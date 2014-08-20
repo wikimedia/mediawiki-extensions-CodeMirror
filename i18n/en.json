@@ -1,0 +1,8 @@
+{
+	"@metadata": {
+		"authors": [
+			"pastakhov"
+		]
+	},
+	"codemirror-desc": "Syntax-highlighted editing for wiki pages using [http://codemirror.net/ CodeMirror]"
+}
