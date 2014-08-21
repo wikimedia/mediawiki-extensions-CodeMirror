@@ -36,7 +36,7 @@ CodeMirror.defineMode("mediawiki", function(config, parserConfig) {
 		}
 		if (stream.eat("}")) {
 			if (stream.eat("}")) {
-				state.tokenize = inText;
+				state.tokenize = inWikitext;
 				return "tag bracket";
 			}
 		}
@@ -60,7 +60,7 @@ CodeMirror.defineMode("mediawiki", function(config, parserConfig) {
 				return "keyword strong";
 			}
 		}
-		state.tokenize = inText;
+		state.tokenize = inWikitext;
 		return "error";
 	}
 
@@ -71,7 +71,7 @@ CodeMirror.defineMode("mediawiki", function(config, parserConfig) {
 		}
 		if (stream.eat("}")) {
 			if (stream.eat("}")) {
-				state.tokenize = inText;
+				state.tokenize = inWikitext;
 				return "tag bracket";
 			}
 		}
@@ -85,8 +85,15 @@ CodeMirror.defineMode("mediawiki", function(config, parserConfig) {
 		return "string";
 	}
 
-	function inText(stream, state) {
+	function inWikitext(stream, state) {
+		var style = [];
+		var sol = stream.sol();
 		var ch = stream.next();
+
+		if (sol) {
+			state.isBold = false;
+			state.isItalic = false;
+		}
 
 		switch (ch) {
 			case "{":
@@ -96,13 +103,29 @@ CodeMirror.defineMode("mediawiki", function(config, parserConfig) {
 					return "tag bracket";
 				}
 				break;
+			case "'":
+				if (stream.match("''")) {
+					state.isBold = (state.isBold ? false : true);
+				} else if (stream.match("'")) {
+					state.isItalic = (state.isItalic ? false : true);
+				}
+				break;
+		}
+		if (state.isBold) {
+			style.push("strong");
+		}
+		if (state.isItalic) {
+			style.push("em");
+		}
+		if (style.length > 0) {
+			return style.join(" ");
 		}
 		return null;
 	}
 
 	return {
 		startState: function() {
-			return {tokenize: inText, style: null};
+			return {tokenize: inWikitext, style: null};
 		},
 		token: function(stream, state) {
 			return state.tokenize(stream, state);
