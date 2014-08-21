@@ -17,12 +17,19 @@ CodeMirror.defineMode("mediawiki", function(config, parserConfig) {
 			state.tokenize = inParserFunctionName;
 			return "strong";
 		}
-		stream.eatWhile(/[^\|}]/);
+		stream.eatWhile(/[^\|\}\s]/);
 		state.tokenize = inTemplateArgumentSeparator;
 		return "link";
 	}
 
 	function inTemplateArgumentSeparator(stream, state) { // {{ Page name |
+		if (stream.eatSpace() && !stream.eol()) {
+			var peek = stream.peek();
+			if ( peek !== "|" && peek != "}" ) {
+				state.tokenize = inTemplatePageName;
+				return "link";
+			}
+		}
 		if (stream.eat("|")) {
 			state.tokenize = inTemplateArgument;
 			return "tag strong";
@@ -33,8 +40,11 @@ CodeMirror.defineMode("mediawiki", function(config, parserConfig) {
 				return "tag bracket";
 			}
 		}
+		if ( stream.eol() ) {
+			return null;
+		}
 		stream.next();
-		return null;
+		return "error";
 	}
 
 	function inTemplateArgument(stream, state) { // {{ Page name |
