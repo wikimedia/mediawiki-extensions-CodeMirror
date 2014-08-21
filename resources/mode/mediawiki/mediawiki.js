@@ -54,9 +54,14 @@ CodeMirror.defineMode("mediawiki", function(config, parserConfig) {
 	}
 
 	function inParserFunctionName(stream, state) { // {{#
-		stream.eatWhile(/[^:}]/);
-		state.tokenize = inParserFunctionArgumentSeparator;
-		return "keyword";
+		if (stream.eatWhile(/\w/)) {
+			if (stream.peek() === ":") {
+				state.tokenize = inParserFunctionArgumentSeparator;
+				return "keyword strong";
+			}
+		}
+		state.tokenize = inText;
+		return "error";
 	}
 
 	function inParserFunctionArgumentSeparator(stream, state) { // {{ Page name |
