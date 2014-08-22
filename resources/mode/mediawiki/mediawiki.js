@@ -1,138 +1,137 @@
-// CodeMirror, copyright (c) by Marijn Haverbeke and others
-// Distributed under an MIT license: http://codemirror.net/LICENSE
+/*global CodeMirror, define, require  */
+(function( mod ) {
+	if ( typeof exports === 'object' && typeof module === 'object' ) { // CommonJS
+		mod( require( '../../lib/codemirror' ), require( '../htmlmixed/htmlmixed' ) );
+	} else if ( typeof define === 'function' && define.amd ) { // AMD
+		define( ['../../lib/codemirror', '../htmlmixed/htmlmixed'], mod );
+	} else { // Plain browser env
+		mod( CodeMirror );
+	}
+})(function( CodeMirror ) {
+'use strict';
 
-(function(mod) {
-  if (typeof exports == "object" && typeof module == "object") // CommonJS
-    mod(require("../../lib/codemirror"), require("../htmlmixed/htmlmixed"));
-  else if (typeof define == "function" && define.amd) // AMD
-    define(["../../lib/codemirror", "../htmlmixed/htmlmixed"], mod);
-  else // Plain browser env
-    mod(CodeMirror);
-})(function(CodeMirror) {
-"use strict";
-
-CodeMirror.defineMode("mediawiki", function(config, parserConfig) {
-	function inTemplatePageName(stream, state) { // {{
-		if (stream.eat("#")) {
+CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
+	function inTemplatePageName( stream, state ) { // {{
+		if ( stream.eat( '#' ) ) {
 			state.tokenize = inParserFunctionName;
-			return "strong";
+			return 'strong';
 		}
-		stream.eatWhile(/[^\|\}\s]/);
+		stream.eatWhile( /[^\|\}\s]/ );
 		state.tokenize = inTemplateArgumentSeparator;
-		return "link";
+		return 'link';
 	}
 
-	function inTemplateArgumentSeparator(stream, state) { // {{ Page name |
-		if (stream.eatSpace() && !stream.eol()) {
+	function inTemplateArgumentSeparator( stream, state ) { // {{ Page name |
+		if ( stream.eatSpace() && !stream.eol() ) {
 			var peek = stream.peek();
-			if ( peek !== "|" && peek != "}" ) {
+			if ( peek !== '|' && peek !== '}' ) {
 				state.tokenize = inTemplatePageName;
-				return "link";
+				return 'link';
 			}
 		}
-		if (stream.eat("|")) {
+		if ( stream.eat( '|' ) ) {
 			state.tokenize = inTemplateArgument;
-			return "tag strong";
+			return 'tag strong';
 		}
-		if (stream.eat("}")) {
-			if (stream.eat("}")) {
+		if ( stream.eat( '}' ) ) {
+			if ( stream.eat( '}' ) ) {
 				state.tokenize = inWikitext;
-				return "tag bracket";
+				return 'tag bracket';
 			}
 		}
 		if ( stream.eol() ) {
 			return null;
 		}
 		stream.next();
-		return "error";
+		return 'error';
 	}
 
-	function inTemplateArgument(stream, state) { // {{ Page name |
-		stream.eatWhile(/[^\|}]/);
+	function inTemplateArgument( stream, state ) { // {{ Page name |
+		stream.eatWhile( /[^\|}]/ );
 		state.tokenize = inTemplateArgumentSeparator;
-		return "string";
+		return 'string';
 	}
 
-	function inParserFunctionName(stream, state) { // {{#
-		if (stream.eatWhile(/\w/)) {
-			if (stream.peek() === ":") {
+	function inParserFunctionName( stream, state ) { // {{#
+		if ( stream.eatWhile( /\w/ ) ) {
+			if ( stream.peek() === ':' ) {
 				state.tokenize = inParserFunctionArgumentSeparator;
-				return "keyword strong";
+				return 'keyword strong';
 			}
 		}
 		state.tokenize = inWikitext;
-		return "error";
+		return 'error';
 	}
 
-	function inParserFunctionArgumentSeparator(stream, state) { // {{ Page name |
-		if (stream.eat(/[|:]/)) {
+	function inParserFunctionArgumentSeparator( stream, state ) { // {{ Page name |
+		if ( stream.eat( /[|:]/ ) ) {
 			state.tokenize = inParserFunctionArgument;
-			return "tag strong";
+			return 'tag strong';
 		}
-		if (stream.eat("}")) {
-			if (stream.eat("}")) {
+		if ( stream.eat( '}' ) ) {
+			if ( stream.eat( '}' ) ) {
 				state.tokenize = inWikitext;
-				return "tag bracket";
+				return 'tag bracket';
 			}
 		}
 		stream.next();
-		return "string";
+		return 'string';
 	}
 
-	function inParserFunctionArgument(stream, state) { // {{#
-		stream.eatWhile(/[^|}]/);
+	function inParserFunctionArgument( stream, state ) { // {{#
+		stream.eatWhile( /[^|}]/ );
 		state.tokenize = inParserFunctionArgumentSeparator;
-		return "string";
+		return 'string';
 	}
 
-	function inWikitext(stream, state) {
+	function inWikitext( stream, state ) {
 		var style = [];
 		var sol = stream.sol();
 		var ch = stream.next();
 
-		if (sol) {
+		if ( sol ) {
 			state.isBold = false;
 			state.isItalic = false;
 		}
 
-		switch (ch) {
-			case "{":
-				if (stream.eat("{")) { // Templates
+		switch ( ch ) {
+			case '{':
+				if ( stream.eat( '{' ) ) { // Templates
 					state.tokenize = inTemplatePageName;
 					stream.eatSpace();
-					return "tag bracket";
+					return 'tag bracket';
 				}
 				break;
-			case "'":
-				if (stream.match("''")) {
-					state.isBold = (state.isBold ? false : true);
-				} else if (stream.match("'")) {
-					state.isItalic = (state.isItalic ? false : true);
+			case '\'':
+				if ( stream.match( '\'\'' ) ) {
+					state.isBold = ( state.isBold ? false : true );
+				} else if ( stream.match( '\'' ) ) {
+					state.isItalic = ( state.isItalic ? false : true );
 				}
 				break;
 		}
-		if (state.isBold) {
-			style.push("strong");
+		if ( state.isBold ) {
+			style.push( 'strong' );
 		}
-		if (state.isItalic) {
-			style.push("em");
+		if ( state.isItalic ) {
+			style.push( 'em' );
 		}
-		if (style.length > 0) {
-			return style.join(" ");
+		if ( style.length > 0 ) {
+			return style.join(' ');
 		}
 		return null;
 	}
 
 	return {
 		startState: function() {
-			return {tokenize: inWikitext, style: null};
+			return { tokenize: inWikitext, style: null };
 		},
-		token: function(stream, state) {
-			return state.tokenize(stream, state);
+		token: function( stream, state ) {
+			return state.tokenize( stream, state );
 		}
 	};
 });
 
-CodeMirror.defineMIME("text/mediawiki", "mediawiki");
+CodeMirror.defineMIME( 'text/mediawiki', 'mediawiki' );
 
 });
