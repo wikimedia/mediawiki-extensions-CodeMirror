@@ -104,12 +104,29 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 				break;
 			case '\'':
 				if ( stream.match( '\'\'' ) ) {
-					state.isBold = ( state.isBold ? false : true );
+					state.isBold = state.isBold ? false : true;
 				} else if ( stream.match( '\'' ) ) {
-					state.isItalic = ( state.isItalic ? false : true );
+					state.isItalic = state.isItalic ? false : true;
+				}
+				break;
+			case '&':
+				// this code was copied from mode/xml/xml.js
+				var ok;
+				if ( stream.eat( '#' ) ) {
+					if (stream.eat( 'x' ) ) {
+						ok = stream.eatWhile( /[a-fA-F\d]/ ) && stream.eat( ';');
+					} else {
+						ok = stream.eatWhile( /[\d]/ ) && stream.eat( ';' );
+					}
+				} else {
+					ok = stream.eatWhile( /[\w\.\-:]/ ) && stream.eat( ';' );
+				}
+				if ( ok ) {
+					style.push( 'atom' );
 				}
 				break;
 		}
+
 		if ( state.isBold ) {
 			style.push( 'strong' );
 		}
@@ -124,7 +141,7 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 
 	return {
 		startState: function() {
-			return { tokenize: inWikitext, style: null };
+			return { tokenize: inWikitext, isBold: false, isItalic: false };
 		},
 		token: function( stream, state ) {
 			return state.tokenize( stream, state );
