@@ -85,6 +85,11 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 	}
 
 	function inWikitext( stream, state ) {
+		function chain( parser ) {
+			state.tokenize = parser;
+			return parser( stream, state );
+		}
+
 		var style = [];
 		var sol = stream.sol();
 		var ch = stream.next();
@@ -107,6 +112,11 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 					state.isBold = state.isBold ? false : true;
 				} else if ( stream.match( '\'' ) ) {
 					state.isItalic = state.isItalic ? false : true;
+				}
+				break;
+			case '<':
+				if ( stream.match( '!--' ) ) {
+					return chain( inBlock( 'comment', '-->' ) );
 				}
 				break;
 			case '&':
@@ -137,6 +147,19 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 			return style.join(' ');
 		}
 		return null;
+	}
+
+	function inBlock( style, terminator ) {
+		return function( stream, state ) {
+			while ( !stream.eol() ) {
+				if ( stream.match( terminator ) ) {
+					state.tokenize = inWikitext;
+					break;
+				}
+				stream.next();
+			}
+			return style;
+		};
 	}
 
 	return {
