@@ -5,6 +5,7 @@
   font-family: monospace;
   height: 400px;
   border: 1px solid #CCC;
+  font-size: 1.1em;
 }
 .CodeMirror-scroll {
   /* Set scrolling behaviour here */
