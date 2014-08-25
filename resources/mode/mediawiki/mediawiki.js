@@ -71,7 +71,7 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 				}
 				break;
 			case 'TemplateArgumentContinue':
-				if ( stream.eatWhile( /[^=<\{\&\}\|]/ ) ) {
+				if ( stream.eatWhile( /[^<\{\&\}\|]/ ) ) {
 					state.ImInBlock.pop();
 					state.ImInBlock.push( 'TemplateArgument' );
 					return 'string';
