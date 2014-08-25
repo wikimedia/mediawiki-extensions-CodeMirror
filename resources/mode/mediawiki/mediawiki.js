@@ -11,6 +11,9 @@
 'use strict';
 
 CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
+
+	var tagName = false;
+
 	function inWikitext( stream, state ) {
 		function chain( parser ) {
 			state.tokenize = parser;
@@ -31,7 +34,7 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 					state.ImInBlock.push( 'ParserFunctionName' );
 					return 'keyword strong';
 				} else {
-					if ( stream.eatWhile( /[^<\{\&\s\}\|]/ ) ) {
+					if ( stream.eatWhile( /[^\s\u00a0\}\|<\{\&]/ ) ) {
 						state.ImInBlock.push( 'TemplatePageNameContinue' );
 						return 'link';
 					}
@@ -39,7 +42,7 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 				break;
 			case 'TemplatePageNameContinue':
 				stream.eatSpace();
-				if ( stream.match( /\s*[^<\{\&\s\}\|]/ ) ) {
+				if ( stream.match( /[\s\u00a0]*[^\s\u00a0\}\|<\{\&]/ ) ) {
 					return 'link';
 				}
 				if ( stream.eat( '|' ) ) {
@@ -54,7 +57,7 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 				}
 				break;
 			case 'TemplateArgument':
-				if ( stream.eatWhile( /[^=<\{\&\}\|]/ ) ) {
+				if ( stream.eatWhile( /[^=\}\|<\{\&]/ ) ) {
 					if ( blockType === 'TemplateArgument' && stream.eat('=') ) {
 						state.ImInBlock.pop();
 						state.ImInBlock.push( 'TemplateArgumentContinue' );
@@ -71,7 +74,7 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 				}
 				break;
 			case 'TemplateArgumentContinue':
-				if ( stream.eatWhile( /[^<\{\&\}\|]/ ) ) {
+				if ( stream.eatWhile( /[^\}\|<\{\&]/ ) ) {
 					state.ImInBlock.pop();
 					state.ImInBlock.push( 'TemplateArgument' );
 					return 'string';
@@ -97,7 +100,7 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 				}
 				break;
 			case 'ParserFunctionArgument':
-				if ( stream.eatWhile( /[^<\{\&\}\|]/ ) ) {
+				if ( stream.eatWhile( /[^\}\|<\{\&]/ ) ) {
 					return 'string-2';
 				} else if ( stream.eat( '|' ) ) {
 					return 'tag strong';
@@ -108,6 +111,49 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 					}
 				}
 				break;
+			case 'TagName':
+				var tmp = stream.eatWhile( /[^>\/\s\u00a0<\{\&]/ );
+				if ( tmp ) {
+					if ( stream.eatSpace() || /[>\/\s\u00a0]/.test( stream.peek() ) ) {
+						state.ImInBlock.pop();
+						state.ImInBlock.push( 'TagAttribute' );
+						state.ImInTag.push( tagName === true ? tmp : null );
+					}
+					tagName = false;
+					return 'tag';
+				}
+				tagName = false;
+				break;
+			case 'TagAttribute':
+				var attributName = stream.eatWhile( /[^>\/\s\u00a0<\{\&]/ );
+				if ( attributName ) {
+					stream.eatSpace();
+//					if ( stream.eat( '=' ) ) {
+//						//state.tokenize = inTagAttributeValue( attributName );
+//					}
+					return 'attribute';
+				}
+				if ( stream.eat( '>' ) ) {
+					state.ImInBlock.pop();
+					return 'tag bracket';
+				}
+				break;
+			case 'TagClose':
+				if ( stream.eatWhile( /[^>\/\s\u00a0<\{\&]/ ) ) {
+					stream.eatSpace();
+					if ( /[^<\{\&]/.test( stream.peek() ) ) {
+						state.ImInBlock.pop();
+						state.ImInBlock.push( 'TagCloseEnd' );
+					}
+					return 'tag';
+				}
+				break;
+			case 'TagCloseEnd':
+				if ( stream.eat( '>' ) ) {
+					state.ImInBlock.pop();
+					return 'tag bracket';
+				}
+				return 'error';
 			case null:
 				if ( sol ) {
 					state.isBold = false;
@@ -145,6 +191,19 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 			case '<':
 				if ( stream.match( '!--' ) ) {
 					return chain( inBlock( 'comment', '-->' ) );
+				}
+				if ( stream.eat( '/' ) ) {
+					if ( /[\w\{<]/.test( stream.peek() ) ) {
+						if ( state.ImInBlock.length > 0 && state.ImInBlock[state.ImInBlock.length -1] === 'TagName' ) { // <nowiki><</nowiki>
+							state.ImInBlock.pop();
+						}
+						state.ImInBlock.push( 'TagClose' );
+						return 'tag bracket';
+					}
+				} else if ( /[\w\{<]/.test( stream.peek() ) ) {
+					tagName = true;
+					state.ImInBlock.push( 'TagName' );
+					return 'tag bracket';
 				}
 				break;
 			case '&':
@@ -187,7 +246,7 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 
 	return {
 		startState: function() {
-			return { tokenize: inWikitext, ImInBlock: [], isBold: false, isItalic: false };
+			return { tokenize: inWikitext, ImInBlock: [], ImInTag:[], isBold: false, isItalic: false };
 		},
 		token: function( stream, state ) {
 			return state.tokenize( stream, state );
