@@ -13,6 +13,7 @@
 CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 
 	var tagName = false;
+	var mustEat = true;
 
 	function inWikitext( stream, state ) {
 		function chain( parser ) {
@@ -28,6 +29,63 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 		}
 
 		switch ( blockType ) {
+			case 'Link':
+				if ( sol ) {
+					state.ImInBlock.pop(); //FIXME: it is wrong Link
+					return null;
+				} else if ( stream.eatWhile( /[^#\s\u00a0\|\]]/ ) ) { //FIXME '{{' brokes Link, sample [[z{{page]]
+					return 'attribute mw-underline strong';
+				} else if ( stream.eat( '#' ) ) {
+					state.ImInBlock.push( 'LinkToSection' );
+					return 'attribute strong';
+				} else if ( stream.eat( '|' ) ) {
+					stream.eatSpace();
+					state.ImInBlock.pop();
+					state.ImInBlock.push( 'LinkText' );
+					return 'tag strong';
+				} else if ( stream.eatSpace() ) {
+					if ( /[^#\|\]]/.test( stream.peek() ) ) {
+						return 'attribute mw-underline strong';
+					}
+					return null;
+				} else if ( stream.eat( ']' ) ) {
+					if ( stream.eat( ']' ) ) {
+						state.ImInBlock.pop();
+						if ( !stream.eatSpace() ) {
+							state.ImInBlock.push( 'LinkTrail' );
+						}
+						return 'tag bracket';
+					}
+				}
+				break;
+			case 'LinkToSection':
+				state.ImInBlock.pop();
+				if ( sol ) {
+					state.ImInBlock.pop(); //FIXME: it is wrong Link
+					return null;
+				}
+				stream.eatWhile( /[^\|\]]/ ); //FIXME '{{' brokes Link, sample [[z{{page]]
+				return 'attribute';
+			case 'LinkText':
+				stream.eatSpace();
+				if ( stream.match( /[\s\u00a0]*\]\]/ ) ) {
+					state.ImInBlock.pop();
+					if ( !stream.eatSpace() ) {
+						state.ImInBlock.push( 'LinkTrail' );
+					}
+					return 'tag bracket';
+				}
+				mustEat = false;
+				stream.eatWhile( /[^\]\s\u00a0]/ );
+				style.push( 'mw-underline' );
+				break;
+			case 'LinkTrail': // FIXME with Language::linkTrail()
+				state.ImInBlock.pop();
+				if ( !stream.sol && stream.eatWhile( /[^\s\u00a0>\}\[\]<\{\']/ ) ) { // &
+					mustEat = false;
+					style.push( 'mw-underline' );
+				}
+				break;
 			case 'TemplatePageName':
 				state.ImInBlock.pop();
 				if ( stream.eat( '#' ) ) {
@@ -36,14 +94,14 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 				} else {
 					if ( stream.eatWhile( /[^\s\u00a0\}\|<\{\&]/ ) ) {
 						state.ImInBlock.push( 'TemplatePageNameContinue' );
-						return 'link';
+						return 'attribute mw-underline';
 					}
 				}
 				break;
 			case 'TemplatePageNameContinue':
 				stream.eatSpace();
 				if ( stream.match( /[\s\u00a0]*[^\s\u00a0\}\|<\{\&]/ ) ) {
-					return 'link';
+					return 'attribute mw-underline';
 				}
 				if ( stream.eat( '|' ) ) {
 					state.ImInBlock.pop();
@@ -162,15 +220,15 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 						return null;
 					}
 				}
-				if ( state.isBold ) {
-					style.push( 'strong' );
-				}
-				if ( state.isItalic ) {
-					style.push( 'em' );
-				}
 		}
 
-		var ch = stream.next();
+		var ch = null;
+		if ( mustEat ) {
+			ch = stream.next();
+		} else {
+			mustEat = true;
+		}
+
 		if ( ch === '&' ) {
 			// this code was copied from mode/xml/xml.js
 			var ok;
@@ -196,6 +254,15 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 						return 'tag bracket';
 					}
 					break;
+				case '[':
+					if ( stream.eat( '[' ) ) { // Link Example: [[ Foo | Bar ]]
+						stream.eatSpace();
+						if ( /[^\]\|\[\{]/.test( stream.peek() ) ) {
+							state.ImInBlock.push( 'Link' );
+							return 'tag bracket';
+						}
+					}
+					break;
 				case '<':
 					if ( stream.match( '!--' ) ) {
 						return chain( inBlock( 'comment', '-->' ) );
@@ -215,7 +282,13 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 					}
 					break;
 			}
-			stream.eatWhile( /[^>\}<\{\'\&]/ );
+			stream.eatWhile( /[^\s\u00a0>\}\[\]<\{\'\&]/ );
+			if ( state.isBold ) {
+				style.push( 'strong' );
+			}
+			if ( state.isItalic ) {
+				style.push( 'em' );
+			}
 			if ( !state.allowWikiformatting ) {
 				style.push( 'qualifier' );
 			}
