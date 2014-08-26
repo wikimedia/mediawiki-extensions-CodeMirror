@@ -75,6 +75,7 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 						return 'tag bracket';
 					}
 				}
+				style.push( 'string' );
 				break;
 			case 'ParserFunctionName':
 				if ( stream.eatWhile( /\w/ ) ) {
@@ -97,6 +98,7 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 						return 'tag bracket';
 					}
 				}
+				style.push( 'string-2' );
 				break;
 			case 'TagName':
 				var tmp = stream.eatWhile( /[^>\/\s\u00a0<\{\&]/ );
@@ -213,7 +215,7 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 					}
 					break;
 			}
-			stream.eatWhile( /[^<\{\'\&]/ );
+			stream.eatWhile( /[^>\}<\{\'\&]/ );
 			if ( !state.allowWikiformatting ) {
 				style.push( 'qualifier' );
 			}
