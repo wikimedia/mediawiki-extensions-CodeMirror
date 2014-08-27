@@ -1,6 +1,7 @@
 /*global CodeMirror*/
 jQuery( document ).ready( function ( $ ) {
-	CodeMirror.fromTextArea( $( '#wpTextbox1' )[0], {
+	var textbox1 = $( '#wpTextbox1' );
+	var codeMirror = CodeMirror.fromTextArea( textbox1[0], {
 			styleActiveLine: true,
 			//lineNumbers: true,
 			lineWrapping: true,
@@ -10,4 +11,5 @@ jQuery( document ).ready( function ( $ ) {
 			//autoCloseBrackets: true,
 			mode: 'text/mediawiki'
 		} );
+	codeMirror.setSize( null, textbox1.height() );
 } );
