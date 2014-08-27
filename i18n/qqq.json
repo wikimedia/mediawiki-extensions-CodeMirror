@@ -1,8 +1,9 @@
 {
 	"@metadata": {
 		"authors": [
-			"pastakhov"
+			"pastakhov",
+			"Raymond"
 		]
 	},
-	"codemirror-desc": "{{desc|name=PhpTags CodeEditor|url=https://www.mediawiki.org/wiki/Extension:CodeMirror}}"
+	"codemirror-desc": "{{desc|name=Code Mirror|url=https://www.mediawiki.org/wiki/Extension:CodeMirror}}"
 }

@@ -1,0 +1,8 @@
+{
+	"@metadata": {
+		"authors": [
+			"Metalhead64"
+		]
+	},
+	"codemirror-desc": "Ermöglicht syntaxhervorgehobenes Bearbeiten für Wikiseiten mithilfe [http://codemirror.net/ CodeMirror]"
+}

@@ -1,0 +1,8 @@
+{
+	"@metadata": {
+		"authors": [
+			"Gomoko"
+		]
+	},
+	"codemirror-desc": "Édition avec coloration syntaxique pour les pages de wiki en utilisant [http://codemirror.net/ CodeMirror]"
+}
