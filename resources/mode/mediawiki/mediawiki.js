@@ -55,9 +55,9 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 				} else if ( stream.eat( ']' ) ) {
 					if ( stream.eat( ']' ) ) {
 						state.ImInBlock.pop();
-						if ( !stream.eatSpace() ) {
-							state.ImInBlock.push( 'LinkTrail' );
-						}
+//						if ( !stream.eatSpace() ) {
+//							state.ImInBlock.push( 'LinkTrail' );
+//						}
 						return 'tag bracket';
 					}
 				}
@@ -226,9 +226,7 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 					state.isBold = false;
 					state.isItalic = false;
 					if ( stream.eat( ' ' ) ) {
-						state.allowWikiformatting = false;
-					} else {
-						state.allowWikiformatting = true;
+						return 'mw-skipformatting';
 					}
 				}
 				if ( stream.peek() === '\'' ) {
@@ -310,9 +308,9 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 			if ( state.isItalic ) {
 				style.push( 'em' );
 			}
-			if ( !state.allowWikiformatting ) {
-				style.push( 'qualifier' );
-			}
+//			if ( state.skipFormatting ) {
+//				style.push( 'mw-skipformatting' );
+//			}
 		} else {
 			stream.eatWhile( /[^&]/ );
 			style.push( 'qualifier' );
@@ -339,7 +337,7 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 
 	return {
 		startState: function() {
-			return { tokenize: inWikitext, ImInBlock: [], ImInTag:[], allowWikimarkup: true, allowWikiformatting: true, bTempArgName: false, isBold: false, isItalic: false };
+			return { tokenize: inWikitext, ImInBlock: [], ImInTag:[], allowWikimarkup: true, skipFormatting: false, bTempArgName: false, isBold: false, isItalic: false };
 		},
 		token: function( stream, state ) {
 			return state.tokenize( stream, state );
