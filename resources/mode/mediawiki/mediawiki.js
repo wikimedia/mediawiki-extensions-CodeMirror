@@ -22,6 +22,7 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 		}
 
 		var style = [];
+		var mnemonicStyle = []; // character entity references style
 		var sol = stream.sol();
 		var blockType = null;
 		if ( state.ImInBlock.length > 0 ) {
@@ -33,8 +34,11 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 				if ( sol ) {
 					state.ImInBlock.pop(); //FIXME: it is wrong Link
 					return null;
-				} else if ( stream.eatWhile( /[^#\s\u00a0\|\]]/ ) ) { //FIXME '{{' brokes Link, sample [[z{{page]]
+				} else if ( stream.eatWhile( /[^#\s\u00a0\|\]\&]/ ) ) { //FIXME '{{' brokes Link, sample [[z{{page]]
 					return 'attribute mw-underline strong';
+				} else if ( stream.peek() === '&' ) { // check for character entity references
+					style = ['attribute', 'mw-underline', 'strong'];
+					mnemonicStyle = ['mw-underline'];
 				} else if ( stream.eat( '#' ) ) {
 					state.ImInBlock.push( 'LinkToSection' );
 					return 'attribute strong';
@@ -59,43 +63,55 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 				}
 				break;
 			case 'LinkToSection':
-				state.ImInBlock.pop();
 				if ( sol ) {
+					state.ImInBlock.pop();
 					state.ImInBlock.pop(); //FIXME: it is wrong Link
 					return null;
 				}
-				stream.eatWhile( /[^\|\]]/ ); //FIXME '{{' brokes Link, sample [[z{{page]]
-				return 'attribute';
+				if ( stream.eatWhile( /[^\|\]\&]/ ) ) { //FIXME '{{' brokes Link, sample [[z{{page]]
+					mustEat = false;
+					style = ['attribute'];
+				} else if ( stream.peek() === '&' ) {
+					style = ['attribute'];
+				} else {
+					state.ImInBlock.pop();
+					return 'attribute';
+				}
+				break;
 			case 'LinkText':
 				stream.eatSpace();
 				if ( stream.match( /[\s\u00a0]*\]\]/ ) ) {
 					state.ImInBlock.pop();
-					if ( !stream.eatSpace() ) {
-						state.ImInBlock.push( 'LinkTrail' );
-					}
+//					if ( !stream.eatSpace() ) {
+//						state.ImInBlock.push( 'LinkTrail' );
+//					}
 					return 'tag bracket';
 				}
-				mustEat = false;
-				stream.eatWhile( /[^\]\s\u00a0]/ );
-				style.push( 'mw-underline' );
-				break;
-			case 'LinkTrail': // FIXME with Language::linkTrail()
-				state.ImInBlock.pop();
-				if ( !stream.sol && stream.eatWhile( /[^\s\u00a0>\}\[\]<\{\']/ ) ) { // &
+
+				if ( stream.eatWhile( /[^\]\s\u00a0\&]/ ) ) {
 					mustEat = false;
-					style.push( 'mw-underline' );
+					style = ['mw-underline'];
+				} else if ( stream.peek() === '&' ) {
+					style = ['mw-underline'];
+					mnemonicStyle = ['mw-underline'];
 				}
 				break;
+//			case 'LinkTrail': // FIXME with Language::linkTrail()
+//				state.ImInBlock.pop();
+//				if ( sol !== true && stream.eatWhile( /[^\s\u00a0>\}\[\]<\{\']/ ) ) { // &
+//					mustEat = false;
+//					style.push( 'mw-underline' );
+//				}
+//				break;
 			case 'TemplatePageName':
 				state.ImInBlock.pop();
 				if ( stream.eat( '#' ) ) {
 					state.ImInBlock.push( 'ParserFunctionName' );
 					return 'keyword strong';
-				} else {
-					if ( stream.eatWhile( /[^\s\u00a0\}\|<\{\&]/ ) ) {
-						state.ImInBlock.push( 'TemplatePageNameContinue' );
-						return 'attribute mw-underline';
-					}
+				}
+				if ( stream.eatWhile( /[^\s\u00a0\}\|<\{\&]/ ) ) {
+					state.ImInBlock.push( 'TemplatePageNameContinue' );
+					return 'attribute mw-underline';
 				}
 				break;
 			case 'TemplatePageNameContinue':
@@ -113,6 +129,10 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 				if ( stream.match( /\}\}/ ) ) {
 					state.ImInBlock.pop();
 					return 'tag bracket';
+				}
+				if ( stream.peek() === '&' ) {
+					style = ['attribute', 'mw-underline'];
+					mnemonicStyle = ['mw-underline'];
 				}
 				break;
 			case 'TemplateArgument':
@@ -242,7 +262,8 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 				ok = stream.eatWhile( /[\w\.\-:]/ ) && stream.eat( ';' );
 			}
 			if ( ok ) {
-				return 'atom';
+				mnemonicStyle.push( 'atom' );
+				return mnemonicStyle.join(' ');
 			}
 		} else if ( state.allowWikimarkup ) {
 			state.bTempArgName = false;
@@ -282,7 +303,7 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 					}
 					break;
 			}
-			stream.eatWhile( /[^\s\u00a0>\}\[\]<\{\'\&]/ );
+			stream.eatWhile( /[^\s\u00a0>\}\[\]<\{\'\|\&]/ );
 			if ( state.isBold ) {
 				style.push( 'strong' );
 			}
