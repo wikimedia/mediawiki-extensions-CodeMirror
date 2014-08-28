@@ -155,6 +155,21 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 				}
 				style.push( 'string' );
 				break;
+			case 'TemplateVariable':
+				if ( stream.eatWhile( /[^\}\&]/ ) ) {
+					return 'variable-2';
+				}
+				if ( stream.match( '}}}' ) ) {
+					state.ImInBlock.pop();
+					return 'variable-2';
+				}
+				if ( stream.peek() === '&' ) {
+					style = ['variable-2'];
+				} else {
+					stream.next();
+					return 'variable-2';
+				}
+				break;
 			case 'ParserFunctionName':
 				if ( stream.eatWhile( /\w/ ) ) {
 					return 'keyword strong';
@@ -267,7 +282,11 @@ CodeMirror.defineMode('mediawiki', function( /*config, parserConfig*/ ) {
 			state.bTempArgName = false;
 			switch ( ch ) {
 				case '{':
-					if ( stream.eat( '{' ) ) { // Templates
+					if ( stream.match( '{{' ) ) { // Variable
+						stream.eatSpace();
+						state.ImInBlock.push( 'TemplateVariable' );
+						return 'variable-2';
+					} else if ( stream.eat( '{' ) ) { // Templates
 						stream.eatSpace();
 						state.ImInBlock.push( 'TemplatePageName' );
 						return 'tag bracket';
