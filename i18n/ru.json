@@ -1,0 +1,8 @@
+{
+	"@metadata": {
+		"authors": [
+			"Okras"
+		]
+	},
+	"codemirror-desc": "Редактирование вики-страниц с подсветкой синтаксиса с помощью [http://codemirror.net/ CodeMirror]"
+}
