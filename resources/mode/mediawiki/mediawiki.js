@@ -117,8 +117,11 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 					return 'attribute';
 				}
 				if ( stream.peek() === '&' ) {
-					style = ['attribute', 'mw-underline'];
+					style = ['attribute', 'strong', 'mw-underline'];
 					mnemonicStyle = ['mw-underline'];
+				} else if ( stream.match( /[\s\u00a0]*&/ ) ) { // {{ PAGE & NAME }}
+					stream.backUp(1);
+					return 'attribute strong mw-underline';
 				}
 				break;
 			case 'TemplateArgument':
@@ -155,7 +158,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 				}
 				break;
 			case 'ParserFunctionName':
-				if ( stream.match( /#?\w+/ ) ) { // FIXME: {{#name}} and and {{uc}} are wrong, must have ':'
+				if ( stream.match( /#?[^\s\u00a0\}\[\]<\{\'\|\&\:]+/ ) ) { // FIXME: {{#name}} and and {{uc}} are wrong, must have ':'
 					return 'keyword strong';
 				}
 				if ( stream.eat( ':' ) ) {
@@ -279,7 +282,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 							return 'keyword';
 						}
 						// Check for parser function without '#'
-						var name = stream.match( /(\w+)(\:|[\s\u00a0]*)(\}\}?)?(.)?/ );
+						var name = stream.match( /([^\s\u00a0\}\[\]<\{\'\|\&\:]+)(\:|[\s\u00a0]*)(\}\}?)?(.)?/ );
 						if ( name ) {
 							stream.backUp( name[0].length );
 							if ( (name[2] === ':' || name[4] === undefined || name[3] === '}}') && (config.mwextFunctionSynonyms[0][name[1].toLowerCase()] || config.mwextFunctionSynonyms[1][name[1]]) ) {
@@ -320,7 +323,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 					}
 					break;
 			}
-			stream.eatWhile( /[^\s\u00a0>\}\[\]<\{\'\|\&]/ );
+			stream.eatWhile( /[^\s\u00a0>\}\[\]<\{\'\|\&\:]/ );
 			if ( state.isBold ) {
 				style.push( 'strong' );
 			}
