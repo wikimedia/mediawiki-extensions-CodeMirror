@@ -1,7 +1,8 @@
-/*global CodeMirror*/
+/*global CodeMirror, mw*/
 jQuery( document ).ready( function ( $ ) {
 	var textbox1 = $( '#wpTextbox1' );
 	var codeMirror = CodeMirror.fromTextArea( textbox1[0], {
+			mwextFunctionSynonyms: mw.config.get( 'extCodeMirrorFunctionSynonyms' ),
 			styleActiveLine: true,
 			//lineNumbers: true,
 			lineWrapping: true,

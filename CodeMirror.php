@@ -15,7 +15,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	die( 'This file is an extension to MediaWiki and thus not a valid entry point.' );
 }
 
-const EXT_CODEMIRROR_VERSION = '1.8.0';
+const EXT_CODEMIRROR_VERSION = '1.9.0';
 
 // Register this extension on Special:Version
 $wgExtensionCredits['parserhook'][] = array(
@@ -35,6 +35,7 @@ $wgAutoloadClasses['CodeMirrorHooks'] = __DIR__ . '/CodeMirror.hooks.php';
 
 $wgHooks['EditPage::showEditForm:initial'][] = 'CodeMirrorHooks::onEditPageShowEditFormInitial';
 $wgHooks['EditPage::showReadOnlyForm:initial'][] = 'CodeMirrorHooks::onEditPageShowEditFormInitial';
+$wgHooks['MakeGlobalVariablesScript'][] = 'CodeMirrorHooks::onMakeGlobalVariablesScript';
 
 $tpl = array(
 	'localBasePath' => __DIR__ . '/resources',
