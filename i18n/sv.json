@@ -1,0 +1,8 @@
+{
+	"@metadata": {
+		"authors": [
+			"Lokal Profil"
+		]
+	},
+	"codemirror-desc": "Syntaxmarkerad redigering för wikisidor med hjälp av [http://codemirror.net/ CodeMirror]"
+}
