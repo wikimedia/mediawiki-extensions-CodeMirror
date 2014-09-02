@@ -179,7 +179,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 				style.push( 'string-2' );
 				break;
 			case 'TagName':
-				var tmp = stream.eatWhile( /[^>\/\s\u00a0<\{\&]/ );
+				var tmp = stream.match( /[^>\/\s\u00a0<\{\&]*/ )[0];
 				if ( tmp ) {
 					if ( stream.eatSpace() || /[>\/\s\u00a0]/.test( stream.peek() ) ) {
 						state.ImInBlock.pop();
@@ -202,6 +202,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 				}
 				if ( stream.eat( '>' ) ) {
 					state.ImInBlock.pop();
+					state.ImInBlock.push( 'InsideTag' );
 					return 'tag bracket';
 				}
 				break;
@@ -218,9 +219,26 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 			case 'TagCloseEnd':
 				if ( stream.eat( '>' ) ) {
 					state.ImInBlock.pop();
+					state.ImInTag.pop();
 					return 'tag bracket';
 				}
 				return 'error';
+			case 'InsideTag':
+				var tag = state.ImInTag[ state.ImInTag.length - 1 ];
+				if ( tag === 'pre' ) {
+					if ( stream.eatWhile( /[^&<]/ ) ) {
+						return 'qualifier';
+					} else if ( stream.peek() === '&' ) {
+						style = ['qualifier'];
+					} else if ( stream.match( '</pre>') ) {
+						stream.backUp( 6 );
+						state.ImInBlock.pop();
+					} else {
+						stream.next();
+						return 'qualifier';
+					}
+				}
+				break;
 			case null:
 				if ( sol ) {
 					state.isBold = false;
@@ -263,7 +281,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 				mnemonicStyle.push( 'atom' );
 				return mnemonicStyle.join(' ');
 			}
-		} else if ( state.allowWikimarkup ) {
+		} else {
 			state.bTempArgName = false;
 			switch ( ch ) {
 				case '{':
@@ -328,9 +346,6 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 //			if ( state.skipFormatting ) {
 //				style.push( 'mw-skipformatting' );
 //			}
-		} else {
-			stream.eatWhile( /[^&]/ );
-			style.push( 'qualifier' );
 		}
 
 		if ( style.length > 0 ) {
@@ -354,7 +369,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 
 	return {
 		startState: function() {
-			return { tokenize: inWikitext, ImInBlock: [], ImInTag:[], allowWikimarkup: true, skipFormatting: false, bTempArgName: false, isBold: false, isItalic: false };
+			return { tokenize: inWikitext, ImInBlock: [], ImInTag:[], skipFormatting: false, bTempArgName: false, isBold: false, isItalic: false };
 		},
 		token: function( stream, state ) {
 			return state.tokenize( stream, state );
