@@ -143,19 +143,14 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 				style.push( 'string' );
 				break;
 			case 'TemplateVariable':
-				if ( stream.eatWhile( /[^\}\&]/ ) ) {
+				if ( stream.eatWhile( /[^\}\[\]<\{\|\&]/ ) ) {
 					return 'variable-2';
 				}
 				if ( stream.match( '}}}' ) ) {
 					state.ImInBlock.pop();
 					return 'variable-2';
 				}
-				if ( stream.peek() === '&' ) {
-					style = ['variable-2'];
-				} else {
-					stream.next();
-					return 'variable-2';
-				}
+				style = ['variable-2'];
 				break;
 			case 'ParserFunctionName':
 				if ( stream.match( /#?[^\s\u00a0\}\[\]<\{\'\|\&\:]+/ ) ) { // FIXME: {{#name}} and and {{uc}} are wrong, must have ':'
