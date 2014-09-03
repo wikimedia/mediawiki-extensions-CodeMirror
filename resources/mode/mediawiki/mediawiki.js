@@ -12,8 +12,13 @@
 
 CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 
-	var isTagNameClear = false;
 	var mustEat = true;
+	var permittedHtmlTags = ['b', 'bdi', 'del', 'i', 'ins', 'u', 'font', 'big', 'small', 'sub', 'sup', 'h1',
+				'h2', 'h3', 'h4', 'h5', 'h6', 'cite', 'code', 'em', 's',
+				'strike', 'strong', 'tt', 'var', 'div', 'center',
+				'blockquote', 'ol', 'ul', 'dl', 'table', 'caption', 'pre',
+				'ruby', 'rb', 'rp', 'rt', 'rtc', 'p', 'span', 'abbr', 'dfn',
+				'kbd', 'samp', 'data', 'time', 'mark', 'br', 'wbr', 'hr', 'li', 'dt', 'dd', 'td', 'th', 'tr'];
 
 	function inWikitext( stream, state ) {
 		function chain( parser ) {
@@ -24,7 +29,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 		var style = [];
 		var mnemonicStyle = []; // character entity references style
 		var sol = stream.sol();
-		var blockType = null, tmp, re, mt;
+		var blockType = null, tmp, re, mt, name;
 		if ( state.ImInBlock.length > 0 ) {
 			blockType = state.ImInBlock[state.ImInBlock.length - 1];
 		}
@@ -179,26 +184,15 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 				style.push( 'string-2' );
 				break;
 			case 'TagName':
-				tmp = stream.match( /[^>\/\s\u00a0<\{\&]*/ );
-				if ( tmp ) {
-					tmp = tmp[0].toLowerCase();
-					if ( stream.eatSpace() || /[>\/\s\u00a0]/.test( stream.peek() ) ) {
-						state.ImInBlock.pop();
-						state.ImInBlock.push( 'TagAttribute' );
-						if ( isTagNameClear ) {
-							if ( config.mwextTags.indexOf( tmp ) >= 0 ) {
-								isTagNameClear = false;
-								state.ImInTag.push( tmp );
-								return 'keyword';
-							}
-						} else {
-							state.ImInTag.push( null );
-						}
-					}
-					return 'tag';
+				name = stream.match( /[^>\/\s\u00a0]*/ )[0].toLowerCase();
+				state.ImInBlock.pop();
+				state.ImInBlock.push( 'TagAttribute' );
+				if ( config.mwextTags.indexOf( name ) >= 0 ) {
+					state.ImInTag.push( name );
+					return 'keyword';
 				}
-				isTagNameClear = false;
-				break;
+				state.ImInTag.push( null );
+				return 'tag';
 			case 'TagAttribute':
 				var attributName = stream.eatWhile( /[^>\/\s\u00a0<\{\&]/ );
 				if ( attributName ) {
@@ -222,14 +216,14 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 				break;
 			case 'TagClose':
 				state.ImInBlock.pop();
-				tmp = stream.match( /[^>\s\u00a0<\{]*/ );
-				if ( tmp ) {
-					tmp = tmp[0].toLowerCase();
+				name = stream.match( /[^>\/\s\u00a0]*/ );
+				if ( name ) {
+					name = name[0].toLowerCase();
 					stream.eatSpace();
 					if ( /[>]/.test( stream.peek() ) ) {
 						state.ImInBlock.push( 'TagCloseEnd' );
 					}
-					return config.mwextTags.indexOf( tmp ) >= 0 ? 'keyword' : 'tag';
+					return config.mwextTags.indexOf( name ) >= 0 ? 'keyword' : 'tag';
 				}
 				break;
 			case 'TagCloseEnd':
@@ -330,7 +324,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 							return 'keyword';
 						}
 						// Check for parser function without '#'
-						var name = stream.match( /([^\s\u00a0\}\[\]<\{\'\|\&\:]+)(\:|[\s\u00a0]*)(\}\}?)?(.)?/ );
+						name = stream.match( /([^\s\u00a0\}\[\]<\{\'\|\&\:]+)(\:|[\s\u00a0]*)(\}\}?)?(.)?/ );
 						if ( name ) {
 							stream.backUp( name[0].length );
 							if ( (name[2] === ':' || name[4] === undefined || name[3] === '}}') && (config.mwextFunctionSynonyms[0][name[1].toLowerCase()] || config.mwextFunctionSynonyms[1][name[1]]) ) {
@@ -356,15 +350,15 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 					if ( stream.match( '!--' ) ) {
 						return chain( inBlock( 'comment', '-->' ) );
 					}
-					if ( stream.eat( '/' ) ) {
-						if ( /[^\s\u00a0\}\[\]<\{\'\|\&\:]/.test( stream.peek() ) ) {
-							state.ImInBlock.push( 'TagClose' );
+					tmp = stream.eat( '/' ) ? 'TagClose' : 'TagName';
+					name = stream.match( /[^>\/\s\u00a0]*/ );
+					if ( name ) {
+						stream.backUp( name[0].length );
+						name = name[0].toLowerCase();
+						if ( config.mwextTags.indexOf( name ) >= 0 || permittedHtmlTags.indexOf( name ) >= 0 ) {
+							state.ImInBlock.push( tmp );
 							return 'tag bracket';
 						}
-					} else if ( /[^\s\u00a0\}\[\]<\{\'\|\&\:]/.test( stream.peek() ) ) {
-						isTagNameClear = true;
-						state.ImInBlock.push( 'TagName' );
-						return 'tag bracket';
 					}
 					break;
 			}
