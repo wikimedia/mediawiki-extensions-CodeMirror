@@ -3,6 +3,7 @@ jQuery( document ).ready( function ( $ ) {
 	var textbox1 = $( '#wpTextbox1' );
 	var codeMirror = CodeMirror.fromTextArea( textbox1[0], {
 			mwextFunctionSynonyms: mw.config.get( 'extCodeMirrorFunctionSynonyms' ),
+			mwextTags: mw.config.get( 'extCodeMirrorTags' ),
 			styleActiveLine: true,
 			//lineNumbers: true,
 			lineWrapping: true,
