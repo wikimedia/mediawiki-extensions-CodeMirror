@@ -12,7 +12,7 @@
 
 CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 
-	var tagName = false;
+	var isTagNameClear = false;
 	var mustEat = true;
 
 	function inWikitext( stream, state ) {
@@ -24,7 +24,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 		var style = [];
 		var mnemonicStyle = []; // character entity references style
 		var sol = stream.sol();
-		var blockType = null;
+		var blockType = null, tmp, re, mt;
 		if ( state.ImInBlock.length > 0 ) {
 			blockType = state.ImInBlock[state.ImInBlock.length - 1];
 		}
@@ -34,7 +34,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 				if ( sol ) {
 					state.ImInBlock.pop(); //FIXME: it is wrong Link
 					return null;
-				} else if ( stream.eatWhile( /[^#\s\u00a0\|\]\&]/ ) ) { //FIXME '{{' brokes Link, sample [[z{{page]]
+				} else if ( stream.eatWhile( /[^#\s\u00a0\|\]\{\}\&]/ ) ) { //FIXME '{{' brokes Link, sample [[z{{page]]
 					return 'attribute mw-underline';
 				} else if ( stream.peek() === '&' ) { // check for character entity references
 					style = ['attribute', 'mw-underline'];
@@ -66,7 +66,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 					state.ImInBlock.pop(); //FIXME: it is wrong Link
 					return null;
 				}
-				if ( stream.eatWhile( /[^\|\]\&]/ ) ) { //FIXME '{{' brokes Link, sample [[z{{page]]
+				if ( stream.eatWhile( /[^\|\]\{\}\&]/ ) ) { //FIXME '{{' brokes Link, sample [[z{{page]]
 					mustEat = false;
 					style = ['attribute'];
 				} else if ( stream.peek() === '&' ) {
@@ -86,7 +86,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 					return 'attribute';
 				}
 
-				if ( stream.eatWhile( /[^\]\s\u00a0\&]/ ) ) {
+				if ( stream.eatWhile( /[^\]\s\u00a0\&\}\[\]\{]/ ) ) {
 					mustEat = false;
 					style = ['mw-underline'];
 				} else if ( stream.peek() === '&' ) {
@@ -125,13 +125,13 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 				}
 				break;
 			case 'TemplateArgument':
-				if ( state.bTempArgName && stream.eatWhile( /[^=\}\|<\{\&]/ ) ) {
+				if ( state.bTempArgName && stream.eatWhile( /[^=\[\]\}\|<\{\&]/ ) ) {
 					state.bTempArgName = false;
 					if ( stream.eat( '=' ) ) {
 						return 'string strong';
 					}
 					return 'string';
-				} else if ( stream.eatWhile( /[^\}\|<\{\&]/ ) ) {
+				} else if ( stream.eatWhile( /[^\[\]\}\|<\{\&]/ ) ) {
 					return 'string';
 				} else if ( stream.eat( '|' ) ) {
 					state.bTempArgName = true;
@@ -168,7 +168,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 				style = ['keyword'];
 				break;
 			case 'ParserFunctionArgument':
-				if ( stream.eatWhile( /[^\}\|<\{\&]/ ) ) {
+				if ( stream.eatWhile( /[^\[\]\}\|<\{\&]/ ) ) {
 					return 'string-2';
 				} else if ( stream.eat( '|' ) ) {
 					return 'keyword strong';
@@ -179,17 +179,25 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 				style.push( 'string-2' );
 				break;
 			case 'TagName':
-				var tmp = stream.match( /[^>\/\s\u00a0<\{\&]*/ )[0];
+				tmp = stream.match( /[^>\/\s\u00a0<\{\&]*/ );
 				if ( tmp ) {
+					tmp = tmp[0].toLowerCase();
 					if ( stream.eatSpace() || /[>\/\s\u00a0]/.test( stream.peek() ) ) {
 						state.ImInBlock.pop();
 						state.ImInBlock.push( 'TagAttribute' );
-						state.ImInTag.push( tagName === true ? tmp : null );
+						if ( isTagNameClear ) {
+							if ( config.mwextTags.indexOf( tmp ) >= 0 ) {
+								isTagNameClear = false;
+								state.ImInTag.push( tmp );
+								return 'keyword';
+							}
+						} else {
+							state.ImInTag.push( null );
+						}
 					}
-					tagName = false;
 					return 'tag';
 				}
-				tagName = false;
+				isTagNameClear = false;
 				break;
 			case 'TagAttribute':
 				var attributName = stream.eatWhile( /[^>\/\s\u00a0<\{\&]/ );
@@ -200,20 +208,28 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 //					}
 					return 'attribute';
 				}
+				if ( stream.match( '/>') ) {
+					state.ImInBlock.pop();
+					return 'tag bracket';
+				}
 				if ( stream.eat( '>' ) ) {
 					state.ImInBlock.pop();
-					state.ImInBlock.push( 'InsideTag' );
+					if ( state.ImInTag[ state.ImInTag.length - 1 ] ) {
+						state.ImInBlock.push( 'InsideTag' );
+					}
 					return 'tag bracket';
 				}
 				break;
 			case 'TagClose':
-				if ( stream.eatWhile( /[^>\/\s\u00a0<\{\&]/ ) ) {
+				state.ImInBlock.pop();
+				tmp = stream.match( /[^>\s\u00a0<\{]*/ );
+				if ( tmp ) {
+					tmp = tmp[0].toLowerCase();
 					stream.eatSpace();
-					if ( /[^<\{\&]/.test( stream.peek() ) ) {
-						state.ImInBlock.pop();
+					if ( /[>]/.test( stream.peek() ) ) {
 						state.ImInBlock.push( 'TagCloseEnd' );
 					}
-					return 'tag';
+					return config.mwextTags.indexOf( tmp ) >= 0 ? 'keyword' : 'tag';
 				}
 				break;
 			case 'TagCloseEnd':
@@ -225,17 +241,36 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 				return 'error';
 			case 'InsideTag':
 				var tag = state.ImInTag[ state.ImInTag.length - 1 ];
-				if ( tag === 'pre' ) {
+				if ( tag === 'pre' || tag === 'nowiki' ) {
+					var st = tag === 'pre' ? 'qualifier' : '';
 					if ( stream.eatWhile( /[^&<]/ ) ) {
-						return 'qualifier';
+						return st;
 					} else if ( stream.peek() === '&' ) {
-						style = ['qualifier'];
-					} else if ( stream.match( '</pre>') ) {
-						stream.backUp( 6 );
-						state.ImInBlock.pop();
+						style = [st];
 					} else {
-						stream.next();
-						return 'qualifier';
+						re = new RegExp( '</' + tag + '\\s*>', 'i' );
+						mt = stream.match( re );
+						if ( mt ) {
+							stream.backUp( mt[0].length );
+							state.ImInBlock.pop();
+						} else {
+							stream.next();
+							return st;
+						}
+					}
+				} else {
+					if ( stream.eatWhile( /[^<]/ ) ) {
+						return 'string-2';
+					} else {
+						re = new RegExp( '</' + tag + '\\s*>', 'i' );
+						mt = stream.match( re );
+						if ( mt ) {
+							stream.backUp( mt[0].length );
+							state.ImInBlock.pop();
+						} else {
+							stream.next();
+							return 'string-2';
+						}
 					}
 				}
 				break;
@@ -322,15 +357,12 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 						return chain( inBlock( 'comment', '-->' ) );
 					}
 					if ( stream.eat( '/' ) ) {
-						if ( /[\w\{<]/.test( stream.peek() ) ) {
-							if ( state.ImInBlock.length > 0 && state.ImInBlock[state.ImInBlock.length -1] === 'TagName' ) { // <nowiki><</nowiki>
-								state.ImInBlock.pop();
-							}
+						if ( /[^\s\u00a0\}\[\]<\{\'\|\&\:]/.test( stream.peek() ) ) {
 							state.ImInBlock.push( 'TagClose' );
 							return 'tag bracket';
 						}
-					} else if ( /[\w\{<]/.test( stream.peek() ) ) {
-						tagName = true;
+					} else if ( /[^\s\u00a0\}\[\]<\{\'\|\&\:]/.test( stream.peek() ) ) {
+						isTagNameClear = true;
 						state.ImInBlock.push( 'TagName' );
 						return 'tag bracket';
 					}

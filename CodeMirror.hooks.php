@@ -18,11 +18,12 @@ class CodeMirrorHooks {
 			$wgParser->firstCallInit();
 		}
 		self::$globalVariableScript['FunctionSynonyms'] = $wgParser->mFunctionSynonyms;
+		self::$globalVariableScript['Tags'] = $wgParser->getTags();
 		$output->addModules( 'ext.CodeMirror' );
 		return true;
 	}
 
-	public static function onMakeGlobalVariablesScript( array &$vars, OutputPage $out ) {
+	public static function onMakeGlobalVariablesScript( array &$vars ) {
 		foreach ( self::$globalVariableScript as $key=> $value ) {
 			$vars["extCodeMirror$key"] = $value;
 		}
