@@ -4,6 +4,7 @@ jQuery( document ).ready( function ( $ ) {
 	var codeMirror = CodeMirror.fromTextArea( textbox1[0], {
 			mwextFunctionSynonyms: mw.config.get( 'extCodeMirrorFunctionSynonyms' ),
 			mwextTags: mw.config.get( 'extCodeMirrorTags' ),
+			mwextDoubleUnderscore: mw.config.get( 'extCodeMirrorDoubleUnderscore' ),
 			styleActiveLine: true,
 			//lineNumbers: true,
 			lineWrapping: true,

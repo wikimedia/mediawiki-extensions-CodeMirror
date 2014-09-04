@@ -361,8 +361,17 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 						}
 					}
 					break;
+				case '_':
+					name = stream.match( /_[^\s\u00a0_>\}\[\]<\{\'\|\&\:]*__/ );
+					if ( name ) {
+						name = '_' + name[0];
+						if ( config.mwextDoubleUnderscore[0][name.toLowerCase()] || config.mwextDoubleUnderscore[1][name] ) {
+							return 'keyword strong';
+						}
+					}
+					break;
 			}
-			stream.eatWhile( /[^\s\u00a0>\}\[\]<\{\'\|\&\:]/ );
+			stream.eatWhile( /[^\s\u00a0_>\}\[\]<\{\'\|\&\:]/ );
 			if ( state.isBold ) {
 				style.push( 'strong' );
 			}
