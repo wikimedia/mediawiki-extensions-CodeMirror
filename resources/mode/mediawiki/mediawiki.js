@@ -327,7 +327,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 						name = stream.match( /([^\s\u00a0\}\[\]<\{\'\|\&\:]+)(\:|[\s\u00a0]*)(\}\}?)?(.)?/ );
 						if ( name ) {
 							stream.backUp( name[0].length );
-							if ( (name[2] === ':' || name[4] === undefined || name[3] === '}}') && (config.mwextFunctionSynonyms[0][name[1].toLowerCase()] || config.mwextFunctionSynonyms[1][name[1]]) ) {
+							if ( (name[2] === ':' || name[4] === undefined || name[3] === '}}') && (name[1].toLowerCase() in config.mwextFunctionSynonyms[0] || name[1] in config.mwextFunctionSynonyms[1]) ) {
 								state.ImInBlock.push( 'ParserFunctionName' );
 								return 'keyword';
 							}
@@ -365,7 +365,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 					name = stream.match( /_[^\s\u00a0_>\}\[\]<\{\'\|\&\:]*__/ );
 					if ( name ) {
 						name = '_' + name[0];
-						if ( config.mwextDoubleUnderscore[0][name.toLowerCase()] || config.mwextDoubleUnderscore[1][name] ) {
+						if ( name.toLowerCase() in config.mwextDoubleUnderscore[0] || name in config.mwextDoubleUnderscore[1] ) {
 							return 'keyword strong';
 						}
 					}
