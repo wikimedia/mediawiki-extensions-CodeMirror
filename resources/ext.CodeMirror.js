@@ -25,7 +25,7 @@ jQuery( document ).ready( function ( $ ) {
 			 * Get the contents of the textarea
 			 */
 			getContents: function () {
-				return this.doc.getValue();
+				return codeMirror.doc.getValue();
 			},
 
 			/**
@@ -33,7 +33,7 @@ jQuery( document ).ready( function ( $ ) {
 			 * in some browsers (IE/Opera)
 			 */
 			getSelection: function () {
-				return this.doc.getSelection();
+				return codeMirror.doc.getSelection();
 			},
 
 			/**
@@ -41,109 +41,115 @@ jQuery( document ).ready( function ( $ ) {
 			 * inserting text at the caret when selection is empty.
 			 */
 			encapsulateSelection: function ( options ) {
-				var insertText, selText,
-						selectPeri = options.selectPeri,
-						pre = options.pre, post = options.post;
+				return this.each( function () {
+					var insertText, selText,
+							selectPeri = options.selectPeri,
+							pre = options.pre, post = options.post;
 
-				if ( options.selectionStart !== undefined ) {
-					//fn[command].call( this, options );
-					fn.setSelection( { 'start': options.selectionStart, 'end': options.selectionEnd } ); // not tested
-				}
-
-				selText = this.doc.getSelection();
-				if ( !selText ) {
-					selText = options.peri;
-				} else if ( options.replace ) {
-					selectPeri = false;
-					selText = options.peri;
-				} else {
-					selectPeri = false;
-					while ( selText.charAt( selText.length - 1 ) === ' ' ) {
-						// Exclude ending space char
-						selText = selText.substring( 0, selText.length - 1 );
-						post += ' ';
+					if ( options.selectionStart !== undefined ) {
+						//fn[command].call( this, options );
+						fn.setSelection( { 'start': options.selectionStart, 'end': options.selectionEnd } ); // not tested
 					}
-					while ( selText.charAt( 0 ) === ' ' ) {
-						// Exclude prepending space char
-						selText = selText.substring( 1, selText.length );
-						pre = ' ' + pre;
-					}
-				}
 
-				/**
-				* Do the splitlines stuff.
-				*
-				* Wrap each line of the selected text with pre and post
-				*/
-				function doSplitLines( selText, pre, post ) {
-					var i,
-						insertText = '',
-						selTextArr = selText.split( '\n' );
-					for ( i = 0; i < selTextArr.length; i++ ) {
-						insertText += pre + selTextArr[i] + post;
-						if ( i !== selTextArr.length - 1 ) {
-							insertText += '\n';
+					selText = codeMirror.doc.getSelection();
+					if ( !selText ) {
+						selText = options.peri;
+					} else if ( options.replace ) {
+						selectPeri = false;
+						selText = options.peri;
+					} else {
+						selectPeri = false;
+						while ( selText.charAt( selText.length - 1 ) === ' ' ) {
+							// Exclude ending space char
+							selText = selText.substring( 0, selText.length - 1 );
+							post += ' ';
+						}
+						while ( selText.charAt( 0 ) === ' ' ) {
+							// Exclude prepending space char
+							selText = selText.substring( 1, selText.length );
+							pre = ' ' + pre;
 						}
 					}
-					return insertText;
-				}
 
-				if ( options.splitlines ) {
-					selectPeri = false;
-					insertText = doSplitLines( selText, pre, post );
-				} else {
-					insertText = pre + selText + post;
-				}
-
-				var startCursor = this.doc.getCursor( true );
-				if ( options.ownline ) {
-					if ( startCursor.ch !== 0 ) {
-						insertText = '\n' + insertText;
-						pre += '\n';
+					/**
+					* Do the splitlines stuff.
+					*
+					* Wrap each line of the selected text with pre and post
+					*/
+					function doSplitLines( selText, pre, post ) {
+						var i,
+							insertText = '',
+							selTextArr = selText.split( '\n' );
+						for ( i = 0; i < selTextArr.length; i++ ) {
+							insertText += pre + selTextArr[i] + post;
+							if ( i !== selTextArr.length - 1 ) {
+								insertText += '\n';
+							}
+						}
+						return insertText;
 					}
-					var endCursor = this.doc.getCursor( false );
-					if ( this.doc.getLine( endCursor.line ).length !== endCursor.ch ) {
-						insertText += '\n';
-						post += '\n';
+
+					if ( options.splitlines ) {
+						selectPeri = false;
+						insertText = doSplitLines( selText, pre, post );
+					} else {
+						insertText = pre + selText + post;
 					}
-				}
 
-				this.doc.replaceSelection( insertText );
+					var startCursor = codeMirror.doc.getCursor( true );
+					if ( options.ownline ) {
+						if ( startCursor.ch !== 0 ) {
+							insertText = '\n' + insertText;
+							pre += '\n';
+						}
+						var endCursor = codeMirror.doc.getCursor( false );
+						if ( codeMirror.doc.getLine( endCursor.line ).length !== endCursor.ch ) {
+							insertText += '\n';
+							post += '\n';
+						}
+					}
 
-				if ( selectPeri ) {
-					this.doc.setSelection(
-							this.doc.posFromIndex( this.doc.indexFromPos( startCursor ) + pre.length ),
-							this.doc.posFromIndex( this.doc.indexFromPos( startCursor ) + pre.length + selText.length )
-						);
-				}
+					codeMirror.doc.replaceSelection( insertText );
+
+					if ( selectPeri ) {
+						codeMirror.doc.setSelection(
+								codeMirror.doc.posFromIndex( codeMirror.doc.indexFromPos( startCursor ) + pre.length ),
+								codeMirror.doc.posFromIndex( codeMirror.doc.indexFromPos( startCursor ) + pre.length + selText.length )
+							);
+					}
+				});
 			},
 
 			/**
 			 * Get the position (in resolution of bytes not necessarily characters)
 			 * in a textarea
 			 */
-			 getCaretPosition: function ( options ) {
-				 var caretPos = this.doc.indexFromPos( this.doc.getCursor( true ) );
-				 if ( options.startAndEnd ) {
-					 var endPos = this.doc.indexFromPos( this.doc.getCursor( false ) );
-					 return [ caretPos, endPos ];
-				 }
-				 return caretPos;
-			 },
+			getCaretPosition: function ( options ) {
+				var caretPos = codeMirror.doc.indexFromPos( codeMirror.doc.getCursor( true ) );
+				if ( options.startAndEnd ) {
+					var endPos = codeMirror.doc.indexFromPos( codeMirror.doc.getCursor( false ) );
+					return [ caretPos, endPos ];
+				}
+				return caretPos;
+			},
 
 			 setSelection: function ( options ) {
-				 return this.doc.setSelection( this.doc.posFromIndex( options.start ), this.doc.posFromIndex( options.end ) );
+				return this.each( function () {
+					codeMirror.doc.setSelection( codeMirror.doc.posFromIndex( options.start ), codeMirror.doc.posFromIndex( options.end ) );
+				});
 			 },
 
-			 /**
-			 * Scroll a textarea to the current cursor position. You can set the cursor
-			 * position with setSelection()
-			 * @param options boolean Whether to force a scroll even if the caret position
-			 *  is already visible. Defaults to false
-			 */
-			 scrollToCaretPosition: function ( /* options */ ) {
-				 this.scrollIntoView( null );
-			 }
+			/**
+			* Scroll a textarea to the current cursor position. You can set the cursor
+			* position with setSelection()
+			* @param options boolean Whether to force a scroll even if the caret position
+			*  is already visible. Defaults to false
+			*/
+			scrollToCaretPosition: function ( /* options */ ) {
+				return this.each(function () {
+					codeMirror.scrollIntoView( null );
+				});
+			}
 		};
 
 		switch ( command ) {
@@ -197,7 +203,7 @@ jQuery( document ).ready( function ( $ ) {
 				break;
 		}
 
-		retval = fn[command].call( codeMirror, options );
+		retval = fn[command].call( this, options );
 		codeMirror.focus();
 
 		return retval;
