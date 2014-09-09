@@ -14,6 +14,11 @@ jQuery( document ).ready( function ( $ ) {
 			//autoCloseBrackets: true,
 			mode: 'text/mediawiki'
 		} );
+
+	if ( !codeMirror ) {
+		return;
+	}
+
 	codeMirror.setSize( null, textbox1.height() );
 
 	// Replace jquery.textSelection.js

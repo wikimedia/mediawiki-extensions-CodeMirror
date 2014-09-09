@@ -18,7 +18,8 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 				'strike', 'strong', 'tt', 'var', 'div', 'center',
 				'blockquote', 'ol', 'ul', 'dl', 'table', 'caption', 'pre',
 				'ruby', 'rb', 'rp', 'rt', 'rtc', 'p', 'span', 'abbr', 'dfn',
-				'kbd', 'samp', 'data', 'time', 'mark', 'br', 'wbr', 'hr', 'li', 'dt', 'dd', 'td', 'th', 'tr'];
+				'kbd', 'samp', 'data', 'time', 'mark', 'br', 'wbr', 'hr', 'li', 'dt', 'dd', 'td', 'th', 'tr',
+				'noinclude', 'includeonly', 'onlyinclude'];
 
 	function inWikitext( stream, state ) {
 		function chain( parser ) {
@@ -40,21 +41,21 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 					state.ImInBlock.pop(); //FIXME: it is wrong Link
 					return null;
 				} else if ( stream.eatWhile( /[^#\s\u00a0\|\]\{\}\&]/ ) ) { //FIXME '{{' brokes Link, sample [[z{{page]]
-					return 'attribute mw-underline';
+					return 'mw-link-pagename mw-underline';
 				} else if ( stream.peek() === '&' ) { // check for character entity references
-					style = ['attribute', 'mw-underline'];
+					style = ['mw-link', 'mw-underline'];
 					mnemonicStyle = ['mw-underline'];
 				} else if ( stream.eat( '#' ) ) {
 					state.ImInBlock.push( 'LinkToSection' );
-					return 'attribute strong';
+					return 'mw-link';
 				} else if ( stream.eat( '|' ) ) {
 					stream.eatSpace();
 					state.ImInBlock.pop();
 					state.ImInBlock.push( 'LinkText' );
-					return 'attribute strong';
+					return 'mw-link-delimiter';
 				} else if ( stream.eatSpace() ) {
 					if ( /[^#\|\]]/.test( stream.peek() ) ) {
-						return 'attribute mw-underline strong';
+						return 'mw-link-pagename mw-underline';
 					}
 					return null;
 				} else if ( stream.match( ']]' ) ) {
@@ -62,7 +63,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 //					if ( !stream.eatSpace() ) {
 //						state.ImInBlock.push( 'LinkTrail' );
 //					}
-					return 'attribute';
+					return 'mw-link-bracket';
 				}
 				break;
 			case 'LinkToSection':
@@ -73,12 +74,12 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 				}
 				if ( stream.eatWhile( /[^\|\]\{\}\&]/ ) ) { //FIXME '{{' brokes Link, sample [[z{{page]]
 					mustEat = false;
-					style = ['attribute'];
+					style = ['mw-link-tosection'];
 				} else if ( stream.peek() === '&' ) {
-					style = ['attribute'];
+					style = ['mw-link-tosection'];
 				} else {
 					state.ImInBlock.pop();
-					return 'attribute';
+					return 'mw-link-tosection';
 				}
 				break;
 			case 'LinkText':
@@ -88,7 +89,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 //					if ( !stream.eatSpace() ) {
 //						state.ImInBlock.push( 'LinkTrail' );
 //					}
-					return 'attribute';
+					return 'mw-link-bracket';
 				}
 
 				if ( stream.eatWhile( /[^\]\s\u00a0\&\}\[\]\{]/ ) ) {
@@ -108,91 +109,99 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 //				break;
 			case 'TemplatePageName':
 				if ( stream.match( /[\s\u00a0]*[^\s\u00a0\}\|<\{\&]/ ) ) {
-					return 'attribute strong mw-underline';
+					return 'mw-templatepage-name';
 				}
 				if ( stream.eat( '|' ) ) {
 					state.ImInBlock.pop();
 					state.ImInBlock.push( 'TemplateArgument' );
 					state.bTempArgName = true;
 					stream.eatSpace();
-					return 'attribute strong';
+					return 'mw-templatepage-delimiter';
 				}
 				if ( stream.match( '}}' ) ) {
 					state.ImInBlock.pop();
-					return 'attribute';
+					return 'mw-templatepage-bracket';
 				}
 				if ( stream.peek() === '&' ) {
-					style = ['attribute', 'strong', 'mw-underline'];
-					mnemonicStyle = ['mw-underline'];
+					style = ['mw-templatepage-name'];
+					mnemonicStyle = ['mw-templatepage-name-mnemonic'];
 				} else if ( stream.match( /[\s\u00a0]*&/ ) ) { // {{ PAGE & NAME }}
 					stream.backUp(1);
-					return 'attribute strong mw-underline';
+					return 'mw-templatepage-name';
 				}
 				break;
 			case 'TemplateArgument':
 				if ( state.bTempArgName && stream.eatWhile( /[^=\[\]\}\|<\{\&]/ ) ) {
 					state.bTempArgName = false;
 					if ( stream.eat( '=' ) ) {
-						return 'string strong';
+						return 'mw-templatepage-argument-name';
 					}
-					return 'string';
+					return 'mw-templatepage';
 				} else if ( stream.eatWhile( /[^\[\]\}\|<\{\&]/ ) ) {
-					return 'string';
+					return 'mw-templatepage';
 				} else if ( stream.eat( '|' ) ) {
 					state.bTempArgName = true;
-					return 'attribute strong';
+					return 'mw-templatepage-delimiter';
 				} else if ( stream.match( '}}' ) ) {
 					state.ImInBlock.pop();
-					return 'attribute';
+					return 'mw-templatepage-bracket';
 				}
-				style.push( 'string' );
+				style.push( 'mw-templatepage' );
 				break;
 			case 'TemplateVariable':
 				if ( stream.eatWhile( /[^\}\[\]<\{\|\&]/ ) ) {
-					return 'variable-2';
+					return 'mw-templatevariable-name';
 				}
+				if ( stream.eat('|') ) {
+					state.ImInBlock.pop();
+					state.ImInBlock.push( 'TemplateVariableDefault' );
+					return 'mw-templatevariable-delimiter';
+				}
+				// break is not necessary here
+				/*falls through*/
+			case 'TemplateVariableDefault':
 				if ( stream.match( '}}}' ) ) {
 					state.ImInBlock.pop();
-					return 'variable-2';
+					return 'mw-templatevariable-bracket';
 				}
-				style = ['variable-2'];
+				style = ['mw-templatevariable'];
 				break;
 			case 'ParserFunctionName':
 				if ( stream.match( /#?[^\s\u00a0\}\[\]<\{\'\|\&\:]+/ ) ) { // FIXME: {{#name}} and and {{uc}} are wrong, must have ':'
-					return 'keyword strong';
+					return 'mw-parserfunction-name';
 				}
 				if ( stream.eat( ':' ) ) {
 					state.ImInBlock.pop();
 					state.ImInBlock.push( 'ParserFunctionArgument' );
-					return 'keyword strong';
+					return 'mw-parserfunction-delimiter';
 				}
 				if ( stream.match( /[\s\u00a0]*\}\}/ ) ) {
 					state.ImInBlock.pop();
-					return 'keyword';
+					return 'mw-parserfunction-bracket';
 				}
-				style = ['keyword'];
+				style = ['mw-parserfunction'];
 				break;
 			case 'ParserFunctionArgument':
 				if ( stream.eatWhile( /[^\[\]\}\|<\{\&]/ ) ) {
-					return 'string-2';
+					return 'mw-parserfunction';
 				} else if ( stream.eat( '|' ) ) {
-					return 'keyword strong';
+					return 'mw-parserfunction-delimiter';
 				} else if ( stream.match( '}}' ) ) {
 					state.ImInBlock.pop();
-					return 'keyword';
+					return 'mw-parserfunction-bracket';
 				}
-				style.push( 'string-2' );
+				style.push( 'mw-parserfunction' );
 				break;
 			case 'TagName':
-				name = stream.match( /[^>\/\s\u00a0]*/ )[0].toLowerCase();
+				name = stream.match( /[^>\/\|\s\u00a0]*/ )[0].toLowerCase();
 				state.ImInBlock.pop();
 				state.ImInBlock.push( 'TagAttribute' );
 				if ( config.mwextTags.indexOf( name ) >= 0 ) {
 					state.ImInTag.push( name );
-					return 'keyword';
+					return 'mw-tagext-name';
 				}
 				state.ImInTag.push( null );
-				return 'tag';
+				return 'mw-tag-name';
 			case 'TagAttribute':
 				var attributName = stream.eatWhile( /[^>\/\s\u00a0<\{\&]/ );
 				if ( attributName ) {
@@ -200,19 +209,21 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 //					if ( stream.eat( '=' ) ) {
 //						//state.tokenize = inTagAttributeValue( attributName );
 //					}
-					return 'attribute';
+					return 'mw-tag-attribute';
 				}
 				if ( stream.match( '/>') ) {
 					state.ImInBlock.pop();
-					return 'tag bracket';
+					return 'mw-tag-bracket';
 				}
 				if ( stream.eat( '>' ) ) {
 					state.ImInBlock.pop();
 					if ( state.ImInTag[ state.ImInTag.length - 1 ] ) {
 						state.ImInBlock.push( 'InsideTag' );
+						return 'mw-tagext-bracket';
 					}
-					return 'tag bracket';
+					return 'mw-tag-bracket';
 				}
+				style = ['mw-tag-attribute'];
 				break;
 			case 'TagClose':
 				state.ImInBlock.pop();
@@ -223,20 +234,22 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 					if ( /[>]/.test( stream.peek() ) ) {
 						state.ImInBlock.push( 'TagCloseEnd' );
 					}
-					return config.mwextTags.indexOf( name ) >= 0 ? 'keyword' : 'tag';
+					return config.mwextTags.indexOf( name ) >= 0 ? 'mw-tagext-name' : 'mw-tag-name';
 				}
 				break;
 			case 'TagCloseEnd':
 				if ( stream.eat( '>' ) ) {
 					state.ImInBlock.pop();
-					state.ImInTag.pop();
-					return 'tag bracket';
+					if ( state.ImInTag.pop() ) {
+						return 'mw-tagext-bracket';
+					}
+					return 'mw-tag-bracket';
 				}
 				return 'error';
 			case 'InsideTag':
 				var tag = state.ImInTag[ state.ImInTag.length - 1 ];
 				if ( tag === 'pre' || tag === 'nowiki' ) {
-					var st = tag === 'pre' ? 'qualifier' : '';
+					var st = tag === 'pre' ? 'mw-tag-pre' : 'mw-tag-nowiki';
 					if ( stream.eatWhile( /[^&<]/ ) ) {
 						return st;
 					} else if ( stream.peek() === '&' ) {
@@ -254,7 +267,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 					}
 				} else {
 					if ( stream.eatWhile( /[^<]/ ) ) {
-						return 'string-2';
+						return 'mw-tagext';
 					} else {
 						re = new RegExp( '</' + tag + '\\s*>', 'i' );
 						mt = stream.match( re );
@@ -263,7 +276,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 							state.ImInBlock.pop();
 						} else {
 							stream.next();
-							return 'string-2';
+							return 'mw-tagext';
 						}
 					}
 				}
@@ -274,6 +287,12 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 					state.isItalic = false;
 					if ( stream.eat( ' ' ) ) {
 						return 'mw-skipformatting';
+					}
+					if ( stream.match( /[\*#]+:*/ ) ) {
+						return 'mw-list';
+					}
+					if ( stream.match( /:+[\*#]*/ ) ) {
+						return 'mw-indenting';
 					}
 				}
 				if ( stream.peek() === '\'' ) {
@@ -307,7 +326,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 				ok = stream.eatWhile( /[\w\.\-:]/ ) && stream.eat( ';' );
 			}
 			if ( ok ) {
-				mnemonicStyle.push( 'atom' );
+				mnemonicStyle.push( 'mw-mnemonic' );
 				return mnemonicStyle.join(' ');
 			}
 		} else {
@@ -317,11 +336,11 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 					if ( stream.match( '{{' ) ) { // Variable
 						stream.eatSpace();
 						state.ImInBlock.push( 'TemplateVariable' );
-						return 'variable-2';
+						return 'mw-templatevariable-bracket';
 					} else if ( stream.match( /\{[\s\u00a0]*/ ) ) {
 						if ( stream.peek() === '#' ) { // Parser function
 							state.ImInBlock.push( 'ParserFunctionName' );
-							return 'keyword';
+							return 'mw-parserfunction-bracket';
 						}
 						// Check for parser function without '#'
 						name = stream.match( /([^\s\u00a0\}\[\]<\{\'\|\&\:]+)(\:|[\s\u00a0]*)(\}\}?)?(.)?/ );
@@ -329,12 +348,12 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 							stream.backUp( name[0].length );
 							if ( (name[2] === ':' || name[4] === undefined || name[3] === '}}') && (name[1].toLowerCase() in config.mwextFunctionSynonyms[0] || name[1] in config.mwextFunctionSynonyms[1]) ) {
 								state.ImInBlock.push( 'ParserFunctionName' );
-								return 'keyword';
+								return 'mw-parserfunction-bracket';
 							}
 						}
 						// Template
 						state.ImInBlock.push( 'TemplatePageName' );
-						return 'attribute';
+						return 'mw-templatepage-bracket';
 					}
 					break;
 				case '[':
@@ -342,22 +361,26 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 						stream.eatSpace();
 						if ( /[^\]\|\[\{]/.test( stream.peek() ) ) {
 							state.ImInBlock.push( 'Link' );
-							return 'attribute';
+							return 'mw-link-bracket';
 						}
 					}
 					break;
 				case '<':
-					if ( stream.match( '!--' ) ) {
-						return chain( inBlock( 'comment', '-->' ) );
+					if ( stream.match( '!--' ) ) { // coment
+						return chain( inBlock( 'mw-comment', '-->' ) );
 					}
 					tmp = stream.eat( '/' ) ? 'TagClose' : 'TagName';
 					name = stream.match( /[^>\/\s\u00a0]*/ );
 					if ( name ) {
 						stream.backUp( name[0].length );
 						name = name[0].toLowerCase();
-						if ( config.mwextTags.indexOf( name ) >= 0 || permittedHtmlTags.indexOf( name ) >= 0 ) {
+						if ( config.mwextTags.indexOf( name ) >= 0 ) { // Parser function
 							state.ImInBlock.push( tmp );
-							return 'tag bracket';
+							return 'mw-tagext-bracket';
+						}
+						if ( permittedHtmlTags.indexOf( name ) >= 0 ) { // Html tag
+							state.ImInBlock.push( tmp );
+							return 'mw-tag-bracket';
 						}
 					}
 					break;
@@ -366,7 +389,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 					if ( name ) {
 						name = '_' + name[0];
 						if ( name.toLowerCase() in config.mwextDoubleUnderscore[0] || name in config.mwextDoubleUnderscore[1] ) {
-							return 'keyword strong';
+							return 'mw-parserfunction-name';
 						}
 					}
 					break;
