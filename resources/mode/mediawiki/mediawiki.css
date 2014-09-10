@@ -8,47 +8,47 @@
 .cm-mw-list {font-weight: bold; background-color: #eee;}
 .cm-mw-indenting {font-weight: bold; background-color: #ddd;}
 .cm-mw-mnemonic {color: #040;}
-.cm-mw-comment {color: #aaa;}
+.cm-mw-comment {color: #aaa; font-weight: normal;}
 
-.cm-mw-section-1 {font-size: 1.8em;}
-.cm-mw-section-2 {font-size: 1.5em;}
-.cm-mw-section-3 {font-weight: bold;}
-.cm-mw-section-4 {font-weight: bold;}
-.cm-mw-section-5 {font-weight: bold;}
-.cm-mw-section-6 {font-weight: bold;}
+pre.cm-mw-section-1 {font-size: 1.8em;}
+pre.cm-mw-section-2 {font-size: 1.5em;}
+pre.cm-mw-section-3 {font-weight: bold;}
+pre.cm-mw-section-4 {font-weight: bold;}
+pre.cm-mw-section-5 {font-weight: bold;}
+pre.cm-mw-section-6 {font-weight: bold;}
 .cm-mw-section-heading {color: #08f;}
 
-.cm-mw-templatepage {color: #a11;}
+.cm-mw-templatepage {color: #a11;  font-weight: normal;}
 .cm-mw-templatepage-name {color: #a11; font-weight: bold; text-decoration: underline;}
-.cm-mw-templatepage-name-mnemonic {text-decoration: underline;}
+.cm-mw-templatepage-name-mnemonic {text-decoration: underline; font-weight: normal;}
 .cm-mw-templatepage-argument-name {color: #a11; font-weight: bold;}
 .cm-mw-templatepage-delimiter {color: #a11; font-weight: bold;}
 .cm-mw-templatepage-bracket {color: #a11; font-weight: bold;}
 
-.cm-mw-templatevariable {color: #f50;}
+.cm-mw-templatevariable {color: #f50;  font-weight: normal;}
 .cm-mw-templatevariable-name {color: #f50; font-weight: bold;}
-.cm-mw-templatevariable-bracket {color: #f50;}
+.cm-mw-templatevariable-bracket {color: #f50;  font-weight: normal;}
 .cm-mw-templatevariable-delimiter {color: #f50; font-weight: bold;}
 
-.cm-mw-parserfunction {color: #e0e;}
+.cm-mw-parserfunction {color: #e0e; font-weight: normal;}
 .cm-mw-parserfunction-name {color: #70a; font-weight: bold;}
 .cm-mw-parserfunction-bracket {color: #70a; font-weight: bold;}
 .cm-mw-parserfunction-delimiter {color: #70a; font-weight: bold;}
 
-.cm-mw-tagext {color: #e0e;}
+.cm-mw-tagext {color: #e0e; font-weight: normal;}
 .cm-mw-tagext-name {color: #70a; font-weight: bold;}
-.cm-mw-tagext-bracket {color: #70a;}
+.cm-mw-tagext-bracket {color: #70a; font-weight: normal;}
 
 .cm-mw-tag-name {color: #170; font-weight: bold;}
-.cm-mw-tag-bracket {color: #170;}
-.cm-mw-tag-attribute {color: #170; }
-.cm-mw-tag-pre {color: #444;}
-.cm-mw-tag-nowiki {color: #e0e;}
+.cm-mw-tag-bracket {color: #170; font-weight: normal;}
+.cm-mw-tag-attribute {color: #170; font-weight: normal;}
+.cm-mw-tag-pre {color: #444; font-weight: normal;}
+.cm-mw-tag-nowiki {color: #e0e; font-weight: normal;}
 
 .cm-mw-link-pagename {color: #219; font-weight: bold;}
-.cm-mw-link-tosection {color: #219;}
-.cm-mw-link-bracket {color: #219;}
+.cm-mw-link-tosection {color: #08f; font-weight: normal;}
+.cm-mw-link-bracket {color: #219; font-weight: normal;}
 .cm-mw-link-delimiter {color: #219; font-weight: bold;}
 
-.cm-mw-extlink {color: #219;}
+.cm-mw-extlink {color: #219; font-weight: normal;}
 .cm-mw-extlink-bracket {color: #219; font-weight: bold;}

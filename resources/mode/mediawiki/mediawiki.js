@@ -37,15 +37,14 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 
 		switch ( blockType ) {
 			case 'Section':
-				if ( stream.eatWhile( /[^&]/ ) ) {
+				if ( stream.eatWhile( /[^&<\[\{]/ ) ) {
 					if ( stream.eol() ) {
 						state.ImInBlock.pop();
 						state.ImInBlock.push( 'SectionEnd' );
 						stream.backUp( state.SectionN );
 					}
-					return 'mw-section-' + state.SectionN;
+					return null;
 				}
-				mnemonicStyle = style = ['mw-section-' + state.SectionN];
 				break;
 			case 'SectionEnd':
 				state.ImInBlock.pop();
@@ -326,12 +325,12 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 							}
 							break;
 						case '=':
-							tmp = stream.match( /(={0,5})(.+?=\1\s*)$/ );
+							tmp = stream.match( /(={0,5})(.+?(=\1\s*))$/ );
 							if ( tmp ) { // Title
 								stream.backUp( tmp[2].length );
 								state.ImInBlock.push( 'Section' );
-								state.SectionN = tmp[1].length + 1;
-								return 'mw-section-heading';
+								state.SectionN = tmp[3].length;
+								return 'mw-section-heading line-cm-mw-section-' + (tmp[1].length + 1);
 							}
 							break;
 					}
