@@ -2,45 +2,53 @@
 	text-decoration: underline;
 }
 
-.cm-s-default .cm-mw-skipformatting {
+.cm-mw-skipformatting {
 	background-color: #CCC;
 }
-.cm-s-default .cm-mw-list {font-weight: bold; background-color: #eee;}
-.cm-s-default .cm-mw-indenting {font-weight: bold; background-color: #ddd;}
-.cm-s-default .cm-mw-mnemonic {color: #040;}
-.cm-s-default .cm-mw-comment {color: #aaa;}
+.cm-mw-list {font-weight: bold; background-color: #eee;}
+.cm-mw-indenting {font-weight: bold; background-color: #ddd;}
+.cm-mw-mnemonic {color: #040;}
+.cm-mw-comment {color: #aaa;}
 
-.cm-s-default .cm-mw-templatepage {color: #a11;}
-.cm-s-default .cm-mw-templatepage-name {color: #a11; font-weight: bold; text-decoration: underline;}
-.cm-s-default .cm-mw-templatepage-name-mnemonic {text-decoration: underline;}
-.cm-s-default .cm-mw-templatepage-argument-name {color: #a11; font-weight: bold;}
-.cm-s-default .cm-mw-templatepage-delimiter {color: #a11; font-weight: bold;}
-.cm-s-default .cm-mw-templatepage-bracket {color: #a11; font-weight: bold;}
+.cm-mw-section-1 {font-size: 1.8em;}
+.cm-mw-section-2 {font-size: 1.5em;}
+.cm-mw-section-3 {font-weight: bold;}
+.cm-mw-section-4 {font-weight: bold;}
+.cm-mw-section-5 {font-weight: bold;}
+.cm-mw-section-6 {font-weight: bold;}
+.cm-mw-section-heading {color: #08f;}
 
-.cm-s-default .cm-mw-templatevariable {color: #f50;}
-.cm-s-default .cm-mw-templatevariable-name {color: #f50; font-weight: bold;}
-.cm-s-default .cm-mw-templatevariable-bracket {color: #f50;}
-.cm-s-default .cm-mw-templatevariable-delimiter {color: #f50; font-weight: bold;}
+.cm-mw-templatepage {color: #a11;}
+.cm-mw-templatepage-name {color: #a11; font-weight: bold; text-decoration: underline;}
+.cm-mw-templatepage-name-mnemonic {text-decoration: underline;}
+.cm-mw-templatepage-argument-name {color: #a11; font-weight: bold;}
+.cm-mw-templatepage-delimiter {color: #a11; font-weight: bold;}
+.cm-mw-templatepage-bracket {color: #a11; font-weight: bold;}
 
-.cm-s-default .cm-mw-parserfunction {color: #e0e;}
-.cm-s-default .cm-mw-parserfunction-name {color: #70a; font-weight: bold;}
-.cm-s-default .cm-mw-parserfunction-bracket {color: #70a; font-weight: bold;}
-.cm-s-default .cm-mw-parserfunction-delimiter {color: #70a; font-weight: bold;}
+.cm-mw-templatevariable {color: #f50;}
+.cm-mw-templatevariable-name {color: #f50; font-weight: bold;}
+.cm-mw-templatevariable-bracket {color: #f50;}
+.cm-mw-templatevariable-delimiter {color: #f50; font-weight: bold;}
 
-.cm-s-default .cm-mw-tagext {color: #e0e;}
-.cm-s-default .cm-mw-tagext-name {color: #70a; font-weight: bold;}
-.cm-s-default .cm-mw-tagext-bracket {color: #70a;}
+.cm-mw-parserfunction {color: #e0e;}
+.cm-mw-parserfunction-name {color: #70a; font-weight: bold;}
+.cm-mw-parserfunction-bracket {color: #70a; font-weight: bold;}
+.cm-mw-parserfunction-delimiter {color: #70a; font-weight: bold;}
 
-.cm-s-default .cm-mw-tag-name {color: #170; font-weight: bold;}
-.cm-s-default .cm-mw-tag-bracket {color: #170;}
-.cm-s-default .cm-mw-tag-attribute {color: #170; }
-.cm-s-default .cm-mw-tag-pre {color: #444;}
-.cm-s-default .cm-mw-tag-nowiki {color: #e0e;}
+.cm-mw-tagext {color: #e0e;}
+.cm-mw-tagext-name {color: #70a; font-weight: bold;}
+.cm-mw-tagext-bracket {color: #70a;}
 
-.cm-s-default .cm-mw-link-pagename {color: #219; font-weight: bold;}
-.cm-s-default .cm-mw-link-tosection {color: #219;}
-.cm-s-default .cm-mw-link-bracket {color: #219;}
-.cm-s-default .cm-mw-link-delimiter {color: #219; font-weight: bold;}
+.cm-mw-tag-name {color: #170; font-weight: bold;}
+.cm-mw-tag-bracket {color: #170;}
+.cm-mw-tag-attribute {color: #170; }
+.cm-mw-tag-pre {color: #444;}
+.cm-mw-tag-nowiki {color: #e0e;}
 
-.cm-s-default .cm-mw-extlink {color: #219;}
-.cm-s-default .cm-mw-extlink-bracket {color: #219; font-weight: bold;}
+.cm-mw-link-pagename {color: #219; font-weight: bold;}
+.cm-mw-link-tosection {color: #219;}
+.cm-mw-link-bracket {color: #219;}
+.cm-mw-link-delimiter {color: #219; font-weight: bold;}
+
+.cm-mw-extlink {color: #219;}
+.cm-mw-extlink-bracket {color: #219; font-weight: bold;}

@@ -30,12 +30,27 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 		var style = [];
 		var mnemonicStyle = []; // character entity references style
 		var sol = stream.sol();
-		var blockType = null, tmp, re, mt, name;
+		var blockType = null, ch = null,  tmp, re, mt, name;
 		if ( state.ImInBlock.length > 0 ) {
 			blockType = state.ImInBlock[state.ImInBlock.length - 1];
 		}
 
 		switch ( blockType ) {
+			case 'Section':
+				if ( stream.eatWhile( /[^&]/ ) ) {
+					if ( stream.eol() ) {
+						state.ImInBlock.pop();
+						state.ImInBlock.push( 'SectionEnd' );
+						stream.backUp( state.SectionN );
+					}
+					return 'mw-section-' + state.SectionN;
+				}
+				mnemonicStyle = style = ['mw-section-' + state.SectionN];
+				break;
+			case 'SectionEnd':
+				state.ImInBlock.pop();
+				stream.skipToEnd();
+				return 'mw-section-heading';
 			case 'Link':
 				if ( sol ) {
 					state.ImInBlock.pop(); //FIXME: it is wrong Link
@@ -282,19 +297,6 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 				}
 				break;
 			case null:
-				if ( sol ) {
-					state.isBold = false;
-					state.isItalic = false;
-					if ( stream.eat( ' ' ) ) {
-						return 'mw-skipformatting';
-					}
-					if ( stream.match( /[\*#]+:*/ ) ) {
-						return 'mw-list';
-					}
-					if ( stream.match( /:+[\*#]*/ ) ) {
-						return 'mw-indenting';
-					}
-				}
 				if ( stream.peek() === '\'' ) {
 					if ( stream.match( '\'\'\'' ) ) {
 						state.isBold = state.isBold ? false : true;
@@ -304,9 +306,38 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 						return null;
 					}
 				}
+				if ( sol ) {
+					state.isBold = false;
+					state.isItalic = false;
+					mustEat = false;
+					ch = stream.next();
+					switch ( ch ) {
+						case ' ':
+							return 'mw-skipformatting';
+						case '*':
+						case '#':
+							if ( stream.match( /[\*#]*:*/ ) ) {
+								return 'mw-list';
+							}
+							break;
+						case ':':
+							if ( stream.match( /:*[\*#]*/ ) ) {
+								return 'mw-indenting';
+							}
+							break;
+						case '=':
+							tmp = stream.match( /(={0,5})(.+?=\1\s*)$/ );
+							if ( tmp ) { // Title
+								stream.backUp( tmp[2].length );
+								state.ImInBlock.push( 'Section' );
+								state.SectionN = tmp[1].length + 1;
+								return 'mw-section-heading';
+							}
+							break;
+					}
+				}
 		}
 
-		var ch = null;
 		if ( mustEat ) {
 			ch = stream.next();
 		} else {
@@ -427,7 +458,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 
 	return {
 		startState: function() {
-			return { tokenize: inWikitext, ImInBlock: [], ImInTag:[], skipFormatting: false, bTempArgName: false, isBold: false, isItalic: false };
+			return { tokenize: inWikitext, ImInBlock: [], ImInTag:[], skipFormatting: false, bTempArgName: false, isBold: false, isItalic: false, SectionN: null };
 		},
 		token: function( stream, state ) {
 			return state.tokenize( stream, state );
