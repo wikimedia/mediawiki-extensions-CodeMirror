@@ -5,6 +5,7 @@ jQuery( document ).ready( function ( $ ) {
 			mwextFunctionSynonyms: mw.config.get( 'extCodeMirrorFunctionSynonyms' ),
 			mwextTags: mw.config.get( 'extCodeMirrorTags' ),
 			mwextDoubleUnderscore: mw.config.get( 'extCodeMirrorDoubleUnderscore' ),
+			mwextUrlProtocols: mw.config.get( 'extCodeMirrorUrlProtocols' ),
 			styleActiveLine: true,
 			//lineNumbers: true,
 			lineWrapping: true,

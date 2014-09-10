@@ -51,4 +51,6 @@ pre.cm-mw-section-6 {font-weight: bold;}
 .cm-mw-link-delimiter {color: #219; font-weight: bold;}
 
 .cm-mw-extlink {color: #219; font-weight: normal;}
+.cm-mw-extlink-protocol {color: #219; font-weight: bold;}
+.cm-mw-extlink-text {font-weight: normal;}
 .cm-mw-extlink-bracket {color: #219; font-weight: bold;}

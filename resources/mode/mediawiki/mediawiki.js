@@ -121,6 +121,45 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 //					style.push( 'mw-underline' );
 //				}
 //				break;
+			case 'ExternalLinkProtocol':
+				while ( state.ProtocolN > 0 ) {
+					state.ProtocolN--;
+					stream.next();
+				}
+				state.ImInBlock.pop();
+				if ( !stream.eol() ) {
+					state.ImInBlock.push( 'ExternalLink' );
+				}
+				return 'mw-extlink-protocol mw-underline';
+			case 'ExternalLink':
+				if ( stream.eatWhile( /[^\s\]]/ ) ) {
+					if ( stream.eol() ) {
+						state.ImInBlock.pop();
+					}
+					return 'mw-extlink mw-underline';
+				}
+				state.ImInBlock.pop();
+				if ( stream.eat( ']' ) ) {
+					return 'mw-extlink-bracket';
+				}
+				stream.eatSpace();
+				if ( !stream.eol() ) {
+					state.ImInBlock.push( 'ExternalLinkText' );
+				}
+				return null;
+			case 'ExternalLinkText':
+				stream.eatSpace();
+				if ( stream.eatWhile( /[^\]\s\u00a0]/ ) ) {
+					if ( stream.eol() ) {
+						state.ImInBlock.pop();
+					}
+					return 'mw-extlink-text mw-underline';
+				}
+				state.ImInBlock.pop();
+				if ( stream.eat( ']' ) ) {
+					return 'mw-extlink-bracket';
+				}
+				return null;
 			case 'TemplatePageName':
 				if ( stream.match( /[\s\u00a0]*[^\s\u00a0\}\|<\{\&]/ ) ) {
 					return 'mw-templatepage-name';
@@ -393,6 +432,15 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 							state.ImInBlock.push( 'Link' );
 							return 'mw-link-bracket';
 						}
+					} else {
+						re = new RegExp( config.mwextUrlProtocols, 'i' );
+						mt = stream.match( re );
+						if ( mt ) {
+							stream.backUp( mt[0].length );
+							state.ProtocolN = mt[0].length;
+							state.ImInBlock.push( 'ExternalLinkProtocol' );
+							return 'mw-extlink-bracket';
+						}
 					}
 					break;
 				case '<':
@@ -457,7 +505,7 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 
 	return {
 		startState: function() {
-			return { tokenize: inWikitext, ImInBlock: [], ImInTag:[], skipFormatting: false, bTempArgName: false, isBold: false, isItalic: false, SectionN: null };
+			return { tokenize: inWikitext, ImInBlock: [], ImInTag:[], skipFormatting: false, bTempArgName: false, isBold: false, isItalic: false, SectionN: null, ProtocolN: null };
 		},
 		token: function( stream, state ) {
 			return state.tokenize( stream, state );

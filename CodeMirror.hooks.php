@@ -44,6 +44,7 @@ class CodeMirrorHooks {
 			}
 		}
 
+		self::$globalVariableScript['UrlProtocols'] = $wgParser->mUrlProtocols;// wfUrlProtocolsWithoutProtRel();
 //		self::$globalVariableScript['LinkTrailCharacters'] = $wgContLang->linkTrail();
 		$output->addModules( 'ext.CodeMirror' );
 		return true;
