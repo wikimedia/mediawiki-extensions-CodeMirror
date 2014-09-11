@@ -1,12 +1,12 @@
-/*global CodeMirror, define, require  */
+/* global CodeMirror */
 (function( mod ) {
-	if ( typeof exports === 'object' && typeof module === 'object' ) { // CommonJS
-		mod( require( '../../lib/codemirror' ), require( '../htmlmixed/htmlmixed' ) );
-	} else if ( typeof define === 'function' && define.amd ) { // AMD
-		define( ['../../lib/codemirror', '../htmlmixed/htmlmixed'], mod );
-	} else { // Plain browser env
+//	if ( typeof exports === 'object' && typeof module === 'object' ) { // CommonJS
+//		mod( require( '../../lib/codemirror' ) );
+//	} else if ( typeof define === 'function' && define.amd ) { // AMD
+//		define( ['../../lib/codemirror'], mod );
+//	} else { // Plain browser env
 		mod( CodeMirror );
-	}
+//	}
 })(function( CodeMirror ) {
 'use strict';
 
@@ -161,8 +161,8 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 				}
 				return null;
 			case 'TemplatePageName':
-				if ( stream.match( /[\s\u00a0]*[^\s\u00a0\}\|<\{\&]/ ) ) {
-					return 'mw-templatepage-name';
+				if ( stream.match( /[\s\u00a0]*[^\s\u00a0\}\|<\{\&]+/ ) ) {
+					return 'mw-templatepage-name mw-underline';
 				}
 				if ( stream.eat( '|' ) ) {
 					state.ImInBlock.pop();
@@ -176,11 +176,11 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 					return 'mw-templatepage-bracket';
 				}
 				if ( stream.peek() === '&' ) {
-					style = ['mw-templatepage-name'];
-					mnemonicStyle = ['mw-templatepage-name-mnemonic'];
+					style = ['mw-templatepage-name', 'mw-underline'];
+					mnemonicStyle = ['mw-templatepage-name-mnemonic', 'mw-underline'];
 				} else if ( stream.match( /[\s\u00a0]*&/ ) ) { // {{ PAGE & NAME }}
 					stream.backUp(1);
-					return 'mw-templatepage-name';
+					return 'mw-templatepage-name mw-underline';
 				}
 				break;
 			case 'TemplateArgument':
@@ -479,9 +479,6 @@ CodeMirror.defineMode('mediawiki', function( config/*, parserConfig */ ) {
 			if ( state.isItalic ) {
 				style.push( 'em' );
 			}
-//			if ( state.skipFormatting ) {
-//				style.push( 'mw-skipformatting' );
-//			}
 		}
 
 		if ( style.length > 0 ) {

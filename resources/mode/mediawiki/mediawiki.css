@@ -19,8 +19,8 @@ pre.cm-mw-section-6 {font-weight: bold;}
 .cm-mw-section-heading {color: #08f;}
 
 .cm-mw-templatepage {color: #a11;  font-weight: normal;}
-.cm-mw-templatepage-name {color: #a11; font-weight: bold; text-decoration: underline;}
-.cm-mw-templatepage-name-mnemonic {text-decoration: underline; font-weight: normal;}
+.cm-mw-templatepage-name {color: #a11; font-weight: bold;}
+.cm-mw-templatepage-name-mnemonic {font-weight: normal;}
 .cm-mw-templatepage-argument-name {color: #a11; font-weight: bold;}
 .cm-mw-templatepage-delimiter {color: #a11; font-weight: bold;}
 .cm-mw-templatepage-bracket {color: #a11; font-weight: bold;}

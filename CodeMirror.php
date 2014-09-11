@@ -15,7 +15,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	die( 'This file is an extension to MediaWiki and thus not a valid entry point.' );
 }
 
-const EXT_CODEMIRROR_VERSION = '2.1.3';
+const EXT_CODEMIRROR_VERSION = '2.1.4';
 
 // Register this extension on Special:Version
 $wgExtensionCredits['parserhook'][] = array(
