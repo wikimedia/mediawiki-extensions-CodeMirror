@@ -1,0 +1,8 @@
+{
+	"@metadata": {
+		"authors": [
+			"Andriykopanytsia"
+		]
+	},
+	"codemirror-desc": "Редагування вікі-сторінок з підсвічуванням синтаксису за допомогою [http://codemirror.net/ CodeMirror]"
+}
