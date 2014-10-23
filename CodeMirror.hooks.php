@@ -15,11 +15,22 @@ class CodeMirrorHooks {
 	 */
 	public static function onEditPageShowEditFormInitial( EditPage $editPage, OutputPage $output ) {
 		global $wgParser, $wgContLang;
+
+		self::$globalVariableScript['ExtMode'] = array(
+			'tag' => array(
+				'pre' => 'mw-tag-pre',
+				'nowiki' => 'mw-tag-nowiki',
+			),
+			'func' => array(),
+			'data' => array()
+		);
+		\wfRunHooks( 'CodeMirrorGetExtensionMode', array( &self::$globalVariableScript['ExtMode'], &$module, &$output ) );
+
 		if ( false === isset( $wgParser->mFunctionSynonyms ) ) {
 			$wgParser->initialiseVariables();
 			$wgParser->firstCallInit();
 		}
-		self::$globalVariableScript['Tags'] = $wgParser->getTags();
+		self::$globalVariableScript['Tags'] = array_fill_keys( $wgParser->getTags(), true );
 
 		$mw = $wgContLang->getMagicWords();
 		self::$globalVariableScript['DoubleUnderscore'] = array( array(), array() );
@@ -46,7 +57,7 @@ class CodeMirrorHooks {
 
 		self::$globalVariableScript['UrlProtocols'] = $wgParser->mUrlProtocols;// wfUrlProtocolsWithoutProtRel();
 //		self::$globalVariableScript['LinkTrailCharacters'] = $wgContLang->linkTrail();
-		$output->addModules( 'ext.CodeMirror' );
+		$output->addModules( 'ext.CodeMirror.init' );
 		return true;
 	}
 
@@ -54,5 +65,13 @@ class CodeMirrorHooks {
 		foreach ( self::$globalVariableScript as $key=> $value ) {
 			$vars["extCodeMirror$key"] = $value;
 		}
+	}
+
+	public static function getPreferences( $user, &$defaultPreferences ) {
+		$defaultPreferences['usecodemirror'] = array(
+			'type' => 'api',
+			'default' => '1',
+		);
+		return true;
 	}
 }

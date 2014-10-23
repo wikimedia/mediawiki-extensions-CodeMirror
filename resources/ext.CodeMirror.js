@@ -1,29 +1,13 @@
-/*global CodeMirror, mw*/
-jQuery( document ).ready( function ( $ ) {
-	var textbox1 = $( '#wpTextbox1' );
-	var codeMirror = CodeMirror.fromTextArea( textbox1[0], {
-			mwextFunctionSynonyms: mw.config.get( 'extCodeMirrorFunctionSynonyms' ),
-			mwextTags: mw.config.get( 'extCodeMirrorTags' ),
-			mwextDoubleUnderscore: mw.config.get( 'extCodeMirrorDoubleUnderscore' ),
-			mwextUrlProtocols: mw.config.get( 'extCodeMirrorUrlProtocols' ),
-			styleActiveLine: true,
-			//lineNumbers: true,
-			lineWrapping: true,
-			//indentUnit: 4,
-			//indentWithTabs: true
-			//matchBrackets: true,
-			//autoCloseBrackets: true,
-			mode: 'text/mediawiki'
-		} );
+/* global CodeMirror, mw, $ */
 
-	if ( !codeMirror ) {
-		return;
-	}
-
-	codeMirror.setSize( null, textbox1.height() );
+var initExtCodeMirror = function() {
+	var origTextSelection = $.fn.textSelection, codeMirror = false;
 
 	// Replace jquery.textSelection.js
-	$.fn.textSelection = function ( command, options ) {
+	var cmTextSelection = function ( command, options ) {
+		if ( ! codeMirror ) {
+			return origTextSelection( command, options );
+		}
 		var fn, retval;
 
 		fn = {
@@ -215,5 +199,142 @@ jQuery( document ).ready( function ( $ ) {
 		return retval;
 	};
 
-	//$( codeMirror.getInputField() ).data( 'wikiEditor-context', {fn: fn, $iframe: false} );
-} );
+	function setCodeEditorPreference( prefValue ) {
+		var api = new mw.Api();
+		api.postWithToken( 'options', {
+			action: 'options',
+			optionname: 'usecodemirror',
+			optionvalue: prefValue ? 1 : 0
+		} ).fail( function ( code, result ) {
+			mw.log.error( 'Failed to set code editor preference: ' + code + '\n' + result.error );
+		} );
+	}
+
+	if ( mw.user.options.get( 'usecodemirror' ) === '1' || mw.user.options.get( 'usecodemirror' ) === 1 ) {
+		codeMirror = true;
+	}
+
+	function addCodeMirrorToWikiEditor() {
+		(function waitWikiEditor() {
+			if ( $( '#wikiEditor-section-main' ).length > 0 ) {
+				$( '#wpTextbox1' ).wikiEditor(
+						'addToToolbar',
+						{
+							'section': 'main',
+							'groups': {
+								'codemirror':{
+		//							'label': 'CodeMirror',
+									'tools': {
+										'CodeMirror': {
+											label: 'CodeMirror',
+											type: 'button',
+											icon: mw.config.get( 'wgExtensionAssetsPath' ) + '/CodeMirror/resources/images/cm-' + (codeMirror ? 'on.png' : 'off.png'),
+											action: {type: 'callback', execute: function( context ){ switchCodeMirror( context ); } }
+		//								},
+		//								'Undo':{
+		//									label: 'Undo',
+		//									type: 'button',
+		//									icon: mw.config.get( 'wgExtensionAssetsPath' ) + '/CodeMirror/resources/images/undo.png',
+		//									action: {type: 'callback', execute: function(context){alert(context);} }
+		//								},
+		//								'Redo':{
+		//									label: 'Redo',
+		//									type: 'button',
+		//									icon: mw.config.get( 'wgExtensionAssetsPath' ) + '/CodeMirror/resources/images/redo.png',
+		//									action: {type: 'callback', execute: function(context){alert(context);} }
+										}
+									}
+								}
+							}
+						}
+					);
+			} else {
+				setTimeout( waitWikiEditor, 500 );
+			}
+		})();
+	}
+
+	if ( $( '#wpTextbox1' ).wikiEditor && mw.user.options.get( 'usebetatoolbar' ) === 1 && mw.user.options.get( 'showtoolbar' ) === 1 ) {
+		addCodeMirrorToWikiEditor();
+	} else {
+		var $image = $( '<img>' ).attr( {
+			width: 23,
+			height: 22,
+			src: mw.config.get( 'wgExtensionAssetsPath' ) + '/CodeMirror/resources/images/old-cm-' + (codeMirror ? 'on.png' : 'off.png'),
+			alt: 'CodeMirror',
+			title: 'CodeMirror',
+			id: 'CodeMirrorButton',
+			'class': 'mw-toolbar-editbutton'
+		} ).click( function () {
+			switchCodeMirror( false );
+			return false;
+		} );
+
+		$( '#toolbar' ).append( $image );
+	}
+
+	function switchCodeMirror( context ) {
+		//alert( 'switchCodeMirror: ' + codeMirror );
+		var $img, $src;
+		if ( context !== false ) {
+			$img = context.modules.toolbar.$toolbar.find( 'img.tool[rel=CodeMirror]' );
+		} else {
+			$img = $( '#CodeMirrorButton' );
+		}
+
+		if ( codeMirror ) {
+			setCodeEditorPreference( false );
+			codeMirror.save();
+			codeMirror.toTextArea();
+			codeMirror = false;
+			$.fn.textSelection = origTextSelection;
+			$src = mw.config.get( 'wgExtensionAssetsPath' ) + '/CodeMirror/resources/images/' + (context ? 'cm-off.png' : 'old-cm-off.png' );
+			$img.attr( 'src', $src );
+		} else {
+			enableCodeMirror();
+			$src = mw.config.get( 'wgExtensionAssetsPath' ) + '/CodeMirror/resources/images/' + (context ? 'cm-on.png' : 'old-cm-on.png' );
+			$img.attr( 'src', $src );
+			setCodeEditorPreference( true );
+		}
+	}
+
+	function enableCodeMirror() {
+		var textbox1 = $( '#wpTextbox1' );
+		if ( textbox1[0].style.display === 'none' ) {
+			return;
+		}
+		codeMirror = CodeMirror.fromTextArea( textbox1[0], {
+				mwextFunctionSynonyms: mw.config.get( 'extCodeMirrorFunctionSynonyms' ),
+				mwextTags: mw.config.get( 'extCodeMirrorTags' ),
+				mwextDoubleUnderscore: mw.config.get( 'extCodeMirrorDoubleUnderscore' ),
+				mwextUrlProtocols: mw.config.get( 'extCodeMirrorUrlProtocols' ),
+				mwextMode: mw.config.get( 'extCodeMirrorExtMode' ),
+				//matchMW: true,
+				styleActiveLine: true,
+				//gutters: ['CodeMirror-mediawiki-gutter'],
+				//lint: true,
+				lineWrapping: true,
+				//indentUnit: 4,
+				//indentWithTabs: true,
+				//matchBrackets: true,
+				//autoCloseBrackets: true,
+				mode: 'text/mediawiki'
+			} );
+
+		if ( window.navigator.userAgent.indexOf('Trident/') > -1 ) { //IE specific code goes here
+			$( '.CodeMirror' ).addClass( 'CodeMirrorIE' );
+		}
+
+		codeMirror.setSize( null, textbox1.height() );
+		$.fn.textSelection = cmTextSelection;
+	}
+
+	if ( codeMirror ) {
+		enableCodeMirror();
+	}
+};
+
+$.when(
+	$.ready,
+	mw.loader.using( ['user.options', 'jquery.textSelection', 'mediawiki.api'] )
+).done( initExtCodeMirror() );
