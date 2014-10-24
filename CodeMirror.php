@@ -15,7 +15,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	die( 'This file is an extension to MediaWiki and thus not a valid entry point.' );
 }
 
-const EXT_CODEMIRROR_VERSION = '3.0.0';
+const EXT_CODEMIRROR_VERSION = '3.0.1';
 
 // Register this extension on Special:Version
 $wgExtensionCredits['parserhook'][] = array(
@@ -86,6 +86,7 @@ $wgResourceModules['ext.CodeMirror.other'] = array(
 	'group' => 'ext.CodeMirror',
 ) + $tpl;
 
-$wgCodeMirrorResources = array(
-	'dependencies' => array( 'ext.CodeMirror.lib' => true ),
-);
+if ( false === isset( $wgCodeMirrorResources ) ) {
+	$wgCodeMirrorResources = array();
+}
+$wgCodeMirrorResources['dependencies']['ext.CodeMirror.lib'] = true;
