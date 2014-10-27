@@ -1,8 +1,9 @@
 {
 	"@metadata": {
 		"authors": [
-			"Shirayuki"
+			"Shirayuki",
+			"SkyDaisy9"
 		]
 	},
-	"codemirror-desc": "[http://codemirror.net/ CodeMirror] を使用した構文強調付きのウィキページ編集"
+	"codemirror-desc": "ウィキ・テキスト編集時に構文を強調してくれる"
 }

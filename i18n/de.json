@@ -4,5 +4,5 @@
 			"Metalhead64"
 		]
 	},
-	"codemirror-desc": "Ermöglicht syntaxhervorgehobenes Bearbeiten für Wikiseiten mithilfe [http://codemirror.net/ CodeMirror]"
+	"codemirror-desc": "Ermöglicht Syntax-Hervorhebungen im Wikitext-Editor"
 }
