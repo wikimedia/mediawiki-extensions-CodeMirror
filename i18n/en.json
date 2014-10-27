@@ -4,5 +4,5 @@
 			"pastakhov"
 		]
 	},
-	"codemirror-desc": "Syntax-highlighted editing for wiki pages using [http://codemirror.net/ CodeMirror]"
+	"codemirror-desc": "Provides syntax highlighting in wikitext editor"
 }
