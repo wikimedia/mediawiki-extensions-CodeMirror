@@ -2,8 +2,9 @@
 	"@metadata": {
 		"authors": [
 			"pastakhov",
-			"Raymond"
+			"Raymond",
+			"SkyDaisy9"
 		]
 	},
-	"codemirror-desc": "{{desc|name=Code Mirror|url=https://www.mediawiki.org/wiki/Extension:CodeMirror}}"
+	"codemirror-desc": "{{desc|name=Code Mirror|url=https://www.mediawiki.org/wiki/Extension:CodeMirror}}\n\nAdditional info; Discription of \"Syntax highlighting\" in wiki\nhttps://m.mediawiki.org/wiki/Extension:SyntaxHighlight_GSHi"
 }
