@@ -4,5 +4,5 @@
 			"Beta16"
 		]
 	},
-	"codemirror-desc": "Modifiche con sintassi evidenziata per pagine wiki utilizzando [http://codemirror.net/ CodeMirror]"
+	"codemirror-desc": "Fornisce l'evidenziazione della sintassi nell'editor wikitesto"
 }
