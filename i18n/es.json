@@ -1,0 +1,8 @@
+{
+	"@metadata": {
+		"authors": [
+			"Fitoschido"
+		]
+	},
+	"codemirror-desc": "Proporciona resalte de la sintaxis en el editor de código wiki"
+}
