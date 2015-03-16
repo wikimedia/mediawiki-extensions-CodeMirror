@@ -433,8 +433,8 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 			}
 			if ( stream.eat( '>' ) ) {
 				state.extName = name;
-				if ( name in config.mwextMode.tag  ) {
-					state.extMode = CodeMirror.getMode( config, config.mwextMode.tag[name] );
+				if ( name in config.mwextModes.tag  ) {
+					state.extMode = CodeMirror.getMode( config, config.mwextModes.tag[name] );
 					state.extState = CodeMirror.startState( state.extMode );
 				}
 				state.tokenize = eatExtTagArea( name );
