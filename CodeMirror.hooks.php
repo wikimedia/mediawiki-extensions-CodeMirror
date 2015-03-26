@@ -66,13 +66,16 @@ class CodeMirrorHooks {
 	 * @return boolean
 	 */
 	private static function isCodeMirrorEnabled( IContextSource $context ) {
+		global $wgCodeMirrorEnableFrontend;
+
 		// Check, if we already checked, if page action is editing, if not, do it now
 		if ( is_null( self::$isEnabled ) ) {
 			// edit can be 'edit' and 'submit'
-			self::$isEnabled = in_array(
-				Action::getActionName( $context ),
-				array( 'edit', 'submit' )
-			);
+			self::$isEnabled = $wgCodeMirrorEnableFrontend &&
+				in_array(
+					Action::getActionName( $context ),
+					array( 'edit', 'submit' )
+				);
 		}
 
 		return self::$isEnabled;
@@ -176,10 +179,12 @@ class CodeMirrorHooks {
 	 * @return bool Always true
 	 */
 	public static function onGetPreferences( User $user, &$defaultPreferences ) {
-		$defaultPreferences['usecodemirror'] = array(
-			'type' => 'api',
-			'default' => '1',
-		);
+		if ( self::isCodeMirrorEnabled( RequestContext::getMain() ) ) {
+			$defaultPreferences['usecodemirror'] = array(
+				'type' => 'api',
+				'default' => '1',
+			);
+		}
 		return true;
 	}
 }
