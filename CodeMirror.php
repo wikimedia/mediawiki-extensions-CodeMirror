@@ -71,3 +71,11 @@ $wgResourceModules['ext.CodeMirror.lib'] = $wgCodeMirrorResourceTemplate + array
 	'group' => 'ext.CodeMirror',
 	'targets' => array( 'mobile', 'desktop' ),
 );
+
+// Configuration options
+
+/**
+ * Specify, if CodeMirror extension should integrate CodeMirror in MediaWiki's editor (or WikiEditor), or if
+ * it should work as a library provider for other extensions.
+ */
+$wgCodeMirrorEnableFrontend = true;
