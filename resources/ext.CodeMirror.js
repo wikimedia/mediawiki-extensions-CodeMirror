@@ -7,8 +7,8 @@
 		api = new mw.Api(),
 		// function for a textselection function for CodeMirror
 		cmTextSelection = function ( command, options ) {
-			if ( !codeMirror ) {
-				return origTextSelection( command, options );
+			if ( !codeMirror || codeMirror.getTextArea() !== this[0] ) {
+				return origTextSelection.call( this, command, options );
 			}
 			var fn, retval;
 
@@ -295,6 +295,7 @@
 				mwextModes: mw.config.get( 'extCodeMirrorExtModes' ),
 				styleActiveLine: true,
 				lineWrapping: true,
+				readOnly: textbox1[0].readOnly,
 				// select mediawiki as text input mode
 				mode: 'text/mediawiki'
 			} );
