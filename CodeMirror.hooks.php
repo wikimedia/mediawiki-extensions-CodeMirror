@@ -179,12 +179,13 @@ class CodeMirrorHooks {
 	 * @return bool Always true
 	 */
 	public static function onGetPreferences( User $user, &$defaultPreferences ) {
-		if ( self::isCodeMirrorEnabled( RequestContext::getMain() ) ) {
-			$defaultPreferences['usecodemirror'] = array(
-				'type' => 'api',
-				'default' => '1',
-			);
-		}
+		// CodeMirror is enabled by default for users.
+		// It can be changed by adding '$wgDefaultUserOptions['usecodemirror'] = 0;' into LocalSettings.php
+		$defaultPreferences['usecodemirror'] = array(
+			'type' => 'api',
+			'default' => '1',
+		);
 		return true;
 	}
+
 }
