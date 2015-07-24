@@ -2,8 +2,9 @@
 	"@metadata": {
 		"authors": [
 			"Waihorace",
-			"LNDDYL"
+			"LNDDYL",
+			"Cwlin0416"
 		]
 	},
-	"codemirror-desc": "於 wiki 文字編輯器提供語法反白標示"
+	"codemirror-desc": "提供 wikitext 編輯器語法醒目標示"
 }
