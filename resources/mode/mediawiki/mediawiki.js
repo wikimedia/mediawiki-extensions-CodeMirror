@@ -586,6 +586,32 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 		};
 	}
 
+	function eatFreeExternalLinkProtocol( stream, state ) {
+		stream.match( urlProtocols );
+		state.tokenize = eatFreeExternalLink;
+		return makeLocalStyle( 'mw-free-extlink-protocol', state );
+	}
+
+	function eatFreeExternalLink( stream, state ) {
+		if ( stream.eol() ) {
+			// @todo error message
+		} else if ( stream.match( /[^\s\u00a0\{\[\]<>~\)\.,]*/ ) ) {
+			if ( stream.peek() === '~' ) {
+				if ( stream.match( /~{3,}/, false ) ) {
+					state.tokenize = state.stack.pop();
+					return makeLocalStyle( 'mw-free-extlink', state );
+				} else {
+					stream.match( /~*/ );
+					return makeLocalStyle( 'mw-free-extlink', state );
+				}
+			} else if ( stream.match( /[\)\.,]*(?=[^\s\u00a0\{\[\]<>~\)\.,])/ ) ) {
+				return makeLocalStyle( 'mw-free-extlink', state );
+			}
+		}
+		state.tokenize = state.stack.pop();
+		return makeLocalStyle( 'mw-free-extlink', state );
+	}
+
 	function eatWikiText( style, mnemonicStyle ) {
 		return function( stream, state ) {
 			function chain( parser ) {
@@ -593,12 +619,17 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 				state.tokenize = parser;
 				return parser( stream, state );
 			}
-			var sol = stream.sol();
-			var ch = stream.next();
+			var ch, sol = stream.sol();
 
 			if ( sol ) {
 				state.isBold = false;
 				state.isItalic = false;
+				if ( stream.match( urlProtocols ) ) { // highlight free external links, bug T108448
+					state.stack.push( state.tokenize );
+					state.tokenize = eatFreeExternalLink;
+					return makeLocalStyle( 'mw-free-extlink-protocol', state );
+				}
+				ch = stream.next();
 				switch ( ch ) {
 					case '-':
 						if ( stream.match( '---' ) ) {
@@ -651,6 +682,8 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 							return 'mw-table-bracket';
 						}
 				}
+			} else {
+				ch = stream.next();
 			}
 
 			switch ( ch ) {
@@ -752,10 +785,19 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 						return 'mw-signature';
 					}
 					break;
+				default:
+					if ( /[\s\u00a0]/.test( ch ) ) {
+						stream.eatSpace();
+						if ( stream.match( urlProtocols, false ) ) { // highlight free external links, bug T108448
+							state.stack.push( state.tokenize );
+							state.tokenize = eatFreeExternalLinkProtocol;
+							return makeStyle( style, state );
+						}
+					}
+					break;
 			}
 			stream.match( /[^\s\u00a0_>\}\[\]<\{\'\|\&\:~]+/ );
-			var ret = makeStyle( style, state );
-			return ret;
+			return makeStyle( style, state );
 		};
 	}
 
