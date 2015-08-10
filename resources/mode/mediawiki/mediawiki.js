@@ -510,12 +510,30 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 		return eatWikiText( 'mw-table-definition', '' )( stream, state );
 	}
 
+	function inTableCaption( stream, state ) {
+		if ( stream.sol() ) {
+			var peek = stream.peek();
+			if ( peek === '|' || peek === '!' ) {
+				state.tokenize = inTable;
+				return state.tokenize( stream, state );
+			}
+			state.isBold = false;
+			state.isItalic = false;
+		}
+		return eatWikiText( 'mw-table-caption', '' )( stream, state );
+	}
+
 	function inTable( stream, state ) {
 		if ( stream.sol() ) {
 			if ( stream.eat( '|' ) ) {
 				if ( stream.eat( '-' ) ) {
 					stream.eatSpace();
 					state.tokenize = inTableDefinition;
+					return makeLocalStyle( 'mw-table-delimiter', state );
+				}
+				if ( stream.eat( '+' ) ) {
+					stream.eatSpace();
+					state.tokenize = inTableCaption;
 					return makeLocalStyle( 'mw-table-delimiter', state );
 				}
 				if ( stream.eat( '}' ) ) {

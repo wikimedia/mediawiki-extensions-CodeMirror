@@ -73,6 +73,7 @@ pre.cm-mw-tag-nowiki, .cm-mw-tag-nowiki {background-image: url(img/black4.png);}
 .cm-mw-table-bracket {color: #e0e; font-weight: bold;}
 .cm-mw-table-delimiter {color: #e0e; font-weight: bold;}
 .cm-mw-table-definition {color: #e0e; font-weight: normal;}
+.cm-mw-table-caption {font-weight: bold;}
 
 .cm-mw-template-ground {}
 .cm-mw-template2-ground {background-image: url(img/template4.png);}
