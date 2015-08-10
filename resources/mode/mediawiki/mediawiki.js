@@ -512,19 +512,19 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 
 	function inTableCaption( stream, state ) {
 		if ( stream.sol() ) {
-			var peek = stream.peek();
-			if ( peek === '|' || peek === '!' ) {
+			state.isBold = false;
+			state.isItalic = false;
+			if ( stream.match( /[\s\u00a0]*[\|!]/, false ) ) {
 				state.tokenize = inTable;
 				return state.tokenize( stream, state );
 			}
-			state.isBold = false;
-			state.isItalic = false;
 		}
 		return eatWikiText( 'mw-table-caption', '' )( stream, state );
 	}
 
 	function inTable( stream, state ) {
 		if ( stream.sol() ) {
+			stream.eatSpace();
 			if ( stream.eat( '|' ) ) {
 				if ( stream.eat( '-' ) ) {
 					stream.eatSpace();
@@ -556,13 +556,12 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 	function eatTableRow( isStart, isHead ) {
 		return function ( stream, state ) {
 			if ( stream.sol() ) {
-				var peek = stream.peek();
-				if ( peek === '|' || peek === '!' ) {
+				state.isBold = false;
+				state.isItalic = false;
+				if ( stream.match( /[\s\u00a0]*[\|!]/, false ) ) {
 					state.tokenize = inTable;
 					return state.tokenize( stream, state );
 				}
-				state.isBold = false;
-				state.isItalic = false;
 			} else {
 				if ( stream.match( /[^'\|\{\[<\&~]+/ ) ) {
 					return makeStyle( (isHead ? 'strong' : ''), state );
