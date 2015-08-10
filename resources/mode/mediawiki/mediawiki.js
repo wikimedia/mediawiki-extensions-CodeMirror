@@ -597,14 +597,16 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 			// @todo error message
 		} else if ( stream.match( /[^\s\u00a0\{\[\]<>~\)\.,]*/ ) ) {
 			if ( stream.peek() === '~' ) {
-				if ( stream.match( /~{3,}/, false ) ) {
-					state.tokenize = state.stack.pop();
-					return makeLocalStyle( 'mw-free-extlink', state );
-				} else {
+				if ( !stream.match( /~{3,}/, false ) ) {
 					stream.match( /~*/ );
 					return makeLocalStyle( 'mw-free-extlink', state );
 				}
-			} else if ( stream.match( /[\)\.,]*(?=[^\s\u00a0\{\[\]<>~\)\.,])/ ) ) {
+			} else if ( stream.peek() === '{' ) {
+				if ( !stream.match( /\{\{/, false ) ) {
+					stream.eat( '{' );
+					return makeLocalStyle( 'mw-free-extlink', state );
+				}
+			} else if ( stream.match( /[\)\.,]+(?=[^\s\u00a0\{\[\]<>~\)\.,])/ ) ) {
 				return makeLocalStyle( 'mw-free-extlink', state );
 			}
 		}
