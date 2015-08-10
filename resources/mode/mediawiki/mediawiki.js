@@ -502,6 +502,13 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 		};
 	}
 
+	function eatStartTable( stream, state ) {
+		stream.match( '{|' );
+		stream.eatSpace();
+		state.tokenize = inTableDefinition;
+		return 'mw-table-bracket';
+	}
+
 	function inTableDefinition( stream, state ) {
 		if ( stream.sol() ) {
 			state.tokenize = inTable;
@@ -516,7 +523,7 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 			state.isItalic = false;
 			if ( stream.match( /[\s\u00a0]*[\|!]/, false ) ) {
 				state.tokenize = inTable;
-				return state.tokenize( stream, state );
+				return inTable( stream, state );
 			}
 		}
 		return eatWikiText( 'mw-table-caption', '' )( stream, state );
@@ -560,7 +567,7 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 				state.isItalic = false;
 				if ( stream.match( /[\s\u00a0]*[\|!]/, false ) ) {
 					state.tokenize = inTable;
-					return state.tokenize( stream, state );
+					return inTable( stream, state );
 				}
 			} else {
 				if ( stream.match( /[^'\|\{\[<\&~]+/ ) ) {
@@ -593,8 +600,6 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 				state.isBold = false;
 				state.isItalic = false;
 				switch ( ch ) {
-					case ' ':
-						return 'mw-skipformatting';
 					case '-':
 						if ( stream.match( '---' ) ) {
 							return 'mw-hr';
@@ -616,10 +621,28 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 						}
 						break;
 					case ':':
+						if ( stream.match( /:*{\|/, false ) ) { // Highlight indented tables :{|, bug T108454
+							state.stack.push( state.tokenize );
+							state.tokenize = eatStartTable;
+						}
 						if ( stream.match( /:*[\*#]*/ ) ) {
 							return 'mw-indenting';
 						}
 						break;
+					case ' ':
+						if ( stream.match( /[\s\u00a0]*:*{\|/, false ) ) { // Leading spaces is the correct syntax for a table, bug T108454
+							stream.eatSpace();
+							if ( stream.match( /:+/ ) ) { // ::{|
+								state.stack.push( state.tokenize );
+								state.tokenize = eatStartTable;
+								return 'mw-indenting';
+							}
+							stream.eat( '{' );
+						} else {
+							return 'mw-skipformatting';
+						}
+						// break is not necessary here
+						/*falls through*/
 					case '{':
 						if ( stream.eat( '|' ) ) {
 							stream.eatSpace();
