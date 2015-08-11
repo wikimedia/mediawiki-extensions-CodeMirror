@@ -54,6 +54,10 @@ $wgResourceModules['ext.CodeMirror.init'] = $wgCodeMirrorResourceTemplate + arra
 	'scripts' => array(
 		'ext.CodeMirror.js'
 	),
+	'messages' => array(
+		'codemirror-enable-label',
+		'codemirror-disable-label',
+	),
 	'group' => 'ext.CodeMirror',
 );
 

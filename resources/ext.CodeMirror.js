@@ -205,6 +205,8 @@
 		 */
 		addCodeMirrorToWikiEditor = function () {
 			if ( $( '#wikiEditor-section-main' ).length > 0 ) {
+				var msg = codeMirror ? 'codemirror-disable-label' : 'codemirror-enable-label';
+
 				$( '#wpTextbox1' ).wikiEditor(
 					'addToToolbar',
 					{
@@ -213,7 +215,7 @@
 							'codemirror':{
 								'tools': {
 									'CodeMirror': {
-										label: 'CodeMirror',
+										label: mw.msg( msg ),
 										type: 'button',
 										// FIXME: There should be a better way?
 										icon: mw.config.get( 'wgExtensionAssetsPath' ) + '/CodeMirror/resources/images/cm-' + ( codeMirror ? 'on.png' : 'off.png' ),
@@ -269,11 +271,15 @@
 			codeMirror = false;
 			$.fn.textSelection = origTextSelection;
 			$src = mw.config.get( 'wgExtensionAssetsPath' ) + '/CodeMirror/resources/images/' + ( context ? 'cm-off.png' : 'old-cm-off.png' );
-			$img.attr( 'src', $src );
+			$img
+				.attr( 'src', $src )
+				.attr( 'title', mw.msg( 'codemirror-enable-label' ) );
 		} else {
 			enableCodeMirror();
 			$src = mw.config.get( 'wgExtensionAssetsPath' ) + '/CodeMirror/resources/images/' + ( context ? 'cm-on.png' : 'old-cm-on.png' );
-			$img.attr( 'src', $src );
+			$img
+				.attr( 'src', $src )
+				.attr( 'title', mw.msg( 'codemirror-disable-label' ) );
 			setCodeEditorPreference( true );
 		}
 	}
