@@ -19,7 +19,10 @@ class CodeMirrorHooks {
 	 * @return bool Always true
 	 */
 	public static function onResourceLoaderRegisterModules( ResourceLoader $rl ) {
-		global $wgCodeMirrorResourceTemplate;
+		$codeMirrorResourceTemplate = array(
+			'localBasePath' => __DIR__ . '/resources',
+			'remoteExtPath' => 'CodeMirror/resources',
+		);
 
 		self::$extModes = array(
 			'tag' => array(
@@ -53,7 +56,7 @@ class CodeMirrorHooks {
 			'messages' => array_keys( $extResources['messages'] ),
 			'dependencies' => array_keys( $extResources['dependencies'] ),
 			'group' => 'ext.CodeMirror',
-		) + $wgCodeMirrorResourceTemplate;
+		) + $codeMirrorResourceTemplate;
 
 		$rl->register( array( 'ext.CodeMirror.other' => $codeMirror ) );
 
