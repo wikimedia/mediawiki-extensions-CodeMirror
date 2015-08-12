@@ -1,8 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"Fitoschido"
+			"Fitoschido",
+			"Macofe"
 		]
 	},
-	"codemirror-desc": "Proporciona resalte de la sintaxis en el editor de código wiki"
+	"codemirror-desc": "Proporciona resalte de la sintaxis en el editor de código wiki",
+	"codemirror-enable-label": "Activar CodeMirror (resaltado de sintaxis)",
+	"codemirror-disable-label": "Desactivar CodeMirror (resaltado de sintaxis)"
 }
