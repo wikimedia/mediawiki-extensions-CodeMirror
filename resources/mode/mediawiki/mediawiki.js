@@ -268,7 +268,14 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 			state.tokenize = inExternalLinkText;
 			return makeStyle( '', state );
 		}
-		if ( stream.match( /[^\s\u00a0\]\{\&~]+/ ) || stream.eatSpace() ) {
+		if ( stream.match( /[^\s\u00a0\]\{\&~']+/ ) || stream.eatSpace() ) {
+			if ( stream.peek() === '\'' ) {
+				if ( stream.match( '\'\'', false ) ) {
+					state.tokenize = inExternalLinkText;
+				} else {
+					stream.next();
+				}
+			}
 			return makeStyle( 'mw-extlink', state );
 		}
 		return eatWikiText( 'mw-extlink', '' )( stream, state );
@@ -312,7 +319,7 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 //					if ( !stream.eatSpace() ) {
 //						state.ImInBlock.push( 'LinkTrail' );
 //					}
-		} 
+		}
 		if ( stream.match( /[\s\u00a0]*[^\s\u00a0#\|\]\&~\{]+/ ) || stream.eatSpace() ) { //FIXME '{{' brokes Link, sample [[z{{page]]
 			return makeStyle( 'mw-link-pagename mw-pagename', state );
 		}
@@ -390,7 +397,7 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 				state.tokenize = state.stack.pop();
 				return makeLocalStyle( (isHtmlTag ? 'mw-htmltag-name' : 'mw-exttag-name'), state );
 			}
-			
+
 			if ( isHtmlTag ) {
 				if ( isCloseTag ) {
 					state.tokenize = eatChar( '>', 'mw-htmltag-bracket' );
@@ -595,7 +602,7 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 	function eatFreeExternalLink( stream, state ) {
 		if ( stream.eol() ) {
 			// @todo error message
-		} else if ( stream.match( /[^\s\u00a0\{\[\]<>~\)\.,]*/ ) ) {
+		} else if ( stream.match( /[^\s\u00a0\{\[\]<>~\)\.,']*/ ) ) {
 			if ( stream.peek() === '~' ) {
 				if ( !stream.match( /~{3,}/, false ) ) {
 					stream.match( /~*/ );
@@ -603,7 +610,12 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 				}
 			} else if ( stream.peek() === '{' ) {
 				if ( !stream.match( /\{\{/, false ) ) {
-					stream.eat( '{' );
+					stream.next();
+					return makeLocalStyle( 'mw-free-extlink', state );
+				}
+			} else if ( stream.peek() === '\'' ) {
+				if ( !stream.match( '\'\'', false ) ) {
+					stream.next();
 					return makeLocalStyle( 'mw-free-extlink', state );
 				}
 			} else if ( stream.match( /[\)\.,]+(?=[^\s\u00a0\{\[\]<>~\)\.,])/ ) ) {
