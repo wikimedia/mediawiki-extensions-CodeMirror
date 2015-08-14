@@ -634,7 +634,7 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 				ch = stream.next();
 				switch ( ch ) {
 					case '-':
-						if ( stream.match( '---' ) ) {
+						if ( stream.match( /----*/ ) ) {
 							return 'mw-hr';
 						}
 						break;
