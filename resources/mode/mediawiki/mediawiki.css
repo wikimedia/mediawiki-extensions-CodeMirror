@@ -19,7 +19,7 @@
 .cm-mw-indenting {color: #08f; font-weight: bold; background-color: #ddd;}
 .cm-mw-mnemonic {color: #090;}
 .cm-mw-comment {color: #aaa; font-weight: normal;}
-.cm-mw-apostrophes {color: #08f;}
+.cm-mw-apostrophes-bold, .cm-mw-apostrophes-italic {color: #08f;}
 
 pre.cm-mw-section-1 {font-size: 1.8em;}
 pre.cm-mw-section-2 {font-size: 1.5em;}
