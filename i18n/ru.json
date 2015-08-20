@@ -5,5 +5,7 @@
 			"Kaganer"
 		]
 	},
-	"codemirror-desc": "Обеспечивает подсветку синтаксиса в редакторе вики-текста."
+	"codemirror-desc": "Обеспечивает подсветку синтаксиса в редакторе вики-текста.",
+	"codemirror-enable-label": "Включить CodeMirror (подсветка синтаксиса)",
+	"codemirror-disable-label": "Выключить CodeMirror (подсветка синтаксиса)"
 }
