@@ -734,7 +734,7 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 					}
 					break;
 				case '{':
-					if ( stream.match( '{{' ) ) { // Variable
+					if ( !stream.match( '{{{{', false ) && stream.match( '{{' ) ) { // Template parameter (skip parameters inside a template transclusion, Bug: T108450)
 						stream.eatSpace();
 						state.stack.push( state.tokenize );
 						state.tokenize = inVariable;
