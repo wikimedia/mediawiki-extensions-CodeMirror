@@ -20,6 +20,10 @@
 					return codeMirror.doc.getValue();
 				},
 
+				setContents: function ( newContents ) {
+					codeMirror.doc.setValue( newContents );
+				},
+
 				/**
 				 * Get the currently selected text in this textarea. Will focus the textarea
 				 * in some browsers (IE/Opera)
@@ -232,7 +236,28 @@
 					}
 				);
 			}
-		};
+		},
+		originHooksTextarea = $.valHooks.textarea;
+
+	// define JQuery hook for searching and replacing text using JS if CodeMirror is enabled, see Bug: T108711
+	$.valHooks.textarea = {
+		get: function( elem ) {
+			if ( elem.id === 'wpTextbox1' && codeMirror ) {
+				return codeMirror.doc.getValue();
+			} else if ( originHooksTextarea ) {
+				return originHooksTextarea.get( elem );
+			}
+			return elem.value;
+		},
+		set: function( elem, value ) {
+			if ( elem.id === 'wpTextbox1' && codeMirror ) {
+				return codeMirror.doc.setValue( value );
+			} else if ( originHooksTextarea ) {
+				return originHooksTextarea.set( elem, value );
+			}
+			elem.value = value;
+		}
+	};
 
 	/**
 	 * Save CodeMirror enabled pref.
