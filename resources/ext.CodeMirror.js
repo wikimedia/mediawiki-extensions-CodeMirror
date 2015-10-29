@@ -265,6 +265,9 @@
 	 * @param {Boolean} prefValue True, if CodeMirror should be enabled by default, otherwise false.
 	 */
 	function setCodeEditorPreference( prefValue ) {
+		if ( mw.user.isAnon() ) { // Skip it for anon users
+			return;
+		}
 		api.postWithToken( 'options', {
 			action: 'options',
 			optionname: 'usecodemirror',
