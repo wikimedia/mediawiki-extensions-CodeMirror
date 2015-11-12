@@ -4,5 +4,7 @@
 			"Lokal Profil"
 		]
 	},
-	"codemirror-desc": "Ger syntaxmarkerad redigering för redigering av wikitext"
+	"codemirror-desc": "Ger syntaxmarkerad redigering för redigering av wikitext",
+	"codemirror-enable-label": "Aktivera CodeMirror (Syntaxmarkering)",
+	"codemirror-disable-label": "Inaktivera CodeMirror (Syntaxmarkering)"
 }
