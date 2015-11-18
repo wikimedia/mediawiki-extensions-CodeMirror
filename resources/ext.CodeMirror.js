@@ -1,5 +1,9 @@
 /* global CodeMirror, mediaWiki */
 ( function ( mw, $ ) {
+	if ( mw.config.get( 'wgCodeEditorCurrentLanguage' ) ) { // If the CodeEditor is used then just exit;
+		return;
+	}
+
 	// codeMirror needs a special textselection jQuery function to work, save the current one to restore when
 	// CodeMirror get's disabled.
 	var origTextSelection = $.fn.textSelection,
