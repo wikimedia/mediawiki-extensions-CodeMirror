@@ -335,7 +335,10 @@
 				lineWrapping: true,
 				readOnly: textbox1[0].readOnly,
 				// select mediawiki as text input mode
-				mode: 'text/mediawiki'
+				mode: 'text/mediawiki',
+				extraKeys: {
+					Tab: false
+				}
 			} );
 		// Our best friend, IE, needs some special css
 		if ( window.navigator.userAgent.indexOf('Trident/') > -1 ) {
