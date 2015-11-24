@@ -1,4 +1,3 @@
-/* global CodeMirror, mediaWiki */
 ( function ( mw, $ ) {
 	if ( mw.config.get( 'wgCodeEditorCurrentLanguage' ) ) { // If the CodeEditor is used then just exit;
 		return;
@@ -11,7 +10,7 @@
 		api = new mw.Api(),
 		// function for a textselection function for CodeMirror
 		cmTextSelection = function ( command, options ) {
-			if ( !codeMirror || codeMirror.getTextArea() !== this[0] ) {
+			if ( !codeMirror || codeMirror.getTextArea() !== this[ 0 ] ) {
 				return origTextSelection.call( this, command, options );
 			}
 			var fn, retval;
@@ -42,13 +41,17 @@
 				 */
 				encapsulateSelection: function ( options ) {
 					return this.each( function () {
-						var insertText, selText,
-								selectPeri = options.selectPeri,
-								pre = options.pre, post = options.post;
+						var insertText,
+							selText,
+							selectPeri = options.selectPeri,
+							pre = options.pre,
+							post = options.post,
+							startCursor = codeMirror.doc.getCursor( true ),
+							endCursor = codeMirror.doc.getCursor( false );
 
 						if ( options.selectionStart !== undefined ) {
-							//fn[command].call( this, options );
-							fn.setSelection( { 'start': options.selectionStart, 'end': options.selectionEnd } ); // not tested
+							// fn[command].call( this, options );
+							fn.setSelection( { start: options.selectionStart, end: options.selectionEnd } ); // not tested
 						}
 
 						selText = codeMirror.doc.getSelection();
@@ -80,8 +83,9 @@
 							var i,
 								insertText = '',
 								selTextArr = selText.split( '\n' );
+
 							for ( i = 0; i < selTextArr.length; i++ ) {
-								insertText += pre + selTextArr[i] + post;
+								insertText += pre + selTextArr[ i ] + post;
 								if ( i !== selTextArr.length - 1 ) {
 									insertText += '\n';
 								}
@@ -96,13 +100,12 @@
 							insertText = pre + selText + post;
 						}
 
-						var startCursor = codeMirror.doc.getCursor( true );
 						if ( options.ownline ) {
 							if ( startCursor.ch !== 0 ) {
 								insertText = '\n' + insertText;
 								pre += '\n';
 							}
-							var endCursor = codeMirror.doc.getCursor( false );
+
 							if ( codeMirror.doc.getLine( endCursor.line ).length !== endCursor.ch ) {
 								insertText += '\n';
 								post += '\n';
@@ -117,7 +120,7 @@
 									codeMirror.doc.posFromIndex( codeMirror.doc.indexFromPos( startCursor ) + pre.length + selText.length )
 								);
 						}
-					});
+					} );
 				},
 
 				/**
@@ -125,37 +128,35 @@
 				 * in a textarea
 				 */
 				getCaretPosition: function ( options ) {
-					var caretPos = codeMirror.doc.indexFromPos( codeMirror.doc.getCursor( true ) );
+					var caretPos = codeMirror.doc.indexFromPos( codeMirror.doc.getCursor( true ) ),
+						endPos = codeMirror.doc.indexFromPos( codeMirror.doc.getCursor( false ) );
 					if ( options.startAndEnd ) {
-						var endPos = codeMirror.doc.indexFromPos( codeMirror.doc.getCursor( false ) );
 						return [ caretPos, endPos ];
 					}
 					return caretPos;
 				},
 
-				 setSelection: function ( options ) {
+				setSelection: function ( options ) {
 					return this.each( function () {
 						codeMirror.doc.setSelection( codeMirror.doc.posFromIndex( options.start ), codeMirror.doc.posFromIndex( options.end ) );
-					});
-				 },
+					} );
+				},
 
 				/**
 				* Scroll a textarea to the current cursor position. You can set the cursor
 				* position with setSelection()
-				* @param options boolean Whether to force a scroll even if the caret position
-				*  is already visible. Defaults to false
 				*/
-				scrollToCaretPosition: function ( /* options */ ) {
-					return this.each(function () {
+				scrollToCaretPosition: function () {
+					return this.each( function () {
 						codeMirror.scrollIntoView( null );
-					});
+					} );
 				}
 			};
 
 			switch ( command ) {
-				//case 'getContents': // no params
-				//case 'setContents': // no params with defaults
-				//case 'getSelection': // no params
+				// case 'getContents': // no params
+				// case 'setContents': // no params with defaults
+				// case 'getSelection': // no params
 				case 'encapsulateSelection':
 					options = $.extend( {
 						pre: '', // Text to insert before the cursor/selection
@@ -203,7 +204,7 @@
 					break;
 			}
 
-			retval = fn[command].call( this, options );
+			retval = fn[ command ].call( this, options );
 			codeMirror.focus();
 
 			return retval;
@@ -218,18 +219,18 @@
 				$( '#wpTextbox1' ).wikiEditor(
 					'addToToolbar',
 					{
-						'section': 'main',
-						'groups': {
-							'codemirror':{
-								'tools': {
-									'CodeMirror': {
+						section: 'main',
+						groups: {
+							codemirror: {
+								tools: {
+									CodeMirror: {
 										label: mw.msg( msg ),
 										type: 'button',
 										// FIXME: There should be a better way?
 										icon: mw.config.get( 'wgExtensionAssetsPath' ) + '/CodeMirror/resources/images/cm-' + ( codeMirror ? 'on.png' : 'off.png' ),
 										action: {
 											type: 'callback',
-											execute: function( context ) {
+											execute: function ( context ) {
 												switchCodeMirror( context );
 											}
 										}
@@ -245,7 +246,7 @@
 
 	// define JQuery hook for searching and replacing text using JS if CodeMirror is enabled, see Bug: T108711
 	$.valHooks.textarea = {
-		get: function( elem ) {
+		get: function ( elem ) {
 			if ( elem.id === 'wpTextbox1' && codeMirror ) {
 				return codeMirror.doc.getValue();
 			} else if ( originHooksTextarea ) {
@@ -253,7 +254,7 @@
 			}
 			return elem.value;
 		},
-		set: function( elem, value ) {
+		set: function ( elem, value ) {
 			if ( elem.id === 'wpTextbox1' && codeMirror ) {
 				return codeMirror.doc.setValue( value );
 			} else if ( originHooksTextarea ) {
@@ -266,7 +267,7 @@
 	/**
 	 * Save CodeMirror enabled pref.
 	 *
-	 * @param {Boolean} prefValue True, if CodeMirror should be enabled by default, otherwise false.
+	 * @param {boolean} prefValue True, if CodeMirror should be enabled by default, otherwise false.
 	 */
 	function setCodeEditorPreference( prefValue ) {
 		if ( mw.user.isAnon() ) { // Skip it for anon users
@@ -322,10 +323,10 @@
 	function enableCodeMirror() {
 		var textbox1 = $( '#wpTextbox1' );
 
-		if ( textbox1[0].style.display === 'none' ) {
+		if ( textbox1[ 0 ].style.display === 'none' ) {
 			return;
 		}
-		codeMirror = CodeMirror.fromTextArea( textbox1[0], {
+		codeMirror = CodeMirror.fromTextArea( textbox1[ 0 ], {
 				mwextFunctionSynonyms: mw.config.get( 'extCodeMirrorFunctionSynonyms' ),
 				mwextTags: mw.config.get( 'extCodeMirrorTags' ),
 				mwextDoubleUnderscore: mw.config.get( 'extCodeMirrorDoubleUnderscore' ),
@@ -333,7 +334,7 @@
 				mwextModes: mw.config.get( 'extCodeMirrorExtModes' ),
 				styleActiveLine: true,
 				lineWrapping: true,
-				readOnly: textbox1[0].readOnly,
+				readOnly: textbox1[ 0 ].readOnly,
 				// select mediawiki as text input mode
 				mode: 'text/mediawiki',
 				extraKeys: {
@@ -341,7 +342,7 @@
 				}
 			} );
 		// Our best friend, IE, needs some special css
-		if ( window.navigator.userAgent.indexOf('Trident/') > -1 ) {
+		if ( window.navigator.userAgent.indexOf( 'Trident/' ) > -1 ) {
 			$( '.CodeMirror' ).addClass( 'CodeMirrorIE' );
 		}
 
@@ -366,7 +367,7 @@
 				var $image = $( '<img>' ).attr( {
 					width: 23,
 					height: 22,
-					src: mw.config.get( 'wgExtensionAssetsPath' ) + '/CodeMirror/resources/images/old-cm-' + (codeMirror ? 'on.png' : 'off.png'),
+					src: mw.config.get( 'wgExtensionAssetsPath' ) + '/CodeMirror/resources/images/old-cm-' + ( codeMirror ? 'on.png' : 'off.png' ),
 					alt: 'CodeMirror',
 					title: 'CodeMirror',
 					id: 'CodeMirrorButton',
