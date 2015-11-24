@@ -1,5 +1,9 @@
 /* global CodeMirror, mediaWiki */
 ( function ( mw, $ ) {
+	if ( mw.config.get( 'wgCodeEditorCurrentLanguage' ) ) { // If the CodeEditor is used then just exit;
+		return;
+	}
+
 	// codeMirror needs a special textselection jQuery function to work, save the current one to restore when
 	// CodeMirror get's disabled.
 	var origTextSelection = $.fn.textSelection,
@@ -265,6 +269,9 @@
 	 * @param {Boolean} prefValue True, if CodeMirror should be enabled by default, otherwise false.
 	 */
 	function setCodeEditorPreference( prefValue ) {
+		if ( mw.user.isAnon() ) { // Skip it for anon users
+			return;
+		}
 		api.postWithToken( 'options', {
 			action: 'options',
 			optionname: 'usecodemirror',
@@ -328,7 +335,10 @@
 				lineWrapping: true,
 				readOnly: textbox1[0].readOnly,
 				// select mediawiki as text input mode
-				mode: 'text/mediawiki'
+				mode: 'text/mediawiki',
+				extraKeys: {
+					Tab: false
+				}
 			} );
 		// Our best friend, IE, needs some special css
 		if ( window.navigator.userAgent.indexOf('Trident/') > -1 ) {
