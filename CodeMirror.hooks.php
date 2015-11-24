@@ -1,7 +1,7 @@
 <?php
 
-
 class CodeMirrorHooks {
+
 	/** @var null|array Cached version of global variables, if available, otherwise null */
 	private static $globalVariableScript = null;
 	/** @var null|boolean Saves, if CodeMirror should be loaded on this page or not */
@@ -14,11 +14,15 @@ class CodeMirrorHooks {
 	 *
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/ResourceLoaderRegisterModules
 	 *
-	 * @param ResourceLoader &$resourceLoader The ResourceLoader object
+	 * @param ResourceLoader &$rl The ResourceLoader object
+	 *
 	 * @return bool Always true
 	 */
 	public static function onResourceLoaderRegisterModules( ResourceLoader $rl ) {
-		global $wgCodeMirrorResourceTemplate;
+		$codeMirrorResourceTemplate = array(
+			'localBasePath' => __DIR__ . '/resources',
+			'remoteExtPath' => 'CodeMirror/resources',
+		);
 
 		self::$extModes = array(
 			'tag' => array(
@@ -52,7 +56,7 @@ class CodeMirrorHooks {
 			'messages' => array_keys( $extResources['messages'] ),
 			'dependencies' => array_keys( $extResources['dependencies'] ),
 			'group' => 'ext.CodeMirror',
-		) + $wgCodeMirrorResourceTemplate;
+		) + $codeMirrorResourceTemplate;
 
 		$rl->register( array( 'ext.CodeMirror.other' => $codeMirror ) );
 
@@ -145,7 +149,9 @@ class CodeMirrorHooks {
 	 *
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/MakeGlobalVariablesScript
 	 *
-	 * @param ResourceLoader &$resourceLoader The ResourceLoader object
+	 * @param array $vars
+	 * @param OutputPage $out
+	 *
 	 * @return bool Always true
 	 */
 	public static function onMakeGlobalVariablesScript( array &$vars, OutputPage $out ) {
@@ -161,7 +167,9 @@ class CodeMirrorHooks {
 	 *
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/BeforePageDisplay
 	 *
-	 * @param ResourceLoader &$resourceLoader The ResourceLoader object
+	 * @param OutputPage $out
+	 * @param Skin $skin
+	 *
 	 * @return bool Always true
 	 */
 	public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
@@ -175,7 +183,9 @@ class CodeMirrorHooks {
 	 *
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/GetPreferences
 	 *
-	 * @param ResourceLoader &$resourceLoader The ResourceLoader object
+	 * @param User $user
+	 * @param array $defaultPreferences
+	 *
 	 * @return bool Always true
 	 */
 	public static function onGetPreferences( User $user, &$defaultPreferences ) {

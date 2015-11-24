@@ -22,23 +22,24 @@ function eatMnemonic( stream, style, mnemonicStyle ) {
 
 CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 
-	var urlProtocols = new RegExp( config.mwextUrlProtocols, 'i' );
-	var permittedHtmlTags = {'b': true, 'bdi': true, 'del': true, 'i': true, 'ins': true,
-		'u': true, 'font': true, 'big': true, 'small': true, 'sub': true, 'sup': true,
-		'h1': true, 'h2': true, 'h3': true, 'h4': true, 'h5': true, 'h6': true, 'cite': true,
-		'code': true, 'em': true, 's': true, 'strike': true, 'strong': true, 'tt': true,
-		'var': true, 'div': true, 'center': true, 'blockquote': true, 'ol': true, 'ul': true,
-		'dl': true, 'table': true, 'caption': true, 'pre': true, 'ruby': true, 'rb': true,
-		'rp': true, 'rt': true, 'rtc': true, 'p': true, 'span': true, 'abbr': true, 'dfn': true,
-		'kbd': true, 'samp': true, 'data': true, 'time': true, 'mark': true, 'br': true,
-		'wbr': true, 'hr': true, 'li': true, 'dt': true, 'dd': true, 'td': true, 'th': true,
-		'tr': true,	'noinclude': true, 'includeonly': true, 'onlyinclude': true};
+	var urlProtocols = new RegExp( config.mwextUrlProtocols, 'i' ),
+		permittedHtmlTags = {'b': true, 'bdi': true, 'del': true, 'i': true, 'ins': true,
+			'u': true, 'font': true, 'big': true, 'small': true, 'sub': true, 'sup': true,
+			'h1': true, 'h2': true, 'h3': true, 'h4': true, 'h5': true, 'h6': true, 'cite': true,
+			'code': true, 'em': true, 's': true, 'strike': true, 'strong': true, 'tt': true,
+			'var': true, 'div': true, 'center': true, 'blockquote': true, 'ol': true, 'ul': true,
+			'dl': true, 'table': true, 'caption': true, 'pre': true, 'ruby': true, 'rb': true,
+			'rp': true, 'rt': true, 'rtc': true, 'p': true, 'span': true, 'abbr': true, 'dfn': true,
+			'kbd': true, 'samp': true, 'data': true, 'time': true, 'mark': true, 'br': true,
+			'wbr': true, 'hr': true, 'li': true, 'dt': true, 'dd': true, 'td': true, 'th': true,
+			'tr': true,	'noinclude': true, 'includeonly': true, 'onlyinclude': true},
+		isBold, isItalic, firstsingleletterword, firstmultiletterword, firstspace, mBold, mItalic, mTokens = [], mStyle;
 
 	function makeStyle( style, state, endGround ) {
-		if ( state.isBold ) {
+		if ( isBold ) {
 			style += ' strong';
 		}
-		if ( state.isItalic ) {
+		if ( isItalic ) {
 			style += ' em';
 		}
 		return makeLocalStyle( style, state, endGround );
@@ -268,7 +269,14 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 			state.tokenize = inExternalLinkText;
 			return makeStyle( '', state );
 		}
-		if ( stream.match( /[^\s\u00a0\]\{\&~]+/ ) || stream.eatSpace() ) {
+		if ( stream.match( /[^\s\u00a0\]\{\&~']+/ ) || stream.eatSpace() ) {
+			if ( stream.peek() === '\'' ) {
+				if ( stream.match( '\'\'', false ) ) {
+					state.tokenize = inExternalLinkText;
+				} else {
+					stream.next();
+				}
+			}
 			return makeStyle( 'mw-extlink', state );
 		}
 		return eatWikiText( 'mw-extlink', '' )( stream, state );
@@ -312,7 +320,7 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 //					if ( !stream.eatSpace() ) {
 //						state.ImInBlock.push( 'LinkTrail' );
 //					}
-		} 
+		}
 		if ( stream.match( /[\s\u00a0]*[^\s\u00a0#\|\]\&~\{]+/ ) || stream.eatSpace() ) { //FIXME '{{' brokes Link, sample [[z{{page]]
 			return makeStyle( 'mw-link-pagename mw-pagename', state );
 		}
@@ -344,25 +352,25 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 	}
 
 	function eatLinkText() {
-		var isBold, isItalic;
+		var linkIsBold, linkIsItalic;
 		return function ( stream, state ) {
 			if ( stream.match( ']]' ) ) {
 				state.tokenize = state.stack.pop();
 				return makeLocalStyle( 'mw-link-bracket', state, 'nLink' );
 			}
 			if ( stream.match( '\'\'\'' ) ) {
-				isBold = (isBold ? false : true);
+				linkIsBold = (linkIsBold ? false : true);
 				return makeLocalStyle( 'mw-link-text mw-apostrophes', state );
 			}
 			if ( stream.match( '\'\'' ) ) {
-				isItalic = (isItalic ? false : true);
+				linkIsItalic = (linkIsItalic ? false : true);
 				return makeLocalStyle( 'mw-link-text mw-apostrophes', state );
 			}
 			var tmpstyle = 'mw-link-text';
-			if ( isBold ) {
+			if ( linkIsBold ) {
 				tmpstyle += ' strong';
 			}
-			if ( isItalic ) {
+			if ( linkIsItalic ) {
 				tmpstyle += ' em';
 			}
 			if ( stream.match( /[^'\]\{\&~]+/ ) ) {
@@ -390,7 +398,7 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 				state.tokenize = state.stack.pop();
 				return makeLocalStyle( (isHtmlTag ? 'mw-htmltag-name' : 'mw-exttag-name'), state );
 			}
-			
+
 			if ( isHtmlTag ) {
 				if ( isCloseTag ) {
 					state.tokenize = eatChar( '>', 'mw-htmltag-bracket' );
@@ -450,9 +458,10 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 
 	function eatExtTagArea( name ) {
 		return function( stream, state ) {
-			var origString = false, from = stream.pos, to;
-			var pattern = new RegExp( '</' + name + '\\s*>' );
-			var m = pattern.exec( from ? stream.string.slice( from ) : stream.string );
+			var origString = false, from = stream.pos, to,
+				pattern = new RegExp( '</' + name + '\\s*>' ),
+				m = pattern.exec( from ? stream.string.slice( from ) : stream.string );
+
 			if ( m ) {
 				if ( m.index === 0 ) {
 					state.tokenize = eatExtCloseTag( name );
@@ -467,6 +476,7 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 				origString = stream.string;
 				stream.string = origString.slice( 0, to );
 			}
+
 			state.stack.push( state.tokenize );
 			state.tokenize = eatExtTokens( origString );
 			return state.tokenize( stream, state );
@@ -502,6 +512,13 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 		};
 	}
 
+	function eatStartTable( stream, state ) {
+		stream.match( '{|' );
+		stream.eatSpace();
+		state.tokenize = inTableDefinition;
+		return 'mw-table-bracket';
+	}
+
 	function inTableDefinition( stream, state ) {
 		if ( stream.sol() ) {
 			state.tokenize = inTable;
@@ -510,12 +527,26 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 		return eatWikiText( 'mw-table-definition', '' )( stream, state );
 	}
 
+	function inTableCaption( stream, state ) {
+		if ( stream.sol() && stream.match( /[\s\u00a0]*[\|!]/, false ) ) {
+			state.tokenize = inTable;
+			return inTable( stream, state );
+		}
+		return eatWikiText( 'mw-table-caption', '' )( stream, state );
+	}
+
 	function inTable( stream, state ) {
 		if ( stream.sol() ) {
+			stream.eatSpace();
 			if ( stream.eat( '|' ) ) {
 				if ( stream.eat( '-' ) ) {
 					stream.eatSpace();
 					state.tokenize = inTableDefinition;
+					return makeLocalStyle( 'mw-table-delimiter', state );
+				}
+				if ( stream.eat( '+' ) ) {
+					stream.eatSpace();
+					state.tokenize = inTableCaption;
 					return makeLocalStyle( 'mw-table-delimiter', state );
 				}
 				if ( stream.eat( '}' ) ) {
@@ -538,20 +569,17 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 	function eatTableRow( isStart, isHead ) {
 		return function ( stream, state ) {
 			if ( stream.sol() ) {
-				var peek = stream.peek();
-				if ( peek === '|' || peek === '!' ) {
+				if ( stream.match( /[\s\u00a0]*[\|!]/, false ) ) {
 					state.tokenize = inTable;
-					return state.tokenize( stream, state );
+					return inTable( stream, state );
 				}
-				state.isBold = false;
-				state.isItalic = false;
 			} else {
 				if ( stream.match( /[^'\|\{\[<\&~]+/ ) ) {
 					return makeStyle( (isHead ? 'strong' : ''), state );
 				}
 				if ( stream.match( '||' ) || isHead && stream.match( '!!' ) || (isStart && stream.eat( '|' )) ) {
-					state.isBold = false;
-					state.isItalic = false;
+					isBold = false;
+					isItalic = false;
 					if ( isStart ) {
 						state.tokenize = eatTableRow( false, isHead );
 					}
@@ -562,6 +590,39 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 		};
 	}
 
+	function eatFreeExternalLinkProtocol( stream, state ) {
+		stream.match( urlProtocols );
+		state.tokenize = eatFreeExternalLink;
+		return makeLocalStyle( 'mw-free-extlink-protocol', state );
+	}
+
+	function eatFreeExternalLink( stream, state ) {
+		if ( stream.eol() ) {
+			// @todo error message
+		} else if ( stream.match( /[^\s\u00a0\{\[\]<>~\)\.,']*/ ) ) {
+			if ( stream.peek() === '~' ) {
+				if ( !stream.match( /~{3,}/, false ) ) {
+					stream.match( /~*/ );
+					return makeLocalStyle( 'mw-free-extlink', state );
+				}
+			} else if ( stream.peek() === '{' ) {
+				if ( !stream.match( /\{\{/, false ) ) {
+					stream.next();
+					return makeLocalStyle( 'mw-free-extlink', state );
+				}
+			} else if ( stream.peek() === '\'' ) {
+				if ( !stream.match( '\'\'', false ) ) {
+					stream.next();
+					return makeLocalStyle( 'mw-free-extlink', state );
+				}
+			} else if ( stream.match( /[\)\.,]+(?=[^\s\u00a0\{\[\]<>~\)\.,])/ ) ) {
+				return makeLocalStyle( 'mw-free-extlink', state );
+			}
+		}
+		state.tokenize = state.stack.pop();
+		return makeLocalStyle( 'mw-free-extlink', state );
+	}
+
 	function eatWikiText( style, mnemonicStyle ) {
 		return function( stream, state ) {
 			function chain( parser ) {
@@ -569,17 +630,18 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 				state.tokenize = parser;
 				return parser( stream, state );
 			}
-			var sol = stream.sol();
-			var ch = stream.next();
+			var ch, sol = stream.sol();
 
 			if ( sol ) {
-				state.isBold = false;
-				state.isItalic = false;
+				if ( stream.match( urlProtocols ) ) { // highlight free external links, bug T108448
+					state.stack.push( state.tokenize );
+					state.tokenize = eatFreeExternalLink;
+					return makeLocalStyle( 'mw-free-extlink-protocol', state );
+				}
+				ch = stream.next();
 				switch ( ch ) {
-					case ' ':
-						return 'mw-skipformatting';
 					case '-':
-						if ( stream.match( '---' ) ) {
+						if ( stream.match( /----*/ ) ) {
 							return 'mw-hr';
 						}
 						break;
@@ -599,10 +661,28 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 						}
 						break;
 					case ':':
+						if ( stream.match( /:*{\|/, false ) ) { // Highlight indented tables :{|, bug T108454
+							state.stack.push( state.tokenize );
+							state.tokenize = eatStartTable;
+						}
 						if ( stream.match( /:*[\*#]*/ ) ) {
 							return 'mw-indenting';
 						}
 						break;
+					case ' ':
+						if ( stream.match( /[\s\u00a0]*:*{\|/, false ) ) { // Leading spaces is the correct syntax for a table, bug T108454
+							stream.eatSpace();
+							if ( stream.match( /:+/ ) ) { // ::{|
+								state.stack.push( state.tokenize );
+								state.tokenize = eatStartTable;
+								return 'mw-indenting';
+							}
+							stream.eat( '{' );
+						} else {
+							return 'mw-skipformatting';
+						}
+						// break is not necessary here
+						/*falls through*/
 					case '{':
 						if ( stream.eat( '|' ) ) {
 							stream.eatSpace();
@@ -611,18 +691,26 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 							return 'mw-table-bracket';
 						}
 				}
+			} else {
+				ch = stream.next();
 			}
 
 			switch ( ch ) {
 				case '&':
 					return makeStyle( eatMnemonic( stream, style, mnemonicStyle ), state );
 				case '\'':
-					if ( stream.match( '\'\'' ) ) {
-						state.isBold = state.isBold ? false : true;
-						return makeLocalStyle( 'mw-apostrophes', state );
-					} else if ( stream.eat( '\'' ) ) {
-						state.isItalic = state.isItalic ? false : true;
-						return makeLocalStyle( 'mw-apostrophes', state );
+					if ( stream.match( /'*(?=''''')/ ) || stream.match( /'''(?!')/, false ) ) { // skip the irrelevant apostrophes ( >5 or =4 )
+						break;
+					}
+					if ( stream.match( '\'\'' ) ) { // bold\
+						if ( !(firstsingleletterword || stream.match( '\'\'', false )) ) {
+							prepareItalicForCorrection( stream );
+						}
+						isBold = isBold ? false : true;
+						return makeLocalStyle( 'mw-apostrophes-bold', state );
+					} else if ( stream.eat( '\'' ) ) { // italic
+						isItalic = isItalic ? false : true;
+						return makeLocalStyle( 'mw-apostrophes-italic', state );
 					}
 					break;
 				case '[':
@@ -646,7 +734,7 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 					}
 					break;
 				case '{':
-					if ( stream.match( '{{' ) ) { // Variable
+					if ( !stream.match( '{{{{', false ) && stream.match( '{{' ) ) { // Template parameter (skip parameters inside a template transclusion, Bug: T108450)
 						stream.eatSpace();
 						state.stack.push( state.tokenize );
 						state.tokenize = inVariable;
@@ -712,24 +800,66 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 						return 'mw-signature';
 					}
 					break;
+				default:
+					if ( /[\s\u00a0]/.test( ch ) ) {
+						stream.eatSpace();
+						if ( stream.match( urlProtocols, false ) ) { // highlight free external links, bug T108448
+							state.stack.push( state.tokenize );
+							state.tokenize = eatFreeExternalLinkProtocol;
+							return makeStyle( style, state );
+						}
+					}
+					break;
 			}
 			stream.match( /[^\s\u00a0_>\}\[\]<\{\'\|\&\:~]+/ );
-			var ret = makeStyle( style, state );
-			return ret;
+			return makeStyle( style, state );
 		};
+	}
+
+	/**
+	 * Remembers position and status for rollbacking.
+	 * It needed for change bold to italic with apostrophe before it if required
+	 * @see https://phabricator.wikimedia.org/T108455
+	 * @param CodeMirror.StringStream stream
+	 * @returns null
+	 */
+	function prepareItalicForCorrection( stream ) {
+		// see Parser::doQuotes() in MediaWiki core, it works similar
+		// firstsingleletterword has maximum priority
+		// firstmultiletterword has medium priority
+		// firstspace has low priority
+		var end = stream.pos,
+			str = stream.string.substr( 0, end - 3 ),
+			x1 = str.substr( -1, 1 ),
+			x2 = str.substr( -2, 1 );
+
+		// firstsingleletterword olways is undefined here
+		if ( x1 === ' ' ) {
+			if ( firstmultiletterword || firstspace ) {
+				return;
+			}
+			firstspace = end;
+		} else if ( x2 === ' ' ) {
+			firstsingleletterword = end;
+		} else if ( firstmultiletterword ) {
+			return;
+		} else {
+			firstmultiletterword = end;
+		}
+		// remember bold and italic state for restore
+		mBold = isBold;
+		mItalic = isItalic;
 	}
 
 	return {
 		startState: function() {
-			return { tokenize: eatWikiText('', ''), stack: [], InHtmlTag:[], isBold: false, isItalic: false, extName: false, extMode: false, extState: false, nTemplate: 0, nLink: 0, nExt: 0 };
+			return { tokenize: eatWikiText('', ''), stack: [], InHtmlTag:[], extName: false, extMode: false, extState: false, nTemplate: 0, nLink: 0, nExt: 0 };
 		},
 		copyState: function( state ) {
 			return {
 				tokenize: state.tokenize,
 				stack: state.stack.concat( [] ),
 				InHtmlTag: state.InHtmlTag.concat( [] ),
-				isBold: state.isBold,
-				isItalic: state.isItalic,
 				extName: state.extName,
 				extMode: state.extMode,
 				extState: state.extMode !== false && CodeMirror.copyState( state.extMode, state.extState ),
@@ -739,7 +869,68 @@ CodeMirror.defineMode( 'mediawiki', function( config/*, parserConfig */ ) {
 			};
 		},
 		token: function( stream, state ) {
-			return state.tokenize( stream, state );
+			var style, p, t, f,
+				readyTokens = [],
+				tmpTokens = [];
+
+			if ( mTokens.length > 0 ) { // just send saved tokens till they exists
+				t = mTokens.shift();
+				stream.pos = t.pos;
+				state = t.state;
+				return t.style;
+			}
+
+			if ( stream.sol() ) { // reset bold and italic status in every new line
+				isBold = false;
+				isItalic = false;
+				firstsingleletterword = undefined;
+				firstmultiletterword = undefined;
+				firstspace = undefined;
+			}
+
+			do {
+				style = state.tokenize( stream, state ); // get token style
+				f = firstsingleletterword || firstmultiletterword || firstspace;
+				if ( f ) { // rollback point exists
+					if ( f !== p ) { // new rollbak point
+						p = f;
+						if ( tmpTokens.length > 0 ) { // it's not first rollbak point
+							readyTokens = readyTokens.concat( tmpTokens ); // save tokens
+							tmpTokens = [];
+						}
+					}
+					tmpTokens.push( { // save token
+						pos: stream.pos,
+						style: style,
+						state: CodeMirror.copyState( state.extMode ? state.extMode : 'mediawiki', state )
+					} );
+				} else { // rollback point not exists
+					mStyle = style; // remember style before possible rollback point
+					return style; // just return token style
+				}
+			} while ( !stream.eol() );
+
+			if ( isBold && isItalic ) { // needs to rollback
+				isItalic = mItalic; // restore status
+				isBold = mBold;
+				firstsingleletterword = undefined;
+				firstmultiletterword = undefined;
+				firstspace = undefined;
+				if ( readyTokens.length > 0 ) { // it contains tickets before the point of rollback
+					readyTokens[readyTokens.length-1].pos++; // add one apostrophe, next token will be italic (two apostrophes)
+					mTokens = readyTokens; // for sending tokens till the point of rollback
+				} else { // there are no tikets before the point of rollback
+					stream.pos = tmpTokens[0].pos - 2; // eat( '\'')
+					return mStyle; // send saved Style
+				}
+			} else { // not needs to rollback
+				mTokens = readyTokens.concat( tmpTokens ); // send all saved tokens
+			}
+			// return first saved token
+			t = mTokens.shift();
+			stream.pos = t.pos;
+			state = t.state;
+			return t.style;
 		},
 		blankLine: function( state ) {
 			if ( state.extName ) {

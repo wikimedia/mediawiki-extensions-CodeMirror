@@ -1,5 +1,9 @@
 /* global CodeMirror, mediaWiki */
 ( function ( mw, $ ) {
+	if ( mw.config.get( 'wgCodeEditorCurrentLanguage' ) ) { // If the CodeEditor is used then just exit;
+		return;
+	}
+
 	// codeMirror needs a special textselection jQuery function to work, save the current one to restore when
 	// CodeMirror get's disabled.
 	var origTextSelection = $.fn.textSelection,
@@ -18,6 +22,10 @@
 				 */
 				getContents: function () {
 					return codeMirror.doc.getValue();
+				},
+
+				setContents: function ( newContents ) {
+					codeMirror.doc.setValue( newContents );
 				},
 
 				/**
@@ -205,6 +213,8 @@
 		 */
 		addCodeMirrorToWikiEditor = function () {
 			if ( $( '#wikiEditor-section-main' ).length > 0 ) {
+				var msg = codeMirror ? 'codemirror-disable-label' : 'codemirror-enable-label';
+
 				$( '#wpTextbox1' ).wikiEditor(
 					'addToToolbar',
 					{
@@ -213,7 +223,7 @@
 							'codemirror':{
 								'tools': {
 									'CodeMirror': {
-										label: 'CodeMirror',
+										label: mw.msg( msg ),
 										type: 'button',
 										// FIXME: There should be a better way?
 										icon: mw.config.get( 'wgExtensionAssetsPath' ) + '/CodeMirror/resources/images/cm-' + ( codeMirror ? 'on.png' : 'off.png' ),
@@ -230,7 +240,28 @@
 					}
 				);
 			}
-		};
+		},
+		originHooksTextarea = $.valHooks.textarea;
+
+	// define JQuery hook for searching and replacing text using JS if CodeMirror is enabled, see Bug: T108711
+	$.valHooks.textarea = {
+		get: function( elem ) {
+			if ( elem.id === 'wpTextbox1' && codeMirror ) {
+				return codeMirror.doc.getValue();
+			} else if ( originHooksTextarea ) {
+				return originHooksTextarea.get( elem );
+			}
+			return elem.value;
+		},
+		set: function( elem, value ) {
+			if ( elem.id === 'wpTextbox1' && codeMirror ) {
+				return codeMirror.doc.setValue( value );
+			} else if ( originHooksTextarea ) {
+				return originHooksTextarea.set( elem, value );
+			}
+			elem.value = value;
+		}
+	};
 
 	/**
 	 * Save CodeMirror enabled pref.
@@ -238,6 +269,9 @@
 	 * @param {Boolean} prefValue True, if CodeMirror should be enabled by default, otherwise false.
 	 */
 	function setCodeEditorPreference( prefValue ) {
+		if ( mw.user.isAnon() ) { // Skip it for anon users
+			return;
+		}
 		api.postWithToken( 'options', {
 			action: 'options',
 			optionname: 'usecodemirror',
@@ -269,11 +303,15 @@
 			codeMirror = false;
 			$.fn.textSelection = origTextSelection;
 			$src = mw.config.get( 'wgExtensionAssetsPath' ) + '/CodeMirror/resources/images/' + ( context ? 'cm-off.png' : 'old-cm-off.png' );
-			$img.attr( 'src', $src );
+			$img
+				.attr( 'src', $src )
+				.attr( 'title', mw.msg( 'codemirror-enable-label' ) );
 		} else {
 			enableCodeMirror();
 			$src = mw.config.get( 'wgExtensionAssetsPath' ) + '/CodeMirror/resources/images/' + ( context ? 'cm-on.png' : 'old-cm-on.png' );
-			$img.attr( 'src', $src );
+			$img
+				.attr( 'src', $src )
+				.attr( 'title', mw.msg( 'codemirror-disable-label' ) );
 			setCodeEditorPreference( true );
 		}
 	}
@@ -297,7 +335,10 @@
 				lineWrapping: true,
 				readOnly: textbox1[0].readOnly,
 				// select mediawiki as text input mode
-				mode: 'text/mediawiki'
+				mode: 'text/mediawiki',
+				extraKeys: {
+					Tab: false
+				}
 			} );
 		// Our best friend, IE, needs some special css
 		if ( window.navigator.userAgent.indexOf('Trident/') > -1 ) {
