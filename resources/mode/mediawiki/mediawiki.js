@@ -1,7 +1,3 @@
-( function ( mod, CodeMirror ) {
-	mod( CodeMirror );
-}( mod, CodeMirror ) );
-
 ( function ( CodeMirror ) {
 	'use strict';
 
