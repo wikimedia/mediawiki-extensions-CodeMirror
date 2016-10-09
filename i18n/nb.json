@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Jon Harald Søby"
+		]
+	},
+	"codemirror-desc": "Gir syntaksmarkering i wikitekstredigereren",
+	"codemirror-enable-label": "Slå på CodeMirror (syntaksmarkering)",
+	"codemirror-disable-label": "Slå av CodeMirror (syntaksmarkering)"
+}
