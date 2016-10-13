@@ -2,8 +2,11 @@
 	"@metadata": {
 		"authors": [
 			"Vitorvicentevalente",
-			"Nemo bis"
+			"Nemo bis",
+			"Hamilton Abreu"
 		]
 	},
-	"codemirror-desc": "Destaque da sintaxe de edição para páginas wiki usando [http://codemirror.net/ CodeMirror]"
+	"codemirror-desc": "Destaque da sintaxe de edição para páginas wiki usando [http://codemirror.net/ CodeMirror]",
+	"codemirror-enable-label": "Ativar CodeMirror (destaque de sintaxe)",
+	"codemirror-disable-label": "Desativar CodeMirror (destaque de sintaxe)"
 }
