@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Giromin Cangiaxo"
+		]
+	},
+	"codemirror-desc": "O permette d'evidençiâ a scintasci inte l'editor de wiki-testo",
+	"codemirror-enable-label": "Attiva CodeMirror (Syntaxhighlight)",
+	"codemirror-disable-label": "Disattiva CodeMirror (Syntaxhighlight)"
+}
