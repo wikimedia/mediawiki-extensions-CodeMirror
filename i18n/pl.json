@@ -1,8 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"Chrumps"
+			"Chrumps",
+			"Woytecr"
 		]
 	},
-	"codemirror-desc": "Edycja wiki z podświetleniem składni za pomocą [http://codemirror.net/ CodeMirror]"
+	"codemirror-desc": "Dostarcza podświetlanie składni w edytorze wikitekstu",
+	"codemirror-enable-label": "Włącz CodeMirror (Podświetlanie składni)",
+	"codemirror-disable-label": "Wyłącz CodeMirror (Podświetlanie składni)"
 }
