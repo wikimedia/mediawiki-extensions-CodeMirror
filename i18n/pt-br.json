@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"!Silent"
+		]
+	},
+	"codemirror-desc": "Fornece um realce de sintaxe no editor de wikitexto",
+	"codemirror-enable-label": "Habilitar o CodeMirror (realçador de sintaxe)",
+	"codemirror-disable-label": "Desativar o CodeMirror (realçador de sintaxe)"
+}
