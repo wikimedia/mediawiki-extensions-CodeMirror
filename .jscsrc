@@ -1,6 +1,0 @@
-{
-	"preset": "wikimedia",
-	"requireVarDeclFirst": null,
-	"requireMultipleVarDecl": null,
-	"disallowEmptyBlocks": null
-}
