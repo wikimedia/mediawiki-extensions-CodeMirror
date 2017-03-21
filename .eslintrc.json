@@ -7,7 +7,10 @@
 	},
 	"globals": {
 		"mediaWiki": false,
-		"CodeMirror": false
+		"CodeMirror": false,
+		"ve": false,
+		"mw": false,
+		"OO": false
 	},
 	"rules": {
 		"dot-notation": [ "error", { "allowKeywords": true } ]

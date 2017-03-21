@@ -96,6 +96,37 @@
 				"ext.CodeMirror.lib.mode.clike",
 				"ext.CodeMirror.lib"
 			]
+		},
+		"ext.CodeMirror.visualEditor.init": {
+			"scripts": [
+				"modules/ve-cm/ve.ui.CodeMirror.init.js"
+			],
+			"styles": [
+				"modules/ve-cm/ve.ui.CodeMirror.init.less"
+			],
+			"messages": [
+				"codemirror-toggle-label"
+			],
+			"targets": [
+				"desktop"
+			]
+		},
+		"ext.CodeMirror.visualEditor": {
+			"dependencies": [
+				"ext.visualEditor.mwcore",
+				"ext.CodeMirror.lib",
+				"ext.CodeMirror.mode.mediawiki",
+				"mediawiki.api",
+				"mediawiki.api.options",
+				"user.options"
+			],
+			"scripts": [
+				"modules/ve-cm/ve.ui.CodeMirrorAction.js",
+				"modules/ve-cm/ve.ui.CodeMirrorTool.js"
+			],
+			"targets": [
+				"desktop"
+			]
 		}
 	},
 	"ResourceFileModulePaths": {
@@ -113,6 +144,10 @@
 			"CodeMirrorHooks::onGetPreferences"
 		]
 	},
+	"VisualEditorPluginModules": [
+		"ext.CodeMirror.visualEditor.init",
+		"ext.CodeMirror.visualEditor"
+	],
 	"config": {
 		"CodeMirrorEnableFrontend": true
 	},

@@ -1,0 +1,49 @@
+.ve-init-mw-desktopArticleTarget {
+	.CodeMirror {
+		height: auto;
+		z-index: -1;
+		position: absolute;
+		top: 0;
+		left: 0;
+		font-size: 1.17216em;
+		line-height: 1.5em;
+		width: 100%;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+
+		padding: 0 1.14286em; /* 1/0.875 */
+		@media screen and ( min-width: 982px ) {
+			padding: 0 1.71429em; /* surface-margin-left (1.5em) / (mw-body-content font-size) 0.875em */
+		}
+	}
+
+	.CodeMirror pre,
+	.CodeMirror-lines {
+		padding: 0;
+	}
+
+	.CodeMirror-scroll {
+		margin-right: 0;
+		overflow: auto !important; /* stylelint-disable-line declaration-no-important */
+	}
+
+	.CodeMirror-sizer {
+		border-right: 0;
+	}
+
+	.CodeMirror pre.cm-mw-section-1,
+	.CodeMirror pre.cm-mw-section-2 {
+		font-size: inherit;
+		line-height: inherit;
+		font-weight: bold;
+	}
+}
+
+.ve-ce-documentNode-codeEditor-hide {
+	opacity: 0.3;
+}
+
+.ve-ce-documentNode-codeEditor-webkit-hide {
+	-webkit-text-fill-color: transparent;
+}
