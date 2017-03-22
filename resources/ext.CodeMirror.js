@@ -227,7 +227,9 @@
 		}
 
 		retval = fn[ command ].call( this, options );
-		codeMirror.focus();
+		if ( command === 'setSelection' ) {
+			codeMirror.focus();
+		}
 
 		return retval;
 	}
