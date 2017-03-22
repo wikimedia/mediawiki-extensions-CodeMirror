@@ -12,13 +12,6 @@
 	api = new mw.Api();
 	originHooksTextarea = $.valHooks.textarea;
 
-	function getIcon( isOn, isClassicToolbar ) {
-		return mw.config.get( 'wgExtensionAssetsPath' ) + '/CodeMirror/resources/images/' +
-			( isClassicToolbar ? 'old-' : '' ) +
-			'cm-' +
-			( isOn ? 'on' : 'off' ) + '.png';
-	}
-
 	// function for a textselection function for CodeMirror
 	function cmTextSelection( command, options ) {
 		var fn, retval;
@@ -256,8 +249,7 @@
 								CodeMirror: {
 									label: mw.msg( useCodeMirror ? 'codemirror-disable-label' : 'codemirror-enable-label' ),
 									type: 'button',
-									// FIXME: There should be a better way?
-									icon: getIcon( useCodeMirror ),
+									offset: [ 2, 2 ],
 									action: {
 										type: 'callback',
 										execute: function ( context ) {
@@ -271,6 +263,8 @@
 					}
 				}
 			);
+			// eslint-disable-next-line no-use-before-define
+			switchCodeMirror( $( '#wpTextbox1' ).data( 'wikiEditor-context' ) );
 		}
 	}
 
@@ -313,7 +307,7 @@
 	 * @param {Object} [wikiEditor] WikiEditor, if present
 	 */
 	function switchCodeMirror( wikiEditor ) {
-		var src, label;
+		var label;
 
 		if ( codeMirror ) {
 			setCodeEditorPreference( false );
@@ -321,24 +315,23 @@
 			codeMirror.toTextArea();
 			codeMirror = null;
 			$.fn.textSelection = origTextSelection;
-			src = getIcon( false, !wikiEditor );
 			label = mw.msg( 'codemirror-enable-label' );
 		} else {
 			// eslint-disable-next-line no-use-before-define
 			enableCodeMirror( !!wikiEditor );
-			src = getIcon( true, !wikiEditor );
 			label = mw.msg( 'codemirror-disable-label' );
 			setCodeEditorPreference( true );
 		}
 		if ( wikiEditor ) {
 			wikiEditor.modules.toolbar.$toolbar.find( 'a.tool[rel=CodeMirror]' )
-				.css( 'background-image', 'url(' + src + ')' )
+				.toggleClass( 'tool-codemirror-on', !!codeMirror )
+				.toggleClass( 'tool-codemirror-off', !codeMirror )
 				.attr( 'title', label );
 		} else {
-			$( '#CodeMirrorButton' ).attr( {
-				src: src,
-				title: label
-			} );
+			$( '#mw-editbutton-codemirror' )
+				.toggleClass( 'mw-editbutton-codemirror-on', !!codeMirror )
+				.toggleClass( 'mw-editbutton-codemirror-off', !codeMirror )
+				.attr( 'title', label );
 		}
 	}
 
@@ -391,27 +384,27 @@
 	if ( $.inArray( mw.config.get( 'wgAction' ), [ 'edit', 'submit' ] ) !== -1 ) {
 		// This function shouldn't be called without user.options is loaded, but it's not guaranteed
 		mw.loader.using( 'user.options', function () {
-			var $image;
 			// This can be the string "0" if the user disabled the preference - Bug T54542#555387
 			if ( mw.loader.getState( 'ext.wikiEditor' ) && mw.user.options.get( 'usebetatoolbar' ) > 0 ) {
 				// load wikiEditor's toolbar (if not already) and add our button
 				$( '#wpTextbox1' ).on( 'wikiEditor-toolbar-doneInitialSections', addCodeMirrorToWikiEditor );
 			} else {
-				// If WikiEditor isn't enabled, add CodeMirror button to the default wiki editor toolbar
-				$image = $( '<img>' ).attr( {
-					width: 23,
-					height: 22,
-					src: getIcon( useCodeMirror, true ),
-					alt: 'CodeMirror',
-					title: 'CodeMirror',
-					id: 'CodeMirrorButton',
-					'class': 'mw-toolbar-editbutton'
-				} ).click( function () {
-					switchCodeMirror();
-					return false;
+				mw.loader.using( 'mediawiki.toolbar', function () {
+					// If WikiEditor isn't enabled, add CodeMirror button to the default wiki editor toolbar
+					mw.toolbar.addButton( {
+						speedTip: 'CodeMirror',
+						imageId: 'mw-editbutton-codemirror',
+						onClick: function () {
+							switchCodeMirror();
+							return false;
+						}
+					} );
+					$( function () {
+						$( '#mw-editbutton-codemirror' )
+							// Classes used here: mw-editbutton-codemirror-on, mw-editbutton-codemirror-off
+							.addClass( 'mw-editbutton-codemirror-' + ( useCodeMirror ? 'on' : 'off' ) );
+					} );
 				} );
-
-				$( '#toolbar' ).append( $image );
 			}
 		} );
 	}

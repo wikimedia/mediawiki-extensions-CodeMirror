@@ -29,6 +29,9 @@
 			"scripts": [
 				"ext.CodeMirror.js"
 			],
+			"styles": [
+				"ext.CodeMirror.less"
+			],
 			"messages": [
 				"codemirror-enable-label",
 				"codemirror-disable-label"
