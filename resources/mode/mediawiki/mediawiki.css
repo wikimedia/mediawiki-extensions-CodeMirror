@@ -1,17 +1,3 @@
-.CodeMirror {
-	line-height: 1.5em;
-	padding: 0.1em;
-}
-
-.mw-codeMirror-classicToolbar {
-	border: 1px solid #a2a9b1;
-}
-
-.CodeMirror pre,
-.CodeMirror-lines {
-	padding: 0;
-}
-
 /* stylelint-disable block-opening-brace-newline-before, block-opening-brace-newline-after,
 	block-closing-brace-space-after, declaration-block-single-line-max-declarations,
 	declaration-block-semicolon-newline-after, selector-list-comma-newline-after */

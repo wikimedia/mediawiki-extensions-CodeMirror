@@ -415,8 +415,8 @@
 							return false;
 						}
 					} );
-					// We don't know when button will be added, wait until the document is ready for update it
-					$( document ).ready( function () { updateToolbarButton(); } );
+					// We don't know when button will be added, wait until the document is ready to update it
+					$( function () { updateToolbarButton(); } );
 				} );
 			}
 		} );
