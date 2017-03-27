@@ -24,7 +24,8 @@
 				"ext.CodeMirror.other",
 				"mediawiki.api",
 				"jquery.textSelection",
-				"user.options"
+				"user.options",
+				"mediawiki.api.options"
 			],
 			"scripts": [
 				"ext.CodeMirror.js"
