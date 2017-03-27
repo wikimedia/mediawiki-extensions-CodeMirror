@@ -264,7 +264,7 @@
 				}
 			);
 			// eslint-disable-next-line no-use-before-define
-			switchCodeMirror( $( '#wpTextbox1' ).data( 'wikiEditor-context' ) );
+			updateToolbarButton( $( '#wpTextbox1' ).data( 'wikiEditor-context' ) );
 		}
 	}
 
@@ -294,6 +294,8 @@
 	 * @param {boolean} prefValue True, if CodeMirror should be enabled by default, otherwise false.
 	 */
 	function setCodeEditorPreference( prefValue ) {
+		useCodeMirror = prefValue; // Save state for function updateToolbarIcon()
+
 		if ( mw.user.isAnon() ) { // Skip it for anon users
 			return;
 		}
@@ -302,37 +304,51 @@
 	}
 
 	/**
+	 * Updates CodeMirror button on the toolbar according to the current state (on/off)
+	 *
+	 * @param {Object} [wikiEditor] WikiEditor, if present
+	 */
+	function updateToolbarButton( wikiEditor ) {
+		var label;
+
+		if ( useCodeMirror ) {
+			label = mw.msg( 'codemirror-enable-label' );
+		} else {
+			label = mw.msg( 'codemirror-disable-label' );
+		}
+
+		if ( wikiEditor ) {
+			wikiEditor.modules.toolbar.$toolbar.find( 'a.tool[rel=CodeMirror]' )
+				.toggleClass( 'tool-codemirror-on', !!useCodeMirror )
+				.toggleClass( 'tool-codemirror-off', !useCodeMirror )
+				.attr( 'title', label );
+		} else {
+			$( '#mw-editbutton-codemirror' )
+				.toggleClass( 'mw-editbutton-codemirror-on', !!useCodeMirror )
+				.toggleClass( 'mw-editbutton-codemirror-off', !useCodeMirror )
+				.attr( 'title', label );
+		}
+	}
+
+	/**
 	 * Enables or disables CodeMirror
 	 *
 	 * @param {Object} [wikiEditor] WikiEditor, if present
 	 */
 	function switchCodeMirror( wikiEditor ) {
-		var label;
-
 		if ( codeMirror ) {
 			setCodeEditorPreference( false );
 			codeMirror.save();
 			codeMirror.toTextArea();
 			codeMirror = null;
 			$.fn.textSelection = origTextSelection;
-			label = mw.msg( 'codemirror-enable-label' );
+
 		} else {
 			// eslint-disable-next-line no-use-before-define
 			enableCodeMirror( !!wikiEditor );
-			label = mw.msg( 'codemirror-disable-label' );
 			setCodeEditorPreference( true );
 		}
-		if ( wikiEditor ) {
-			wikiEditor.modules.toolbar.$toolbar.find( 'a.tool[rel=CodeMirror]' )
-				.toggleClass( 'tool-codemirror-on', !!codeMirror )
-				.toggleClass( 'tool-codemirror-off', !codeMirror )
-				.attr( 'title', label );
-		} else {
-			$( '#mw-editbutton-codemirror' )
-				.toggleClass( 'mw-editbutton-codemirror-on', !!codeMirror )
-				.toggleClass( 'mw-editbutton-codemirror-off', !codeMirror )
-				.attr( 'title', label );
-		}
+		updateToolbarButton( wikiEditor );
 	}
 
 	/**
@@ -399,11 +415,8 @@
 							return false;
 						}
 					} );
-					$( function () {
-						$( '#mw-editbutton-codemirror' )
-							// Classes used here: mw-editbutton-codemirror-on, mw-editbutton-codemirror-off
-							.addClass( 'mw-editbutton-codemirror-' + ( useCodeMirror ? 'on' : 'off' ) );
-					} );
+					// We don't know when button will be added, wait until the document is ready for update it
+					$( document ).ready( function () { updateToolbarButton(); } );
 				} );
 			}
 		} );
