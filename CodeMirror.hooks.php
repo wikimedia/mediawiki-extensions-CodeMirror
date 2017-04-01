@@ -4,10 +4,12 @@ class CodeMirrorHooks {
 
 	/** @var null|array Cached version of global variables, if available, otherwise null */
 	private static $globalVariableScript = null;
+
 	/** @var null|boolean Saves, if CodeMirror should be loaded on this page or not */
 	private static $isEnabled = null;
+
 	/** @var array values passed from other extensions for use in self::getGlobalVariables() */
-	private static $extModes = array();
+	private static $extModes = [];
 
 	/**
 	 * ResourceLoaderRegisterModules hook handler to conditionally register CodeMirror modules
@@ -15,59 +17,53 @@ class CodeMirrorHooks {
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/ResourceLoaderRegisterModules
 	 *
 	 * @param ResourceLoader &$rl The ResourceLoader object
-	 *
-	 * @return bool Always true
 	 */
 	public static function onResourceLoaderRegisterModules( ResourceLoader $rl ) {
-		$codeMirrorResourceTemplate = array(
+		$codeMirrorResourceTemplate = [
 			'localBasePath' => __DIR__ . '/resources',
 			'remoteExtPath' => 'CodeMirror/resources',
-		);
+		];
 
-		self::$extModes = array(
-			'tag' => array(
+		self::$extModes = [
+			'tag' => [
 				'pre' => 'mw-tag-pre',
 				'nowiki' => 'mw-tag-nowiki',
-			),
-			'func' => array(),
-			'data' => array(),
-		);
-		$extResources = array(
-			'scripts' => array(),
-			'styles' => array(),
-			'messages' => array(),
-			'dependencies' => array( 'ext.CodeMirror.lib' => true ),
-		);
+			],
+			'func' => [],
+			'data' => [],
+		];
+		$extResources = [
+			'scripts' => [],
+			'styles' => [],
+			'messages' => [],
+			'dependencies' => [ 'ext.CodeMirror.lib' => true ],
+		];
 
 		// Check if WikiEditor is installed and add it as a dependency
-		// FIXME: Is there no better solution doing it?
-		$resourceModules = $rl->getConfig()->get( 'ResourceModules' );
-		if ( isset( $resourceModules['ext.wikiEditor'] ) ) {
+		if ( \ExtensionRegistry::getInstance()->isLoaded( 'WikiEditor' ) ) {
 			$extResources['dependencies']['ext.wikiEditor'] = true;
 		}
 
 		// enable other extensions to add additional resources and modes
-		Hooks::run( 'CodeMirrorGetAdditionalResources', array( &$extResources, &self::$extModes ) );
+		Hooks::run( 'CodeMirrorGetAdditionalResources', [ &$extResources, &self::$extModes ] );
 
 		// Prepare array of resources for ResourceLoader
-		$codeMirror = array(
+		$codeMirror = [
 			'scripts' => array_keys( $extResources['scripts'] ),
 			'styles' => array_keys( $extResources['styles'] ),
 			'messages' => array_keys( $extResources['messages'] ),
 			'dependencies' => array_keys( $extResources['dependencies'] ),
 			'group' => 'ext.CodeMirror',
-		) + $codeMirrorResourceTemplate;
+		] + $codeMirrorResourceTemplate;
 
-		$rl->register( array( 'ext.CodeMirror.other' => $codeMirror ) );
-
-		return true;
+		$rl->register( [ 'ext.CodeMirror.other' => $codeMirror ] );
 	}
 
 	/**
 	 * Checks, if CodeMirror should be loaded on this page or not.
 	 *
 	 * @param IContextSource $context The current ContextSource object
-	 * @return boolean
+	 * @return bool
 	 */
 	private static function isCodeMirrorEnabled( IContextSource $context ) {
 		global $wgCodeMirrorEnableFrontend;
@@ -78,7 +74,7 @@ class CodeMirrorHooks {
 			self::$isEnabled = $wgCodeMirrorEnableFrontend &&
 				in_array(
 					Action::getActionName( $context ),
-					array( 'edit', 'submit' )
+					[ 'edit', 'submit' ]
 				);
 		}
 
@@ -105,14 +101,14 @@ class CodeMirrorHooks {
 			}
 
 			// initialize global vars
-			$globalVariableScript = array(
+			$globalVariableScript = [
 				'ExtModes' => self::$extModes,
 				'Tags' => array_fill_keys( $wgParser->getTags(), true ),
-				'DoubleUnderscore' => array( array(), array() ),
+				'DoubleUnderscore' => [ [], [] ],
 				'FunctionSynonyms' => $wgParser->mFunctionSynonyms,
 				'UrlProtocols' => $wgParser->mUrlProtocols,
 				'LinkTrailCharacters' =>  $contObj->linkTrail(),
-			);
+			];
 
 			$mw = $contObj->getMagicWords();
 			foreach ( MagicWord::getDoubleUnderscoreArray()->names as $name ) {
@@ -151,8 +147,6 @@ class CodeMirrorHooks {
 	 *
 	 * @param array $vars
 	 * @param OutputPage $out
-	 *
-	 * @return bool Always true
 	 */
 	public static function onMakeGlobalVariablesScript( array &$vars, OutputPage $out ) {
 		$context = $out->getContext();
@@ -169,8 +163,6 @@ class CodeMirrorHooks {
 	 *
 	 * @param OutputPage $out
 	 * @param Skin $skin
-	 *
-	 * @return bool Always true
 	 */
 	public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
 		if ( self::isCodeMirrorEnabled( $out->getContext() ) ) {
@@ -185,17 +177,14 @@ class CodeMirrorHooks {
 	 *
 	 * @param User $user
 	 * @param array $defaultPreferences
-	 *
-	 * @return bool Always true
 	 */
 	public static function onGetPreferences( User $user, &$defaultPreferences ) {
 		// CodeMirror is enabled by default for users.
 		// It can be changed by adding '$wgDefaultUserOptions['usecodemirror'] = 0;' into LocalSettings.php
-		$defaultPreferences['usecodemirror'] = array(
+		$defaultPreferences['usecodemirror'] = [
 			'type' => 'api',
 			'default' => '1',
-		);
-		return true;
+		];
 	}
 
 }
