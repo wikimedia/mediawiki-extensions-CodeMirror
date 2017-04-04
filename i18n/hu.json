@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Tacsipacsi"
+		]
+	},
+	"codemirror-enable-label": "CodeMirror (szintaxiskiemelés) engedélyezése",
+	"codemirror-disable-label": "CodeMirror (szintaxiskiemelés) letiltása"
+}
