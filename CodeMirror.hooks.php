@@ -89,6 +89,7 @@ class CodeMirrorHooks {
 	 * @return array
 	 */
 	public static function getGlobalVariables( IContextSource $context ) {
+		/** @var Parser $wgParser */
 		global $wgParser;
 
 		// if we already created these variable array, return it
