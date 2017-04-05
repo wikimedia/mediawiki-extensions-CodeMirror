@@ -410,11 +410,11 @@
 					return makeLocalStyle( 'mw-htmltag-name', state );
 				} // it is the extension tag
 				if ( isCloseTag ) {
-					state.tokenize = eatChar( '>', 'mw-exttag-bracket' );
+					state.tokenize = eatChar( '>', 'mw-exttag-bracket mw-ext-' + name );
 				} else {
 					state.tokenize = eatExtTagAttribute( name );
 				}
-				return makeLocalStyle( 'mw-exttag-name', state );
+				return makeLocalStyle( 'mw-exttag-name mw-ext-' + name, state );
 			};
 		}
 
@@ -439,7 +439,7 @@
 		function eatExtTagAttribute( name ) {
 			return function ( stream, state ) {
 				if ( stream.match( /[^>\/<\{\&~]+/ ) ) {
-					return makeLocalStyle( 'mw-exttag-attribute', state );
+					return makeLocalStyle( 'mw-exttag-attribute mw-ext-' + name, state );
 				}
 				if ( stream.eat( '>' ) ) {
 					state.extName = name;
@@ -448,13 +448,13 @@
 						state.extState = CodeMirror.startState( state.extMode );
 					}
 					state.tokenize = eatExtTagArea( name );
-					return makeLocalStyle( 'mw-exttag-bracket', state );
+					return makeLocalStyle( 'mw-exttag-bracket mw-ext-' + name, state );
 				}
 				if ( stream.match( '/>' ) ) {
 					state.tokenize = state.stack.pop();
-					return makeLocalStyle( 'mw-exttag-bracket', state );
+					return makeLocalStyle( 'mw-exttag-bracket mw-ext-' + name, state );
 				}
-				return eatWikiText( 'mw-exttag-attribute', '' )( stream, state );
+				return eatWikiText( 'mw-exttag-attribute mw-ext-' + name, '' )( stream, state );
 			};
 		}
 
@@ -492,7 +492,7 @@
 				stream.next(); // eat <
 				stream.next(); // eat /
 				state.tokenize = eatTagName( name.length, true, false );
-				return makeLocalStyle( 'mw-exttag-bracket', state );
+				return makeLocalStyle( 'mw-exttag-bracket mw-ext-' + name, state );
 			};
 		}
 
@@ -773,7 +773,7 @@
 					case '<':
 						isCloseTag = !!stream.eat( '/' );
 						tagname = stream.match( /[^>\/\s\u00a0\.\*\,\[\]\{\}\$\^\+\?\|\/\\'`~<=!@#%&\(\)-]+/ );
-						if ( stream.match( '!--' ) ) { // coment
+						if ( stream.match( '!--' ) ) { // comment
 							return chain( eatBlock( 'mw-comment', '-->' ) );
 						}
 						if ( tagname ) {
@@ -786,7 +786,7 @@
 								stream.backUp( tagname.length );
 								state.stack.push( state.tokenize );
 								state.tokenize = eatTagName( tagname.length, isCloseTag, false );
-								return makeLocalStyle( 'mw-exttag-bracket', state );
+								return makeLocalStyle( 'mw-exttag-bracket mw-ext-' + tagname, state );
 							}
 							if ( tagname in permittedHtmlTags ) { // Html tag
 								if ( isCloseTag === true && tagname !== state.InHtmlTag.pop() ) {
