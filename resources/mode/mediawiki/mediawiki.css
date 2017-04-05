@@ -14,8 +14,8 @@
 .cm-mw-comment { color: #aaa; font-weight: normal; }
 .cm-mw-apostrophes-bold, .cm-mw-apostrophes-italic { color: #08f; }
 
-pre.cm-mw-section-1 { font-size: 1.8em; }
-pre.cm-mw-section-2 { font-size: 1.5em; }
+pre.cm-mw-section-1 { font-size: 1.8em; line-height: 1.2em; }
+pre.cm-mw-section-2 { font-size: 1.5em; line-height: 1.2em; }
 pre.cm-mw-section-3 { font-weight: bold; }
 pre.cm-mw-section-4 { font-weight: bold; }
 pre.cm-mw-section-5 { font-weight: bold; }
