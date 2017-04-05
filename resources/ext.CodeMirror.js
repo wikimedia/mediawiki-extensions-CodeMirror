@@ -369,7 +369,7 @@
 			mwextDoubleUnderscore: mw.config.get( 'extCodeMirrorDoubleUnderscore' ),
 			mwextUrlProtocols: mw.config.get( 'extCodeMirrorUrlProtocols' ),
 			mwextModes: mw.config.get( 'extCodeMirrorExtModes' ),
-			styleActiveLine: true,
+			// styleActiveLine: true, // disabled since Bug: T162204, maybe should be optional
 			lineWrapping: true,
 			readOnly: $textbox1[ 0 ].readOnly,
 			// select mediawiki as text input mode
