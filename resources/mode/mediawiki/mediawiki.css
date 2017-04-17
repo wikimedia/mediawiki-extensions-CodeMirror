@@ -22,12 +22,12 @@ pre.cm-mw-section-5 { font-weight: bold; }
 pre.cm-mw-section-6 { font-weight: bold; }
 .cm-mw-section-header { color: #08f; font-weight: normal; }
 
-.cm-mw-template { color: #a11; font-weight: normal; }
-.cm-mw-template-name { color: #a11; font-weight: bold; }
+.cm-mw-template { color: #70a; font-weight: normal; }
+.cm-mw-template-name { color: #70a; font-weight: bold; }
 .cm-mw-template-name-mnemonic { font-weight: normal; }
-.cm-mw-template-argument-name { color: #a11; font-weight: bold; }
-.cm-mw-template-delimiter { color: #a11; font-weight: bold; }
-.cm-mw-template-bracket { color: #a11; font-weight: bold; }
+.cm-mw-template-argument-name { color: #70a; font-weight: bold; }
+.cm-mw-template-delimiter { color: #70a; font-weight: bold; }
+.cm-mw-template-bracket { color: #70a; font-weight: bold; }
 
 .cm-mw-templatevariable { color: #f50; font-weight: normal; }
 .cm-mw-templatevariable-name { color: #f50; font-weight: bold; }
@@ -35,9 +35,9 @@ pre.cm-mw-section-6 { font-weight: bold; }
 .cm-mw-templatevariable-delimiter { color: #f50; font-weight: bold; }
 
 .cm-mw-parserfunction { font-weight: normal; }
-.cm-mw-parserfunction-name { color: #70a; font-weight: bold; }
-.cm-mw-parserfunction-bracket { color: #70a; font-weight: bold; }
-.cm-mw-parserfunction-delimiter { color: #70a; font-weight: bold; }
+.cm-mw-parserfunction-name { color: #a11; font-weight: bold; }
+.cm-mw-parserfunction-bracket { color: #a11; font-weight: bold; }
+.cm-mw-parserfunction-delimiter { color: #a11; font-weight: bold; }
 
 pre.cm-mw-exttag { background-image: url( img/ext2.png ); }
 .cm-mw-exttag { background-image: url( img/ext4.png ); }
