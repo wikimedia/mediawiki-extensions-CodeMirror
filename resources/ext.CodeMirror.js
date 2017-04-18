@@ -312,9 +312,9 @@
 		var label;
 
 		if ( useCodeMirror ) {
-			label = mw.msg( 'codemirror-enable-label' );
-		} else {
 			label = mw.msg( 'codemirror-disable-label' );
+		} else {
+			label = mw.msg( 'codemirror-enable-label' );
 		}
 
 		if ( wikiEditor ) {
