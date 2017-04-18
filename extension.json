@@ -22,10 +22,10 @@
 			"dependencies": [
 				"ext.CodeMirror.lib",
 				"ext.CodeMirror.other",
-				"mediawiki.api",
 				"jquery.textSelection",
-				"user.options",
-				"mediawiki.api.options"
+				"mediawiki.api",
+				"mediawiki.api.options",
+				"user.options"
 			],
 			"scripts": [
 				"ext.CodeMirror.js"

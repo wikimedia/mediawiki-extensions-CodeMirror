@@ -39,11 +39,6 @@ class CodeMirrorHooks {
 			'dependencies' => [ 'ext.CodeMirror.lib' => true ],
 		];
 
-		// Check if WikiEditor is installed and add it as a dependency
-		if ( \ExtensionRegistry::getInstance()->isLoaded( 'WikiEditor' ) ) {
-			$extResources['dependencies']['ext.wikiEditor'] = true;
-		}
-
 		// enable other extensions to add additional resources and modes
 		Hooks::run( 'CodeMirrorGetAdditionalResources', [ &$extResources, &self::$extModes ] );
 

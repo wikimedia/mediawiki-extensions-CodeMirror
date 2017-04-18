@@ -1,5 +1,5 @@
 ( function ( mw, $ ) {
-	var origTextSelection, useCodeMirror, codeMirror, api, originHooksTextarea;
+	var origTextSelection, useCodeMirror, codeMirror, api, originHooksTextarea, wikiEditorToolbarEnabled = false;
 
 	if ( mw.config.get( 'wgCodeEditorCurrentLanguage' ) ) { // If the CodeEditor is used then just exit;
 		return;
@@ -11,6 +11,13 @@
 	useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
 	api = new mw.Api();
 	originHooksTextarea = $.valHooks.textarea;
+
+	if ( mw.loader.getState( 'ext.wikiEditor' ) ) {  // The WikiEditor extension exists
+		// This can be the string "0" if the user disabled the preference - Bug T54542#555387
+		if ( mw.user.options.get( 'usebetatoolbar' ) > 0 ) { // And the WikiEditor beta toolbar is used by the user
+			wikiEditorToolbarEnabled = true;
+		}
+	}
 
 	// function for a textselection function for CodeMirror
 	function cmTextSelection( command, options ) {
@@ -345,7 +352,7 @@
 
 		} else {
 			// eslint-disable-next-line no-use-before-define
-			enableCodeMirror( !!wikiEditor );
+			enableCodeMirror();
 			setCodeEditorPreference( true );
 		}
 		updateToolbarButton( wikiEditor );
@@ -353,10 +360,8 @@
 
 	/**
 	 * Replaces the default textarea with CodeMirror
-	 *
-	 * @param {boolean} [useWikiEditor]
 	 */
-	function enableCodeMirror( useWikiEditor ) {
+	function enableCodeMirror() {
 		var $codeMirror,
 			$textbox1 = $( '#wpTextbox1' );
 
@@ -386,7 +391,7 @@
 			'line-height': $textbox1.css( 'line-height' )
 		} );
 
-		if ( !useWikiEditor ) {
+		if ( !wikiEditorToolbarEnabled ) {
 			$codeMirror.addClass( 'mw-codeMirror-classicToolbar' );
 		}
 
@@ -398,36 +403,32 @@
 
 	/* Check if view is in edit mode and that the required modules are available. Then, customize the toolbar … */
 	if ( $.inArray( mw.config.get( 'wgAction' ), [ 'edit', 'submit' ] ) !== -1 ) {
-		// This function shouldn't be called without user.options is loaded, but it's not guaranteed
-		mw.loader.using( 'user.options', function () {
-			// This can be the string "0" if the user disabled the preference - Bug T54542#555387
-			if ( mw.loader.getState( 'ext.wikiEditor' ) && mw.user.options.get( 'usebetatoolbar' ) > 0 ) {
-				// load wikiEditor's toolbar (if not already) and add our button
-				$( '#wpTextbox1' ).on( 'wikiEditor-toolbar-doneInitialSections', addCodeMirrorToWikiEditor );
-			} else {
-				mw.loader.using( 'mediawiki.toolbar', function () {
-					// If WikiEditor isn't enabled, add CodeMirror button to the default wiki editor toolbar
-					mw.toolbar.addButton( {
-						speedTip: 'CodeMirror',
-						imageId: 'mw-editbutton-codemirror',
-						onClick: function () {
-							switchCodeMirror();
-							return false;
-						}
-					} );
-					// We don't know when button will be added, wait until the document is ready to update it
-					$( function () { updateToolbarButton(); } );
+		if ( wikiEditorToolbarEnabled ) {
+			// load wikiEditor's toolbar (if not already) and add our button
+			$( '#wpTextbox1' ).on( 'wikiEditor-toolbar-doneInitialSections', addCodeMirrorToWikiEditor );
+		} else {
+			mw.loader.using( 'mediawiki.toolbar', function () {
+				// If WikiEditor isn't enabled, add CodeMirror button to the default wiki editor toolbar
+				mw.toolbar.addButton( {
+					speedTip: 'CodeMirror',
+					imageId: 'mw-editbutton-codemirror',
+					onClick: function () {
+						switchCodeMirror();
+						return false;
+					}
 				} );
-			}
-		} );
+				// We don't know when button will be added, wait until the document is ready to update it
+				$( function () { updateToolbarButton(); } );
+			} );
+		}
 	}
 
 	// enable CodeMirror
 	if ( useCodeMirror ) {
-		if ( mw.loader.getState( 'ext.wikiEditor' ) ) {
-			$( '#wpTextbox1' ).on( 'wikiEditor-toolbar-doneInitialSections', enableCodeMirror.bind( this, true ) );
+		if ( wikiEditorToolbarEnabled ) {
+			$( '#wpTextbox1' ).on( 'wikiEditor-toolbar-doneInitialSections', enableCodeMirror.bind( this ) );
 		} else {
-			enableCodeMirror( false );
+			enableCodeMirror();
 		}
 	}
 }( mediaWiki, jQuery ) );
