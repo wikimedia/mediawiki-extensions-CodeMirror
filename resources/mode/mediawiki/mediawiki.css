@@ -41,9 +41,9 @@ pre.cm-mw-section-6 { font-weight: bold; }
 
 pre.cm-mw-exttag { background-image: url( img/ext2.png ); }
 .cm-mw-exttag { background-image: url( img/ext4.png ); }
-.cm-mw-exttag-name { color: #70a; font-weight: bold; }
-.cm-mw-exttag-bracket { color: #70a; font-weight: normal; }
-.cm-mw-exttag-attribute { color: #70a; font-weight: normal; }
+.cm-mw-exttag-name { color: #170; font-weight: bold; }
+.cm-mw-exttag-bracket { color: #170; font-weight: normal; }
+.cm-mw-exttag-attribute { color: #170; font-weight: normal; }
 
 .cm-mw-htmltag-name { color: #170; font-weight: bold; }
 .cm-mw-htmltag-bracket { color: #170; font-weight: normal; }
