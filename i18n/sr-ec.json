@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Obsuser"
+		]
+	},
+	"codemirror-enable-label": "Омогући CodeMirror (означавање синтаксе)",
+	"codemirror-disable-label": "Онемогући CodeMirror (означавање синтаксе)"
+}
