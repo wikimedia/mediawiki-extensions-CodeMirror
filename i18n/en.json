@@ -5,7 +5,5 @@
 		]
 	},
 	"codemirror-desc": "Provides syntax highlighting in wikitext editor",
-	"codemirror-enable-label": "Enable CodeMirror (Syntax highlight)",
-	"codemirror-disable-label": "Disable CodeMirror (Syntax highlight)",
 	"codemirror-toggle-label": "Syntax highlighting"
 }
