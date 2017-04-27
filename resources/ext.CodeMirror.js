@@ -1,5 +1,5 @@
 ( function ( mw, $ ) {
-	var origTextSelection, useCodeMirror, codeMirror, api, originHooksTextarea, wikiEditorToolbarEnabled = false;
+	var origTextSelection, useCodeMirror, codeMirror, api, originHooksTextarea, wikiEditorToolbarEnabled;
 
 	if ( mw.config.get( 'wgCodeEditorCurrentLanguage' ) ) { // If the CodeEditor is used then just exit;
 		return;
@@ -11,13 +11,10 @@
 	useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
 	api = new mw.Api();
 	originHooksTextarea = $.valHooks.textarea;
-
-	if ( mw.loader.getState( 'ext.wikiEditor' ) ) {  // The WikiEditor extension exists
+	// The WikiEditor extension exists the WikiEditor beta toolbar is used by the user
+	wikiEditorToolbarEnabled = !!mw.loader.getState( 'ext.wikiEditor' ) &&
 		// This can be the string "0" if the user disabled the preference - Bug T54542#555387
-		if ( mw.user.options.get( 'usebetatoolbar' ) > 0 ) { // And the WikiEditor beta toolbar is used by the user
-			wikiEditorToolbarEnabled = true;
-		}
-	}
+		mw.user.options.get( 'usebetatoolbar' ) > 0;
 
 	// function for a textselection function for CodeMirror
 	function cmTextSelection( command, options ) {
