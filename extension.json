@@ -1,6 +1,6 @@
 {
 	"name": "CodeMirror",
-	"version": "3.4.0",
+	"version": "4.0.0",
 	"author": [
 		"[https://www.mediawiki.org/wiki/User:Pastakhov Pavel Astakhov]",
 		"[https://www.mediawiki.org/wiki/User:Florianschmidtwelzow Florian Schmidt]"
@@ -18,10 +18,13 @@
 		"CodeMirrorHooks": "CodeMirror.hooks.php"
 	},
 	"ResourceModules": {
-		"ext.CodeMirror.init": {
+		"ext.CodeMirror.loader": {
+			"loaderScripts": "ext.CodeMirror.loader.js"
+		},
+		"ext.CodeMirror": {
 			"dependencies": [
 				"ext.CodeMirror.lib",
-				"ext.CodeMirror.other",
+				"ext.CodeMirror.mode.mediawiki",
 				"jquery.textSelection",
 				"mediawiki.api",
 				"mediawiki.api.options",
@@ -40,18 +43,58 @@
 		},
 		"ext.CodeMirror.lib": {
 			"scripts": [
-				"lib/codemirror/lib/codemirror.js",
-				"lib/codemirror/addon/selection/active-line.js",
-				"mode/mediawiki/mediawiki.js"
+				"lib/codemirror/lib/codemirror.js"
 			],
 			"styles": [
-				"lib/codemirror/lib/codemirror.css",
-				"lib/codemirror/addon/lint/lint.css",
-				"mode/mediawiki/mediawiki.css"
-			],
-			"targets": [
-				"mobile",
-				"desktop"
+				"lib/codemirror/lib/codemirror.css"
+			]
+		},
+		"ext.CodeMirror.mode.mediawiki": {
+			"scripts": "mode/mediawiki/mediawiki.js",
+			"styles": "mode/mediawiki/mediawiki.css",
+			"dependencies": [
+				"ext.CodeMirror.lib"
+			]
+		},
+		"ext.CodeMirror.lib.mode.css": {
+			"scripts": "lib/codemirror/mode/css/css.js",
+			"dependencies": [
+				"ext.CodeMirror.lib"
+			]
+		},
+		"ext.CodeMirror.lib.mode.javascript": {
+			"scripts": "lib/codemirror/mode/javascript/javascript.js",
+			"dependencies": [
+				"ext.CodeMirror.lib"
+			]
+		},
+		"ext.CodeMirror.lib.mode.xml": {
+			"scripts": "lib/codemirror/mode/xml/xml.js",
+			"dependencies": [
+				"ext.CodeMirror.lib"
+			]
+		},
+		"ext.CodeMirror.lib.mode.htmlmixed": {
+			"scripts": "lib/codemirror/mode/htmlmixed/htmlmixed.js",
+			"dependencies": [
+				"ext.CodeMirror.lib.mode.xml",
+				"ext.CodeMirror.lib.mode.javascript",
+				"ext.CodeMirror.lib.mode.css",
+				"ext.CodeMirror.lib"
+			]
+		},
+		"ext.CodeMirror.lib.mode.clike": {
+			"scripts": "lib/codemirror/mode/clike/clike.js",
+			"dependencies": [
+				"ext.CodeMirror.lib"
+			]
+		},
+		"ext.CodeMirror.lib.mode.php": {
+			"scripts": "lib/codemirror/mode/php/php.js",
+			"dependencies": [
+				"ext.CodeMirror.lib.mode.htmlmixed",
+				"ext.CodeMirror.lib.mode.clike",
+				"ext.CodeMirror.lib"
 			]
 		}
 	},
@@ -68,13 +111,15 @@
 		],
 		"GetPreferences": [
 			"CodeMirrorHooks::onGetPreferences"
-		],
-		"ResourceLoaderRegisterModules": [
-			"CodeMirrorHooks::onResourceLoaderRegisterModules"
 		]
 	},
 	"config": {
 		"CodeMirrorEnableFrontend": true
 	},
+	"CodeMirrorTagModes": {
+		"pre": "mw-tag-pre",
+		"nowiki": "mw-tag-nowiki"
+	},
+	"CodeMirrorPluginModules": [],
 	"manifest_version": 1
 }
