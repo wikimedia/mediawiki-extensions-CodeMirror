@@ -355,7 +355,7 @@
 			return;
 		}
 
-		mw.loader.using( config.pluginModules, function() {
+		mw.loader.using( config.pluginModules, function () {
 			var $codeMirror,
 				$textbox1 = $( '#wpTextbox1' );
 
