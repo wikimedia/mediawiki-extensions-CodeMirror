@@ -251,7 +251,7 @@
 						codemirror: {
 							tools: {
 								CodeMirror: {
-									label: mw.msg( useCodeMirror ? 'codemirror-disable-label' : 'codemirror-enable-label' ),
+									label: mw.msg( 'codemirror-toggle-label' ),
 									type: 'button',
 									offset: [ 2, 2 ],
 									action: {
@@ -313,24 +313,14 @@
 	 * @param {Object} [wikiEditor] WikiEditor, if present
 	 */
 	function updateToolbarButton( wikiEditor ) {
-		var label;
-
-		if ( useCodeMirror ) {
-			label = mw.msg( 'codemirror-disable-label' );
-		} else {
-			label = mw.msg( 'codemirror-enable-label' );
-		}
-
 		if ( wikiEditor ) {
 			wikiEditor.modules.toolbar.$toolbar.find( 'a.tool[rel=CodeMirror]' )
 				.toggleClass( 'tool-codemirror-on', !!useCodeMirror )
-				.toggleClass( 'tool-codemirror-off', !useCodeMirror )
-				.attr( 'title', label );
+				.toggleClass( 'tool-codemirror-off', !useCodeMirror );
 		} else {
 			$( '#mw-editbutton-codemirror' )
 				.toggleClass( 'mw-editbutton-codemirror-on', !!useCodeMirror )
-				.toggleClass( 'mw-editbutton-codemirror-off', !useCodeMirror )
-				.attr( 'title', label );
+				.toggleClass( 'mw-editbutton-codemirror-off', !useCodeMirror );
 		}
 	}
 
@@ -408,7 +398,7 @@
 			mw.loader.using( 'mediawiki.toolbar', function () {
 				// If WikiEditor isn't enabled, add CodeMirror button to the default wiki editor toolbar
 				mw.toolbar.addButton( {
-					speedTip: 'CodeMirror',
+					speedTip: mw.msg( 'codemirror-toggle-label' ),
 					imageId: 'mw-editbutton-codemirror',
 					onClick: function () {
 						switchCodeMirror();

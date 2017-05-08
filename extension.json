@@ -37,8 +37,7 @@
 				"ext.CodeMirror.less"
 			],
 			"messages": [
-				"codemirror-enable-label",
-				"codemirror-disable-label"
+				"codemirror-toggle-label"
 			]
 		},
 		"ext.CodeMirror.lib": {
