@@ -6,6 +6,5 @@
 		]
 	},
 	"codemirror-desc": "Dostarcza podświetlanie składni w edytorze wikitekstu",
-	"codemirror-enable-label": "Włącz CodeMirror (Podświetlanie składni)",
-	"codemirror-disable-label": "Wyłącz CodeMirror (Podświetlanie składni)"
+	"codemirror-toggle-label": "Podświetlanie składni"
 }
