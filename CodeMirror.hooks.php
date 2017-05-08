@@ -107,8 +107,8 @@ class CodeMirrorHooks {
 	 */
 	public static function onMakeGlobalVariablesScript( array &$vars, OutputPage $out ) {
 		$context = $out->getContext();
-		// add CodeMirror vars only for edit pages
-		if ( self::isCodeMirrorEnabled( $context ) ) {
+		// add CodeMirror vars on edit pages, or if VE is installed
+		if ( self::isCodeMirrorEnabled( $context ) || class_exists( 'VisualEditorHooks' )  ) {
 			$vars['extCodeMirrorConfig'] = self::getConfiguraton( $context );
 		}
 	}
