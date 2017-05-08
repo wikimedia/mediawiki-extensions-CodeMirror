@@ -22,7 +22,8 @@
 
 	CodeMirror.defineMode( 'mediawiki', function ( config /* , parserConfig */ ) {
 
-		var urlProtocols = new RegExp( config.mwextUrlProtocols, 'i' ),
+		var mwConfig = config.mwConfig,
+			urlProtocols = new RegExp( mwConfig.urlProtocols, 'i' ),
 			permittedHtmlTags = { b: true, bdi: true, del: true, i: true, ins: true,
 				u: true, font: true, big: true, small: true, sub: true, sup: true,
 				h1: true, h2: true, h3: true, h4: true, h5: true, h6: true, cite: true,
@@ -443,8 +444,8 @@
 				}
 				if ( stream.eat( '>' ) ) {
 					state.extName = name;
-					if ( name in config.mwextModes.tag ) {
-						state.extMode = CodeMirror.getMode( config, config.mwextModes.tag[ name ] );
+					if ( name in mwConfig.tagModes ) {
+						state.extMode = CodeMirror.getMode( config, mwConfig.tagModes[ name ] );
 						state.extState = CodeMirror.startState( state.extMode );
 					}
 					state.tokenize = eatExtTagArea( name );
@@ -756,7 +757,7 @@
 							name = stream.match( /([^\s\u00a0\}\[\]<\{\'\|\&\:]+)(\:|[\s\u00a0]*)(\}\}?)?(.)?/ );
 							if ( name ) {
 								stream.backUp( name[ 0 ].length );
-								if ( ( name[ 2 ] === ':' || name[ 4 ] === undefined || name[ 3 ] === '}}' ) && ( name[ 1 ].toLowerCase() in config.mwextFunctionSynonyms[ 0 ] || name[ 1 ] in config.mwextFunctionSynonyms[ 1 ] ) ) {
+								if ( ( name[ 2 ] === ':' || name[ 4 ] === undefined || name[ 3 ] === '}}' ) && ( name[ 1 ].toLowerCase() in mwConfig.functionSynonyms[ 0 ] || name[ 1 ] in mwConfig.functionSynonyms[ 1 ] ) ) {
 									state.nExt++;
 									state.stack.push( state.tokenize );
 									state.tokenize = inParserFunctionName;
@@ -778,7 +779,7 @@
 						}
 						if ( tagname ) {
 							tagname = tagname[ 0 ].toLowerCase();
-							if ( tagname in config.mwextTags ) { // Parser function
+							if ( tagname in mwConfig.tags ) { // Parser function
 								if ( isCloseTag === true ) {
 									// @todo message
 									return 'error';

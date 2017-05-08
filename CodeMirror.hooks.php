@@ -2,93 +2,57 @@
 
 class CodeMirrorHooks {
 
-	/** @var null|array Cached version of global variables, if available, otherwise null */
-	private static $globalVariableScript = null;
-
-	/** @var null|boolean Saves, if CodeMirror should be loaded on this page or not */
-	private static $isEnabled = null;
-
-	/** @var array values passed from other extensions for use in self::getGlobalVariables() */
-	private static $extModes = [];
-
-	/**
-	 * ResourceLoaderRegisterModules hook handler to conditionally register CodeMirror modules
-	 *
-	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/ResourceLoaderRegisterModules
-	 *
-	 * @param ResourceLoader &$rl The ResourceLoader object
-	 */
-	public static function onResourceLoaderRegisterModules( ResourceLoader $rl ) {
-		$codeMirrorResourceTemplate = [
-			'localBasePath' => __DIR__ . '/resources',
-			'remoteExtPath' => 'CodeMirror/resources',
-		];
-
-		self::$extModes = [
-			'tag' => [
-				'pre' => 'mw-tag-pre',
-				'nowiki' => 'mw-tag-nowiki',
-			],
-			'func' => [],
-			'data' => [],
-		];
-		$extResources = [
-			'scripts' => [],
-			'styles' => [],
-			'messages' => [],
-			'dependencies' => [ 'ext.CodeMirror.lib' => true ],
-		];
-
-		// enable other extensions to add additional resources and modes
-		Hooks::run( 'CodeMirrorGetAdditionalResources', [ &$extResources, &self::$extModes ] );
-
-		// Prepare array of resources for ResourceLoader
-		$codeMirror = [
-			'scripts' => array_keys( $extResources['scripts'] ),
-			'styles' => array_keys( $extResources['styles'] ),
-			'messages' => array_keys( $extResources['messages'] ),
-			'dependencies' => array_keys( $extResources['dependencies'] ),
-			'group' => 'ext.CodeMirror',
-		] + $codeMirrorResourceTemplate;
-
-		$rl->register( [ 'ext.CodeMirror.other' => $codeMirror ] );
-	}
-
 	/**
 	 * Checks, if CodeMirror should be loaded on this page or not.
 	 *
 	 * @param IContextSource $context The current ContextSource object
+	 * @global bool $wgCodeMirrorEnableFrontend Should CodeMirror be loaded on this page
+	 * @staticvar null|boolean $isEnabled Saves, if CodeMirror should be loaded on this page or not
 	 * @return bool
 	 */
 	private static function isCodeMirrorEnabled( IContextSource $context ) {
 		global $wgCodeMirrorEnableFrontend;
+		static $isEnabled = null;
 
 		// Check, if we already checked, if page action is editing, if not, do it now
-		if ( is_null( self::$isEnabled ) ) {
-			// edit can be 'edit' and 'submit'
-			self::$isEnabled = $wgCodeMirrorEnableFrontend &&
+		if ( $isEnabled === null ) {
+			$isEnabled = $wgCodeMirrorEnableFrontend &&
 				in_array(
 					Action::getActionName( $context ),
 					[ 'edit', 'submit' ]
 				);
 		}
 
-		return self::$isEnabled;
+		return $isEnabled;
+	}
 
+	/**
+	 * This function are used by the MobileFrontend extension only and will be
+	 * removed
+	 * @deprecated since version 4.0.0
+	 * @todo Remove usage in MobileFrontend and this function some time later
+	 * @param IContextSource $context
+	 * @return array
+	 */
+	public static function getGlobalVariables() {
+		MWDebug::deprecated( __METHOD__ );
+		return [];
 	}
 
 	/**
 	 * Returns an array of variables for CodeMirror to work (tags and so on)
 	 *
 	 * @param IContextSource $context The current ContextSource object
+	 * @global Parser $wgParser
+	 * @staticvar array $config Cached version of configuration
 	 * @return array
 	 */
-	public static function getGlobalVariables( IContextSource $context ) {
-		/** @var Parser $wgParser */
+	public static function getConfiguraton( IContextSource $context ) {
 		global $wgParser;
+		static $config = [];
 
 		// if we already created these variable array, return it
-		if ( !self::$globalVariableScript ) {
+		if ( !$config ) {
 			$contObj = $context->getLanguage();
 
 			if ( !isset( $wgParser->mFunctionSynonyms ) ) {
@@ -96,14 +60,15 @@ class CodeMirrorHooks {
 				$wgParser->firstCallInit();
 			}
 
-			// initialize global vars
-			$globalVariableScript = [
-				'ExtModes' => self::$extModes,
-				'Tags' => array_fill_keys( $wgParser->getTags(), true ),
-				'DoubleUnderscore' => [ [], [] ],
-				'FunctionSynonyms' => $wgParser->mFunctionSynonyms,
-				'UrlProtocols' => $wgParser->mUrlProtocols,
-				'LinkTrailCharacters' =>  $contObj->linkTrail(),
+			// initialize configuration
+			$config = [
+				'pluginModules' => ExtensionRegistry::getInstance()->getAttribute( 'CodeMirrorPluginModules' ),
+				'tagModes' => ExtensionRegistry::getInstance()->getAttribute( 'CodeMirrorTagModes' ),
+				'tags' => array_fill_keys( $wgParser->getTags(), true ),
+				'doubleUnderscore' => [ [], [] ],
+				'functionSynonyms' => $wgParser->mFunctionSynonyms,
+				'urlProtocols' => $wgParser->mUrlProtocols,
+				'linkTrailCharacters' =>  $contObj->linkTrail(),
 			];
 
 			$mw = $contObj->getMagicWords();
@@ -111,10 +76,10 @@ class CodeMirrorHooks {
 				if ( isset( $mw[$name] ) ) {
 					$caseSensitive = array_shift( $mw[$name] ) == 0 ? 0 : 1;
 					foreach ( $mw[$name] as $n ) {
-						$globalVariableScript['DoubleUnderscore'][$caseSensitive][ $caseSensitive ? $n : $contObj->lc( $n ) ] = $name;
+						$config['doubleUnderscore'][$caseSensitive][ $caseSensitive ? $n : $contObj->lc( $n ) ] = $name;
 					}
 				} else {
-					$globalVariableScript['DoubleUnderscore'][0][] = $name;
+					$config['doubleUnderscore'][0][] = $name;
 				}
 			}
 
@@ -122,18 +87,14 @@ class CodeMirrorHooks {
 				if ( isset( $mw[$name] ) ) {
 					$caseSensitive = array_shift( $mw[$name] ) == 0 ? 0 : 1;
 					foreach ( $mw[$name] as $n ) {
-						$globalVariableScript['FunctionSynonyms'][$caseSensitive][ $caseSensitive ? $n : $contObj->lc( $n ) ] = $name;
+						$config['functionSynonyms'][$caseSensitive][ $caseSensitive ? $n : $contObj->lc( $n ) ] = $name;
 					}
 				}
 			}
 
-			// prefix all variables and save it into class variable
-			foreach ( $globalVariableScript as $key=> $value ) {
-				self::$globalVariableScript["extCodeMirror$key"] = $value;
-			}
 		}
 
-		return self::$globalVariableScript;
+		return $config;
 	}
 
 	/**
@@ -148,7 +109,7 @@ class CodeMirrorHooks {
 		$context = $out->getContext();
 		// add CodeMirror vars only for edit pages
 		if ( self::isCodeMirrorEnabled( $context ) ) {
-			$vars += self::getGlobalVariables( $context );
+			$vars['extCodeMirrorConfig'] = self::getConfiguraton( $context );
 		}
 	}
 
@@ -162,7 +123,7 @@ class CodeMirrorHooks {
 	 */
 	public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
 		if ( self::isCodeMirrorEnabled( $out->getContext() ) ) {
-			$out->addModules( 'ext.CodeMirror.init' );
+			$out->addModules( 'ext.CodeMirror' );
 		}
 	}
 

@@ -359,43 +359,44 @@
 	 * Replaces the default textarea with CodeMirror
 	 */
 	function enableCodeMirror() {
-		var $codeMirror,
-			$textbox1 = $( '#wpTextbox1' );
+		var config = mw.config.get( 'extCodeMirrorConfig' );
 
 		if ( codeMirror ) {
 			return;
 		}
-		codeMirror = CodeMirror.fromTextArea( $textbox1[ 0 ], {
-			mwextFunctionSynonyms: mw.config.get( 'extCodeMirrorFunctionSynonyms' ),
-			mwextTags: mw.config.get( 'extCodeMirrorTags' ),
-			mwextDoubleUnderscore: mw.config.get( 'extCodeMirrorDoubleUnderscore' ),
-			mwextUrlProtocols: mw.config.get( 'extCodeMirrorUrlProtocols' ),
-			mwextModes: mw.config.get( 'extCodeMirrorExtModes' ),
-			// styleActiveLine: true, // disabled since Bug: T162204, maybe should be optional
-			lineWrapping: true,
-			readOnly: $textbox1[ 0 ].readOnly,
-			// select mediawiki as text input mode
-			mode: 'text/mediawiki',
-			extraKeys: {
-				Tab: false
+
+		mw.loader.using( config.pluginModules, function() {
+			var $codeMirror,
+				$textbox1 = $( '#wpTextbox1' );
+
+			codeMirror = CodeMirror.fromTextArea( $textbox1[ 0 ], {
+				mwConfig: config,
+				// styleActiveLine: true, // disabled since Bug: T162204, maybe should be optional
+				lineWrapping: true,
+				readOnly: $textbox1[ 0 ].readOnly,
+				// select mediawiki as text input mode
+				mode: 'text/mediawiki',
+				extraKeys: {
+					Tab: false
+				}
+			} );
+			$codeMirror = $( codeMirror.getWrapperElement() );
+
+			// HACK: <textarea> font size varies by browser (chrome/FF/IE)
+			$codeMirror.css( {
+				'font-size': $textbox1.css( 'font-size' ),
+				'line-height': $textbox1.css( 'line-height' )
+			} );
+
+			if ( !wikiEditorToolbarEnabled ) {
+				$codeMirror.addClass( 'mw-codeMirror-classicToolbar' );
 			}
+
+			// set the height of the textarea
+			codeMirror.setSize( null, $textbox1.height() );
+			// Overwrite default textselection of WikiEditor to work with CodeMirror, too
+			$.fn.textSelection = cmTextSelection;
 		} );
-		$codeMirror = $( codeMirror.getWrapperElement() );
-
-		// HACK: <textarea> font size varies by browser (chrome/FF/IE)
-		$codeMirror.css( {
-			'font-size': $textbox1.css( 'font-size' ),
-			'line-height': $textbox1.css( 'line-height' )
-		} );
-
-		if ( !wikiEditorToolbarEnabled ) {
-			$codeMirror.addClass( 'mw-codeMirror-classicToolbar' );
-		}
-
-		// set the hight of the textarea
-		codeMirror.setSize( null, $textbox1.height() );
-		// Overwrite default textselection of WikiEditor to work with CodeMirror, too
-		$.fn.textSelection = cmTextSelection;
 	}
 
 	/* Check if view is in edit mode and that the required modules are available. Then, customize the toolbar … */
