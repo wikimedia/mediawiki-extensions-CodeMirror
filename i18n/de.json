@@ -5,6 +5,5 @@
 		]
 	},
 	"codemirror-desc": "Ermöglicht Syntax-Hervorhebungen im Wikitext-Editor",
-	"codemirror-enable-label": "CodeMirror aktivieren (Syntaxhervorhebung)",
-	"codemirror-disable-label": "CodeMirror deaktivieren (Syntaxhervorhebung)"
+	"codemirror-toggle-label": "Syntaxhervorhebung"
 }

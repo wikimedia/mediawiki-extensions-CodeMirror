@@ -1,10 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Lokal Profil"
+			"Lokal Profil",
+			"WikiPhoenix"
 		]
 	},
 	"codemirror-desc": "Ger syntaxmarkerad redigering för redigering av wikitext",
-	"codemirror-enable-label": "Aktivera CodeMirror (Syntaxmarkering)",
-	"codemirror-disable-label": "Inaktivera CodeMirror (Syntaxmarkering)"
+	"codemirror-toggle-label": "Syntaxmarkering"
 }

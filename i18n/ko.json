@@ -6,6 +6,5 @@
 		]
 	},
 	"codemirror-desc": "위키텍스트 편집기에서 구문 강조 기능을 제공합니다",
-	"codemirror-enable-label": "CodeMirror (문법 강조) 사용",
-	"codemirror-disable-label": "CodeMirror (문법 강조) 사용 안 함"
+	"codemirror-toggle-label": "문법 강조"
 }
