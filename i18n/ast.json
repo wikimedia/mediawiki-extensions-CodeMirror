@@ -5,6 +5,5 @@
 		]
 	},
 	"codemirror-desc": "Ufre sintaxis resaltada nel editor de testu wiki",
-	"codemirror-enable-label": "Activar CodeMirror (resaltáu de sintaxis)",
-	"codemirror-disable-label": "Desactivar CodeMirror (resaltáu de sintaxis)"
+	"codemirror-toggle-label": "Resaltador de sintaxis"
 }
