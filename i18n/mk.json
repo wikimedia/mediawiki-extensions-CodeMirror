@@ -5,6 +5,5 @@
 		]
 	},
 	"codemirror-desc": "Дава потцртување на синтаксата во уредувачот на викитекст",
-	"codemirror-enable-label": "Вклучи го CodeMirror (подвлекување на синтакса)",
-	"codemirror-disable-label": "Исклучи го CodeMirror (подвлекување на синтакса)"
+	"codemirror-toggle-label": "Истакнување на синтакса"
 }
