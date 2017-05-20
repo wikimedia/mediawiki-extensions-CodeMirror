@@ -242,34 +242,40 @@
 	 * Adds the CodeMirror button to WikiEditor
 	 */
 	function addCodeMirrorToWikiEditor() {
-		if ( $( '#wikiEditor-section-main' ).length > 0 ) {
-			$( '#wpTextbox1' ).wikiEditor(
-				'addToToolbar',
-				{
-					section: 'main',
-					groups: {
-						codemirror: {
-							tools: {
-								CodeMirror: {
-									label: mw.msg( 'codemirror-toggle-label' ),
-									type: 'button',
-									offset: [ 2, 2 ],
-									action: {
-										type: 'callback',
-										execute: function ( context ) {
-											// eslint-disable-next-line no-use-before-define
-											switchCodeMirror( context );
-										}
+		var $codeMirrorButton;
+
+		$( '#wpTextbox1' ).wikiEditor(
+			'addToToolbar',
+			{
+				section: 'main',
+				groups: {
+					codemirror: {
+						tools: {
+							CodeMirror: {
+								label: mw.msg( 'codemirror-toggle-label' ),
+								type: 'button',
+								action: {
+									type: 'callback',
+									execute: function () {
+										// eslint-disable-next-line no-use-before-define
+										switchCodeMirror();
 									}
 								}
 							}
 						}
 					}
 				}
-			);
-			// eslint-disable-next-line no-use-before-define
-			updateToolbarButton( $( '#wpTextbox1' ).data( 'wikiEditor-context' ) );
-		}
+			}
+		);
+
+		$codeMirrorButton = $( '#wpTextbox1' ).data( 'wikiEditor-context' ).modules.toolbar.$toolbar.find( 'a.tool[rel=CodeMirror]' );
+		// FIXME in extensions/WikiEditor/modules/jquery.wikiEditor.toolbar.js
+		$codeMirrorButton
+			.css( 'background-image', '' )
+			.attr( 'id', 'mw-editbutton-codemirror' );
+
+		// eslint-disable-next-line no-use-before-define
+		updateToolbarButton();
 	}
 
 	// define JQuery hook for searching and replacing text using JS if CodeMirror is enabled, see Bug: T108711
@@ -309,27 +315,17 @@
 
 	/**
 	 * Updates CodeMirror button on the toolbar according to the current state (on/off)
-	 *
-	 * @param {Object} [wikiEditor] WikiEditor, if present
 	 */
-	function updateToolbarButton( wikiEditor ) {
-		if ( wikiEditor ) {
-			wikiEditor.modules.toolbar.$toolbar.find( 'a.tool[rel=CodeMirror]' )
-				.toggleClass( 'tool-codemirror-on', !!useCodeMirror )
-				.toggleClass( 'tool-codemirror-off', !useCodeMirror );
-		} else {
-			$( '#mw-editbutton-codemirror' )
-				.toggleClass( 'mw-editbutton-codemirror-on', !!useCodeMirror )
-				.toggleClass( 'mw-editbutton-codemirror-off', !useCodeMirror );
-		}
+	function updateToolbarButton() {
+		$( '#mw-editbutton-codemirror' )
+			.toggleClass( 'mw-editbutton-codemirror-on', !!useCodeMirror )
+			.toggleClass( 'mw-editbutton-codemirror-off', !useCodeMirror );
 	}
 
 	/**
 	 * Enables or disables CodeMirror
-	 *
-	 * @param {Object} [wikiEditor] WikiEditor, if present
 	 */
-	function switchCodeMirror( wikiEditor ) {
+	function switchCodeMirror() {
 		if ( codeMirror ) {
 			setCodeEditorPreference( false );
 			codeMirror.save();
@@ -342,7 +338,7 @@
 			enableCodeMirror();
 			setCodeEditorPreference( true );
 		}
-		updateToolbarButton( wikiEditor );
+		updateToolbarButton();
 	}
 
 	/**

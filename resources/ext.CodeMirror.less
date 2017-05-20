@@ -15,19 +15,25 @@
 }
 
 .mw-editbutton-codemirror-on {
-	.background-image-svg( 'images/old-cm-on.svg', 'images/old-cm-on.png' );
+	// WikiEditor toolbar
+	&.tool-button {
+		.background-image-svg( 'images/cm-on.svg', 'images/cm-on.png' );
+	}
+	// Classic toolbar
+	&.mw-toolbar-editbutton {
+		.background-image-svg( 'images/old-cm-on.svg', 'images/old-cm-on.png' );
+	}
 }
 
 .mw-editbutton-codemirror-off {
-	.background-image-svg( 'images/old-cm-off.svg', 'images/old-cm-off.png' );
-}
-
-.wikiEditor-ui-toolbar .tool-codemirror-on {
-	.background-image-svg( 'images/cm-on.svg', 'images/cm-on.png' );
-}
-
-.wikiEditor-ui-toolbar .tool-codemirror-off {
-	.background-image-svg( 'images/cm-off.svg', 'images/cm-off.png' );
+	// WikiEditor toolbar
+	&.tool-button {
+		.background-image-svg( 'images/cm-off.svg', 'images/cm-off.png' );
+	}
+	// Classic toolbar
+	&.mw-toolbar-editbutton {
+		.background-image-svg( 'images/old-cm-off.svg', 'images/old-cm-off.png' );
+	}
 }
 
 .oo-ui-popupWidget.ve-init-mw-switchPopupWidget {
