@@ -11,16 +11,20 @@ class CodeMirrorHooks {
 	 * @return bool
 	 */
 	private static function isCodeMirrorEnabled( IContextSource $context ) {
-		global $wgCodeMirrorEnableFrontend;
+		global $wgCodeMirrorEnableFrontend, $wgCodeMirrorBetaFeature;
 		static $isEnabled = null;
 
 		// Check, if we already checked, if page action is editing, if not, do it now
 		if ( $isEnabled === null ) {
-			$isEnabled = $wgCodeMirrorEnableFrontend &&
-				in_array(
-					Action::getActionName( $context ),
-					[ 'edit', 'submit' ]
-				);
+			if ( $wgCodeMirrorEnableFrontend && !$wgCodeMirrorBetaFeature ) {
+				$isEnabled = in_array( Action::getActionName( $context ), [ 'edit', 'submit' ] );
+			} else {
+				$isEnabled = $wgCodeMirrorEnableFrontend &&
+					in_array( Action::getActionName( $context ), [ 'edit', 'submit' ] ) &&
+					$wgCodeMirrorBetaFeature &&
+					ExtensionRegistry::getInstance()->isLoaded( 'BetaFeatures' ) &&
+					BetaFeatures::isFeatureEnabled( $context->getUser(), 'codemirror-syntax-highlight' );
+			}
 		}
 
 		return $isEnabled;
@@ -142,6 +146,28 @@ class CodeMirrorHooks {
 			'type' => 'api',
 			'default' => '1',
 		];
+	}
+
+	/**
+	 * GetBetaFeaturePreferences hook handler
+	 *
+	 * @param User $user
+	 * @param array $preferences
+	 */
+	public static function onGetBetaFeaturePreferences( User $user, &$preferences ) {
+		global $wgCodeMirrorEnableFrontend, $wgCodeMirrorBetaFeature, $wgExtensionAssetsPath;
+		if ( $wgCodeMirrorEnableFrontend && $wgCodeMirrorBetaFeature ) {
+			$preferences['codemirror-syntax-highlight'] = [
+				'label-message' => 'codemirror-beta-title',
+				'desc-message' => 'codemirror-beta-desc',
+				'screenshot' => [
+					'ltr' => $wgExtensionAssetsPath . '/CodeMirror/resources/images/codemirror-beta-LTR.svg',
+					'rtl' => $wgExtensionAssetsPath . '/CodeMirror/resources/images/codemirror-beta-RTL.svg'
+				],
+				'info-link' => 'https://meta.wikimedia.org/wiki/Community_Tech/Wikitext_editor_syntax_highlighting',
+				'discussion-link' => 'https://meta.wikimedia.org/wiki/Talk:Community_Tech/Wikitext_editor_syntax_highlighting'
+			];
+		}
 	}
 
 }
