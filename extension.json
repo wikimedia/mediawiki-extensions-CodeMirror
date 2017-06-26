@@ -28,16 +28,23 @@
 				"jquery.textSelection",
 				"mediawiki.api",
 				"mediawiki.api.options",
-				"user.options"
+				"user.options",
+				"oojs-ui"
 			],
 			"scripts": [
 				"ext.CodeMirror.js"
 			],
 			"styles": [
-				"ext.CodeMirror.less"
+				"ext.CodeMirror.less",
+				"modules/popup.less"
 			],
 			"messages": [
-				"codemirror-toggle-label"
+				"codemirror-toggle-label",
+				"codemirror-popup-syntax",
+				"codemirror-popup-highlighting",
+				"codemirror-popup-desc",
+				"codemirror-popup-btn-yes",
+				"codemirror-popup-btn-no"
 			]
 		},
 		"ext.CodeMirror.lib": {

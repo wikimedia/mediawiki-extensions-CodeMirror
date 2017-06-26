@@ -127,6 +127,7 @@ class CodeMirrorHooks {
 	 */
 	public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
 		if ( self::isCodeMirrorEnabled( $out->getContext() ) ) {
+			$out->enableOOUI();
 			$out->addModules( 'ext.CodeMirror' );
 		}
 	}
