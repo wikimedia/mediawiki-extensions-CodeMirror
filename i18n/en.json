@@ -5,5 +5,7 @@
 		]
 	},
 	"codemirror-desc": "Provides syntax highlighting in wikitext editor",
-	"codemirror-toggle-label": "Syntax highlighting"
+	"codemirror-toggle-label": "Syntax highlighting",
+	"codemirror-beta-title": "Syntax highlighting",
+	"codemirror-beta-desc": "Syntax highlighting makes editing easier by using color and shade to visually separate article text from the code for links, references and templates."
 }

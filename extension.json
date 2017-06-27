@@ -141,6 +141,9 @@
 		],
 		"GetPreferences": [
 			"CodeMirrorHooks::onGetPreferences"
+		],
+		"GetBetaFeaturePreferences": [
+			"CodeMirrorHooks::onGetBetaFeaturePreferences"
 		]
 	},
 	"VisualEditorPluginModules": [
@@ -148,7 +151,8 @@
 		"ext.CodeMirror.visualEditor"
 	],
 	"config": {
-		"CodeMirrorEnableFrontend": true
+		"CodeMirrorEnableFrontend": true,
+		"CodeMirrorBetaFeature": false
 	},
 	"CodeMirrorTagModes": {
 		"pre": "mw-tag-pre",
