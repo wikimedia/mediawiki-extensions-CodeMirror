@@ -1,5 +1,6 @@
 ( function ( mw, $ ) {
-	var origTextSelection, useCodeMirror, codeMirror, api, originHooksTextarea, wikiEditorToolbarEnabled;
+	var origTextSelection, useCodeMirror, codeMirror, api, originHooksTextarea,
+		wikiEditorToolbarEnabled, popupStatus = null, popup = false;
 
 	if ( mw.config.get( 'wgCodeEditorCurrentLanguage' ) ) { // If the CodeEditor is used then just exit;
 		return;
@@ -385,12 +386,41 @@
 		} );
 	}
 
+	/**
+	 * Add a popup for first time users (T165003)
+	 */
+	function addPopup() {
+		this.popuptext = '<div class=\'codemirror-popup-div\'>' +
+			'<div class=\'codemirror-popup-top\'>{ <span class=\'codemirror-popup-color-blue\'>' +
+			mw.msg( 'codemirror-popup-syntax' ) + '</span> ' +
+			mw.msg( 'codemirror-popup-highlighting' ) + ' }</div>' +
+			'<div class=\'codemirror-popup-text\'>' + mw.msg( 'codemirror-popup-desc' ) + '</div>' +
+			'<div class=\'codemirror-popup-btn codemirror-popup-btn-yes\'>' + mw.msg( 'codemirror-popup-btn-yes' ) + '</div>' +
+			'<div class=\'codemirror-popup-btn codemirror-popup-btn-no\'>' + mw.msg( 'codemirror-popup-btn-no' ) + '</div>' +
+			'</div>';
+		popup = new OO.ui.PopupWidget( {
+			$content: $( this.popuptext ),
+			containerPadding: 80,
+			$floatableContainer: $( '#mw-editbutton-codemirror' ),
+			padded: false,
+			width: 215
+		} );
+		// Add our popup to the body, it will find its correct position using $floatableContainer
+		$( 'body' ).append( popup.$element );
+
+		// To display the popup, toggle the visibility to 'true'
+		popup.toggle( true );
+	}
+
 	/* Check if view is in edit mode and that the required modules are available. Then, customize the toolbar … */
 	if ( $.inArray( mw.config.get( 'wgAction' ), [ 'edit', 'submit' ] ) !== -1 ) {
 		if ( wikiEditorToolbarEnabled ) {
-			// load wikiEditor's toolbar (if not already) and add our button
-			$( '#wpTextbox1' ).on( 'wikiEditor-toolbar-doneInitialSections', addCodeMirrorToWikiEditor );
+			// Add our button
+			if ( useCodeMirror ) {
+				$( addCodeMirrorToWikiEditor );
+			}
 		} else {
+			// Load wikiEditor's toolbar and add our button
 			mw.loader.using( 'mediawiki.toolbar', function () {
 				// If WikiEditor isn't enabled, add CodeMirror button to the default wiki editor toolbar
 				mw.toolbar.addButton( {
@@ -402,7 +432,30 @@
 					}
 				} );
 				// We don't know when button will be added, wait until the document is ready to update it
-				$( function () { updateToolbarButton(); } );
+				$( function () {
+					updateToolbarButton();
+					// Is there already a local storage entry?
+					// If so, we already showed them the popup, don't show again
+					popupStatus = localStorage.getItem( 'codemirror-try-popup' );
+					// If popup entry isn't in local storage, lets show them the popup
+					if ( !popupStatus ) {
+						try {
+							localStorage.setItem( 'codemirror-try-popup', 1 );
+							addPopup();
+							$( '.codemirror-popup-btn-yes' ).click( function () {
+								enableCodeMirror();
+								setCodeEditorPreference( true );
+								updateToolbarButton();
+								popup.toggle( false );
+							} );
+							$( '.codemirror-popup-btn-no' ).click( function () {
+								popup.toggle( false );
+							} );
+						} catch ( e ) {
+							// No local storage or local storage full, don't show popup
+						}
+					}
+				} );
 			} );
 		}
 	}
@@ -415,4 +468,5 @@
 			enableCodeMirror();
 		}
 	}
+
 }( mediaWiki, jQuery ) );
