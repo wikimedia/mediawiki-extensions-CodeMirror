@@ -5,5 +5,8 @@
 		]
 	},
 	"codemirror-desc": "Dèje l'evidenziazzione d'a sindasse jndr'à 'u cangiatore de uicchiteste",
-	"codemirror-toggle-label": "Evidenziatore de sindasse"
+	"codemirror-toggle-label": "Evidenziatore de sindasse",
+	"codemirror-popup-syntax": "Sindasse",
+	"codemirror-popup-btn-yes": "Pruéve",
+	"codemirror-popup-btn-no": "No, grazie"
 }

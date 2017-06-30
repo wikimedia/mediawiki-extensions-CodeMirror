@@ -4,5 +4,8 @@
 			"Robby"
 		]
 	},
-	"codemirror-toggle-label": "Ervirhiewe vun der Syntax"
+	"codemirror-toggle-label": "Ervirhiewe vun der Syntax",
+	"codemirror-popup-syntax": "Syntax",
+	"codemirror-popup-btn-yes": "Probéiert et",
+	"codemirror-popup-btn-no": "Nee Merci"
 }

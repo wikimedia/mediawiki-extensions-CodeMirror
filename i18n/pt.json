@@ -7,6 +7,8 @@
 			"Fúlvio"
 		]
 	},
-	"codemirror-desc": "Destaque da sintaxe de edição para páginas wiki usando [http://codemirror.net/ CodeMirror]",
-	"codemirror-toggle-label": "Realce sintáctico"
+	"codemirror-desc": "Fornece realce sintático no editor de texto wiki",
+	"codemirror-toggle-label": "Realce sintáctico",
+	"codemirror-beta-title": "Realce sintático",
+	"codemirror-beta-desc": "O realce sintático facilita as edições pelo uso da cor e sombra para separar visualmente o texto do artigo do restante código para links, referências e predefinições."
 }

@@ -5,5 +5,7 @@
 		]
 	},
 	"codemirror-desc": "Ufre sintaxis resaltada nel editor de testu wiki",
-	"codemirror-toggle-label": "Resaltador de sintaxis"
+	"codemirror-toggle-label": "Resaltador de sintaxis",
+	"codemirror-beta-title": "Resaltador de sintaxis",
+	"codemirror-beta-desc": "El resaltador de sintaxis facilita la edición usando color y solombra pa estremar de mou visual el testu del artículu del códigu pa enllaces, referencies y plantíes."
 }
