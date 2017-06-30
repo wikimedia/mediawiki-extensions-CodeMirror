@@ -392,11 +392,11 @@
 	function addPopup() {
 		this.popuptext = '<div class=\'codemirror-popup-div\'>' +
 			'<div class=\'codemirror-popup-top\'>{ <span class=\'codemirror-popup-color-blue\'>' +
-			mw.msg( 'codemirror-popup-syntax' ) + '</span> ' +
-			mw.msg( 'codemirror-popup-highlighting' ) + ' }</div>' +
-			'<div class=\'codemirror-popup-text\'>' + mw.msg( 'codemirror-popup-desc' ) + '</div>' +
-			'<div class=\'codemirror-popup-btn codemirror-popup-btn-yes\'>' + mw.msg( 'codemirror-popup-btn-yes' ) + '</div>' +
-			'<div class=\'codemirror-popup-btn codemirror-popup-btn-no\'>' + mw.msg( 'codemirror-popup-btn-no' ) + '</div>' +
+			mw.message( 'codemirror-popup-syntax' ).escaped() + '</span> ' +
+			mw.message( 'codemirror-popup-highlighting' ).escaped() + ' }</div>' +
+			'<div class=\'codemirror-popup-text\'>' + mw.message( 'codemirror-popup-desc' ).escaped() + '</div>' +
+			'<div class=\'codemirror-popup-btn codemirror-popup-btn-yes\'>' + mw.message( 'codemirror-popup-btn-yes' ).escaped() + '</div>' +
+			'<div class=\'codemirror-popup-btn codemirror-popup-btn-no\'>' + mw.message( 'codemirror-popup-btn-no' ).escaped() + '</div>' +
 			'</div>';
 		popup = new OO.ui.PopupWidget( {
 			$content: $( this.popuptext ),
@@ -416,9 +416,7 @@
 	if ( $.inArray( mw.config.get( 'wgAction' ), [ 'edit', 'submit' ] ) !== -1 ) {
 		if ( wikiEditorToolbarEnabled ) {
 			// Add our button
-			if ( useCodeMirror ) {
-				$( addCodeMirrorToWikiEditor );
-			}
+			$( addCodeMirrorToWikiEditor );
 		} else {
 			// Load wikiEditor's toolbar and add our button
 			mw.loader.using( 'mediawiki.toolbar', function () {
@@ -436,24 +434,20 @@
 					updateToolbarButton();
 					// Is there already a local storage entry?
 					// If so, we already showed them the popup, don't show again
-					popupStatus = localStorage.getItem( 'codemirror-try-popup' );
+					popupStatus = mw.storage.get( 'codemirror-try-popup' );
 					// If popup entry isn't in local storage, lets show them the popup
 					if ( !popupStatus ) {
-						try {
-							localStorage.setItem( 'codemirror-try-popup', 1 );
-							addPopup();
-							$( '.codemirror-popup-btn-yes' ).click( function () {
-								enableCodeMirror();
-								setCodeEditorPreference( true );
-								updateToolbarButton();
-								popup.toggle( false );
-							} );
-							$( '.codemirror-popup-btn-no' ).click( function () {
-								popup.toggle( false );
-							} );
-						} catch ( e ) {
-							// No local storage or local storage full, don't show popup
-						}
+						mw.storage.set( 'codemirror-try-popup', 1 );
+						addPopup();
+						$( '.codemirror-popup-btn-yes' ).click( function () {
+							enableCodeMirror();
+							setCodeEditorPreference( true );
+							updateToolbarButton();
+							popup.toggle( false );
+						} );
+						$( '.codemirror-popup-btn-no' ).click( function () {
+							popup.toggle( false );
+						} );
 					}
 				} );
 			} );
