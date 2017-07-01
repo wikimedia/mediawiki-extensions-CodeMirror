@@ -1,8 +1,13 @@
 {
 	"@metadata": {
 		"authors": [
-			"Subi"
+			"Subi",
+			"Mikel Ibaiba"
 		]
 	},
+	"codemirror-beta-title": "Sintaxiaren nabarmengailua",
+	"codemirror-popup-syntax": "Sintaxia",
+	"codemirror-popup-highlighting": "Azpimarratzen",
+	"codemirror-popup-btn-yes": "Probatu",
 	"codemirror-popup-btn-no": "Ez, eskerrik asko"
 }
