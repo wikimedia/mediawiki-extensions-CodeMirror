@@ -4,5 +4,9 @@
 			"Aftabuzzaman"
 		]
 	},
-	"codemirror-toggle-label": "সিনট্যাক্স আলোকপাতকরণ"
+	"codemirror-toggle-label": "সিনট্যাক্স আলোকপাতকরণ",
+	"codemirror-beta-title": "সিনট্যাক্স আলোকপাতকরণ",
+	"codemirror-popup-highlighting": "আলোকপাতকরণ",
+	"codemirror-popup-btn-yes": "চেষ্টা করে দেখুন",
+	"codemirror-popup-btn-no": "না, ধন্যবাদ"
 }
