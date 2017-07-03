@@ -29,7 +29,7 @@
 				"mediawiki.api",
 				"mediawiki.api.options",
 				"user.options",
-				"oojs-ui",
+				"oojs-ui-widgets",
 				"mediawiki.storage"
 			],
 			"scripts": [

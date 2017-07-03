@@ -412,6 +412,28 @@
 		popup.toggle( true );
 	}
 
+	/**
+	 * Handle popup. If popup hasn't been shown before, show popup and add a localStorage entry.
+	 * check it before showing popup in future.
+	 */
+	function handlePopup() {
+		popupStatus = mw.storage.get( 'codemirror-try-popup' );
+		// If popup entry isn't in local storage, lets show them the popup
+		if ( !popupStatus ) {
+			mw.storage.set( 'codemirror-try-popup', 1 );
+			addPopup();
+			$( '.codemirror-popup-btn-yes' ).click( function () {
+				$( enableCodeMirror );
+				$( setCodeEditorPreference( true ) );
+				$( updateToolbarButton );
+				popup.toggle( false );
+			} );
+			$( '.codemirror-popup-btn-no' ).click( function () {
+				popup.toggle( false );
+			} );
+		}
+	}
+
 	/* Check if view is in edit mode and that the required modules are available. Then, customize the toolbar … */
 	if ( $.inArray( mw.config.get( 'wgAction' ), [ 'edit', 'submit' ] ) !== -1 ) {
 		if ( wikiEditorToolbarEnabled ) {
@@ -432,26 +454,13 @@
 				// We don't know when button will be added, wait until the document is ready to update it
 				$( function () {
 					updateToolbarButton();
-					// Is there already a local storage entry?
-					// If so, we already showed them the popup, don't show again
-					popupStatus = mw.storage.get( 'codemirror-try-popup' );
-					// If popup entry isn't in local storage, lets show them the popup
-					if ( !popupStatus ) {
-						mw.storage.set( 'codemirror-try-popup', 1 );
-						addPopup();
-						$( '.codemirror-popup-btn-yes' ).click( function () {
-							enableCodeMirror();
-							setCodeEditorPreference( true );
-							updateToolbarButton();
-							popup.toggle( false );
-						} );
-						$( '.codemirror-popup-btn-no' ).click( function () {
-							popup.toggle( false );
-						} );
-					}
 				} );
 			} );
 		}
+		// Wait for DOM before loading our popup
+		$( function () {
+			window.setTimeout( function () { handlePopup(); }, 500 );
+		} );
 	}
 
 	// enable CodeMirror
