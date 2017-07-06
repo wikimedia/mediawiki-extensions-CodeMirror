@@ -6,7 +6,7 @@
 	},
 	"codemirror-desc": "Ermöglicht Syntax-Hervorhebungen im Wikitext-Editor",
 	"codemirror-toggle-label": "Syntaxhervorhebung",
-	"codemirror-beta-title": "Syntaxhervorhebung",
+	"codemirror-beta-title": "Wikitext-Syntaxhervorhebung",
 	"codemirror-beta-desc": "Syntaxhervorhebung macht das Bearbeiten einfacher durch die Verwendung von Farben und Farbtönen zur visuellen Trennung des Artikeltextes vom Code für Links, Einzelnachweise und Vorlagen.",
 	"codemirror-popup-syntax": "Syntax",
 	"codemirror-popup-highlighting": "Hervorhebung",

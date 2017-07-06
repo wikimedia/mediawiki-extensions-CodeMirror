@@ -6,5 +6,10 @@
 		]
 	},
 	"codemirror-desc": "Fournit une mise en évidence de la syntaxe dans l’éditeur wikitexte",
-	"codemirror-toggle-label": "Colorisation syntaxique"
+	"codemirror-toggle-label": "Colorisation syntaxique",
+	"codemirror-beta-title": "Mise en forme du texte avec la syntaxe Wiki",
+	"codemirror-popup-syntax": "Syntaxe",
+	"codemirror-popup-highlighting": "Mise en forme",
+	"codemirror-popup-btn-yes": "Essayez le",
+	"codemirror-popup-btn-no": "Non, merci"
 }
