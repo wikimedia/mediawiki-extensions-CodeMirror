@@ -157,8 +157,8 @@ class CodeMirrorHooks {
 				],
 				'info-link' => 'https://meta.wikimedia.org/wiki/' .
 					'Community_Tech/Wikitext_editor_syntax_highlighting',
-				'discussion-link' => 'https://meta.wikimedia.org/wiki/' .
-					'Talk:Community_Tech/Wikitext_editor_syntax_highlighting'
+				'discussion-link' => 'https://www.mediawiki.org/wiki/' .
+					'Extension_talk:CodeMirror'
 			];
 		}
 	}
