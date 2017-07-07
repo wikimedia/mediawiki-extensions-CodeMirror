@@ -164,10 +164,8 @@ class CodeMirrorHooks {
 				'label-message' => 'codemirror-beta-title',
 				'desc-message' => 'codemirror-beta-desc',
 				'screenshot' => [
-					'ltr' => $wgExtensionAssetsPath .
-						'/CodeMirror/resources/images/codemirror-beta-LTR.svg',
-					'rtl' => $wgExtensionAssetsPath .
-						'/CodeMirror/resources/images/codemirror-beta-RTL.svg'
+					'ltr' => $wgExtensionAssetsPath . '/CodeMirror/resources/images/codemirror-beta-ltr.svg',
+					'rtl' => $wgExtensionAssetsPath . '/CodeMirror/resources/images/codemirror-beta-rtl.svg'
 				],
 				'info-link' => 'https://meta.wikimedia.org/wiki/' .
 					'Community_Tech/Wikitext_editor_syntax_highlighting',
