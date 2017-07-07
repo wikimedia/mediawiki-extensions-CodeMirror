@@ -32,18 +32,6 @@ class CodeMirrorHooks {
 	}
 
 	/**
-	 * This function are used by the MobileFrontend extension only and will be
-	 * removed
-	 * @deprecated since version 4.0.0
-	 * @todo Remove usage in MobileFrontend and this function some time later
-	 * @return array
-	 */
-	public static function getGlobalVariables() {
-		MWDebug::deprecated( __METHOD__ );
-		return [];
-	}
-
-	/**
 	 * Returns an array of variables for CodeMirror to work (tags and so on)
 	 *
 	 * @param IContextSource $context The current ContextSource object
