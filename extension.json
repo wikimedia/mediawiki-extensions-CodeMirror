@@ -9,6 +9,9 @@
 	"descriptionmsg": "codemirror-desc",
 	"type": "parserhook",
 	"license-name": "GPL-2.0+",
+	"requires": {
+		"MediaWiki": ">= 1.23.0"
+    },
 	"MessagesDirs": {
 		"CodeMirror": [
 			"i18n"
