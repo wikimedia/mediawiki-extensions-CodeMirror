@@ -6,5 +6,8 @@
 		]
 	},
 	"codemirror-desc": "Ger syntaxmarkerad redigering för redigering av wikitext",
-	"codemirror-toggle-label": "Syntaxmarkering"
+	"codemirror-toggle-label": "Syntaxmarkering",
+	"codemirror-popup-syntax": "Syntax",
+	"codemirror-popup-btn-yes": "Prova",
+	"codemirror-popup-btn-no": "Nej, tack"
 }

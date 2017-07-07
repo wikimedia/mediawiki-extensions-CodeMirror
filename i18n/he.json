@@ -1,8 +1,17 @@
 {
 	"@metadata": {
 		"authors": [
-			"Guycn2"
+			"Guycn2",
+			"Amire80"
 		]
 	},
-	"codemirror-desc": "עריכת תחביר מודגש עבור דפי ויקי שמשתמשים ב־[http://codemirror.net/ CodeMirror]"
+	"codemirror-desc": "צביעת תחביר בעורך קוד ויקי",
+	"codemirror-toggle-label": "צביעת תחביר",
+	"codemirror-beta-title": "צביעת תחביר בקוד ויקי",
+	"codemirror-beta-desc": "צביעת תחביר עוזרת לערך יותר בקלות באמצעות צבע והצללה כדי להפריד באופן חזותי בין טקסט הערך לבין קוד לקישורים, הערות שוליים, ותבניות.",
+	"codemirror-popup-syntax": "תחביר",
+	"codemirror-popup-highlighting": "צביעה",
+	"codemirror-popup-desc": "צביעת תחביר עוזרת לך להבחין בקלות בין חלקים שונים של העריכה שלך באמצעות סימונם בצבע.",
+	"codemirror-popup-btn-yes": "לנסות",
+	"codemirror-popup-btn-no": "לא, תודה"
 }
