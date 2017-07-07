@@ -23,7 +23,8 @@ class CodeMirrorHooks {
 					in_array( Action::getActionName( $context ), [ 'edit', 'submit' ] ) &&
 					$wgCodeMirrorBetaFeature &&
 					ExtensionRegistry::getInstance()->isLoaded( 'BetaFeatures' ) &&
-					BetaFeatures::isFeatureEnabled( $context->getUser(), 'codemirror-syntax-highlight' );
+					BetaFeatures::isFeatureEnabled(
+						$context->getUser(), 'codemirror-syntax-highlight' );
 			}
 		}
 
@@ -35,7 +36,6 @@ class CodeMirrorHooks {
 	 * removed
 	 * @deprecated since version 4.0.0
 	 * @todo Remove usage in MobileFrontend and this function some time later
-	 * @param IContextSource $context
 	 * @return array
 	 */
 	public static function getGlobalVariables() {
@@ -58,6 +58,7 @@ class CodeMirrorHooks {
 		// if we already created these variable array, return it
 		if ( !$config ) {
 			$contObj = $context->getLanguage();
+			$registry = ExtensionRegistry::getInstance();
 
 			if ( !isset( $wgParser->mFunctionSynonyms ) ) {
 				$wgParser->initialiseVariables();
@@ -66,8 +67,8 @@ class CodeMirrorHooks {
 
 			// initialize configuration
 			$config = [
-				'pluginModules' => ExtensionRegistry::getInstance()->getAttribute( 'CodeMirrorPluginModules' ),
-				'tagModes' => ExtensionRegistry::getInstance()->getAttribute( 'CodeMirrorTagModes' ),
+				'pluginModules' => $registry->getAttribute( 'CodeMirrorPluginModules' ),
+				'tagModes' => $registry->getAttribute( 'CodeMirrorTagModes' ),
 				'tags' => array_fill_keys( $wgParser->getTags(), true ),
 				'doubleUnderscore' => [ [], [] ],
 				'functionSynonyms' => $wgParser->mFunctionSynonyms,
@@ -80,7 +81,8 @@ class CodeMirrorHooks {
 				if ( isset( $mw[$name] ) ) {
 					$caseSensitive = array_shift( $mw[$name] ) == 0 ? 0 : 1;
 					foreach ( $mw[$name] as $n ) {
-						$config['doubleUnderscore'][$caseSensitive][ $caseSensitive ? $n : $contObj->lc( $n ) ] = $name;
+						$n = $caseSensitive ? $n : $contObj->lc( $n );
+						$config['doubleUnderscore'][$caseSensitive][$n] = $name;
 					}
 				} else {
 					$config['doubleUnderscore'][0][] = $name;
@@ -91,7 +93,8 @@ class CodeMirrorHooks {
 				if ( isset( $mw[$name] ) ) {
 					$caseSensitive = array_shift( $mw[$name] ) == 0 ? 0 : 1;
 					foreach ( $mw[$name] as $n ) {
-						$config['functionSynonyms'][$caseSensitive][ $caseSensitive ? $n : $contObj->lc( $n ) ] = $name;
+						$n = $caseSensitive ? $n : $contObj->lc( $n );
+						$config['functionSynonyms'][$caseSensitive][$n] = $name;
 					}
 				}
 			}
@@ -112,7 +115,7 @@ class CodeMirrorHooks {
 	public static function onMakeGlobalVariablesScript( array &$vars, OutputPage $out ) {
 		$context = $out->getContext();
 		// add CodeMirror vars on edit pages, or if VE is installed
-		if ( self::isCodeMirrorEnabled( $context ) || class_exists( 'VisualEditorHooks' )  ) {
+		if ( self::isCodeMirrorEnabled( $context ) || class_exists( 'VisualEditorHooks' ) ) {
 			$vars['extCodeMirrorConfig'] = self::getConfiguraton( $context );
 		}
 	}
@@ -140,8 +143,8 @@ class CodeMirrorHooks {
 	 * @param array $defaultPreferences
 	 */
 	public static function onGetPreferences( User $user, &$defaultPreferences ) {
-		// CodeMirror is enabled by default for users.
-		// It can be changed by adding '$wgDefaultUserOptions['usecodemirror'] = 0;' into LocalSettings.php
+		// CodeMirror is enabled by default for users. It can
+		// be changed by adding '$wgDefaultUserOptions['usecodemirror'] = 0;' into LocalSettings.php
 		$defaultPreferences['usecodemirror'] = [
 			'type' => 'api',
 			'default' => '1',
@@ -161,11 +164,15 @@ class CodeMirrorHooks {
 				'label-message' => 'codemirror-beta-title',
 				'desc-message' => 'codemirror-beta-desc',
 				'screenshot' => [
-					'ltr' => $wgExtensionAssetsPath . '/CodeMirror/resources/images/codemirror-beta-LTR.svg',
-					'rtl' => $wgExtensionAssetsPath . '/CodeMirror/resources/images/codemirror-beta-RTL.svg'
+					'ltr' => $wgExtensionAssetsPath .
+						'/CodeMirror/resources/images/codemirror-beta-LTR.svg',
+					'rtl' => $wgExtensionAssetsPath .
+						'/CodeMirror/resources/images/codemirror-beta-RTL.svg'
 				],
-				'info-link' => 'https://meta.wikimedia.org/wiki/Community_Tech/Wikitext_editor_syntax_highlighting',
-				'discussion-link' => 'https://meta.wikimedia.org/wiki/Talk:Community_Tech/Wikitext_editor_syntax_highlighting'
+				'info-link' => 'https://meta.wikimedia.org/wiki/' .
+					'Community_Tech/Wikitext_editor_syntax_highlighting',
+				'discussion-link' => 'https://meta.wikimedia.org/wiki/' .
+					'Talk:Community_Tech/Wikitext_editor_syntax_highlighting'
 			];
 		}
 	}
