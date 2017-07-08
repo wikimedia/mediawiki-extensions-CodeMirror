@@ -65,11 +65,11 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 
 		// As the action is regenerated each time, we need to store the bound listener
 		// in the mirror for later disconnection.
-		surface.mirror.veTransactionListener = this.onDocumentTransact.bind( this, surface );
+		surface.mirror.veTransactionListener = this.onDocumentPrecommit.bind( this );
 
-		doc.on( 'transact', surface.mirror.veTransactionListener );
+		doc.on( 'precommit', surface.mirror.veTransactionListener );
 	} else if ( surface.mirror && enable !== true ) {
-		doc.off( 'transact', surface.mirror.veTransactionListener );
+		doc.off( 'precommit', surface.mirror.veTransactionListener );
 
 		surfaceView.$documentNode.removeClass(
 			've-ce-documentNode-codeEditor-webkit-hide ve-ce-documentNode-codeEditor-webkit'
@@ -83,37 +83,55 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 	return true;
 };
 
-ve.ui.CodeMirrorAction.prototype.onDocumentTransact = function ( surface, tx ) {
-	var node, textRange, line,
-		doc = surface.getModel().getDocument(),
-		mirror = surface.mirror,
-		modifiedRange = tx.getModifiedRange( doc ),
-		nodes = doc.selectNodes( modifiedRange, 'leaves' );
+/**
+ * Handle precommit events from the document.
+ *
+ * The document is still in it's 'old' state before the transaction
+ * has been applied at this point.
+ *
+ * @param {ve.dm.Transaction} tx [description]
+ */
+ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
+	var i,
+		offset = 0,
+		replacements = [],
+		linearData = this.surface.getModel().getDocument().data,
+		store = linearData.getStore(),
+		mirror = this.surface.mirror;
 
-	// TODO: Iterate over operations and perform a replaceRange for each replace operation
-	if ( nodes.length === 1 && nodes[ 0 ].node instanceof ve.dm.TextNode ) {
-		node = nodes[ 0 ].node.parent;
-		textRange = nodes[ 0 ].nodeRange;
-		line = node.parent.children.indexOf( node );
-		if ( tx.operations.every( function ( op ) {
-			return op.type === 'retain' || ( op.type === 'replace' && op.remove.length === 0 );
-		} ) ) {
-			// Single line insert
-			mirror.replaceRange(
-				doc.data.getText( true, modifiedRange ),
-				{ line: line, ch: modifiedRange.start - textRange.start }
-			);
-		} else {
-			// Single line replace
-			mirror.replaceRange(
-				doc.data.getText( true, textRange ),
-				{ line: line, ch: 0 },
-				{ line: line, ch: mirror.getLine( line ).length }
-			);
+	/**
+	 * Convert a VE offset to a 2D CodeMirror position
+	 *
+	 * @private
+	 * @param {Number} veOffset VE linear model offset
+	 * @return {Object} Code mirror position, containing 'line' and 'ch'
+	 */
+	function convertOffset( veOffset ) {
+		var cmOffset = linearData.getSourceText( new ve.Range( 0, veOffset ) ).length;
+		return mirror.posFromIndex( cmOffset );
+	}
+
+	tx.operations.forEach( function ( op ) {
+		if ( op.type === 'retain' ) {
+			offset += op.length;
+		} else if ( op.type === 'replace' ) {
+			replacements.push( {
+				start: convertOffset( offset ),
+				// Don't bother recalculating end offset if not a removal, replaceRange works with just one arg
+				end: op.remove.length ? convertOffset( offset + op.remove.length ) : undefined,
+				data: new ve.dm.ElementLinearData( store, op.insert ).getSourceText()
+			} );
+			offset += op.remove.length;
 		}
-	} else {
-		// Fallback - flush whole doc
-		mirror.setValue( surface.getDom() );
+	} );
+
+	// Apply replacements in reverse to avoid having to shift offsets
+	for ( i = replacements.length - 1; i >= 0; i-- ) {
+		mirror.replaceRange(
+			replacements[ i ].data,
+			replacements[ i ].start,
+			replacements[ i ].end
+		);
 	}
 };
 
