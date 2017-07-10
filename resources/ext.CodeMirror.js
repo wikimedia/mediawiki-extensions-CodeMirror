@@ -434,15 +434,20 @@
 		}
 	}
 
-	/* Check if view is in edit mode and that the required modules are available. Then, customize the toolbar … */
+	// If view is in edit mode, add the button to the toolbar.
 	if ( $.inArray( mw.config.get( 'wgAction' ), [ 'edit', 'submit' ] ) !== -1 ) {
+		// Check if the user is using the enhanced editing toolbar (supplied by the
+		// WikiEditor extension) or the default editing toolbar (supplied by core).
 		if ( wikiEditorToolbarEnabled ) {
-			// Add our button
-			$( addCodeMirrorToWikiEditor );
+			// They are using the enhanced editing toolbar.
+			mw.loader.using( 'ext.wikiEditor.toolbar', function () {
+				// Add CodeMirror button to the enhanced editing toolbar.
+				$( addCodeMirrorToWikiEditor );
+			} );
 		} else {
-			// Load wikiEditor's toolbar and add our button
+			// They are using the default editing toolbar.
 			mw.loader.using( 'mediawiki.toolbar', function () {
-				// If WikiEditor isn't enabled, add CodeMirror button to the default wiki editor toolbar
+				// Add CodeMirror button to the default editing toolbar.
 				mw.toolbar.addButton( {
 					speedTip: mw.msg( 'codemirror-toggle-label' ),
 					imageId: 'mw-editbutton-codemirror',
