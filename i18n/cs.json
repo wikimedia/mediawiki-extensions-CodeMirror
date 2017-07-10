@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Meliganai"
+		]
+	},
+	"codemirror-beta-title": "Zvýraznění syntaxe wikitextu",
+	"codemirror-beta-desc": "Zvýraznění syntaxe zjednodušuje editaci užitím barev a odstínů, aby byl vizuálně oddělen text stránky od kódu odkazů, poznámek a šablon."
+}
