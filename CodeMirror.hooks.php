@@ -34,18 +34,19 @@ class CodeMirrorHooks {
 	/**
 	 * Returns an array of variables for CodeMirror to work (tags and so on)
 	 *
-	 * @param IContextSource $context The current ContextSource object
 	 * @global Parser $wgParser
+	 * @global Language $wgContLang
 	 * @staticvar array $config Cached version of configuration
 	 * @return array
 	 */
-	public static function getConfiguraton( IContextSource $context ) {
-		global $wgParser;
+	public static function getConfiguraton() {
+		global $wgParser, $wgContLang;
 		static $config = [];
 
 		// if we already created these variable array, return it
 		if ( !$config ) {
-			$contObj = $context->getLanguage();
+			 // Use the content language, not the user language. (See T170130.)
+			$lang = $wgContLang;
 			$registry = ExtensionRegistry::getInstance();
 
 			if ( !isset( $wgParser->mFunctionSynonyms ) ) {
@@ -61,15 +62,15 @@ class CodeMirrorHooks {
 				'doubleUnderscore' => [ [], [] ],
 				'functionSynonyms' => $wgParser->mFunctionSynonyms,
 				'urlProtocols' => $wgParser->mUrlProtocols,
-				'linkTrailCharacters' =>  $contObj->linkTrail(),
+				'linkTrailCharacters' =>  $lang->linkTrail(),
 			];
 
-			$mw = $contObj->getMagicWords();
+			$mw = $lang->getMagicWords();
 			foreach ( MagicWord::getDoubleUnderscoreArray()->names as $name ) {
 				if ( isset( $mw[$name] ) ) {
 					$caseSensitive = array_shift( $mw[$name] ) == 0 ? 0 : 1;
 					foreach ( $mw[$name] as $n ) {
-						$n = $caseSensitive ? $n : $contObj->lc( $n );
+						$n = $caseSensitive ? $n : $lang->lc( $n );
 						$config['doubleUnderscore'][$caseSensitive][$n] = $name;
 					}
 				} else {
@@ -81,7 +82,7 @@ class CodeMirrorHooks {
 				if ( isset( $mw[$name] ) ) {
 					$caseSensitive = array_shift( $mw[$name] ) == 0 ? 0 : 1;
 					foreach ( $mw[$name] as $n ) {
-						$n = $caseSensitive ? $n : $contObj->lc( $n );
+						$n = $caseSensitive ? $n : $lang->lc( $n );
 						$config['functionSynonyms'][$caseSensitive][$n] = $name;
 					}
 				}
@@ -104,7 +105,7 @@ class CodeMirrorHooks {
 		$context = $out->getContext();
 		// add CodeMirror vars on edit pages, or if VE is installed
 		if ( self::isCodeMirrorEnabled( $context ) || class_exists( 'VisualEditorHooks' ) ) {
-			$vars['extCodeMirrorConfig'] = self::getConfiguraton( $context );
+			$vars['extCodeMirrorConfig'] = self::getConfiguraton();
 		}
 	}
 
