@@ -46,6 +46,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 		surface.mirror = CodeMirror( surfaceView.$element[ 0 ], {
 			value: surface.getDom(),
 			mwConfig: mw.config.get( 'extCodeMirrorConfig' ),
+			readOnly: 'nocursor',
 			lineWrapping: true,
 			tabSize: 1,
 			scrollbarStyle: 'null',
