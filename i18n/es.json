@@ -6,5 +6,10 @@
 		]
 	},
 	"codemirror-desc": "Proporciona resalte de la sintaxis en el editor de código wiki",
-	"codemirror-toggle-label": "Resaltado de sintaxis"
+	"codemirror-toggle-label": "Resaltado de sintaxis",
+	"codemirror-beta-title": "Resaltado de sintaxis de wikitexto",
+	"codemirror-popup-syntax": "Sintaxis",
+	"codemirror-popup-highlighting": "Resaltado",
+	"codemirror-popup-btn-yes": "Pruébalo",
+	"codemirror-popup-btn-no": "No, gracias"
 }
