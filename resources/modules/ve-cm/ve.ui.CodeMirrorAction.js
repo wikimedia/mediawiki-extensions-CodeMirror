@@ -50,6 +50,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 			lineWrapping: true,
 			tabSize: 1,
 			scrollbarStyle: 'null',
+			specialChars: /^$/,
 			viewportMargin: 5,
 			// select mediawiki as text input mode
 			mode: 'text/mediawiki',
