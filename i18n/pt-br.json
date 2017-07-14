@@ -1,10 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"!Silent"
+			"!Silent",
+			"Felipe L. Ewald"
 		]
 	},
 	"codemirror-desc": "Fornece um realce de sintaxe no editor de wikitexto",
-	"codemirror-enable-label": "Habilitar o CodeMirror (realçador de sintaxe)",
-	"codemirror-disable-label": "Desativar o CodeMirror (realçador de sintaxe)"
+	"codemirror-popup-syntax": "Sintaxe"
 }
