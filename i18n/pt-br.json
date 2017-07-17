@@ -6,5 +6,6 @@
 		]
 	},
 	"codemirror-desc": "Fornece um realce de sintaxe no editor de wikitexto",
-	"codemirror-popup-syntax": "Sintaxe"
+	"codemirror-popup-syntax": "Sintaxe",
+	"codemirror-popup-btn-yes": "Experimente"
 }
