@@ -7,5 +7,7 @@
 	},
 	"codemirror-desc": "Fornece um realce de sintaxe no editor de wikitexto",
 	"codemirror-popup-syntax": "Sintaxe",
-	"codemirror-popup-btn-yes": "Experimente"
+	"codemirror-popup-highlighting": "Realçar",
+	"codemirror-popup-btn-yes": "Experimente",
+	"codemirror-popup-btn-no": "Não, obrigado"
 }
