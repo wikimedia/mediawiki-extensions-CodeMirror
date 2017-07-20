@@ -327,17 +327,23 @@
 	 * Enables or disables CodeMirror
 	 */
 	function switchCodeMirror() {
+		var scrollTop,
+			$textbox1 = $( '#wpTextbox1' );
+
 		if ( codeMirror ) {
+			scrollTop = codeMirror.getScrollInfo().top;
 			setCodeEditorPreference( false );
 			codeMirror.save();
 			codeMirror.toTextArea();
 			codeMirror = null;
 			$.fn.textSelection = origTextSelection;
-
+			$textbox1.scrollTop( scrollTop );
 		} else {
+			scrollTop = $textbox1.scrollTop();
 			// eslint-disable-next-line no-use-before-define
 			enableCodeMirror();
 			setCodeEditorPreference( true );
+			codeMirror.scrollTo( 0, scrollTop );
 		}
 		updateToolbarButton();
 	}
