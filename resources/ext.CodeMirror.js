@@ -390,16 +390,22 @@
 	 * Add a popup for first time users (T165003)
 	 */
 	function addPopup() {
-		this.popuptext = '<div class=\'codemirror-popup-div\'>' +
-			'<div class=\'codemirror-popup-top\'>{ <span class=\'codemirror-popup-color-blue\'>' +
-			mw.message( 'codemirror-popup-syntax' ).escaped() + '</span> ' +
-			mw.message( 'codemirror-popup-highlighting' ).escaped() + ' }</div>' +
-			'<div class=\'codemirror-popup-text\'>' + mw.message( 'codemirror-popup-desc' ).escaped() + '</div>' +
-			'<div class=\'codemirror-popup-btn codemirror-popup-btn-yes\'>' + mw.message( 'codemirror-popup-btn-yes' ).escaped() + '</div>' +
-			'<div class=\'codemirror-popup-btn codemirror-popup-btn-no\'>' + mw.message( 'codemirror-popup-btn-no' ).escaped() + '</div>' +
-			'</div>';
+		var $content =
+			$( '<div>' ).addClass( 'codemirror-popup-div' ).append(
+				$( '<div>' ).addClass( 'codemirror-popup-top' ).append(
+					'{ ',
+					$( '<span>' ).addClass( 'codemirror-popup-color-blue' ).text( mw.msg( 'codemirror-popup-syntax' ) ),
+					' ',
+					document.createTextNode( mw.msg( 'codemirror-popup-highlighting' ) ),
+					' }'
+				),
+				$( '<div>' ).addClass( 'codemirror-popup-text' ).text( mw.msg( 'codemirror-popup-desc' ) ),
+				$( '<div>' ).addClass( 'codemirror-popup-btn codemirror-popup-btn-yes' ).text( mw.msg( 'codemirror-popup-btn-yes' ) ),
+				$( '<div>' ).addClass( 'codemirror-popup-btn codemirror-popup-btn-no' ).text( mw.msg( 'codemirror-popup-btn-no' ) )
+			);
+
 		popup = new OO.ui.PopupWidget( {
-			$content: $( this.popuptext ),
+			$content: $content,
 			containerPadding: 80,
 			$floatableContainer: $( '#mw-editbutton-codemirror' ),
 			padded: false,
