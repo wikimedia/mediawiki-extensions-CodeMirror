@@ -1,6 +1,6 @@
 ( function ( mw, $ ) {
 	var origTextSelection, useCodeMirror, codeMirror, api, originHooksTextarea,
-		wikiEditorToolbarEnabled, popupStatus = null, popup = false;
+		wikiEditorToolbarEnabled;
 
 	if ( mw.config.get( 'wgCodeEditorCurrentLanguage' ) ) { // If the CodeEditor is used then just exit;
 		return;
@@ -388,56 +388,72 @@
 
 	/**
 	 * Add a popup for first time users (T165003)
+	 *
+	 * If popup hasn't been shown before, show popup and add a localStorage entry.
+	 * check it before showing popup in future.
 	 */
-	function addPopup() {
-		var $content =
+	/**
+	 */
+	function handlePopup() {
+		var yesButton, noButton, $title, $content, popup;
+
+		// If popup has previously been dismissed, don't show again.
+		if ( mw.storage.get( 'codemirror-try-popup' ) ) {
+			return;
+		}
+		mw.storage.set( 'codemirror-try-popup', 1 );
+
+		yesButton = new OO.ui.ButtonWidget( {
+			label: mw.msg( 'codemirror-popup-btn-yes' ),
+			flags: [ 'primary', 'progressive' ]
+		} );
+		noButton = new OO.ui.ButtonWidget( {
+			label: mw.msg( 'codemirror-popup-btn-no' ),
+			flags: [ 'destructive' ]
+		} );
+		$title =
+			$( '<span>' ).append(
+				'{ ',
+				$( '<span>' ).addClass( 'codemirror-popup-color-blue' ).text( mw.msg( 'codemirror-popup-syntax' ) ),
+				' ',
+				document.createTextNode( mw.msg( 'codemirror-popup-highlighting' ) ),
+				' }'
+			);
+		$content =
 			$( '<div>' ).addClass( 'codemirror-popup-div' ).append(
-				$( '<div>' ).addClass( 'codemirror-popup-top' ).append(
-					'{ ',
-					$( '<span>' ).addClass( 'codemirror-popup-color-blue' ).text( mw.msg( 'codemirror-popup-syntax' ) ),
-					' ',
-					document.createTextNode( mw.msg( 'codemirror-popup-highlighting' ) ),
-					' }'
-				),
 				$( '<div>' ).addClass( 'codemirror-popup-text' ).text( mw.msg( 'codemirror-popup-desc' ) ),
-				$( '<div>' ).addClass( 'codemirror-popup-btn codemirror-popup-btn-yes' ).text( mw.msg( 'codemirror-popup-btn-yes' ) ),
-				$( '<div>' ).addClass( 'codemirror-popup-btn codemirror-popup-btn-no' ).text( mw.msg( 'codemirror-popup-btn-no' ) )
+				yesButton.$element,
+				noButton.$element
 			);
 
 		popup = new OO.ui.PopupWidget( {
+			head: true,
+			label: $title,
+			classes: [ 'codemirror-popup' ],
 			$content: $content,
-			containerPadding: 80,
 			$floatableContainer: $( '#mw-editbutton-codemirror' ),
-			padded: false,
-			width: 215
+			padded: true,
+			width: 300
 		} );
 		// Add our popup to the body, it will find its correct position using $floatableContainer
 		$( 'body' ).append( popup.$element );
 
+		// Events
+		yesButton.on( 'click', function () {
+			if ( !codeMirror ) {
+				switchCodeMirror();
+			}
+			popup.toggle( false );
+		} );
+		noButton.on( 'click', function () {
+			if ( codeMirror ) {
+				switchCodeMirror();
+			}
+			popup.toggle( false );
+		} );
+
 		// To display the popup, toggle the visibility to 'true'
 		popup.toggle( true );
-	}
-
-	/**
-	 * Handle popup. If popup hasn't been shown before, show popup and add a localStorage entry.
-	 * check it before showing popup in future.
-	 */
-	function handlePopup() {
-		popupStatus = mw.storage.get( 'codemirror-try-popup' );
-		// If popup entry isn't in local storage, lets show them the popup
-		if ( !popupStatus ) {
-			mw.storage.set( 'codemirror-try-popup', 1 );
-			addPopup();
-			$( '.codemirror-popup-btn-yes' ).click( function () {
-				$( enableCodeMirror );
-				$( setCodeEditorPreference( true ) );
-				$( updateToolbarButton );
-				popup.toggle( false );
-			} );
-			$( '.codemirror-popup-btn-no' ).click( function () {
-				popup.toggle( false );
-			} );
-		}
 	}
 
 	// If view is in edit mode, add the button to the toolbar.
@@ -468,10 +484,14 @@
 				} );
 			} );
 		}
-		// Wait for DOM before loading our popup
-		$( function () {
-			window.setTimeout( function () { handlePopup(); }, 500 );
-		} );
+
+		// Don't show popup if CM already enabled
+		if ( !useCodeMirror ) {
+			// Wait for DOM before loading our popup
+			$( function () {
+				window.setTimeout( function () { handlePopup(); }, 500 );
+			} );
+		}
 	}
 
 	// enable CodeMirror
