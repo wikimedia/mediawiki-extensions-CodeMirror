@@ -61,8 +61,8 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 
 		surfaceView.$documentNode.addClass(
 			'WebkitTextFillColor' in document.body.style ?
-			've-ce-documentNode-codeEditor-webkit-hide' :
-			've-ce-documentNode-codeEditor-webkit'
+				've-ce-documentNode-codeEditor-webkit-hide' :
+				've-ce-documentNode-codeEditor-webkit'
 		);
 
 		// As the action is regenerated each time, we need to store the bound listener
