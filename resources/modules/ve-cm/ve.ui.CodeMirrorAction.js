@@ -59,6 +59,10 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 			}
 		} );
 
+		// The VE/CM overlay technique only works with monospace fonts (as we use width-changing bold as a highlight)
+		// so revert any editfont user preference
+		surfaceView.$element.removeClass( 'mw-editfont-default mw-editfont-sans-serif mw-editfont-serif' ).addClass( 'mw-editfont-monospace' );
+
 		surfaceView.$documentNode.addClass(
 			'WebkitTextFillColor' in document.body.style ?
 				've-ce-documentNode-codeEditor-webkit-hide' :
@@ -72,6 +76,9 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 		doc.on( 'precommit', surface.mirror.veTransactionListener );
 	} else if ( surface.mirror && enable !== true ) {
 		doc.off( 'precommit', surface.mirror.veTransactionListener );
+
+		// Restore edit-font
+		surfaceView.$element.removeClass( 'mw-editfont-monospace' ).addClass( 'mw-editfont-' + mw.user.options.get( 'editfont' ) );
 
 		surfaceView.$documentNode.removeClass(
 			've-ce-documentNode-codeEditor-webkit-hide ve-ce-documentNode-codeEditor-webkit'
