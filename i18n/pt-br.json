@@ -7,6 +7,7 @@
 	},
 	"codemirror-desc": "Fornece um realce de sintaxe no editor de wikitexto",
 	"codemirror-toggle-label": "Realce de sintaxe",
+	"codemirror-beta-title": "Realce de sintaxe do texto wiki",
 	"codemirror-popup-syntax": "Sintaxe",
 	"codemirror-popup-highlighting": "Realçar",
 	"codemirror-popup-btn-yes": "Experimente",

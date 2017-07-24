@@ -4,9 +4,13 @@
 			"Andriykopanytsia",
 			"Ата",
 			"Dars",
-			"Piramidion"
+			"Piramidion",
+			"SimondR"
 		]
 	},
 	"codemirror-desc": "Забезпечує підсвічування синтаксису у редакторі вікітексту",
-	"codemirror-toggle-label": "Підсвічування синтаксису"
+	"codemirror-toggle-label": "Підсвічування синтаксису",
+	"codemirror-popup-syntax": "Синтаксис",
+	"codemirror-popup-btn-yes": "Спробуйте",
+	"codemirror-popup-btn-no": "Ні, дякую"
 }
