@@ -1,1 +1,46 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="22" width="23"><defs><linearGradient id="a"><stop offset="0" stop-color="#d7e7fe"/><stop offset=".632" stop-color="#a3b6d0"/><stop offset=".895" stop-color="#90a3bd"/><stop offset="1" stop-color="#7588a3"/></linearGradient><linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="o" y2="20.5" x2="0" y1="1.5"/><linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="b" y2="20.5" x2="0" y1="1.5"/><linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="c" y2="20.5" x2="0" y1="1.5"/><linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="d" y2="20.5" x2="0" y1="1.5"/><linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="e" y2="20.5" x2="0" y1="1.5"/><linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="f" y2="20.5" x2="0" y1="1.5"/><linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="g" y2="20.5" x2="0" y1="1.5"/><linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="h" y2="20.5" x2="0" y1="1.5"/><linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="i" y2="20.5" x2="0" y1="1.5"/><linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="j" y2="20.5" x2="0" y1="1.5"/><linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="k" y2="20.5" x2="0" y1="1.5"/><linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="l" y2="20.5" x2="0" y1="1.5"/><linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="m" y2="20.5" x2="0" y1="1.5"/><linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="n" y2="20.5" x2="0" y1="1.5"/></defs><path fill="url(#b)" d="M.5.5h22v21H.5z"/><path fill="url(#c)" d="M.5.5h22v21H.5z"/><path fill="url(#d)" d="M.5.5h22v21H.5z"/><path fill="url(#e)" d="M.5.5h22v21H.5z"/><path fill="url(#f)" d="M.5.5h22v21H.5z"/><path fill="url(#g)" d="M.5.5h22v21H.5z"/><path fill="url(#h)" d="M.5.5h22v21H.5z"/><path fill="url(#i)" d="M.5.5h22v21H.5z"/><path fill="url(#j)" d="M.5.5h22v21H.5z"/><path fill="url(#k)" d="M.5.5h22v21H.5z"/><path fill="url(#l)" d="M.5.5h22v21H.5z"/><path fill="url(#m)" d="M.5.5h22v21H.5z"/><path fill="url(#n)" d="M.5.5h22v21H.5z"/><path fill="url(#o)" d="M.5.5h22v21H.5z"/><path d="M22.1 0v1H1v20.1H0V.9S0 0 .9 0" fill="#fff"/><path d="M22 1l.1-1s.9 0 .9.9v20.2s0 .9-.9.9H.9s-.9 0-.9-.9l1-.1h21" fill="#435978"/><g transform="translate(-.5 -.499)"><path id="p" d="M4 12v-1h1c1 0 1 0 1-1V7.614c0-.514.024-.896.073-1.142.054-.252.14-.463.257-.633.204-.28.473-.48.808-.59.335-.11.872-.25 1.835-.25H10v1h-.752c-.457 0-.77.19-.936.406-.167.216-.312.446-.312 1.07v1.856c0 .73-.04 1.18-.244 1.493-.2.307-.562.53-1.09.667.535.155.9.385 1.096.688.2.31.238.76.238 1.49v1.86c0 .62.145.85.312 1.06.166.22.48.41.936.41H10v1H8.973c-.963 0-1.5-.133-1.835-.248a1.578 1.578 0 0 1-.808-.59 1.68 1.68 0 0 1-.257-.626C6.023 16.283 6 15.9 6 15.386V13c0-1 0-1-1-1z"/><use transform="matrix(-1 0 0 1 24 0)" width="24" height="24" xlink:href="#p"/></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="22" width="23">
+    <defs>
+        <linearGradient id="a">
+            <stop offset="0" stop-color="#d7e7fe"/>
+            <stop offset=".632" stop-color="#a3b6d0"/>
+            <stop offset=".895" stop-color="#90a3bd"/>
+            <stop offset="1" stop-color="#7588a3"/>
+        </linearGradient>
+        <linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="o" y2="20.5" x2="0" y1="1.5"/>
+        <linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="b" y2="20.5" x2="0" y1="1.5"/>
+        <linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="c" y2="20.5" x2="0" y1="1.5"/>
+        <linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="d" y2="20.5" x2="0" y1="1.5"/>
+        <linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="e" y2="20.5" x2="0" y1="1.5"/>
+        <linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="f" y2="20.5" x2="0" y1="1.5"/>
+        <linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="g" y2="20.5" x2="0" y1="1.5"/>
+        <linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="h" y2="20.5" x2="0" y1="1.5"/>
+        <linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="i" y2="20.5" x2="0" y1="1.5"/>
+        <linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="j" y2="20.5" x2="0" y1="1.5"/>
+        <linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="k" y2="20.5" x2="0" y1="1.5"/>
+        <linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="l" y2="20.5" x2="0" y1="1.5"/>
+        <linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="m" y2="20.5" x2="0" y1="1.5"/>
+        <linearGradient gradientUnits="userSpaceOnUse" xlink:href="#a" id="n" y2="20.5" x2="0" y1="1.5"/>
+    </defs>
+    <path fill="url(#b)" d="M.5.5h22v21H.5z"/>
+    <path fill="url(#c)" d="M.5.5h22v21H.5z"/>
+    <path fill="url(#d)" d="M.5.5h22v21H.5z"/>
+    <path fill="url(#e)" d="M.5.5h22v21H.5z"/>
+    <path fill="url(#f)" d="M.5.5h22v21H.5z"/>
+    <path fill="url(#g)" d="M.5.5h22v21H.5z"/>
+    <path fill="url(#h)" d="M.5.5h22v21H.5z"/>
+    <path fill="url(#i)" d="M.5.5h22v21H.5z"/>
+    <path fill="url(#j)" d="M.5.5h22v21H.5z"/>
+    <path fill="url(#k)" d="M.5.5h22v21H.5z"/>
+    <path fill="url(#l)" d="M.5.5h22v21H.5z"/>
+    <path fill="url(#m)" d="M.5.5h22v21H.5z"/>
+    <path fill="url(#n)" d="M.5.5h22v21H.5z"/>
+    <path fill="url(#o)" d="M.5.5h22v21H.5z"/>
+    <path d="M22.1 0v1H1v20.1H0V.9S0 0 .9 0" fill="#fff"/>
+    <path d="M22 1l.1-1s.9 0 .9.9v20.2s0 .9-.9.9H.9s-.9 0-.9-.9l1-.1h21" fill="#435978"/>
+    <g transform="translate(2.2,1.8)">
+        <path id="p"
+              d="M 18.29 6.29 14.71 2.71 a 1 1 0 0 0 -1.41 0 L 3.71 12.29 a 1 1 0 0 0 0 1.41 L 4 14 1 18 H 6
+              l 1 -1 .29 .29 a 1 1 0 0 0 1.41 0 l 9.59 -9.59 A 1 1 0 0 0 18.29 6.29 Z M 7 15 5 13 l 9 -9 2 2 Z"/>
+    </g>
+</svg>
