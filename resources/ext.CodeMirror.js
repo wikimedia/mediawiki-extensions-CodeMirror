@@ -403,6 +403,11 @@
 	function handlePopup() {
 		var yesButton, noButton, $title, $content, popup;
 
+		// If CodeMirror button doesn't exist, don't show popup
+		if ( !$( '#mw-editbutton-codemirror' ).length ) {
+			return;
+		}
+
 		// If popup has previously been dismissed, don't show again.
 		if ( mw.storage.get( 'codemirror-try-popup' ) ) {
 			return;
