@@ -270,10 +270,7 @@
 		);
 
 		$codeMirrorButton = $( '#wpTextbox1' ).data( 'wikiEditor-context' ).modules.toolbar.$toolbar.find( 'a.tool[rel=CodeMirror]' );
-		// FIXME in extensions/WikiEditor/modules/jquery.wikiEditor.toolbar.js
-		$codeMirrorButton
-			.css( 'background-image', '' )
-			.attr( 'id', 'mw-editbutton-codemirror' );
+		$codeMirrorButton.attr( 'id', 'mw-editbutton-codemirror' );
 
 		// eslint-disable-next-line no-use-before-define
 		updateToolbarButton();
