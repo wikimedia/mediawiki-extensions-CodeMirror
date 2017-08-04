@@ -21,9 +21,6 @@
 		"CodeMirrorHooks": "CodeMirror.hooks.php"
 	},
 	"ResourceModules": {
-		"ext.CodeMirror.loader": {
-			"loaderScripts": "ext.CodeMirror.loader.js"
-		},
 		"ext.CodeMirror": {
 			"dependencies": [
 				"ext.CodeMirror.lib",
