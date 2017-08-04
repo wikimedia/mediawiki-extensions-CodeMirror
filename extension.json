@@ -18,13 +18,15 @@
 		]
 	},
 	"AutoloadClasses": {
-		"CodeMirrorHooks": "CodeMirror.hooks.php"
+		"CodeMirrorHooks": "CodeMirror.hooks.php",
+		"ResourceLoaderCodeMirrorModule": "ResourceLoaderCodeMirrorModule.php"
 	},
 	"ResourceModules": {
 		"ext.CodeMirror.loader": {
 			"loaderScripts": "ext.CodeMirror.loader.js"
 		},
 		"ext.CodeMirror": {
+			"class": "ResourceLoaderCodeMirrorModule",
 			"dependencies": [
 				"ext.CodeMirror.lib",
 				"ext.CodeMirror.mode.mediawiki",
@@ -144,9 +146,6 @@
 		"remoteExtPath": "CodeMirror/resources"
 	},
 	"Hooks": {
-		"MakeGlobalVariablesScript": [
-			"CodeMirrorHooks::onMakeGlobalVariablesScript"
-		],
 		"BeforePageDisplay": [
 			"CodeMirrorHooks::onBeforePageDisplay"
 		],
