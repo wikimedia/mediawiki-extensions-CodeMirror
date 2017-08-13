@@ -13,9 +13,24 @@
 		box-sizing: border-box;
 		pointer-events: none;
 
-		padding: 0 1.14286em; /* 1/0.875 */
-		@media screen and ( min-width: 982px ) {
-			padding: 0 1.71429em; /* surface-margin-left (1.5em) / (mw-body-content font-size) 0.875em */
+		// Core VE default padding
+		padding: 0.5em 1.5em;
+
+		// Skin specific paddings
+		.skin-vector & {
+			padding: 0 1.14286em; /* 1/0.875 */
+			@media screen and ( min-width: 982px ) {
+				padding: 0 1.71429em; /* surface-margin-left (1.5em) / (mw-body-content font-size) 0.875em */
+			}
+		}
+
+		.skin-monobook & {
+			padding: 0;
+		}
+
+		.skin-timeless & {
+			padding-left: 2em;
+			padding-right: 2em;
 		}
 	}
 
