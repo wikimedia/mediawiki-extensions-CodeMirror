@@ -23,8 +23,8 @@
 	},
 	"ResourceModules": {
 		"ext.CodeMirror": {
-			"class": "ResourceLoaderCodeMirrorModule",
 			"dependencies": [
+				"ext.CodeMirror.data",
 				"ext.CodeMirror.lib",
 				"ext.CodeMirror.mode.mediawiki",
 				"jquery.textSelection",
@@ -49,6 +49,9 @@
 				"codemirror-popup-btn-yes",
 				"codemirror-popup-btn-no"
 			]
+		},
+		"ext.CodeMirror.data": {
+			"class": "ResourceLoaderCodeMirrorModule"
 		},
 		"ext.CodeMirror.lib": {
 			"scripts": [
@@ -122,6 +125,7 @@
 		},
 		"ext.CodeMirror.visualEditor": {
 			"dependencies": [
+				"ext.CodeMirror.data",
 				"ext.visualEditor.mwcore",
 				"ext.CodeMirror.lib",
 				"ext.CodeMirror.mode.mediawiki",
