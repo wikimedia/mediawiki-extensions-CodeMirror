@@ -31,8 +31,8 @@ class ResourceLoaderCodeMirrorModule extends ResourceLoaderFileModule {
 		return ResourceLoader::makeConfigSetScript(
 				[ 'extCodeMirrorConfig' => $this->getFrontendConfiguraton() ]
 			)
-			   . "\n"
-			   . parent::getScript( $context );
+			. "\n"
+			. parent::getScript( $context );
 	}
 
 	/**
