@@ -30,6 +30,7 @@
 				"jquery.textSelection",
 				"mediawiki.api",
 				"mediawiki.api.options",
+				"mediawiki.user",
 				"user.options",
 				"oojs-ui-widgets",
 				"mediawiki.storage"
