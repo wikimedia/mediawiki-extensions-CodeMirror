@@ -162,7 +162,6 @@
 		"ext.CodeMirror.visualEditor"
 	],
 	"config": {
-		"CodeMirrorEnableFrontend": true,
 		"CodeMirrorBetaFeature": false
 	},
 	"CodeMirrorTagModes": {

@@ -6,21 +6,19 @@ class CodeMirrorHooks {
 	 * Checks, if CodeMirror should be loaded on this page or not.
 	 *
 	 * @param IContextSource $context The current ContextSource object
-	 * @global bool $wgCodeMirrorEnableFrontend Should CodeMirror be loaded on this page
 	 * @staticvar null|boolean $isEnabled Saves, if CodeMirror should be loaded on this page or not
 	 * @return bool
 	 */
 	private static function isCodeMirrorEnabled( IContextSource $context ) {
-		global $wgCodeMirrorEnableFrontend, $wgCodeMirrorBetaFeature;
+		global $wgCodeMirrorBetaFeature;
 		static $isEnabled = null;
 
 		// Check, if we already checked, if page action is editing, if not, do it now
 		if ( $isEnabled === null ) {
-			if ( $wgCodeMirrorEnableFrontend && !$wgCodeMirrorBetaFeature ) {
+			if ( !$wgCodeMirrorBetaFeature ) {
 				$isEnabled = in_array( Action::getActionName( $context ), [ 'edit', 'submit' ] );
 			} else {
-				$isEnabled = $wgCodeMirrorEnableFrontend &&
-					in_array( Action::getActionName( $context ), [ 'edit', 'submit' ] ) &&
+				$isEnabled = in_array( Action::getActionName( $context ), [ 'edit', 'submit' ] ) &&
 					$wgCodeMirrorBetaFeature &&
 					ExtensionRegistry::getInstance()->isLoaded( 'BetaFeatures' ) &&
 					BetaFeatures::isFeatureEnabled(
@@ -69,8 +67,8 @@ class CodeMirrorHooks {
 	 * @param array $preferences
 	 */
 	public static function onGetBetaFeaturePreferences( User $user, &$preferences ) {
-		global $wgCodeMirrorEnableFrontend, $wgCodeMirrorBetaFeature, $wgExtensionAssetsPath;
-		if ( $wgCodeMirrorEnableFrontend && $wgCodeMirrorBetaFeature ) {
+		global $wgCodeMirrorBetaFeature, $wgExtensionAssetsPath;
+		if ( $wgCodeMirrorBetaFeature ) {
 			$preferences['codemirror-syntax-highlight'] = [
 				'label-message' => 'codemirror-beta-title',
 				'desc-message' => 'codemirror-beta-desc',
