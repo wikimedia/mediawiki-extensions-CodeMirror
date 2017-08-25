@@ -925,7 +925,7 @@
 					firstmultiletterword = undefined;
 					firstspace = undefined;
 					if ( readyTokens.length > 0 ) { // it contains tickets before the point of rollback
-						readyTokens[ readyTokens.length ].pos++; // add one apostrophe, next token will be italic (two apostrophes)
+						readyTokens[ readyTokens.length - 1 ].pos++; // add one apostrophe, next token will be italic (two apostrophes)
 						mTokens = readyTokens; // for sending tokens till the point of rollback
 					} else { // there are no tikets before the point of rollback
 						stream.pos = tmpTokens[ 0 ].pos - 2; // eat( '\'')
