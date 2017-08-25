@@ -465,7 +465,7 @@
 	}
 
 	// If view is in edit mode, add the button to the toolbar.
-	if ( $.inArray( mw.config.get( 'wgAction' ), [ 'edit', 'submit' ] ) !== -1 ) {
+	if ( $( '#wpTextbox1' ).length ) {
 		// Check if the user is using the enhanced editing toolbar (supplied by the
 		// WikiEditor extension) or the default editing toolbar (supplied by core).
 		if ( wikiEditorToolbarEnabled ) {
