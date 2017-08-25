@@ -1,9 +1,17 @@
 {
 	"@metadata": {
 		"authors": [
-			"Meliganai"
+			"Meliganai",
+			"Mormegil"
 		]
 	},
+	"codemirror-desc": "Poskytuje zvýrazňování syntaxe v editoru wikitextu",
+	"codemirror-toggle-label": "Zvýraznění syntaxe",
 	"codemirror-beta-title": "Zvýraznění syntaxe wikitextu",
-	"codemirror-beta-desc": "Zvýraznění syntaxe zjednodušuje editaci užitím barev a odstínů, aby byl vizuálně oddělen text stránky od kódu odkazů, poznámek a šablon."
+	"codemirror-beta-desc": "Zvýraznění syntaxe zjednodušuje editaci užitím barev a odstínů, aby byl vizuálně oddělen text stránky od kódu odkazů, poznámek a šablon.",
+	"codemirror-popup-syntax": "Zvýraznění",
+	"codemirror-popup-highlighting": "syntaxe",
+	"codemirror-popup-desc": "Zvýraznění syntaxe vám pomůže jednoduše rozlišovat různé části editace jejich barevným vyznačením.",
+	"codemirror-popup-btn-yes": "Vyzkoušet",
+	"codemirror-popup-btn-no": "Ne, děkuji"
 }
