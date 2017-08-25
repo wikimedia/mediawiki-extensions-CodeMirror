@@ -61,7 +61,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 
 		// The VE/CM overlay technique only works with monospace fonts (as we use width-changing bold as a highlight)
 		// so revert any editfont user preference
-		surfaceView.$element.removeClass( 'mw-editfont-default mw-editfont-sans-serif mw-editfont-serif' ).addClass( 'mw-editfont-monospace' );
+		surfaceView.$element.removeClass( 'mw-editfont-sans-serif mw-editfont-serif' ).addClass( 'mw-editfont-monospace' );
 
 		surfaceView.$documentNode.addClass(
 			'WebkitTextFillColor' in document.body.style ?
