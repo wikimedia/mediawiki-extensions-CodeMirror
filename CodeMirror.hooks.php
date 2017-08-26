@@ -76,7 +76,7 @@ class CodeMirrorHooks {
 					'ltr' => $wgExtensionAssetsPath . '/CodeMirror/resources/images/codemirror-beta-ltr.svg',
 					'rtl' => $wgExtensionAssetsPath . '/CodeMirror/resources/images/codemirror-beta-rtl.svg'
 				],
-				'info-link' => 'https://meta.wikimedia.org/wiki/' .
+				'info-link' => 'https://meta.wikimedia.org/wiki/Special:MyLanguage/' .
 					'Community_Tech/Wikitext_editor_syntax_highlighting',
 				'discussion-link' => 'https://www.mediawiki.org/wiki/' .
 					'Extension_talk:CodeMirror'
