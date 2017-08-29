@@ -69,13 +69,21 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 				've-ce-documentNode-codeEditor-webkit'
 		);
 
-		// As the action is regenerated each time, we need to store the bound listener
+		/* Events */
+
+		// As the action is regenerated each time, we need to store bound listeners
 		// in the mirror for later disconnection.
 		surface.mirror.veTransactionListener = this.onDocumentPrecommit.bind( this );
+		surface.mirror.veLangChangeListener = this.onLangChange.bind( this );
 
 		doc.on( 'precommit', surface.mirror.veTransactionListener );
+		surfaceView.getDocument().on( 'langChange', surface.mirror.veLangChangeListener );
+
+		this.onLangChange();
+
 	} else if ( surface.mirror && enable !== true ) {
 		doc.off( 'precommit', surface.mirror.veTransactionListener );
+		surfaceView.getDocument().off( 'langChange', surface.mirror.veLangChangeListener );
 
 		// Restore edit-font
 		surfaceView.$element.removeClass( 'mw-editfont-monospace' ).addClass( 'mw-editfont-' + mw.user.options.get( 'editfont' ) );
@@ -90,6 +98,16 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 	}
 
 	return true;
+};
+
+/**
+ * Handle langChange events from the document view
+ */
+ve.ui.CodeMirrorAction.prototype.onLangChange = function () {
+	var surface = this.surface,
+		dir = surface.getView().getDocument().getDir();
+
+	surface.mirror.getWrapperElement().setAttribute( 'dir', dir );
 };
 
 /**
