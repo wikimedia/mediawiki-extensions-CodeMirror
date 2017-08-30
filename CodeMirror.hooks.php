@@ -3,7 +3,7 @@
 class CodeMirrorHooks {
 
 	/**
-	 * Checks, if CodeMirror should be loaded on this page or not.
+	 * Checks if CodeMirror is enabled for this user
 	 *
 	 * @param IContextSource $context The current ContextSource object
 	 * @staticvar null|boolean $isEnabled Saves, if CodeMirror should be loaded on this page or not
@@ -16,10 +16,9 @@ class CodeMirrorHooks {
 		// Check, if we already checked, if page action is editing, if not, do it now
 		if ( $isEnabled === null ) {
 			if ( !$wgCodeMirrorBetaFeature ) {
-				$isEnabled = in_array( Action::getActionName( $context ), [ 'edit', 'submit' ] );
+				$isEnabled = true;
 			} else {
-				$isEnabled = in_array( Action::getActionName( $context ), [ 'edit', 'submit' ] ) &&
-					$wgCodeMirrorBetaFeature &&
+				$isEnabled = $wgCodeMirrorBetaFeature &&
 					ExtensionRegistry::getInstance()->isLoaded( 'BetaFeatures' ) &&
 					BetaFeatures::isFeatureEnabled(
 						$context->getUser(), 'codemirror-syntax-highlight' );
@@ -27,6 +26,18 @@ class CodeMirrorHooks {
 		}
 
 		return $isEnabled;
+	}
+
+	/**
+	 * Checks if CodeMirror for textarea wikitext editor should be loaded on this page or not.
+	 *
+	 * @param IContextSource $context The current ContextSource object
+	 * @staticvar null|boolean $isEnabled Saves, if CodeMirror should be loaded on this page or not
+	 * @return bool
+	 */
+	private static function isCodeMirrorOnPage( IContextSource $context ) {
+		return in_array( Action::getActionName( $context ), [ 'edit', 'submit' ] ) &&
+			self::isCodeMirrorEnabled( $context );
 	}
 
 	/**
@@ -38,9 +49,10 @@ class CodeMirrorHooks {
 	 * @param Skin $skin
 	 */
 	public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
-		if ( self::isCodeMirrorEnabled( $out->getContext() ) ) {
+		if ( self::isCodeMirrorOnPage( $out->getContext() ) ) {
 			$out->addModules( 'ext.CodeMirror' );
 		}
+		$out->addJsConfigVars( 'wgCodeMirrorEnabled', self::isCodeMirrorEnabled( $out->getContext() ) );
 	}
 
 	/**
