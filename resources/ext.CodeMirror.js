@@ -324,23 +324,34 @@
 	 * Enables or disables CodeMirror
 	 */
 	function switchCodeMirror() {
-		var scrollTop,
+		var selectionObj,
+			selectionStart,
+			selectionEnd,
+			scrollTop,
+			hasFocus,
 			$textbox1 = $( '#wpTextbox1' );
 
 		if ( codeMirror ) {
 			scrollTop = codeMirror.getScrollInfo().top;
+			selectionObj = codeMirror.doc.listSelections()[ 0 ];
+			selectionStart = codeMirror.doc.indexFromPos( selectionObj.head );
+			selectionEnd = codeMirror.doc.indexFromPos( selectionObj.anchor );
+			hasFocus = codeMirror.hasFocus();
 			setCodeEditorPreference( false );
 			codeMirror.save();
 			codeMirror.toTextArea();
 			codeMirror = null;
 			$.fn.textSelection = origTextSelection;
+			if ( hasFocus ) {
+				$textbox1.focus();
+			}
+			$textbox1.prop( 'selectionStart', selectionStart );
+			$textbox1.prop( 'selectionEnd', selectionEnd );
 			$textbox1.scrollTop( scrollTop );
 		} else {
-			scrollTop = $textbox1.scrollTop();
 			// eslint-disable-next-line no-use-before-define
 			enableCodeMirror();
 			setCodeEditorPreference( true );
-			codeMirror.scrollTo( 0, scrollTop );
 		}
 		updateToolbarButton();
 	}
@@ -351,13 +362,16 @@
 	function enableCodeMirror() {
 		var config = mw.config.get( 'extCodeMirrorConfig' );
 
-		if ( codeMirror ) {
-			return;
-		}
-
 		mw.loader.using( config.pluginModules, function () {
 			var $codeMirror,
-				$textbox1 = $( '#wpTextbox1' );
+				$textbox1 = $( '#wpTextbox1' ),
+				selectionStart = $textbox1.prop( 'selectionStart' ),
+				selectionEnd = $textbox1.prop( 'selectionEnd' ),
+				scrollTop = $textbox1.scrollTop();
+
+			if ( codeMirror ) { // Already loaded
+				return;
+			}
 
 			codeMirror = CodeMirror.fromTextArea( $textbox1[ 0 ], {
 				mwConfig: config,
@@ -371,6 +385,9 @@
 				}
 			} );
 			$codeMirror = $( codeMirror.getWrapperElement() );
+
+			codeMirror.doc.setSelection( codeMirror.doc.posFromIndex( selectionEnd ), codeMirror.doc.posFromIndex( selectionStart ) );
+			codeMirror.scrollTo( null, scrollTop );
 
 			// HACK: <textarea> font size varies by browser (chrome/FF/IE)
 			$codeMirror.css( {
