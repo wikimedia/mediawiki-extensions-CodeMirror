@@ -2,8 +2,11 @@
 	"@metadata": {
 		"authors": [
 			"Tacsipacsi",
-			"Urbalazs"
+			"Urbalazs",
+			"Bencemac"
 		]
 	},
-	"codemirror-toggle-label": "Szintaxiskiemelés"
+	"codemirror-toggle-label": "Szintaxiskiemelés",
+	"codemirror-beta-title": "Wikiszöveges szintaxiskiemelő",
+	"codemirror-beta-desc": "A szintaxiskiemelő megkönnyíti a szerkesztést, eltérő színezéssel elkülönítve a belső hivatkozásokat, jegyzeteket és sablonokat."
 }
