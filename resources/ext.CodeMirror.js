@@ -367,7 +367,10 @@
 				// select mediawiki as text input mode
 				mode: 'text/mediawiki',
 				extraKeys: {
-					Tab: false
+					Tab: false,
+					// T174055: Do not redefine the browser history navigation keys
+					'Alt-Left': false,
+					'Alt-Right': false
 				}
 			} );
 			$codeMirror = $( codeMirror.getWrapperElement() );
