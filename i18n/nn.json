@@ -5,6 +5,7 @@
 		]
 	},
 	"codemirror-toggle-label": "Syntaksframheving",
-	"codemirror-popup-highlighting": "Framheving",
+	"codemirror-popup-syntax": "Framheving av",
+	"codemirror-popup-highlighting": "syntaks",
 	"codemirror-popup-desc": "Syntaksframheving hjelper deg med å raskt skilja mellom ulike delar av endringa din ved å gje dei ulike fargar."
 }
