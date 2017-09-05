@@ -371,8 +371,10 @@
 					// T174055: Do not redefine the browser history navigation keys
 					'Alt-Left': false,
 					'Alt-Right': false
-				}
+				},
+				viewportMargin: Infinity
 			} );
+
 			$codeMirror = $( codeMirror.getWrapperElement() );
 
 			// HACK: <textarea> font size varies by browser (chrome/FF/IE)
