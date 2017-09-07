@@ -11,6 +11,7 @@
 	"codemirror-beta-title": "Resaltado do texto coa sintaxe Wiki",
 	"codemirror-popup-syntax": "Sintaxe",
 	"codemirror-popup-highlighting": "Resaltando",
+	"codemirror-popup-desc": "O realce sintáctico axuda a distinguir as diferentes partes da súa edición poñéndolles diferentes cores.",
 	"codemirror-popup-btn-yes": "Probar",
 	"codemirror-popup-btn-no": "Non, grazas"
 }
