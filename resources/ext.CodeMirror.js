@@ -381,6 +381,12 @@
 				'line-height': $textbox1.css( 'line-height' )
 			} );
 
+			// use direction and language of the original textbox
+			$codeMirror.attr( {
+				dir: $textbox1.attr( 'dir' ),
+				lang: $textbox1.attr( 'lang' )
+			} );
+
 			if ( !wikiEditorToolbarEnabled ) {
 				$codeMirror.addClass( 'mw-codeMirror-classicToolbar' );
 			}
