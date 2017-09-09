@@ -25,7 +25,7 @@
  */
 class ResourceLoaderCodeMirrorModule extends ResourceLoaderFileModule {
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	public function getScript( ResourceLoaderContext $context ) {
 		return ResourceLoader::makeConfigSetScript(
@@ -36,7 +36,7 @@ class ResourceLoaderCodeMirrorModule extends ResourceLoaderFileModule {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	public function supportsURLLoading() {
 		// This module does not support loading URLs, because it inserts
@@ -45,7 +45,7 @@ class ResourceLoaderCodeMirrorModule extends ResourceLoaderFileModule {
 	}
 
 	/**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
 	public function enableModuleContentVersion() {
 		return true;

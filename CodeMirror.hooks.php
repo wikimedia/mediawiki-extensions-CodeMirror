@@ -34,8 +34,8 @@ class CodeMirrorHooks {
 	 *
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/BeforePageDisplay
 	 *
-	 * @param OutputPage $out
-	 * @param Skin $skin
+	 * @param OutputPage &$out
+	 * @param Skin &$skin
 	 */
 	public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
 		if ( self::isCodeMirrorEnabled( $out->getContext() ) ) {
@@ -49,7 +49,7 @@ class CodeMirrorHooks {
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/GetPreferences
 	 *
 	 * @param User $user
-	 * @param array $defaultPreferences
+	 * @param array &$defaultPreferences
 	 */
 	public static function onGetPreferences( User $user, &$defaultPreferences ) {
 		// CodeMirror is enabled by default for users. It can
@@ -64,7 +64,7 @@ class CodeMirrorHooks {
 	 * GetBetaFeaturePreferences hook handler
 	 *
 	 * @param User $user
-	 * @param array $preferences
+	 * @param array &$preferences
 	 */
 	public static function onGetBetaFeaturePreferences( User $user, &$preferences ) {
 		global $wgCodeMirrorBetaFeature, $wgExtensionAssetsPath;
