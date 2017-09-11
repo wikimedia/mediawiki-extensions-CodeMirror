@@ -368,6 +368,9 @@
 				mode: 'text/mediawiki',
 				extraKeys: {
 					Tab: false,
+					// T174514: Move the cursor at the beginning/end of the current wrapped line
+					Home: 'goLineLeft',
+					End: 'goLineRight',
 					// T174055: Do not redefine the browser history navigation keys
 					'Alt-Left': false,
 					'Alt-Right': false
