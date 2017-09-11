@@ -9,9 +9,31 @@
 	// codeMirror needs a special textselection jQuery function to work, save the current one to restore when
 	// CodeMirror get's disabled.
 	origTextSelection = $.fn.textSelection;
+
 	useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
 	api = new mw.Api();
+
 	originHooksTextarea = $.valHooks.textarea;
+	// define jQuery hook for searching and replacing text using JS if CodeMirror is enabled, see Bug: T108711
+	$.valHooks.textarea = {
+		get: function ( elem ) {
+			if ( elem.id === 'wpTextbox1' && codeMirror ) {
+				return codeMirror.doc.getValue();
+			} else if ( originHooksTextarea ) {
+				return originHooksTextarea.get( elem );
+			}
+			return elem.value;
+		},
+		set: function ( elem, value ) {
+			if ( elem.id === 'wpTextbox1' && codeMirror ) {
+				return codeMirror.doc.setValue( value );
+			} else if ( originHooksTextarea ) {
+				return originHooksTextarea.set( elem, value );
+			}
+			elem.value = value;
+		}
+	};
+
 	// The WikiEditor extension exists the WikiEditor beta toolbar is used by the user
 	wikiEditorToolbarEnabled = !!mw.loader.getState( 'ext.wikiEditor' ) &&
 		// This can be the string "0" if the user disabled the preference - Bug T54542#555387
@@ -251,63 +273,6 @@
 	}
 
 	/**
-	 * Adds the CodeMirror button to WikiEditor
-	 */
-	function addCodeMirrorToWikiEditor() {
-		var $codeMirrorButton;
-
-		$( '#wpTextbox1' ).wikiEditor(
-			'addToToolbar',
-			{
-				section: 'main',
-				groups: {
-					codemirror: {
-						tools: {
-							CodeMirror: {
-								label: mw.msg( 'codemirror-toggle-label' ),
-								type: 'button',
-								action: {
-									type: 'callback',
-									execute: function () {
-										// eslint-disable-next-line no-use-before-define
-										switchCodeMirror();
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		);
-
-		$codeMirrorButton = $( '#wpTextbox1' ).data( 'wikiEditor-context' ).modules.toolbar.$toolbar.find( 'a.tool[rel=CodeMirror]' );
-		$codeMirrorButton.attr( 'id', 'mw-editbutton-codemirror' );
-
-		// eslint-disable-next-line no-use-before-define
-		updateToolbarButton();
-	}
-
-	// define JQuery hook for searching and replacing text using JS if CodeMirror is enabled, see Bug: T108711
-	$.valHooks.textarea = {
-		get: function ( elem ) {
-			if ( elem.id === 'wpTextbox1' && codeMirror ) {
-				return codeMirror.doc.getValue();
-			} else if ( originHooksTextarea ) {
-				return originHooksTextarea.get( elem );
-			}
-			return elem.value;
-		},
-		set: function ( elem, value ) {
-			if ( elem.id === 'wpTextbox1' && codeMirror ) {
-				return codeMirror.doc.setValue( value );
-			} else if ( originHooksTextarea ) {
-				return originHooksTextarea.set( elem, value );
-			}
-			elem.value = value;
-		}
-	};
-
-	/**
 	 * Save CodeMirror enabled pref.
 	 *
 	 * @param {boolean} prefValue True, if CodeMirror should be enabled by default, otherwise false.
@@ -320,50 +285,6 @@
 		}
 		api.saveOption( 'usecodemirror', prefValue ? 1 : 0 );
 		mw.user.options.set( 'usecodemirror', prefValue ? 1 : 0 );
-	}
-
-	/**
-	 * Updates CodeMirror button on the toolbar according to the current state (on/off)
-	 */
-	function updateToolbarButton() {
-		$( '#mw-editbutton-codemirror' )
-			.toggleClass( 'mw-editbutton-codemirror-on', !!useCodeMirror )
-			.toggleClass( 'mw-editbutton-codemirror-off', !useCodeMirror );
-	}
-
-	/**
-	 * Enables or disables CodeMirror
-	 */
-	function switchCodeMirror() {
-		var selectionObj,
-			selectionStart,
-			selectionEnd,
-			scrollTop,
-			hasFocus,
-			$textbox1 = $( '#wpTextbox1' );
-
-		if ( codeMirror ) {
-			scrollTop = codeMirror.getScrollInfo().top;
-			selectionObj = codeMirror.doc.listSelections()[ 0 ];
-			selectionStart = codeMirror.doc.indexFromPos( selectionObj.head );
-			selectionEnd = codeMirror.doc.indexFromPos( selectionObj.anchor );
-			hasFocus = codeMirror.hasFocus();
-			setCodeEditorPreference( false );
-			codeMirror.toTextArea();
-			codeMirror = null;
-			$.fn.textSelection = origTextSelection;
-			if ( hasFocus ) {
-				$textbox1.focus();
-			}
-			$textbox1.prop( 'selectionStart', selectionStart );
-			$textbox1.prop( 'selectionEnd', selectionEnd );
-			$textbox1.scrollTop( scrollTop );
-		} else {
-			// eslint-disable-next-line no-use-before-define
-			enableCodeMirror();
-			setCodeEditorPreference( true );
-		}
-		updateToolbarButton();
 	}
 
 	/**
@@ -427,6 +348,85 @@
 			// Overwrite default textselection of WikiEditor to work with CodeMirror, too
 			$.fn.textSelection = cmTextSelection;
 		} );
+	}
+
+	/**
+	 * Updates CodeMirror button on the toolbar according to the current state (on/off)
+	 */
+	function updateToolbarButton() {
+		$( '#mw-editbutton-codemirror' )
+			.toggleClass( 'mw-editbutton-codemirror-on', !!useCodeMirror )
+			.toggleClass( 'mw-editbutton-codemirror-off', !useCodeMirror );
+	}
+
+	/**
+	 * Enables or disables CodeMirror
+	 */
+	function switchCodeMirror() {
+		var selectionObj,
+			selectionStart,
+			selectionEnd,
+			scrollTop,
+			hasFocus,
+			$textbox1 = $( '#wpTextbox1' );
+
+		if ( codeMirror ) {
+			scrollTop = codeMirror.getScrollInfo().top;
+			selectionObj = codeMirror.doc.listSelections()[ 0 ];
+			selectionStart = codeMirror.doc.indexFromPos( selectionObj.head );
+			selectionEnd = codeMirror.doc.indexFromPos( selectionObj.anchor );
+			hasFocus = codeMirror.hasFocus();
+			setCodeEditorPreference( false );
+			codeMirror.toTextArea();
+			codeMirror = null;
+			$.fn.textSelection = origTextSelection;
+			if ( hasFocus ) {
+				$textbox1.focus();
+			}
+			$textbox1.prop( 'selectionStart', selectionStart );
+			$textbox1.prop( 'selectionEnd', selectionEnd );
+			$textbox1.scrollTop( scrollTop );
+		} else {
+			// eslint-disable-next-line no-use-before-define
+			enableCodeMirror();
+			setCodeEditorPreference( true );
+		}
+		updateToolbarButton();
+	}
+
+	/**
+	 * Adds the CodeMirror button to WikiEditor
+	 */
+	function addCodeMirrorToWikiEditor() {
+		var $codeMirrorButton;
+
+		$( '#wpTextbox1' ).wikiEditor(
+			'addToToolbar',
+			{
+				section: 'main',
+				groups: {
+					codemirror: {
+						tools: {
+							CodeMirror: {
+								label: mw.msg( 'codemirror-toggle-label' ),
+								type: 'button',
+								action: {
+									type: 'callback',
+									execute: function () {
+										switchCodeMirror();
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		);
+
+		$codeMirrorButton = $( '#wpTextbox1' ).data( 'wikiEditor-context' ).modules.toolbar.$toolbar.find( 'a.tool[rel=CodeMirror]' );
+		$codeMirrorButton.attr( 'id', 'mw-editbutton-codemirror' );
+
+		updateToolbarButton();
 	}
 
 	/**
