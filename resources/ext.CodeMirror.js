@@ -17,6 +17,10 @@
 		// This can be the string "0" if the user disabled the preference - Bug T54542#555387
 		mw.user.options.get( 'usebetatoolbar' ) > 0;
 
+	// T174055: Do not redefine the browser history navigation keys (T175378: for PC only)
+	CodeMirror.keyMap.pcDefault[ 'Alt-Left' ] = false;
+	CodeMirror.keyMap.pcDefault[ 'Alt-Right' ] = false;
+
 	// function for a textselection function for CodeMirror
 	function cmTextSelection( command, options ) {
 		var fn, retval;
@@ -370,10 +374,7 @@
 					Tab: false,
 					// T174514: Move the cursor at the beginning/end of the current wrapped line
 					Home: 'goLineLeft',
-					End: 'goLineRight',
-					// T174055: Do not redefine the browser history navigation keys
-					'Alt-Left': false,
-					'Alt-Right': false
+					End: 'goLineRight'
 				},
 				viewportMargin: Infinity
 			} );
