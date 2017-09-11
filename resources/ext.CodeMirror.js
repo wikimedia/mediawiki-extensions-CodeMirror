@@ -502,7 +502,7 @@
 		if ( !useCodeMirror ) {
 			// Wait for DOM before loading our popup
 			$( function () {
-				window.setTimeout( function () { handlePopup(); }, 500 );
+				setTimeout( handlePopup, 500 );
 			} );
 		}
 	}
