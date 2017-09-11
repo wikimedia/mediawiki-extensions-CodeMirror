@@ -403,10 +403,8 @@
 	 * If popup hasn't been shown before, show popup and add a localStorage entry.
 	 * check it before showing popup in future.
 	 */
-	/**
-	 */
 	function handlePopup() {
-		var yesButton, noButton, $title, $content, popup;
+		var yesButton, noButton, $labelText, $label, $content, popup;
 
 		// If CodeMirror button doesn't exist, don't show popup
 		if ( !$( '#mw-editbutton-codemirror' ).length ) {
@@ -427,14 +425,10 @@
 			label: mw.msg( 'codemirror-popup-btn-no' ),
 			flags: [ 'destructive' ]
 		} );
-		$title =
-			$( '<span>' ).append(
-				'{ ',
-				$( '<span>' ).addClass( 'codemirror-popup-color-blue' ).text( mw.msg( 'codemirror-popup-syntax' ) ),
-				' ',
-				document.createTextNode( mw.msg( 'codemirror-popup-highlighting' ) ),
-				' }'
-			);
+		$labelText = $( '<span>' ).text( mw.msg( 'codemirror-popup-label' ) );
+		$label = $( '<span>' )
+			.addClass( 'codemirror-popup-label' )
+			.append( '{ ', $labelText, ' }' );
 		$content =
 			$( '<div>' ).addClass( 'codemirror-popup-div' ).append(
 				$( '<div>' ).addClass( 'codemirror-popup-text' ).text( mw.msg( 'codemirror-popup-desc' ) ),
@@ -444,7 +438,7 @@
 
 		popup = new OO.ui.PopupWidget( {
 			head: true,
-			label: $title,
+			label: $label,
 			classes: [ 'codemirror-popup' ],
 			$content: $content,
 			$floatableContainer: $( '#mw-editbutton-codemirror' ),

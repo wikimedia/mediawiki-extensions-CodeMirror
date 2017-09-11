@@ -44,8 +44,7 @@
 			],
 			"messages": [
 				"codemirror-toggle-label",
-				"codemirror-popup-syntax",
-				"codemirror-popup-highlighting",
+				"codemirror-popup-label",
 				"codemirror-popup-desc",
 				"codemirror-popup-btn-yes",
 				"codemirror-popup-btn-no"
