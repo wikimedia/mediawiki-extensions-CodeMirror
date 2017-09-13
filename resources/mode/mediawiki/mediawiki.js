@@ -807,6 +807,29 @@
 							return 'mw-signature';
 						}
 						break;
+					case '_': // Maybe double undescored Magic Word as __TOC__
+						tmp = 1;
+						while ( stream.eat( '_' ) ) { // Optimize processing of many underscore symbols
+							tmp++;
+						}
+						if ( tmp > 2 ) { // Many underscore symbols
+							if ( !stream.eol() ) {
+								stream.backUp( 2 ); // Leave last two underscore symbols for processing again in next iteration
+							}
+							return makeStyle( style, state ); // Optimization: skip regex function at the end for EOL and backuped symbols
+						} else if ( tmp === 2 ) { // Check on double underscore Magic Word
+							name = stream.match( /([^\s\u00a0>}[\]<{'|&:~]+?)__/ ); // The same as the end of function except '_' inside and with '__' at the end of string
+							if ( name && name[ 0 ] ) {
+								if ( '__' + name[ 0 ].toLowerCase() in mwConfig.doubleUnderscore[ 0 ] || '__' + name[ 0 ] in mwConfig.doubleUnderscore[ 1 ] ) {
+									return 'mw-doubleUnderscore';
+								}
+								if ( !stream.eol() ) {
+									stream.backUp( 2 ); // Two underscore symbols at the end can be begining of other double undescored Magic Word
+								}
+								return makeStyle( style, state ); // Optimization: skip regex function at the end for EOL and backuped symbols
+							}
+						}
+						break;
 					default:
 						if ( /[\s\u00a0]/.test( ch ) ) {
 							stream.eatSpace();
