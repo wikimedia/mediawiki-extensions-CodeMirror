@@ -5,7 +5,9 @@
 		]
 	},
 	"codemirror-toggle-label": "Syntaksframheving",
-	"codemirror-popup-syntax": "Framheving av",
-	"codemirror-popup-highlighting": "syntaks",
-	"codemirror-popup-desc": "Syntaksframheving hjelper deg med å raskt skilja mellom ulike delar av endringa din ved å gje dei ulike fargar."
+	"codemirror-beta-title": "Syntaksframheving for wikitekst",
+	"codemirror-beta-desc": "Syntaksframheving gjer endring enklare gjennom å nytta ulike fargar og nyansar for å gje eit synleg skilje mellom sidetekst og kode for lenkjer, kjelder og malar.",
+	"codemirror-popup-label": "Syntaksframheving",
+	"codemirror-popup-desc": "Syntaksframheving hjelper deg med å raskt skilja mellom ulike delar av endringa din ved å gje dei ulike fargar.",
+	"codemirror-popup-btn-no": "Nei takk"
 }
