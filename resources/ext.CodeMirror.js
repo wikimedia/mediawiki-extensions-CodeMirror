@@ -25,7 +25,7 @@
 	function cmTextSelection( command, options ) {
 		var fn, retval;
 
-		if ( !codeMirror || codeMirror.getTextArea() !== this[ 0 ] ) {
+		if ( !codeMirror ) {
 			return origTextSelection.call( this, command, options );
 		}
 
