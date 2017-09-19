@@ -334,7 +334,6 @@
 		if ( codeMirror ) {
 			scrollTop = codeMirror.getScrollInfo().top;
 			setCodeEditorPreference( false );
-			codeMirror.save();
 			codeMirror.toTextArea();
 			codeMirror = null;
 			$.fn.textSelection = origTextSelection;
