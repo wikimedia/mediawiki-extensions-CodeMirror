@@ -1,6 +1,6 @@
 ( function ( mw, $ ) {
 	var origTextSelection, useCodeMirror, codeMirror, api, originHooksTextarea,
-		wikiEditorToolbarEnabled;
+		wikiEditorToolbarEnabled, enableContentEditable = true;
 
 	if ( mw.config.get( 'wgCodeEditorCurrentLanguage' ) ) { // If the CodeEditor is used then just exit;
 		return;
@@ -16,6 +16,13 @@
 	wikiEditorToolbarEnabled = !!mw.loader.getState( 'ext.wikiEditor' ) &&
 		// This can be the string "0" if the user disabled the preference - Bug T54542#555387
 		mw.user.options.get( 'usebetatoolbar' ) > 0;
+
+	// Disable spellchecking for Firefox users on non-Mac systems (Bug T95104)
+	if ( navigator.userAgent.indexOf( 'Firefox' ) > -1 &&
+		navigator.userAgent.indexOf( 'Mac' ) === -1
+	) {
+		enableContentEditable = false;
+	}
 
 	// T174055: Do not redefine the browser history navigation keys (T175378: for PC only)
 	CodeMirror.keyMap.pcDefault[ 'Alt-Left' ] = false;
@@ -376,8 +383,8 @@
 					Home: 'goLineLeft',
 					End: 'goLineRight'
 				},
-				inputStyle: 'contenteditable',
-				spellcheck: true,
+				inputStyle: enableContentEditable ? 'contenteditable' : 'textarea',
+				spellcheck: enableContentEditable,
 				viewportMargin: Infinity
 			} );
 
