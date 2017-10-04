@@ -390,6 +390,8 @@
 					Home: 'goLineLeft',
 					End: 'goLineRight'
 				},
+				inputStyle: 'contenteditable',
+				spellcheck: true,
 				viewportMargin: Infinity
 			} );
 
