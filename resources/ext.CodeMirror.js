@@ -349,7 +349,6 @@
 			selectionEnd = codeMirror.doc.indexFromPos( selectionObj.anchor );
 			hasFocus = codeMirror.hasFocus();
 			setCodeEditorPreference( false );
-			codeMirror.save();
 			codeMirror.toTextArea();
 			codeMirror = null;
 			$.fn.textSelection = origTextSelection;
