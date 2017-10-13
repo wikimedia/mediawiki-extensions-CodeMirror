@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Beta16",
-			"Statix64"
+			"Statix64",
+			"Sakretsu"
 		]
 	},
 	"codemirror-desc": "Fornisce l'evidenziazione della sintassi nell'editor wikitesto",
@@ -10,6 +11,7 @@
 	"codemirror-beta-title": "Evidenziazione della sintassi nel wikitesto",
 	"codemirror-beta-desc": "L'evidenziazione della sintassi rende più semplice la modifica utilizzando colori e sfumature per separare visivamente il testo della pagina dal codice per collegamenti, note e template.",
 	"codemirror-popup-label": "Evidenziazione della sintassi",
+	"codemirror-popup-desc": "L'evidenziazione della sintassi ti aiuterà a distinguere facilmente diverse parti della tua modifica codificandole a colori.",
 	"codemirror-popup-btn-yes": "Prova",
 	"codemirror-popup-btn-no": "No, grazie"
 }
