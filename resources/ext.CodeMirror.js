@@ -430,6 +430,38 @@
 	}
 
 	/**
+	 * Adds CodeMirror button to the toolbar
+	 */
+	function addToolbarButton() {
+		// Check if the user is using the enhanced editing toolbar (supplied by the
+		// WikiEditor extension) or the default editing toolbar (supplied by core).
+		if ( wikiEditorToolbarEnabled ) {
+			// They are using the enhanced editing toolbar.
+			mw.loader.using( 'ext.wikiEditor.toolbar', function () {
+				// Add CodeMirror button to the enhanced editing toolbar.
+				$( addCodeMirrorToWikiEditor );
+			} );
+		} else {
+			// They are using the default editing toolbar.
+			mw.loader.using( 'mediawiki.toolbar', function () {
+				// Add CodeMirror button to the default editing toolbar.
+				mw.toolbar.addButton( {
+					speedTip: mw.msg( 'codemirror-toggle-label' ),
+					imageId: 'mw-editbutton-codemirror',
+					onClick: function () {
+						switchCodeMirror();
+						return false;
+					}
+				} );
+				// We don't know when button will be added, wait until the document is ready to update it
+				$( function () {
+					updateToolbarButton();
+				} );
+			} );
+		}
+	}
+
+	/**
 	 * Add a popup for first time users (T165003)
 	 *
 	 * If popup hasn't been shown before, show popup and add a localStorage entry.
@@ -500,32 +532,7 @@
 
 	// If view is in edit mode, add the button to the toolbar.
 	if ( $( '#wpTextbox1' ).length ) {
-		// Check if the user is using the enhanced editing toolbar (supplied by the
-		// WikiEditor extension) or the default editing toolbar (supplied by core).
-		if ( wikiEditorToolbarEnabled ) {
-			// They are using the enhanced editing toolbar.
-			mw.loader.using( 'ext.wikiEditor.toolbar', function () {
-				// Add CodeMirror button to the enhanced editing toolbar.
-				$( addCodeMirrorToWikiEditor );
-			} );
-		} else {
-			// They are using the default editing toolbar.
-			mw.loader.using( 'mediawiki.toolbar', function () {
-				// Add CodeMirror button to the default editing toolbar.
-				mw.toolbar.addButton( {
-					speedTip: mw.msg( 'codemirror-toggle-label' ),
-					imageId: 'mw-editbutton-codemirror',
-					onClick: function () {
-						switchCodeMirror();
-						return false;
-					}
-				} );
-				// We don't know when button will be added, wait until the document is ready to update it
-				$( function () {
-					updateToolbarButton();
-				} );
-			} );
-		}
+		addToolbarButton();
 
 		// Don't show popup if CM already enabled
 		if ( !useCodeMirror ) {
