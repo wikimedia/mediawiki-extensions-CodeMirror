@@ -300,7 +300,9 @@
 				selectionEnd = $textbox1.prop( 'selectionEnd' ),
 				scrollTop = $textbox1.scrollTop();
 
-			if ( codeMirror ) { // Already loaded
+			// If CodeMirror is already loaded or wikEd gadget is enabled, abort. See T178348.
+			// FIXME: Would be good to replace the wikEd check with something more generic.
+			if ( codeMirror || window.wikEd !== undefined ) {
 				return;
 			}
 
