@@ -326,6 +326,13 @@
 
 			$codeMirror = $( codeMirror.getWrapperElement() );
 
+			$codeMirror.resizable( {
+				handles: 'se',
+				resize: function ( event, ui ) {
+					ui.size.width = ui.originalSize.width;
+				}
+			} );
+
 			codeMirror.doc.setSelection( codeMirror.doc.posFromIndex( selectionEnd ), codeMirror.doc.posFromIndex( selectionStart ) );
 			codeMirror.scrollTo( null, scrollTop );
 

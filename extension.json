@@ -33,7 +33,8 @@
 				"mediawiki.user",
 				"user.options",
 				"oojs-ui-widgets",
-				"mediawiki.storage"
+				"mediawiki.storage",
+				"jquery.ui.resizable"
 			],
 			"scripts": [
 				"ext.CodeMirror.js"
