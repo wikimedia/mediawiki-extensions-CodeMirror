@@ -561,4 +561,11 @@
 		}
 	}
 
+	// Synchronize textarea with CodeMirror before leaving
+	window.addEventListener( 'beforeunload', function () {
+		if ( codeMirror ) {
+			codeMirror.save();
+		}
+	} );
+
 }( mediaWiki, jQuery ) );
