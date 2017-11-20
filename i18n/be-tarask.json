@@ -5,5 +5,6 @@
 		]
 	},
 	"codemirror-desc": "Забясьпечвае вылучэньне сынтаксысу ў рэдактары вікітэксту",
-	"codemirror-toggle-label": "Вылучэньне сынтаксысу"
+	"codemirror-toggle-label": "Вылучэньне сынтаксысу",
+	"codemirror-beta-title": "Вылучэньне сынтаксысу вікітэксту"
 }
