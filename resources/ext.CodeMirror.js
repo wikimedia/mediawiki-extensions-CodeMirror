@@ -396,7 +396,6 @@
 			$textbox1.prop( 'selectionEnd', selectionEnd );
 			$textbox1.scrollTop( scrollTop );
 		} else {
-			// eslint-disable-next-line no-use-before-define
 			enableCodeMirror();
 			setCodeEditorPreference( true );
 		}
