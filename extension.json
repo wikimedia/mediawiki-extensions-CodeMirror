@@ -130,6 +130,7 @@
 				"ext.visualEditor.mwcore",
 				"ext.CodeMirror.lib",
 				"ext.CodeMirror.mode.mediawiki",
+				"jquery.client",
 				"mediawiki.api",
 				"mediawiki.api.options",
 				"user.options"
