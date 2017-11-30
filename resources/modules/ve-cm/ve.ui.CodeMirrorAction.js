@@ -66,7 +66,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 		surfaceView.$documentNode.addClass(
 			'WebkitTextFillColor' in document.body.style ?
 				've-ce-documentNode-codeEditor-webkit-hide' :
-				've-ce-documentNode-codeEditor-webkit'
+				've-ce-documentNode-codeEditor-hide'
 		);
 
 		/* Events */
@@ -89,7 +89,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 		surfaceView.$element.removeClass( 'mw-editfont-monospace' ).addClass( 'mw-editfont-' + mw.user.options.get( 'editfont' ) );
 
 		surfaceView.$documentNode.removeClass(
-			've-ce-documentNode-codeEditor-webkit-hide ve-ce-documentNode-codeEditor-webkit'
+			've-ce-documentNode-codeEditor-webkit-hide ve-ce-documentNode-codeEditor-hide'
 		);
 
 		surface.mirror.getWrapperElement().remove();
