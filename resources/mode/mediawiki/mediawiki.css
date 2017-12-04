@@ -11,7 +11,7 @@
 .cm-mw-doubleUnderscore, .cm-mw-signature, .cm-mw-hr { color: #08f; font-weight: bold; background-color: #eee; }
 .cm-mw-indenting { color: #08f; font-weight: bold; }
 .cm-mw-mnemonic { color: #290; }
-.cm-mw-comment { color: #aaa; font-weight: normal; }
+.cm-mw-comment { color: #84a0a0; font-weight: normal; }
 .cm-mw-apostrophes-bold, .cm-mw-apostrophes-italic { color: #08f; }
 
 pre.cm-mw-section-1 { font-size: 1.8em; line-height: 1.2em; }
