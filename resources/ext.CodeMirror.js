@@ -1,6 +1,6 @@
 ( function ( mw, $ ) {
 	var origTextSelection, useCodeMirror, codeMirror, api, originHooksTextarea,
-		wikiEditorToolbarEnabled, enableContentEditable = true;
+		wikiEditorToolbarEnabled, enableContentEditable = true, textBox;
 
 	if ( mw.config.get( 'wgCodeEditorCurrentLanguage' ) ) { // If the CodeEditor is used then just exit;
 		return;
@@ -54,7 +54,9 @@
 	function cmTextSelection( command, options ) {
 		var fn, retval;
 
-		if ( !codeMirror ) {
+		if ( !codeMirror ||
+			( this[ 0 ] !== textBox && this[ 0 ] !== codeMirror.getWrapperElement() )
+		) {
 			return origTextSelection.call( this, command, options );
 		}
 
@@ -325,6 +327,7 @@
 			} );
 
 			$codeMirror = $( codeMirror.getWrapperElement() );
+			textBox = $textbox1[ 0 ];
 
 			$codeMirror.resizable( {
 				handles: 'se',
