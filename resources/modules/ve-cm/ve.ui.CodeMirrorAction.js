@@ -38,7 +38,8 @@ ve.ui.CodeMirrorAction.static.methods = [ 'toggle' ];
  * @return {boolean} Action was executed
  */
 ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
-	var surface = this.surface,
+	var profile, supportsTransparentText,
+		surface = this.surface,
 		surfaceView = surface.getView(),
 		doc = surface.getModel().getDocument();
 
@@ -63,8 +64,13 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 		// so revert any editfont user preference
 		surfaceView.$element.removeClass( 'mw-editfont-sans-serif mw-editfont-serif' ).addClass( 'mw-editfont-monospace' );
 
+		profile = $.client.profile();
+		supportsTransparentText = 'WebkitTextFillColor' in document.body.style &&
+			// Disable on Firefox+OSX (T175223)
+			!( profile.layout === 'gecko' && profile.platform === 'mac' );
+
 		surfaceView.$documentNode.addClass(
-			'WebkitTextFillColor' in document.body.style ?
+			supportsTransparentText ?
 				've-ce-documentNode-codeEditor-webkit-hide' :
 				've-ce-documentNode-codeEditor-hide'
 		);
