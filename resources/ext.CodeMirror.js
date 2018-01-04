@@ -1,8 +1,19 @@
 ( function ( mw, $ ) {
 	var origTextSelection, useCodeMirror, codeMirror, api, originHooksTextarea,
-		wikiEditorToolbarEnabled, enableContentEditable = true, textBox;
+		wikiEditorToolbarEnabled, textBox,
+		enableContentEditable = true;
 
 	if ( mw.config.get( 'wgCodeEditorCurrentLanguage' ) ) { // If the CodeEditor is used then just exit;
+		return;
+	}
+
+	// The WikiEditor extension exists the WikiEditor beta toolbar is used by the user
+	wikiEditorToolbarEnabled = !!mw.loader.getState( 'ext.wikiEditor' ) &&
+		// This can be the string "0" if the user disabled the preference - Bug T54542#555387
+		mw.user.options.get( 'usebetatoolbar' ) > 0;
+
+	// If WikiEditor is disabled, and the deprecated classic toolbar is unavailable then exit.
+	if ( !wikiEditorToolbarEnabled && !mw.loader.getState( 'mediawiki.toolbar' ) ) {
 		return;
 	}
 
@@ -33,11 +44,6 @@
 			elem.value = value;
 		}
 	};
-
-	// The WikiEditor extension exists the WikiEditor beta toolbar is used by the user
-	wikiEditorToolbarEnabled = !!mw.loader.getState( 'ext.wikiEditor' ) &&
-		// This can be the string "0" if the user disabled the preference - Bug T54542#555387
-		mw.user.options.get( 'usebetatoolbar' ) > 0;
 
 	// Disable spellchecking for Firefox users on non-Mac systems (Bug T95104)
 	if ( navigator.userAgent.indexOf( 'Firefox' ) > -1 &&
