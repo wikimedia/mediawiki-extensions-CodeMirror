@@ -453,8 +453,8 @@
 		// Check if the user is using the enhanced editing toolbar (supplied by the
 		// WikiEditor extension) or the default editing toolbar (supplied by core).
 		if ( wikiEditorToolbarEnabled ) {
-			// They are using the enhanced editing toolbar.
-			mw.loader.using( 'ext.wikiEditor.toolbar', function () {
+			// They are using WikiEditor
+			mw.loader.using( 'ext.wikiEditor', function () {
 				// Add CodeMirror button to the enhanced editing toolbar.
 				$( addCodeMirrorToWikiEditor );
 			} );
