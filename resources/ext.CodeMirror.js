@@ -1,6 +1,6 @@
 ( function ( mw, $ ) {
-	var origTextSelection, useCodeMirror, codeMirror, api, originHooksTextarea,
-		wikiEditorToolbarEnabled, textBox,
+	var useCodeMirror, codeMirror, api, originHooksTextarea,
+		wikiEditorToolbarEnabled, cmTextSelection,
 		enableContentEditable = true;
 
 	if ( mw.config.get( 'wgCodeEditorCurrentLanguage' ) ) { // If the CodeEditor is used then just exit;
@@ -16,10 +16,6 @@
 	if ( !wikiEditorToolbarEnabled && !mw.loader.getState( 'mediawiki.toolbar' ) ) {
 		return;
 	}
-
-	// codeMirror needs a special textselection jQuery function to work, save the current one to restore when
-	// CodeMirror get's disabled.
-	origTextSelection = $.fn.textSelection;
 
 	useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
 	api = new mw.Api();
@@ -56,229 +52,126 @@
 	CodeMirror.keyMap.pcDefault[ 'Alt-Left' ] = false;
 	CodeMirror.keyMap.pcDefault[ 'Alt-Right' ] = false;
 
-	// function for a textselection function for CodeMirror
-	function cmTextSelection( command, options ) {
-		var fn, retval;
+	// jQuery.textSelection overrides for CodeMirror.
+	// See jQuery.textSelection.js for method documentation
+	cmTextSelection = {
+		getContents: function () {
+			return codeMirror.doc.getValue();
+		},
+		setContents: function ( content ) {
+			codeMirror.doc.setValue( content );
+		},
+		getSelection: function () {
+			return codeMirror.doc.getSelection();
+		},
+		setSelection: function ( options ) {
+			return this.each( function () {
+				codeMirror.doc.setSelection( codeMirror.doc.posFromIndex( options.start ), codeMirror.doc.posFromIndex( options.end ) );
+				codeMirror.focus();
+			} );
+		},
+		encapsulateSelection: function ( options ) {
+			return this.each( function () {
+				var insertText,
+					selText,
+					selectPeri = options.selectPeri,
+					pre = options.pre,
+					post = options.post,
+					startCursor = codeMirror.doc.getCursor( true ),
+					endCursor = codeMirror.doc.getCursor( false );
 
-		if ( !codeMirror ||
-			( this[ 0 ] !== textBox && this[ 0 ] !== codeMirror.getWrapperElement() )
-		) {
-			return origTextSelection.call( this, command, options );
-		}
+				if ( options.selectionStart !== undefined ) {
+					// fn[command].call( this, options );
+					cmTextSelection.setSelection.call( $( this ), { start: options.selectionStart, end: options.selectionEnd } ); // not tested
+				}
 
-		fn = {
-			/**
-			 * Get the contents of the textarea
-			 *
-			 * @return {string}
-			 */
-			getContents: function () {
-				return codeMirror.doc.getValue();
-			},
-
-			setContents: function ( newContents ) {
-				codeMirror.doc.setValue( newContents );
-			},
-
-			/**
-			 * Get the currently selected text in this textarea. Will focus the textarea
-			 * in some browsers (IE/Opera)
-			 *
-			 * @return {string}
-			 */
-			getSelection: function () {
-				return codeMirror.doc.getSelection();
-			},
-
-			/**
-			 * Inserts text at the beginning and end of a text selection, optionally
-			 * inserting text at the caret when selection is empty.
-			 *
-			 * @param {Object} options
-			 * @return {jQuery}
-			 */
-			encapsulateSelection: function ( options ) {
-				return this.each( function () {
-					var insertText,
-						selText,
-						selectPeri = options.selectPeri,
-						pre = options.pre,
-						post = options.post,
-						startCursor = codeMirror.doc.getCursor( true ),
-						endCursor = codeMirror.doc.getCursor( false );
-
-					if ( options.selectionStart !== undefined ) {
-						// fn[command].call( this, options );
-						fn.setSelection( { start: options.selectionStart, end: options.selectionEnd } ); // not tested
+				selText = codeMirror.doc.getSelection();
+				if ( !selText ) {
+					selText = options.peri;
+				} else if ( options.replace ) {
+					selectPeri = false;
+					selText = options.peri;
+				} else {
+					selectPeri = false;
+					while ( selText.charAt( selText.length - 1 ) === ' ' ) {
+						// Exclude ending space char
+						selText = selText.substring( 0, selText.length - 1 );
+						post += ' ';
 					}
-
-					selText = codeMirror.doc.getSelection();
-					if ( !selText ) {
-						selText = options.peri;
-					} else if ( options.replace ) {
-						selectPeri = false;
-						selText = options.peri;
-					} else {
-						selectPeri = false;
-						while ( selText.charAt( selText.length - 1 ) === ' ' ) {
-							// Exclude ending space char
-							selText = selText.substring( 0, selText.length - 1 );
-							post += ' ';
-						}
-						while ( selText.charAt( 0 ) === ' ' ) {
-							// Exclude prepending space char
-							selText = selText.substring( 1, selText.length );
-							pre = ' ' + pre;
-						}
+					while ( selText.charAt( 0 ) === ' ' ) {
+						// Exclude prepending space char
+						selText = selText.substring( 1, selText.length );
+						pre = ' ' + pre;
 					}
+				}
 
-					/**
-					* Do the splitlines stuff.
-					*
-					* Wrap each line of the selected text with pre and post
-					*
-					* @param {string} selText
-					* @param {string} pre
-					* @param {string} post
-					* @return {string}
-					*/
-					function doSplitLines( selText, pre, post ) {
-						var i,
-							insertText = '',
-							selTextArr = selText.split( '\n' );
+				/**
+				* Do the splitlines stuff.
+				*
+				* Wrap each line of the selected text with pre and post
+				*
+				* @param {string} selText
+				* @param {string} pre
+				* @param {string} post
+				* @return {string}
+				*/
+				function doSplitLines( selText, pre, post ) {
+					var i,
+						insertText = '',
+						selTextArr = selText.split( '\n' );
 
-						for ( i = 0; i < selTextArr.length; i++ ) {
-							insertText += pre + selTextArr[ i ] + post;
-							if ( i !== selTextArr.length - 1 ) {
-								insertText += '\n';
-							}
-						}
-						return insertText;
-					}
-
-					if ( options.splitlines ) {
-						selectPeri = false;
-						insertText = doSplitLines( selText, pre, post );
-					} else {
-						insertText = pre + selText + post;
-					}
-
-					if ( options.ownline ) {
-						if ( startCursor.ch !== 0 ) {
-							insertText = '\n' + insertText;
-							pre += '\n';
-						}
-
-						if ( codeMirror.doc.getLine( endCursor.line ).length !== endCursor.ch ) {
+					for ( i = 0; i < selTextArr.length; i++ ) {
+						insertText += pre + selTextArr[ i ] + post;
+						if ( i !== selTextArr.length - 1 ) {
 							insertText += '\n';
-							post += '\n';
 						}
 					}
+					return insertText;
+				}
 
-					codeMirror.doc.replaceSelection( insertText );
+				if ( options.splitlines ) {
+					selectPeri = false;
+					insertText = doSplitLines( selText, pre, post );
+				} else {
+					insertText = pre + selText + post;
+				}
 
-					if ( selectPeri ) {
-						codeMirror.doc.setSelection(
-							codeMirror.doc.posFromIndex( codeMirror.doc.indexFromPos( startCursor ) + pre.length ),
-							codeMirror.doc.posFromIndex( codeMirror.doc.indexFromPos( startCursor ) + pre.length + selText.length )
-						);
+				if ( options.ownline ) {
+					if ( startCursor.ch !== 0 ) {
+						insertText = '\n' + insertText;
+						pre += '\n';
 					}
-				} );
-			},
 
-			/**
-			 * Get the position (in resolution of bytes not necessarily characters)
-			 * in a textarea
-			 *
-			 * @param {Object} options
-			 * @return {number}
-			 */
-			getCaretPosition: function ( options ) {
-				var caretPos = codeMirror.doc.indexFromPos( codeMirror.doc.getCursor( true ) ),
-					endPos = codeMirror.doc.indexFromPos( codeMirror.doc.getCursor( false ) );
-				if ( options.startAndEnd ) {
-					return [ caretPos, endPos ];
+					if ( codeMirror.doc.getLine( endCursor.line ).length !== endCursor.ch ) {
+						insertText += '\n';
+						post += '\n';
+					}
 				}
-				return caretPos;
-			},
 
-			setSelection: function ( options ) {
-				return this.each( function () {
-					codeMirror.doc.setSelection( codeMirror.doc.posFromIndex( options.start ), codeMirror.doc.posFromIndex( options.end ) );
-				} );
-			},
+				codeMirror.doc.replaceSelection( insertText );
 
-			/**
-			* Scroll a textarea to the current cursor position. You can set the cursor
-			* position with setSelection()
-			*
-			* @return {jQuery}
-			*/
-			scrollToCaretPosition: function () {
-				return this.each( function () {
-					codeMirror.scrollIntoView( null );
-				} );
+				if ( selectPeri ) {
+					codeMirror.doc.setSelection(
+						codeMirror.doc.posFromIndex( codeMirror.doc.indexFromPos( startCursor ) + pre.length ),
+						codeMirror.doc.posFromIndex( codeMirror.doc.indexFromPos( startCursor ) + pre.length + selText.length )
+					);
+				}
+			} );
+		},
+		getCaretPosition: function ( options ) {
+			var caretPos = codeMirror.doc.indexFromPos( codeMirror.doc.getCursor( true ) ),
+				endPos = codeMirror.doc.indexFromPos( codeMirror.doc.getCursor( false ) );
+			if ( options.startAndEnd ) {
+				return [ caretPos, endPos ];
 			}
-		};
-
-		switch ( command ) {
-			// case 'getContents': // no params
-			// case 'setContents': // no params with defaults
-			// case 'getSelection': // no params
-			case 'encapsulateSelection':
-				options = $.extend( {
-					pre: '', // Text to insert before the cursor/selection
-					peri: '', // Text to insert between pre and post and select afterwards
-					post: '', // Text to insert after the cursor/selection
-					ownline: false, // Put the inserted text on a line of its own
-					replace: false, // If there is a selection, replace it with peri instead of leaving it alone
-					selectPeri: true, // Select the peri text if it was inserted (but not if there was a selection and replace==false, or if splitlines==true)
-					splitlines: false, // If multiple lines are selected, encapsulate each line individually
-					selectionStart: undefined, // Position to start selection at
-					selectionEnd: undefined // Position to end selection at. Defaults to start
-				}, options );
-				break;
-			case 'getCaretPosition':
-				options = $.extend( {
-					// Return [start, end] instead of just start
-					startAndEnd: false
-				}, options );
-				// FIXME: We may not need character position-based functions if we insert markers in the right places
-				break;
-			case 'setSelection':
-				options = $.extend( {
-					// Position to start selection at
-					start: undefined,
-					// Position to end selection at. Defaults to start
-					end: undefined,
-					// Element to start selection in (iframe only)
-					startContainer: undefined,
-					// Element to end selection in (iframe only). Defaults to startContainer
-					endContainer: undefined
-				}, options );
-
-				if ( options.end === undefined ) {
-					options.end = options.start;
-				}
-				if ( options.endContainer === undefined ) {
-					options.endContainer = options.startContainer;
-				}
-				// FIXME: We may not need character position-based functions if we insert markers in the right places
-				break;
-			case 'scrollToCaretPosition':
-				options = $.extend( {
-					force: false // Force a scroll even if the caret position is already visible
-				}, options );
-				break;
+			return caretPos;
+		},
+		scrollToCaretPosition: function () {
+			return this.each( function () {
+				codeMirror.scrollIntoView( null );
+			} );
 		}
-
-		retval = fn[ command ].call( this, options );
-		if ( command === 'setSelection' ) {
-			codeMirror.focus();
-		}
-
-		return retval;
-	}
+	};
 
 	/**
 	 * Save CodeMirror enabled pref.
@@ -331,9 +224,13 @@
 				spellcheck: enableContentEditable,
 				viewportMargin: Infinity
 			} );
-
 			$codeMirror = $( codeMirror.getWrapperElement() );
-			textBox = $textbox1[ 0 ];
+
+			// Allow textSelection() functions to work with CodeMirror editing field.
+			$codeMirror.textSelection( 'register', cmTextSelection );
+			// Also override textSelection() functions for the "real" hidden textarea to route to
+			// CodeMirror. We unregister this when switching to normal textarea mode.
+			$textbox1.textSelection( 'register', cmTextSelection );
 
 			$codeMirror.resizable( {
 				handles: 'se',
@@ -363,8 +260,6 @@
 
 			// set the height of the textarea
 			codeMirror.setSize( null, $textbox1.height() );
-			// Overwrite default textselection of WikiEditor to work with CodeMirror, too
-			$.fn.textSelection = cmTextSelection;
 		} );
 	}
 
@@ -386,6 +281,7 @@
 			selectionEnd,
 			scrollTop,
 			hasFocus,
+			$codeMirror,
 			$textbox1 = $( '#wpTextbox1' );
 
 		if ( codeMirror ) {
@@ -394,10 +290,12 @@
 			selectionStart = codeMirror.doc.indexFromPos( selectionObj.head );
 			selectionEnd = codeMirror.doc.indexFromPos( selectionObj.anchor );
 			hasFocus = codeMirror.hasFocus();
+			$codeMirror = $( codeMirror.getWrapperElement() );
 			setCodeEditorPreference( false );
+			$codeMirror.textSelection( 'unregister' );
+			$textbox1.textSelection( 'unregister' );
 			codeMirror.toTextArea();
 			codeMirror = null;
-			$.fn.textSelection = origTextSelection;
 			if ( hasFocus ) {
 				$textbox1.focus();
 			}
