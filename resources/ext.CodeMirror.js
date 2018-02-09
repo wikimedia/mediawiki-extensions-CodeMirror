@@ -65,98 +65,11 @@
 			return codeMirror.doc.getSelection();
 		},
 		setSelection: function ( options ) {
-			return this.each( function () {
-				codeMirror.doc.setSelection( codeMirror.doc.posFromIndex( options.start ), codeMirror.doc.posFromIndex( options.end ) );
-				codeMirror.focus();
-			} );
+			codeMirror.doc.setSelection( codeMirror.doc.posFromIndex( options.start ), codeMirror.doc.posFromIndex( options.end ) );
+			codeMirror.focus();
 		},
-		encapsulateSelection: function ( options ) {
-			return this.each( function () {
-				var insertText,
-					selText,
-					selectPeri = options.selectPeri,
-					pre = options.pre,
-					post = options.post,
-					startCursor = codeMirror.doc.getCursor( true ),
-					endCursor = codeMirror.doc.getCursor( false );
-
-				if ( options.selectionStart !== undefined ) {
-					// fn[command].call( this, options );
-					cmTextSelection.setSelection.call( $( this ), { start: options.selectionStart, end: options.selectionEnd } ); // not tested
-				}
-
-				selText = codeMirror.doc.getSelection();
-				if ( !selText ) {
-					selText = options.peri;
-				} else if ( options.replace ) {
-					selectPeri = false;
-					selText = options.peri;
-				} else {
-					selectPeri = false;
-					while ( selText.charAt( selText.length - 1 ) === ' ' ) {
-						// Exclude ending space char
-						selText = selText.substring( 0, selText.length - 1 );
-						post += ' ';
-					}
-					while ( selText.charAt( 0 ) === ' ' ) {
-						// Exclude prepending space char
-						selText = selText.substring( 1, selText.length );
-						pre = ' ' + pre;
-					}
-				}
-
-				/**
-				* Do the splitlines stuff.
-				*
-				* Wrap each line of the selected text with pre and post
-				*
-				* @param {string} selText
-				* @param {string} pre
-				* @param {string} post
-				* @return {string}
-				*/
-				function doSplitLines( selText, pre, post ) {
-					var i,
-						insertText = '',
-						selTextArr = selText.split( '\n' );
-
-					for ( i = 0; i < selTextArr.length; i++ ) {
-						insertText += pre + selTextArr[ i ] + post;
-						if ( i !== selTextArr.length - 1 ) {
-							insertText += '\n';
-						}
-					}
-					return insertText;
-				}
-
-				if ( options.splitlines ) {
-					selectPeri = false;
-					insertText = doSplitLines( selText, pre, post );
-				} else {
-					insertText = pre + selText + post;
-				}
-
-				if ( options.ownline ) {
-					if ( startCursor.ch !== 0 ) {
-						insertText = '\n' + insertText;
-						pre += '\n';
-					}
-
-					if ( codeMirror.doc.getLine( endCursor.line ).length !== endCursor.ch ) {
-						insertText += '\n';
-						post += '\n';
-					}
-				}
-
-				codeMirror.doc.replaceSelection( insertText );
-
-				if ( selectPeri ) {
-					codeMirror.doc.setSelection(
-						codeMirror.doc.posFromIndex( codeMirror.doc.indexFromPos( startCursor ) + pre.length ),
-						codeMirror.doc.posFromIndex( codeMirror.doc.indexFromPos( startCursor ) + pre.length + selText.length )
-					);
-				}
-			} );
+		replaceSelection: function ( value ) {
+			codeMirror.doc.replaceSelection( value );
 		},
 		getCaretPosition: function ( options ) {
 			var caretPos = codeMirror.doc.indexFromPos( codeMirror.doc.getCursor( true ) ),
@@ -167,9 +80,7 @@
 			return caretPos;
 		},
 		scrollToCaretPosition: function () {
-			return this.each( function () {
-				codeMirror.scrollIntoView( null );
-			} );
+			codeMirror.scrollIntoView( null );
 		}
 	};
 
