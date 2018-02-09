@@ -18,8 +18,8 @@
 		]
 	},
 	"AutoloadClasses": {
-		"CodeMirrorHooks": "CodeMirrorHooks.php",
-		"ResourceLoaderCodeMirrorModule": "ResourceLoaderCodeMirrorModule.php"
+		"CodeMirrorHooks": "includes/CodeMirrorHooks.php",
+		"ResourceLoaderCodeMirrorModule": "includes/ResourceLoaderCodeMirrorModule.php"
 	},
 	"ResourceModules": {
 		"ext.CodeMirror": {
