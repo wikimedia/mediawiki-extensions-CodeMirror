@@ -1,10 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"Metalhead64"
+			"Metalhead64",
+			"Kghbln"
 		]
 	},
-	"codemirror-desc": "Ermöglicht Syntax-Hervorhebungen im Wikitext-Editor",
+	"codemirror-desc": "Ermöglicht Syntaxhervorhebungen im Wikitext-Editor",
 	"codemirror-toggle-label": "Syntaxhervorhebung",
 	"codemirror-beta-title": "Wikitext-Syntaxhervorhebung",
 	"codemirror-beta-desc": "Syntaxhervorhebung macht das Bearbeiten einfacher durch die Verwendung von Farben und Farbtönen zur visuellen Trennung des Seitentextes vom Code für Links, Einzelnachweise und Vorlagen.",
