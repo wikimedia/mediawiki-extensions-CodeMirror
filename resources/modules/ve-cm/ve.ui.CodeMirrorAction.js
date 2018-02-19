@@ -30,6 +30,39 @@ ve.ui.CodeMirrorAction.static.name = 'codeMirror';
  */
 ve.ui.CodeMirrorAction.static.methods = [ 'toggle' ];
 
+/* Static methods */
+
+/**
+ * Make whitespace replacements to match ve.ce.TextNode functionality
+ *
+ * @param {string} text Text
+ * @return {string} Replaced text
+ */
+ve.ui.CodeMirrorAction.static.fixWhitespace = ( function () {
+	var ws, symbol, pattern,
+		whitespaceHtmlCharacters = ve.ce.TextNode.static.whitespaceHtmlCharacters,
+		replacements = [];
+
+	// Convert whitespaceHtmlCharacters object into regex/symbol
+	// pairs and cache result locally.
+	for ( ws in whitespaceHtmlCharacters ) {
+		// We actally render newlines
+		if ( ws !== '\n' ) {
+			symbol = whitespaceHtmlCharacters[ ws ];
+			pattern = new RegExp( ws, 'g' );
+			replacements.push( [ pattern, symbol ] );
+		}
+	}
+
+	return function fixWhitespace( text ) {
+		replacements.forEach( function ( replacement ) {
+			text = text.replace( replacement[ 0 ], replacement[ 1 ] );
+		} );
+		return text;
+	};
+
+}() );
+
 /* Methods */
 
 /**
@@ -45,11 +78,10 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 
 	if ( !surface.mirror && enable !== false ) {
 		surface.mirror = CodeMirror( surfaceView.$element[ 0 ], {
-			value: surface.getDom(),
+			value: this.constructor.static.fixWhitespace( surface.getDom() ),
 			mwConfig: mw.config.get( 'extCodeMirrorConfig' ),
 			readOnly: 'nocursor',
 			lineWrapping: true,
-			tabSize: 1,
 			scrollbarStyle: 'null',
 			specialChars: /^$/,
 			viewportMargin: 5,
@@ -130,7 +162,8 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 		replacements = [],
 		linearData = this.surface.getModel().getDocument().data,
 		store = linearData.getStore(),
-		mirror = this.surface.mirror;
+		mirror = this.surface.mirror,
+		fixWhitespace = this.constructor.static.fixWhitespace;
 
 	/**
 	 * Convert a VE offset to a 2D CodeMirror position
@@ -152,7 +185,7 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 				start: convertOffset( offset ),
 				// Don't bother recalculating end offset if not a removal, replaceRange works with just one arg
 				end: op.remove.length ? convertOffset( offset + op.remove.length ) : undefined,
-				data: new ve.dm.ElementLinearData( store, op.insert ).getSourceText()
+				data: fixWhitespace( new ve.dm.ElementLinearData( store, op.insert ).getSourceText() )
 			} );
 			offset += op.remove.length;
 		}
