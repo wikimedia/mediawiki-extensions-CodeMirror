@@ -87,6 +87,12 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 
 		this.onLangChange();
 
+		ve.init.target.once( 'surfaceReady', function () {
+			if ( surface.mirror ) {
+				surface.mirror.refresh();
+			}
+		} );
+
 	} else if ( surface.mirror && enable !== true ) {
 		doc.off( 'precommit', surface.mirror.veTransactionListener );
 		surfaceView.getDocument().off( 'langChange', surface.mirror.veLangChangeListener );
