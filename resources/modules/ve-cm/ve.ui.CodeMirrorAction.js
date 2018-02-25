@@ -131,8 +131,7 @@ ve.ui.CodeMirrorAction.prototype.onLangChange = function () {
  * @param {ve.dm.Transaction} tx [description]
  */
 ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
-	var i,
-		offset = 0,
+	var offset = 0,
 		replacements = [],
 		linearData = this.surface.getModel().getDocument().data,
 		store = linearData.getStore(),
@@ -164,14 +163,18 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 		}
 	} );
 
-	// Apply replacements in reverse to avoid having to shift offsets
-	for ( i = replacements.length - 1; i >= 0; i-- ) {
-		mirror.replaceRange(
-			replacements[ i ].data,
-			replacements[ i ].start,
-			replacements[ i ].end
-		);
-	}
+	// Defer to allow to VE surface to update rendering to correct size (T185184)
+	setTimeout( function () {
+		var i;
+		// Apply replacements in reverse to avoid having to shift offsets
+		for ( i = replacements.length - 1; i >= 0; i-- ) {
+			mirror.replaceRange(
+				replacements[ i ].data,
+				replacements[ i ].start,
+				replacements[ i ].end
+			);
+		}
+	} );
 };
 
 /* Registration */
