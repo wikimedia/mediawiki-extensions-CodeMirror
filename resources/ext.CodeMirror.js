@@ -60,6 +60,7 @@
 		},
 		setContents: function ( content ) {
 			codeMirror.doc.setValue( content );
+			return this;
 		},
 		getSelection: function () {
 			return codeMirror.doc.getSelection();
@@ -67,9 +68,11 @@
 		setSelection: function ( options ) {
 			codeMirror.doc.setSelection( codeMirror.doc.posFromIndex( options.start ), codeMirror.doc.posFromIndex( options.end ) );
 			codeMirror.focus();
+			return this;
 		},
 		replaceSelection: function ( value ) {
 			codeMirror.doc.replaceSelection( value );
+			return this;
 		},
 		getCaretPosition: function ( options ) {
 			var caretPos = codeMirror.doc.indexFromPos( codeMirror.doc.getCursor( true ) ),
@@ -81,6 +84,7 @@
 		},
 		scrollToCaretPosition: function () {
 			codeMirror.scrollIntoView( null );
+			return this;
 		}
 	};
 
