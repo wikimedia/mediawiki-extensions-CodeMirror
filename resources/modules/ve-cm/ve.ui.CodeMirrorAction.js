@@ -163,7 +163,8 @@ ve.ui.CodeMirrorAction.prototype.onLangChange = function () {
  * @param {ve.dm.Transaction} tx [description]
  */
 ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
-	var offset = 0,
+	var i,
+		offset = 0,
 		replacements = [],
 		linearData = this.surface.getModel().getDocument().data,
 		store = linearData.getStore(),
@@ -196,18 +197,21 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 		}
 	} );
 
-	// Defer to allow to VE surface to update rendering to correct size (T185184)
-	setTimeout( function () {
-		var i;
-		// Apply replacements in reverse to avoid having to shift offsets
-		for ( i = replacements.length - 1; i >= 0; i-- ) {
-			mirror.replaceRange(
-				replacements[ i ].data,
-				replacements[ i ].start,
-				replacements[ i ].end
-			);
-		}
-	} );
+	// Apply replacements in reverse to avoid having to shift offsets
+	for ( i = replacements.length - 1; i >= 0; i-- ) {
+		mirror.replaceRange(
+			replacements[ i ].data,
+			replacements[ i ].start,
+			replacements[ i ].end
+		);
+	}
+
+	// HACK: The absolutely positioned CodeMirror doesn't calculate the viewport
+	// correctly when expanding from less than the viewport height.  (T185184)
+	if ( mirror.display.sizer.style.minHeight !== this.lastHeight ) {
+		mirror.refresh();
+	}
+	this.lastHeight = mirror.display.sizer.style.minHeight;
 };
 
 /* Registration */
