@@ -2,12 +2,14 @@
 	"@metadata": {
 		"authors": [
 			"Fitoschido",
-			"Macofe"
+			"Macofe",
+			"PoLuX124"
 		]
 	},
 	"codemirror-desc": "Proporciona resalte de la sintaxis en el editor de código wiki",
 	"codemirror-toggle-label": "Resaltado de sintaxis",
 	"codemirror-beta-title": "Resaltado de sintaxis de wikitexto",
+	"codemirror-beta-desc": "El resaltado de sintaxis facilita la edición usando matices de color que separan visualmente el texto de la página del código de enlaces, referencias y plantillas.",
 	"codemirror-popup-label": "Resaltado de sintaxis",
 	"codemirror-popup-btn-yes": "Pruébalo",
 	"codemirror-popup-btn-no": "No, gracias"
