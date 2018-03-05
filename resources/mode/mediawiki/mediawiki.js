@@ -33,7 +33,7 @@
 				rp: true, rt: true, rtc: true, p: true, span: true, abbr: true, dfn: true,
 				kbd: true, samp: true, data: true, time: true, mark: true, br: true,
 				wbr: true, hr: true, li: true, dt: true, dd: true, td: true, th: true,
-				tr: true, noinclude: true, includeonly: true, onlyinclude: true },
+				tr: true, noinclude: true, includeonly: true, onlyinclude: true, translate: true },
 			isBold, isItalic, firstsingleletterword, firstmultiletterword, firstspace, mBold, mItalic, mTokens = [],
 			mStyle;
 
