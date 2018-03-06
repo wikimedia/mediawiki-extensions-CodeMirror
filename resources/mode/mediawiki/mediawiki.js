@@ -34,6 +34,7 @@
 				kbd: true, samp: true, data: true, time: true, mark: true, br: true,
 				wbr: true, hr: true, li: true, dt: true, dd: true, td: true, th: true,
 				tr: true, noinclude: true, includeonly: true, onlyinclude: true, translate: true },
+			voidHtmlTags = { br: true, hr: true, wbr: true },
 			isBold, isItalic, firstsingleletterword, firstmultiletterword, firstspace, mBold, mItalic, mTokens = [],
 			mStyle;
 
@@ -403,7 +404,7 @@
 				}
 
 				if ( isHtmlTag ) {
-					if ( isCloseTag ) {
+					if ( isCloseTag && !( name in voidHtmlTags ) ) {
 						state.tokenize = eatChar( '>', 'mw-htmltag-bracket' );
 					} else {
 						state.tokenize = eatHtmlTagAttribute( name );
@@ -425,7 +426,9 @@
 					return makeLocalStyle( 'mw-htmltag-attribute', state );
 				}
 				if ( stream.eat( '>' ) ) {
-					state.InHtmlTag.push( name );
+					if ( !( name in voidHtmlTags ) ) {
+						state.InHtmlTag.push( name );
+					}
 					state.tokenize = state.stack.pop();
 					return makeLocalStyle( 'mw-htmltag-bracket', state );
 				}
@@ -794,9 +797,14 @@
 									// @todo message
 									return 'error';
 								}
+								if ( isCloseTag === true && tagname in voidHtmlTags ) {
+									// @todo message
+									return 'error';
+								}
 								stream.backUp( tagname.length );
 								state.stack.push( state.tokenize );
-								state.tokenize = eatTagName( tagname.length, isCloseTag, true );
+								// || ( tagname in voidHtmlTags ) because opening void tags should also be treated as the closing tag.
+								state.tokenize = eatTagName( tagname.length, isCloseTag || ( tagname in voidHtmlTags ), true );
 								return makeLocalStyle( 'mw-htmltag-bracket', state );
 							}
 							stream.backUp( tagname.length );
