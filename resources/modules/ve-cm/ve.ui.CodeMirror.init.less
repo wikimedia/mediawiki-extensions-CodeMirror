@@ -53,7 +53,12 @@
 	.CodeMirror pre.cm-mw-section-2 {
 		font-size: inherit;
 		line-height: inherit;
-		font-weight: bold;
+	}
+
+	.CodeMirror-code * {
+		// Monospace fonts can change width when bold
+		// stylelint-disable-next-line declaration-no-important
+		font-weight: normal !important;
 	}
 }
 
