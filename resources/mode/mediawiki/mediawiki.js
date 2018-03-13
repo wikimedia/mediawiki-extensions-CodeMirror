@@ -579,7 +579,7 @@
 						return inTable( stream, state );
 					}
 				} else {
-					if ( stream.match( /[^'|{[<&~]+/ ) ) {
+					if ( stream.match( /[^'|{[<&~!]+/ ) ) {
 						return makeStyle( ( isHead ? 'strong' : '' ), state );
 					}
 					if ( stream.match( '||' ) || isHead && stream.match( '!!' ) || ( isStart && stream.eat( '|' ) ) ) {
