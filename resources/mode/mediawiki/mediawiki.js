@@ -640,7 +640,7 @@
 				}
 
 				if ( sol ) {
-					if ( stream.match( urlProtocols ) ) { // highlight free external links, bug T108448
+					if ( !stream.match( '//', false ) && stream.match( urlProtocols ) ) { // highlight free external links, bug T108448
 						state.stack.push( state.tokenize );
 						state.tokenize = eatFreeExternalLink;
 						return makeLocalStyle( 'mw-free-extlink-protocol', state );
@@ -833,7 +833,7 @@
 					default:
 						if ( /[\s\u00a0]/.test( ch ) ) {
 							stream.eatSpace();
-							if ( stream.match( urlProtocols, false ) ) { // highlight free external links, bug T108448
+							if ( stream.match( urlProtocols, false ) && !stream.match( '//' ) ) { // highlight free external links, bug T108448
 								state.stack.push( state.tokenize );
 								state.tokenize = eatFreeExternalLinkProtocol;
 								return makeStyle( style, state );
