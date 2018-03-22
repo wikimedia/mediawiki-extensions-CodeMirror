@@ -94,7 +94,7 @@
 	 * @param {boolean} prefValue True, if CodeMirror should be enabled by default, otherwise false.
 	 */
 	function setCodeEditorPreference( prefValue ) {
-		useCodeMirror = prefValue; // Save state for function updateToolbarIcon()
+		useCodeMirror = prefValue; // Save state for function updateToolbarButton()
 
 		if ( mw.user.isAnon() ) { // Skip it for anon users
 			return;
@@ -182,9 +182,13 @@
 	 * Updates CodeMirror button on the toolbar according to the current state (on/off)
 	 */
 	function updateToolbarButton() {
-		$( '#mw-editbutton-codemirror' )
-			.toggleClass( 'mw-editbutton-codemirror-on', !!useCodeMirror )
-			.toggleClass( 'mw-editbutton-codemirror-off', !useCodeMirror );
+		var $button = $( '#mw-editbutton-codemirror' );
+
+		$button
+			// Classic toolbar
+			.toggleClass( 'mw-editbutton-codemirror-active', !!useCodeMirror )
+			// WikiEditor toolbar
+			.data( 'setActive' )( !!useCodeMirror );
 	}
 
 	/**
@@ -240,6 +244,7 @@
 							CodeMirror: {
 								label: mw.msg( 'codemirror-toggle-label' ),
 								type: 'button',
+								oouiIcon: 'highlight',
 								action: {
 									type: 'callback',
 									execute: function () {
@@ -253,7 +258,7 @@
 			}
 		);
 
-		$codeMirrorButton = $( '#wpTextbox1' ).data( 'wikiEditor-context' ).modules.toolbar.$toolbar.find( 'a.tool[rel=CodeMirror]' );
+		$codeMirrorButton = $( '#wpTextbox1' ).data( 'wikiEditor-context' ).modules.toolbar.$toolbar.find( '.tool[rel=CodeMirror]' );
 		$codeMirrorButton.attr( 'id', 'mw-editbutton-codemirror' );
 
 		updateToolbarButton();

@@ -34,7 +34,8 @@
 				"user.options",
 				"oojs-ui-widgets",
 				"mediawiki.storage",
-				"jquery.ui.resizable"
+				"jquery.ui.resizable",
+				"oojs-ui.styles.icons-editing-styling"
 			],
 			"scripts": [
 				"ext.CodeMirror.js"
