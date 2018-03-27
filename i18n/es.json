@@ -11,6 +11,7 @@
 	"codemirror-beta-title": "Resaltado de sintaxis de wikitexto",
 	"codemirror-beta-desc": "El resaltado de sintaxis facilita la edición usando matices de color que separan visualmente el texto de la página del código de enlaces, referencias y plantillas.",
 	"codemirror-popup-label": "Resaltado de sintaxis",
+	"codemirror-popup-desc": "Resaltar la sintaxis facilita distinguir entre distintas partes de la edición a través de un código de colores.",
 	"codemirror-popup-btn-yes": "Pruébalo",
 	"codemirror-popup-btn-no": "No, gracias"
 }
