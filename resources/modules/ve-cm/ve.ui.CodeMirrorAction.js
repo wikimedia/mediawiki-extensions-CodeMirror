@@ -71,7 +71,7 @@ ve.ui.CodeMirrorAction.static.fixWhitespace = ( function () {
  * @return {boolean} Action was executed
  */
 ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
-	var profile, supportsTransparentText,
+	var profile, supportsTransparentText, mirrorElement,
 		surface = this.surface,
 		surfaceView = surface.getView(),
 		doc = surface.getModel().getDocument();
@@ -136,7 +136,8 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 			've-ce-documentNode-codeEditor-webkit-hide ve-ce-documentNode-codeEditor-hide'
 		);
 
-		surface.mirror.getWrapperElement().remove();
+		mirrorElement = surface.mirror.getWrapperElement();
+		mirrorElement.parentNode.removeChild( mirrorElement );
 
 		surface.mirror = null;
 	}
