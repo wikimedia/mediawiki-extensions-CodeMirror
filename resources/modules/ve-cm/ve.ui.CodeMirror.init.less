@@ -60,6 +60,15 @@
 		// stylelint-disable-next-line declaration-no-important
 		font-weight: normal !important;
 	}
+
+	// Ensure surface is using identical font rules
+	.ve-ui-mwWikitextSurface .ve-ce-paragraphNode {
+		// The following are already set correctly in VE:
+		// white-space, word-wrap, line-height, font-size, font-family, font-weight
+		word-break: normal;
+		-webkit-font-variant-ligatures: contextual;
+		font-variant-ligatures: contextual;
+	}
 }
 
 .ve-ce-documentNode-codeEditor-hide {
