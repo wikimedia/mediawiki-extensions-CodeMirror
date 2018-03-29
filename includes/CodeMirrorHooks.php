@@ -96,4 +96,27 @@ class CodeMirrorHooks {
 		}
 	}
 
+	/**
+	 * Register test modules for CodeMirror.
+	 * @param array &$modules
+	 * @param ResourceLoader &$rl
+	 * @return bool
+	 */
+	public static function onResourceLoaderTestModules( array &$modules, ResourceLoader &$rl ) {
+		$modules['qunit']['ext.CodeMirror.test'] = [
+			'scripts' => [
+				'resources/mode/mediawiki/tests/qunit/CodeMirror.mediawiki.test.js',
+			],
+			'dependencies' => [
+				'ext.CodeMirror.data',
+				'ext.CodeMirror.lib',
+				'ext.CodeMirror.mode.mediawiki',
+			],
+			'localBasePath' => __DIR__ . '/../',
+			'remoteExtPath' => 'CodeMirror',
+		];
+
+		return true;
+	}
+
 }

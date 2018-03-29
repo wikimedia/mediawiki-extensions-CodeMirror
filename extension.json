@@ -158,7 +158,8 @@
 		],
 		"GetBetaFeaturePreferences": [
 			"CodeMirrorHooks::onGetBetaFeaturePreferences"
-		]
+		],
+		"ResourceLoaderTestModules": "CodeMirrorHooks::onResourceLoaderTestModules"
 	},
 	"VisualEditorPluginModules": [
 		"ext.CodeMirror.visualEditor.init",
