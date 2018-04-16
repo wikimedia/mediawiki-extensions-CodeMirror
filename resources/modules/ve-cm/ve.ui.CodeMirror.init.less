@@ -5,7 +5,6 @@
 		position: absolute;
 		top: 0;
 		left: 0;
-		line-height: 1.5em;
 		width: 100%;
 		-webkit-box-sizing: border-box;
 		-moz-box-sizing: border-box;
@@ -55,19 +54,24 @@
 		line-height: inherit;
 	}
 
-	.CodeMirror-code * {
+	// Ensure surfaces are using identical font rules
+	.CodeMirror-code *,
+	.ve-ui-mwWikitextSurface .ve-ce-paragraphNode {
+		// The following are already set by mw-editfont-monospace on the parent: font-size, font-family
+		line-height: 1.5em;
+		word-wrap: break-word;
+		white-space: pre-wrap;
+		word-break: normal;
+		-webkit-hyphens: manual;
+		-moz-hyphens: manual;
+		-ms-hyphens: manual;
+		hyphens: manual;
+		-webkit-font-variant-ligatures: contextual;
+		font-variant-ligatures: contextual;
+
 		// Monospace fonts can change width when bold
 		// stylelint-disable-next-line declaration-no-important
 		font-weight: normal !important;
-	}
-
-	// Ensure surface is using identical font rules
-	.ve-ui-mwWikitextSurface .ve-ce-paragraphNode {
-		// The following are already set correctly in VE:
-		// white-space, word-wrap, line-height, font-size, font-family, font-weight
-		word-break: normal;
-		-webkit-font-variant-ligatures: contextual;
-		font-variant-ligatures: contextual;
 	}
 }
 
