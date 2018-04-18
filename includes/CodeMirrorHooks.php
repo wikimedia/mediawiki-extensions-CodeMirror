@@ -37,6 +37,8 @@ class CodeMirrorHooks {
 	 */
 	private static function isCodeMirrorOnPage( IContextSource $context ) {
 		return in_array( Action::getActionName( $context ), [ 'edit', 'submit' ] ) &&
+			// CodeMirror on textarea wikitext editors doesn't support RTL (T170001)
+			!$context->getTitle()->getPageLanguage()->isRTL() &&
 			self::isCodeMirrorEnabled( $context );
 	}
 
