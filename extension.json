@@ -41,15 +41,10 @@
 				"ext.CodeMirror.js"
 			],
 			"styles": [
-				"ext.CodeMirror.less",
-				"modules/popup.less"
+				"ext.CodeMirror.less"
 			],
 			"messages": [
-				"codemirror-toggle-label",
-				"codemirror-popup-label",
-				"codemirror-popup-desc",
-				"codemirror-popup-btn-yes",
-				"codemirror-popup-btn-no"
+				"codemirror-toggle-label"
 			]
 		},
 		"ext.CodeMirror.data": {

@@ -4,6 +4,6 @@
 			"Cedric31"
 		]
 	},
-	"codemirror-enable-label": "Activar CodeMirror (Syntaxhighlight)",
-	"codemirror-disable-label": "Desactivar CodeMirror (Syntaxhighlight)"
+	"codemirror-disable-label": "Desactivar CodeMirror (Syntaxhighlight)",
+	"codemirror-enable-label": "Activar CodeMirror (Syntaxhighlight)"
 }

@@ -296,86 +296,9 @@
 		}
 	}
 
-	/**
-	 * Add a popup for first time users (T165003)
-	 *
-	 * If popup hasn't been shown before, show popup and add a localStorage entry.
-	 * check it before showing popup in future.
-	 */
-	function handlePopup() {
-		var yesButton, noButton, $labelText, $label, $content, popup;
-
-		// If CodeMirror button doesn't exist, don't show popup
-		if ( !$( '#mw-editbutton-codemirror' ).length ) {
-			return;
-		}
-
-		// If popup has previously been dismissed, don't show again.
-		if ( mw.storage.get( 'codemirror-try-popup' ) ) {
-			return;
-		}
-		mw.storage.set( 'codemirror-try-popup', 1 );
-
-		yesButton = new OO.ui.ButtonWidget( {
-			label: mw.msg( 'codemirror-popup-btn-yes' ),
-			flags: [ 'primary', 'progressive' ]
-		} );
-		noButton = new OO.ui.ButtonWidget( {
-			label: mw.msg( 'codemirror-popup-btn-no' ),
-			flags: [ 'destructive' ]
-		} );
-		$labelText = $( '<span>' ).text( mw.msg( 'codemirror-popup-label' ) );
-		$label = $( '<span>' )
-			.addClass( 'codemirror-popup-label' )
-			.append( '{ ', $labelText, ' }' );
-		$content =
-			$( '<div>' ).addClass( 'codemirror-popup-div' ).append(
-				$( '<div>' ).addClass( 'codemirror-popup-text' ).text( mw.msg( 'codemirror-popup-desc' ) ),
-				yesButton.$element,
-				noButton.$element
-			);
-
-		popup = new OO.ui.PopupWidget( {
-			head: true,
-			label: $label,
-			classes: [ 'codemirror-popup' ],
-			$content: $content,
-			$floatableContainer: $( '#mw-editbutton-codemirror' ),
-			padded: true,
-			width: 300
-		} );
-		// Add our popup to the body, it will find its correct position using $floatableContainer
-		$( 'body' ).append( popup.$element );
-
-		// Events
-		yesButton.on( 'click', function () {
-			if ( !codeMirror ) {
-				switchCodeMirror();
-			}
-			popup.toggle( false );
-		} );
-		noButton.on( 'click', function () {
-			if ( codeMirror ) {
-				switchCodeMirror();
-			}
-			popup.toggle( false );
-		} );
-
-		// To display the popup, toggle the visibility to 'true'
-		popup.toggle( true );
-	}
-
 	// If view is in edit mode, add the button to the toolbar.
 	if ( $( '#wpTextbox1' ).length ) {
 		addToolbarButton();
-
-		// Don't show popup if CM already enabled
-		if ( !useCodeMirror ) {
-			// Wait for DOM before loading our popup
-			$( function () {
-				setTimeout( handlePopup, 500 );
-			} );
-		}
 	}
 
 	// enable CodeMirror
