@@ -152,7 +152,7 @@ ve.ui.CodeMirrorAction.prototype.onLangChange = function () {
 	var surface = this.surface,
 		dir = surface.getView().getDocument().getDir();
 
-	surface.mirror.getWrapperElement().setAttribute( 'dir', dir );
+	surface.mirror.setOption( 'direction', dir );
 };
 
 /**
