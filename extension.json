@@ -7,7 +7,7 @@
 	],
 	"url": "https://www.mediawiki.org/wiki/Extension:CodeMirror",
 	"descriptionmsg": "codemirror-desc",
-	"type": "parserhook",
+	"type": "editor",
 	"license-name": "GPL-2.0-or-later",
 	"requires": {
 		"MediaWiki": ">= 1.31.0"
