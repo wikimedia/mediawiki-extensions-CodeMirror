@@ -10,7 +10,7 @@
 	"type": "editor",
 	"license-name": "GPL-2.0-or-later",
 	"requires": {
-		"MediaWiki": ">= 1.31.0"
+		"MediaWiki": ">= 1.32.0"
 	},
 	"MessagesDirs": {
 		"CodeMirror": [
@@ -29,7 +29,6 @@
 				"ext.CodeMirror.mode.mediawiki",
 				"jquery.textSelection",
 				"mediawiki.api",
-				"mediawiki.api.options",
 				"mediawiki.user",
 				"user.options",
 				"oojs-ui-widgets",
@@ -128,7 +127,6 @@
 				"ext.CodeMirror.mode.mediawiki",
 				"jquery.client",
 				"mediawiki.api",
-				"mediawiki.api.options",
 				"user.options"
 			],
 			"scripts": [
