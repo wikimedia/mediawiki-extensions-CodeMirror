@@ -169,6 +169,9 @@
 				lang: $textbox1.attr( 'lang' )
 			} );
 
+			// T194102: UniversalLanguageSelector integration is buggy, disabling it completely
+			$( codeMirror.getInputField() ).addClass( 'noime' );
+
 			if ( !wikiEditorToolbarEnabled ) {
 				$codeMirror.addClass( 'mw-codeMirror-classicToolbar' );
 			}
