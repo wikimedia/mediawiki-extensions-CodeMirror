@@ -4,8 +4,6 @@
 			"pastakhov"
 		]
 	},
-	"codemirror-beta-desc": "Syntax highlighting makes editing easier by using color and shade to visually separate page text from the code for links, references and templates.",
-	"codemirror-beta-title": "Wikitext syntax highlighting",
 	"codemirror-desc": "Provides syntax highlighting in wikitext editor",
 	"codemirror-toggle-label": "Syntax highlighting"
 }

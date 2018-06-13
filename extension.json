@@ -146,21 +146,12 @@
 		"BeforePageDisplay": [
 			"CodeMirrorHooks::onBeforePageDisplay"
 		],
-		"GetPreferences": [
-			"CodeMirrorHooks::onGetPreferences"
-		],
-		"GetBetaFeaturePreferences": [
-			"CodeMirrorHooks::onGetBetaFeaturePreferences"
-		],
 		"ResourceLoaderTestModules": "CodeMirrorHooks::onResourceLoaderTestModules"
 	},
 	"VisualEditorPluginModules": [
 		"ext.CodeMirror.visualEditor.init",
 		"ext.CodeMirror.visualEditor"
 	],
-	"config": {
-		"CodeMirrorBetaFeature": false
-	},
 	"CodeMirrorTagModes": {
 		"pre": "mw-tag-pre",
 		"nowiki": "mw-tag-nowiki"
