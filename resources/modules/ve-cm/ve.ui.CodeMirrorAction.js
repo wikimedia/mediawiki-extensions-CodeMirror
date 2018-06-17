@@ -88,7 +88,8 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 			// select mediawiki as text input mode
 			mode: 'text/mediawiki',
 			extraKeys: {
-				Tab: false
+				Tab: false,
+				'Shift-Tab': false
 			}
 		} );
 

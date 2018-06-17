@@ -131,6 +131,7 @@
 				mode: 'text/mediawiki',
 				extraKeys: {
 					Tab: false,
+					'Shift-Tab': false,
 					// T174514: Move the cursor at the beginning/end of the current wrapped line
 					Home: 'goLineLeft',
 					End: 'goLineRight'
