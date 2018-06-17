@@ -66,8 +66,8 @@
 			return codeMirror.doc.getSelection();
 		},
 		setSelection: function ( options ) {
-			codeMirror.doc.setSelection( codeMirror.doc.posFromIndex( options.start ), codeMirror.doc.posFromIndex( options.end ) );
 			codeMirror.focus();
+			codeMirror.doc.setSelection( codeMirror.doc.posFromIndex( options.start ), codeMirror.doc.posFromIndex( options.end ) );
 			return this;
 		},
 		replaceSelection: function ( value ) {
