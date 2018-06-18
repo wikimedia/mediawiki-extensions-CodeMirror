@@ -6,8 +6,6 @@
 			"Danmichaelo"
 		]
 	},
-	"codemirror-beta-desc": "Syntaksfremheving gjør redigering enklere gjennom å bruke ulike farger og gråtoner for å visuelt skille sidetekst fra koder for lenker, referanser og maler.",
-	"codemirror-beta-title": "Syntaksfremheving for wikitekst",
 	"codemirror-desc": "Gir syntaksfremheving i wikitekstredigereren",
 	"codemirror-toggle-label": "Syntaksfremheving"
 }

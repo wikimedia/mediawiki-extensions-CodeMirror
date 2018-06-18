@@ -8,8 +8,6 @@
 			"Athena in Wonderland"
 		]
 	},
-	"codemirror-beta-desc": "O realce sintático facilita as edições pelo uso da cor e sombra para separar visualmente o texto da página do restante código para hiperligações, referências e predefinições.",
-	"codemirror-beta-title": "Realce sintático do texto wiki",
 	"codemirror-desc": "Fornece realce sintático no editor de texto wiki",
 	"codemirror-toggle-label": "Realce sintático"
 }

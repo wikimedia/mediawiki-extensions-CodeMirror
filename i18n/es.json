@@ -6,8 +6,6 @@
 			"PoLuX124"
 		]
 	},
-	"codemirror-beta-desc": "El resaltado de sintaxis facilita la edición usando matices de color que separan visualmente el texto de la página del código de enlaces, referencias y plantillas.",
-	"codemirror-beta-title": "Resaltado de sintaxis de wikitexto",
 	"codemirror-desc": "Proporciona resalte de la sintaxis en el editor de código wiki",
 	"codemirror-toggle-label": "Resaltado de sintaxis"
 }

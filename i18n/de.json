@@ -5,8 +5,6 @@
 			"Kghbln"
 		]
 	},
-	"codemirror-beta-desc": "Syntaxhervorhebung macht das Bearbeiten einfacher durch die Verwendung von Farben und Farbtönen zur visuellen Trennung des Seitentextes vom Code für Links, Einzelnachweise und Vorlagen.",
-	"codemirror-beta-title": "Wikitext-Syntaxhervorhebung",
 	"codemirror-desc": "Ermöglicht Syntaxhervorhebungen im Wikitext-Editor",
 	"codemirror-toggle-label": "Syntaxhervorhebung"
 }

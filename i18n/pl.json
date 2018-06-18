@@ -6,8 +6,6 @@
 			"Railfail536"
 		]
 	},
-	"codemirror-beta-desc": "Podświetlanie składni ułatwia edytowanie przez wyróżnienie kodu spośród treści strony poprzez jego kolorowanie.",
-	"codemirror-beta-title": "Podświetlanie składni wikitekstu",
 	"codemirror-desc": "Dostarcza podświetlanie składni w edytorze wikitekstu",
 	"codemirror-toggle-label": "Podświetlanie składni"
 }

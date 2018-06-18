@@ -5,8 +5,6 @@
 			"MaGa"
 		]
 	},
-	"codemirror-beta-desc": "Isticanje sintakse olakšava uređivanje uz pomoć boja i nijansi za vizualno razlikovanje kôdova za poveznice, referencije i predloške od teksta na stranicama.",
-	"codemirror-beta-title": "Isticatelj wikitekstualne sintakse",
 	"codemirror-desc": "Omogućava isticanje sintakse u uređivaču wikiteksta",
 	"codemirror-toggle-label": "Isticanje sintakse"
 }

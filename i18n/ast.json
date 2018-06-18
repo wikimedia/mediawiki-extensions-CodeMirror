@@ -4,8 +4,6 @@
 			"Xuacu"
 		]
 	},
-	"codemirror-beta-desc": "El resaltador de sintaxis facilita la edición usando color y solombra pa estremar de mou visual el testu de la páxina del códigu pa enllaces, referencies y plantíes.",
-	"codemirror-beta-title": "Resaltador de sintaxis de testu wiki",
 	"codemirror-desc": "Ufre sintaxis resaltada nel editor de testu wiki",
 	"codemirror-toggle-label": "Resaltador de sintaxis"
 }

@@ -4,8 +4,6 @@
 			"Srdjan m"
 		]
 	},
-	"codemirror-beta-desc": "Isticanje sintakse olakšava uređivanje koristeći boje i nijanse za vizualno razlikovanje teksta na stranicama od koda za linkove, reference i šablone.",
-	"codemirror-beta-title": "Isticanje sintakse wikiteksta",
 	"codemirror-desc": "Omogućava isticanje sintakse u uređivaču wikiteksta",
 	"codemirror-toggle-label": "Isticanje sintakse"
 }

@@ -6,8 +6,6 @@
 			"Bencemac"
 		]
 	},
-	"codemirror-beta-desc": "A szintaxiskiemelő megkönnyíti a szerkesztést, eltérő színezéssel elkülönítve a belső hivatkozásokat, jegyzeteket és sablonokat.",
-	"codemirror-beta-title": "Wikiszöveges szintaxiskiemelő",
 	"codemirror-desc": "Szintaxiskiemelő hozzáadása a wikiszöveges szerkesztőhöz",
 	"codemirror-toggle-label": "Szintaxiskiemelés"
 }

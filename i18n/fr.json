@@ -7,8 +7,6 @@
 			"Thibaut120094"
 		]
 	},
-	"codemirror-beta-desc": "La mise en forme de la syntaxe rend la modification plus facile de par l'utilisation de couleurs et d’ombres pour séparer visuellement le texte des pages et le code concernant les liens, les références et les modèles.",
-	"codemirror-beta-title": "Coloration syntaxique du wikitexte",
 	"codemirror-desc": "Fournit une mise en évidence de la syntaxe dans l’éditeur wikitexte",
 	"codemirror-toggle-label": "Colorisation syntaxique"
 }

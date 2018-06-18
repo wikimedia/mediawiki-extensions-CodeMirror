@@ -8,8 +8,6 @@
 			"Kly"
 		]
 	},
-	"codemirror-beta-desc": "語法醒目標示透過使用顏色和陰影在視覺上將頁面文字從連結、參考資料和模板的原始碼中分隔出來，使編輯更容易。",
-	"codemirror-beta-title": "Wiki文字語法醒目標示",
 	"codemirror-desc": "提供 wikitext 編輯器語法醒目標示",
 	"codemirror-toggle-label": "語法醒目標示"
 }

@@ -4,8 +4,6 @@
 			"Strainu"
 		]
 	},
-	"codemirror-beta-desc": "Evidențierea sintaxei ușurează editarea folosind culori și umbre pentru a separa vizual textul paginii de codul pentru legături, referințe și formate.",
-	"codemirror-beta-title": "Evidențierea sintaxei wikitext",
 	"codemirror-desc": "Oferă evidențierea sintaxei în editorul wikitext",
 	"codemirror-toggle-label": "Evidențierea sintaxei"
 }

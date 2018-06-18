@@ -6,8 +6,6 @@
 			"Eduardo Addad de Oliveira"
 		]
 	},
-	"codemirror-beta-desc": "O destaque de sintaxe facilita a edição usando cor e sombra para separar visualmente o texto da página do código para links, referências e predefinições.",
-	"codemirror-beta-title": "Realce de sintaxe do texto wiki",
 	"codemirror-desc": "Fornece um realce de sintaxe no editor de wikitexto",
 	"codemirror-toggle-label": "Realce de sintaxe"
 }

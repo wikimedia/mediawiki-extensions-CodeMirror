@@ -4,8 +4,6 @@
 			"Liuxinyu970226"
 		]
 	},
-	"codemirror-beta-desc": "语法高亮通过使用颜色和阴影形象化地从链接、参考资料和模板的代码中分离页面文本，使编辑更容易。",
-	"codemirror-beta-title": "Wiki文本语法高亮",
 	"codemirror-desc": "在wiki文本编辑器中提供语法高亮显示",
 	"codemirror-toggle-label": "语法高亮"
 }

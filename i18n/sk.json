@@ -4,8 +4,6 @@
 			"TomášPolonec"
 		]
 	},
-	"codemirror-beta-desc": "Zvýraznenie syntaxe zjednodušuje editovanie použitím farieb a odtieňov na vizuálne oddelenie textu stránky od kódu odkazov, referencií a šablón.",
-	"codemirror-beta-title": "Zvýraznenie syntaxe wikitextu",
 	"codemirror-desc": "Poskytuje zvýraznenie syntaxe v textovom editore",
 	"codemirror-toggle-label": "Zvýraznenie syntaxe"
 }

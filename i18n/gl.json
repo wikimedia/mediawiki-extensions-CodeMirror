@@ -6,8 +6,6 @@
 			"Elisardojm"
 		]
 	},
-	"codemirror-beta-desc": "O destaque sintáctico facilita a edición utilizando cores e sombreados para separar visualmente o texto da páxina do código de ligazóns, referencias e modelos.",
-	"codemirror-beta-title": "Resaltado do texto coa sintaxe Wiki",
 	"codemirror-desc": "Proporciona un resalte da sintaxe no editor de texto wiki",
 	"codemirror-toggle-label": "Resaltado de sintaxe"
 }
