@@ -189,10 +189,14 @@
 		var $button = $( '#mw-editbutton-codemirror' );
 
 		$button
-			// Classic toolbar
-			.toggleClass( 'mw-editbutton-codemirror-active', !!useCodeMirror )
-			// WikiEditor toolbar
-			.data( 'setActive' )( !!useCodeMirror );
+			// Classic and WikiEditor2010 toolbar
+			.toggleClass( 'mw-editbutton-codemirror-active', !!useCodeMirror );
+		// WikiEditor2010 toolbar
+		$button.find( 'a' ).attr( 'aria-checked', !!useCodeMirror );
+		// WikiEditor2010 with ooui icons
+		if ( $button.data( 'setActive' ) ) {
+			$button.data( 'setActive' )( !!useCodeMirror );
+		}
 	}
 
 	/**
@@ -263,7 +267,10 @@
 		);
 
 		$codeMirrorButton = $( '#wpTextbox1' ).data( 'wikiEditor-context' ).modules.toolbar.$toolbar.find( '.tool[rel=CodeMirror]' );
-		$codeMirrorButton.attr( 'id', 'mw-editbutton-codemirror' );
+		$codeMirrorButton
+			.attr( 'id', 'mw-editbutton-codemirror' )
+			// Set a role on the ButtonWidget, since it's a ButtonWidget instead of a ToggleButtonWidget
+			.find( 'a' ).attr( 'role', 'switch' );
 
 		updateToolbarButton();
 	}
