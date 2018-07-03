@@ -146,7 +146,12 @@
 		"BeforePageDisplay": [
 			"CodeMirrorHooks::onBeforePageDisplay"
 		],
-		"ResourceLoaderTestModules": "CodeMirrorHooks::onResourceLoaderTestModules"
+		"GetPreferences": [
+			"CodeMirrorHooks::onGetPreferences"
+		],
+		"ResourceLoaderTestModules": [
+			"CodeMirrorHooks::onResourceLoaderTestModules"
+		]
 	},
 	"VisualEditorPluginModules": [
 		"ext.CodeMirror.visualEditor.init",
