@@ -20,6 +20,8 @@
  * @file
  */
 
+use MediaWiki\MediaWikiServices;
+
 /**
  * ResourceLoader module for ext.CodeMirror
  */
@@ -55,14 +57,13 @@ class ResourceLoaderCodeMirrorModule extends ResourceLoaderFileModule {
 	 * Returns an array of variables for CodeMirror to work (tags and so on)
 	 *
 	 * @global Parser $wgParser
-	 * @global Language $wgContLang
 	 * @return array
 	 */
 	private function getFrontendConfiguraton() {
-		global $wgParser, $wgContLang;
+		global $wgParser;
 
 		// Use the content language, not the user language. (See T170130.)
-		$lang = $wgContLang;
+		$lang = MediaWikiServices::getInstance()->getContentLanguage();
 		$registry = ExtensionRegistry::getInstance();
 
 		if ( !isset( $wgParser->mFunctionSynonyms ) ) {
