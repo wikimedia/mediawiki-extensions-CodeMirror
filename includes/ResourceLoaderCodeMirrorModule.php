@@ -56,29 +56,23 @@ class ResourceLoaderCodeMirrorModule extends ResourceLoaderFileModule {
 	/**
 	 * Returns an array of variables for CodeMirror to work (tags and so on)
 	 *
-	 * @global Parser $wgParser
 	 * @return array
 	 */
 	private function getFrontendConfiguraton() {
-		global $wgParser;
-
 		// Use the content language, not the user language. (See T170130.)
 		$lang = MediaWikiServices::getInstance()->getContentLanguage();
 		$registry = ExtensionRegistry::getInstance();
-
-		if ( !isset( $wgParser->mFunctionSynonyms ) ) {
-			$wgParser->initialiseVariables();
-			$wgParser->firstCallInit();
-		}
+		$parser = MediaWikiServices::getInstance()->getParser();
+		$parser->firstCallInit();
 
 		// initialize configuration
 		$config = [
 			'pluginModules' => $registry->getAttribute( 'CodeMirrorPluginModules' ),
 			'tagModes' => $registry->getAttribute( 'CodeMirrorTagModes' ),
-			'tags' => array_fill_keys( $wgParser->getTags(), true ),
+			'tags' => array_fill_keys( $parser->getTags(), true ),
 			'doubleUnderscore' => [ [], [] ],
-			'functionSynonyms' => $wgParser->mFunctionSynonyms,
-			'urlProtocols' => $wgParser->mUrlProtocols,
+			'functionSynonyms' => $parser->mFunctionSynonyms,
+			'urlProtocols' => $parser->mUrlProtocols,
 			'linkTrailCharacters' => $lang->linkTrail(),
 		];
 
