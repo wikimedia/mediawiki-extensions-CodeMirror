@@ -77,7 +77,8 @@ class ResourceLoaderCodeMirrorModule extends ResourceLoaderFileModule {
 		];
 
 		$mw = $lang->getMagicWords();
-		foreach ( MagicWord::getDoubleUnderscoreArray()->names as $name ) {
+		$magicWordFactory = $parser->getMagicWordFactory();
+		foreach ( $magicWordFactory->getDoubleUnderscoreArray()->getNames() as $name ) {
 			if ( isset( $mw[$name] ) ) {
 				$caseSensitive = array_shift( $mw[$name] ) == 0 ? 0 : 1;
 				foreach ( $mw[$name] as $n ) {
@@ -89,7 +90,7 @@ class ResourceLoaderCodeMirrorModule extends ResourceLoaderFileModule {
 			}
 		}
 
-		foreach ( MagicWord::getVariableIDs() as $name ) {
+		foreach ( $magicWordFactory->getVariableIDs() as $name ) {
 			if ( isset( $mw[$name] ) ) {
 				$caseSensitive = array_shift( $mw[$name] ) == 0 ? 0 : 1;
 				foreach ( $mw[$name] as $n ) {
