@@ -63,7 +63,6 @@ class ResourceLoaderCodeMirrorModule extends ResourceLoaderFileModule {
 		$lang = MediaWikiServices::getInstance()->getContentLanguage();
 		$registry = ExtensionRegistry::getInstance();
 		$parser = MediaWikiServices::getInstance()->getParser();
-		$parser->firstCallInit();
 
 		// initialize configuration
 		$config = [
@@ -71,8 +70,8 @@ class ResourceLoaderCodeMirrorModule extends ResourceLoaderFileModule {
 			'tagModes' => $registry->getAttribute( 'CodeMirrorTagModes' ),
 			'tags' => array_fill_keys( $parser->getTags(), true ),
 			'doubleUnderscore' => [ [], [] ],
-			'functionSynonyms' => $parser->mFunctionSynonyms,
-			'urlProtocols' => $parser->mUrlProtocols,
+			'functionSynonyms' => $parser->getFunctionSynonyms(),
+			'urlProtocols' => $parser->getUrlProtocols(),
 			'linkTrailCharacters' => $lang->linkTrail(),
 		];
 
