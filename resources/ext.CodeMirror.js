@@ -189,11 +189,9 @@
 		var $button = $( '#mw-editbutton-codemirror' );
 
 		$button
-			// Classic and WikiEditor2010 toolbar
+			// For Classic and WikiEditor2010 toolbar
 			.toggleClass( 'mw-editbutton-codemirror-active', !!useCodeMirror );
-		// WikiEditor2010 toolbar
-		$button.find( 'a' ).attr( 'aria-checked', !!useCodeMirror );
-		// WikiEditor2010 with ooui icons
+		// WikiEditor2010 OOUI ToggleButtonWidget
 		if ( $button.data( 'setActive' ) ) {
 			$button.data( 'setActive' )( !!useCodeMirror );
 		}
@@ -251,7 +249,7 @@
 						tools: {
 							CodeMirror: {
 								label: mw.msg( 'codemirror-toggle-label' ),
-								type: 'button',
+								type: 'toggle',
 								oouiIcon: 'highlight',
 								action: {
 									type: 'callback',
@@ -268,9 +266,7 @@
 
 		$codeMirrorButton = $( '#wpTextbox1' ).data( 'wikiEditor-context' ).modules.toolbar.$toolbar.find( '.tool[rel=CodeMirror]' );
 		$codeMirrorButton
-			.attr( 'id', 'mw-editbutton-codemirror' )
-			// Set a role on the ButtonWidget, since it's a ButtonWidget instead of a ToggleButtonWidget
-			.find( 'a' ).attr( 'role', 'switch' );
+			.attr( 'id', 'mw-editbutton-codemirror' );
 
 		updateToolbarButton();
 	}
