@@ -6,7 +6,6 @@ class CodeMirrorHooks {
 	 * Checks if CodeMirror for textarea wikitext editor should be loaded on this page or not.
 	 *
 	 * @param IContextSource $context The current ContextSource object
-	 * @staticvar null|boolean $isEnabled Saves, if CodeMirror should be loaded on this page or not
 	 * @return bool
 	 */
 	private static function isCodeMirrorOnPage( IContextSource $context ) {
