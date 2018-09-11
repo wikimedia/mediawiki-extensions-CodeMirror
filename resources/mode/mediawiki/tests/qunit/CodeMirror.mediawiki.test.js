@@ -93,7 +93,7 @@
 	 * wikitext prior to initializing CodeMirror. So this function will do this and
 	 * destroy CodeMirror after the test has completed, so that we have a clean slate
 	 * for the next iteration.
-	 * @param {String} wikitext
+	 * @param {string} wikitext
 	 * @param {Function} callback Ran after CodeMirror has been initialized.
 	 */
 	function setup( wikitext, callback ) {

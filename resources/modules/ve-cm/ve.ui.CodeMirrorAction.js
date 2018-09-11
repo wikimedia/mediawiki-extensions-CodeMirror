@@ -177,7 +177,7 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 	 * Convert a VE offset to a 2D CodeMirror position
 	 *
 	 * @private
-	 * @param {Number} veOffset VE linear model offset
+	 * @param {number} veOffset VE linear model offset
 	 * @return {Object} Code mirror position, containing 'line' and 'ch'
 	 */
 	function convertOffset( veOffset ) {
