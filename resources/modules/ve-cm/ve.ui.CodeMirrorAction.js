@@ -40,15 +40,15 @@ ve.ui.CodeMirrorAction.static.methods = [ 'toggle' ];
  */
 ve.ui.CodeMirrorAction.static.fixWhitespace = ( function () {
 	var ws, symbol, pattern,
-		whitespaceHtmlCharacters = ve.ce.TextNode.static.whitespaceHtmlCharacters,
+		visibleWhitespaceCharacters = ve.visibleWhitespaceCharacters,
 		replacements = [];
 
-	// Convert whitespaceHtmlCharacters object into regex/symbol
+	// Convert visibleWhitespaceCharacters object into regex/symbol
 	// pairs and cache result locally.
-	for ( ws in whitespaceHtmlCharacters ) {
+	for ( ws in visibleWhitespaceCharacters ) {
 		// We actally render newlines
 		if ( ws !== '\n' ) {
-			symbol = whitespaceHtmlCharacters[ ws ];
+			symbol = visibleWhitespaceCharacters[ ws ];
 			pattern = new RegExp( ws, 'g' );
 			replacements.push( [ pattern, symbol ] );
 		}
