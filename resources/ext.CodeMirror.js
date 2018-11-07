@@ -1,19 +1,14 @@
 ( function ( mw, $ ) {
-	var useCodeMirror, codeMirror, api, originHooksTextarea,
-		wikiEditorToolbarEnabled, cmTextSelection,
+	var useCodeMirror, codeMirror, api, originHooksTextarea, cmTextSelection,
 		enableContentEditable = true;
 
 	if ( mw.config.get( 'wgCodeEditorCurrentLanguage' ) ) { // If the CodeEditor is used then just exit;
 		return;
 	}
 
-	// The WikiEditor extension exists the WikiEditor beta toolbar is used by the user
-	wikiEditorToolbarEnabled = !!mw.loader.getState( 'ext.wikiEditor' ) &&
-		// This can be the string "0" if the user disabled the preference - Bug T54542#555387
-		mw.user.options.get( 'usebetatoolbar' ) > 0;
-
-	// If WikiEditor is disabled, and the deprecated classic toolbar is unavailable then exit.
-	if ( !wikiEditorToolbarEnabled && !mw.loader.getState( 'mediawiki.toolbar' ) ) {
+	// Exit if WikiEditor is disabled
+	// usebetatoolbar can be the string "0" if the user disabled the preference - Bug T54542#555387
+	if ( !( mw.loader.getState( 'ext.wikiEditor' ) && mw.user.options.get( 'usebetatoolbar' ) > 0 ) ) {
 		return;
 	}
 
@@ -173,10 +168,6 @@
 			// T194102: UniversalLanguageSelector integration is buggy, disabling it completely
 			$( codeMirror.getInputField() ).addClass( 'noime' );
 
-			if ( !wikiEditorToolbarEnabled ) {
-				$codeMirror.addClass( 'mw-codeMirror-classicToolbar' );
-			}
-
 			// set the height of the textarea
 			codeMirror.setSize( null, $textbox1.height() );
 		} );
@@ -188,9 +179,8 @@
 	function updateToolbarButton() {
 		var $button = $( '#mw-editbutton-codemirror' );
 
-		$button
-			// For Classic and WikiEditor2010 toolbar
-			.toggleClass( 'mw-editbutton-codemirror-active', !!useCodeMirror );
+		$button.toggleClass( 'mw-editbutton-codemirror-active', !!useCodeMirror );
+
 		// WikiEditor2010 OOUI ToggleButtonWidget
 		if ( $button.data( 'setActive' ) ) {
 			$button.data( 'setActive' )( !!useCodeMirror );
@@ -201,12 +191,7 @@
 	 * Enables or disables CodeMirror
 	 */
 	function switchCodeMirror() {
-		var selectionObj,
-			selectionStart,
-			selectionEnd,
-			scrollTop,
-			hasFocus,
-			$codeMirror,
+		var selectionObj, selectionStart, selectionEnd, scrollTop, hasFocus, $codeMirror,
 			$textbox1 = $( '#wpTextbox1' );
 
 		if ( codeMirror ) {
@@ -275,32 +260,11 @@
 	 * Adds CodeMirror button to the toolbar
 	 */
 	function addToolbarButton() {
-		// Check if the user is using the enhanced editing toolbar (supplied by the
-		// WikiEditor extension) or the default editing toolbar (supplied by core).
-		if ( wikiEditorToolbarEnabled ) {
-			// They are using WikiEditor
-			mw.loader.using( 'ext.wikiEditor', function () {
-				// Add CodeMirror button to the enhanced editing toolbar.
-				$( addCodeMirrorToWikiEditor );
-			} );
-		} else {
-			// They are using the default editing toolbar.
-			mw.loader.using( 'mediawiki.toolbar', function () {
-				// Add CodeMirror button to the default editing toolbar.
-				mw.toolbar.addButton( {
-					speedTip: mw.msg( 'codemirror-toggle-label' ),
-					imageId: 'mw-editbutton-codemirror',
-					onClick: function () {
-						switchCodeMirror();
-						return false;
-					}
-				} );
-				// We don't know when button will be added, wait until the document is ready to update it
-				$( function () {
-					updateToolbarButton();
-				} );
-			} );
-		}
+		// They are using WikiEditor
+		mw.loader.using( 'ext.wikiEditor', function () {
+			// Add CodeMirror button to the enhanced editing toolbar.
+			$( addCodeMirrorToWikiEditor );
+		} );
 	}
 
 	// If view is in edit mode, add the button to the toolbar.
@@ -310,11 +274,7 @@
 
 	// enable CodeMirror
 	if ( useCodeMirror ) {
-		if ( wikiEditorToolbarEnabled ) {
-			$( '#wpTextbox1' ).on( 'wikiEditor-toolbar-doneInitialSections', enableCodeMirror.bind( this ) );
-		} else {
-			enableCodeMirror();
-		}
+		$( '#wpTextbox1' ).on( 'wikiEditor-toolbar-doneInitialSections', enableCodeMirror.bind( this ) );
 	}
 
 	// Synchronize textarea with CodeMirror before leaving
