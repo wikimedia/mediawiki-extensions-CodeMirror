@@ -1,4 +1,4 @@
-( function ( mw, $ ) {
+( function () {
 	var useCodeMirror, codeMirror, api, originHooksTextarea, cmTextSelection,
 		enableContentEditable = true;
 
@@ -284,4 +284,4 @@
 		}
 	} );
 
-}( mediaWiki, jQuery ) );
+}() );

@@ -1,4 +1,4 @@
-( function ( ve, mw ) {
+( function () {
 	mw.libs.ve.targetLoader.addPlugin( function () {
 		var index,
 			target = ve.init.mw.DesktopArticleTarget;
@@ -8,4 +8,4 @@
 			target.static.actionGroups[ 1 ].include.splice( index, 0, 'codeMirror' );
 		}
 	} );
-}( ve, mediaWiki ) );
+}() );

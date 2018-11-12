@@ -1,14 +1,12 @@
 {
 	"extends": "wikimedia",
 	"env": {
-		"browser": true,
-		"jquery": true
+		"browser": true
 	},
 	"globals": {
-		"mediaWiki": false,
 		"CodeMirror": false,
-		"ve": false,
 		"mw": false,
+		"$": false,
 		"OO": false
 	},
 	"rules": {

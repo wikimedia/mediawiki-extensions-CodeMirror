@@ -2,7 +2,7 @@
  * MediaWiki CodeMirror tests.
  */
 
-( function ( $, mw ) {
+( function () {
 	/**
 	 * Keys are the titles of the test cases. Each has an 'input' and the expected 'output'.
 	 * @type {Object}
@@ -135,4 +135,4 @@
 			} );
 		} );
 	} );
-}( jQuery, mediaWiki ) );
+}() );
