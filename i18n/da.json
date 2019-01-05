@@ -1,8 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Weblars"
+			"Weblars",
+			"Saederup92"
 		]
 	},
+	"codemirror-desc": "Giver syntaksfremhævelse i wikitekst editoren",
 	"codemirror-toggle-label": "Syntaksfremhævelse"
 }
