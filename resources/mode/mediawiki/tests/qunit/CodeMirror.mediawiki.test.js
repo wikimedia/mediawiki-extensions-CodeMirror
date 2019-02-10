@@ -100,7 +100,7 @@
 		var $textarea = $( '<textarea>' );
 
 		$textarea.val( wikitext );
-		$( 'body' ).append( $textarea );
+		$( document.body ).append( $textarea );
 
 		CodeMirror.fromTextArea( $textarea[ 0 ], {
 			mwConfig: config,
