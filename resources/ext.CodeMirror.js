@@ -177,6 +177,7 @@
 	 * Updates CodeMirror button on the toolbar according to the current state (on/off)
 	 */
 	function updateToolbarButton() {
+		// eslint-disable-next-line no-jquery/no-global-selector
 		var $button = $( '#mw-editbutton-codemirror' );
 
 		$button.toggleClass( 'mw-editbutton-codemirror-active', !!useCodeMirror );
@@ -206,7 +207,7 @@
 			codeMirror.toTextArea();
 			codeMirror = null;
 			if ( hasFocus ) {
-				$textbox1.focus();
+				$textbox1.trigger( 'focus' );
 			}
 			$textbox1.prop( 'selectionStart', selectionStart );
 			$textbox1.prop( 'selectionEnd', selectionEnd );
@@ -260,6 +261,7 @@
 	}
 
 	$( function () {
+		// eslint-disable-next-line no-jquery/no-global-selector
 		$textbox1 = $( '#wpTextbox1' );
 
 		// Add CodeMirror button to the enhanced editing toolbar.

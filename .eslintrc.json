@@ -1,16 +1,15 @@
 {
 	"root": true,
-	"extends": "wikimedia",
-	"env": {
-		"browser": true
-	},
+	"extends": [
+		"wikimedia/client",
+		"wikimedia/jquery"
+	],
 	"globals": {
 		"CodeMirror": false,
 		"mw": false,
-		"$": false,
 		"OO": false
 	},
 	"rules": {
-		"max-len": 0
+		"max-len": "off"
 	}
 }
