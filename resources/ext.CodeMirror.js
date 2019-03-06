@@ -252,33 +252,18 @@
 		$codeMirrorButton
 			.attr( 'id', 'mw-editbutton-codemirror' );
 
-		updateToolbarButton();
-	}
+		if ( useCodeMirror ) {
+			enableCodeMirror();
+		}
 
-	/**
-	 * Adds CodeMirror button to the toolbar
-	 */
-	function addToolbarButton() {
-		// They are using WikiEditor
-		mw.loader.using( 'ext.wikiEditor', function () {
-			// Add CodeMirror button to the enhanced editing toolbar.
-			// Add an additional $() to avoid a race condition with WikiEditor.
-			// FIXME: Solve this with an explicit dependency.
-			$( addCodeMirrorToWikiEditor );
-		} );
+		updateToolbarButton();
 	}
 
 	$( function () {
 		$textbox1 = $( '#wpTextbox1' );
-		// If view is in edit mode, add the button to the toolbar.
-		if ( $textbox1.length ) {
-			addToolbarButton();
-		}
 
-		// enable CodeMirror
-		if ( useCodeMirror ) {
-			$textbox1.on( 'wikiEditor-toolbar-doneInitialSections', enableCodeMirror.bind( this ) );
-		}
+		// Add CodeMirror button to the enhanced editing toolbar.
+		$textbox1.on( 'wikiEditor-toolbar-doneInitialSections', addCodeMirrorToWikiEditor );
 	} );
 
 	// Synchronize textarea with CodeMirror before leaving
