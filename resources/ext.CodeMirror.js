@@ -1,5 +1,6 @@
 ( function () {
 	var useCodeMirror, codeMirror, api, originHooksTextarea, cmTextSelection,
+		$textbox1,
 		enableContentEditable = true;
 
 	if ( mw.config.get( 'wgCodeEditorCurrentLanguage' ) ) { // If the CodeEditor is used then just exit;
@@ -106,7 +107,6 @@
 
 		mw.loader.using( config.pluginModules, function () {
 			var $codeMirror,
-				$textbox1 = $( '#wpTextbox1' ),
 				selectionStart = $textbox1.prop( 'selectionStart' ),
 				selectionEnd = $textbox1.prop( 'selectionEnd' ),
 				scrollTop = $textbox1.scrollTop();
@@ -191,8 +191,7 @@
 	 * Enables or disables CodeMirror
 	 */
 	function switchCodeMirror() {
-		var selectionObj, selectionStart, selectionEnd, scrollTop, hasFocus, $codeMirror,
-			$textbox1 = $( '#wpTextbox1' );
+		var selectionObj, selectionStart, selectionEnd, scrollTop, hasFocus, $codeMirror;
 
 		if ( codeMirror ) {
 			scrollTop = codeMirror.getScrollInfo().top;
@@ -225,7 +224,7 @@
 	function addCodeMirrorToWikiEditor() {
 		var $codeMirrorButton;
 
-		$( '#wpTextbox1' ).wikiEditor(
+		$textbox1.wikiEditor(
 			'addToToolbar',
 			{
 				section: 'main',
@@ -249,7 +248,7 @@
 			}
 		);
 
-		$codeMirrorButton = $( '#wpTextbox1' ).data( 'wikiEditor-context' ).modules.toolbar.$toolbar.find( '.tool[rel=CodeMirror]' );
+		$codeMirrorButton = $textbox1.data( 'wikiEditor-context' ).modules.toolbar.$toolbar.find( '.tool[rel=CodeMirror]' );
 		$codeMirrorButton
 			.attr( 'id', 'mw-editbutton-codemirror' );
 
@@ -263,19 +262,24 @@
 		// They are using WikiEditor
 		mw.loader.using( 'ext.wikiEditor', function () {
 			// Add CodeMirror button to the enhanced editing toolbar.
+			// Add an additional $() to avoid a race condition with WikiEditor.
+			// FIXME: Solve this with an explicit dependency.
 			$( addCodeMirrorToWikiEditor );
 		} );
 	}
 
-	// If view is in edit mode, add the button to the toolbar.
-	if ( $( '#wpTextbox1' ).length ) {
-		addToolbarButton();
-	}
+	$( function () {
+		$textbox1 = $( '#wpTextbox1' );
+		// If view is in edit mode, add the button to the toolbar.
+		if ( $textbox1.length ) {
+			addToolbarButton();
+		}
 
-	// enable CodeMirror
-	if ( useCodeMirror ) {
-		$( '#wpTextbox1' ).on( 'wikiEditor-toolbar-doneInitialSections', enableCodeMirror.bind( this ) );
-	}
+		// enable CodeMirror
+		if ( useCodeMirror ) {
+			$textbox1.on( 'wikiEditor-toolbar-doneInitialSections', enableCodeMirror.bind( this ) );
+		}
+	} );
 
 	// Synchronize textarea with CodeMirror before leaving
 	window.addEventListener( 'beforeunload', function () {
