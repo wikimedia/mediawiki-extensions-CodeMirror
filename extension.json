@@ -25,14 +25,10 @@
 		"ext.CodeMirror": {
 			"dependencies": [
 				"ext.CodeMirror.data",
-				"ext.CodeMirror.lib",
-				"ext.CodeMirror.mode.mediawiki",
 				"jquery.textSelection",
 				"mediawiki.api",
 				"mediawiki.user",
 				"user.options",
-				"oojs-ui-widgets",
-				"mediawiki.storage",
 				"jquery.ui.resizable",
 				"oojs-ui.styles.icons-editing-styling"
 			],

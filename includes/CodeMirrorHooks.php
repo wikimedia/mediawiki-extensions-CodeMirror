@@ -25,6 +25,12 @@ class CodeMirrorHooks {
 	public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
 		if ( self::isCodeMirrorOnPage( $out->getContext() ) ) {
 			$out->addModules( 'ext.CodeMirror' );
+
+			if ( $out->getUser()->getOption( 'usecodemirror' ) ) {
+				// These modules are predelivered for performance when needed
+				// keep these modules in sync with ext.CodeMirror.js
+				$out->addModules( [ 'ext.CodeMirror.lib', 'ext.CodeMirror.mode.mediawiki' ] );
+			}
 		}
 		// TODO: for backwards compatibility. Remove in 2019.
 		$out->addJsConfigVars( 'wgCodeMirrorEnabled', true );
