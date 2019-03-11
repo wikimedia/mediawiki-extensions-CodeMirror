@@ -14,6 +14,10 @@ class CodeMirrorHooks {
 		if ( in_array( 'ext.codeEditor', $out->getModules() ) ) {
 			return false;
 		}
+		// Disable CodeMirror when the WikiEditor toolbar is not enabled in preferences
+		if ( !$out->getUser()->getOption( 'usebetatoolbar' ) ) {
+			return false;
+		}
 		$context = $out->getContext();
 		return in_array( Action::getActionName( $context ), [ 'edit', 'submit' ] ) &&
 			// CodeMirror on textarea wikitext editors doesn't support RTL (T170001)

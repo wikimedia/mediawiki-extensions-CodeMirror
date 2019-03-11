@@ -9,8 +9,7 @@
 		];
 
 	// Exit if WikiEditor is disabled
-	// usebetatoolbar can be the string "0" if the user disabled the preference - Bug T54542#555387
-	if ( !( mw.loader.getState( 'ext.wikiEditor' ) && mw.user.options.get( 'usebetatoolbar' ) > 0 ) ) {
+	if ( !mw.loader.getState( 'ext.wikiEditor' ) ) {
 		return;
 	}
 
