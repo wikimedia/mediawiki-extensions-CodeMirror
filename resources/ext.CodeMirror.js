@@ -1,7 +1,12 @@
 ( function () {
 	var useCodeMirror, codeMirror, api, originHooksTextarea, cmTextSelection,
 		$textbox1,
-		enableContentEditable = true;
+		enableContentEditable = true,
+		// Keep these modules in sync with CodeMirrorHooks.php
+		codeMirrorCoreModules = [
+			'ext.CodeMirror.lib',
+			'ext.CodeMirror.mode.mediawiki'
+		];
 
 	if ( mw.config.get( 'wgCodeEditorCurrentLanguage' ) ) { // If the CodeEditor is used then just exit;
 		return;
@@ -43,10 +48,6 @@
 	) {
 		enableContentEditable = false;
 	}
-
-	// T174055: Do not redefine the browser history navigation keys (T175378: for PC only)
-	CodeMirror.keyMap.pcDefault[ 'Alt-Left' ] = false;
-	CodeMirror.keyMap.pcDefault[ 'Alt-Right' ] = false;
 
 	// jQuery.textSelection overrides for CodeMirror.
 	// See jQuery.textSelection.js for method documentation
@@ -105,7 +106,7 @@
 	function enableCodeMirror() {
 		var config = mw.config.get( 'extCodeMirrorConfig' );
 
-		mw.loader.using( config.pluginModules, function () {
+		mw.loader.using( codeMirrorCoreModules.concat( config.pluginModules ), function () {
 			var $codeMirror,
 				selectionStart = $textbox1.prop( 'selectionStart' ),
 				selectionEnd = $textbox1.prop( 'selectionEnd' ),
@@ -116,6 +117,10 @@
 			if ( codeMirror || mw.user.options.get( 'gadget-wikEd' ) > 0 ) {
 				return;
 			}
+
+			// T174055: Do not redefine the browser history navigation keys (T175378: for PC only)
+			CodeMirror.keyMap.pcDefault[ 'Alt-Left' ] = false;
+			CodeMirror.keyMap.pcDefault[ 'Alt-Right' ] = false;
 
 			codeMirror = CodeMirror.fromTextArea( $textbox1[ 0 ], {
 				mwConfig: config,
