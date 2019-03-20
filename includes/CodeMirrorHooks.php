@@ -5,10 +5,16 @@ class CodeMirrorHooks {
 	/**
 	 * Checks if CodeMirror for textarea wikitext editor should be loaded on this page or not.
 	 *
-	 * @param IContextSource $context The current ContextSource object
+	 * @param OutputPage $out
 	 * @return bool
 	 */
-	private static function isCodeMirrorOnPage( IContextSource $context ) {
+	private static function isCodeMirrorOnPage( OutputPage $out ) {
+		// Disable CodeMirror when CodeEditor is active on this page
+		// Depends on ext.codeEditor being added by EditPage::showEditForm:initial
+		if ( in_array( 'ext.codeEditor', $out->getModules() ) ) {
+			return false;
+		}
+		$context = $out->getContext();
 		return in_array( Action::getActionName( $context ), [ 'edit', 'submit' ] ) &&
 			// CodeMirror on textarea wikitext editors doesn't support RTL (T170001)
 			!$context->getTitle()->getPageLanguage()->isRTL();
@@ -23,7 +29,7 @@ class CodeMirrorHooks {
 	 * @param Skin &$skin
 	 */
 	public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
-		if ( self::isCodeMirrorOnPage( $out->getContext() ) ) {
+		if ( self::isCodeMirrorOnPage( $out ) ) {
 			$out->addModules( 'ext.CodeMirror' );
 
 			if ( $out->getUser()->getOption( 'usecodemirror' ) ) {
