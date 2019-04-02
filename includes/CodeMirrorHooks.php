@@ -38,8 +38,6 @@ class CodeMirrorHooks {
 				$out->addModules( [ 'ext.CodeMirror.lib', 'ext.CodeMirror.mode.mediawiki' ] );
 			}
 		}
-		// TODO: for backwards compatibility. Remove in 2019.
-		$out->addJsConfigVars( 'wgCodeMirrorEnabled', true );
 	}
 
 	/**
