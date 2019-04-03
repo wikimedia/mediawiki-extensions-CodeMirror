@@ -25,10 +25,10 @@ class CodeMirrorHooks {
 	 *
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/BeforePageDisplay
 	 *
-	 * @param OutputPage &$out
-	 * @param Skin &$skin
+	 * @param OutputPage $out
+	 * @param Skin $skin
 	 */
-	public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
+	public static function onBeforePageDisplay( OutputPage $out, Skin $skin ) {
 		if ( self::isCodeMirrorOnPage( $out ) ) {
 			$out->addModules( 'ext.CodeMirror' );
 
@@ -60,10 +60,10 @@ class CodeMirrorHooks {
 	/**
 	 * Register test modules for CodeMirror.
 	 * @param array &$modules
-	 * @param ResourceLoader &$rl
+	 * @param ResourceLoader $rl
 	 * @return bool
 	 */
-	public static function onResourceLoaderTestModules( array &$modules, ResourceLoader &$rl ) {
+	public static function onResourceLoaderTestModules( array &$modules, ResourceLoader $rl ) {
 		$modules['qunit']['ext.CodeMirror.test'] = [
 			'scripts' => [
 				'resources/mode/mediawiki/tests/qunit/CodeMirror.mediawiki.test.js',
