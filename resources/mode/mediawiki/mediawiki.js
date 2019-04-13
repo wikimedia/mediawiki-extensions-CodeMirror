@@ -467,7 +467,7 @@
 				var origString = false,
 					from = stream.pos,
 					to,
-					pattern = new RegExp( '</' + name + '\\s*>' ),
+					pattern = new RegExp( '</' + name + '\\s*>', 'i' ),
 					m = pattern.exec( from ? stream.string.slice( from ) : stream.string );
 
 				if ( m ) {
