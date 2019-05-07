@@ -48,7 +48,7 @@ class CodeMirrorHooks {
 	 * @param User $user
 	 * @param array &$defaultPreferences
 	 */
-	public static function onGetPreferences( User $user, &$defaultPreferences ) {
+	public static function onGetPreferences( User $user, array &$defaultPreferences ) {
 		// CodeMirror is enabled by default for users. It can
 		// be changed by adding '$wgDefaultUserOptions['usecodemirror'] = 0;' into LocalSettings.php
 		$defaultPreferences['usecodemirror'] = [
@@ -59,9 +59,11 @@ class CodeMirrorHooks {
 
 	/**
 	 * Register test modules for CodeMirror.
+	 *
+	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/ResourceLoaderTestModules
+	 *
 	 * @param array &$modules
 	 * @param ResourceLoader $rl
-	 * @return bool
 	 */
 	public static function onResourceLoaderTestModules( array &$modules, ResourceLoader $rl ) {
 		$modules['qunit']['ext.CodeMirror.test'] = [
@@ -76,8 +78,6 @@ class CodeMirrorHooks {
 			'localBasePath' => __DIR__ . '/../',
 			'remoteExtPath' => 'CodeMirror',
 		];
-
-		return true;
 	}
 
 }
