@@ -2,9 +2,10 @@
 	"@metadata": {
 		"authors": [
 			"Alirezaaa",
-			"Ladsgroup"
+			"Ladsgroup",
+			"Iriman"
 		]
 	},
 	"codemirror-desc": "ویرایش نحو برجسته برای صفحات ویکی",
-	"codemirror-toggle-label": "پررنگ کردن ترکیب"
+	"codemirror-toggle-label": "پررنگ کردن دستور"
 }
