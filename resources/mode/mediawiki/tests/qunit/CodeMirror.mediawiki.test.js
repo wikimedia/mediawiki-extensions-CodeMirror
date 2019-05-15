@@ -85,6 +85,13 @@
 				title: 'signatures',
 				input: 'my sig ~~~ ~~~~ ~~~~~~~',
 				output: '<pre class=" CodeMirror-line " role="presentation"><span role="presentation">my sig <span class="cm-mw-signature">~~~</span> <span class="cm-mw-signature">~~~~</span> <span class="cm-mw-signature">~~~~~</span>~~</span></pre>'
+			},
+			{
+				title: 'new',
+				input: '<ref></Ref>',
+				output: mw.loader.getState( 'ext.cite.styles' ) ?
+					'<pre class=" CodeMirror-line " role="presentation"><span role="presentation"><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-Ref">Ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-Ref">&gt;</span></span></pre>' :
+					'<pre class=" CodeMirror-line " role="presentation"><span role="presentation">&lt;ref&gt;&lt;/Ref&gt;</span></pre>'
 			}
 		];
 
