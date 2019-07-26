@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Vlad5250"
+		]
+	},
+	"codemirror-desc": "Daje potcrtavanje sintakse u uređivaču wikiteksta",
+	"codemirror-toggle-label": "Isticanje sintakse"
+}
