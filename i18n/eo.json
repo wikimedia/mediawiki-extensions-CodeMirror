@@ -1,8 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"KuboF"
+			"KuboF",
+			"Mirin"
 		]
 	},
-	"codemirror-desc": "Provizas markadon de sintakso en vikiteksta redaktilo"
+	"codemirror-desc": "Provizas markadon de sintakso en vikiteksta redaktilo",
+	"codemirror-toggle-label": "Sintaksa reliefigado"
 }
