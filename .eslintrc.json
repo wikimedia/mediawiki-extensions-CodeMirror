@@ -5,9 +5,9 @@
 		"wikimedia/jquery"
 	],
 	"globals": {
-		"CodeMirror": false,
-		"mw": false,
-		"OO": false
+		"CodeMirror": "readonly",
+		"mw": "readonly",
+		"OO": "readonly"
 	},
 	"rules": {
 		"max-len": "off"
