@@ -71,12 +71,13 @@ ve.ui.CodeMirrorAction.static.fixWhitespace = ( function () {
  * @return {boolean} Action was executed
  */
 ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
-	var profile, supportsTransparentText, mirrorElement,
+	var profile, supportsTransparentText, mirrorElement, tabSizeValue,
 		surface = this.surface,
 		surfaceView = surface.getView(),
 		doc = surface.getModel().getDocument();
 
 	if ( !surface.mirror && enable !== false ) {
+		tabSizeValue = surfaceView.documentView.documentNode.$element.css( 'tab-size' );
 		surface.mirror = CodeMirror( surfaceView.$element[ 0 ], {
 			value: this.constructor.static.fixWhitespace( surface.getDom() ),
 			mwConfig: mw.config.get( 'extCodeMirrorConfig' ),
@@ -85,6 +86,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 			scrollbarStyle: 'null',
 			specialChars: /^$/,
 			viewportMargin: 5,
+			tabSize: tabSizeValue ? +tabSizeValue : 8,
 			// select mediawiki as text input mode
 			mode: 'text/mediawiki',
 			extraKeys: {
