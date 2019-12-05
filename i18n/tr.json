@@ -1,8 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Diyapazon"
+			"Diyapazon",
+			"BaRaN6161 TURK"
 		]
 	},
-	"codemirror-beta-title": "Wikitext sözdizimi vurgulama"
+	"codemirror-desc": "Wiki metin düzenleyicide sözdizimi vurgulaması sağlar",
+	"codemirror-toggle-label": "Sözdizimi vurgulama"
 }
