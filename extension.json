@@ -50,7 +50,8 @@
 				"lib/codemirror/lib/codemirror.js"
 			],
 			"styles": [
-				"lib/codemirror/lib/codemirror.css"
+				"lib/codemirror/lib/codemirror.css",
+				"lib/codemirror-fixes.less"
 			]
 		},
 		"ext.CodeMirror.mode.mediawiki": {
