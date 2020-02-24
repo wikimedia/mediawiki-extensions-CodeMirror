@@ -3,7 +3,9 @@
 	"version": "4.0.0",
 	"author": [
 		"[https://www.mediawiki.org/wiki/User:Pastakhov Pavel Astakhov]",
-		"[https://www.mediawiki.org/wiki/User:Florianschmidtwelzow Florian Schmidt]"
+		"[https://www.mediawiki.org/wiki/User:Florianschmidtwelzow Florian Schmidt]",
+		"Marijn Haverbeke",
+		"[https://raw.githubusercontent.com/codemirror/CodeMirror/master/AUTHORS CodeMirror contributors]"
 	],
 	"url": "https://www.mediawiki.org/wiki/Extension:CodeMirror",
 	"descriptionmsg": "codemirror-desc",
