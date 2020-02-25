@@ -143,6 +143,7 @@
 			// CodeMirror. We unregister this when switching to normal textarea mode.
 			$textbox1.textSelection( 'register', cmTextSelection );
 
+			// RL module jquery.ui
 			$codeMirror.resizable( {
 				handles: 'se',
 				resize: function ( event, ui ) {
