@@ -1,5 +1,15 @@
 @import 'mediawiki.mixins';
 
+.mw-editfont-monospace,
+.mw-editfont-sans-serif,
+.mw-editfont-serif {
+	.CodeMirror {
+		// Don't let CodeMirror set the font to monospace if it's set on an ancestor.
+		// See T245568
+		font-family: inherit;
+	}
+}
+
 .wikiEditor-ui .CodeMirror {
 	line-height: 1.5em;
 	padding: 0.1em;
