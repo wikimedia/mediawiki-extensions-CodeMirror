@@ -1,7 +1,6 @@
 ( function () {
 	var useCodeMirror, codeMirror, api, originHooksTextarea, cmTextSelection,
 		$textbox1,
-		enableContentEditable = true,
 		// Keep these modules in sync with CodeMirrorHooks.php
 		codeMirrorCoreModules = [
 			'ext.CodeMirror.lib',
@@ -36,13 +35,6 @@
 			elem.value = value;
 		}
 	};
-
-	// Disable spellchecking for Firefox users on non-Mac systems (Bug T95104)
-	if ( navigator.userAgent.indexOf( 'Firefox' ) > -1 &&
-		navigator.userAgent.indexOf( 'Mac' ) === -1
-	) {
-		enableContentEditable = false;
-	}
 
 	// jQuery.textSelection overrides for CodeMirror.
 	// See jQuery.textSelection.js for method documentation
@@ -131,8 +123,8 @@
 					Home: 'goLineLeft',
 					End: 'goLineRight'
 				},
-				inputStyle: enableContentEditable ? 'contenteditable' : 'textarea',
-				spellcheck: enableContentEditable,
+				inputStyle: 'contenteditable',
+				spellcheck: true,
 				viewportMargin: Infinity
 			} );
 			$codeMirror = $( codeMirror.getWrapperElement() );
