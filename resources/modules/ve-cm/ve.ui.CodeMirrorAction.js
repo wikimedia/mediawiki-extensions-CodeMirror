@@ -39,75 +39,89 @@ ve.ui.CodeMirrorAction.static.methods = [ 'toggle' ];
  */
 ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 	var profile, supportsTransparentText, mirrorElement, tabSizeValue,
+		action = this,
 		surface = this.surface,
 		surfaceView = surface.getView(),
 		doc = surface.getModel().getDocument();
 
 	if ( !surface.mirror && enable !== false ) {
-		tabSizeValue = surfaceView.documentView.documentNode.$element.css( 'tab-size' );
-		surface.mirror = CodeMirror( surfaceView.$element[ 0 ], {
-			value: surface.getDom(),
-			mwConfig: mw.config.get( 'extCodeMirrorConfig' ),
-			readOnly: 'nocursor',
-			lineWrapping: true,
-			scrollbarStyle: 'null',
-			specialChars: /^$/,
-			viewportMargin: 5,
-			tabSize: tabSizeValue ? +tabSizeValue : 8,
-			// select mediawiki as text input mode
-			mode: 'text/mediawiki',
-			extraKeys: {
-				Tab: false,
-				'Shift-Tab': false
+		surface.mirror = true;
+		mw.loader.using( [
+			'ext.CodeMirror.data',
+			'ext.CodeMirror.lib',
+			'ext.CodeMirror.mode.mediawiki',
+			'jquery.client'
+		] ).then( function () {
+			if ( !surface.mirror ) {
+				// Action was toggled to false since promise started
+				return;
 			}
+			tabSizeValue = surfaceView.documentView.documentNode.$element.css( 'tab-size' );
+			surface.mirror = CodeMirror( surfaceView.$element[ 0 ], {
+				value: surface.getDom(),
+				mwConfig: mw.config.get( 'extCodeMirrorConfig' ),
+				readOnly: 'nocursor',
+				lineWrapping: true,
+				scrollbarStyle: 'null',
+				specialChars: /^$/,
+				viewportMargin: 5,
+				tabSize: tabSizeValue ? +tabSizeValue : 8,
+				// select mediawiki as text input mode
+				mode: 'text/mediawiki',
+				extraKeys: {
+					Tab: false,
+					'Shift-Tab': false
+				}
+			} );
+
+			// The VE/CM overlay technique only works with monospace fonts (as we use width-changing bold as a highlight)
+			// so revert any editfont user preference
+			surfaceView.$element.removeClass( 'mw-editfont-sans-serif mw-editfont-serif' ).addClass( 'mw-editfont-monospace' );
+
+			profile = $.client.profile();
+			supportsTransparentText = 'WebkitTextFillColor' in document.body.style &&
+				// Disable on Firefox+OSX (T175223)
+				!( profile.layout === 'gecko' && profile.platform === 'mac' );
+
+			surfaceView.$documentNode.addClass(
+				supportsTransparentText ?
+					've-ce-documentNode-codeEditor-webkit-hide' :
+					've-ce-documentNode-codeEditor-hide'
+			);
+
+			/* Events */
+
+			// As the action is regenerated each time, we need to store bound listeners
+			// in the mirror for later disconnection.
+			surface.mirror.veTransactionListener = action.onDocumentPrecommit.bind( action );
+			surface.mirror.veLangChangeListener = action.onLangChange.bind( action );
+
+			doc.on( 'precommit', surface.mirror.veTransactionListener );
+			surfaceView.getDocument().on( 'langChange', surface.mirror.veLangChangeListener );
+
+			action.onLangChange();
+
+			ve.init.target.once( 'surfaceReady', function () {
+				if ( surface.mirror ) {
+					surface.mirror.refresh();
+				}
+			} );
 		} );
-
-		// The VE/CM overlay technique only works with monospace fonts (as we use width-changing bold as a highlight)
-		// so revert any editfont user preference
-		surfaceView.$element.removeClass( 'mw-editfont-sans-serif mw-editfont-serif' ).addClass( 'mw-editfont-monospace' );
-
-		profile = $.client.profile();
-		supportsTransparentText = 'WebkitTextFillColor' in document.body.style &&
-			// Disable on Firefox+OSX (T175223)
-			!( profile.layout === 'gecko' && profile.platform === 'mac' );
-
-		surfaceView.$documentNode.addClass(
-			supportsTransparentText ?
-				've-ce-documentNode-codeEditor-webkit-hide' :
-				've-ce-documentNode-codeEditor-hide'
-		);
-
-		/* Events */
-
-		// As the action is regenerated each time, we need to store bound listeners
-		// in the mirror for later disconnection.
-		surface.mirror.veTransactionListener = this.onDocumentPrecommit.bind( this );
-		surface.mirror.veLangChangeListener = this.onLangChange.bind( this );
-
-		doc.on( 'precommit', surface.mirror.veTransactionListener );
-		surfaceView.getDocument().on( 'langChange', surface.mirror.veLangChangeListener );
-
-		this.onLangChange();
-
-		ve.init.target.once( 'surfaceReady', function () {
-			if ( surface.mirror ) {
-				surface.mirror.refresh();
-			}
-		} );
-
 	} else if ( surface.mirror && enable !== true ) {
-		doc.off( 'precommit', surface.mirror.veTransactionListener );
-		surfaceView.getDocument().off( 'langChange', surface.mirror.veLangChangeListener );
+		if ( surface.mirror !== true ) {
+			doc.off( 'precommit', surface.mirror.veTransactionListener );
+			surfaceView.getDocument().off( 'langChange', surface.mirror.veLangChangeListener );
 
-		// Restore edit-font
-		surfaceView.$element.removeClass( 'mw-editfont-monospace' ).addClass( 'mw-editfont-' + mw.user.options.get( 'editfont' ) );
+			// Restore edit-font
+			surfaceView.$element.removeClass( 'mw-editfont-monospace' ).addClass( 'mw-editfont-' + mw.user.options.get( 'editfont' ) );
 
-		surfaceView.$documentNode.removeClass(
-			've-ce-documentNode-codeEditor-webkit-hide ve-ce-documentNode-codeEditor-hide'
-		);
+			surfaceView.$documentNode.removeClass(
+				've-ce-documentNode-codeEditor-webkit-hide ve-ce-documentNode-codeEditor-hide'
+			);
 
-		mirrorElement = surface.mirror.getWrapperElement();
-		mirrorElement.parentNode.removeChild( mirrorElement );
+			mirrorElement = surface.mirror.getWrapperElement();
+			mirrorElement.parentNode.removeChild( mirrorElement );
+		}
 
 		surface.mirror = null;
 	}

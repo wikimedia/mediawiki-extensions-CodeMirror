@@ -120,11 +120,7 @@
 		},
 		"ext.CodeMirror.visualEditor": {
 			"dependencies": [
-				"ext.CodeMirror.data",
 				"ext.visualEditor.mwcore",
-				"ext.CodeMirror.lib",
-				"ext.CodeMirror.mode.mediawiki",
-				"jquery.client",
 				"mediawiki.api",
 				"user.options"
 			],
