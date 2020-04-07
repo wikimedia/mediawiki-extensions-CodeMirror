@@ -1,8 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Metalhead64",
-			"Kghbln"
+			"Kghbln",
+			"Metalhead64"
 		]
 	},
 	"codemirror-desc": "Ermöglicht Syntaxhervorhebungen im Wikitext-Editor",

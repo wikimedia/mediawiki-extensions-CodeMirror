@@ -1,9 +1,9 @@
 {
 	"@metadata": {
 		"authors": [
-			"Obsuser",
 			"Acamicamacaraca",
-			"BadDog"
+			"BadDog",
+			"Obsuser"
 		]
 	},
 	"codemirror-desc": "Омогућава истицање синтаксе у уређивачу викитекста",

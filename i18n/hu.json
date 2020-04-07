@@ -1,9 +1,9 @@
 {
 	"@metadata": {
 		"authors": [
+			"Bencemac",
 			"Tacsipacsi",
-			"Urbalazs",
-			"Bencemac"
+			"Urbalazs"
 		]
 	},
 	"codemirror-desc": "Szintaxiskiemelő hozzáadása a wikiszöveges szerkesztőhöz",

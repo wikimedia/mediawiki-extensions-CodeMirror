@@ -2,8 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"!Silent",
-			"Felipe L. Ewald",
-			"Eduardo Addad de Oliveira"
+			"Eduardo Addad de Oliveira",
+			"Felipe L. Ewald"
 		]
 	},
 	"codemirror-desc": "Fornece um realce de sintaxe no editor de wikitexto",

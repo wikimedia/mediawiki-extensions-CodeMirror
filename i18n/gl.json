@@ -2,8 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Banjo",
-			"Toliño",
-			"Elisardojm"
+			"Elisardojm",
+			"Toliño"
 		]
 	},
 	"codemirror-desc": "Proporciona un resalte da sintaxe no editor de texto wiki",

@@ -2,10 +2,10 @@
 	"@metadata": {
 		"authors": [
 			"Andriykopanytsia",
-			"Ата",
 			"Dars",
 			"Piramidion",
-			"SimondR"
+			"SimondR",
+			"Ата"
 		]
 	},
 	"codemirror-desc": "Забезпечує підсвічування синтаксису у редакторі вікітексту",

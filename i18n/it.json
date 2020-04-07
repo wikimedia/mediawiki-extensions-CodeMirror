@@ -2,8 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Beta16",
-			"Statix64",
-			"Sakretsu"
+			"Sakretsu",
+			"Statix64"
 		]
 	},
 	"codemirror-desc": "Fornisce l'evidenziazione della sintassi nell'editor wikitesto",

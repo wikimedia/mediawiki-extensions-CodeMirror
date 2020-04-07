@@ -2,9 +2,9 @@
 	"@metadata": {
 		"authors": [
 			"Gomoko",
-			"Wladek92",
+			"Thibaut120094",
 			"Trizek (WMF)",
-			"Thibaut120094"
+			"Wladek92"
 		]
 	},
 	"codemirror-desc": "Fournit une mise en évidence de la syntaxe dans l’éditeur wikitexte",

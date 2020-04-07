@@ -2,8 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Chrumps",
-			"Woytecr",
-			"Railfail536"
+			"Railfail536",
+			"Woytecr"
 		]
 	},
 	"codemirror-desc": "Dostarcza podświetlanie składni w edytorze wikitekstu",
