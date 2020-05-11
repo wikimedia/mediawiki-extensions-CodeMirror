@@ -137,15 +137,24 @@
 		"localBasePath": "resources",
 		"remoteExtPath": "CodeMirror/resources"
 	},
+	"QUnitTestModule": {
+		"localBasePath": "",
+		"remoteExtPath": "CodeMirror",
+		"scripts": [
+			"resources/mode/mediawiki/tests/qunit/CodeMirror.mediawiki.test.js"
+		],
+		"dependencies": [
+			"ext.CodeMirror.data",
+			"ext.CodeMirror.lib",
+			"ext.CodeMirror.mode.mediawiki"
+		]
+	},
 	"Hooks": {
 		"BeforePageDisplay": [
 			"CodeMirrorHooks::onBeforePageDisplay"
 		],
 		"GetPreferences": [
 			"CodeMirrorHooks::onGetPreferences"
-		],
-		"ResourceLoaderTestModules": [
-			"CodeMirrorHooks::onResourceLoaderTestModules"
 		]
 	},
 	"VisualEditorPluginModules": [
