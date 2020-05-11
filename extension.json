@@ -150,12 +150,8 @@
 		]
 	},
 	"Hooks": {
-		"BeforePageDisplay": [
-			"CodeMirrorHooks::onBeforePageDisplay"
-		],
-		"GetPreferences": [
-			"CodeMirrorHooks::onGetPreferences"
-		]
+		"BeforePageDisplay": "CodeMirrorHooks::onBeforePageDisplay",
+		"GetPreferences": "CodeMirrorHooks::onGetPreferences"
 	},
 	"VisualEditorPluginModules": [
 		"ext.CodeMirror.visualEditor.init",
