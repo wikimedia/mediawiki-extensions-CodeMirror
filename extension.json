@@ -155,6 +155,8 @@
 	},
 	"attributes": {
 		"CodeMirror": {
+			"PluginModules": [
+			],
 			"TagModes": {
 				"pre": "mw-tag-pre",
 				"nowiki": "mw-tag-nowiki"
@@ -166,11 +168,6 @@
 				"ext.CodeMirror.visualEditor"
 			]
 		}
-	},
-	"config": {
-		"CodeMirrorPluginModules": {
-			"value": []
-                }
 	},
 	"manifest_version": 2
 }
