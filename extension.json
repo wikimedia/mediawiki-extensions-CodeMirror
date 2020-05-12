@@ -153,14 +153,24 @@
 		"BeforePageDisplay": "CodeMirrorHooks::onBeforePageDisplay",
 		"GetPreferences": "CodeMirrorHooks::onGetPreferences"
 	},
-	"VisualEditorPluginModules": [
-		"ext.CodeMirror.visualEditor.init",
-		"ext.CodeMirror.visualEditor"
-	],
-	"CodeMirrorTagModes": {
-		"pre": "mw-tag-pre",
-		"nowiki": "mw-tag-nowiki"
+	"attributes": {
+		"CodeMirror": {
+			"TagModes": {
+				"pre": "mw-tag-pre",
+				"nowiki": "mw-tag-nowiki"
+			}
+		},
+		"VisualEditor": {
+			"PluginModules": [
+				"ext.CodeMirror.visualEditor.init",
+				"ext.CodeMirror.visualEditor"
+			]
+		}
 	},
-	"CodeMirrorPluginModules": [],
-	"manifest_version": 1
+	"config": {
+		"CodeMirrorPluginModules": {
+			"value": []
+                }
+	},
+	"manifest_version": 2
 }
