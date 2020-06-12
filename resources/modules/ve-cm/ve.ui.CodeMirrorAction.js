@@ -113,6 +113,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 			surfaceView.getDocument().off( 'langChange', surface.mirror.veLangChangeListener );
 
 			// Restore edit-font
+			// eslint-disable-next-line mediawiki/class-doc
 			surfaceView.$element.removeClass( 'mw-editfont-monospace' ).addClass( 'mw-editfont-' + mw.user.options.get( 'editfont' ) );
 
 			surfaceView.$documentNode.removeClass(

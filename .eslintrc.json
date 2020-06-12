@@ -6,11 +6,9 @@
 		"wikimedia/mediawiki"
 	],
 	"globals": {
-		"CodeMirror": "readonly",
-		"OO": "readonly"
+		"CodeMirror": "readonly"
 	},
 	"rules": {
-		"max-len": "off",
-		"mediawiki/class-doc": "warn"
+		"max-len": "off"
 	}
 }

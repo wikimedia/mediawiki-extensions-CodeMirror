@@ -5,6 +5,7 @@
 ( function () {
 	/**
 	 * Keys are the titles of the test cases. Each has an 'input' and the expected 'output'.
+	 *
 	 * @type {Object}
 	 */
 	var config = mw.config.get( 'extCodeMirrorConfig' ),
@@ -102,6 +103,7 @@
 	 * wikitext prior to initializing CodeMirror. So this function will do this and
 	 * destroy CodeMirror after the test has completed, so that we have a clean slate
 	 * for the next iteration.
+	 *
 	 * @param {string} wikitext
 	 * @param {Function} callback Ran after CodeMirror has been initialized.
 	 */
