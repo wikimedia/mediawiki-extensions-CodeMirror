@@ -52,59 +52,67 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 			'ext.CodeMirror.mode.mediawiki',
 			'jquery.client'
 		] ).then( function () {
+			var config = mw.config.get( 'extCodeMirrorConfig' );
+
 			if ( !surface.mirror ) {
 				// Action was toggled to false since promise started
 				return;
 			}
-			tabSizeValue = surfaceView.documentView.documentNode.$element.css( 'tab-size' );
-			surface.mirror = CodeMirror( surfaceView.$element[ 0 ], {
-				value: surface.getDom(),
-				mwConfig: mw.config.get( 'extCodeMirrorConfig' ),
-				readOnly: 'nocursor',
-				lineWrapping: true,
-				scrollbarStyle: 'null',
-				specialChars: /^$/,
-				viewportMargin: 5,
-				tabSize: tabSizeValue ? +tabSizeValue : 8,
-				// select mediawiki as text input mode
-				mode: 'text/mediawiki',
-				extraKeys: {
-					Tab: false,
-					'Shift-Tab': false
+			mw.loader.using( config.pluginModules, function () {
+				if ( !surface.mirror ) {
+					// Action was toggled to false since promise started
+					return;
 				}
-			} );
+				tabSizeValue = surfaceView.documentView.documentNode.$element.css( 'tab-size' );
+				surface.mirror = CodeMirror( surfaceView.$element[ 0 ], {
+					value: surface.getDom(),
+					mwConfig: config,
+					readOnly: 'nocursor',
+					lineWrapping: true,
+					scrollbarStyle: 'null',
+					specialChars: /^$/,
+					viewportMargin: 5,
+					tabSize: tabSizeValue ? +tabSizeValue : 8,
+					// select mediawiki as text input mode
+					mode: 'text/mediawiki',
+					extraKeys: {
+						Tab: false,
+						'Shift-Tab': false
+					}
+				} );
 
-			// The VE/CM overlay technique only works with monospace fonts (as we use width-changing bold as a highlight)
-			// so revert any editfont user preference
-			surfaceView.$element.removeClass( 'mw-editfont-sans-serif mw-editfont-serif' ).addClass( 'mw-editfont-monospace' );
+				// The VE/CM overlay technique only works with monospace fonts (as we use width-changing bold as a highlight)
+				// so revert any editfont user preference
+				surfaceView.$element.removeClass( 'mw-editfont-sans-serif mw-editfont-serif' ).addClass( 'mw-editfont-monospace' );
 
-			profile = $.client.profile();
-			supportsTransparentText = 'WebkitTextFillColor' in document.body.style &&
-				// Disable on Firefox+OSX (T175223)
-				!( profile.layout === 'gecko' && profile.platform === 'mac' );
+				profile = $.client.profile();
+				supportsTransparentText = 'WebkitTextFillColor' in document.body.style &&
+					// Disable on Firefox+OSX (T175223)
+					!( profile.layout === 'gecko' && profile.platform === 'mac' );
 
-			surfaceView.$documentNode.addClass(
-				supportsTransparentText ?
-					've-ce-documentNode-codeEditor-webkit-hide' :
-					've-ce-documentNode-codeEditor-hide'
-			);
+				surfaceView.$documentNode.addClass(
+					supportsTransparentText ?
+						've-ce-documentNode-codeEditor-webkit-hide' :
+						've-ce-documentNode-codeEditor-hide'
+				);
 
-			/* Events */
+				/* Events */
 
-			// As the action is regenerated each time, we need to store bound listeners
-			// in the mirror for later disconnection.
-			surface.mirror.veTransactionListener = action.onDocumentPrecommit.bind( action );
-			surface.mirror.veLangChangeListener = action.onLangChange.bind( action );
+				// As the action is regenerated each time, we need to store bound listeners
+				// in the mirror for later disconnection.
+				surface.mirror.veTransactionListener = action.onDocumentPrecommit.bind( action );
+				surface.mirror.veLangChangeListener = action.onLangChange.bind( action );
 
-			doc.on( 'precommit', surface.mirror.veTransactionListener );
-			surfaceView.getDocument().on( 'langChange', surface.mirror.veLangChangeListener );
+				doc.on( 'precommit', surface.mirror.veTransactionListener );
+				surfaceView.getDocument().on( 'langChange', surface.mirror.veLangChangeListener );
 
-			action.onLangChange();
+				action.onLangChange();
 
-			ve.init.target.once( 'surfaceReady', function () {
-				if ( surface.mirror ) {
-					surface.mirror.refresh();
-				}
+				ve.init.target.once( 'surfaceReady', function () {
+					if ( surface.mirror ) {
+						surface.mirror.refresh();
+					}
+				} );
 			} );
 		} );
 	} else if ( surface.mirror && enable !== true ) {
