@@ -4235,6 +4235,8 @@
   function updateGutterSpace(display) {
     var width = display.gutters.offsetWidth;
     display.sizer.style.marginLeft = width + "px";
+    // Send an event in case the container needs to respond to changes in gutter width.
+    signal(display, "updateGutter", display);
   }
 
   function setDocumentHeight(cm, measure) {

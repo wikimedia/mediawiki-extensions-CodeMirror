@@ -113,6 +113,7 @@
 				mwConfig: config,
 				// styleActiveLine: true, // disabled since Bug: T162204, maybe should be optional
 				lineWrapping: true,
+				lineNumbers: true,
 				readOnly: $textbox1[ 0 ].readOnly,
 				// select mediawiki as text input mode
 				mode: 'text/mediawiki',

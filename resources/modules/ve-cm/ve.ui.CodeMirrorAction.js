@@ -42,7 +42,8 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 		action = this,
 		surface = this.surface,
 		surfaceView = surface.getView(),
-		doc = surface.getModel().getDocument();
+		doc = surface.getModel().getDocument(),
+		updateGutter;
 
 	if ( !surface.mirror && enable !== false ) {
 		surface.mirror = true;
@@ -70,7 +71,15 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 					mwConfig: config,
 					readOnly: 'nocursor',
 					lineWrapping: true,
+					// Set up a special "padding" gutter to create space between the line numbers
+					// and page content.  The first column name is a magic constant which causes
+					// the built-in line number gutter to appear in the desired, leftmost position.
+					gutters: [
+						'CodeMirror-linenumbers',
+						'CodeMirror-linenumber-padding'
+					],
 					scrollbarStyle: 'null',
+					lineNumbers: true,
 					specialChars: /^$/,
 					viewportMargin: 5,
 					tabSize: tabSizeValue ? +tabSizeValue : 8,
@@ -110,6 +119,15 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 						've-ce-documentNode-codeEditor-hide'
 				);
 
+				if ( cmOptions.lineNumbers ) {
+					// Transfer gutter width to VE overlay.
+					updateGutter = function ( cmDisplay ) {
+						surfaceView.$documentNode.css( 'margin-left', cmDisplay.gutters.offsetWidth );
+					};
+					CodeMirror.on( surface.mirror.display, 'updateGutter', updateGutter );
+					updateGutter( surface.mirror.display );
+				}
+
 				/* Events */
 
 				// As the action is regenerated each time, we need to store bound listeners
@@ -144,6 +162,8 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 			surfaceView.$documentNode.removeClass(
 				've-ce-documentNode-codeEditor-webkit-hide ve-ce-documentNode-codeEditor-hide'
 			);
+			// Reset gutter.
+			surfaceView.$documentNode.css( 'margin-left', '' );
 
 			mirrorElement = surface.mirror.getWrapperElement();
 			mirrorElement.parentNode.removeChild( mirrorElement );
