@@ -44,6 +44,17 @@ ve.ui.CodeMirrorTool.prototype.onSelect = function () {
 
 	new mw.Api().saveOption( 'usecodemirror', useCodeMirror ? 1 : 0 );
 	mw.user.options.set( 'usecodemirror', useCodeMirror ? 1 : 0 );
+
+	/* eslint-disable camelcase */
+	mw.track( 'event.CodeMirrorUsage', {
+		editor: 'wikitext-2017',
+		enabled: useCodeMirror,
+		toggled: true,
+		session_token: mw.user.sessionId(),
+		user_id: mw.user.getId(),
+		edit_start_ts_ms: ( this.toolbar.target.startTimeStamp * 1000 ) || 0
+	} );
+	/* eslint-enable camelcase */
 };
 
 /**
@@ -60,6 +71,19 @@ ve.ui.CodeMirrorTool.prototype.onSurfaceChange = function ( oldSurface, newSurfa
 		useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
 		command.execute( surface, [ useCodeMirror ] );
 		this.setActive( useCodeMirror );
+
+		if ( this.toolbar.target.startTimeStamp ) {
+			/* eslint-disable camelcase */
+			mw.track( 'event.CodeMirrorUsage', {
+				editor: 'wikitext-2017',
+				enabled: useCodeMirror,
+				toggled: false,
+				session_token: mw.user.sessionId(),
+				user_id: mw.user.getId(),
+				edit_start_ts_ms: ( this.toolbar.target.startTimeStamp * 1000 ) || 0
+			} );
+			/* eslint-enable camelcase */
+		}
 	}
 };
 
