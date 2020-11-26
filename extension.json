@@ -167,6 +167,11 @@
 				"ext.CodeMirror.visualEditor.init",
 				"ext.CodeMirror.visualEditor"
 			]
+		},
+		"EventLogging": {
+			"Schemas": {
+				"CodeMirrorUsage": 20713609
+			}
 		}
 	},
 	"manifest_version": 2

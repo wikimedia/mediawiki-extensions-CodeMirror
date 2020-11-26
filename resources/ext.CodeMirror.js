@@ -210,6 +210,18 @@
 			setCodeEditorPreference( true );
 		}
 		updateToolbarButton();
+
+		/* eslint-disable camelcase */
+		mw.track( 'event.CodeMirrorUsage', {
+			editor: 'wikitext',
+			enabled: codeMirror !== null,
+			toggled: true,
+			session_token: mw.user.sessionId(),
+			user_id: mw.user.getId(),
+			// eslint-disable-next-line no-jquery/no-global-selector
+			edit_start_ts_ms: parseInt( $( 'input[name="wpStarttime"]' ).val() ) * 1000 || 0
+		} );
+		/* eslint-enable camelcase */
 	}
 
 	/**
@@ -249,8 +261,19 @@
 		if ( useCodeMirror ) {
 			enableCodeMirror();
 		}
-
 		updateToolbarButton();
+
+		/* eslint-disable camelcase */
+		mw.track( 'event.CodeMirrorUsage', {
+			editor: 'wikitext',
+			enabled: useCodeMirror,
+			toggled: false,
+			session_token: mw.user.sessionId(),
+			user_id: mw.user.getId(),
+			// eslint-disable-next-line no-jquery/no-global-selector
+			edit_start_ts_ms: parseInt( $( 'input[name="wpStarttime"]' ).val() ) * 1000 || 0
+		} );
+		/* eslint-enable camelcase */
 	}
 
 	$( function () {
