@@ -14,12 +14,37 @@
 .cm-mw-comment { color: #84a0a0; font-weight: normal; }
 .cm-mw-apostrophes-bold, .cm-mw-apostrophes-italic { color: #08f; }
 
-pre.cm-mw-section-1 { font-size: 1.8em; line-height: 1.2em; }
-pre.cm-mw-section-2 { font-size: 1.5em; line-height: 1.2em; }
-pre.cm-mw-section-3 { font-weight: bold; }
-pre.cm-mw-section-4 { font-weight: bold; }
-pre.cm-mw-section-5 { font-weight: bold; }
-pre.cm-mw-section-6 { font-weight: bold; }
+pre.CodeMirror-line.cm-mw-section-1,
+pre.CodeMirror-line-like.cm-mw-section-1 {
+	font-size: 1.8em;
+	line-height: 1.2em;
+}
+
+pre.CodeMirror-line.cm-mw-section-2,
+pre.CodeMirror-line-like.cm-mw-section-2 {
+	font-size: 1.5em;
+	line-height: 1.2em;
+}
+
+pre.CodeMirror-line.cm-mw-section-3,
+pre.CodeMirror-line-like.cm-mw-section-3 {
+	font-weight: bold;
+}
+
+pre.CodeMirror-line.cm-mw-section-4,
+pre.CodeMirror-line-like.cm-mw-section-4 {
+	font-weight: bold;
+}
+
+pre.CodeMirror-line.cm-mw-section-5,
+pre.CodeMirror-line-like.cm-mw-section-5 {
+	font-weight: bold;
+}
+
+pre.CodeMirror-line.cm-mw-section-6,
+pre.CodeMirror-line-like.cm-mw-section-6 {
+	font-weight: bold;
+}
 .cm-mw-section-header { color: #08f; font-weight: normal; }
 
 .cm-mw-template { color: #80c; font-weight: normal; }
@@ -39,7 +64,10 @@ pre.cm-mw-section-6 { font-weight: bold; }
 .cm-mw-parserfunction-bracket { color: #a11; font-weight: bold; }
 .cm-mw-parserfunction-delimiter { color: #a11; font-weight: bold; }
 
-pre.cm-mw-exttag { background-image: url( img/ext2.png ); }
+pre.CodeMirror-line.cm-mw-exttag,
+pre.CodeMirror-line-like.cm-mw-exttag {
+	background-image: url( img/ext2.png );
+}
 .cm-mw-exttag { background-image: url( img/ext4.png ); }
 .cm-mw-exttag-name { color: #290; font-weight: bold; }
 .cm-mw-exttag-bracket { color: #290; font-weight: normal; }
@@ -49,8 +77,17 @@ pre.cm-mw-exttag { background-image: url( img/ext2.png ); }
 .cm-mw-htmltag-bracket { color: #290; font-weight: normal; }
 .cm-mw-htmltag-attribute { color: #290; font-weight: normal; }
 
-pre.cm-mw-tag-pre, .cm-mw-tag-pre { background-image: url( img/black4.png ); }
-pre.cm-mw-tag-nowiki, .cm-mw-tag-nowiki { background-image: url( img/black4.png ); }
+pre.CodeMirror-line.cm-mw-tag-pre,
+pre.CodeMirror-line-like.cm-mw-tag-pre,
+.cm-mw-tag-pre {
+	background-image: url( img/black4.png );
+}
+
+pre.CodeMirror-line.cm-mw-tag-nowiki,
+pre.CodeMirror-line-like.cm-mw-tag-nowiki,
+.cm-mw-tag-nowiki {
+	background-image: url( img/black4.png );
+}
 
 .cm-mw-link { color: #36c; font-weight: normal; }
 .cm-mw-link-pagename { color: #36c; font-weight: normal; }
