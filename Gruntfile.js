@@ -21,7 +21,8 @@ module.exports = function ( grunt ) {
 				'**/*.{css,less}',
 				'!resources/lib/**',
 				'!node_modules/**',
-				'!vendor/**'
+				'!vendor/**',
+				'resources/lib/codemirror-fixes.less'
 			]
 		},
 		banana: {

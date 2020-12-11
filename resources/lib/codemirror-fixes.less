@@ -4,3 +4,14 @@
 	// See:  http://code.iamkate.com/html-and-css/fixing-browsers-broken-monospace-font-handling/
 	font-family: monospace, monospace;
 }
+
+div.CodeMirror span {
+	&.CodeMirror-matchingbracket {
+		color: #fff;
+		background-color: #54595d;
+	}
+
+	&.CodeMirror-nonmatchingbracket {
+		color: inherit;
+	}
+}

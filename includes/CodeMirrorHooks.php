@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 class CodeMirrorHooks {
 
 	/**
@@ -42,6 +44,17 @@ class CodeMirrorHooks {
 				$out->addModules( [ 'ext.CodeMirror.lib', 'ext.CodeMirror.mode.mediawiki' ] );
 			}
 		}
+	}
+
+	/**
+	 * Hook handler for enabling bracket matching.
+	 *
+	 * @param array &$vars Array of variables to be added into the output of the startup module
+	 */
+	public static function onResourceLoaderGetConfigVars( array &$vars ) {
+		/** @var Config $config */
+		$config = MediaWikiServices::getInstance()->getMainConfig();
+		$vars['wgCodeMirrorEnableBracketMatching'] = $config->get( 'CodeMirrorEnableBracketMatching' );
 	}
 
 	/**

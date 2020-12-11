@@ -125,7 +125,8 @@
 				},
 				inputStyle: 'contenteditable',
 				spellcheck: true,
-				viewportMargin: Infinity
+				viewportMargin: Infinity,
+				matchBrackets: mw.config.get( 'wgCodeMirrorEnableBracketMatching' )
 			} );
 			$codeMirror = $( codeMirror.getWrapperElement() );
 

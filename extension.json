@@ -14,6 +14,13 @@
 	"requires": {
 		"MediaWiki": ">= 1.34.0"
 	},
+	"config": {
+		"CodeMirrorEnableBracketMatching": {
+			"value": false,
+			"description": "Temporary feature flag for the matchbrackets addon.",
+			"public": true
+		}
+	},
 	"MessagesDirs": {
 		"CodeMirror": [
 			"i18n"
@@ -54,6 +61,14 @@
 			"styles": [
 				"lib/codemirror/lib/codemirror.css",
 				"lib/codemirror-fixes.less"
+			]
+		},
+		"ext.CodeMirror.addons": {
+			"scripts": [
+				"lib/codemirror/addon/edit/matchbrackets.js"
+			],
+			"dependencies": [
+				"ext.CodeMirror.lib"
 			]
 		},
 		"ext.CodeMirror.mode.mediawiki": {
@@ -151,11 +166,13 @@
 	},
 	"Hooks": {
 		"BeforePageDisplay": "CodeMirrorHooks::onBeforePageDisplay",
-		"GetPreferences": "CodeMirrorHooks::onGetPreferences"
+		"GetPreferences": "CodeMirrorHooks::onGetPreferences",
+		"ResourceLoaderGetConfigVars": "CodeMirrorHooks::onResourceLoaderGetConfigVars"
 	},
 	"attributes": {
 		"CodeMirror": {
 			"PluginModules": [
+				"ext.CodeMirror.addons"
 			],
 			"TagModes": {
 				"pre": "mw-tag-pre",
