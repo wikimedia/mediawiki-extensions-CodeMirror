@@ -78,7 +78,8 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 					extraKeys: {
 						Tab: false,
 						'Shift-Tab': false
-					}
+					},
+					matchBrackets: mw.config.get( 'wgCodeMirrorEnableBracketMatching' )
 				} );
 
 				// The VE/CM overlay technique only works with monospace fonts (as we use width-changing bold as a highlight)
@@ -102,9 +103,11 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 				// in the mirror for later disconnection.
 				surface.mirror.veTransactionListener = action.onDocumentPrecommit.bind( action );
 				surface.mirror.veLangChangeListener = action.onLangChange.bind( action );
+				surface.mirror.veSelectListener = action.onSelect.bind( action );
 
 				doc.on( 'precommit', surface.mirror.veTransactionListener );
 				surfaceView.getDocument().on( 'langChange', surface.mirror.veLangChangeListener );
+				surface.getModel().on( 'select', surface.mirror.veSelectListener );
 
 				action.onLangChange();
 
@@ -119,6 +122,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 		if ( surface.mirror !== true ) {
 			doc.off( 'precommit', surface.mirror.veTransactionListener );
 			surfaceView.getDocument().off( 'langChange', surface.mirror.veLangChangeListener );
+			surface.getModel().off( 'select', surface.mirror.veSelectListener );
 
 			// Restore edit-font
 			// eslint-disable-next-line mediawiki/class-doc
@@ -139,6 +143,61 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 };
 
 /**
+ * Handle select events from the surface model
+ *
+ * @param {ve.dm.Selection} selection
+ */
+ve.ui.CodeMirrorAction.prototype.onSelect = function ( selection ) {
+	var fromPos, toPos,
+		range = selection.getCoveringRange(),
+		dmDoc = this.surface.getModel().getDocument();
+
+	if ( !range ) {
+		return;
+	}
+
+	/**
+	 * Convert a DM offset to a CM position (line + ch)
+	 *
+	 * @param {number} offset VE DM offset
+	 * @return {Object} CM position
+	 * @throws {Error} Offset out of bounds
+	 */
+	function getPosFromOffset( offset ) {
+		var lineLength,
+			lineOffset = 0,
+			line = 0,
+			lines = dmDoc.getDocumentNode().getChildren();
+
+		if ( offset < 0 ) {
+			throw new Error( 'Offset out of bounds' );
+		}
+
+		while ( lineOffset < offset ) {
+			if ( !lines[ line ] || lines[ line ].isInternal() ) {
+				throw new Error( 'Offset out of bounds' );
+			}
+			lineLength = lines[ line ].getOuterLength();
+			if ( lineOffset + lineLength > offset ) {
+				return {
+					line: line,
+					ch: offset - lineOffset - 1
+				};
+			}
+			lineOffset += lineLength;
+			line++;
+		}
+		throw new Error( 'Offset out of bounds' );
+	}
+
+	fromPos = getPosFromOffset( range.from );
+	// Don't do the calculation twice when the range is collapsed
+	toPos = range.isCollapsed() ? fromPos : getPosFromOffset( range.to );
+
+	this.surface.mirror.setSelection( fromPos, toPos );
+};
+
+/**
  * Handle langChange events from the document view
  */
 ve.ui.CodeMirrorAction.prototype.onLangChange = function () {
@@ -154,7 +213,7 @@ ve.ui.CodeMirrorAction.prototype.onLangChange = function () {
  * The document is still in it's 'old' state before the transaction
  * has been applied at this point.
  *
- * @param {ve.dm.Transaction} tx [description]
+ * @param {ve.dm.Transaction} tx
  */
 ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 	var i,
