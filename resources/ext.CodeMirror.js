@@ -278,11 +278,11 @@
 	}
 
 	$( function () {
-		// eslint-disable-next-line no-jquery/no-global-selector
-		$textbox1 = $( '#wpTextbox1' );
-
 		// Add CodeMirror button to the enhanced editing toolbar.
-		$textbox1.on( 'wikiEditor-toolbar-doneInitialSections', addCodeMirrorToWikiEditor );
+		mw.hook( 'wikiEditor.toolbarReady' ).add( function ( $textarea ) {
+			$textbox1 = $textarea;
+			addCodeMirrorToWikiEditor();
+		} );
 	} );
 
 	// Synchronize textarea with CodeMirror before leaving
