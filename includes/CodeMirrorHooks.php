@@ -54,7 +54,11 @@ class CodeMirrorHooks {
 	public static function onResourceLoaderGetConfigVars( array &$vars ) {
 		/** @var Config $config */
 		$config = MediaWikiServices::getInstance()->getMainConfig();
-		$vars['wgCodeMirrorEnableBracketMatching'] = $config->get( 'CodeMirrorEnableBracketMatching' );
+
+		$vars['wgCodeMirrorEnableBracketMatching'] = $config->get( 'CodeMirrorEnableBracketMatching' )
+			// Allows tests to override the configuration.
+			|| RequestContext::getMain()->getRequest()
+				->getCookie( '-codemirror-bracket-matching-test', 'mw' );
 	}
 
 	/**
