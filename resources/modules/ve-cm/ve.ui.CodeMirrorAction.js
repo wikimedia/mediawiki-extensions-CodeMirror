@@ -148,53 +148,16 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
  * @param {ve.dm.Selection} selection
  */
 ve.ui.CodeMirrorAction.prototype.onSelect = function ( selection ) {
-	var fromPos, toPos,
-		range = selection.getCoveringRange(),
-		dmDoc = this.surface.getModel().getDocument();
+	var range = selection.getCoveringRange();
 
-	if ( !range ) {
+	// Do not re-trigger bracket matching as long as something is selected
+	if ( !range || !range.isCollapsed() ) {
 		return;
 	}
 
-	/**
-	 * Convert a DM offset to a CM position (line + ch)
-	 *
-	 * @param {number} offset VE DM offset
-	 * @return {Object} CM position
-	 * @throws {Error} Offset out of bounds
-	 */
-	function getPosFromOffset( offset ) {
-		var lineLength,
-			lineOffset = 0,
-			line = 0,
-			lines = dmDoc.getDocumentNode().getChildren();
-
-		if ( offset < 0 ) {
-			throw new Error( 'Offset out of bounds' );
-		}
-
-		while ( lineOffset < offset ) {
-			if ( !lines[ line ] || lines[ line ].isInternal() ) {
-				throw new Error( 'Offset out of bounds' );
-			}
-			lineLength = lines[ line ].getOuterLength();
-			if ( lineOffset + lineLength > offset ) {
-				return {
-					line: line,
-					ch: offset - lineOffset - 1
-				};
-			}
-			lineOffset += lineLength;
-			line++;
-		}
-		throw new Error( 'Offset out of bounds' );
-	}
-
-	fromPos = getPosFromOffset( range.from );
-	// Don't do the calculation twice when the range is collapsed
-	toPos = range.isCollapsed() ? fromPos : getPosFromOffset( range.to );
-
-	this.surface.mirror.setSelection( fromPos, toPos );
+	this.surface.mirror.setSelection( this.surface.mirror.posFromIndex(
+		this.surface.getModel().getSourceOffsetFromOffset( range.from )
+	) );
 };
 
 /**
@@ -219,8 +182,8 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 	var i,
 		offset = 0,
 		replacements = [],
-		linearData = this.surface.getModel().getDocument().data,
-		store = linearData.getStore(),
+		model = this.surface.getModel(),
+		store = model.getDocument().getStore(),
 		mirror = this.surface.mirror;
 
 	/**
@@ -231,8 +194,7 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 	 * @return {Object} Code mirror position, containing 'line' and 'ch'
 	 */
 	function convertOffset( veOffset ) {
-		var cmOffset = linearData.getSourceText( new ve.Range( 0, veOffset ) ).length;
-		return mirror.posFromIndex( cmOffset );
+		return mirror.posFromIndex( model.getSourceOffsetFromOffset( veOffset ) );
 	}
 
 	tx.operations.forEach( function ( op ) {
