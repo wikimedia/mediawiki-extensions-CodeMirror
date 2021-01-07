@@ -229,7 +229,14 @@
 	 * Adds the CodeMirror button to WikiEditor
 	 */
 	function addCodeMirrorToWikiEditor() {
-		var $codeMirrorButton;
+		var $codeMirrorButton,
+			context = $textbox1.data( 'wikiEditor-context' ),
+			toolbar = context && context.modules && context.modules.toolbar;
+
+		// Guard against something having removed WikiEditor (T271457)
+		if ( !toolbar ) {
+			return;
+		}
 
 		$textbox1.wikiEditor(
 			'addToToolbar',
@@ -255,7 +262,7 @@
 			}
 		);
 
-		$codeMirrorButton = $textbox1.data( 'wikiEditor-context' ).modules.toolbar.$toolbar.find( '.tool[rel=CodeMirror]' );
+		$codeMirrorButton = toolbar.$toolbar.find( '.tool[rel=CodeMirror]' );
 		$codeMirrorButton
 			.attr( 'id', 'mw-editbutton-codemirror' );
 
