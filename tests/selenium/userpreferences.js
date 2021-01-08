@@ -26,6 +26,7 @@ class UserPreferences {
 
 	enableWikitext2017EditorWithCodeMirror() {
 		this.setPreferences( {
+			usebetatoolbar: null,
 			usecodemirror: '1',
 			'visualeditor-enable': '1',
 			'visualeditor-newwikitext': '1'

@@ -8,15 +8,22 @@ class EditPage extends Page {
 		super.openTitle( title, { action: 'edit', vehidebetadialog: 1, hidewelcomedialog: 1 } );
 	}
 
+	get wikiEditorToolbar() { return $( '#wikiEditor-ui-toolbar' ); }
 	get legacyTextInput() { return $( '#wpTextbox1' ); }
 	clickText() {
-		if ( this.legacyTextInput.isDisplayed() ) {
+		if ( this.visualEditorSave.isDisplayed() ) {
+			this.visualEditorSurface.click();
+		} else if ( this.legacyTextInput.isDisplayed() ) {
 			this.legacyTextInput.click();
 		} else {
 			// Click the container, if using WikiEditor etc.
 			this.legacyTextInput.parentElement().click();
 		}
 	}
+
+	get visualEditorSave() { return $( '.ve-ui-toolbar-saveButton' ); }
+	get visualEditorToggle() { return $( '.ve-init-mw-editSwitch' ); }
+	get visualEditorSurface() { return $( '.ve-ui-surface-source' ); }
 
 	cursorToPosition( index ) {
 		this.clickText();

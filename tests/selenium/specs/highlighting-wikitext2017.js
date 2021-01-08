@@ -7,17 +7,18 @@ const assert = require( 'assert' ),
 	LoginPage = require( 'wdio-mediawiki/LoginPage' ),
 	UserPreferences = require( '../userpreferences' );
 
-describe( 'CodeMirror bracket match highlighting for the wikitext 2010 editor', function () {
+describe( 'CodeMirror bracket match highlighting for the wikitext 2017 editor', function () {
 	before( function () {
 		LoginPage.loginAdmin();
 		this.title = FixtureContent.createFixturePage();
-		UserPreferences.enableWikitext2010EditorWithCodeMirror();
+		UserPreferences.enableWikitext2017EditorWithCodeMirror();
 		FeatureFlag.enable();
 	} );
 
 	beforeEach( function () {
 		EditPage.openForEditing( this.title );
-		EditPage.wikiEditorToolbar.waitForDisplayed();
+		EditPage.visualEditorSave.waitForDisplayed();
+		assert( !EditPage.wikiEditorToolbar.isDisplayed() );
 		EditPage.clickText();
 	} );
 
