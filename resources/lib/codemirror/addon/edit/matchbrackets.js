@@ -1,6 +1,19 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
+/**
+ * Modified by the WMDE Technical Wishes Team
+ * currently based on
+ * https://github.com/codemirror/CodeMirror/blob/156e6686774c38f1722a8ec5bfc790f7b47fd0e3/addon/edit/matchbrackets.js
+ * (from 2018-01-26)
+ *
+ * Modifications:
+ * - Introduced findSurroundingBrackets() along with it's `brackets` map. This is called when no
+ *   `match` is found at the current cursor position.
+ * - Removed the `style` argument from the `scanForBracket` call. This fixes a compatibility issue
+ *   with the "mediawiki" mode that tokenizes some brackets as `[[` or `{{{` pairs or triplets.
+ */
+
 (function(mod) {
   if (typeof exports == "object" && typeof module == "object") // CommonJS
     mod(require("../../lib/codemirror"));
@@ -118,12 +131,14 @@
     // from before or after the cursor.
     var match = (!afterCursor && pos >= 0 && matching[line.text.charAt(pos)]) ||
         matching[line.text.charAt(++pos)];
-    if (!match)  return findSurroundingBrackets( cm, where );
+    // Note: Modified by WMDE, was `return null` before.
+    if (!match) return findSurroundingBrackets( cm, where );
     var dir = match.charAt(1) == ">" ? 1 : -1;
     if (config && config.strict && (dir > 0) != (pos == where.ch)) return null;
     var style = cm.getTokenTypeAt(Pos(where.line, pos + 1));
 
-    var found = scanForBracket(cm, Pos(where.line, pos + (dir > 0 ? 1 : 0)), dir, undefined /* style || null */, config);
+    // Note: Modified by WMDE, used `style || null` instead of `undefined` before.
+    var found = scanForBracket(cm, Pos(where.line, pos + (dir > 0 ? 1 : 0)), dir, undefined, config);
     if (found == null) return null;
     return {from: Pos(where.line, pos), to: found && found.pos,
             match: found && found.ch == match.charAt(0), forward: dir > 0};
