@@ -3,6 +3,7 @@
 .*.swp
 .directory
 /node_modules/
+/tests/selenium/log/
 /vendor/
 /composer.lock
 .eslintcache
