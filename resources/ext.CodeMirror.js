@@ -94,7 +94,7 @@
 		var config = mw.config.get( 'extCodeMirrorConfig' );
 
 		mw.loader.using( codeMirrorCoreModules.concat( config.pluginModules ), function () {
-			var $codeMirror,
+			var $codeMirror, cmOptions,
 				selectionStart = $textbox1.prop( 'selectionStart' ),
 				selectionEnd = $textbox1.prop( 'selectionEnd' ),
 				scrollTop = $textbox1.scrollTop();
@@ -109,7 +109,7 @@
 			CodeMirror.keyMap.pcDefault[ 'Alt-Left' ] = false;
 			CodeMirror.keyMap.pcDefault[ 'Alt-Right' ] = false;
 
-			codeMirror = CodeMirror.fromTextArea( $textbox1[ 0 ], {
+			cmOptions = {
 				mwConfig: config,
 				// styleActiveLine: true, // disabled since Bug: T162204, maybe should be optional
 				lineWrapping: true,
@@ -125,9 +125,15 @@
 				},
 				inputStyle: 'contenteditable',
 				spellcheck: true,
-				viewportMargin: Infinity,
-				matchBrackets: mw.config.get( 'wgCodeMirrorEnableBracketMatching' )
-			} );
+				viewportMargin: Infinity
+			};
+
+			if ( mw.config.get( 'wgCodeMirrorEnableBracketMatching' ) ) {
+				// options for the matchBrackets addon
+				cmOptions.matchBrackets = {};
+			}
+
+			codeMirror = CodeMirror.fromTextArea( $textbox1[ 0 ], cmOptions );
 			$codeMirror = $( codeMirror.getWrapperElement() );
 
 			// Allow textSelection() functions to work with CodeMirror editing field.

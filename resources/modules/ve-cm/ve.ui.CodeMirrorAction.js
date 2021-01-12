@@ -59,12 +59,13 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 				return;
 			}
 			mw.loader.using( config.pluginModules, function () {
+				var cmOptions;
 				if ( !surface.mirror ) {
 					// Action was toggled to false since promise started
 					return;
 				}
 				tabSizeValue = surfaceView.documentView.documentNode.$element.css( 'tab-size' );
-				surface.mirror = CodeMirror( surfaceView.$element[ 0 ], {
+				cmOptions = {
 					value: surface.getDom(),
 					mwConfig: config,
 					readOnly: 'nocursor',
@@ -78,9 +79,15 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 					extraKeys: {
 						Tab: false,
 						'Shift-Tab': false
-					},
-					matchBrackets: mw.config.get( 'wgCodeMirrorEnableBracketMatching' )
-				} );
+					}
+				};
+
+				if ( mw.config.get( 'wgCodeMirrorEnableBracketMatching' ) ) {
+					// options for the matchBrackets addon
+					cmOptions.matchBrackets = {};
+				}
+
+				surface.mirror = CodeMirror( surfaceView.$element[ 0 ], cmOptions );
 
 				// The VE/CM overlay technique only works with monospace fonts (as we use width-changing bold as a highlight)
 				// so revert any editfont user preference
