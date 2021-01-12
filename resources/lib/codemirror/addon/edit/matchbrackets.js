@@ -42,28 +42,38 @@
 		'}': false
 	};
 
-	function findSurroundingBrackets( cm, where ) {
-		// FIXME: This currently doesn't respect any limit!
-		var from, to, ch,
+	function findSurroundingBrackets( cm, where, config ) {
+		var i, from, to, ch,
 			nestedBracketsToSkip = 0,
 			lineNo = where.line,
 			line = cm.getLine( lineNo ),
-			pos = where.ch;
+			pos = where.ch,
+			maxScanLen = ( config && config.maxScanLineLength ) || 10000;
+			maxScanLines = ( config && config.maxScanLines ) || 1000;
+
+		// Check the limit for the current line
+		if ( line.length > maxScanLen ) {
+			return null;
+		}
 
 		// Search forward
 		while ( true ) {
 			if ( pos >= line.length ) {
 				lineNo++;
-				if ( lineNo > cm.lastLine() ) {
+				// Give up when to many lines have been scanned
+				if ( lineNo > cm.lastLine() || lineNo - where.line >= maxScanLines ) {
 					break;
 				}
 				line = cm.getLine( lineNo );
+				// Give up when the next line is to long
+				if ( line.length > maxScanLen ) {
+					return null;
+				}
 				pos = 0;
 				// Continue early to make sure we don't read characters from empty lines
 				continue;
 			}
 
-			// FIXME: Is it possible to use native methods to find the next bracket?
 			ch = line.charAt( pos );
 			if ( ch in brackets ) {
 				// Found a closing bracket that's not part of a nested pair
@@ -87,16 +97,20 @@
 			pos--;
 			if ( pos < 0 ) {
 				lineNo--;
-				if ( lineNo < cm.firstLine() ) {
+				// Give up when to many lines have been scanned
+				if ( lineNo < cm.firstLine() || where.line - lineNo >= maxScanLines ) {
 					break;
 				}
 				line = cm.getLine( lineNo );
+				// Give up when the next line is to long
+				if ( line.length > maxScanLen ) {
+					return null;
+				}
 				pos = line.length;
 				// Continue early to make sure we don't read characters from empty lines
 				continue;
 			}
 
-			// FIXME: Is it possible to use native methods to find the previous bracket?
 			ch = line.charAt( pos );
 			if ( ch in brackets ) {
 				// Found an opening bracket that's not part of a nested pair
@@ -137,7 +151,7 @@
     var match = (!afterCursor && pos >= 0 && re.test(line.text.charAt(pos)) && matching[line.text.charAt(pos)]) ||
         re.test(line.text.charAt(pos + 1)) && matching[line.text.charAt(++pos)];
     // Note: Modified by WMDE, was `return null` before.
-    if (!match) return findSurroundingBrackets( cm, where );
+    if (!match) return findSurroundingBrackets( cm, where, config );
     var dir = match.charAt(1) == ">" ? 1 : -1;
     if (config && config.strict && (dir > 0) != (pos == where.ch)) return null;
     var style = cm.getTokenTypeAt(Pos(where.line, pos + 1));
