@@ -162,9 +162,7 @@ ve.ui.CodeMirrorAction.prototype.onSelect = function ( selection ) {
 		return;
 	}
 
-	this.surface.mirror.setSelection( this.surface.mirror.posFromIndex(
-		this.surface.getModel().getSourceOffsetFromOffset( range.from )
-	) );
+	this.surface.mirror.setSelection( this.getPosFromOffset( range.from ) );
 };
 
 /**
@@ -189,29 +187,18 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 	var i,
 		offset = 0,
 		replacements = [],
-		model = this.surface.getModel(),
-		store = model.getDocument().getStore(),
+		action = this,
+		store = this.surface.getModel().getDocument().getStore(),
 		mirror = this.surface.mirror;
-
-	/**
-	 * Convert a VE offset to a 2D CodeMirror position
-	 *
-	 * @private
-	 * @param {number} veOffset VE linear model offset
-	 * @return {Object} Code mirror position, containing 'line' and 'ch'
-	 */
-	function convertOffset( veOffset ) {
-		return mirror.posFromIndex( model.getSourceOffsetFromOffset( veOffset ) );
-	}
 
 	tx.operations.forEach( function ( op ) {
 		if ( op.type === 'retain' ) {
 			offset += op.length;
 		} else if ( op.type === 'replace' ) {
 			replacements.push( {
-				start: convertOffset( offset ),
+				start: action.getPosFromOffset( offset ),
 				// Don't bother recalculating end offset if not a removal, replaceRange works with just one arg
-				end: op.remove.length ? convertOffset( offset + op.remove.length ) : undefined,
+				end: op.remove.length ? action.getPosFromOffset( offset + op.remove.length ) : undefined,
 				data: new ve.dm.ElementLinearData( store, op.insert ).getSourceText()
 			} );
 			offset += op.remove.length;
@@ -233,6 +220,18 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 		mirror.refresh();
 	}
 	this.lastHeight = mirror.display.sizer.style.minHeight;
+};
+
+/**
+ * Convert a VE offset to a 2D CodeMirror position
+ *
+ * @param {number} veOffset VE linear model offset
+ * @return {Object} Code mirror position, containing 'line' and 'ch' numbers
+ */
+ve.ui.CodeMirrorAction.prototype.getPosFromOffset = function ( veOffset ) {
+	return this.surface.mirror.posFromIndex(
+		this.surface.getModel().getSourceOffsetFromOffset( veOffset )
+	);
 };
 
 /* Registration */
