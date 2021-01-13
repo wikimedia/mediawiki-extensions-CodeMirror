@@ -606,12 +606,12 @@
 				// @todo error message
 			} else if ( stream.match( /^[^\s\u00a0{[\]<>~).,']*/ ) ) {
 				if ( stream.peek() === '~' ) {
-					if ( !stream.match( /^~{3,}/, false ) ) {
+					if ( !stream.match( /^~~~+/, false ) ) {
 						stream.match( /^~*/ );
 						return makeLocalStyle( 'mw-free-extlink', state );
 					}
 				} else if ( stream.peek() === '{' ) {
-					if ( !stream.match( /^\{\{/, false ) ) {
+					if ( !stream.match( '{{', false ) ) {
 						stream.next();
 						return makeLocalStyle( 'mw-free-extlink', state );
 					}
@@ -648,7 +648,7 @@
 					ch = stream.next();
 					switch ( ch ) {
 						case '-':
-							if ( stream.match( /^----*/ ) ) {
+							if ( stream.match( /^---+/ ) ) {
 								return 'mw-hr';
 							}
 							break;
@@ -663,19 +663,17 @@
 							break;
 						case '*':
 						case '#':
-							if ( stream.match( /^[*#]*:*/ ) ) {
-								return 'mw-list';
-							}
-							break;
+							// Just consume all nested list and indention syntax when there is more
+							stream.match( /^[*#]*:*/ );
+							return 'mw-list';
 						case ':':
 							if ( stream.match( /^:*{\|/, false ) ) { // Highlight indented tables :{|, bug T108454
 								state.stack.push( state.tokenize );
 								state.tokenize = eatStartTable;
 							}
-							if ( stream.match( /^:*[*#]*/ ) ) {
-								return 'mw-indenting';
-							}
-							break;
+							// Just consume all nested list and indention syntax when there is more
+							stream.match( /^:*[*#]*/ );
+							return 'mw-indenting';
 						case ' ':
 							if ( stream.match( /^[\s\u00a0]*:*{\|/, false ) ) { // Leading spaces is the correct syntax for a table, bug T108454
 								stream.eatSpace();
