@@ -152,7 +152,8 @@
     if (!match) return findSurroundingBrackets( cm, where, config );
     var dir = match.charAt(1) == ">" ? 1 : -1;
     if (config && config.strict && (dir > 0) != (pos == where.ch)) return null;
-    var style = cm.getTokenTypeAt(Pos(where.line, pos + 1));
+    // Note: Disabled for performance reasons.
+    // var style = cm.getTokenTypeAt(Pos(where.line, pos + 1));
 
     // Note: Modified by WMDE, used `style || null` instead of `undefined` before.
     var found = scanForBracket(cm, Pos(where.line, pos + (dir > 0 ? 1 : 0)), dir, undefined, config);
