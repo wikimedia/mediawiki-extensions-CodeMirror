@@ -65,7 +65,7 @@
 		},
 		"ext.CodeMirror.addons": {
 			"scripts": [
-				"lib/codemirror/addon/edit/matchbrackets.js"
+				"addon/edit/matchbrackets-wmde.js"
 			],
 			"dependencies": [
 				"ext.CodeMirror.lib"

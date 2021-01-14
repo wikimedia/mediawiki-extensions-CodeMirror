@@ -12,6 +12,7 @@ module.exports = function ( grunt ) {
 			},
 			all: [
 				'**/*.{js,json}',
+				'!resources/addon/edit/**',
 				'!resources/lib/**',
 				'!{vendor,node_modules}/**'
 			]
