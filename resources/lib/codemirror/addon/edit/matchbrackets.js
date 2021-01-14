@@ -33,7 +33,7 @@
     return config && config.bracketRegex || /[(){}[\]]/
   }
 
-	var brackets = {
+	var surroundingBrackets = {
 		'(': ')',
 		')': false,
 		'[': ']',
@@ -43,12 +43,12 @@
 	};
 
 	function findSurroundingBrackets( cm, where, config ) {
-		var i, from, to, ch,
+		var from, to, ch,
 			nestedBracketsToSkip = 0,
 			lineNo = where.line,
 			line = cm.getLine( lineNo ),
 			pos = where.ch,
-			maxScanLen = ( config && config.maxScanLineLength ) || 10000;
+			maxScanLen = ( config && config.maxScanLineLength ) || 10000,
 			maxScanLines = ( config && config.maxScanLines ) || 1000;
 
 		// Check the limit for the current line
@@ -75,13 +75,13 @@
 			}
 
 			ch = line.charAt( pos );
-			if ( ch in brackets ) {
+			if ( ch in surroundingBrackets ) {
 				// Found a closing bracket that's not part of a nested pair
-				if ( !brackets[ch] && nestedBracketsToSkip <= 0 ) {
+				if ( !surroundingBrackets[ch] && nestedBracketsToSkip <= 0 ) {
 					to = { pos: Pos( lineNo, pos ), char: ch };
 					break;
 				}
-				nestedBracketsToSkip += brackets[ch] ? 1 : -1;
+				nestedBracketsToSkip += surroundingBrackets[ch] ? 1 : -1;
 			}
 
 			pos++;
@@ -112,13 +112,13 @@
 			}
 
 			ch = line.charAt( pos );
-			if ( ch in brackets ) {
+			if ( ch in surroundingBrackets ) {
 				// Found an opening bracket that's not part of a nested pair
-				if ( brackets[ch] && nestedBracketsToSkip <= 0 ) {
-					from = { pos: Pos( lineNo, pos ), expectedToChar: brackets[ch] };
+				if ( surroundingBrackets[ch] && nestedBracketsToSkip <= 0 ) {
+					from = { pos: Pos( lineNo, pos ), expectedToChar: surroundingBrackets[ch] };
 					break;
 				}
-				nestedBracketsToSkip += brackets[ch] ? -1 : 1;
+				nestedBracketsToSkip += surroundingBrackets[ch] ? -1 : 1;
 			}
 		}
 
@@ -128,13 +128,11 @@
 				to: to.pos,
 				match: from.expectedToChar === to.char
 			};
-		} else if ( from ) {
-			return { from: from.pos, match: false };
-		} else if ( to ) {
-			return { from: to.pos, match: false };
-		} else {
-			return null;
+		} else if ( from || to ) {
+			return { from: ( from || to ).pos, match: false };
 		}
+
+		return null;
 	}
 
   function findMatchingBracket(cm, where, config) {
