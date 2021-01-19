@@ -4,8 +4,8 @@
 /**
  * Modified by the WMDE Technical Wishes Team
  * currently based on
- * https://github.com/codemirror/CodeMirror/blob/a966b5d115af09983d37f7c9aa034b78ac954ca4/addon/edit/matchbrackets.js
- * (from 2020-12-04)
+ * https://github.com/codemirror/CodeMirror/blob/4823ade863d0306371858394bc1b117aed3043bf/addon/edit/matchbrackets.js
+ * (from 2021-01-14)
  *
  * Modifications:
  * - Introduced findSurroundingBrackets() along with it's `brackets` map. This is called when no
@@ -198,11 +198,12 @@
 
   function matchBrackets(cm, autoclear, config) {
     // Disable brace matching in long lines, since it'll cause hugely slow updates
-    var maxHighlightLen = cm.state.matchBrackets.maxHighlightLineLength || 1000;
+    var maxHighlightLen = cm.state.matchBrackets.maxHighlightLineLength || 1000,
+      highlightNonMatching = config && config.highlightNonMatching;
     var marks = [], ranges = cm.listSelections();
     for (var i = 0; i < ranges.length; i++) {
       var match = ranges[i].empty() && findMatchingBracket(cm, ranges[i].head, config);
-      if (match && cm.getLine(match.from.line).length <= maxHighlightLen) {
+      if (match && (match.match || highlightNonMatching !== false) && cm.getLine(match.from.line).length <= maxHighlightLen) {
         var style = match.match ? "CodeMirror-matchingbracket" : "CodeMirror-nonmatchingbracket";
         marks.push(cm.markText(match.from, Pos(match.from.line, match.from.ch + 1), {className: style}));
         if (match.to && cm.getLine(match.to.line).length <= maxHighlightLen)
@@ -212,7 +213,7 @@
 
     if (marks.length) {
       // Kludge to work around the IE bug from issue #1193, where text
-      // input stops going to the textare whever this fires.
+      // input stops going to the textarea whenever this fires.
       if (ie_lt8 && cm.state.focused) cm.focus();
 
       var clear = function() {
