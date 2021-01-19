@@ -135,6 +135,32 @@
 		return null;
 	}
 
+	function stillTheSameMarks( marks, config ) {
+		var same = config.currentMarks &&
+			// No need to compare the details if it's not even the same amount
+			config.currentMarks.length === marks.length &&
+			// We need the flexibility because the order can be closing → opening bracket as well
+			marks.every( function ( mark ) {
+				// These are typically only 2 elements for the opening and closing bracket
+				for ( var i = 0; i < config.currentMarks.length; i++ ) {
+					// Ordered from "most likely to change" to "least likely" for performance
+					if ( config.currentMarks[i].from.ch === mark.from.ch &&
+						config.currentMarks[i].from.line === mark.from.line &&
+						config.currentMarks[i].match === mark.match
+					) {
+						// This assumes all elements are unique, which should be the case
+						config.currentMarks.splice( i, 1 );
+						return true;
+					}
+				}
+				return false;
+			} ) &&
+			// Must be empty at the end, i.e. all elements must have been found and removed
+			!config.currentMarks.length;
+		config.currentMarks = marks;
+		return same;
+	}
+
   function findMatchingBracket(cm, where, config) {
     var line = cm.getLineHandle(where.line), pos = where.ch - 1;
     var afterCursor = config && config.afterCursor
@@ -199,15 +225,33 @@
   function matchBrackets(cm, autoclear, config) {
     // Disable brace matching in long lines, since it'll cause hugely slow updates
     var maxHighlightLen = cm.state.matchBrackets.maxHighlightLineLength || 1000;
-    var marks = [], ranges = cm.listSelections();
+    var markPositions = [], marks = [], ranges = cm.listSelections();
     for (var i = 0; i < ranges.length; i++) {
       var match = ranges[i].empty() && findMatchingBracket(cm, ranges[i].head, config);
       if (match && cm.getLine(match.from.line).length <= maxHighlightLen) {
-        var style = match.match ? "CodeMirror-matchingbracket" : "CodeMirror-nonmatchingbracket";
-        marks.push(cm.markText(match.from, Pos(match.from.line, match.from.ch + 1), {className: style}));
+        // Note: Modified by WMDE, now uses an intermediate format to delay the actual highlighting
+        markPositions.push(match);
         if (match.to && cm.getLine(match.to.line).length <= maxHighlightLen)
-          marks.push(cm.markText(match.to, Pos(match.to.line, match.to.ch + 1), {className: style}));
+          markPositions.push({from: match.to, match: match.match});
       }
+    }
+
+    // There is no config when autoclear is true
+    if (config && stillTheSameMarks(markPositions, config)) {
+      return;
+    }
+
+    if (!autoclear && config.currentlyHighlighted) {
+      config.currentlyHighlighted();
+      config.currentlyHighlighted = null;
+    }
+    for (i = 0; i < markPositions.length; i++) {
+      marks.push(cm.markText(
+        markPositions[i].from,
+        // Note: This assumes there is always exactly 1 character to highlight
+        Pos(markPositions[i].from.line, markPositions[i].from.ch + 1),
+        {className: markPositions[i].match ? 'CodeMirror-matchingbracket' : 'CodeMirror-nonmatchingbracket'}
+      ));
     }
 
     if (marks.length) {
@@ -221,17 +265,13 @@
         });
       };
       if (autoclear) setTimeout(clear, 800);
-      else return clear;
+      else config.currentlyHighlighted = clear;
     }
   }
 
   function doMatchBrackets(cm) {
     cm.operation(function() {
-      if (cm.state.matchBrackets.currentlyHighlighted) {
-        cm.state.matchBrackets.currentlyHighlighted();
-        cm.state.matchBrackets.currentlyHighlighted = null;
-      }
-      cm.state.matchBrackets.currentlyHighlighted = matchBrackets(cm, false, cm.state.matchBrackets);
+      matchBrackets(cm, false, cm.state.matchBrackets);
     });
   }
 

@@ -84,7 +84,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 
 				if ( mw.config.get( 'wgCodeMirrorEnableBracketMatching' ) ) {
 					// options for the matchBrackets addon
-					cmOptions.matchBrackets = { maxHighlightLineLength: 10000 };
+					cmOptions.matchBrackets = { maxHighlightLineLength: 5000 };
 				}
 
 				surface.mirror = CodeMirror( surfaceView.$element[ 0 ], cmOptions );

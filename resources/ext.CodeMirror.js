@@ -130,7 +130,7 @@
 
 			if ( mw.config.get( 'wgCodeMirrorEnableBracketMatching' ) ) {
 				// options for the matchBrackets addon
-				cmOptions.matchBrackets = { maxHighlightLineLength: 10000 };
+				cmOptions.matchBrackets = { maxHighlightLineLength: 5000 };
 			}
 
 			codeMirror = CodeMirror.fromTextArea( $textbox1[ 0 ], cmOptions );
