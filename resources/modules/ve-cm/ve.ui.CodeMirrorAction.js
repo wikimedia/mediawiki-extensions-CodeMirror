@@ -85,7 +85,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 				if ( mw.config.get( 'wgCodeMirrorEnableBracketMatching' ) ) {
 					cmOptions.matchBrackets = {
 						highlightNonMatching: false,
-						maxHighlightLineLength: 10000
+						maxHighlightLineLength: 5000
 					};
 				}
 
