@@ -16,7 +16,7 @@ class HookTest extends MediaWikiTestCase {
 	 * @covers \CodeMirrorHooks::onBeforePageDisplay
 	 */
 	public function testOnBeforePageDisplay() {
-		$wikiPage = new \WikiPage( \Title::makeTitle( NS_MAIN, __FUNCTION__ ) );
+		$wikiPage = new \WikiPage( \Title::makeTitle( NS_MAIN, __METHOD__ ) );
 		$context = $this->createMock( \IContextSource::class );
 		$context->method( 'getRequest' )->willReturn( new \FauxRequest( [ 'action' => 'edit' ] ) );
 		$context->method( 'canUseWikiPage' )->willReturn( true );
