@@ -175,6 +175,23 @@
 		} );
 	}
 
+	function logUsage( data ) {
+		var event, editCountBucket;
+
+		/* eslint-disable camelcase */
+		event = {
+			session_token: mw.user.sessionId(),
+			user_id: mw.user.getId()
+		};
+		$.extend( event, data );
+		editCountBucket = mw.config.get( 'wgUserEditCountBucket' );
+		if ( editCountBucket !== null ) {
+			event.user_edit_count_bucket = editCountBucket;
+		}
+		/* eslint-enable camelcase */
+		mw.track( 'event.CodeMirrorUsage', event );
+	}
+
 	/**
 	 * Updates CodeMirror button on the toolbar according to the current state (on/off)
 	 */
@@ -220,17 +237,13 @@
 		}
 		updateToolbarButton();
 
-		/* eslint-disable camelcase */
-		mw.track( 'event.CodeMirrorUsage', {
+		logUsage( {
 			editor: 'wikitext',
 			enabled: codeMirror !== null,
 			toggled: true,
-			session_token: mw.user.sessionId(),
-			user_id: mw.user.getId(),
-			// eslint-disable-next-line no-jquery/no-global-selector
+			// eslint-disable-next-line no-jquery/no-global-selector,camelcase
 			edit_start_ts_ms: parseInt( $( 'input[name="wpStarttime"]' ).val() ) * 1000 || 0
 		} );
-		/* eslint-enable camelcase */
 	}
 
 	/**
@@ -279,17 +292,13 @@
 		}
 		updateToolbarButton();
 
-		/* eslint-disable camelcase */
-		mw.track( 'event.CodeMirrorUsage', {
+		logUsage( {
 			editor: 'wikitext',
 			enabled: useCodeMirror,
 			toggled: false,
-			session_token: mw.user.sessionId(),
-			user_id: mw.user.getId(),
-			// eslint-disable-next-line no-jquery/no-global-selector
+			// eslint-disable-next-line no-jquery/no-global-selector,camelcase
 			edit_start_ts_ms: parseInt( $( 'input[name="wpStarttime"]' ).val() ) * 1000 || 0
 		} );
-		/* eslint-enable camelcase */
 	}
 
 	$( function () {
