@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Eleassar"
+		]
+	},
+	"codemirror-desc": "Omogoča označevanje skladnje v urejevalniku wikibesedila",
+	"codemirror-toggle-label": "Označevanje skladnje"
+}
