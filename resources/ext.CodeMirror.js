@@ -179,11 +179,10 @@
 		var event, editCountBucket;
 
 		/* eslint-disable camelcase */
-		event = {
+		event = $.extend( {
 			session_token: mw.user.sessionId(),
 			user_id: mw.user.getId()
-		};
-		$.extend( event, data );
+		}, data );
 		editCountBucket = mw.config.get( 'wgUserEditCountBucket' );
 		if ( editCountBucket !== null ) {
 			event.user_edit_count_bucket = editCountBucket;
