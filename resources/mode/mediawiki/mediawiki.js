@@ -23,7 +23,7 @@
 	CodeMirror.defineMode( 'mediawiki', function ( config /* , parserConfig */ ) {
 
 		var mwConfig = config.mwConfig,
-			urlProtocols = new RegExp( mwConfig.urlProtocols, 'i' ),
+			urlProtocols = new RegExp( '^(?:' + mwConfig.urlProtocols + ')', 'i' ),
 			permittedHtmlTags = { b: true, bdi: true, del: true, i: true, ins: true,
 				u: true, font: true, big: true, small: true, sub: true, sup: true,
 				h1: true, h2: true, h3: true, h4: true, h5: true, h6: true, cite: true,
