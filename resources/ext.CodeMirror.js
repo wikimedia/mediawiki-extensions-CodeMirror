@@ -131,7 +131,7 @@
 			if ( mw.config.get( 'wgCodeMirrorEnableBracketMatching' ) ) {
 				cmOptions.matchBrackets = {
 					highlightNonMatching: false,
-					maxHighlightLineLength: 5000
+					maxHighlightLineLength: 10000
 				};
 			}
 
