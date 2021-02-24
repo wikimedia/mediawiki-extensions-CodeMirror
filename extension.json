@@ -187,7 +187,7 @@
 		},
 		"EventLogging": {
 			"Schemas": {
-				"CodeMirrorUsage": 20981443
+				"CodeMirrorUsage": "/analytics/legacy/codemirrorusage/1.0.0"
 			}
 		}
 	},
