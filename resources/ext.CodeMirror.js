@@ -167,8 +167,11 @@
 				lang: $textbox1.attr( 'lang' )
 			} );
 
-			// T194102: UniversalLanguageSelector integration is buggy, disabling it completely
-			$( codeMirror.getInputField() ).addClass( 'noime' );
+			$( codeMirror.getInputField() )
+				// T259347: Use accesskey of the original textbox
+				.attr( 'accesskey', $textbox1.attr( 'accesskey' ) )
+				// T194102: UniversalLanguageSelector integration is buggy, disabling it completely
+				.addClass( 'noime' );
 
 			// set the height of the textarea
 			codeMirror.setSize( null, $textbox1.height() );
