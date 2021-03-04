@@ -19,6 +19,11 @@
 			"value": false,
 			"description": "Temporary feature flag for the matchbrackets addon.",
 			"public": true
+		},
+		"CodeMirrorAccessibilityColors": {
+			"value": false,
+			"description": "Temporary feature flag for accessibility colors.",
+			"public": true
 		}
 	},
 	"MessagesDirs": {
@@ -73,7 +78,10 @@
 		},
 		"ext.CodeMirror.mode.mediawiki": {
 			"scripts": "mode/mediawiki/mediawiki.js",
-			"styles": "mode/mediawiki/mediawiki.css",
+			"styles": [
+				"mode/mediawiki/mediawiki.css",
+				"mode/mediawiki/accessible-colors.css"
+			],
 			"dependencies": [
 				"ext.CodeMirror.lib"
 			]

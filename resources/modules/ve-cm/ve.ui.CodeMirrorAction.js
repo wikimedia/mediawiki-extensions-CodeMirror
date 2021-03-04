@@ -95,6 +95,10 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 				// so revert any editfont user preference
 				surfaceView.$element.removeClass( 'mw-editfont-sans-serif mw-editfont-serif' ).addClass( 'mw-editfont-monospace' );
 
+				if ( mw.config.get( 'wgCodeMirrorAccessibilityColors' ) ) {
+					surfaceView.$element.addClass( 'cm-mw-accessible-colors' );
+				}
+
 				profile = $.client.profile();
 				supportsTransparentText = 'WebkitTextFillColor' in document.body.style &&
 					// Disable on Firefox+OSX (T175223)

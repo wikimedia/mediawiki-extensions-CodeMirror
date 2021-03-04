@@ -1,0 +1,55 @@
+/* stylelint-disable selector-list-comma-newline-after, block-opening-brace-newline-before,
+	block-opening-brace-newline-after, block-closing-brace-space-after */
+
+/*
+ * This style sheet overrides colors in mediawiki.css with
+ * colors that meet our accessibility standards.
+ */
+
+/* misc */
+.cm-mw-accessible-colors .cm-mw-section-header,
+.cm-mw-accessible-colors .cm-mw-list,
+.cm-mw-accessible-colors .cm-mw-doubleUnderscore,
+.cm-mw-accessible-colors .cm-mw-signature,
+.cm-mw-accessible-colors .cm-mw-hr,
+.cm-mw-accessible-colors .cm-mw-indenting,
+.cm-mw-accessible-colors .cm-mw-apostrophes-bold,
+.cm-mw-accessible-colors .cm-mw-apostrophes-italic { color: #0076dd; }
+.cm-mw-accessible-colors .cm-mw-mnemonic { color: #14866d; }
+.cm-mw-accessible-colors .cm-mw-comment { color: #72777d; }
+
+/* links */
+.cm-mw-accessible-colors .cm-mw-link-pagename,
+.cm-mw-accessible-colors .cm-mw-link-bracket,
+.cm-mw-accessible-colors .cm-mw-link-delimiter,
+.cm-mw-accessible-colors .cm-mw-extlink,
+.cm-mw-accessible-colors .cm-mw-free-extlink,
+.cm-mw-accessible-colors .cm-mw-extlink-protocol,
+.cm-mw-accessible-colors .cm-mw-free-extlink-protocol,
+.cm-mw-accessible-colors .cm-mw-extlink-bracket { color: #000aaa; }
+
+.cm-mw-accessible-colors .cm-mw-link,
+.cm-mw-accessible-colors .cm-mw-link-tosection { color: #0076dd; }
+
+/* tags */
+.cm-mw-accessible-colors .cm-mw-exttag-name,
+.cm-mw-accessible-colors .cm-mw-exttag-bracket,
+.cm-mw-accessible-colors .cm-mw-exttag-attribute,
+.cm-mw-accessible-colors .cm-mw-htmltag-name,
+.cm-mw-accessible-colors .cm-mw-htmltag-bracket,
+.cm-mw-accessible-colors .cm-mw-htmltag-attribute { color: #14866d; }
+
+/* tables */
+.cm-mw-accessible-colors .cm-mw-table-bracket,
+.cm-mw-accessible-colors .cm-mw-table-delimiter,
+.cm-mw-accessible-colors .cm-mw-table-definition { color: #d08; }
+
+/* templates */
+.cm-mw-accessible-colors .cm-mw-templatevariable,
+.cm-mw-accessible-colors .cm-mw-templatevariable-name,
+.cm-mw-accessible-colors .cm-mw-templatevariable-bracket,
+.cm-mw-accessible-colors .cm-mw-templatevariable-delimiter { color: #ac6600; }
+
+.cm-mw-accessible-colors .cm-mw-parserfunction-name,
+.cm-mw-accessible-colors .cm-mw-parserfunction-bracket,
+.cm-mw-accessible-colors .cm-mw-parserfunction-delimiter { color: #d33; }
