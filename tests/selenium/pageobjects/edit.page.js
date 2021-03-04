@@ -37,7 +37,7 @@ class EditPage extends Page {
 	}
 
 	getHighlightedMatchingBrackets() {
-		const elements = $$( '.CodeMirror-line .CodeMirror-matchingbracket' );
+		const elements = $$( '.CodeMirror-line .cm-mw-matchingbracket' );
 		const matchingTexts = elements.map( function ( el ) {
 			return el.getText();
 		} );
