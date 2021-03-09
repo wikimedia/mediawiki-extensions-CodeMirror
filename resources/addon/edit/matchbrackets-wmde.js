@@ -12,6 +12,8 @@
  *   `match` is found at the current cursor position.
  * - Removed the `style` argument from the `scanForBracket` call. This fixes a compatibility issue
  *   with the "mediawiki" mode that tokenizes some brackets as `[[` or `{{{` pairs or triplets.
+ * - Changed the class name `CodeMirror-matchingbracket` to `cm-mw-matchingbracket`. This is
+ *   necessary to get rid of the "default styles for common addons" from codemirror.css (T270926).
  */
 
 (function(mod) {
@@ -251,7 +253,8 @@
         markPositions[i].from,
         // Note: This assumes there is always exactly 1 character to highlight
         Pos(markPositions[i].from.line, markPositions[i].from.ch + 1),
-        {className: markPositions[i].match ? 'CodeMirror-matchingbracket' : 'CodeMirror-nonmatchingbracket'}
+        // Note: Modified by WMDE to get rid of the library's "default styles for common addons"
+        {className: markPositions[i].match ? 'cm-mw-matchingbracket' : 'CodeMirror-nonmatchingbracket'}
       ));
     }
 
