@@ -175,6 +175,10 @@
 
 			// set the height of the textarea
 			codeMirror.setSize( null, $textbox1.height() );
+
+			if ( mw.config.get( 'wgCodeMirrorAccessibilityColors' ) ) {
+				$codeMirror.addClass( 'cm-mw-accessible-colors' );
+			}
 		} );
 	}
 

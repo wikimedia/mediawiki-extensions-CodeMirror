@@ -59,6 +59,8 @@ class CodeMirrorHooks {
 			// Allows tests to override the configuration.
 			|| RequestContext::getMain()->getRequest()
 				->getCookie( '-codemirror-bracket-matching-test', 'mw' );
+
+		$vars['wgCodeMirrorAccessibilityColors'] = $config->get( 'CodeMirrorAccessibilityColors' );
 	}
 
 	/**
