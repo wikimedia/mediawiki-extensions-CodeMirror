@@ -266,6 +266,7 @@
       var clear = function() {
         cm.operation(function() {
           for (var i = 0; i < marks.length; i++) marks[i].clear();
+          config.currentMarks = [];
         });
       };
       if (autoclear) setTimeout(clear, 800);
