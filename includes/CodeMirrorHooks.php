@@ -49,6 +49,8 @@ class CodeMirrorHooks {
 	/**
 	 * Hook handler for enabling bracket matching.
 	 *
+	 * TODO: restrict to pages where codemirror might be enabled.
+	 *
 	 * @param array &$vars Array of variables to be added into the output of the startup module
 	 */
 	public static function onResourceLoaderGetConfigVars( array &$vars ) {
@@ -61,6 +63,8 @@ class CodeMirrorHooks {
 				->getCookie( '-codemirror-bracket-matching-test', 'mw' );
 
 		$vars['wgCodeMirrorAccessibilityColors'] = $config->get( 'CodeMirrorAccessibilityColors' );
+
+		$vars['wgCodeMirrorLineNumberingNamespaces'] = $config->get( 'CodeMirrorLineNumberingNamespaces' );
 	}
 
 	/**

@@ -88,6 +88,21 @@
 	}
 
 	/**
+	 * TODO: remove once line numbering is fully deployed. (TBD: task)
+	 *
+	 * @return bool
+	 */
+	function isLineNumbering() {
+		var lineNumberingNamespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
+
+		if ( lineNumberingNamespaces === null ) {
+			return true;
+		} else {
+			return lineNumberingNamespaces.indexOf( mw.config.get( 'wgNamespaceNumber' ) ) !== -1;
+		}
+	}
+
+	/**
 	 * Replaces the default textarea with CodeMirror
 	 */
 	function enableCodeMirror() {
@@ -113,7 +128,7 @@
 				mwConfig: config,
 				// styleActiveLine: true, // disabled since Bug: T162204, maybe should be optional
 				lineWrapping: true,
-				lineNumbers: true,
+				lineNumbers: isLineNumbering(),
 				readOnly: $textbox1[ 0 ].readOnly,
 				// select mediawiki as text input mode
 				mode: 'text/mediawiki',

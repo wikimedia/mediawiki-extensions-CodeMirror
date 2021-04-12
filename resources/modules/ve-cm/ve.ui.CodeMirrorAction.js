@@ -33,6 +33,21 @@ ve.ui.CodeMirrorAction.static.methods = [ 'toggle' ];
 /* Methods */
 
 /**
+ * TODO: remove once line numbering is fully deployed. (TBD: task)
+ *
+ * @return bool
+ */
+ve.ui.CodeMirrorAction.static.isLineNumbering = function () {
+	var lineNumberingNamespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
+
+	if ( lineNumberingNamespaces === null ) {
+		return true;
+	} else {
+		return lineNumberingNamespaces.indexOf( mw.config.get( 'wgNamespaceNumber' ) ) !== -1;
+	}
+};
+
+/**
  * @method
  * @param {boolean} [enable] State to force toggle to, inverts current state if undefined
  * @return {boolean} Action was executed
@@ -71,15 +86,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 					mwConfig: config,
 					readOnly: 'nocursor',
 					lineWrapping: true,
-					// Set up a special "padding" gutter to create space between the line numbers
-					// and page content.  The first column name is a magic constant which causes
-					// the built-in line number gutter to appear in the desired, leftmost position.
-					gutters: [
-						'CodeMirror-linenumbers',
-						'CodeMirror-linenumber-padding'
-					],
 					scrollbarStyle: 'null',
-					lineNumbers: true,
 					specialChars: /^$/,
 					viewportMargin: 5,
 					tabSize: tabSizeValue ? +tabSizeValue : 8,
@@ -96,6 +103,19 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 						highlightNonMatching: false,
 						maxHighlightLineLength: 10000
 					};
+				}
+
+				if ( ve.ui.CodeMirrorAction.static.isLineNumbering() ) {
+					$.extend( cmOptions, {
+						// Set up a special "padding" gutter to create space between the line numbers
+						// and page content.  The first column name is a magic constant which causes
+						// the built-in line number gutter to appear in the desired, leftmost position.
+						gutters: [
+							'CodeMirror-linenumbers',
+							'CodeMirror-linenumber-padding'
+						],
+						lineNumbers: true
+					} );
 				}
 
 				surface.mirror = CodeMirror( surfaceView.$element[ 0 ], cmOptions );

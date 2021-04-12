@@ -24,6 +24,11 @@
 			"value": false,
 			"description": "Temporary feature flag for accessibility colors.",
 			"public": true
+		},
+		"CodeMirrorLineNumberingNamespaces": {
+			"value": [ 10 ],
+			"description": "List of namespace IDs where line numbering should be enabled, or `null` to enable for all namespaces.  Defaults to the `Template` namespace.",
+			"public": true
 		}
 	},
 	"MessagesDirs": {
