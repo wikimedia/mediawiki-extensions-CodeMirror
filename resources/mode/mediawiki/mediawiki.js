@@ -200,6 +200,9 @@
 					state.tokenize = state.stack.pop();
 					return makeLocalStyle( 'mw-template-bracket', state, 'nTemplate' );
 				}
+				if ( stream.match( /^[\s\u00a0]*<!--.*?-->/ ) ) {
+					return makeLocalStyle( 'mw-comment', state );
+				}
 				if ( haveAte && stream.sol() ) {
 					// @todo error message
 					state.nTemplate--;
