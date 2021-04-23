@@ -159,6 +159,9 @@
 			} ) &&
 			// Must be empty at the end, i.e. all elements must have been found and removed
 			!config.currentMarks.length;
+
+		// Restore config.currentMarks after the loop above destroyed the original. This is done for
+		// performance reasons to avoid the need for an (expensive) copy.
 		config.currentMarks = marks;
 		return same;
 	}
@@ -247,7 +250,10 @@
     if (!autoclear && config.currentlyHighlighted) {
       config.currentlyHighlighted();
       config.currentlyHighlighted = null;
+      // Backup of the new mark positions must be done after the clear above
+      config.currentMarks = markPositions;
     }
+
     for (i = 0; i < markPositions.length; i++) {
       marks.push(cm.markText(
         markPositions[i].from,
