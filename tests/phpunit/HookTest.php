@@ -3,6 +3,7 @@
 namespace CodeMirror\Tests;
 
 use CodeMirrorHooks;
+use MediaWiki\MediaWikiServices;
 use MediaWikiTestCase;
 use RequestContext;
 
@@ -41,7 +42,8 @@ class HookTest extends MediaWikiTestCase {
 	public function testPreferenceRegistered() {
 		$user = self::getTestUser()->getUser();
 		$this->setMwGlobals( 'wgTitle', \Title::newFromText( __METHOD__ ) );
-		$kinds = $user->getOptionKinds( RequestContext::getMain(), [ 'usecodemirror' => 1 ] );
+		$kinds = MediaWikiServices::getInstance()->getUserOptionsManager()
+			->getOptionKinds( $user, RequestContext::getMain(), [ 'usecodemirror' => 1 ] );
 		self::assertEquals( 'registered', $kinds['usecodemirror'] );
 	}
 }
