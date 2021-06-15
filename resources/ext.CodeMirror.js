@@ -1,21 +1,15 @@
 ( function () {
-	var useCodeMirror, codeMirror, api, originHooksTextarea, cmTextSelection,
-		$textbox1,
-		// Keep these modules in sync with CodeMirrorHooks.php
-		codeMirrorCoreModules = [
-			'ext.CodeMirror.lib',
-			'ext.CodeMirror.mode.mediawiki'
-		];
+	var codeMirror, $textbox1;
 
 	// Exit if WikiEditor is disabled
 	if ( !mw.loader.getState( 'ext.wikiEditor' ) ) {
 		return;
 	}
 
-	useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
-	api = new mw.Api();
+	var useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
+	var api = new mw.Api();
 
-	originHooksTextarea = $.valHooks.textarea;
+	var originHooksTextarea = $.valHooks.textarea;
 	// define jQuery hook for searching and replacing text using JS if CodeMirror is enabled, see Bug: T108711
 	$.valHooks.textarea = {
 		get: function ( elem ) {
@@ -38,7 +32,7 @@
 
 	// jQuery.textSelection overrides for CodeMirror.
 	// See jQuery.textSelection.js for method documentation
-	cmTextSelection = {
+	var cmTextSelection = {
 		getContents: function () {
 			return codeMirror.doc.getValue();
 		},
@@ -90,7 +84,7 @@
 	/**
 	 * TODO: remove once line numbering is fully deployed. (TBD: task)
 	 *
-	 * @return bool
+	 * @return {boolean}
 	 */
 	function isLineNumbering() {
 		var lineNumberingNamespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
@@ -101,6 +95,12 @@
 			return lineNumberingNamespaces.indexOf( mw.config.get( 'wgNamespaceNumber' ) ) !== -1;
 		}
 	}
+
+	// Keep these modules in sync with CodeMirrorHooks.php
+	var codeMirrorCoreModules = [
+		'ext.CodeMirror.lib',
+		'ext.CodeMirror.mode.mediawiki'
+	];
 
 	/**
 	 * Replaces the default textarea with CodeMirror

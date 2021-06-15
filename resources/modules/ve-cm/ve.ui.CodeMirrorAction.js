@@ -35,7 +35,7 @@ ve.ui.CodeMirrorAction.static.methods = [ 'toggle' ];
 /**
  * TODO: remove once line numbering is fully deployed. (TBD: task)
  *
- * @return bool
+ * @return {boolean}
  */
 ve.ui.CodeMirrorAction.static.isLineNumbering = function () {
 	var lineNumberingNamespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
@@ -53,12 +53,10 @@ ve.ui.CodeMirrorAction.static.isLineNumbering = function () {
  * @return {boolean} Action was executed
  */
 ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
-	var profile, supportsTransparentText, mirrorElement, tabSizeValue,
-		action = this,
+	var action = this,
 		surface = this.surface,
 		surfaceView = surface.getView(),
-		doc = surface.getModel().getDocument(),
-		updateGutter;
+		doc = surface.getModel().getDocument();
 
 	if ( !surface.mirror && enable !== false ) {
 		surface.mirror = true;
@@ -75,13 +73,12 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 				return;
 			}
 			mw.loader.using( config.pluginModules, function () {
-				var cmOptions;
 				if ( !surface.mirror ) {
 					// Action was toggled to false since promise started
 					return;
 				}
-				tabSizeValue = surfaceView.documentView.documentNode.$element.css( 'tab-size' );
-				cmOptions = {
+				var tabSizeValue = surfaceView.documentView.documentNode.$element.css( 'tab-size' );
+				var cmOptions = {
 					value: surface.getDom(),
 					mwConfig: config,
 					readOnly: 'nocursor',
@@ -128,8 +125,8 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 					surfaceView.$element.addClass( 'cm-mw-accessible-colors' );
 				}
 
-				profile = $.client.profile();
-				supportsTransparentText = 'WebkitTextFillColor' in document.body.style &&
+				var profile = $.client.profile();
+				var supportsTransparentText = 'WebkitTextFillColor' in document.body.style &&
 					// Disable on Firefox+OSX (T175223)
 					!( profile.layout === 'gecko' && profile.platform === 'mac' );
 
@@ -141,7 +138,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 
 				if ( cmOptions.lineNumbers ) {
 					// Transfer gutter width to VE overlay.
-					updateGutter = function ( cmDisplay ) {
+					var updateGutter = function ( cmDisplay ) {
 						surfaceView.$documentNode.css( 'margin-left', cmDisplay.gutters.offsetWidth );
 					};
 					CodeMirror.on( surface.mirror.display, 'updateGutter', updateGutter );
@@ -185,7 +182,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 			// Reset gutter.
 			surfaceView.$documentNode.css( 'margin-left', '' );
 
-			mirrorElement = surface.mirror.getWrapperElement();
+			var mirrorElement = surface.mirror.getWrapperElement();
 			mirrorElement.parentNode.removeChild( mirrorElement );
 		}
 
@@ -230,8 +227,7 @@ ve.ui.CodeMirrorAction.prototype.onLangChange = function () {
  * @param {ve.dm.Transaction} tx
  */
 ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
-	var i,
-		offset = 0,
+	var offset = 0,
 		replacements = [],
 		action = this,
 		store = this.surface.getModel().getDocument().getStore(),
@@ -252,7 +248,7 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 	} );
 
 	// Apply replacements in reverse to avoid having to shift offsets
-	for ( i = replacements.length - 1; i >= 0; i-- ) {
+	for ( var i = replacements.length - 1; i >= 0; i-- ) {
 		mirror.replaceRange(
 			replacements[ i ].data,
 			replacements[ i ].start,
