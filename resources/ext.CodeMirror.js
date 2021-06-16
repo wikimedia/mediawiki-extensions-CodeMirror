@@ -179,6 +179,8 @@
 			if ( mw.config.get( 'wgCodeMirrorAccessibilityColors' ) ) {
 				$codeMirror.addClass( 'cm-mw-accessible-colors' );
 			}
+
+			mw.hook( 'ext.CodeMirror.switch' ).fire( true, $codeMirror );
 		} );
 	}
 
@@ -237,6 +239,8 @@
 			$textbox1.prop( 'selectionStart', selectionStart );
 			$textbox1.prop( 'selectionEnd', selectionEnd );
 			$textbox1.scrollTop( scrollTop );
+
+			mw.hook( 'ext.CodeMirror.switch' ).fire( false, $textbox1 );
 		} else {
 			enableCodeMirror();
 			setCodeEditorPreference( true );
