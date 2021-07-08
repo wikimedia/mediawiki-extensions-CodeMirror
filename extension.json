@@ -165,6 +165,9 @@
 		"localBasePath": "resources",
 		"remoteExtPath": "CodeMirror/resources"
 	},
+	"DefaultUserOptions": {
+		"usecodemirror": 0
+	},
 	"QUnitTestModule": {
 		"localBasePath": "",
 		"remoteExtPath": "CodeMirror",
