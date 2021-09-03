@@ -82,18 +82,18 @@
 	}
 
 	/**
-	 * TODO: remove once line numbering is fully deployed. (TBD: task)
-	 *
 	 * @return {boolean}
 	 */
 	function isLineNumbering() {
-		var lineNumberingNamespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
-
-		if ( lineNumberingNamespaces === null ) {
-			return true;
-		} else {
-			return lineNumberingNamespaces.indexOf( mw.config.get( 'wgNamespaceNumber' ) ) !== -1;
+		// T285660: Backspace related bug on Android browsers as of 2021
+		if ( /Android\b/.test( navigator.userAgent ) ) {
+			return false;
 		}
+
+		var namespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
+		// Set to [] to disable everywhere, or null to enable everywhere
+		return !namespaces ||
+			namespaces.indexOf( mw.config.get( 'wgNamespaceNumber' ) ) !== -1;
 	}
 
 	// Keep these modules in sync with CodeMirrorHooks.php

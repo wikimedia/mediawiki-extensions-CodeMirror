@@ -33,18 +33,18 @@ ve.ui.CodeMirrorAction.static.methods = [ 'toggle' ];
 /* Methods */
 
 /**
- * TODO: remove once line numbering is fully deployed. (TBD: task)
- *
  * @return {boolean}
  */
 ve.ui.CodeMirrorAction.static.isLineNumbering = function () {
-	var lineNumberingNamespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
-
-	if ( lineNumberingNamespaces === null ) {
-		return true;
-	} else {
-		return lineNumberingNamespaces.indexOf( mw.config.get( 'wgNamespaceNumber' ) ) !== -1;
+	// T285660: Backspace related bug on Android browsers as of 2021
+	if ( /Android\b/.test( navigator.userAgent ) ) {
+		return false;
 	}
+
+	var namespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
+	// Set to [] to disable everywhere, or null to enable everywhere
+	return !namespaces ||
+		namespaces.indexOf( mw.config.get( 'wgNamespaceNumber' ) ) !== -1;
 };
 
 /**
