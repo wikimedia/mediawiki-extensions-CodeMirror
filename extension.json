@@ -26,8 +26,8 @@
 			"public": true
 		},
 		"CodeMirrorLineNumberingNamespaces": {
-			"value": [ 10 ],
-			"description": "List of namespace IDs where line numbering should be enabled, or `null` to enable for all namespaces.  Defaults to the `Template` namespace.",
+			"value": null,
+			"description": "List of namespace IDs where line numbering should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere. Defaults to `null` for all namespaces.",
 			"public": true
 		}
 	},
