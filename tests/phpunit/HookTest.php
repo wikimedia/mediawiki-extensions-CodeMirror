@@ -4,13 +4,13 @@ namespace CodeMirror\Tests;
 
 use CodeMirrorHooks;
 use MediaWiki\MediaWikiServices;
-use MediaWikiTestCase;
+use MediaWikiIntegrationTestCase;
 use RequestContext;
 
 /**
  * @group CodeMirror
  */
-class HookTest extends MediaWikiTestCase {
+class HookTest extends MediaWikiIntegrationTestCase {
 
 	/**
 	 * @covers \CodeMirrorHooks::isCodeMirrorOnPage
