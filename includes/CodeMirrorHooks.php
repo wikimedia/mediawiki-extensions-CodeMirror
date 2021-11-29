@@ -16,8 +16,9 @@ class CodeMirrorHooks {
 		if ( in_array( 'ext.codeEditor', $out->getModules() ) ) {
 			return false;
 		}
+		$userOptionsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
 		// Disable CodeMirror when the WikiEditor toolbar is not enabled in preferences
-		if ( !$out->getUser()->getOption( 'usebetatoolbar' ) ) {
+		if ( !$userOptionsLookup->getOption( $out->getUser(), 'usebetatoolbar' ) ) {
 			return false;
 		}
 		$context = $out->getContext();
@@ -38,7 +39,8 @@ class CodeMirrorHooks {
 		if ( self::isCodeMirrorOnPage( $out ) ) {
 			$out->addModules( 'ext.CodeMirror' );
 
-			if ( $out->getUser()->getOption( 'usecodemirror' ) ) {
+			$userOptionsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
+			if ( $userOptionsLookup->getOption( $out->getUser(), 'usecodemirror' ) ) {
 				// These modules are predelivered for performance when needed
 				// keep these modules in sync with ext.CodeMirror.js
 				$out->addModules( [ 'ext.CodeMirror.lib', 'ext.CodeMirror.mode.mediawiki' ] );

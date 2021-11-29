@@ -4,6 +4,7 @@ namespace CodeMirror\Tests;
 
 use CodeMirrorHooks;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\User\UserOptionsLookup;
 use MediaWikiIntegrationTestCase;
 use RequestContext;
 
@@ -25,7 +26,9 @@ class HookTest extends MediaWikiIntegrationTestCase {
 		$context->method( 'getTitle' )->willReturn( $wikiPage->getTitle() );
 
 		$user = $this->createMock( \User::class );
-		$user->method( 'getOption' )->willReturn( true );
+		$userOptionsLookup = $this->createMock( UserOptionsLookup::class );
+		$userOptionsLookup->method( 'getOption' )->willReturn( true );
+		$this->setService( 'UserOptionsLookup', $userOptionsLookup );
 
 		$out = $this->createMock( \OutputPage::class );
 		$out->method( 'getModules' )->willReturn( [] );
