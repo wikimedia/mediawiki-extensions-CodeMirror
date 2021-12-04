@@ -28,7 +28,7 @@
 				u: true, font: true, big: true, small: true, sub: true, sup: true,
 				h1: true, h2: true, h3: true, h4: true, h5: true, h6: true, cite: true,
 				code: true, em: true, s: true, strike: true, strong: true, tt: true,
-				var: true, div: true, center: true, blockquote: true, ol: true, ul: true,
+				var: true, div: true, center: true, blockquote: true, q: true, ol: true, ul: true,
 				dl: true, table: true, caption: true, pre: true, ruby: true, rb: true,
 				rp: true, rt: true, rtc: true, p: true, span: true, abbr: true, dfn: true,
 				kbd: true, samp: true, data: true, time: true, mark: true, br: true,
