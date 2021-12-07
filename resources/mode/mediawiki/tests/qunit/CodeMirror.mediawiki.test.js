@@ -121,7 +121,7 @@
 		var $textarea = $( '<textarea>' );
 
 		$textarea.val( wikitext );
-		$( document.body ).append( $textarea );
+		$( '#qunit-fixture' ).append( $textarea );
 
 		CodeMirror.fromTextArea( $textarea[ 0 ], {
 			mwConfig: config,
@@ -136,7 +136,7 @@
 
 		// Tear down.
 		$textarea.remove();
-		$( '.CodeMirror-code' ).remove();
+		$( '#qunit-fixture' ).find( '.CodeMirror' ).remove();
 	}
 
 	testCases.forEach( function ( testCase ) {
