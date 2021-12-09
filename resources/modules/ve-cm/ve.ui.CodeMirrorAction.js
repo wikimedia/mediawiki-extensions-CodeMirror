@@ -260,8 +260,8 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 	// correctly when expanding from less than the viewport height.  (T185184)
 	if ( mirror.display.sizer.style.minHeight !== this.lastHeight ) {
 		mirror.refresh();
+		this.lastHeight = mirror.display.sizer.style.minHeight;
 	}
-	this.lastHeight = mirror.display.sizer.style.minHeight;
 };
 
 /**

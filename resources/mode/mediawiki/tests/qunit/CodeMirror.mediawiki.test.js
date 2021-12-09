@@ -9,6 +9,7 @@
 	 * @type {Object}
 	 */
 	var config = mw.config.get( 'extCodeMirrorConfig' ),
+		extCiteLoaded = config.tagModes.ref,
 		testCases = [
 			{
 				title: 'p tags, extra closing tag',
@@ -18,7 +19,9 @@
 			{
 				title: 'HTML and ref tag attributes',
 				input: '<span title="a>b"><ref name="a>b"/></span>',
-				output: '<pre class=" CodeMirror-line " role="presentation"><span role="presentation"><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">span </span><span class="cm-mw-htmltag-attribute">title="a&gt;b"</span><span class="cm-mw-htmltag-bracket">&gt;</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref </span><span class="cm-mw-exttag-attribute cm-mw-ext-ref">name="a&gt;b"</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">/&gt;</span><span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">span</span><span class="cm-mw-htmltag-bracket">&gt;</span></span></pre>'
+				output: extCiteLoaded ?
+					'<pre class=" CodeMirror-line " role="presentation"><span role="presentation"><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">span </span><span class="cm-mw-htmltag-attribute">title="a&gt;b"</span><span class="cm-mw-htmltag-bracket">&gt;</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref </span><span class="cm-mw-exttag-attribute cm-mw-ext-ref">name="a&gt;b"</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">/&gt;</span><span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">span</span><span class="cm-mw-htmltag-bracket">&gt;</span></span></pre>' :
+					'<pre class=" CodeMirror-line " role="presentation"><span role="presentation"><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">span </span><span class="cm-mw-htmltag-attribute">title="a&gt;b"</span><span class="cm-mw-htmltag-bracket">&gt;</span>&lt;ref name="a&gt;b"/&gt;<span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">span</span><span class="cm-mw-htmltag-bracket">&gt;</span></span></pre>'
 			},
 			{
 				title: 'indented table with caption and inline headings',
@@ -53,7 +56,7 @@
 			{
 				title: 'ref tag with cite web, extraneous curly braces',
 				input: '<ref>{{cite web|2=foo}}}}</ref>',
-				output: mw.loader.getState( 'ext.cite.styles' ) ?
+				output: extCiteLoaded ?
 					'<pre class=" CodeMirror-line " role="presentation"><span role="presentation"><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-bracket">{{</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-name cm-mw-pagename">cite web</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-delimiter">|</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-argument-name">2=</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template">foo</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-bracket">}}</span><span class="cm-mw-tag-ref ">}}</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;</span></span></pre>' :
 					'<pre class=" CodeMirror-line " role="presentation"><span role="presentation">&lt;ref&gt;<span class="cm-mw-template-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template-ground cm-mw-template-name cm-mw-pagename">cite web</span><span class="cm-mw-template-ground cm-mw-template-delimiter">|</span><span class="cm-mw-template-ground cm-mw-template-argument-name">2=</span><span class="cm-mw-template-ground cm-mw-template">foo</span><span class="cm-mw-template-ground cm-mw-template-bracket">}}</span>}}&lt;/ref&gt;</span></pre>'
 			},
@@ -100,7 +103,7 @@
 			{
 				title: 'new',
 				input: '<ref></Ref>',
-				output: mw.loader.getState( 'ext.cite.styles' ) ?
+				output: extCiteLoaded ?
 					'<pre class=" CodeMirror-line " role="presentation"><span role="presentation"><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-Ref">Ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-Ref">&gt;</span></span></pre>' :
 					'<pre class=" CodeMirror-line " role="presentation"><span role="presentation">&lt;ref&gt;&lt;/Ref&gt;</span></pre>'
 			}
