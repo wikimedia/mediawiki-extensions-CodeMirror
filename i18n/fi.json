@@ -2,8 +2,10 @@
 	"@metadata": {
 		"authors": [
 			"Nike",
-			"Pyscowicz"
+			"Pyscowicz",
+			"01miki10"
 		]
 	},
+	"codemirror-desc": "Lisää syntaksin korostuksen wikitekstin muokkaimeen",
 	"codemirror-toggle-label": "Syntaksin korostus"
 }

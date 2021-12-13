@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"McDutchie"
+		]
+	},
+	"codemirror-desc": "Forni coloration syntactic in le editor de wikitexto",
+	"codemirror-toggle-label": "Coloration syntactic"
+}

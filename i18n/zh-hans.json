@@ -1,9 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Liuxinyu970226"
+			"Liuxinyu970226",
+			"Tranve"
 		]
 	},
-	"codemirror-desc": "在wiki文本编辑器中提供语法高亮显示",
+	"codemirror-desc": "在wikitext编辑器中提供语法高亮显示",
 	"codemirror-toggle-label": "语法高亮"
 }

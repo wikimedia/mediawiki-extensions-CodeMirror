@@ -2,9 +2,10 @@
 	"@metadata": {
 		"authors": [
 			"BaRaN6161 TURK",
-			"Diyapazon"
+			"Diyapazon",
+			"Vito Genovese"
 		]
 	},
-	"codemirror-desc": "Vikimetin düzenleyicide sözdizimi vurgulaması sağlar",
-	"codemirror-toggle-label": "Sözdizimi vurgulama"
+	"codemirror-desc": "Vikimetin düzenleyicide sözdizim vurgulaması sağlar",
+	"codemirror-toggle-label": "Sözdizim vurgulama"
 }
