@@ -15,6 +15,7 @@ describe( 'CodeMirror bracket match default', function () {
 
 	it( 'disables highlighting', function () {
 		EditPage.openForEditing( this.title );
+		EditPage.wikiEditorToolbar.waitForDisplayed();
 		EditPage.clickText();
 
 		EditPage.cursorToPosition( 0 );
