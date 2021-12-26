@@ -35,14 +35,17 @@
     return config && config.bracketRegex || /[(){}[\]]/
   }
 
-	var surroundingBrackets = {
+  function surroundingBracketsObject(config) {
+    return config && config.surroundingBrackets || {
 		'(': ')',
 		')': false,
 		'[': ']',
 		']': false,
 		'{': '}',
 		'}': false
-	};
+	}
+	  
+  }
 
 	function findSurroundingBrackets( cm, where, config ) {
 		var from, to, ch,
@@ -51,7 +54,8 @@
 			line = cm.getLine( lineNo ),
 			pos = where.ch,
 			maxScanLen = ( config && config.maxScanLineLength ) || 10000,
-			maxScanLines = ( config && config.maxScanLines ) || 1000;
+			maxScanLines = ( config && config.maxScanLines ) || 1000,
+		    	surroundingBrackets = surroundingBracketsObject(config);
 
 		// Check the limit for the current line
 		if ( line.length > maxScanLen ) {
