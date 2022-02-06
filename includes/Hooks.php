@@ -1,8 +1,16 @@
 <?php
 
-use MediaWiki\MediaWikiServices;
+namespace MediaWiki\Extension\CodeMirror;
 
-class CodeMirrorHooks {
+use Action;
+use Config;
+use MediaWiki\MediaWikiServices;
+use OutputPage;
+use RequestContext;
+use Skin;
+use User;
+
+class Hooks {
 
 	/**
 	 * Checks if CodeMirror for textarea wikitext editor should be loaded on this page or not.

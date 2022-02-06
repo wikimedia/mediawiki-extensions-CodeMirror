@@ -36,9 +36,8 @@
 			"i18n"
 		]
 	},
-	"AutoloadClasses": {
-		"CodeMirrorHooks": "includes/CodeMirrorHooks.php",
-		"ResourceLoaderCodeMirrorModule": "includes/ResourceLoaderCodeMirrorModule.php"
+	"AutoloadNamespaces": {
+		"MediaWiki\\Extension\\CodeMirror\\": "includes/"
 	},
 	"ResourceModules": {
 		"ext.CodeMirror": {
@@ -62,7 +61,7 @@
 			]
 		},
 		"ext.CodeMirror.data": {
-			"class": "ResourceLoaderCodeMirrorModule"
+			"class": "MediaWiki\\Extension\\CodeMirror\\ResourceLoaderCodeMirrorModule"
 		},
 		"ext.CodeMirror.lib": {
 			"scripts": [
@@ -181,9 +180,9 @@
 		]
 	},
 	"Hooks": {
-		"BeforePageDisplay": "CodeMirrorHooks::onBeforePageDisplay",
-		"GetPreferences": "CodeMirrorHooks::onGetPreferences",
-		"ResourceLoaderGetConfigVars": "CodeMirrorHooks::onResourceLoaderGetConfigVars"
+		"BeforePageDisplay": "MediaWiki\\Extension\\CodeMirror\\Hooks::onBeforePageDisplay",
+		"GetPreferences": "MediaWiki\\Extension\\CodeMirror\\Hooks::onGetPreferences",
+		"ResourceLoaderGetConfigVars": "MediaWiki\\Extension\\CodeMirror\\Hooks::onResourceLoaderGetConfigVars"
 	},
 	"attributes": {
 		"CodeMirror": {

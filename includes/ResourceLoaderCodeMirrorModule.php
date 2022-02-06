@@ -20,7 +20,13 @@
  * @file
  */
 
+namespace MediaWiki\Extension\CodeMirror;
+
+use ExtensionRegistry;
 use MediaWiki\MediaWikiServices;
+use ResourceLoader;
+use ResourceLoaderContext;
+use ResourceLoaderFileModule;
 
 /**
  * ResourceLoader module for ext.CodeMirror

@@ -1,8 +1,8 @@
 <?php
 
-namespace CodeMirror\Tests;
+namespace MediaWiki\Extension\CodeMirror\Tests;
 
-use CodeMirrorHooks;
+use MediaWiki\Extension\CodeMirror\Hooks;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\User\UserOptionsLookup;
 use MediaWikiIntegrationTestCase;
@@ -14,8 +14,8 @@ use RequestContext;
 class HookTest extends MediaWikiIntegrationTestCase {
 
 	/**
-	 * @covers \CodeMirrorHooks::isCodeMirrorOnPage
-	 * @covers \CodeMirrorHooks::onBeforePageDisplay
+	 * @covers \MediaWiki\Extension\CodeMirror\Hooks::isCodeMirrorOnPage
+	 * @covers \MediaWiki\Extension\CodeMirror\Hooks::onBeforePageDisplay
 	 */
 	public function testOnBeforePageDisplay() {
 		$wikiPage = new \WikiPage( \Title::makeTitle( NS_MAIN, __METHOD__ ) );
@@ -36,11 +36,11 @@ class HookTest extends MediaWikiIntegrationTestCase {
 		$out->method( 'getUser' )->willReturn( $user );
 		$out->expects( $this->exactly( 2 ) )->method( 'addModules' );
 
-		CodeMirrorHooks::onBeforePageDisplay( $out, $this->createMock( \Skin::class ) );
+		Hooks::onBeforePageDisplay( $out, $this->createMock( \Skin::class ) );
 	}
 
 	/**
-	 * @covers \CodeMirrorHooks::onGetPreferences
+	 * @covers \MediaWiki\Extension\CodeMirror\Hooks::onGetPreferences
 	 */
 	public function testPreferenceRegistered() {
 		$user = self::getTestUser()->getUser();
