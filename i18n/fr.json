@@ -4,9 +4,10 @@
 			"Gomoko",
 			"Thibaut120094",
 			"Trizek (WMF)",
+			"Verdy p",
 			"Wladek92"
 		]
 	},
-	"codemirror-desc": "Fournit une mise en évidence de la syntaxe dans l’éditeur wikitexte",
+	"codemirror-desc": "Fournit une mise en évidence de la syntaxe dans l’éditeur de wikitexte",
 	"codemirror-toggle-label": "Colorisation syntaxique"
 }
