@@ -103,6 +103,55 @@
 	];
 
 	/**
+	 * Set the size of the CodeMirror element,
+	 * and react to changes coming from WikiEditor (including Realtime Preview if its enabled).
+	 */
+	function setupSizing() {
+		var $codeMirror = $( codeMirror.getWrapperElement() );
+
+		// Only add jQuery UI's resizing corner if realtime preview is not enabled,
+		// because that feature provides height resizing (even when preview isn't used).
+		if ( mw.loader.getState( 'ext.wikiEditor.realtimepreview' ) === 'ready' ) {
+			codeMirror.setSize( '100%', $textbox1.parent().height() );
+		} else {
+			// RL module jquery.ui
+			$codeMirror.resizable( {
+				handles: 'se',
+				resize: function ( event, ui ) {
+					ui.size.width = ui.originalSize.width;
+				}
+			} );
+			// Match the height of the textarea.
+			codeMirror.setSize( null, $textbox1.height() );
+		}
+		var $resizableHandle = $codeMirror.find( '.ui-resizable-handle' );
+		mw.hook( 'ext.WikiEditor.realtimepreview.enable' ).add( function ( realtimePreview ) {
+			// CodeMirror may have been turned on and then off again before realtimepreview is enabled, in which case it will be null.
+			if ( !codeMirror ) {
+				return;
+			}
+			// Get rid of the corner resize handle, because realtimepreview provides its own.
+			$resizableHandle.hide();
+			// Add listener for CodeMirror keyups.
+			realtimePreview.addPreviewListener( $codeMirror );
+			// Fix the width and height of the CodeMirror area.
+			codeMirror.setSize( '100%', realtimePreview.twoPaneLayout.$element.height() );
+		} );
+		mw.hook( 'ext.WikiEditor.realtimepreview.resize' ).add( function ( resizingBar ) {
+			// CodeMirror may have been turned off after realtimepreview was opened, in which case it will be null.
+			if ( !codeMirror ) {
+				return;
+			}
+			// Keep in sync with the height of the pane.
+			codeMirror.setSize( '100%', resizingBar.getResizedPane().height() );
+		} );
+		mw.hook( 'ext.WikiEditor.realtimepreview.disable' ).add( function () {
+			// Re-show the corner resize handle.
+			$resizableHandle.show();
+		} );
+	}
+
+	/**
 	 * Replaces the default textarea with CodeMirror
 	 */
 	function enableCodeMirror() {
@@ -168,13 +217,7 @@
 			// CodeMirror. We unregister this when switching to normal textarea mode.
 			$textbox1.textSelection( 'register', cmTextSelection );
 
-			// RL module jquery.ui
-			$codeMirror.resizable( {
-				handles: 'se',
-				resize: function ( event, ui ) {
-					ui.size.width = ui.originalSize.width;
-				}
-			} );
+			setupSizing( $textbox1, codeMirror );
 
 			if ( hasFocus ) {
 				codeMirror.focus();
@@ -199,9 +242,6 @@
 				.attr( 'accesskey', $textbox1.attr( 'accesskey' ) )
 				// T194102: UniversalLanguageSelector integration is buggy, disabling it completely
 				.addClass( 'noime' );
-
-			// set the height of the textarea
-			codeMirror.setSize( null, $textbox1.height() );
 
 			if ( mw.config.get( 'wgCodeMirrorAccessibilityColors' ) ) {
 				$codeMirror.addClass( 'cm-mw-accessible-colors' );
