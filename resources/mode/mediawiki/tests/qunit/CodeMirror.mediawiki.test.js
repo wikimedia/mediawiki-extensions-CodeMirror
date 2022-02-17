@@ -76,6 +76,11 @@
 				output: '<pre class=" cm-mw-section-2 CodeMirror-line "><span><span class="cm-mw-section-header">==</span> My section <span class="cm-mw-section-header">==</span></span></pre><pre><span>Foo bar</span></pre><pre class=" cm-mw-section-3 CodeMirror-line "><span><span class="cm-mw-section-header">===</span> Blah <span class="cm-mw-section-header">===</span></span></pre><pre><span>Baz</span></pre>'
 			},
 			{
+				title: 'section headings with trailing comments',
+				input: '== My section == <!-- comment --> \nFoo bar\n=== Blah ===<!--comment-->\nBaz\n== <i>a</i> <!-- comment --> == <!--comment-->',
+				output: '<pre class=" cm-mw-section-2 CodeMirror-line "><span><span class="cm-mw-section-header">==</span> My section <span class="cm-mw-section-header">== </span><span class="cm-mw-comment">&lt;!-- comment --&gt;</span> </span></pre><pre><span>Foo bar</span></pre><pre class=" cm-mw-section-3 CodeMirror-line "><span><span class="cm-mw-section-header">===</span> Blah <span class="cm-mw-section-header">===</span><span class="cm-mw-comment">&lt;!--comment--&gt;</span></span></pre><pre><span>Baz</span></pre><pre class=" cm-mw-section-2 CodeMirror-line "><span><span class="cm-mw-section-header">==</span> <span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">i</span><span class="cm-mw-htmltag-bracket">&gt;</span>a<span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">i</span><span class="cm-mw-htmltag-bracket">&gt;</span> <span class="cm-mw-comment">&lt;!-- comment --&gt;</span> <span class="cm-mw-section-header">== </span><span class="cm-mw-comment">&lt;!--comment--&gt;</span></span></pre>'
+			},
+			{
 				title: 'bullets and numbering, with invalid leading spacing',
 				input: '* bullet A\n* bullet B\n# one\n # two',
 				output: '<pre><span><span class="cm-mw-list">*</span> bullet A</span></pre><pre><span><span class="cm-mw-list">*</span> bullet B</span></pre><pre><span><span class="cm-mw-list">#</span> one</span></pre><pre><span><span class="cm-mw-skipformatting"> </span># two</span></pre>'
