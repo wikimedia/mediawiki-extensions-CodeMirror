@@ -1,12 +1,12 @@
 <?php
 
-namespace CodeMirror\Tests;
+namespace MediaWiki\Extension\CodeMirror\Tests;
 
-use ResourceLoaderCodeMirrorModule;
+use MediaWiki\Extension\CodeMirror\ResourceLoaderCodeMirrorModule;
 use ResourceLoaderContext;
 
 /**
- * @covers \ResourceLoaderCodeMirrorModule
+ * @covers \MediaWiki\Extension\CodeMirror\ResourceLoaderCodeMirrorModule
  */
 class ResourceLoaderCodeMirrorModuleTest extends \MediaWikiIntegrationTestCase {
 
