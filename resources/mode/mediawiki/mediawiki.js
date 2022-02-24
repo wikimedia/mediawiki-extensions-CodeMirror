@@ -394,17 +394,7 @@
 					chars--;
 					name = name + stream.next();
 				}
-				if ( stream.eol() ) {
-					// @todo error message
-					state.tokenize = state.stack.pop();
-					return makeLocalStyle( ( isHtmlTag ? 'mw-htmltag-name' : 'mw-exttag-name' ), state );
-				}
 				stream.eatSpace();
-				if ( stream.eol() ) {
-					// @todo error message
-					state.tokenize = state.stack.pop();
-					return makeLocalStyle( ( isHtmlTag ? 'mw-htmltag-name' : 'mw-exttag-name' ), state );
-				}
 
 				if ( isHtmlTag ) {
 					if ( isCloseTag && !( name in voidHtmlTags ) ) {
