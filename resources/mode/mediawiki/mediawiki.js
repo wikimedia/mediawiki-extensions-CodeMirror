@@ -299,7 +299,7 @@
 				state.tokenize = state.stack.pop();
 				return makeLocalStyle( 'mw-extlink-bracket', state, 'nLink' );
 			}
-			if ( stream.match( /^[^'\]{&~]+/ ) ) {
+			if ( stream.match( /^[^'\]{&~<]+/ ) ) {
 				return makeStyle( 'mw-extlink-text', state );
 			}
 			return eatWikiText( 'mw-extlink-text', '' )( stream, state );
@@ -380,7 +380,7 @@
 				if ( linkIsItalic ) {
 					tmpstyle += ' em';
 				}
-				if ( stream.match( /^[^'\]{&~]+/ ) ) {
+				if ( stream.match( /^[^'\]{&~<]+/ ) ) {
 					return makeStyle( tmpstyle, state );
 				}
 				return eatWikiText( tmpstyle, '' )( stream, state );
