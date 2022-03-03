@@ -15,6 +15,7 @@
  * - Changed the class name `CodeMirror-matchingbracket` to `cm-mw-matchingbracket`. This is
  *   necessary to get rid of the "default styles for common addons" from codemirror.css (T270926).
  */
+/* eslint-disable */
 
 (function(mod) {
   if (typeof exports == "object" && typeof module == "object") // CommonJS
@@ -35,136 +36,138 @@
     return config && config.bracketRegex || /[(){}[\]]/
   }
 
-	var surroundingBrackets = {
-		'(': ')',
-		')': false,
-		'[': ']',
-		']': false,
-		'{': '}',
-		'}': false
-	};
+  /* eslint-enable */
+  var surroundingBrackets = {
+    '(': ')',
+    ')': false,
+    '[': ']',
+    ']': false,
+    '{': '}',
+    '}': false
+  };
 
-	function findSurroundingBrackets( cm, where, config ) {
-		var from, to, ch,
-			nestedBracketsToSkip = 0,
-			lineNo = where.line,
-			line = cm.getLine( lineNo ),
-			pos = where.ch,
-			maxScanLen = ( config && config.maxScanLineLength ) || 10000,
-			maxScanLines = ( config && config.maxScanLines ) || 1000;
+  function findSurroundingBrackets( cm, where, config ) {
+    var from, to, ch,
+      nestedBracketsToSkip = 0,
+      lineNo = where.line,
+      line = cm.getLine( lineNo ),
+      pos = where.ch,
+      maxScanLen = ( config && config.maxScanLineLength ) || 10000,
+      maxScanLines = ( config && config.maxScanLines ) || 1000;
 
-		// Check the limit for the current line
-		if ( line.length > maxScanLen ) {
-			return null;
-		}
+    // Check the limit for the current line
+    if ( line.length > maxScanLen ) {
+      return null;
+    }
 
-		// Search forward
-		while ( true ) {
-			if ( pos >= line.length ) {
-				lineNo++;
-				// Give up when to many lines have been scanned
-				if ( lineNo > cm.lastLine() || lineNo - where.line >= maxScanLines ) {
-					break;
-				}
-				line = cm.getLine( lineNo );
-				// Give up when the next line is to long
-				if ( line.length > maxScanLen ) {
-					return null;
-				}
-				pos = 0;
-				// Continue early to make sure we don't read characters from empty lines
-				continue;
-			}
+    // Search forward
+    while ( true ) {
+      if ( pos >= line.length ) {
+        lineNo++;
+        // Give up when to many lines have been scanned
+        if ( lineNo > cm.lastLine() || lineNo - where.line >= maxScanLines ) {
+          break;
+        }
+        line = cm.getLine( lineNo );
+        // Give up when the next line is to long
+        if ( line.length > maxScanLen ) {
+          return null;
+        }
+        pos = 0;
+        // Continue early to make sure we don't read characters from empty lines
+        continue;
+      }
 
-			ch = line.charAt( pos );
-			if ( ch in surroundingBrackets ) {
-				// Found a closing bracket that's not part of a nested pair
-				if ( !surroundingBrackets[ch] && nestedBracketsToSkip <= 0 ) {
-					to = { pos: Pos( lineNo, pos ), char: ch };
-					break;
-				}
-				nestedBracketsToSkip += surroundingBrackets[ch] ? 1 : -1;
-			}
+      ch = line.charAt( pos );
+      if ( ch in surroundingBrackets ) {
+        // Found a closing bracket that's not part of a nested pair
+        if ( !surroundingBrackets[ch] && nestedBracketsToSkip <= 0 ) {
+          to = { pos: Pos( lineNo, pos ), char: ch };
+          break;
+        }
+        nestedBracketsToSkip += surroundingBrackets[ch] ? 1 : -1;
+      }
 
-			pos++;
-		}
+      pos++;
+    }
 
-		nestedBracketsToSkip = 0;
-		lineNo = where.line;
-		line = cm.getLine( lineNo );
-		pos = where.ch;
+    nestedBracketsToSkip = 0;
+    lineNo = where.line;
+    line = cm.getLine( lineNo );
+    pos = where.ch;
 
-		// Search backwards
-		while ( true ) {
-			pos--;
-			if ( pos < 0 ) {
-				lineNo--;
-				// Give up when to many lines have been scanned
-				if ( lineNo < cm.firstLine() || where.line - lineNo >= maxScanLines ) {
-					break;
-				}
-				line = cm.getLine( lineNo );
-				// Give up when the next line is to long
-				if ( line.length > maxScanLen ) {
-					return null;
-				}
-				pos = line.length;
-				// Continue early to make sure we don't read characters from empty lines
-				continue;
-			}
+    // Search backwards
+    while ( true ) {
+      pos--;
+      if ( pos < 0 ) {
+        lineNo--;
+        // Give up when to many lines have been scanned
+        if ( lineNo < cm.firstLine() || where.line - lineNo >= maxScanLines ) {
+          break;
+        }
+        line = cm.getLine( lineNo );
+        // Give up when the next line is to long
+        if ( line.length > maxScanLen ) {
+          return null;
+        }
+        pos = line.length;
+        // Continue early to make sure we don't read characters from empty lines
+        continue;
+      }
 
-			ch = line.charAt( pos );
-			if ( ch in surroundingBrackets ) {
-				// Found an opening bracket that's not part of a nested pair
-				if ( surroundingBrackets[ch] && nestedBracketsToSkip <= 0 ) {
-					from = { pos: Pos( lineNo, pos ), expectedToChar: surroundingBrackets[ch] };
-					break;
-				}
-				nestedBracketsToSkip += surroundingBrackets[ch] ? -1 : 1;
-			}
-		}
+      ch = line.charAt( pos );
+      if ( ch in surroundingBrackets ) {
+        // Found an opening bracket that's not part of a nested pair
+        if ( surroundingBrackets[ch] && nestedBracketsToSkip <= 0 ) {
+          from = { pos: Pos( lineNo, pos ), expectedToChar: surroundingBrackets[ch] };
+          break;
+        }
+        nestedBracketsToSkip += surroundingBrackets[ch] ? -1 : 1;
+      }
+    }
 
-		if ( from && to ) {
-			return {
-				from: from.pos,
-				to: to.pos,
-				match: from.expectedToChar === to.char
-			};
-		} else if ( from || to ) {
-			return { from: ( from || to ).pos, match: false };
-		}
+    if ( from && to ) {
+      return {
+        from: from.pos,
+        to: to.pos,
+        match: from.expectedToChar === to.char
+      };
+    } else if ( from || to ) {
+      return { from: ( from || to ).pos, match: false };
+    }
 
-		return null;
-	}
+    return null;
+  }
 
-	function stillTheSameMarks( marks, config ) {
-		var same = config.currentMarks &&
-			// No need to compare the details if it's not even the same amount
-			config.currentMarks.length === marks.length &&
-			// We need the flexibility because the order can be closing → opening bracket as well
-			marks.every( function ( mark ) {
-				// These are typically only 2 elements for the opening and closing bracket
-				for ( var i = 0; i < config.currentMarks.length; i++ ) {
-					// Ordered from "most likely to change" to "least likely" for performance
-					if ( config.currentMarks[i].from.ch === mark.from.ch &&
-						config.currentMarks[i].from.line === mark.from.line &&
-						config.currentMarks[i].match === mark.match
-					) {
-						// This assumes all elements are unique, which should be the case
-						config.currentMarks.splice( i, 1 );
-						return true;
-					}
-				}
-				return false;
-			} ) &&
-			// Must be empty at the end, i.e. all elements must have been found and removed
-			!config.currentMarks.length;
+  function stillTheSameMarks( marks, config ) {
+    var same = config.currentMarks &&
+      // No need to compare the details if it's not even the same amount
+      config.currentMarks.length === marks.length &&
+      // We need the flexibility because the order can be closing → opening bracket as well
+      marks.every( function ( mark ) {
+        // These are typically only 2 elements for the opening and closing bracket
+        for ( var i = 0; i < config.currentMarks.length; i++ ) {
+          // Ordered from "most likely to change" to "least likely" for performance
+          if ( config.currentMarks[i].from.ch === mark.from.ch &&
+            config.currentMarks[i].from.line === mark.from.line &&
+            config.currentMarks[i].match === mark.match
+          ) {
+            // This assumes all elements are unique, which should be the case
+            config.currentMarks.splice( i, 1 );
+            return true;
+          }
+        }
+        return false;
+      } ) &&
+      // Must be empty at the end, i.e. all elements must have been found and removed
+      !config.currentMarks.length;
 
-		// Restore config.currentMarks after the loop above destroyed the original. This is done for
-		// performance reasons to avoid the need for an (expensive) copy.
-		config.currentMarks = marks;
-		return same;
-	}
+    // Restore config.currentMarks after the loop above destroyed the original. This is done for
+    // performance reasons to avoid the need for an (expensive) copy.
+    config.currentMarks = marks;
+    return same;
+  }
+  /* eslint-disable */
 
   function findMatchingBracket(cm, where, config) {
     var line = cm.getLineHandle(where.line), pos = where.ch - 1;
@@ -231,8 +234,8 @@
     // Disable brace matching in long lines, since it'll cause hugely slow updates
     var maxHighlightLen = cm.state.matchBrackets.maxHighlightLineLength || 1000,
       highlightNonMatching = config && config.highlightNonMatching;
-    var markPositions = [], marks = [], ranges = cm.listSelections();
-    for (var i = 0; i < ranges.length; i++) {
+    var i, markPositions = [], marks = [], ranges = cm.listSelections();
+    for (i = 0; i < ranges.length; i++) {
       var match = ranges[i].empty() && findMatchingBracket(cm, ranges[i].head, config);
       if (match && (match.match || highlightNonMatching !== false) && cm.getLine(match.from.line).length <= maxHighlightLen) {
         // Note: Modified by WMDE, now uses an intermediate format to delay the actual highlighting
@@ -242,27 +245,29 @@
       }
     }
 
+    /* eslint-enable */
     // There is no config when autoclear is true
-    if (config && stillTheSameMarks(markPositions, config)) {
+    if ( config && stillTheSameMarks( markPositions, config ) ) {
       return;
     }
 
-    if (!autoclear && config.currentlyHighlighted) {
+    if ( !autoclear && config.currentlyHighlighted ) {
       config.currentlyHighlighted();
       config.currentlyHighlighted = null;
       // Backup of the new mark positions must be done after the clear above
       config.currentMarks = markPositions;
     }
 
-    for (i = 0; i < markPositions.length; i++) {
-      marks.push(cm.markText(
+    for ( i = 0; i < markPositions.length; i++ ) {
+      marks.push( cm.markText(
         markPositions[i].from,
         // Note: This assumes there is always exactly 1 character to highlight
-        Pos(markPositions[i].from.line, markPositions[i].from.ch + 1),
+        Pos( markPositions[i].from.line, markPositions[i].from.ch + 1 ),
         // Note: Modified by WMDE to get rid of the library's "default styles for common addons"
-        {className: markPositions[i].match ? 'cm-mw-matchingbracket' : 'CodeMirror-nonmatchingbracket'}
-      ));
+        { className: markPositions[i].match ? 'cm-mw-matchingbracket' : 'CodeMirror-nonmatchingbracket' }
+      ) );
     }
+    /* eslint-disable */
 
     if (marks.length) {
       // Kludge to work around the IE bug from issue #1193, where text
