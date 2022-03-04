@@ -106,6 +106,11 @@
 				output: extCiteLoaded ?
 					'<pre><span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-Ref">Ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-Ref">&gt;</span></span></pre>' :
 					'<pre><span>&lt;ref&gt;&lt;/Ref&gt;</span></pre>'
+			},
+			{
+				title: 'multi-line tag',
+				input: '<div\nid="foo"\n>bar</div>',
+				output: '<pre><span><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">div</span></span></pre><pre><span><span class="cm-mw-htmltag-attribute">id="foo"</span></span></pre><pre><span><span class="cm-mw-htmltag-bracket">&gt;</span>bar<span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">div</span><span class="cm-mw-htmltag-bracket">&gt;</span></span></pre>'
 			}
 		];
 
