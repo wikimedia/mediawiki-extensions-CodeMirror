@@ -19,7 +19,7 @@
 			{
 				title: 'HTML tag attributes',
 				input: '<span title="a<b"><b title="a>b"></b></span>',
-				output: '<pre><span><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">span </span><span class="cm-mw-htmltag-attribute">title="a&lt;b"</span><span class="cm-mw-htmltag-bracket">&gt;&lt;</span><span class="cm-mw-htmltag-name">b </span><span class="cm-mw-htmltag-attribute">title="a&gt;b"</span><span class="cm-mw-htmltag-bracket">&gt;&lt;/</span><span class="cm-mw-htmltag-name">b</span><span class="cm-mw-htmltag-bracket">&gt;&lt;/</span><span class="cm-mw-htmltag-name">span</span><span class="cm-mw-htmltag-bracket">&gt;</span></span></pre>'
+				output: '<pre><span><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">span </span><span class="cm-mw-htmltag-attribute">title="a&lt;b"</span><span class="cm-mw-htmltag-bracket">&gt;&lt;</span><span class="cm-mw-htmltag-name">b </span><span class="cm-mw-htmltag-attribute">title="a</span><span class="cm-mw-htmltag-bracket">&gt;</span>b"&gt;<span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">b</span><span class="cm-mw-htmltag-bracket">&gt;&lt;/</span><span class="cm-mw-htmltag-name">span</span><span class="cm-mw-htmltag-bracket">&gt;</span></span></pre>'
 			},
 			{
 				title: 'ref tag attributes',
