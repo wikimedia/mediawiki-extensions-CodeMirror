@@ -155,6 +155,13 @@
 			codeMirror = CodeMirror.fromTextArea( $textbox1[ 0 ], cmOptions );
 			$codeMirror = $( codeMirror.getWrapperElement() );
 
+			codeMirror.on( 'focus', function () {
+				$textbox1.triggerHandler( 'focus' );
+			} );
+			codeMirror.on( 'blur', function () {
+				$textbox1.triggerHandler( 'blur' );
+			} );
+
 			// Allow textSelection() functions to work with CodeMirror editing field.
 			$codeMirror.textSelection( 'register', cmTextSelection );
 			// Also override textSelection() functions for the "real" hidden textarea to route to
