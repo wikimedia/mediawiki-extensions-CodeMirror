@@ -1,9 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Minh Nguyen"
+			"Minh Nguyen",
+			"NguoiDungKhongDinhDanh"
 		]
 	},
-	"codemirror-desc": "Tô màu cú pháp trong hộp sửa đổi mã wiki",
+	"codemirror-desc": "Tô màu cú pháp trong trình sửa đổi mã wiki",
 	"codemirror-toggle-label": "Tô màu cú pháp"
 }
