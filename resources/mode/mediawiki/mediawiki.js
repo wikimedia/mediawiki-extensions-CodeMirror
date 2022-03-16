@@ -88,14 +88,15 @@
 			return style;
 		}
 
-		function eatBlock( style, terminator ) {
+		function eatBlock( style, terminator, consumeLast ) {
 			return function ( stream, state ) {
-				while ( !stream.eol() ) {
-					if ( stream.match( terminator ) ) {
-						state.tokenize = state.stack.pop();
-						break;
+				if ( stream.skipTo( terminator ) ) {
+					if ( consumeLast !== false ) {
+						stream.match( terminator );
 					}
-					stream.next();
+					state.tokenize = state.stack.pop();
+				} else {
+					stream.skipToEnd();
 				}
 				return makeLocalStyle( style, state );
 			};
@@ -125,6 +126,10 @@
 					if ( stream.eol() ) {
 						stream.backUp( count );
 						state.tokenize = eatEnd( 'mw-section-header' );
+					} else if ( stream.match( /^<!--(?!.*?-->.*?=)/, false ) ) {
+						// T171074: handle trailing comments
+						stream.backUp( count );
+						state.tokenize = eatBlock( 'mw-section-header', '<!--', false );
 					}
 					return null; // style is null
 				}
@@ -649,7 +654,7 @@
 							}
 							break;
 						case '=':
-							tmp = stream.match( /^(={0,5})(.+?(=\1\s*))$/ );
+							tmp = stream.match( /^(={0,5})(.+?(=\1\s*)(<!--(?!.*-->.*\S).*?)?)$/ );
 							if ( tmp ) { // Title
 								stream.backUp( tmp[ 2 ].length );
 								state.stack.push( state.tokenize );
