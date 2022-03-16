@@ -1,4 +1,3 @@
-/* eslint-disable no-use-before-define */
 ( function ( CodeMirror ) {
 	'use strict';
 
@@ -866,9 +865,9 @@
 			// firstmultiletterword has medium priority
 			// firstspace has low priority
 			var end = stream.pos,
-				str = stream.string.substr( 0, end - 3 ),
-				x1 = str.substr( -1, 1 ),
-				x2 = str.substr( -2, 1 );
+				str = stream.string.slice( 0, end - 3 ),
+				x1 = str.slice( -1, -1 + 1 ),
+				x2 = str.slice( -2, -2 + 1 );
 
 			// firstsingleletterword olways is undefined here
 			if ( x1 === ' ' ) {
