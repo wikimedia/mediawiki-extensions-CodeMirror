@@ -148,6 +148,7 @@
 		mw.hook( 'ext.WikiEditor.realtimepreview.disable' ).add( function () {
 			// Re-show the corner resize handle.
 			$resizableHandle.show();
+			codeMirror.refresh(); // T305333
 		} );
 	}
 
@@ -246,6 +247,9 @@
 			if ( mw.config.get( 'wgCodeMirrorAccessibilityColors' ) ) {
 				$codeMirror.addClass( 'cm-mw-accessible-colors' );
 			}
+
+			// T305333: Reload CodeMirror to fix a cursor caret issue.
+			codeMirror.refresh();
 
 			mw.hook( 'ext.CodeMirror.switch' ).fire( true, $codeMirror );
 		} );
