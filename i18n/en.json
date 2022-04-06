@@ -5,5 +5,8 @@
 		]
 	},
 	"codemirror-desc": "Provides syntax highlighting in wikitext editor",
-	"codemirror-toggle-label": "Syntax highlighting"
+	"codemirror-toggle-label": "Syntax highlighting",
+	"codemirror-prefs-colorblind": "Enable colorblind-friendly scheme for syntax highlighting when editing wikitext",
+	"codemirror-prefs-colorblind-help": "If you use a gadget for syntax highlighting, this preference will not work.",
+	"prefs-accessibility": "Accessibility"
 }

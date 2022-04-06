@@ -25,6 +25,11 @@
 			"description": "Temporary feature flag for accessibility colors.",
 			"public": true
 		},
+		"CodeMirrorColorblindColors": {
+			"value": false,
+			"description": "Temporary feature flag for colorblind-friendly colors. Depends on the CodeMirrorAccessibilityColors setting being enabled as well.",
+			"public": true
+		},
 		"CodeMirrorLineNumberingNamespaces": {
 			"value": null,
 			"description": "List of namespace IDs where line numbering should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere. Defaults to `null` for all namespaces.",
@@ -84,7 +89,8 @@
 			"scripts": "mode/mediawiki/mediawiki.js",
 			"styles": [
 				"mode/mediawiki/mediawiki.css",
-				"mode/mediawiki/accessible-colors.less"
+				"mode/mediawiki/accessible-colors.less",
+				"mode/mediawiki/colorblind-colors.less"
 			],
 			"dependencies": [
 				"ext.CodeMirror.lib"

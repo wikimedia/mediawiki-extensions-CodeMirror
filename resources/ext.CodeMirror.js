@@ -246,6 +246,9 @@
 
 			if ( mw.config.get( 'wgCodeMirrorAccessibilityColors' ) ) {
 				$codeMirror.addClass( 'cm-mw-accessible-colors' );
+				if ( mw.config.get( 'wgCodeMirrorColorblindColors' ) && mw.user.options.get( 'usecodemirror-colorblind' ) ) {
+					$codeMirror.addClass( 'cm-mw-colorblind-colors' );
+				}
 			}
 
 			// T305333: Reload CodeMirror to fix a cursor caret issue.
