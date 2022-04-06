@@ -84,7 +84,7 @@
 			"scripts": "mode/mediawiki/mediawiki.js",
 			"styles": [
 				"mode/mediawiki/mediawiki.css",
-				"mode/mediawiki/accessible-colors.css"
+				"mode/mediawiki/accessible-colors.less"
 			],
 			"dependencies": [
 				"ext.CodeMirror.lib"
