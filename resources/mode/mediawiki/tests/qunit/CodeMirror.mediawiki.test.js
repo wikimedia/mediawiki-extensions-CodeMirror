@@ -17,11 +17,16 @@
 				output: '<pre><span>this is <span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">p</span><span class="cm-mw-htmltag-bracket">&gt;&lt;</span><span class="cm-mw-htmltag-name">div</span><span class="cm-mw-htmltag-bracket">&gt;</span>content<span class="cm-error">&lt;/p</span>&gt;<span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">p</span><span class="cm-mw-htmltag-bracket">&gt;</span></span></pre>'
 			},
 			{
-				title: 'HTML and ref tag attributes',
-				input: '<span title="a>b"><ref name="a>b"/></span>',
+				title: 'HTML tag attributes',
+				input: '<span title="a<b"><b title="a>b"></b></span>',
+				output: '<pre><span><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">span </span><span class="cm-mw-htmltag-attribute">title="a&lt;b"</span><span class="cm-mw-htmltag-bracket">&gt;&lt;</span><span class="cm-mw-htmltag-name">b </span><span class="cm-mw-htmltag-attribute">title="a&gt;b"</span><span class="cm-mw-htmltag-bracket">&gt;&lt;/</span><span class="cm-mw-htmltag-name">b</span><span class="cm-mw-htmltag-bracket">&gt;&lt;/</span><span class="cm-mw-htmltag-name">span</span><span class="cm-mw-htmltag-bracket">&gt;</span></span></pre>'
+			},
+			{
+				title: 'ref tag attributes',
+				input: '<ref name="a<b"/>',
 				output: extCiteLoaded ?
-					'<pre><span><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">span </span><span class="cm-mw-htmltag-attribute">title="a&gt;b"</span><span class="cm-mw-htmltag-bracket">&gt;</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref </span><span class="cm-mw-exttag-attribute cm-mw-ext-ref">name="a&gt;b"</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">/&gt;</span><span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">span</span><span class="cm-mw-htmltag-bracket">&gt;</span></span></pre>' :
-					'<pre><span><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">span </span><span class="cm-mw-htmltag-attribute">title="a&gt;b"</span><span class="cm-mw-htmltag-bracket">&gt;</span>&lt;ref name="a&gt;b"/&gt;<span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">span</span><span class="cm-mw-htmltag-bracket">&gt;</span></span></pre>'
+					'<pre><span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref </span><span class="cm-mw-exttag-attribute cm-mw-ext-ref">name="a&lt;b"</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">/&gt;</span></span></pre>' :
+					'<pre><span>&lt;ref name="a&lt;b"/&gt;</span></pre>'
 			},
 			{
 				title: 'indented table with caption and inline headings',
