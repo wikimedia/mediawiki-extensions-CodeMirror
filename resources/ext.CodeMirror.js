@@ -1,5 +1,5 @@
 ( function () {
-	var codeMirror, $textbox1;
+	var codeMirror, $textbox1, realtimePreviewHandler;
 
 	// Exit if WikiEditor is disabled
 	if ( !mw.loader.getState( 'ext.wikiEditor' ) ) {
@@ -132,8 +132,9 @@
 			}
 			// Get rid of the corner resize handle, because realtimepreview provides its own.
 			$resizableHandle.hide();
-			// Add listener for CodeMirror keyups.
-			realtimePreview.addPreviewListener( $codeMirror );
+			// Add listener for CodeMirror changes.
+			realtimePreviewHandler = realtimePreview.getEventHandler().bind( realtimePreview );
+			codeMirror.on( 'change', realtimePreviewHandler );
 			// Fix the width and height of the CodeMirror area.
 			codeMirror.setSize( '100%', realtimePreview.twoPaneLayout.$element.height() );
 		} );
@@ -148,7 +149,12 @@
 		mw.hook( 'ext.WikiEditor.realtimepreview.disable' ).add( function () {
 			// Re-show the corner resize handle.
 			$resizableHandle.show();
+			// CodeMirror may have been turned off after realtimepreview was opened, in which case it will be null.
+			if ( !codeMirror ) {
+				return;
+			}
 			codeMirror.refresh(); // T305333
+			codeMirror.off( 'change', realtimePreviewHandler );
 		} );
 	}
 
