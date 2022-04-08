@@ -123,6 +123,9 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 
 				if ( mw.config.get( 'wgCodeMirrorAccessibilityColors' ) ) {
 					surfaceView.$element.addClass( 'cm-mw-accessible-colors' );
+					if ( mw.config.get( 'wgCodeMirrorColorblindColors' ) && mw.user.options.get( 'usecodemirror-colorblind' ) ) {
+						surfaceView.$element.addClass( 'cm-mw-colorblind-colors' );
+					}
 				}
 
 				var profile = $.client.profile();
