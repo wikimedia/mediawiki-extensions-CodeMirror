@@ -4,9 +4,11 @@
 			"Alirezaaa",
 			"Beginneruser",
 			"Iriman",
+			"Jeeputer",
 			"Ladsgroup"
 		]
 	},
 	"codemirror-desc": "ویرایش نحو برجسته برای صفحه‌های ویکی",
-	"codemirror-toggle-label": "پررنگ کردن دستور"
+	"codemirror-toggle-label": "پررنگ کردن دستور",
+	"prefs-accessibility": "دسترسی‌پذیری"
 }

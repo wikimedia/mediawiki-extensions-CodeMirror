@@ -6,5 +6,8 @@
 		]
 	},
 	"codemirror-desc": "צביעת תחביר בעורך קוד ויקי",
-	"codemirror-toggle-label": "צביעת תחביר"
+	"codemirror-toggle-label": "צביעת תחביר",
+	"codemirror-prefs-colorblind": "להפעיל ערכת צבעים ידידותית לעיוורי־צבעים בצביעת קוד בעריכת קוד ויקי",
+	"codemirror-prefs-colorblind-help": "אם מופעל אצלך גאדג'ט לצביעת קוד, ההעדפה הזאת לא תעבוד",
+	"prefs-accessibility": "נגישות"
 }
