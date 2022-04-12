@@ -3,9 +3,11 @@
 		"authors": [
 			"Alirezaaa",
 			"Iriman",
-			"Ladsgroup"
+			"Ladsgroup",
+			"Beginneruser",
+			"Jeeputer"
 		]
 	},
-	"codemirror-desc": "ویرایش نحو برجسته برای صفحات ویکی",
+	"codemirror-desc": "ویرایش نحو برجسته برای صفحه‌های ویکی",
 	"codemirror-toggle-label": "پررنگ کردن دستور"
 }
