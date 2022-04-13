@@ -8,6 +8,6 @@
 			"Verdy p"
 		]
 	},
-	"codemirror-desc": "Fournit une mise en évidence de la syntaxe dans l’éditeur de wikitexte",
-	"codemirror-toggle-label": "Colorisation syntaxique"
+	"codemirror-desc": "Fournit une mise en évidence de la syntaxe dans l’éditeur de wikicode",
+	"codemirror-toggle-label": "Mise en évidence de la syntaxe"
 }
