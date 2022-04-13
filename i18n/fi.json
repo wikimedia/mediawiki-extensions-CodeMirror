@@ -3,9 +3,11 @@
 		"authors": [
 			"01miki10",
 			"Nike",
-			"Pyscowicz"
+			"Pyscowicz",
+			"Yupik"
 		]
 	},
 	"codemirror-desc": "Lisää syntaksin korostuksen wikitekstin muokkaimeen",
-	"codemirror-toggle-label": "Syntaksin korostus"
+	"codemirror-toggle-label": "Syntaksin korostus",
+	"prefs-accessibility": "Saavutettavuus"
 }
