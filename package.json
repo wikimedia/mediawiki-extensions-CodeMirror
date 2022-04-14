@@ -1,4 +1,5 @@
 {
+	"name": "CodeMirror",
 	"private": true,
 	"scripts": {
 		"test": "grunt test"
