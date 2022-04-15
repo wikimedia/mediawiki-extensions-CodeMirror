@@ -1,11 +1,13 @@
 {
 	"@metadata": {
 		"authors": [
+			"DiegoAmbrocio",
 			"Fitoschido",
 			"Macofe",
 			"PoLuX124"
 		]
 	},
 	"codemirror-desc": "Proporciona resalte de la sintaxis en el editor de código wiki",
-	"codemirror-toggle-label": "Resaltado de sintaxis"
+	"codemirror-toggle-label": "Resaltado de sintaxis",
+	"prefs-accessibility": "Accesibilidad"
 }
