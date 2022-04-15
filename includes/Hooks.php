@@ -2,7 +2,6 @@
 
 namespace MediaWiki\Extension\CodeMirror;
 
-use Action;
 use Config;
 use MediaWiki\MediaWikiServices;
 use OutputPage;
@@ -29,10 +28,9 @@ class Hooks {
 		if ( !$userOptionsLookup->getOption( $out->getUser(), 'usebetatoolbar' ) ) {
 			return false;
 		}
-		$context = $out->getContext();
-		return in_array( Action::getActionName( $context ), [ 'edit', 'submit' ] ) &&
+		return in_array( $out->getActionName(), [ 'edit', 'submit' ] ) &&
 			// CodeMirror on textarea wikitext editors doesn't support RTL (T170001)
-			!$context->getTitle()->getPageLanguage()->isRTL();
+			!$out->getTitle()->getPageLanguage()->isRTL();
 	}
 
 	/**
