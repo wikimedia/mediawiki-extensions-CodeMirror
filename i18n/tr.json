@@ -3,9 +3,13 @@
 		"authors": [
 			"BaRaN6161 TURK",
 			"Diyapazon",
+			"SaldırganSincap",
 			"Vito Genovese"
 		]
 	},
 	"codemirror-desc": "Vikimetin düzenleyicide sözdizim vurgulaması sağlar",
-	"codemirror-toggle-label": "Sözdizim vurgulama"
+	"codemirror-toggle-label": "Sözdizim vurgulama",
+	"codemirror-prefs-colorblind": "Vikimetni düzenlerken sözdizimi vurgulaması için renk körü dostu düzeni etkinleştir",
+	"codemirror-prefs-colorblind-help": "Sözdizimi vurgulaması için bir küçük aracı kullanıyorsanız, bu tercih çalışmayacaktır.",
+	"prefs-accessibility": "Erişilebilirlik"
 }
