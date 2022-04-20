@@ -18,22 +18,15 @@ class HookTest extends MediaWikiIntegrationTestCase {
 	 * @covers \MediaWiki\Extension\CodeMirror\Hooks::onBeforePageDisplay
 	 */
 	public function testOnBeforePageDisplay() {
-		$wikiPage = new \WikiPage( \Title::makeTitle( NS_MAIN, __METHOD__ ) );
-		$context = $this->createMock( \IContextSource::class );
-		$context->method( 'getRequest' )->willReturn( new \FauxRequest( [ 'action' => 'edit' ] ) );
-		$context->method( 'canUseWikiPage' )->willReturn( true );
-		$context->method( 'getWikiPage' )->willReturn( $wikiPage );
-		$context->method( 'getTitle' )->willReturn( $wikiPage->getTitle() );
-
-		$user = $this->createMock( \User::class );
 		$userOptionsLookup = $this->createMock( UserOptionsLookup::class );
 		$userOptionsLookup->method( 'getOption' )->willReturn( true );
 		$this->setService( 'UserOptionsLookup', $userOptionsLookup );
 
 		$out = $this->createMock( \OutputPage::class );
 		$out->method( 'getModules' )->willReturn( [] );
-		$out->method( 'getContext' )->willReturn( $context );
-		$out->method( 'getUser' )->willReturn( $user );
+		$out->method( 'getUser' )->willReturn( $this->createMock( \User::class ) );
+		$out->method( 'getActionName' )->willReturn( 'edit' );
+		$out->method( 'getTitle' )->willReturn( \Title::makeTitle( NS_MAIN, __METHOD__ ) );
 		$out->expects( $this->exactly( 2 ) )->method( 'addModules' );
 
 		Hooks::onBeforePageDisplay( $out, $this->createMock( \Skin::class ) );
