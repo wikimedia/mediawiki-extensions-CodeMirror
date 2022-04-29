@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Adamw",
 			"DiegoAmbrocio",
 			"Fitoschido",
 			"Macofe",
@@ -9,5 +10,7 @@
 	},
 	"codemirror-desc": "Proporciona resalte de la sintaxis en el editor de código wiki",
 	"codemirror-toggle-label": "Resaltado de sintaxis",
+	"codemirror-prefs-colorblind": "Habilita daltónico-esquema para la resaltado de sintaxis mientras editando código",
+	"codemirror-prefs-colorblind-help": "Si utiliza un gadget para el resaltado de sintaxis, esta preferencia no funcionará.",
 	"prefs-accessibility": "Accesibilidad"
 }
