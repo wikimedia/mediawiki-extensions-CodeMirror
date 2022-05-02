@@ -6,9 +6,11 @@
 			"Kly",
 			"LNDDYL",
 			"Waihorace",
+			"Winston Sung",
 			"Xiplus"
 		]
 	},
 	"codemirror-desc": "提供 wikitext 編輯器語法醒目標示",
-	"codemirror-toggle-label": "語法醒目標示"
+	"codemirror-toggle-label": "語法醒目標示",
+	"prefs-accessibility": "無障礙"
 }
