@@ -2,9 +2,13 @@
 	"@metadata": {
 		"authors": [
 			"Liuxinyu970226",
+			"Stang",
 			"Tranve"
 		]
 	},
 	"codemirror-desc": "在wikitext编辑器中提供语法高亮显示",
-	"codemirror-toggle-label": "语法高亮"
+	"codemirror-toggle-label": "语法高亮",
+	"codemirror-prefs-colorblind": "编辑wikitext时，启用对色盲用户友好的语法高亮方案",
+	"codemirror-prefs-colorblind-help": "如果您的语法高亮功能由小工具提供，本参数设置不会工作。",
+	"prefs-accessibility": "辅助功能"
 }
