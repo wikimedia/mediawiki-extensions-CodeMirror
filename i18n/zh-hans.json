@@ -10,5 +10,5 @@
 	"codemirror-toggle-label": "语法高亮",
 	"codemirror-prefs-colorblind": "编辑wikitext时，启用对色盲用户友好的语法高亮配色方案",
 	"codemirror-prefs-colorblind-help": "如果您的语法高亮功能由小工具提供，本设置将不会工作。",
-	"prefs-accessibility": "辅助功能"
+	"prefs-accessibility": "无障碍"
 }

@@ -1,9 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
+			"Luky001",
 			"TomášPolonec"
 		]
 	},
 	"codemirror-desc": "Poskytuje zvýraznenie syntaxe v textovom editore",
-	"codemirror-toggle-label": "Zvýraznenie syntaxe"
+	"codemirror-toggle-label": "Zvýraznenie syntaxe",
+	"prefs-accessibility": "Dostupnosť"
 }
