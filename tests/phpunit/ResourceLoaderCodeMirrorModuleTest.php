@@ -3,7 +3,7 @@
 namespace MediaWiki\Extension\CodeMirror\Tests;
 
 use MediaWiki\Extension\CodeMirror\ResourceLoaderCodeMirrorModule;
-use ResourceLoaderContext;
+use MediaWiki\ResourceLoader\Context;
 
 /**
  * @covers \MediaWiki\Extension\CodeMirror\ResourceLoaderCodeMirrorModule
@@ -11,7 +11,7 @@ use ResourceLoaderContext;
 class ResourceLoaderCodeMirrorModuleTest extends \MediaWikiIntegrationTestCase {
 
 	public function testResourceLoaderModule() {
-		$context = $this->createMock( ResourceLoaderContext::class );
+		$context = $this->createMock( Context::class );
 		$module = new ResourceLoaderCodeMirrorModule();
 
 		$this->assertFalse( $module->supportsURLLoading() );
