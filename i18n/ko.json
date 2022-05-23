@@ -8,5 +8,7 @@
 	},
 	"codemirror-desc": "위키텍스트 편집기에서 구문 강조 기능을 제공합니다",
 	"codemirror-toggle-label": "문법 강조",
+	"codemirror-prefs-colorblind": "위키텍스트 편집 시 색각 이상자에게 친숙한 문법 강조용 스킴 활성화하기",
+	"codemirror-prefs-colorblind-help": "문법 강조용 소도구를 사용하는 경우 이 환경 설정은 동작하지 않습니다.",
 	"prefs-accessibility": "접근성"
 }
