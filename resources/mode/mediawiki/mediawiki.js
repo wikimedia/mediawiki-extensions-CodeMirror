@@ -846,7 +846,7 @@
 						}
 						break;
 				}
-				stream.match( /^[^\s\u00a0_>}[\]<{'|&:~]+/ );
+				stream.match( /^[^\s\u00a0_>}[\]<{'|&:~=]+/ );
 				return makeStyle( style, state );
 			};
 		}

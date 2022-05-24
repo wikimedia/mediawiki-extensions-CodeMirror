@@ -77,8 +77,8 @@
 			},
 			{
 				title: 'section headings',
-				input: '== My section ==\nFoo bar\n=== Blah ===\nBaz',
-				output: '<pre class=" cm-mw-section-2 CodeMirror-line "><span><span class="cm-mw-section-header">==</span> My section <span class="cm-mw-section-header">==</span></span></pre><pre><span>Foo bar</span></pre><pre class=" cm-mw-section-3 CodeMirror-line "><span><span class="cm-mw-section-header">===</span> Blah <span class="cm-mw-section-header">===</span></span></pre><pre><span>Baz</span></pre>'
+				input: '== My section ==\nFoo bar\n=== Blah ===\nBaz\n= { =\nText',
+				output: '<pre class=" cm-mw-section-2 CodeMirror-line "><span><span class="cm-mw-section-header">==</span> My section <span class="cm-mw-section-header">==</span></span></pre><pre><span>Foo bar</span></pre><pre class=" cm-mw-section-3 CodeMirror-line "><span><span class="cm-mw-section-header">===</span> Blah <span class="cm-mw-section-header">===</span></span></pre><pre><span>Baz</span></pre><pre class=" cm-mw-section-1 CodeMirror-line "><span><span class="cm-mw-section-header">=</span> { <span class="cm-mw-section-header">=</span></span></pre><pre><span>Text</span></pre>'
 			},
 			{
 				title: 'section headings with trailing comments',
