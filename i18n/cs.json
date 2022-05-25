@@ -6,5 +6,8 @@
 		]
 	},
 	"codemirror-desc": "Poskytuje zvýrazňování syntaxe v editoru wikitextu",
-	"codemirror-toggle-label": "Zvýraznění syntaxe"
+	"codemirror-toggle-label": "Zvýraznění syntaxe",
+	"codemirror-prefs-colorblind": "Zapnout schéma pro barvoslepé u zvýrazňování syntaxe při editaci wikitextu",
+	"codemirror-prefs-colorblind-help": "Pokud používáte pro zvýrazňování syntaxe udělátko, nebude toto nastavení fungovat.",
+	"prefs-accessibility": "Přístupnost"
 }
