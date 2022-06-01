@@ -5,5 +5,8 @@
 		]
 	},
 	"codemirror-desc": "Võimaldab vikiteksti toimetis süntaksi esiletõstu.",
-	"codemirror-toggle-label": "Süntaksi esiletõst"
+	"codemirror-toggle-label": "Süntaksi esiletõst",
+	"codemirror-prefs-colorblind": "Kasuta vikiteksti redigeerimisel värvipimedale sobiva värviskeemiga süntaksi esiletõstu",
+	"codemirror-prefs-colorblind-help": "Kui kasutad süntaksi esiletõstu tööriista, siis see eelistus ei tööta.",
+	"prefs-accessibility": "Hõlbustus"
 }
