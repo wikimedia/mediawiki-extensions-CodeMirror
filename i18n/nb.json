@@ -8,5 +8,8 @@
 		]
 	},
 	"codemirror-desc": "Gir syntaksfremheving i wikitekstredigereren",
-	"codemirror-toggle-label": "Syntaksfremheving"
+	"codemirror-toggle-label": "Syntaksfremheving",
+	"codemirror-prefs-colorblind": "Aktiver modus for fargeblinde ved syntaksfremheving av wikitekst",
+	"codemirror-prefs-colorblind-help": "Hvis du bruker en tilleggsfunksjon for syntaksfremheving vil ikke dette alternativet ha noen effekt.",
+	"prefs-accessibility": "Tilgjengelighet"
 }
