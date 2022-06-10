@@ -70,8 +70,6 @@ class Hooks {
 			|| RequestContext::getMain()->getRequest()
 				->getCookie( '-codemirror-bracket-matching-test', 'mw' );
 
-		$vars['wgCodeMirrorAccessibilityColors'] = $config->get( 'CodeMirrorAccessibilityColors' );
-
 		$vars['wgCodeMirrorColorblindColors'] = $config->get( 'CodeMirrorColorblindColors' );
 
 		$vars['wgCodeMirrorLineNumberingNamespaces'] = $config->get( 'CodeMirrorLineNumberingNamespaces' );
@@ -93,7 +91,7 @@ class Hooks {
 		];
 
 		$config = MediaWikiServices::getInstance()->getMainConfig();
-		if ( $config->get( 'CodeMirrorAccessibilityColors' ) && $config->get( 'CodeMirrorColorblindColors' ) ) {
+		if ( $config->get( 'CodeMirrorColorblindColors' ) ) {
 			$defaultPreferences['usecodemirror-colorblind'] = [
 				'type' => 'toggle',
 				'label-message' => 'codemirror-prefs-colorblind',
