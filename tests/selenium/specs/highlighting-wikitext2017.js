@@ -2,7 +2,6 @@
 
 const assert = require( 'assert' ),
 	EditPage = require( '../pageobjects/edit.page' ),
-	FeatureFlag = require( '../highlightingfeatureflag' ),
 	FixtureContent = require( '../fixturecontent' ),
 	LoginPage = require( 'wdio-mediawiki/LoginPage' ),
 	UserPreferences = require( '../userpreferences' );
@@ -12,7 +11,6 @@ describe( 'CodeMirror bracket match highlighting for the wikitext 2017 editor', 
 		LoginPage.loginAdmin();
 		this.title = FixtureContent.createFixturePage();
 		UserPreferences.enableWikitext2017EditorWithCodeMirror();
-		FeatureFlag.enable();
 	} );
 
 	beforeEach( function () {

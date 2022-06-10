@@ -15,11 +15,6 @@
 		"MediaWiki": ">= 1.38.0"
 	},
 	"config": {
-		"CodeMirrorEnableBracketMatching": {
-			"value": false,
-			"description": "Temporary feature flag for the matchbrackets addon.",
-			"public": true
-		},
 		"CodeMirrorColorblindColors": {
 			"value": false,
 			"description": "Temporary feature flag for colorblind-friendly colors.",

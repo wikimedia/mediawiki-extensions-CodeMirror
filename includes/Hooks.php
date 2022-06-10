@@ -5,7 +5,6 @@ namespace MediaWiki\Extension\CodeMirror;
 use Config;
 use MediaWiki\MediaWikiServices;
 use OutputPage;
-use RequestContext;
 use Skin;
 use User;
 
@@ -64,11 +63,6 @@ class Hooks {
 	public static function onResourceLoaderGetConfigVars( array &$vars ) {
 		/** @var Config $config */
 		$config = MediaWikiServices::getInstance()->getMainConfig();
-
-		$vars['wgCodeMirrorEnableBracketMatching'] = $config->get( 'CodeMirrorEnableBracketMatching' )
-			// Allows tests to override the configuration.
-			|| RequestContext::getMain()->getRequest()
-				->getCookie( '-codemirror-bracket-matching-test', 'mw' );
 
 		$vars['wgCodeMirrorColorblindColors'] = $config->get( 'CodeMirrorColorblindColors' );
 

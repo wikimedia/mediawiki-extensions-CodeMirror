@@ -95,12 +95,10 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 					}
 				};
 
-				if ( mw.config.get( 'wgCodeMirrorEnableBracketMatching' ) ) {
-					cmOptions.matchBrackets = {
-						highlightNonMatching: false,
-						maxHighlightLineLength: 10000
-					};
-				}
+				cmOptions.matchBrackets = {
+					highlightNonMatching: false,
+					maxHighlightLineLength: 10000
+				};
 
 				if ( ve.ui.CodeMirrorAction.static.isLineNumbering() ) {
 					$.extend( cmOptions, {
