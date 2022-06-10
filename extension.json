@@ -84,7 +84,6 @@
 			"scripts": "mode/mediawiki/mediawiki.js",
 			"styles": [
 				"mode/mediawiki/mediawiki.css",
-				"mode/mediawiki/accessible-colors.less",
 				"mode/mediawiki/colorblind-colors.less"
 			],
 			"dependencies": [

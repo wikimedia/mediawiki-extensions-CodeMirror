@@ -250,7 +250,6 @@
 				// T194102: UniversalLanguageSelector integration is buggy, disabling it completely
 				.addClass( 'noime' );
 
-			$codeMirror.addClass( 'cm-mw-accessible-colors' );
 			if ( mw.config.get( 'wgCodeMirrorColorblindColors' ) && mw.user.options.get( 'usecodemirror-colorblind' ) ) {
 				$codeMirror.addClass( 'cm-mw-colorblind-colors' );
 			}
