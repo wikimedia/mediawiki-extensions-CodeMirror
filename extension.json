@@ -20,14 +20,9 @@
 			"description": "Temporary feature flag for the matchbrackets addon.",
 			"public": true
 		},
-		"CodeMirrorAccessibilityColors": {
-			"value": false,
-			"description": "Temporary feature flag for accessibility colors.",
-			"public": true
-		},
 		"CodeMirrorColorblindColors": {
 			"value": false,
-			"description": "Temporary feature flag for colorblind-friendly colors. Depends on the CodeMirrorAccessibilityColors setting being enabled as well.",
+			"description": "Temporary feature flag for colorblind-friendly colors.",
 			"public": true
 		},
 		"CodeMirrorLineNumberingNamespaces": {
