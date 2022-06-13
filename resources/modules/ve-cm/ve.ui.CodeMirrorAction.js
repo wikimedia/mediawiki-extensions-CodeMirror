@@ -119,7 +119,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 				// so revert any editfont user preference
 				surfaceView.$element.removeClass( 'mw-editfont-sans-serif mw-editfont-serif' ).addClass( 'mw-editfont-monospace' );
 
-				if ( mw.config.get( 'wgCodeMirrorColorblindColors' ) && mw.user.options.get( 'usecodemirror-colorblind' ) ) {
+				if ( mw.user.options.get( 'usecodemirror-colorblind' ) ) {
 					surfaceView.$element.addClass( 'cm-mw-colorblind-colors' );
 				}
 

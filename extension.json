@@ -15,11 +15,6 @@
 		"MediaWiki": ">= 1.38.0"
 	},
 	"config": {
-		"CodeMirrorColorblindColors": {
-			"value": false,
-			"description": "Temporary feature flag for colorblind-friendly colors.",
-			"public": true
-		},
 		"CodeMirrorLineNumberingNamespaces": {
 			"value": null,
 			"description": "List of namespace IDs where line numbering should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere. Defaults to `null` for all namespaces.",

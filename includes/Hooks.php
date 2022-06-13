@@ -64,8 +64,6 @@ class Hooks {
 		/** @var Config $config */
 		$config = MediaWikiServices::getInstance()->getMainConfig();
 
-		$vars['wgCodeMirrorColorblindColors'] = $config->get( 'CodeMirrorColorblindColors' );
-
 		$vars['wgCodeMirrorLineNumberingNamespaces'] = $config->get( 'CodeMirrorLineNumberingNamespaces' );
 	}
 
@@ -84,15 +82,12 @@ class Hooks {
 			'type' => 'api',
 		];
 
-		$config = MediaWikiServices::getInstance()->getMainConfig();
-		if ( $config->get( 'CodeMirrorColorblindColors' ) ) {
-			$defaultPreferences['usecodemirror-colorblind'] = [
-				'type' => 'toggle',
-				'label-message' => 'codemirror-prefs-colorblind',
-				'help-message' => 'codemirror-prefs-colorblind-help',
-				'section' => 'editing/accessibility',
-			];
-		}
+		$defaultPreferences['usecodemirror-colorblind'] = [
+			'type' => 'toggle',
+			'label-message' => 'codemirror-prefs-colorblind',
+			'help-message' => 'codemirror-prefs-colorblind-help',
+			'section' => 'editing/accessibility',
+		];
 	}
 
 }
