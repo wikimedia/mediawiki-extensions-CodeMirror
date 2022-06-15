@@ -2,6 +2,21 @@
 	block-closing-brace-space-after, declaration-block-single-line-max-declarations,
 	declaration-block-semicolon-newline-after, selector-list-comma-newline-after */
 
+// Copied from wikimedia-ui-base.less
+@wmui-color-base30: #72777d;
+@wmui-color-red50: #d33;
+@wmui-color-yellow30: #ac6600;
+@wmui-color-green30: #14866d;
+
+@comment-color: @wmui-color-base30;
+@link-color: #000aaa;
+@parser-function-color: @wmui-color-red50;
+@table-color: #d08;
+@template-color: #80c;
+@template-variable-color: @wmui-color-yellow30;
+@wikitext-formatting-color: #0076dd;
+@xml-tag-color: @wmui-color-green30;
+
 @template-background-color: #a11;
 @ext-background-color: #70a;
 @link-background-color: #219;
@@ -15,15 +30,16 @@
 
 .cm-mw-pagename { text-decoration: underline; }
 
+// TODO: It appears like this was never used. Remvoe?
 .cm-mw-matching { background-color: #ffd700; }
 
 .cm-mw-skipformatting { background-color: #adf; }
 .cm-mw-list,
-.cm-mw-indenting { color: #0076dd; font-weight: bold; }
-.cm-mw-doubleUnderscore, .cm-mw-signature, .cm-mw-hr { color: #0076dd; font-weight: bold; background-color: #eee; }
-.cm-mw-mnemonic { color: #14866d; }
-.cm-mw-comment { color: #72777d; font-weight: normal; }
-.cm-mw-apostrophes-bold, .cm-mw-apostrophes-italic { color: #0076dd; }
+.cm-mw-indenting { color: @wikitext-formatting-color; font-weight: bold; }
+.cm-mw-doubleUnderscore, .cm-mw-signature, .cm-mw-hr { color: @wikitext-formatting-color; font-weight: bold; background-color: #eee; }
+.cm-mw-mnemonic { color: @xml-tag-color; }
+.cm-mw-comment { color: @comment-color; font-weight: normal; }
+.cm-mw-apostrophes-bold, .cm-mw-apostrophes-italic { color: @wikitext-formatting-color; }
 
 pre.CodeMirror-line.cm-mw-section-1,
 pre.CodeMirror-line-like.cm-mw-section-1 {
@@ -46,22 +62,22 @@ pre.CodeMirror-line-like.cm-mw-section-6 {
 	font-weight: bold;
 }
 
-.cm-mw-template { color: #80c; font-weight: normal; }
+.cm-mw-template { color: @template-color; font-weight: normal; }
 .cm-mw-template-name-mnemonic { font-weight: normal; }
 .cm-mw-template-name,
 .cm-mw-template-argument-name,
 .cm-mw-template-delimiter,
-.cm-mw-template-bracket { color: #80c; font-weight: bold; }
+.cm-mw-template-bracket { color: @template-color; font-weight: bold; }
 
 .cm-mw-templatevariable,
-.cm-mw-templatevariable-bracket { color: #ac6600; font-weight: normal; }
+.cm-mw-templatevariable-bracket { color: @template-variable-color; font-weight: normal; }
 .cm-mw-templatevariable-name,
-.cm-mw-templatevariable-delimiter { color: #ac6600; font-weight: bold; }
+.cm-mw-templatevariable-delimiter { color: @template-variable-color; font-weight: bold; }
 
 .cm-mw-parserfunction { font-weight: normal; }
 .cm-mw-parserfunction-name,
 .cm-mw-parserfunction-bracket,
-.cm-mw-parserfunction-delimiter { color: #d33; font-weight: bold; }
+.cm-mw-parserfunction-delimiter { color: @parser-function-color; font-weight: bold; }
 
 pre.CodeMirror-line.cm-mw-exttag,
 pre.CodeMirror-line-like.cm-mw-exttag {
@@ -69,11 +85,11 @@ pre.CodeMirror-line-like.cm-mw-exttag {
 }
 .cm-mw-exttag { .ground( @ext: 1 ); }
 .cm-mw-exttag-name,
-.cm-mw-htmltag-name { color: #14866d; font-weight: bold; }
+.cm-mw-htmltag-name { color: @xml-tag-color; font-weight: bold; }
 .cm-mw-exttag-bracket,
 .cm-mw-exttag-attribute,
 .cm-mw-htmltag-bracket,
-.cm-mw-htmltag-attribute { color: #14866d; font-weight: normal; }
+.cm-mw-htmltag-attribute { color: @xml-tag-color; font-weight: normal; }
 
 pre.CodeMirror-line.cm-mw-tag-pre,
 pre.CodeMirror-line-like.cm-mw-tag-pre,
@@ -86,19 +102,19 @@ pre.CodeMirror-line-like.cm-mw-tag-nowiki,
 
 .cm-mw-link,
 .cm-mw-link-tosection,
-.cm-mw-section-header { color: #0076dd; font-weight: normal; }
+.cm-mw-section-header { color: @wikitext-formatting-color; font-weight: normal; }
 .cm-mw-link-pagename,
 .cm-mw-link-bracket,
 .cm-mw-link-delimiter,
 .cm-mw-extlink,
-.cm-mw-free-extlink { color: #000aaa; font-weight: normal; }
+.cm-mw-free-extlink { color: @link-color; font-weight: normal; }
 .cm-mw-extlink-protocol,
 .cm-mw-free-extlink-protocol,
-.cm-mw-extlink-bracket { color: #000aaa; font-weight: bold; }
+.cm-mw-extlink-bracket { color: @link-color; font-weight: bold; }
 
 .cm-mw-table-bracket,
-.cm-mw-table-delimiter { color: #d08; font-weight: bold; }
-.cm-mw-table-definition { color: #d08; font-weight: normal; }
+.cm-mw-table-delimiter { color: @table-color; font-weight: bold; }
+.cm-mw-table-definition { color: @table-color; font-weight: normal; }
 .cm-mw-table-caption { font-weight: bold; }
 
 .cm-mw-template2-ground { .ground( @template: 1 ); }
