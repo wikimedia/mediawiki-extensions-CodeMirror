@@ -73,7 +73,7 @@
 		"ext.CodeMirror.mode.mediawiki": {
 			"scripts": "mode/mediawiki/mediawiki.js",
 			"styles": [
-				"mode/mediawiki/mediawiki.css",
+				"mode/mediawiki/mediawiki.less",
 				"mode/mediawiki/colorblind-colors.less"
 			],
 			"dependencies": [
