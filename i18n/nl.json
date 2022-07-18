@@ -3,8 +3,11 @@
 		"authors": [
 			"Esketti",
 			"Mainframe98",
+			"Romaine",
 			"Siebrand"
 		]
 	},
-	"codemirror-desc": "Biedt accentuering van tekst in de wikitekst tekstverwerker"
+	"codemirror-desc": "Biedt accentuering van tekst in de wikitekst tekstverwerker",
+	"codemirror-prefs-colorblind": "Schakel een kleurenblindvriendelijk schema in voor syntaxisaccentuering bij het bewerken van wikitekst",
+	"prefs-accessibility": "Toegankelijkheid"
 }
