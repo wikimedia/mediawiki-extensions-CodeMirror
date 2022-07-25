@@ -3,9 +3,11 @@
 		"authors": [
 			"Acamicamacaraca",
 			"BadDog",
+			"Milicevic01",
 			"Obsuser"
 		]
 	},
 	"codemirror-desc": "Омогућава истицање синтаксе у уређивачу викитекста",
-	"codemirror-toggle-label": "Истицање синтаксе"
+	"codemirror-toggle-label": "Истицање синтаксе",
+	"prefs-accessibility": "Приступачност"
 }
