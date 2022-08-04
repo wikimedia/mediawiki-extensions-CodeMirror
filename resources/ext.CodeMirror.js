@@ -117,8 +117,9 @@
 			// RL module jquery.ui
 			$codeMirror.resizable( {
 				handles: 'se',
-				resize: function ( event, ui ) {
-					ui.size.width = ui.originalSize.width;
+				resize: function () {
+					// Keep at 100% parent width, don't modify height here
+					codeMirror.setSize( '100%', null );
 				}
 			} );
 			// Match the height of the textarea.
