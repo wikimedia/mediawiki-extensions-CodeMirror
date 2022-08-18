@@ -3,9 +3,13 @@
 		"authors": [
 			"Facenapalm",
 			"Kaganer",
-			"Okras"
+			"Okras",
+			"WindEwriX"
 		]
 	},
 	"codemirror-desc": "Обеспечивает подсветку синтаксиса в редакторе вики-текста.",
-	"codemirror-toggle-label": "Подсветка синтаксиса"
+	"codemirror-toggle-label": "Подсветка синтаксиса",
+	"codemirror-prefs-colorblind": "Включить подсветку синтаксиса для дальтоников при редактировании вики-текста",
+	"codemirror-prefs-colorblind-help": "Если для подсветки синтаксиса вы используете гаджет, эта настройка не будет работать.",
+	"prefs-accessibility": "Доступность"
 }
