@@ -5,5 +5,7 @@
 		]
 	},
 	"codemirror-desc": "Daje potcrtavanje sintakse u uređivaču wikiteksta",
-	"codemirror-toggle-label": "Isticanje sintakse"
+	"codemirror-toggle-label": "Isticanje sintakse",
+	"codemirror-prefs-colorblind": "Omogući shemu s istaknutom sintaksom prilikom uređivanja za osobe s poremećajem prepoznavanja boja",
+	"prefs-accessibility": "Pristupačnost"
 }
