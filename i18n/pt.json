@@ -9,5 +9,8 @@
 		]
 	},
 	"codemirror-desc": "Fornece realce sintático no editor de texto wiki",
-	"codemirror-toggle-label": "Realce sintático"
+	"codemirror-toggle-label": "Realce sintático",
+	"codemirror-prefs-colorblind": "Ativar esquema concebido para pessoas daltónicas, de realce sintático durante a edição de texto wiki",
+	"codemirror-prefs-colorblind-help": "Se utiliza um ''gadget'' para realce sintático, esta preferência não funcionará.",
+	"prefs-accessibility": "Acessibilidade"
 }
