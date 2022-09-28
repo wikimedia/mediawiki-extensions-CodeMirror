@@ -4,7 +4,7 @@
 			"Eleassar"
 		]
 	},
-	"codemirror-desc": "Omogoča označevanje skladnje v urejevalniku wikibesedila",
+	"codemirror-desc": "Omogoča označevanje skladnje v urejevalniku vikibesedila",
 	"codemirror-toggle-label": "Označevanje skladnje",
 	"codemirror-prefs-colorblind": "Omogoči barvno slepim prijazno shemo za označevanje skladnje pri urejanju vikibesedila",
 	"codemirror-prefs-colorblind-help": "Če za označevanje skladnje uporabljate vtičnik, ta nastavitev ne bo delovala.",
