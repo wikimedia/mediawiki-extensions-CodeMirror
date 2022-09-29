@@ -5,11 +5,13 @@
 			"Marine-Blue",
 			"Shirayuki",
 			"SkyDaisy9",
-			"Suzukaze-c"
+			"Suzukaze-c",
+			"Kokage si"
 		]
 	},
 	"codemirror-desc": "ウィキテキストエディターに構文強調の機能を追加する",
 	"codemirror-toggle-label": "構文の強調",
 	"codemirror-prefs-colorblind": "ウィキテキストでの編集時にカラーブラインドに応じた配色を使用する",
-	"codemirror-prefs-colorblind-help": "構文強調表示のガジェットを使用している場合、この設定は機能しません。"
+	"codemirror-prefs-colorblind-help": "構文強調表示のガジェットを使用している場合、この設定は機能しません。",
+	"prefs-accessibility": "アクセシビリティ"
 }
