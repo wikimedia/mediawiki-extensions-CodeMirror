@@ -69,11 +69,14 @@ class ResourceLoaderCodeMirrorModule extends RL\FileModule {
 		$registry = ExtensionRegistry::getInstance();
 		$parser = MediaWikiServices::getInstance()->getParser();
 
+		$tagModes = $registry->getAttribute( 'CodeMirrorTagModes' );
+		$tagNames = array_merge( $parser->getTags(), array_keys( $tagModes ) );
+
 		// initialize configuration
 		$config = [
 			'pluginModules' => $registry->getAttribute( 'CodeMirrorPluginModules' ),
-			'tagModes' => $registry->getAttribute( 'CodeMirrorTagModes' ),
-			'tags' => array_fill_keys( $parser->getTags(), true ),
+			'tagModes' => $tagModes,
+			'tags' => array_fill_keys( $tagNames, true ),
 			'doubleUnderscore' => [ [], [] ],
 			'functionSynonyms' => $parser->getFunctionSynonyms(),
 			'urlProtocols' => $parser->getUrlProtocols(),
