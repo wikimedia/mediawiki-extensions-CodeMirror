@@ -20,7 +20,7 @@
 		"grunt-stylelint": "0.16.0",
 		"stylelint-config-wikimedia": "0.11.1",
 		"wdio-mediawiki": "1.1.1",
-		"wdio-video-reporter": "3.1.1",
+		"wdio-video-reporter": "3.2.3",
 		"webdriverio": "7.4.6"
 	}
 }
