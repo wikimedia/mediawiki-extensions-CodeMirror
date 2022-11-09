@@ -1,7 +1,6 @@
 {
 	"extends": "stylelint-config-wikimedia",
 	"rules": {
-		"rule-empty-line-before": null,
-		"unit-disallowed-list": null
+		"rule-empty-line-before": null
 	}
 }
