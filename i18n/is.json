@@ -4,5 +4,6 @@
 			"Sveinn í Felli"
 		]
 	},
-	"codemirror-toggle-label": "Málfræðilitun"
+	"codemirror-toggle-label": "Málfræðilitun",
+	"codemirror-prefs-colorblind": "Virkja litblinduvænt litastef við áherslulitun málskipunar þegar wikitexta er breytt"
 }
