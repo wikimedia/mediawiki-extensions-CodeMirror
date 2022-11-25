@@ -7,5 +7,6 @@
 	},
 	"codemirror-desc": "Poskytuje zvýraznenie syntaxe v textovom editore",
 	"codemirror-toggle-label": "Zvýraznenie syntaxe",
+	"codemirror-prefs-colorblind": "Povoliť schému pre farboslepých na zvýraznenie syntaxe pri úprave wikitextu",
 	"prefs-accessibility": "Dostupnosť"
 }
