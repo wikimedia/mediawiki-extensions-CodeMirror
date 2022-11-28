@@ -7,5 +7,8 @@
 		]
 	},
 	"codemirror-desc": "Szintaxiskiemelő hozzáadása a wikiszöveges szerkesztőhöz",
-	"codemirror-toggle-label": "Szintaxiskiemelés"
+	"codemirror-toggle-label": "Szintaxiskiemelés",
+	"codemirror-prefs-colorblind": "Színvakbarát színséma használata a wikiszöveges szintaxiskiemeléshez",
+	"codemirror-prefs-colorblind-help": "Ha egy segédeszközt használsz a szintaxiskiemelésre, arra nincs hatással ez a beállítás.",
+	"prefs-accessibility": "Akadálymentesség"
 }
