@@ -12,7 +12,7 @@
 	"type": "editor",
 	"license-name": "GPL-2.0-or-later",
 	"requires": {
-		"MediaWiki": ">= 1.38.0"
+		"MediaWiki": ">= 1.39.0"
 	},
 	"config": {
 		"CodeMirrorLineNumberingNamespaces": {
