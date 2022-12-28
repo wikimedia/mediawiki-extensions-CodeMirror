@@ -4,5 +4,6 @@
 			"Obsuser"
 		]
 	},
-	"codemirror-desc": "Omogućava označavanje sintakse u uređivaču vikiteksta"
+	"codemirror-desc": "Omogućava isticanje sintakse u uređivaču vikiteksta",
+	"codemirror-toggle-label": "Isticanje sintakse"
 }
