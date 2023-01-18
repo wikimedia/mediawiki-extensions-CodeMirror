@@ -9,12 +9,13 @@ use RequestContext;
 
 /**
  * @group CodeMirror
+ * @coversDefaultClass \MediaWiki\Extension\CodeMirror\Hooks
  */
 class HookTest extends MediaWikiIntegrationTestCase {
 
 	/**
-	 * @covers \MediaWiki\Extension\CodeMirror\Hooks::isCodeMirrorOnPage
-	 * @covers \MediaWiki\Extension\CodeMirror\Hooks::onBeforePageDisplay
+	 * @covers ::isCodeMirrorOnPage
+	 * @covers ::onBeforePageDisplay
 	 */
 	public function testOnBeforePageDisplay() {
 		$userOptionsLookup = $this->createMock( UserOptionsLookup::class );
@@ -33,7 +34,7 @@ class HookTest extends MediaWikiIntegrationTestCase {
 	}
 
 	/**
-	 * @covers \MediaWiki\Extension\CodeMirror\Hooks::onGetPreferences
+	 * @covers ::onGetPreferences
 	 */
 	public function testPreferenceRegistered() {
 		$user = self::getTestUser()->getUser();
