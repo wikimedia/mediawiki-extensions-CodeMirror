@@ -3,12 +3,31 @@
 namespace MediaWiki\Extension\CodeMirror;
 
 use Config;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\Hook\BeforePageDisplayHook;
+use MediaWiki\Preferences\Hook\GetPreferencesHook;
+use MediaWiki\ResourceLoader\Hook\ResourceLoaderGetConfigVarsHook;
+use MediaWiki\User\UserOptionsLookup;
 use OutputPage;
 use Skin;
 use User;
 
-class Hooks {
+class Hooks implements
+	BeforePageDisplayHook,
+	ResourceLoaderGetConfigVarsHook,
+	GetPreferencesHook
+{
+
+	/** @var UserOptionsLookup */
+	private $userOptionsLookup;
+
+	/**
+	 * @param UserOptionsLookup $userOptionsLookup
+	 */
+	public function __construct(
+		UserOptionsLookup $userOptionsLookup
+	) {
+		$this->userOptionsLookup = $userOptionsLookup;
+	}
 
 	/**
 	 * Checks if CodeMirror for textarea wikitext editor should be loaded on this page or not.
@@ -16,15 +35,14 @@ class Hooks {
 	 * @param OutputPage $out
 	 * @return bool
 	 */
-	private static function isCodeMirrorOnPage( OutputPage $out ) {
+	private function isCodeMirrorOnPage( OutputPage $out ) {
 		// Disable CodeMirror when CodeEditor is active on this page
 		// Depends on ext.codeEditor being added by EditPage::showEditForm:initial
 		if ( in_array( 'ext.codeEditor', $out->getModules() ) ) {
 			return false;
 		}
-		$userOptionsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
 		// Disable CodeMirror when the WikiEditor toolbar is not enabled in preferences
-		if ( !$userOptionsLookup->getOption( $out->getUser(), 'usebetatoolbar' ) ) {
+		if ( !$this->userOptionsLookup->getOption( $out->getUser(), 'usebetatoolbar' ) ) {
 			return false;
 		}
 		return in_array( $out->getActionName(), [ 'edit', 'submit' ] ) &&
@@ -39,13 +57,13 @@ class Hooks {
 	 *
 	 * @param OutputPage $out
 	 * @param Skin $skin
+	 * @return void This hook must not abort, it must return no value
 	 */
-	public static function onBeforePageDisplay( OutputPage $out, Skin $skin ) {
-		if ( self::isCodeMirrorOnPage( $out ) ) {
+	public function onBeforePageDisplay( $out, $skin ): void {
+		if ( $this->isCodeMirrorOnPage( $out ) ) {
 			$out->addModules( 'ext.CodeMirror' );
 
-			$userOptionsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
-			if ( $userOptionsLookup->getOption( $out->getUser(), 'usecodemirror' ) ) {
+			if ( $this->userOptionsLookup->getOption( $out->getUser(), 'usecodemirror' ) ) {
 				// These modules are predelivered for performance when needed
 				// keep these modules in sync with ext.CodeMirror.js
 				$out->addModules( [ 'ext.CodeMirror.lib', 'ext.CodeMirror.mode.mediawiki' ] );
@@ -59,11 +77,11 @@ class Hooks {
 	 * TODO: restrict to pages where codemirror might be enabled.
 	 *
 	 * @param array &$vars Array of variables to be added into the output of the startup module
+	 * @param string $skin
+	 * @param Config $config
+	 * @return void This hook must not abort, it must return no value
 	 */
-	public static function onResourceLoaderGetConfigVars( array &$vars ) {
-		/** @var Config $config */
-		$config = MediaWikiServices::getInstance()->getMainConfig();
-
+	public function onResourceLoaderGetConfigVars( array &$vars, $skin, Config $config ): void {
 		$vars['wgCodeMirrorLineNumberingNamespaces'] = $config->get( 'CodeMirrorLineNumberingNamespaces' );
 	}
 
@@ -74,8 +92,9 @@ class Hooks {
 	 *
 	 * @param User $user
 	 * @param array &$defaultPreferences
+	 * @return bool|void True or no return value to continue or false to abort
 	 */
-	public static function onGetPreferences( User $user, array &$defaultPreferences ) {
+	public function onGetPreferences( $user, &$defaultPreferences ) {
 		// CodeMirror is disabled by default for all users. It can enabled for everyone
 		// by default by adding '$wgDefaultUserOptions['usecodemirror'] = 1;' into LocalSettings.php
 		$defaultPreferences['usecodemirror'] = [

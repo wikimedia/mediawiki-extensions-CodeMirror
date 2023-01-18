@@ -181,9 +181,17 @@
 		]
 	},
 	"Hooks": {
-		"BeforePageDisplay": "MediaWiki\\Extension\\CodeMirror\\Hooks::onBeforePageDisplay",
-		"GetPreferences": "MediaWiki\\Extension\\CodeMirror\\Hooks::onGetPreferences",
-		"ResourceLoaderGetConfigVars": "MediaWiki\\Extension\\CodeMirror\\Hooks::onResourceLoaderGetConfigVars"
+		"BeforePageDisplay": "main",
+		"GetPreferences": "main",
+		"ResourceLoaderGetConfigVars": "main"
+	},
+	"HookHandlers": {
+		"main": {
+			"class": "MediaWiki\\Extension\\CodeMirror\\Hooks",
+			"services": [
+				"UserOptionsLookup"
+			]
+		}
 	},
 	"attributes": {
 		"CodeMirror": {
