@@ -2,9 +2,13 @@
 	"@metadata": {
 		"authors": [
 			"Minh Nguyen",
-			"NguoiDungKhongDinhDanh"
+			"NguoiDungKhongDinhDanh",
+			"Vinhtantran"
 		]
 	},
 	"codemirror-desc": "Tô màu cú pháp trong trình sửa đổi mã wiki",
-	"codemirror-toggle-label": "Tô màu cú pháp"
+	"codemirror-toggle-label": "Tô màu cú pháp",
+	"codemirror-prefs-colorblind": "Bật bộ màu thân thiện với người mù màu để làm nổi bật cú pháp khi soạn thảo mã wiki",
+	"codemirror-prefs-colorblind-help": "Nếu bạn dùng tiện ích để làm nổi bật cú pháp, tùy chọn này sẽ không có tác dụng.",
+	"prefs-accessibility": "Tăng cường khả năng tiếp cận"
 }
