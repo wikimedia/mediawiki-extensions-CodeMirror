@@ -3,8 +3,11 @@
 		"authors": [
 			"Esketti",
 			"Mainframe98",
-			"Siebrand"
+			"Siebrand",
+			"McDutchie",
+			"Romaine"
 		]
 	},
-	"codemirror-desc": "Biedt accentuering van tekst in de wikitekst tekstverwerker"
+	"codemirror-desc": "Biedt accentuering van tekst in de wikitekst tekstverwerker",
+	"codemirror-toggle-label": "Syntaxis accentueren"
 }
