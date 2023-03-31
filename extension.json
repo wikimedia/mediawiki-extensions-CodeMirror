@@ -12,7 +12,7 @@
 	"type": "editor",
 	"license-name": "GPL-2.0-or-later",
 	"requires": {
-		"MediaWiki": ">= 1.39.0"
+		"MediaWiki": ">= 1.40.0"
 	},
 	"config": {
 		"CodeMirrorLineNumberingNamespaces": {
@@ -31,7 +31,6 @@
 	},
 	"ResourceModules": {
 		"ext.CodeMirror": {
-			"targets": [ "desktop", "mobile" ],
 			"dependencies": [
 				"ext.CodeMirror.data",
 				"jquery.textSelection",
@@ -52,11 +51,9 @@
 			]
 		},
 		"ext.CodeMirror.data": {
-			"targets": [ "desktop", "mobile" ],
 			"class": "MediaWiki\\Extension\\CodeMirror\\ResourceLoaderCodeMirrorModule"
 		},
 		"ext.CodeMirror.lib": {
-			"targets": [ "desktop", "mobile" ],
 			"scripts": [
 				"lib/codemirror/lib/codemirror.js"
 			],
@@ -66,7 +63,6 @@
 			]
 		},
 		"ext.CodeMirror.addons": {
-			"targets": [ "desktop", "mobile" ],
 			"scripts": [
 				"addon/edit/matchbrackets-wmde.js"
 			],
@@ -75,7 +71,6 @@
 			]
 		},
 		"ext.CodeMirror.mode.mediawiki": {
-			"targets": [ "desktop", "mobile" ],
 			"scripts": "mode/mediawiki/mediawiki.js",
 			"styles": [
 				"mode/mediawiki/mediawiki.less",
@@ -86,28 +81,24 @@
 			]
 		},
 		"ext.CodeMirror.lib.mode.css": {
-			"targets": [ "desktop", "mobile" ],
 			"scripts": "lib/codemirror/mode/css/css.js",
 			"dependencies": [
 				"ext.CodeMirror.lib"
 			]
 		},
 		"ext.CodeMirror.lib.mode.javascript": {
-			"targets": [ "desktop", "mobile" ],
 			"scripts": "lib/codemirror/mode/javascript/javascript.js",
 			"dependencies": [
 				"ext.CodeMirror.lib"
 			]
 		},
 		"ext.CodeMirror.lib.mode.xml": {
-			"targets": [ "desktop", "mobile" ],
 			"scripts": "lib/codemirror/mode/xml/xml.js",
 			"dependencies": [
 				"ext.CodeMirror.lib"
 			]
 		},
 		"ext.CodeMirror.lib.mode.htmlmixed": {
-			"targets": [ "desktop", "mobile" ],
 			"scripts": "lib/codemirror/mode/htmlmixed/htmlmixed.js",
 			"dependencies": [
 				"ext.CodeMirror.lib.mode.xml",
@@ -117,14 +108,12 @@
 			]
 		},
 		"ext.CodeMirror.lib.mode.clike": {
-			"targets": [ "desktop", "mobile" ],
 			"scripts": "lib/codemirror/mode/clike/clike.js",
 			"dependencies": [
 				"ext.CodeMirror.lib"
 			]
 		},
 		"ext.CodeMirror.lib.mode.php": {
-			"targets": [ "desktop", "mobile" ],
 			"scripts": "lib/codemirror/mode/php/php.js",
 			"dependencies": [
 				"ext.CodeMirror.lib.mode.htmlmixed",
@@ -141,9 +130,6 @@
 			],
 			"messages": [
 				"codemirror-toggle-label"
-			],
-			"targets": [
-				"desktop"
 			]
 		},
 		"ext.CodeMirror.visualEditor": {
@@ -155,9 +141,6 @@
 			"scripts": [
 				"modules/ve-cm/ve.ui.CodeMirrorAction.js",
 				"modules/ve-cm/ve.ui.CodeMirrorTool.js"
-			],
-			"targets": [
-				"desktop"
 			]
 		}
 	},
