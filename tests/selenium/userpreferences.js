@@ -1,22 +1,22 @@
 'use strict';
 
-const BlankPage = require( 'wdio-mediawiki/BlankPage' );
-const Util = require( 'wdio-mediawiki/Util' );
+const BlankPage = require( 'wdio-mediawiki/BlankPage' ),
+	Util = require( 'wdio-mediawiki/Util' );
 
 class UserPreferences {
-	setPreferences( preferences ) {
-		BlankPage.open();
+	async setPreferences( preferences ) {
+		await BlankPage.open();
 		Util.waitForModuleState( 'mediawiki.base' );
 
-		return browser.execute( function ( prefs ) {
+		return await browser.execute( function ( prefs ) {
 			return mw.loader.using( 'mediawiki.api' ).then( function () {
 				return new mw.Api().saveOptions( prefs );
 			} );
 		}, preferences );
 	}
 
-	enableWikitext2010EditorWithCodeMirror() {
-		this.setPreferences( {
+	async enableWikitext2010EditorWithCodeMirror() {
+		await this.setPreferences( {
 			usebetatoolbar: '1',
 			usecodemirror: '1',
 			'visualeditor-enable': '0',
@@ -24,8 +24,8 @@ class UserPreferences {
 		} );
 	}
 
-	enableWikitext2017EditorWithCodeMirror() {
-		this.setPreferences( {
+	async enableWikitext2017EditorWithCodeMirror() {
+		await this.setPreferences( {
 			usebetatoolbar: null,
 			usecodemirror: '1',
 			'visualeditor-enable': '1',

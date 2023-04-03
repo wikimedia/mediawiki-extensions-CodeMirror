@@ -4,30 +4,32 @@ const assert = require( 'assert' ),
 	EditPage = require( '../pageobjects/edit.page' ),
 	FixtureContent = require( '../fixturecontent' ),
 	LoginPage = require( 'wdio-mediawiki/LoginPage' ),
-	UserPreferences = require( '../userpreferences' );
+	UserPreferences = require( '../userpreferences' ),
+	Util = require( 'wdio-mediawiki/Util' );
 
 describe( 'CodeMirror bracket match highlighting for the wikitext 2010 editor', function () {
-	before( function () {
-		LoginPage.loginAdmin();
-		this.title = FixtureContent.createFixturePage();
-		UserPreferences.enableWikitext2010EditorWithCodeMirror();
+	let title;
+
+	before( async function () {
+		title = Util.getTestString( 'CodeMirror-fixture1-' );
+		await LoginPage.loginAdmin();
+		await FixtureContent.createFixturePage( title );
+		await UserPreferences.enableWikitext2010EditorWithCodeMirror();
 	} );
 
-	beforeEach( function () {
-		EditPage.openForEditing( this.title );
-		EditPage.wikiEditorToolbar.waitForDisplayed();
-		EditPage.clickText();
+	beforeEach( async function () {
+		await EditPage.openForEditing( title );
+		await EditPage.wikiEditorToolbar.waitForDisplayed();
+		await EditPage.clickText();
 	} );
 
-	it( 'highlights matching bracket', function () {
-		EditPage.cursorToPosition( 0 );
-		assert.strictEqual( EditPage.getHighlightedMatchingBrackets(), '[]' );
+	it( 'highlights matching bracket', async function () {
+		await EditPage.cursorToPosition( 0 );
+		assert.strictEqual( await EditPage.getHighlightedMatchingBrackets(), '[]' );
 	} );
 
-	it( 'matches according to cursor movement', function () {
-		EditPage.cursorToPosition( 3 );
-		// FIXME: wait for hook to fire
-		browser.pause( 100 );
-		assert.strictEqual( EditPage.getHighlightedMatchingBrackets(), '{}' );
+	it( 'matches according to cursor movement', async function () {
+		await EditPage.cursorToPosition( 3 );
+		assert.strictEqual( await EditPage.getHighlightedMatchingBrackets(), '{}' );
 	} );
 } );

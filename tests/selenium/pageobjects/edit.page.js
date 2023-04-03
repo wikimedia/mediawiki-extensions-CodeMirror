@@ -4,20 +4,20 @@ const Page = require( 'wdio-mediawiki/Page' );
 
 // Copied from mediawiki-core edit.page.js
 class EditPage extends Page {
-	openForEditing( title ) {
-		super.openTitle( title, { action: 'edit', vehidebetadialog: 1, hidewelcomedialog: 1 } );
+	async openForEditing( title ) {
+		await super.openTitle( title, { action: 'edit', vehidebetadialog: 1, hidewelcomedialog: 1 } );
 	}
 
 	get wikiEditorToolbar() { return $( '#wikiEditor-ui-toolbar' ); }
 	get legacyTextInput() { return $( '#wpTextbox1' ); }
-	clickText() {
-		if ( this.visualEditorSave.isDisplayed() ) {
-			this.visualEditorSurface.click();
-		} else if ( this.legacyTextInput.isDisplayed() ) {
-			this.legacyTextInput.click();
+	async clickText() {
+		if ( await this.visualEditorSave.isDisplayed() ) {
+			await this.visualEditorSurface.click();
+		} else if ( await this.legacyTextInput.isDisplayed() ) {
+			await this.legacyTextInput.click();
 		} else {
 			// Click the container, if using WikiEditor etc.
-			this.legacyTextInput.parentElement().click();
+			await this.legacyTextInput.parentElement().click();
 		}
 	}
 
@@ -25,15 +25,15 @@ class EditPage extends Page {
 	get visualEditorToggle() { return $( '.ve-init-mw-editSwitch' ); }
 	get visualEditorSurface() { return $( '.ve-ui-surface-source' ); }
 
-	cursorToPosition( index ) {
-		this.clickText();
+	async cursorToPosition( index ) {
+		await this.clickText();
 
 		// Second "Control" deactivates the modifier.
 		const keys = [ 'Control', 'Home', 'Control' ];
 		for ( let i = 0; i < index; i++ ) {
 			keys.push( 'ArrowRight' );
 		}
-		browser.keys( keys );
+		await browser.keys( keys );
 	}
 
 	getHighlightedMatchingBrackets() {
