@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Muhammad Shuaib"
+		]
+	},
+	"codemirror-desc": "ویکی خانۂ ترمیم میں سنٹیکس کو نمایاں کرتا ہے",
+	"codemirror-toggle-label": "سنٹیکس روشن گر",
+	"codemirror-prefs-colorblind": "ویکی مندرجات میں ترمیم کے دوران سنٹیکس کو نمایاں کرنے لیے رنگوندا دوست سہولت کو فعال کریں",
+	"codemirror-prefs-colorblind-help": "اگر آپ سنٹیکس کو نمایاں کرنے لیے کسی آلہ کو استعمال کر رہے ہیں تو یہ سہولت کام نہیں کرے گی۔",
+	"prefs-accessibility": "رسائی"
+}
