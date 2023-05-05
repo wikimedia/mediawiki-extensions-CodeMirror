@@ -1,6 +1,6 @@
 <?php
 /**
- * ResourceLoader ext.CodeMirror module
+ * ResourceLoader callback for ext.CodeMirror.data module
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,34 +28,17 @@ use MediaWiki\ResourceLoader as RL;
 use MediaWiki\ResourceLoader\ResourceLoader;
 
 /**
- * ResourceLoader module for ext.CodeMirror
+ * ResourceLoader callback for ext.CodeMirror.data
  */
-class ResourceLoaderCodeMirrorModule extends RL\FileModule {
+class DataScript {
 	/**
-	 * @inheritDoc
+	 * @param RL\Context $context
+	 * @return string
 	 */
-	public function getScript( RL\Context $context ) {
+	public static function makeScript( RL\Context $context ) {
 		return ResourceLoader::makeConfigSetScript(
-				[ 'extCodeMirrorConfig' => $this->getFrontendConfiguraton() ]
-			)
-			. "\n"
-			. parent::getScript( $context );
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function supportsURLLoading() {
-		// This module does not support loading URLs, because it inserts
-		// JS config vars into the module by the getScript function.
-		return false;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function enableModuleContentVersion() {
-		return true;
+				[ 'extCodeMirrorConfig' => self::getFrontendConfiguraton() ]
+			);
 	}
 
 	/**
@@ -63,7 +46,7 @@ class ResourceLoaderCodeMirrorModule extends RL\FileModule {
 	 *
 	 * @return array
 	 */
-	private function getFrontendConfiguraton() {
+	private static function getFrontendConfiguraton() {
 		// Use the content language, not the user language. (See T170130.)
 		$lang = MediaWikiServices::getInstance()->getContentLanguage();
 		$registry = ExtensionRegistry::getInstance();

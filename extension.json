@@ -51,7 +51,12 @@
 			]
 		},
 		"ext.CodeMirror.data": {
-			"class": "MediaWiki\\Extension\\CodeMirror\\ResourceLoaderCodeMirrorModule"
+			"scripts": [
+				{
+					"name": "ext.CodeMirror.data.js",
+					"callback": "MediaWiki\\Extension\\CodeMirror\\DataScript::makeScript"
+				}
+			]
 		},
 		"ext.CodeMirror.lib": {
 			"scripts": [
