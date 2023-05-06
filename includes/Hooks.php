@@ -37,7 +37,7 @@ class Hooks implements
 	 */
 	private function isCodeMirrorOnPage( OutputPage $out ) {
 		// Disable CodeMirror when CodeEditor is active on this page
-		// Depends on ext.codeEditor being added by EditPage::showEditForm:initial
+		// Depends on ext.codeEditor being added by \MediaWiki\EditPage\EditPage::showEditForm:initial
 		if ( in_array( 'ext.codeEditor', $out->getModules() ) ) {
 			return false;
 		}
