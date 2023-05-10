@@ -2,22 +2,18 @@
 
 namespace MediaWiki\Extension\CodeMirror\Tests;
 
-use MediaWiki\Extension\CodeMirror\ResourceLoaderCodeMirrorModule;
+use MediaWiki\Extension\CodeMirror\DataScript;
 use MediaWiki\ResourceLoader\Context;
 
 /**
- * @covers \MediaWiki\Extension\CodeMirror\ResourceLoaderCodeMirrorModule
+ * @covers \MediaWiki\Extension\CodeMirror\DataScript
  */
-class ResourceLoaderCodeMirrorModuleTest extends \MediaWikiIntegrationTestCase {
+class DataScriptTest extends \MediaWikiIntegrationTestCase {
 
-	public function testResourceLoaderModule() {
+	public function testMakeScript() {
 		$context = $this->createMock( Context::class );
-		$module = new ResourceLoaderCodeMirrorModule();
 
-		$this->assertFalse( $module->supportsURLLoading() );
-		$this->assertTrue( $module->enableModuleContentVersion() );
-
-		$script = $module->getScript( $context );
+		$script = DataScript::makeScript( $context );
 		$this->assertStringContainsString( '"extCodeMirrorConfig":', $script );
 		$this->assertStringContainsString( '"pluginModules":', $script );
 		$this->assertStringContainsString( '"tagModes":', $script );
