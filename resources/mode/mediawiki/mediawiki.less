@@ -1,21 +1,11 @@
-/* stylelint-disable block-opening-brace-newline-before, block-opening-brace-newline-after,
-	block-closing-brace-space-after, declaration-block-single-line-max-declarations,
-	declaration-block-semicolon-newline-after, selector-list-comma-newline-after */
-
-// Copied from wikimedia-ui-base.less
-@wmui-color-base30: #72777d;
-@wmui-color-red50: #d33;
-@wmui-color-yellow30: #ac6600;
-@wmui-color-green30: #14866d;
-
-@comment-color: @wmui-color-base30;
+@comment-color: #72777d;
 @link-color: #000aaa;
-@parser-function-color: @wmui-color-red50;
+@parser-function-color: #d33;
 @table-color: #d08;
 @template-color: #80c;
-@template-variable-color: @wmui-color-yellow30;
+@template-variable-color: #ac6600;
 @wikitext-formatting-color: #0076dd;
-@xml-tag-color: @wmui-color-green30;
+@xml-tag-color: #14866d;
 
 @template-background-color: #a11;
 @ext-background-color: #70a;
@@ -27,6 +17,10 @@
 	@link-shade: fade( @link-background-color, 4% * @link );
 	background-color: average( average( @template-shade, @ext-shade ), @link-shade );
 }
+
+/* stylelint-disable block-opening-brace-newline-before, block-opening-brace-newline-after,
+	block-closing-brace-space-after, declaration-block-single-line-max-declarations,
+	declaration-block-semicolon-newline-after, selector-list-comma-newline-after */
 
 .cm-mw-pagename { text-decoration: underline; }
 
