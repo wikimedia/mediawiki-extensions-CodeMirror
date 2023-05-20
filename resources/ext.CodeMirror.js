@@ -74,7 +74,7 @@
 	function setCodeEditorPreference( prefValue ) {
 		useCodeMirror = prefValue; // Save state for function updateToolbarButton()
 
-		if ( mw.user.isAnon() ) { // Skip it for anon users
+		if ( !mw.user.isNamed() ) { // Skip it for unnamed users
 			return;
 		}
 		api.saveOption( 'usecodemirror', prefValue ? 1 : 0 );
