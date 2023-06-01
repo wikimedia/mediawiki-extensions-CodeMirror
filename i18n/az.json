@@ -1,9 +1,12 @@
 {
 	"@metadata": {
 		"authors": [
-			"Toghrul Rahimli"
+			"Toghrul Rahimli",
+			"NMW03"
 		]
 	},
+	"codemirror-desc": "Vikimətn redaktorunda kodun rəngli olmasını təmin edir",
+	"codemirror-toggle-label": "Kodun rənglənməsi",
 	"codemirror-prefs-colorblind": "Vikimətn redaktə edərkən rəng korluğuna uyğun sintaksis sxemini aktivləşdir",
 	"codemirror-prefs-colorblind-help": "Sintaksis üçün hansısa qadcetdən istifadə etsəniz, bu seçim işləməyəcək.",
 	"prefs-accessibility": "Əlçatanlıq"
