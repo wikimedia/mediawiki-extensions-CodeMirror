@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"NMW03",
+			"Toghrul Rahimli"
+		]
+	},
+	"codemirror-desc": "Vikimətn redaktorunda kodun rəngli olmasını təmin edir",
+	"codemirror-toggle-label": "Kodun rənglənməsi"
+}
