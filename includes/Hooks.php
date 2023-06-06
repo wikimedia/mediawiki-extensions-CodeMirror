@@ -38,14 +38,14 @@ class Hooks implements
 	private function isCodeMirrorOnPage( OutputPage $out ) {
 		// Disable CodeMirror when CodeEditor is active on this page
 		// Depends on ext.codeEditor being added by \MediaWiki\EditPage\EditPage::showEditForm:initial
-		if ( in_array( 'ext.codeEditor', $out->getModules() ) ) {
+		if ( in_array( 'ext.codeEditor', $out->getModules(), true ) ) {
 			return false;
 		}
 		// Disable CodeMirror when the WikiEditor toolbar is not enabled in preferences
 		if ( !$this->userOptionsLookup->getOption( $out->getUser(), 'usebetatoolbar' ) ) {
 			return false;
 		}
-		return in_array( $out->getActionName(), [ 'edit', 'submit' ] ) &&
+		return in_array( $out->getActionName(), [ 'edit', 'submit' ], true ) &&
 			// CodeMirror on textarea wikitext editors doesn't support RTL (T170001)
 			!$out->getTitle()->getPageLanguage()->isRTL();
 	}
