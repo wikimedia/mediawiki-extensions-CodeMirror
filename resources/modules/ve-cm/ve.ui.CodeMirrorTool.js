@@ -26,7 +26,7 @@ ve.ui.CodeMirrorTool.static.name = 'codeMirror';
 ve.ui.CodeMirrorTool.static.autoAddToCatchall = false;
 ve.ui.CodeMirrorTool.static.title = OO.ui.deferMsg( 'codemirror-toggle-label' );
 ve.ui.CodeMirrorTool.static.icon = 'highlight';
-ve.ui.CodeMirrorTool.static.group = 'codeMirror';
+ve.ui.CodeMirrorTool.static.group = 'utility';
 ve.ui.CodeMirrorTool.static.commandName = 'codeMirror';
 ve.ui.CodeMirrorTool.static.deactivateOnSelect = false;
 

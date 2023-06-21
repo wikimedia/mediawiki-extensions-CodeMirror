@@ -126,26 +126,22 @@
 				"ext.CodeMirror.lib"
 			]
 		},
-		"ext.CodeMirror.visualEditor.init": {
-			"scripts": [
-				"modules/ve-cm/ve.ui.CodeMirror.init.js"
-			],
-			"styles": [
-				"modules/ve-cm/ve.ui.CodeMirror.init.less"
-			],
-			"messages": [
-				"codemirror-toggle-label"
-			]
-		},
 		"ext.CodeMirror.visualEditor": {
 			"dependencies": [
 				"ext.visualEditor.mwcore",
+				"ext.visualEditor.mwmeta",
 				"mediawiki.api",
 				"user.options"
 			],
 			"scripts": [
 				"modules/ve-cm/ve.ui.CodeMirrorAction.js",
 				"modules/ve-cm/ve.ui.CodeMirrorTool.js"
+			],
+			"styles": [
+				"modules/ve-cm/ve.ui.CodeMirror.less"
+			],
+			"messages": [
+				"codemirror-toggle-label"
 			]
 		}
 	},
@@ -193,7 +189,6 @@
 		},
 		"VisualEditor": {
 			"PluginModules": [
-				"ext.CodeMirror.visualEditor.init",
 				"ext.CodeMirror.visualEditor"
 			]
 		},
