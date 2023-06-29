@@ -1,9 +1,18 @@
 'use strict';
 
-const BlankPage = require( 'wdio-mediawiki/BlankPage' ),
+const Api = require( 'wdio-mediawiki/Api' ),
+	BlankPage = require( 'wdio-mediawiki/BlankPage' ),
+	LoginPage = require( 'wdio-mediawiki/LoginPage' ),
 	Util = require( 'wdio-mediawiki/Util' );
 
 class UserPreferences {
+	async loginAsOther() {
+		const username = Util.getTestString( 'User-' );
+		const password = Util.getTestString();
+		await Api.createAccount( await Api.bot(), username, password );
+		await LoginPage.login( username, password );
+	}
+
 	async setPreferences( preferences ) {
 		await BlankPage.open();
 		Util.waitForModuleState( 'mediawiki.base' );

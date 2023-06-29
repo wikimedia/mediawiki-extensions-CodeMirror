@@ -22,7 +22,6 @@ class EditPage extends Page {
 	}
 
 	get visualEditorSave() { return $( '.ve-ui-toolbar-saveButton' ); }
-	get visualEditorToggle() { return $( '.ve-init-mw-editSwitch' ); }
 	get visualEditorSurface() { return $( '.ve-ui-surface-source' ); }
 
 	async cursorToPosition( index ) {
@@ -36,9 +35,11 @@ class EditPage extends Page {
 		await browser.keys( keys );
 	}
 
-	getHighlightedMatchingBrackets() {
-		const elements = $$( '.CodeMirror-line .cm-mw-matchingbracket' );
-		const matchingTexts = elements.map( function ( el ) {
+	get highlightedBrackets() { return $$( '.CodeMirror-line .cm-mw-matchingbracket' ); }
+
+	async getHighlightedMatchingBrackets() {
+		await this.highlightedBrackets[ 0 ].waitForDisplayed();
+		const matchingTexts = await this.highlightedBrackets.map( function ( el ) {
 			return el.getText();
 		} );
 		return matchingTexts.join( '' );
