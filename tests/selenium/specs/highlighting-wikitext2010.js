@@ -3,7 +3,6 @@
 const assert = require( 'assert' ),
 	EditPage = require( '../pageobjects/edit.page' ),
 	FixtureContent = require( '../fixturecontent' ),
-	LoginPage = require( 'wdio-mediawiki/LoginPage' ),
 	UserPreferences = require( '../userpreferences' ),
 	Util = require( 'wdio-mediawiki/Util' );
 
@@ -12,7 +11,7 @@ describe( 'CodeMirror bracket match highlighting for the wikitext 2010 editor', 
 
 	before( async function () {
 		title = Util.getTestString( 'CodeMirror-fixture1-' );
-		await LoginPage.loginAdmin();
+		await UserPreferences.loginAsOther();
 		await FixtureContent.createFixturePage( title );
 		await UserPreferences.enableWikitext2010EditorWithCodeMirror();
 	} );
