@@ -211,9 +211,13 @@ ve.ui.CodeMirrorAction.prototype.onSelect = function ( selection ) {
  */
 ve.ui.CodeMirrorAction.prototype.onLangChange = function () {
 	var surface = this.surface,
-		dir = surface.getView().getDocument().getDir();
+		doc = surface.getView().getDocument(),
+		dir = doc.getDir(), lang = doc.getLang();
 
 	surface.mirror.setOption( 'direction', dir );
+
+	// Set the wrapper to the appropriate language (T341342)
+	surface.mirror.getWrapperElement().setAttribute( 'lang', lang );
 };
 
 /**
