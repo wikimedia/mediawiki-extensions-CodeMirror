@@ -216,6 +216,9 @@
 			codeMirror.on( 'blur', function () {
 				$textbox1.triggerHandler( 'blur' );
 			} );
+			mw.hook( 'editRecovery.loadEnd' ).add( function ( data ) {
+				codeMirror.on( 'change', data.fieldChangeHandler );
+			} );
 
 			// Allow textSelection() functions to work with CodeMirror editing field.
 			$codeMirror.textSelection( 'register', cmTextSelection );
