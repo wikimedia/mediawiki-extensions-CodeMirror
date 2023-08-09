@@ -9,6 +9,7 @@ use RequestContext;
 
 /**
  * @group CodeMirror
+ * @group Database
  * @coversDefaultClass \MediaWiki\Extension\CodeMirror\Hooks
  */
 class HookTest extends MediaWikiIntegrationTestCase {
