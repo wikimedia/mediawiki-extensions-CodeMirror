@@ -61,7 +61,6 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 	if ( !surface.mirror && enable !== false ) {
 		surface.mirror = true;
 		mw.loader.using( [
-			'ext.CodeMirror.data',
 			'ext.CodeMirror.lib',
 			'ext.CodeMirror.mode.mediawiki',
 			'jquery.client'

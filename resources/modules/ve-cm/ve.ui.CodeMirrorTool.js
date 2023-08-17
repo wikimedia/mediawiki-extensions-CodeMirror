@@ -12,6 +12,8 @@ ve.ui.CodeMirrorTool = function VeUiCodeMirrorTool() {
 	// Parent constructor
 	ve.ui.CodeMirrorTool.super.apply( this, arguments );
 
+	this.extCodeMirror = require( 'ext.CodeMirror' );
+
 	// Events
 	this.toolbar.connect( this, { surfaceChange: 'onSurfaceChange' } );
 };
@@ -30,21 +32,6 @@ ve.ui.CodeMirrorTool.static.group = 'utility';
 ve.ui.CodeMirrorTool.static.commandName = 'codeMirror';
 ve.ui.CodeMirrorTool.static.deactivateOnSelect = false;
 
-// TODO: consolidate with code in ext.CodeMirror.js, see T272035
-ve.ui.CodeMirrorTool.prototype.logUsage = function ( data ) {
-	/* eslint-disable camelcase */
-	var event = $.extend( {
-		session_token: mw.user.sessionId(),
-		user_id: mw.user.getId()
-	}, data );
-	var editCountBucket = mw.config.get( 'wgUserEditCountBucket' );
-	if ( editCountBucket !== null ) {
-		event.user_edit_count_bucket = editCountBucket;
-	}
-	/* eslint-enable camelcase */
-	mw.track( 'event.CodeMirrorUsage', event );
-};
-
 /**
  * @inheritdoc
  */
@@ -58,7 +45,7 @@ ve.ui.CodeMirrorTool.prototype.onSelect = function () {
 	new mw.Api().saveOption( 'usecodemirror', useCodeMirror ? 1 : 0 );
 	mw.user.options.set( 'usecodemirror', useCodeMirror ? 1 : 0 );
 
-	this.logUsage( {
+	this.extCodeMirror.logUsage( {
 		editor: 'wikitext-2017',
 		enabled: useCodeMirror,
 		toggled: true,
@@ -82,7 +69,7 @@ ve.ui.CodeMirrorTool.prototype.onSurfaceChange = function ( oldSurface, newSurfa
 		this.setActive( useCodeMirror );
 
 		if ( this.toolbar.target.startTimeStamp ) {
-			this.logUsage( {
+			this.extCodeMirror.logUsage( {
 				editor: 'wikitext-2017',
 				enabled: useCodeMirror,
 				toggled: false,
