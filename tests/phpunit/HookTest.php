@@ -3,6 +3,7 @@
 namespace MediaWiki\Extension\CodeMirror\Tests;
 
 use MediaWiki\Extension\CodeMirror\Hooks;
+use MediaWiki\Title\Title;
 use MediaWiki\User\UserOptionsLookup;
 use MediaWikiIntegrationTestCase;
 use RequestContext;
@@ -27,7 +28,7 @@ class HookTest extends MediaWikiIntegrationTestCase {
 		$out->method( 'getModules' )->willReturn( [] );
 		$out->method( 'getUser' )->willReturn( $this->createMock( \User::class ) );
 		$out->method( 'getActionName' )->willReturn( 'edit' );
-		$out->method( 'getTitle' )->willReturn( \Title::makeTitle( NS_MAIN, __METHOD__ ) );
+		$out->method( 'getTitle' )->willReturn( Title::makeTitle( NS_MAIN, __METHOD__ ) );
 		$out->expects( $this->exactly( 2 ) )->method( 'addModules' );
 
 		( new Hooks( $userOptionsLookup ) )
@@ -39,7 +40,7 @@ class HookTest extends MediaWikiIntegrationTestCase {
 	 */
 	public function testPreferenceRegistered() {
 		$user = self::getTestUser()->getUser();
-		$this->setMwGlobals( 'wgTitle', \Title::newFromText( __METHOD__ ) );
+		$this->setMwGlobals( 'wgTitle', Title::newFromText( __METHOD__ ) );
 		$kinds = $this->getServiceContainer()->getUserOptionsManager()
 			->getOptionKinds( $user, RequestContext::getMain(), [ 'usecodemirror' => 1 ] );
 		self::assertEquals( 'registered', $kinds['usecodemirror'] );
