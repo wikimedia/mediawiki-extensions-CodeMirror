@@ -61,7 +61,7 @@ class Hooks implements
 	 */
 	public function onBeforePageDisplay( $out, $skin ): void {
 		if ( $this->isCodeMirrorOnPage( $out ) ) {
-			$out->addModules( 'ext.CodeMirror' );
+			$out->addModules( 'ext.CodeMirror.WikiEditor' );
 
 			if ( $this->userOptionsLookup->getOption( $out->getUser(), 'usecodemirror' ) ) {
 				// These modules are predelivered for performance when needed

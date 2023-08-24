@@ -32,30 +32,35 @@
 	"ResourceModules": {
 		"ext.CodeMirror": {
 			"dependencies": [
-				"ext.CodeMirror.data",
-				"jquery.textSelection",
 				"mediawiki.api",
+				"mediawiki.user",
+				"user.options"
+			],
+			"packageFiles": [
+				"ext.CodeMirror.js",
+				{
+					"name": "ext.CodeMirror.data.js",
+					"callback": "MediaWiki\\Extension\\CodeMirror\\DataScript::makeScript"
+				}
+			]
+		},
+		"ext.CodeMirror.WikiEditor": {
+			"dependencies": [
+				"ext.CodeMirror",
+				"jquery.textSelection",
 				"mediawiki.user",
 				"user.options",
 				"jquery.ui",
 				"oojs-ui.styles.icons-editing-styling"
 			],
-			"scripts": [
-				"ext.CodeMirror.js"
+			"packageFiles": [
+				"ext.CodeMirror.WikiEditor.js"
 			],
 			"styles": [
 				"ext.CodeMirror.less"
 			],
 			"messages": [
 				"codemirror-toggle-label"
-			]
-		},
-		"ext.CodeMirror.data": {
-			"scripts": [
-				{
-					"name": "ext.CodeMirror.data.js",
-					"callback": "MediaWiki\\Extension\\CodeMirror\\DataScript::makeScript"
-				}
 			]
 		},
 		"ext.CodeMirror.lib": {
@@ -76,7 +81,7 @@
 			]
 		},
 		"ext.CodeMirror.mode.mediawiki": {
-			"scripts": "mode/mediawiki/mediawiki.js",
+			"packageFiles": "mode/mediawiki/mediawiki.js",
 			"styles": [
 				"mode/mediawiki/mediawiki.less",
 				"mode/mediawiki/colorblind-colors.less"
@@ -131,7 +136,8 @@
 				"ext.visualEditor.mwcore",
 				"ext.visualEditor.mwmeta",
 				"mediawiki.api",
-				"user.options"
+				"user.options",
+				"ext.CodeMirror"
 			],
 			"scripts": [
 				"modules/ve-cm/ve.ui.CodeMirrorAction.js",
@@ -153,13 +159,13 @@
 		"usecodemirror": 0
 	},
 	"QUnitTestModule": {
-		"localBasePath": "",
-		"remoteExtPath": "CodeMirror",
-		"scripts": [
-			"resources/mode/mediawiki/tests/qunit/CodeMirror.mediawiki.test.js"
+		"localBasePath": "resources/mode/mediawiki/tests",
+		"remoteExtPath": "CodeMirror/resources/mode/mediawiki/tests",
+		"packageFiles": [
+			"qunit/CodeMirror.mediawiki.test.js"
 		],
 		"dependencies": [
-			"ext.CodeMirror.data",
+			"ext.CodeMirror",
 			"ext.CodeMirror.lib",
 			"ext.CodeMirror.mode.mediawiki"
 		]

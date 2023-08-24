@@ -9,6 +9,7 @@
 		"CodeMirror": "readonly"
 	},
 	"rules": {
-		"max-len": "off"
+		"max-len": "off",
+		"no-implicit-globals": "off"
 	}
 }
