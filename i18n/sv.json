@@ -2,9 +2,13 @@
 	"@metadata": {
 		"authors": [
 			"Lokal Profil",
-			"WikiPhoenix"
+			"WikiPhoenix",
+			"Sabelöga"
 		]
 	},
 	"codemirror-desc": "Ger syntaxmarkerad redigering för redigering av wikitext",
-	"codemirror-toggle-label": "Syntaxmarkering"
+	"codemirror-toggle-label": "Syntaxmarkering",
+	"codemirror-prefs-colorblind": "Aktivera färgblindvänligt färgschema för syntaxmarkering när du redigerar wikitext",
+	"codemirror-prefs-colorblind-help": "Om du använder en finess för syntaxmarkering kommer inställningen inte fungera.",
+	"prefs-accessibility": "Tillgänglighet"
 }
