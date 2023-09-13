@@ -11,11 +11,7 @@ module.exports = function ( grunt ) {
 				cache: true,
 				fix: grunt.option( 'fix' )
 			},
-			all: [
-				'**/*.{js,json}',
-				'!resources/lib/**',
-				'!{vendor,node_modules}/**'
-			]
+			all: [ '.' ]
 		},
 		stylelint: {
 			all: [

@@ -11,5 +11,16 @@
 	"rules": {
 		"max-len": "off",
 		"no-implicit-globals": "off"
-	}
+	},
+	"overrides": [
+		{
+			"files": [
+				"addon/edit/*.js"
+			],
+			"rules": {
+				"computed-property-spacing": [ "error", "never" ],
+				"indent": [ "error", 2 ]
+			}
+		}
+	]
 }
