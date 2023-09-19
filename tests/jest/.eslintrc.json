@@ -1,0 +1,13 @@
+{
+	"extends": [
+		"wikimedia/jquery",
+		"wikimedia/mediawiki"
+	],
+	"parserOptions": {
+		"sourceType": "module"
+	},
+	"env": {
+		"browser": true,
+		"jest": true
+	}
+}

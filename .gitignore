@@ -3,6 +3,7 @@
 .*.swp
 .directory
 /node_modules/
+/coverage/
 /tests/selenium/log/
 /vendor/
 /composer.lock

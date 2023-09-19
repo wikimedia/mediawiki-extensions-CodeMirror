@@ -18,15 +18,21 @@ class Hooks implements
 {
 
 	/** @var UserOptionsLookup */
-	private $userOptionsLookup;
+	private UserOptionsLookup $userOptionsLookup;
+
+	/** @var bool */
+	private bool $useV6;
 
 	/**
 	 * @param UserOptionsLookup $userOptionsLookup
+	 * @param Config $config
 	 */
 	public function __construct(
-		UserOptionsLookup $userOptionsLookup
+		UserOptionsLookup $userOptionsLookup,
+		Config $config
 	) {
 		$this->userOptionsLookup = $userOptionsLookup;
+		$this->useV6 = $config->get( 'CodeMirrorV6' );
 	}
 
 	/**
@@ -35,7 +41,7 @@ class Hooks implements
 	 * @param OutputPage $out
 	 * @return bool
 	 */
-	private function isCodeMirrorOnPage( OutputPage $out ) {
+	private function isCodeMirrorOnPage( OutputPage $out ): bool {
 		// Disable CodeMirror when CodeEditor is active on this page
 		// Depends on ext.codeEditor being added by \MediaWiki\EditPage\EditPage::showEditForm:initial
 		if ( in_array( 'ext.codeEditor', $out->getModules(), true ) ) {
@@ -60,7 +66,14 @@ class Hooks implements
 	 * @return void This hook must not abort, it must return no value
 	 */
 	public function onBeforePageDisplay( $out, $skin ): void {
-		if ( $this->isCodeMirrorOnPage( $out ) ) {
+		if ( !$this->isCodeMirrorOnPage( $out ) ) {
+			return;
+		}
+
+		// TODO: remove check for cm6enable flag after migration is complete
+		if ( $this->useV6 || $out->getRequest()->getRawVal( 'cm6enable' ) ) {
+			$out->addModules( 'ext.CodeMirror.v6.WikiEditor' );
+		} else {
 			$out->addModules( 'ext.CodeMirror.WikiEditor' );
 
 			if ( $this->userOptionsLookup->getOption( $out->getUser(), 'usecodemirror' ) ) {
