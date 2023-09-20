@@ -1,0 +1,22 @@
+codemirror:
+  license: MIT
+  homepage: https://github.com/codemirror/codemirror5
+  authors: CodeMirror authors
+  version: 5.65.15
+  type: zip
+  src: https://codemirror.net/5/codemirror-5.65.15.zip
+  integrity: sha512-04jTPLBr37QM82YQrCFcjSYeyJGB+AGXPEFN15IArKLZtu92xyQ79Ol31LOB2kH76wnZs4Njzd51+QUhe3JCpw==
+  dest:
+    codemirror-*/AUTHORS:
+    codemirror-*/CHANGELOG.md:
+    codemirror-*/CONTRIBUTING.md:
+    codemirror-*/LICENSE:
+    codemirror-*/README.md:
+    codemirror-*/lib/codemirror.css: lib/
+    codemirror-*/lib/codemirror.js: lib/
+    codemirror-*/mode/clike/clike.js: mode/clike/
+    codemirror-*/mode/css/css.js: mode/css/
+    codemirror-*/mode/htmlmixed/htmlmixed.js: mode/htmlmixed/
+    codemirror-*/mode/javascript/javascript.js: mode/javascript/
+    codemirror-*/mode/php/php.js: mode/php/
+    codemirror-*/mode/xml/xml.js: mode/xml/

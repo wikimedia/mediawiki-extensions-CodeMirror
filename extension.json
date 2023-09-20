@@ -155,6 +155,7 @@
 		"localBasePath": "resources",
 		"remoteExtPath": "CodeMirror/resources"
 	},
+	"ForeignResourcesDir": "resources/lib",
 	"DefaultUserOptions": {
 		"usecodemirror": 0
 	},
