@@ -2,14 +2,14 @@
 
 namespace MediaWiki\Extension\CodeMirror;
 
-use Config;
+use MediaWiki\Config\Config;
 use MediaWiki\Hook\BeforePageDisplayHook;
+use MediaWiki\Output\OutputPage;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
 use MediaWiki\ResourceLoader\Hook\ResourceLoaderGetConfigVarsHook;
+use MediaWiki\User\User;
 use MediaWiki\User\UserOptionsLookup;
-use OutputPage;
 use Skin;
-use User;
 
 class Hooks implements
 	BeforePageDisplayHook,
