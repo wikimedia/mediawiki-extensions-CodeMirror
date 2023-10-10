@@ -22,5 +22,6 @@
 				"indent": [ "error", 2 ]
 			}
 		}
-	]
+	],
+	"ignorePatterns": [ "dist/" ]
 }

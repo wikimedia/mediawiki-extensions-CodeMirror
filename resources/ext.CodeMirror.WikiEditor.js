@@ -215,8 +215,8 @@ function init() {
 
 			// Allow textSelection() functions to work with CodeMirror editing field.
 			$codeMirror.textSelection( 'register', cmTextSelection );
-			// Also override textSelection() functions for the "real" hidden textarea to route to
-			// CodeMirror. We unregister this when switching to normal textarea mode.
+			// Also override textSelection() functions for the "real" hidden textarea to route to CodeMirror.
+			// We unregister this when switching to normal textarea mode.
 			$textbox1.textSelection( 'register', cmTextSelection );
 
 			setupSizing( $textbox1, codeMirror );

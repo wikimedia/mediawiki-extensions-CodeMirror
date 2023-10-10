@@ -1,10 +1,11 @@
 {
 	"name": "CodeMirror",
-	"version": "4.0.0",
+	"version": "5.0.0",
 	"author": [
 		"[https://www.mediawiki.org/wiki/User:Pastakhov Pavel Astakhov]",
 		"[https://www.mediawiki.org/wiki/User:Florianschmidtwelzow Florian Schmidt]",
 		"Marijn Haverbeke",
+		"MusikAnimal",
 		"[https://raw.githubusercontent.com/codemirror/CodeMirror/master/AUTHORS CodeMirror contributors]"
 	],
 	"url": "https://www.mediawiki.org/wiki/Extension:CodeMirror",
@@ -19,6 +20,10 @@
 			"value": null,
 			"description": "List of namespace IDs where line numbering should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere. Defaults to `null` for all namespaces.",
 			"public": true
+		},
+		"CodeMirrorV6": {
+			"value": false,
+			"description": "Temporary feature flag for the CodeMirror 6 upgrade."
 		}
 	},
 	"MessagesDirs": {
@@ -149,6 +154,23 @@
 			"messages": [
 				"codemirror-toggle-label"
 			]
+		},
+		"ext.CodeMirror.v6.WikiEditor": {
+			"dependencies": [
+				"web2017-polyfills",
+				"mediawiki.api",
+				"mediawiki.user",
+				"user.options"
+			],
+			"packageFiles": [
+				"dist/main.js"
+			],
+			"styles": [
+				"ext.CodeMirror.v6.WikiEditor.less"
+			],
+			"messages": [
+				"codemirror-toggle-label"
+			]
 		}
 	},
 	"ResourceFileModulePaths": {
@@ -180,7 +202,8 @@
 		"main": {
 			"class": "MediaWiki\\Extension\\CodeMirror\\Hooks",
 			"services": [
-				"UserOptionsLookup"
+				"UserOptionsLookup",
+				"MainConfig"
 			]
 		}
 	},
