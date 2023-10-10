@@ -27,9 +27,8 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 	 * Replaces the default textarea with CodeMirror
 	 */
 	enableCodeMirror() {
-		// If CodeMirror is already loaded or wikEd gadget is enabled, abort. See T178348.
-		// FIXME: Would be good to replace the wikEd check with something more generic.
-		if ( this.view || mw.user.options.get( 'gadget-wikEd' ) > 0 ) {
+		// If CodeMirror is already loaded, abort.
+		if ( this.view ) {
 			return;
 		}
 

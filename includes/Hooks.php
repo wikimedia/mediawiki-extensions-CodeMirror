@@ -2,7 +2,10 @@
 
 namespace MediaWiki\Extension\CodeMirror;
 
+use ExtensionRegistry;
+use InvalidArgumentException;
 use MediaWiki\Config\Config;
+use MediaWiki\Extension\Gadgets\GadgetRepo;
 use MediaWiki\Hook\BeforePageDisplayHook;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
@@ -17,10 +20,8 @@ class Hooks implements
 	GetPreferencesHook
 {
 
-	/** @var UserOptionsLookup */
 	private UserOptionsLookup $userOptionsLookup;
-
-	/** @var bool */
+	private array $conflictingGadgets;
 	private bool $useV6;
 
 	/**
@@ -33,15 +34,18 @@ class Hooks implements
 	) {
 		$this->userOptionsLookup = $userOptionsLookup;
 		$this->useV6 = $config->get( 'CodeMirrorV6' );
+		$this->conflictingGadgets = $config->get( 'CodeMirrorConflictingGadgets' );
 	}
 
 	/**
 	 * Checks if CodeMirror for textarea wikitext editor should be loaded on this page or not.
 	 *
 	 * @param OutputPage $out
+	 * @param ExtensionRegistry|null $extensionRegistry Overridden in tests.
 	 * @return bool
 	 */
-	private function isCodeMirrorOnPage( OutputPage $out ): bool {
+	public function shouldLoadCodeMirror( OutputPage $out, ?ExtensionRegistry $extensionRegistry = null ): bool {
+		$extensionRegistry = $extensionRegistry ?: ExtensionRegistry::getInstance();
 		// Disable CodeMirror when CodeEditor is active on this page
 		// Depends on ext.codeEditor being added by \MediaWiki\EditPage\EditPage::showEditForm:initial
 		if ( in_array( 'ext.codeEditor', $out->getModules(), true ) ) {
@@ -52,8 +56,35 @@ class Hooks implements
 			return false;
 		}
 		return in_array( $out->getActionName(), [ 'edit', 'submit' ], true ) &&
+			// Disable CodeMirror if we're on an edit page with a conflicting gadget. See T178348.
+			!$this->conflictingGadgetsEnabled( $extensionRegistry, $out->getUser() ) &&
 			// CodeMirror on textarea wikitext editors doesn't support RTL (T170001)
 			!$out->getTitle()->getPageLanguage()->isRTL();
+	}
+
+	/**
+	 * @param ExtensionRegistry $extensionRegistry
+	 * @param User $user
+	 * @return bool
+	 */
+	private function conflictingGadgetsEnabled( ExtensionRegistry $extensionRegistry, User $user ): bool {
+		if ( !$extensionRegistry->isLoaded( 'Gadgets' ) ) {
+			return false;
+		}
+		// @phan-suppress-next-line PhanUndeclaredClassMethod Code path won't be followed if class doesn't exist.
+		$gadgetRepo = GadgetRepo::singleton();
+		$conflictingGadgets = array_intersect( $this->conflictingGadgets, $gadgetRepo->getGadgetIds() );
+		foreach ( $conflictingGadgets as $conflictingGadget ) {
+			try {
+				if ( $gadgetRepo->getGadget( $conflictingGadget )->isEnabled( $user ) ) {
+					return true;
+				}
+			} catch ( InvalidArgumentException $e ) {
+				// Safeguard for an invalid gadget ID; treat as gadget not enabled.
+				continue;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -66,7 +97,7 @@ class Hooks implements
 	 * @return void This hook must not abort, it must return no value
 	 */
 	public function onBeforePageDisplay( $out, $skin ): void {
-		if ( !$this->isCodeMirrorOnPage( $out ) ) {
+		if ( !$this->shouldLoadCodeMirror( $out ) ) {
 			return;
 		}
 

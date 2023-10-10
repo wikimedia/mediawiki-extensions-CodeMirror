@@ -24,6 +24,14 @@
 		"CodeMirrorV6": {
 			"value": false,
 			"description": "Temporary feature flag for the CodeMirror 6 upgrade."
+		},
+		"CodeMirrorConflictingGadgets": {
+			"value": [
+				"wikEd",
+				"DotsSyntaxHighlighter"
+			],
+			"description": "An array of gadget names that, if enabled, will prevent CodeMirror from loading on action=edit and action=submit.",
+			"public": true
 		}
 	},
 	"MessagesDirs": {
