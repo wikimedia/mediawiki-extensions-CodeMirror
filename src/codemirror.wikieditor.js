@@ -84,6 +84,8 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 		if ( hasFocus ) {
 			this.view.focus();
 		}
+
+		mw.hook( 'ext.CodeMirror.switch' ).fire( true, $( this.view.dom ) );
 	}
 
 	/**
@@ -172,7 +174,7 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 			this.$textarea.prop( 'selectionStart', Math.min( from, to ) )
 				.prop( 'selectionEnd', Math.max( to, from ) );
 			this.$textarea.scrollTop( scrollTop );
-			mw.hook( 'ext.CodeMirror.switch' ).fire( false, this.$textbox1 );
+			mw.hook( 'ext.CodeMirror.switch' ).fire( false, this.$textarea );
 		} else {
 			this.enableCodeMirror();
 			this.setCodeMirrorPreference( true );
