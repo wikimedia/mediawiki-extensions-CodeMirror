@@ -6,12 +6,12 @@ use ExtensionRegistry;
 use MediaWiki\Extension\CodeMirror\Hooks;
 use MediaWiki\Extension\Gadgets\Gadget;
 use MediaWiki\Extension\Gadgets\GadgetRepo;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\Output\OutputPage;
 use MediaWiki\Request\WebRequest;
 use MediaWiki\Title\Title;
+use MediaWiki\User\User;
 use MediaWiki\User\UserOptionsLookup;
 use MediaWikiIntegrationTestCase;
-use OutputPage;
 use PHPUnit\Framework\MockObject\MockObject;
 use RequestContext;
 use Skin;
@@ -47,7 +47,7 @@ class HookTest extends MediaWikiIntegrationTestCase {
 			->method( 'addModules' )
 			->withConsecutive( [ $this->equalTo( $expectedFirstModule ) ] );
 
-		( new Hooks( $userOptionsLookup, MediaWikiServices::getInstance()->getMainConfig() ) )
+		( new Hooks( $userOptionsLookup, $this->getServiceContainer()->getMainConfig() ) )
 			->onBeforePageDisplay( $out, $this->createMock( Skin::class ) );
 	}
 
@@ -106,7 +106,7 @@ class HookTest extends MediaWikiIntegrationTestCase {
 
 		$hooks = new Hooks(
 			$userOptionsLookup,
-			MediaWikiServices::getInstance()->getMainConfig()
+			$this->getServiceContainer()->getMainConfig()
 		);
 		self::assertSame( $expectation, $hooks->shouldLoadCodeMirror( $out, $extensionRegistry ) );
 	}
@@ -127,7 +127,7 @@ class HookTest extends MediaWikiIntegrationTestCase {
 	 */
 	private function getMockOutputPage() {
 		$out = $this->createMock( OutputPage::class );
-		$out->method( 'getUser' )->willReturn( $this->createMock( \User::class ) );
+		$out->method( 'getUser' )->willReturn( $this->createMock( User::class ) );
 		$out->method( 'getActionName' )->willReturn( 'edit' );
 		$out->method( 'getTitle' )->willReturn( Title::makeTitle( NS_MAIN, __METHOD__ ) );
 		$request = $this->createMock( WebRequest::class );
