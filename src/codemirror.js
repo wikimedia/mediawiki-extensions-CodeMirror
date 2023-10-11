@@ -149,7 +149,9 @@ export default class CodeMirror {
 				];
 			},
 			scrollToCaretPosition: () => {
-				this.view.scrollIntoView( this.view.state.selection.main.head );
+				this.view.dispatch( {
+					effects: EditorView.scrollIntoView( this.view.state.selection.main.head )
+				} );
 				return $cmDom;
 			}
 		};

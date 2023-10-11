@@ -4,8 +4,16 @@ const Page = require( 'wdio-mediawiki/Page' );
 
 // Copied from mediawiki-core edit.page.js
 class EditPage extends Page {
-	async openForEditing( title ) {
-		await super.openTitle( title, { action: 'edit', vehidebetadialog: 1, hidewelcomedialog: 1 } );
+	async openForEditing( title, cm6enable = false ) {
+		const queryParams = {
+			action: 'edit',
+			vehidebetadialog: 1,
+			hidewelcomedialog: 1
+		};
+		if ( cm6enable ) {
+			queryParams.cm6enable = '1';
+		}
+		await super.openTitle( title, queryParams );
 	}
 
 	get wikiEditorToolbar() { return $( '#wikiEditor-ui-toolbar' ); }
