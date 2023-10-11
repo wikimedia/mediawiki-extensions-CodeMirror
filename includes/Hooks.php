@@ -55,11 +55,12 @@ class Hooks implements
 		if ( !$this->userOptionsLookup->getOption( $out->getUser(), 'usebetatoolbar' ) ) {
 			return false;
 		}
+		$isRTL = $out->getTitle()->getPageLanguage()->isRTL();
 		return in_array( $out->getActionName(), [ 'edit', 'submit' ], true ) &&
 			// Disable CodeMirror if we're on an edit page with a conflicting gadget. See T178348.
 			!$this->conflictingGadgetsEnabled( $extensionRegistry, $out->getUser() ) &&
-			// CodeMirror on textarea wikitext editors doesn't support RTL (T170001)
-			!$out->getTitle()->getPageLanguage()->isRTL();
+			// CodeMirror 5 on textarea wikitext editors doesn't support RTL (T170001)
+			( !$isRTL || $this->shouldUseV6( $out ) );
 	}
 
 	/**
@@ -101,8 +102,7 @@ class Hooks implements
 			return;
 		}
 
-		// TODO: remove check for cm6enable flag after migration is complete
-		if ( $this->useV6 || $out->getRequest()->getRawVal( 'cm6enable' ) ) {
+		if ( $this->shouldUseV6( $out ) ) {
 			$out->addModules( 'ext.CodeMirror.v6.WikiEditor' );
 		} else {
 			$out->addModules( 'ext.CodeMirror.WikiEditor' );
@@ -113,6 +113,15 @@ class Hooks implements
 				$out->addModules( [ 'ext.CodeMirror.lib', 'ext.CodeMirror.mode.mediawiki' ] );
 			}
 		}
+	}
+
+	/**
+	 * @param OutputPage $out
+	 * @return bool
+	 * @todo Remove check for cm6enable flag after migration is complete
+	 */
+	private function shouldUseV6( OutputPage $out ): bool {
+		return $this->useV6 || $out->getRequest()->getRawVal( 'cm6enable' );
 	}
 
 	/**

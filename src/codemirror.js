@@ -20,10 +20,13 @@ export default class CodeMirror {
 	 * Don't assume CodeMirror is used for editing (i.e. "View source" of a protected page).
 	 * Subclasses are safe to override this method if needed.
 	 *
+	 * @see https://codemirror.net/docs/ref/#state.Extension
 	 * @return {Extension[]}
 	 */
 	get defaultExtensions() {
-		const extensions = [];
+		const extensions = [
+			this.contentAttributesExtension
+		];
 		const namespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
 
 		// Set to [] to disable everywhere, or null to enable everywhere
@@ -31,6 +34,24 @@ export default class CodeMirror {
 			extensions.push( lineNumbers() );
 		}
 		return extensions;
+	}
+
+	/**
+	 * This specifies which attributes get added to the .cm-content element.
+	 * If you need to add more, add another Extension on initialization for the contentAttributes
+	 * Facet in the form of EditorView.contentAttributes.of( {Object} ).
+	 *
+	 * @see https://codemirror.net/docs/ref/#view.EditorView^contentAttributes
+	 * @return {Extension}
+	 */
+	get contentAttributesExtension() {
+		return EditorView.contentAttributes.of( {
+			// T259347: Use accesskey of the original textbox
+			accesskey: this.$textarea.attr( 'accesskey' ),
+			// use direction and language of the original textbox
+			dir: this.$textarea.attr( 'dir' ),
+			lang: this.$textarea.attr( 'lang' )
+		} );
 	}
 
 	/**

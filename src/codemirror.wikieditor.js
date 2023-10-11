@@ -44,11 +44,9 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 		const extensions = [
 			...this.defaultExtensions,
 			history(),
-			// These are HTML attributes on the .cm-content element.
+			// See also the default attributes at contentAttributesExtension() in the parent class.
 			EditorView.contentAttributes.of( {
-				spellcheck: 'true',
-				// T259347: Use accesskey of the original textbox
-				accesskey: this.$textarea.attr( 'accesskey' )
+				spellcheck: 'true'
 			} ),
 			EditorView.domEventHandlers( {
 				blur: () => this.$textarea.triggerHandler( 'blur' ),
