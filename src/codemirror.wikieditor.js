@@ -162,6 +162,7 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 			const { from, to } = this.view.state.selection.ranges[ 0 ];
 			$( this.view.dom ).textSelection( 'unregister' );
 			this.$textarea.textSelection( 'unregister' );
+			this.$textarea.val( this.view.state.doc.toString() );
 			this.view.destroy();
 			this.view = null;
 			this.$textarea.show();

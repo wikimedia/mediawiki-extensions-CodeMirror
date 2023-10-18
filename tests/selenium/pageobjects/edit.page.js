@@ -18,6 +18,7 @@ class EditPage extends Page {
 
 	get wikiEditorToolbar() { return $( '#wikiEditor-ui-toolbar' ); }
 	get legacyTextInput() { return $( '#wpTextbox1' ); }
+	get legacyCodeMirrorButton() { return $( '#mw-editbutton-codemirror' ); }
 	async clickText() {
 		if ( await this.visualEditorSave.isDisplayed() ) {
 			await this.visualEditorSurface.click();

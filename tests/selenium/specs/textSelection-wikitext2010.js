@@ -80,4 +80,10 @@ describe( 'CodeMirror textSelection for the wikitext 2010 editor', () => {
 			0
 		);
 	} );
+
+	it( 'retains the contents after turning CodeMirror off', async () => {
+		await EditPage.legacyCodeMirrorButton.click();
+		await EditPage.legacyTextInput.waitForDisplayed();
+		assert.match( await EditPage.legacyTextInput.getValue(), /foobar/ );
+	} );
 } );
