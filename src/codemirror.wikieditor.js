@@ -76,7 +76,8 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 		this.view.dispatch( {
 			selection: EditorSelection.create( [
 				EditorSelection.range( selectionStart, selectionEnd )
-			] )
+			] ),
+			scrollIntoView: true
 		} );
 		if ( hasFocus ) {
 			this.view.focus();
