@@ -154,6 +154,8 @@ class Hooks implements
 			'type' => 'api',
 		];
 
+		// The following messages are generated upstream by the 'section' value
+		// * prefs-accessibility
 		$defaultPreferences['usecodemirror-colorblind'] = [
 			'type' => 'toggle',
 			'label-message' => 'codemirror-prefs-colorblind',
