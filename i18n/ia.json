@@ -7,6 +7,6 @@
 	"codemirror-desc": "Forni coloration syntactic in le editor de wikitexto",
 	"codemirror-toggle-label": "Coloration syntactic",
 	"codemirror-prefs-colorblind": "Activar le schema de coloration syntactic adaptate a personas con daltonismo durante le modification de wikitexto",
-	"codemirror-prefs-colorblind-help": "Si tu usa un gadget pro le coloration syntactic, iste preferentia non functionara.",
+	"codemirror-prefs-colorblind-help": "Si tu usa un accessorio pro le coloration syntactic, iste preferentia non functionara.",
 	"prefs-accessibility": "Accessibilitate"
 }
