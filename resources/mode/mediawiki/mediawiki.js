@@ -751,7 +751,7 @@
 							state.stack.push( state.tokenize );
 							state.tokenize = inVariable;
 							return makeLocalStyle( 'mw-templatevariable-bracket', state );
-						} else if ( stream.match( /^\{[\s\u00a0]*/ ) ) {
+						} else if ( stream.match( /^{(?!{(?!{))[\s\u00a0]*/ ) ) {
 							if ( stream.peek() === '#' ) { // Parser function
 								state.nExt++;
 								state.stack.push( state.tokenize );
