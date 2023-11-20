@@ -744,7 +744,9 @@
 						}
 						break;
 					case '{':
-						if ( !stream.match( '{{{{', false ) && stream.match( '{{' ) ) { // Template parameter (skip parameters inside a template transclusion, Bug: T108450)
+						// Can't be a variable when it starts with more than 3 brackets (T108450) or
+						// a single { followed by a template. E.g. {{{!}} starts a table (T292967).
+						if ( stream.match( /^{{(?!{|[^{}]*}}(?!}))/ ) ) {
 							stream.eatSpace();
 							state.stack.push( state.tokenize );
 							state.tokenize = inVariable;

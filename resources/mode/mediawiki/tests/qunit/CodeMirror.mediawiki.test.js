@@ -83,7 +83,7 @@
 			{
 				title: 'T292967: table syntax where all | are escaped with the {{!}} parser function',
 				input: '{{{!}}\n{{!}}-\n{{!}}}',
-				output: '<pre><span><span class="cm-mw-templatevariable-bracket">{{{</span><span class="cm-mw-templatevariable-name">!}}</span></span></pre><pre><span><span class="cm-mw-templatevariable-name">{{!}}-</span></span></pre><pre><span><span class="cm-mw-templatevariable-name">{{!</span><span class="cm-mw-templatevariable-bracket">}}}</span></span></pre>'
+				output: '<pre><span><span class="cm-mw-template-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template-ground cm-mw-template-name cm-mw-pagename">{!</span><span class="cm-mw-template-ground cm-mw-template-bracket">}}</span></span></pre><pre><span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">{{</span><span class="cm-mw-ext-ground cm-mw-parserfunction-name">!</span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">}}</span>-</span></pre><pre><span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">{{</span><span class="cm-mw-ext-ground cm-mw-parserfunction-name">!</span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">}}</span>}</span></pre>'
 			},
 			{
 				title: 'section headings',
