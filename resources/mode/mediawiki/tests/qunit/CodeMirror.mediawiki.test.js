@@ -76,6 +76,16 @@
 				output: '<pre><span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">{{</span><span class="cm-mw-ext-ground cm-mw-parserfunction-name">#if</span><span class="cm-mw-ext-ground cm-mw-parserfunction-delimiter">:</span><span class="cm-mw-ext-ground cm-mw-parserfunction"> </span><span class="cm-mw-ext-ground cm-mw-parserfunction-delimiter">|</span><span class="cm-mw-ext-ground cm-mw-parserfunction"> </span><span class="cm-mw-template-ext-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template-ext-ground cm-mw-template-name cm-mw-pagename">some template</span></span></pre><pre><span><span class="cm-mw-template-ext-ground cm-mw-comment">&lt;!-- comment --&gt;</span><span class="cm-mw-template-ext-ground cm-mw-template-bracket"> }}</span><span class="cm-mw-ext-ground cm-mw-parserfunction"> </span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">}}</span></span></pre>'
 			},
 			{
+				title: 'T108450: template transclusion where the template name is a parameter',
+				input: '{{{{{1}}}|…}}',
+				output: '<pre><span><span class="cm-mw-template-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template-ground cm-mw-templatevariable-bracket">{{{</span><span class="cm-mw-template-ground cm-mw-templatevariable-name">1</span><span class="cm-mw-template-ground cm-mw-templatevariable-bracket">}}}</span><span class="cm-mw-template-ground cm-mw-template-delimiter">|</span><span class="cm-mw-template-ground cm-mw-template">…</span><span class="cm-mw-template-ground cm-mw-template-bracket">}}</span></span></pre>'
+			},
+			{
+				title: 'T292967: table syntax where all | are escaped with the {{!}} parser function',
+				input: '{{{!}}\n{{!}}-\n{{!}}}',
+				output: '<pre><span><span class="cm-mw-templatevariable-bracket">{{{</span><span class="cm-mw-templatevariable-name">!}}</span></span></pre><pre><span><span class="cm-mw-templatevariable-name">{{!}}-</span></span></pre><pre><span><span class="cm-mw-templatevariable-name">{{!</span><span class="cm-mw-templatevariable-bracket">}}}</span></span></pre>'
+			},
+			{
 				title: 'section headings',
 				input: '== My section ==\nFoo bar\n=== Blah ===\nBaz\n= { =\nText',
 				output: '<pre class=" cm-mw-section-2 CodeMirror-line "><span><span class="cm-mw-section-header">==</span> My section <span class="cm-mw-section-header">==</span></span></pre><pre><span>Foo bar</span></pre><pre class=" cm-mw-section-3 CodeMirror-line "><span><span class="cm-mw-section-header">===</span> Blah <span class="cm-mw-section-header">===</span></span></pre><pre><span>Baz</span></pre><pre class=" cm-mw-section-1 CodeMirror-line "><span><span class="cm-mw-section-header">=</span> { <span class="cm-mw-section-header">=</span></span></pre><pre><span>Text</span></pre>'
