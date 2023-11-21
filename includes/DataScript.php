@@ -111,10 +111,10 @@ class DataScript {
 		$mw = $lang->getMagicWords();
 		foreach ( $magicWordFactory->getDoubleUnderscoreArray()->getNames() as $name ) {
 			if ( isset( $mw[$name] ) ) {
-				$caseSensitive = array_shift( $mw[$name] ) == 0 ? 0 : 1;
+				$caseSensitive = (bool)array_shift( $mw[$name] );
 				foreach ( $mw[$name] as $n ) {
 					$n = $caseSensitive ? $n : $lang->lc( $n );
-					$config['doubleUnderscore'][$caseSensitive][$n] = $name;
+					$config['doubleUnderscore'][(int)$caseSensitive][$n] = $name;
 				}
 			} else {
 				$config['doubleUnderscore'][0][] = $name;
@@ -123,10 +123,10 @@ class DataScript {
 
 		foreach ( $magicWordFactory->getVariableIDs() as $name ) {
 			if ( isset( $mw[$name] ) ) {
-				$caseSensitive = array_shift( $mw[$name] ) == 0 ? 0 : 1;
+				$caseSensitive = (bool)array_shift( $mw[$name] );
 				foreach ( $mw[$name] as $n ) {
 					$n = $caseSensitive ? $n : $lang->lc( $n );
-					$config['functionSynonyms'][$caseSensitive][$n] = $name;
+					$config['functionSynonyms'][(int)$caseSensitive][$n] = $name;
 				}
 			}
 		}
