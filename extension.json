@@ -27,8 +27,7 @@
 		},
 		"CodeMirrorConflictingGadgets": {
 			"value": [
-				"wikEd",
-				"DotsSyntaxHighlighter"
+				"wikEd"
 			],
 			"description": "An array of gadget names that, if enabled, will prevent CodeMirror from loading on action=edit and action=submit.",
 			"public": true
