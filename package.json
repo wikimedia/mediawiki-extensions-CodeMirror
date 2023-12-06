@@ -23,6 +23,7 @@
 		"@babel/plugin-transform-runtime": "7.22.15",
 		"@babel/preset-env": "7.3.0",
 		"@codemirror/commands": "6.2.5",
+		"@codemirror/language": "6.9.3",
 		"@codemirror/search": "6.5.4",
 		"@codemirror/state": "6.2.1",
 		"@codemirror/view": "6.18.1",

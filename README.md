@@ -35,3 +35,10 @@ _NOTE: Consider using [Fresh](https://gerrit.wikimedia.org/g/fresh/) to run thes
 
 Older QUnit tests are in `resources/mode/mediawiki/tests/qunit/`. These will
 eventually be moved over to `tests/qunit` and rewritten for CodeMirror 6.
+
+## CodeMirror 6 change log
+
+This list changes that come by default with the CodeMirror 6 upgrade.
+Some may be removed pending user feedback:
+
+* Bracket matching now highlights unmatched brackets in red
