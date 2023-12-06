@@ -1,4 +1,5 @@
 @comment-color: #72777d;
+@error-color: #f00;
 @link-color: #000aaa;
 @parser-function-color: #d33;
 @table-color: #d08;
@@ -29,17 +30,22 @@ stylistic/selector-list-comma-newline-after
 
 .cm-mw-pagename { text-decoration: underline; }
 
-// TODO: It appears like this was never used. Remvoe?
+// TODO: It appears like this was never used. Remove?
 .cm-mw-matching { background-color: #ffd700; }
 
 .cm-mw-skipformatting { background-color: #adf; }
 .cm-mw-list,
 .cm-mw-indenting { color: @wikitext-formatting-color; font-weight: bold; }
-.cm-mw-doubleUnderscore, .cm-mw-signature, .cm-mw-hr { color: @wikitext-formatting-color; font-weight: bold; background-color: #eee; }
+// FIXME: Remove camelCase variant after CM6 upgrade is complete (also check Global Search)
+.cm-mw-doubleUnderscore,
+.cm-mw-double-underscore,
+.cm-mw-signature, .cm-mw-hr { color: @wikitext-formatting-color; font-weight: bold; background-color: #eee; }
 .cm-mw-mnemonic { color: @xml-tag-color; }
 .cm-mw-comment { color: @comment-color; font-weight: normal; }
 .cm-mw-apostrophes-bold, .cm-mw-apostrophes-italic { color: @wikitext-formatting-color; }
+.cm-mw-strong { font-weight: bold; }
 
+// FIXME: Remove .CodeMirror-line rules after CM6 upgrade
 pre.CodeMirror-line.cm-mw-section-1,
 pre.CodeMirror-line-like.cm-mw-section-1 {
 	font-size: 1.8em;
@@ -148,6 +154,10 @@ pre.CodeMirror-line-like.cm-mw-tag-nowiki,
 .cm-mw-template3-ext-link-ground { .ground( @template: 2, @ext: 1, @link: 1 ); }
 .cm-mw-template3-ext2-link-ground { .ground( @template: 2, @ext: 2, @link: 1 ); }
 .cm-mw-template3-ext3-link-ground { .ground( @template: 2, @ext: 3, @link: 1 ); }
+
+.cm-mw-error { color: @error-color; }
+
+.cm-mw-em { font-style: italic; }
 
 .cm-mw-matchingbracket {
 	background-color: #eee;

@@ -6,13 +6,16 @@
 		"wikimedia/mediawiki"
 	],
 	"parserOptions": {
-		"sourceType": "module"
+		"sourceType": "module",
+		"ecmaVersion": 2022
 	},
 	"env": {
 		"browser": true,
 		"commonjs": true
 	},
 	"rules": {
-		"es-x/no-array-prototype-includes": 0
+		"es-x/no-array-prototype-includes": 0,
+		"es-x/no-class-fields": 0,
+		"es-x/no-rest-spread-properties": 0
 	}
 }

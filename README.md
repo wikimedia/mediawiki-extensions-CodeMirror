@@ -38,7 +38,13 @@ eventually be moved over to `tests/qunit` and rewritten for CodeMirror 6.
 
 ## CodeMirror 6 change log
 
+### Upstream changes
+
 This list changes that come by default with the CodeMirror 6 upgrade.
 Some may be removed pending user feedback:
 
 * Bracket matching now highlights unmatched brackets in red
+
+### New MediaWiki mode features
+
+* Closing HTML tags that highlighted as an error now also highlight the closing '>'

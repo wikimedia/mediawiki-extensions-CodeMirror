@@ -162,6 +162,15 @@
 				"codemirror-toggle-label"
 			]
 		},
+		"ext.CodeMirror.v6.WikiEditor.init": {
+			"packageFiles": [
+				"ext.CodeMirror.v6.WikiEditor.init.js",
+				{
+					"name": "ext.CodeMirror.data.js",
+					"callback": "MediaWiki\\Extension\\CodeMirror\\DataScript::makeScript"
+				}
+			]
+		},
 		"ext.CodeMirror.v6.WikiEditor": {
 			"dependencies": [
 				"web2017-polyfills",
@@ -173,7 +182,9 @@
 				"dist/main.js"
 			],
 			"styles": [
-				"ext.CodeMirror.v6.WikiEditor.less"
+				"ext.CodeMirror.v6.WikiEditor.less",
+				"mode/mediawiki/mediawiki.less",
+				"mode/mediawiki/colorblind-colors.less"
 			],
 			"messages": [
 				"codemirror-toggle-label"

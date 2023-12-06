@@ -9,11 +9,11 @@ import { bracketMatching } from '@codemirror/language';
  * @class CodeMirrorWikiEditor
  */
 export default class CodeMirrorWikiEditor extends CodeMirror {
-	constructor( $textarea ) {
+	constructor( $textarea, langExtension ) {
 		super( $textarea );
-		this.realtimePreviewHandler = null;
-		this.useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
+		this.langExtension = langExtension;
 		this.editRecoveryHandler = null;
+		this.useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
 	}
 
 	/**
@@ -44,6 +44,7 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 		 */
 		const extensions = [
 			...this.defaultExtensions,
+			this.langExtension,
 			bracketMatching(),
 			history(),
 			// See also the default attributes at contentAttributesExtension() in the parent class.

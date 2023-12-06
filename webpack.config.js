@@ -25,7 +25,7 @@ module.exports = ( env, argv ) => ( {
 	// working directory.
 	context: __dirname,
 
-	entry: './src/codemirror.wikieditor.init.js',
+	entry: './src/codemirror.wikieditor.mediawiki.js',
 
 	module: {
 		rules: [ {
@@ -89,8 +89,8 @@ module.exports = ( env, argv ) => ( {
 		// Minified uncompressed size limits for chunks / assets and entrypoints. Keep these numbers
 		// up-to-date and rounded to the nearest 10th of a kibibyte so that code sizing costs are
 		// well understood. Related to bundlesize minified, gzipped compressed file size tests.
-		maxAssetSize: 300.0 * 1024,
-		maxEntrypointSize: 300.0 * 1024,
+		maxAssetSize: 350.0 * 1024,
+		maxEntrypointSize: 350.0 * 1024,
 
 		// The default filter excludes map files, but we rename ours.
 		assetFilter: ( filename ) => !filename.endsWith( srcMapExt )
