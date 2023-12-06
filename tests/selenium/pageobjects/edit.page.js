@@ -16,9 +16,18 @@ class EditPage extends Page {
 		await super.openTitle( title, queryParams );
 	}
 
-	get wikiEditorToolbar() { return $( '#wikiEditor-ui-toolbar' ); }
-	get legacyTextInput() { return $( '#wpTextbox1' ); }
-	get legacyCodeMirrorButton() { return $( '#mw-editbutton-codemirror' ); }
+	get wikiEditorToolbar() {
+		return $( '#wikiEditor-ui-toolbar' );
+	}
+
+	get legacyTextInput() {
+		return $( '#wpTextbox1' );
+	}
+
+	get legacyCodeMirrorButton() {
+		return $( '#mw-editbutton-codemirror' );
+	}
+
 	async clickText() {
 		if ( await this.visualEditorSave.isDisplayed() ) {
 			await this.visualEditorSurface.click();
@@ -30,8 +39,13 @@ class EditPage extends Page {
 		}
 	}
 
-	get visualEditorSave() { return $( '.ve-ui-toolbar-saveButton' ); }
-	get visualEditorSurface() { return $( '.ve-ui-surface-source' ); }
+	get visualEditorSave() {
+		return $( '.ve-ui-toolbar-saveButton' );
+	}
+
+	get visualEditorSurface() {
+		return $( '.ve-ui-surface-source' );
+	}
 
 	async cursorToPosition( index ) {
 		await this.clickText();
@@ -44,7 +58,9 @@ class EditPage extends Page {
 		await browser.keys( keys );
 	}
 
-	get highlightedBrackets() { return $$( '.CodeMirror-line .cm-mw-matchingbracket' ); }
+	get highlightedBrackets() {
+		return $$( '.CodeMirror-line .cm-mw-matchingbracket' );
+	}
 
 	async getHighlightedMatchingBrackets() {
 		await this.highlightedBrackets[ 0 ].waitForDisplayed();
