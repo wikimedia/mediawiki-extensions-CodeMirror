@@ -839,8 +839,9 @@ class CodeMirrorModeMediaWiki {
 					}
 					break;
 				case '{':
-					// Template parameter (T108450 - skip parameters within template transclusions)
-					if ( !stream.match( '{{{{', false ) && stream.match( '{{' ) ) {
+					// Can't be a variable when it starts with more than 3 brackets (T108450) or
+					// a single { followed by a template. E.g. {{{!}} starts a table (T292967).
+					if ( stream.match( /^{{(?!{|[^{}]*}}(?!}))/ ) ) {
 						stream.eatSpace();
 						state.stack.push( state.tokenize );
 						state.tokenize = this.inVariable.bind( this );
@@ -848,8 +849,9 @@ class CodeMirrorModeMediaWiki {
 							modeConfig.tags.templateVariableBracket,
 							state
 						);
-					} else if ( stream.match( /^\{[\s\u00a0]*/ ) ) {
-						if ( stream.peek() === '#' ) { // Parser function
+					} else if ( stream.match( /^{(?!{(?!{))[\s\u00a0]*/ ) ) {
+						// Parser function
+						if ( stream.peek() === '#' ) {
 							state.nExt++;
 							state.stack.push( state.tokenize );
 							state.tokenize = this.inParserFunctionName.bind( this );

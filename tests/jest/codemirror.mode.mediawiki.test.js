@@ -70,6 +70,16 @@ const testCases = [
 		output: '<div class="cm-line"><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">{{</span><span class="cm-mw-ext-ground cm-mw-parserfunction-name">#if</span><span class="cm-mw-ext-ground cm-mw-parserfunction-delimiter">:</span><span class="cm-mw-ext-ground cm-mw-parserfunction"> </span><span class="cm-mw-ext-ground cm-mw-parserfunction-delimiter">|</span><span class="cm-mw-ext-ground cm-mw-parserfunction"> </span><span class="cm-mw-template-ext-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template-ext-ground cm-mw-pagename cm-mw-template-name">some</span><span class="cm-mw-template-ext-ground cm-mw-pagename cm-mw-template-name"> template</span></div><div class="cm-line"><span class="cm-mw-template-ext-ground cm-mw-comment">&lt;!-- comment --&gt;</span><span class="cm-mw-template-ext-ground cm-mw-template-bracket"> }}</span><span class="cm-mw-ext-ground cm-mw-parserfunction"> </span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">}}</span></div>'
 	},
 	{
+		title: 'T108450: template transclusion where the template name is a parameter',
+		input: '{{{{{1}}}|…}}',
+		output: '<div class="cm-line"><span class="cm-mw-template-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template-ground cm-mw-templatevariable-bracket">{{{</span><span class="cm-mw-template-ground cm-mw-templatevariable-name">1</span><span class="cm-mw-template-ground cm-mw-templatevariable-bracket">}}}</span><span class="cm-mw-template-ground cm-mw-template-delimiter">|</span><span class="cm-mw-template-ground cm-mw-template">…</span><span class="cm-mw-template-ground cm-mw-template-bracket">}}</span></div>'
+	},
+	{
+		title: 'T292967: table syntax where all | are escaped with the {{!}} parser function',
+		input: '{{{!}} class="wikitable"\n! header\n{{!}}-\n{{!}} cell\n{{!}}}',
+		output: '<div class="cm-line">{<span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">{{</span><span class="cm-mw-ext-ground cm-mw-parserfunction-name">!</span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">}}</span> class="wikitable"</div><div class="cm-line">! header</div><div class="cm-line"><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">{{</span><span class="cm-mw-ext-ground cm-mw-parserfunction-name">!</span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">}}</span>-</div><div class="cm-line"><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">{{</span><span class="cm-mw-ext-ground cm-mw-parserfunction-name">!</span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">}}</span> cell</div><div class="cm-line"><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">{{</span><span class="cm-mw-ext-ground cm-mw-parserfunction-name">!</span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">}}</span>}</div>'
+	},
+	{
 		title: 'section headings',
 		input: '== My section ==\nFoo bar\n=== Blah ===\nBaz\n= { =\nText',
 		output: '<div class="cm-line"><span class="cm-mw-section-header cm-mw-section-2">==</span> My section <span class="cm-mw-section-header">==</span></div><div class="cm-line">Foo bar</div><div class="cm-line"><span class="cm-mw-section-header cm-mw-section-3">===</span> Blah <span class="cm-mw-section-header">===</span></div><div class="cm-line">Baz</div><div class="cm-line"><span class="cm-mw-section-header cm-mw-section-1">=</span> { <span class="cm-mw-section-header">=</span></div><div class="cm-line">Text</div>'
@@ -122,10 +132,14 @@ const testCases = [
 const textarea = document.createElement( 'textarea' );
 document.body.appendChild( textarea );
 const cm = new CodeMirror( textarea );
+// Stub the config normally provided by mw.config.get('extCodeMirrorConfig')
 const mwLang = mediaWikiLang( {
 	urlProtocols: 'ftp://|https://',
 	doubleUnderscore: [ {
 		__notoc__: 'notoc'
+	} ],
+	functionSynonyms: [ {}, {
+		'!': '!'
 	} ]
 } );
 cm.initialize( [ ...cm.defaultExtensions, mwLang ] );
