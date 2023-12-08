@@ -1011,14 +1011,18 @@
 
 	CodeMirror.defineMode( 'mw-tag-pre', function ( /* config, parserConfig */ ) {
 		return {
-			startState: function () { return {}; },
+			startState: function () {
+				return {};
+			},
 			token: eatNowiki( 'mw-tag-pre', 'line-cm-mw-tag-pre' )
 		};
 	} );
 
 	CodeMirror.defineMode( 'mw-tag-nowiki', function ( /* config, parserConfig */ ) {
 		return {
-			startState: function () { return {}; },
+			startState: function () {
+				return {};
+			},
 			token: eatNowiki( 'mw-tag-nowiki', 'line-cm-mw-tag-nowiki' )
 		};
 	} );

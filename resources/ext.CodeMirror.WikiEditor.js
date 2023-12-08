@@ -108,6 +108,7 @@ function init() {
 			codeMirror.setSize( '100%', $textbox1.parent().height() );
 		} else {
 			// RL module jquery.ui
+			// eslint-disable-next-line es-x/no-resizable-and-growable-arraybuffers
 			$codeMirror.resizable( {
 				handles: 'se',
 				resize: function () {
