@@ -3,6 +3,7 @@ import { EditorSelection } from '@codemirror/state';
 import { EditorView, keymap } from '@codemirror/view';
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
 import { searchKeymap } from '@codemirror/search';
+import { bracketMatching } from '@codemirror/language';
 
 /**
  * @class CodeMirrorWikiEditor
@@ -43,6 +44,7 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 		 */
 		const extensions = [
 			...this.defaultExtensions,
+			bracketMatching(),
 			history(),
 			// See also the default attributes at contentAttributesExtension() in the parent class.
 			EditorView.contentAttributes.of( {
