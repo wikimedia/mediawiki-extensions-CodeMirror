@@ -112,7 +112,12 @@ pre.CodeMirror-line-like.cm-mw-tag-nowiki,
 .cm-mw-link-bracket,
 .cm-mw-link-delimiter,
 .cm-mw-extlink,
-.cm-mw-free-extlink { color: @link-color; font-weight: normal; }
+.cm-mw-free-extlink {
+	color: @link-color;
+	&:not( .cm-mw-strong ) {
+		font-weight: normal;
+	}
+}
 .cm-mw-extlink-protocol,
 .cm-mw-free-extlink-protocol,
 .cm-mw-extlink-bracket { color: @link-color; font-weight: bold; }
