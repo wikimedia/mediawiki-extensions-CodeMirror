@@ -1,5 +1,5 @@
 /**
- * MediaWiki UserInterface CodeMirror tool.
+ * VisualEditor UserInterface CodeMirror tool.
  *
  * @class
  * @abstract
