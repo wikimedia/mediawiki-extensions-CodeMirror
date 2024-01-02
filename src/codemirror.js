@@ -3,14 +3,17 @@ import { EditorView, lineNumbers } from '@codemirror/view';
 
 /**
  * @class CodeMirror
+ * @property {jQuery} $textarea
+ * @property {EditorView} view
+ * @property {EditorState} state
  */
 export default class CodeMirror {
 	/**
 	 * @constructor
-	 * @param {jQuery} $textarea Textarea to add syntax highlighting to.
+	 * @param {HTMLTextAreaElement|jQuery|string} textarea Textarea to add syntax highlighting to.
 	 */
-	constructor( $textarea ) {
-		this.$textarea = $textarea;
+	constructor( textarea ) {
+		this.$textarea = $( textarea );
 		this.view = null;
 		this.state = null;
 	}
@@ -40,6 +43,7 @@ export default class CodeMirror {
 	 * This specifies which attributes get added to the .cm-content element.
 	 * If you need to add more, add another Extension on initialization for the contentAttributes
 	 * Facet in the form of EditorView.contentAttributes.of( {Object} ).
+	 * Subclasses are safe to override this method, but attributes here are considered vital.
 	 *
 	 * @see https://codemirror.net/docs/ref/#view.EditorView^contentAttributes
 	 * @return {Extension}
@@ -58,6 +62,7 @@ export default class CodeMirror {
 	 * Setup CodeMirror and add it to the DOM. This will hide the original textarea.
 	 *
 	 * @param {Extension[]} extensions
+	 * @stable
 	 */
 	initialize( extensions = this.defaultExtensions ) {
 		// Set up the initial EditorState of CodeMirror with contents of the native textarea.
@@ -93,6 +98,7 @@ export default class CodeMirror {
 	 * Log usage of CodeMirror.
 	 *
 	 * @param {Object} data
+	 * @stable
 	 */
 	logUsage( data ) {
 		/* eslint-disable camelcase */
@@ -112,9 +118,11 @@ export default class CodeMirror {
 	 * Save CodeMirror enabled preference.
 	 *
 	 * @param {boolean} prefValue True, if CodeMirror should be enabled by default, otherwise false.
+	 * @stable
 	 */
 	setCodeMirrorPreference( prefValue ) {
-		if ( !mw.user.isNamed() ) { // Skip it for unnamed users
+		// Skip for unnamed users
+		if ( !mw.user.isNamed() ) {
 			return;
 		}
 		new mw.Api().saveOption( 'usecodemirror', prefValue ? 1 : 0 );
