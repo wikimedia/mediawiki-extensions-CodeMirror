@@ -393,7 +393,8 @@ class CodeMirrorModeMediaWiki {
 			state.tokenize = state.stack.pop();
 			return;
 		}
-		if ( stream.match( /^[^|\]&~{}]+/ ) ) { // FIXME '{{' brokes Link, sample [[z{{page]]
+		// FIXME '{{' brokes Link, sample [[z{{page]]
+		if ( stream.match( /^[^|\]&~{}]+/ ) ) {
 			return this.makeLocalStyle( modeConfig.tags.linkToSection, state );
 		}
 		if ( stream.eat( '|' ) ) {
@@ -462,16 +463,17 @@ class CodeMirrorModeMediaWiki {
 					state.tokenize = this.eatHtmlTagAttribute( name );
 				}
 				return this.makeLocalStyle( modeConfig.tags.htmlTagName, state );
-			} // it is the extension tag
+			}
+			// it is the extension tag
 			if ( isCloseTag ) {
 				state.tokenize = this.eatChar(
 					'>',
-					`${ modeConfig.tags.extLinkBracket } mw-ext-${ name }`
+					`${ modeConfig.tags.extTagBracket } mw-ext-${ name }`
 				);
 			} else {
 				state.tokenize = this.eatExtTagAttribute( name );
 			}
-			return this.makeLocalStyle( 'mw-exttag-name mw-ext-' + name, state );
+			return this.makeLocalStyle( `${ modeConfig.tags.extTagName } mw-ext-${ name }`, state );
 		};
 	}
 
@@ -496,15 +498,37 @@ class CodeMirrorModeMediaWiki {
 		};
 	}
 
+	eatNowiki( style ) {
+		return ( stream ) => {
+			if ( stream.match( /^[^&]+/ ) ) {
+				return style;
+			}
+			// eat &
+			stream.next();
+			return this.eatHtmlEntity( stream, style, style );
+		};
+	}
+
 	eatExtTagAttribute( name ) {
 		return ( stream, state ) => {
 			// eslint-disable-next-line security/detect-unsafe-regex
 			if ( stream.match( /^(?:"[^">]*"|'[^'>]*'|[^>/<{&~])+/ ) ) {
-				return this.makeLocalStyle( `mw-exttag-attribute mw-ext-${ name }`, state );
+				return this.makeLocalStyle( `${ modeConfig.tags.extTagAttribute } mw-ext-${ name }`, state );
 			}
 			if ( stream.eat( '>' ) ) {
 				state.extName = name;
-				if ( name in this.config.tagModes ) {
+
+				// FIXME: remove 'nowiki' and 'pre' from TagModes in extension.json after CM6 upgrade
+				// leverage the tagModes system for <nowiki> and <pre>
+				if ( name === 'nowiki' || name === 'pre' ) {
+					// There's no actual processing within these tags (apart from HTML entities),
+					// so startState and copyState can be no-ops.
+					state.extMode = {
+						startState: () => {},
+						copyState: () => {},
+						token: this.eatNowiki( modeConfig.tags[ name ] )
+					};
+				} else if ( name in this.config.tagModes ) {
 					// FIXME: tracked at T348684
 					// state.extMode = CodeMirror.getMode(
 					//  this.config,
@@ -512,14 +536,15 @@ class CodeMirrorModeMediaWiki {
 					// );
 					// state.extState = CodeMirror.startState( state.extMode );
 				}
+
 				state.tokenize = this.eatExtTagArea( name );
-				return this.makeLocalStyle( 'mw-exttag-bracket mw-ext-' + name, state );
+				return this.makeLocalStyle( `${ modeConfig.tags.extTagBracket } mw-ext-${ name }`, state );
 			}
 			if ( stream.match( '/>' ) ) {
 				state.tokenize = state.stack.pop();
-				return this.makeLocalStyle( 'mw-exttag-bracket mw-ext-' + name, state );
+				return this.makeLocalStyle( `${ modeConfig.tags.extTagBracket } mw-ext-${ name }`, state );
 			}
-			return this.eatWikiText( 'mw-exttag-attribute mw-ext-' + name )( stream, state );
+			return this.eatWikiText( `${ modeConfig.tags.extTagAttribute } mw-ext-${ name }` )( stream, state );
 		};
 	}
 
@@ -558,7 +583,7 @@ class CodeMirrorModeMediaWiki {
 			stream.next(); // eat <
 			stream.next(); // eat /
 			state.tokenize = this.eatTagName( name.length, true, false );
-			return this.makeLocalStyle( 'mw-exttag-bracket mw-ext-' + name, state );
+			return this.makeLocalStyle( `${ modeConfig.tags.extTagBracket } mw-ext-${ name }`, state );
 		};
 	}
 
@@ -566,7 +591,7 @@ class CodeMirrorModeMediaWiki {
 		return ( stream, state ) => {
 			let ret;
 			if ( state.extMode === false ) {
-				ret = ( origString === false && stream.sol() ? 'line-cm-mw-exttag' : 'mw-exttag' );
+				ret = origString === false && stream.sol() ? 'line-cm-mw-exttag' : modeConfig.tags.extTag;
 				stream.skipToEnd();
 			} else {
 				ret = (
@@ -891,7 +916,7 @@ class CodeMirrorModeMediaWiki {
 					}
 					if ( tagname ) {
 						tagname = tagname[ 0 ].toLowerCase();
-						if ( this.config.tags && tagname in this.config.tags ) {
+						if ( tagname in this.config.tags ) {
 							// Parser function
 							if ( isCloseTag === true ) {
 								return modeConfig.tags.error;
@@ -899,7 +924,7 @@ class CodeMirrorModeMediaWiki {
 							stream.backUp( tagname.length );
 							state.stack.push( state.tokenize );
 							state.tokenize = this.eatTagName( tagname.length, isCloseTag, false );
-							return this.makeLocalStyle( 'mw-exttag-bracket mw-ext-' + tagname, state );
+							return this.makeLocalStyle( `${ modeConfig.tags.extTagBracket } mw-ext-${ tagname }`, state );
 						}
 						if ( tagname in modeConfig.permittedHtmlTags ) {
 							// Html tag

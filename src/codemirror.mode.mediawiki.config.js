@@ -122,13 +122,21 @@ class CodeMirrorModeMediaWikiConfig {
 			em: 'mw-em',
 			error: 'mw-error',
 			extGround: 'mw-ext-ground',
+			extNowiki: 'mw-ext-nowiki',
+			extPre: 'mw-ext-pre',
+			extTag: 'mw-exttag',
+			extTagAttribute: 'mw-exttag-attribute',
+			extTagBracket: 'mw-exttag-bracket',
+			extTagName: 'mw-exttag-name',
 			freeExtLink: 'mw-free-extlink',
 			freeExtLinkProtocol: 'mw-free-extlink-protocol',
 			htmlEntity: 'mw-html-entity',
 			link: 'mw-link',
 			linkGround: 'mw-link-ground',
 			linkPageName: 'mw-link-pagename',
+			nowiki: 'mw-tag-nowiki',
 			pageName: 'mw-pagename',
+			pre: 'mw-tag-pre',
 			skipFormatting: 'mw-skipformatting',
 			strong: 'mw-strong',
 			tableCaption: 'mw-table-caption',
@@ -156,13 +164,21 @@ class CodeMirrorModeMediaWikiConfig {
 			[ this.tags.em ]: Tag.define(),
 			[ this.tags.error ]: Tag.define(),
 			[ this.tags.extGround ]: Tag.define(),
+			[ this.tags.extNowiki ]: Tag.define(),
+			[ this.tags.extPre ]: Tag.define(),
+			[ this.tags.extTag ]: Tag.define(),
+			[ this.tags.extTagAttribute ]: Tag.define(),
+			[ this.tags.extTagBracket ]: Tag.define(),
+			[ this.tags.extTagName ]: Tag.define(),
 			[ this.tags.freeExtLink ]: Tag.define(),
 			[ this.tags.freeExtLinkProtocol ]: Tag.define(),
 			[ this.tags.htmlEntity ]: Tag.define(),
 			[ this.tags.link ]: Tag.define(),
 			[ this.tags.linkGround ]: Tag.define(),
 			[ this.tags.linkPageName ]: Tag.define(),
+			[ this.tags.nowiki ]: Tag.define(),
 			[ this.tags.pageName ]: Tag.define(),
+			[ this.tags.pre ]: Tag.define(),
 			[ this.tags.skipFormatting ]: Tag.define(),
 			[ this.tags.strong ]: Tag.define(),
 			[ this.tags.tableCaption ]: Tag.define(),
@@ -373,6 +389,30 @@ class CodeMirrorModeMediaWikiConfig {
 				class: 'cm-mw-ext-ground'
 			},
 			{
+				tag: context.tokenTable[ this.tags.extNowiki ],
+				class: 'cm-mw-ext-nowiki'
+			},
+			{
+				tag: context.tokenTable[ this.tags.extPre ],
+				class: 'cm-mw-ext-pre'
+			},
+			{
+				tag: context.tokenTable[ this.tags.extTagBracket ],
+				class: 'cm-mw-exttag-bracket'
+			},
+			{
+				tag: context.tokenTable[ this.tags.extTag ],
+				class: 'cm-mw-exttag'
+			},
+			{
+				tag: context.tokenTable[ this.tags.extTagAttribute ],
+				class: 'cm-mw-exttag-attribute'
+			},
+			{
+				tag: context.tokenTable[ this.tags.extTagName ],
+				class: 'cm-mw-exttag-name'
+			},
+			{
 				tag: context.tokenTable[ this.tags.freeExtLink ],
 				class: 'cm-mw-free-extlink'
 			},
@@ -393,8 +433,16 @@ class CodeMirrorModeMediaWikiConfig {
 				class: 'cm-mw-link-pagename'
 			},
 			{
+				tag: context.tokenTable[ this.tags.nowiki ],
+				class: 'cm-mw-tag-nowiki'
+			},
+			{
 				tag: context.tokenTable[ this.tags.pageName ],
 				class: 'cm-mw-pagename'
+			},
+			{
+				tag: context.tokenTable[ this.tags.pre ],
+				class: 'cm-mw-tag-pre'
 			},
 			{
 				tag: context.tokenTable[ this.tags.skipFormatting ],

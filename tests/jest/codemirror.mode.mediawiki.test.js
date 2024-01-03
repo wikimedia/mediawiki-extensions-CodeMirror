@@ -47,11 +47,11 @@ const testCases = [
 		input: '__NOTOC__',
 		output: '<div class="cm-line"><span class="cm-mw-double-underscore">__NOTOC__</span></div>'
 	},
-	// {
-	//  title: 'nowiki',
-	//  input: '<nowiki>{{foo}}<p> </div> {{{</nowiki>',
-	//  output: '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-nowiki">nowiki</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&gt;</span><span class="cm-mw-tag-nowiki cm-mw-tag-nowiki">{{foo}}&lt;p&gt; &lt;/div&gt; {{{</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-nowiki">nowiki</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&gt;</span></div>'
-	// },
+	{
+		title: 'nowiki',
+		input: '<nowiki>{{foo}}<p> </div> {{{</nowiki>\n<nowiki/><pre class="foo">\n\n {{bar}}</pre>',
+		output: '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-nowiki">nowiki</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&gt;</span><span class="cm-mw-tag-nowiki cm-mw-tag-nowiki">{{foo}}&lt;p&gt; &lt;/div&gt; {{{</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-nowiki">nowiki</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&gt;</span></div><div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-nowiki">nowiki</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">/&gt;</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-pre">pre </span><span class="cm-mw-exttag-attribute cm-mw-ext-pre">class="foo"</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&gt;</span></div><div class="cm-line"><br></div><div class="cm-line"><span class="cm-mw-tag-pre cm-mw-tag-pre"> {{bar}}</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-pre">pre</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&gt;</span></div>'
+	},
 	// {
 	//  title: 'ref tag with cite web, extraneous curly braces',
 	//  input: '<ref>{{cite web|2=foo}}}}</ref>',
@@ -145,7 +145,11 @@ const mwLang = mediaWikiLang( {
 	} ],
 	functionSynonyms: [ {}, {
 		'!': '!'
-	} ]
+	} ],
+	tags: {
+		nowiki: true,
+		pre: true
+	}
 } );
 cm.initialize( [ ...cm.defaultExtensions, mwLang ] );
 
@@ -213,13 +217,21 @@ describe( 'CodeMirrorModeMediaWiki', () => {
 			'em',
 			'error',
 			'extGround',
+			'extNowiki',
+			'extPre',
+			'extTag',
+			'extTagAttribute',
+			'extTagBracket',
+			'extTagName',
 			'freeExtLink',
 			'freeExtLinkProtocol',
 			'htmlEntity',
 			'link',
 			'linkGround',
 			'linkPageName',
+			'nowiki',
 			'pageName',
+			'pre',
 			'skipFormatting',
 			'strong',
 			'tableCaption',
