@@ -40,7 +40,8 @@ stylistic/selector-list-comma-newline-after
 .cm-mw-doubleUnderscore,
 .cm-mw-double-underscore,
 .cm-mw-signature, .cm-mw-hr { color: @wikitext-formatting-color; font-weight: bold; background-color: #eee; }
-.cm-mw-mnemonic { color: @xml-tag-color; }
+// TODO: Deprecate .cm-mw-mnemonic in favor of -html-entity
+.cm-mw-mnemonic, .cm-mw-html-entity { color: @xml-tag-color; }
 .cm-mw-comment { color: @comment-color; font-weight: normal; }
 .cm-mw-apostrophes-bold, .cm-mw-apostrophes-italic { color: @wikitext-formatting-color; }
 .cm-mw-strong { font-weight: bold; }
@@ -68,6 +69,7 @@ pre.CodeMirror-line-like.cm-mw-section-6 {
 }
 
 .cm-mw-template { color: @template-color; font-weight: normal; }
+// TODO: deprecate/remove after CM6 upgrade
 .cm-mw-template-name-mnemonic { font-weight: normal; }
 .cm-mw-template-name,
 .cm-mw-template-argument-name,

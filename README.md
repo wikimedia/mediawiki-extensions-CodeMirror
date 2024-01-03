@@ -50,3 +50,9 @@ Some may be removed pending user feedback:
 
 * Closing HTML tags that highlighted as an error now also highlight the closing '>'
 * Allow link titles to be both emboldened and italicized.
+
+### Deprecations
+
+* The `.cm-mw-mnemonic` CSS class has been renamed to `.cm-mw-html-entity`
+* The `.cm-mw-template-name-mnemonic` class has been removed.
+  Use `.cm-mw-template-ground.cm-html-entity` instead.

@@ -124,10 +124,10 @@ class CodeMirrorModeMediaWikiConfig {
 			extGround: 'mw-ext-ground',
 			freeExtLink: 'mw-free-extlink',
 			freeExtLinkProtocol: 'mw-free-extlink-protocol',
+			htmlEntity: 'mw-html-entity',
 			link: 'mw-link',
 			linkGround: 'mw-link-ground',
 			linkPageName: 'mw-link-pagename',
-			mnemonic: 'mw-mnemonic',
 			pageName: 'mw-pagename',
 			skipFormatting: 'mw-skipformatting',
 			strong: 'mw-strong',
@@ -158,10 +158,10 @@ class CodeMirrorModeMediaWikiConfig {
 			[ this.tags.extGround ]: Tag.define(),
 			[ this.tags.freeExtLink ]: Tag.define(),
 			[ this.tags.freeExtLinkProtocol ]: Tag.define(),
+			[ this.tags.htmlEntity ]: Tag.define(),
 			[ this.tags.link ]: Tag.define(),
 			[ this.tags.linkGround ]: Tag.define(),
 			[ this.tags.linkPageName ]: Tag.define(),
-			[ this.tags.mnemonic ]: Tag.define(),
 			[ this.tags.pageName ]: Tag.define(),
 			[ this.tags.skipFormatting ]: Tag.define(),
 			[ this.tags.strong ]: Tag.define(),
@@ -381,16 +381,16 @@ class CodeMirrorModeMediaWikiConfig {
 				class: 'cm-mw-free-extlink-protocol'
 			},
 			{
+				tag: context.tokenTable[ this.tags.htmlEntity ],
+				class: 'cm-mw-html-entity'
+			},
+			{
 				tag: context.tokenTable[ this.tags.linkGround ],
 				class: 'cm-mw-link-ground'
 			},
 			{
 				tag: context.tokenTable[ this.tags.linkPageName ],
 				class: 'cm-mw-link-pagename'
-			},
-			{
-				tag: context.tokenTable[ this.tags.mnemonic ],
-				class: 'cm-mw-mnemonic'
 			},
 			{
 				tag: context.tokenTable[ this.tags.pageName ],

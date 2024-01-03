@@ -27,7 +27,7 @@ class CodeMirrorModeMediaWiki {
 		this.oldTokens = [];
 	}
 
-	eatMnemonic( stream, style, mnemonicStyle ) {
+	eatHtmlEntity( stream, style ) {
 		let ok;
 		if ( stream.eat( '#' ) ) {
 			if ( stream.eat( 'x' ) ) {
@@ -39,8 +39,7 @@ class CodeMirrorModeMediaWiki {
 			ok = stream.eatWhile( /[\w.\-:]/ ) && stream.eat( ';' );
 		}
 		if ( ok ) {
-			mnemonicStyle += ' ' + modeConfig.tags.mnemonic;
-			return mnemonicStyle;
+			return modeConfig.tags.htmlEntity;
 		}
 		return style;
 	}
@@ -178,7 +177,7 @@ class CodeMirrorModeMediaWiki {
 				}
 				return null; // style is null
 			}
-			return this.eatWikiText( '', '' )( stream, state );
+			return this.eatWikiText( '' )( stream, state );
 		};
 	}
 
@@ -210,7 +209,7 @@ class CodeMirrorModeMediaWiki {
 			state.tokenize = state.stack.pop();
 			return this.makeLocalStyle( modeConfig.tags.templateVariableBracket, state );
 		}
-		return this.eatWikiText( modeConfig.tags.templateVariable, '' )( stream, state );
+		return this.eatWikiText( modeConfig.tags.templateVariable )( stream, state );
 	}
 
 	inParserFunctionName( stream, state ) {
@@ -226,7 +225,7 @@ class CodeMirrorModeMediaWiki {
 			state.tokenize = state.stack.pop();
 			return this.makeLocalStyle( modeConfig.tags.parserFunctionBracket, state, 'nExt' );
 		}
-		return this.eatWikiText( modeConfig.tags.parserFunction, '' )( stream, state );
+		return this.eatWikiText( modeConfig.tags.parserFunction )( stream, state );
 	}
 
 	inParserFunctionArguments( stream, state ) {
@@ -238,7 +237,7 @@ class CodeMirrorModeMediaWiki {
 			state.tokenize = state.stack.pop();
 			return this.makeLocalStyle( modeConfig.tags.parserFunctionBracket, state, 'nExt' );
 		}
-		return this.eatWikiText( modeConfig.tags.parserFunction, '' )( stream, state );
+		return this.eatWikiText( modeConfig.tags.parserFunction )( stream, state );
 	}
 
 	eatTemplatePageName( haveAte ) {
@@ -269,10 +268,7 @@ class CodeMirrorModeMediaWiki {
 				}
 				return this.makeLocalStyle( modeConfig.tags.templateName, state );
 			}
-			return this.eatWikiText(
-				modeConfig.tags.templateName,
-				`${ modeConfig.tags.templateName }-mnemonic`
-			)( stream, state );
+			return this.eatWikiText( modeConfig.tags.templateName )( stream, state );
 		};
 	}
 
@@ -293,7 +289,7 @@ class CodeMirrorModeMediaWiki {
 				state.tokenize = state.stack.pop();
 				return this.makeLocalStyle( modeConfig.tags.templateBracket, state, 'nTemplate' );
 			}
-			return this.eatWikiText( modeConfig.tags.template, '' )( stream, state );
+			return this.eatWikiText( modeConfig.tags.template )( stream, state );
 		};
 	}
 
@@ -339,7 +335,7 @@ class CodeMirrorModeMediaWiki {
 			}
 			return this.makeStyle( modeConfig.tags.extLink, state );
 		}
-		return this.eatWikiText( modeConfig.tags.extLink, '' )( stream, state );
+		return this.eatWikiText( modeConfig.tags.extLink )( stream, state );
 	}
 
 	inExternalLinkText( stream, state ) {
@@ -356,7 +352,7 @@ class CodeMirrorModeMediaWiki {
 		if ( stream.match( /^[^'\]{&~<]+/ ) ) {
 			return this.makeStyle( modeConfig.tags.extLinkText, state );
 		}
-		return this.eatWikiText( modeConfig.tags.extLinkText, '' )( stream, state );
+		return this.eatWikiText( modeConfig.tags.extLinkText )( stream, state );
 	}
 
 	inLink( stream, state ) {
@@ -411,7 +407,7 @@ class CodeMirrorModeMediaWiki {
 			// state.ImInBlock.push( 'LinkTrail' );
 			// }
 		}
-		return this.eatWikiText( modeConfig.tags.linkToSection, '' )( stream, state );
+		return this.eatWikiText( modeConfig.tags.linkToSection )( stream, state );
 	}
 
 	eatLinkText() {
@@ -446,7 +442,7 @@ class CodeMirrorModeMediaWiki {
 			if ( stream.match( /^[^'\]{&~<]+/ ) ) {
 				return this.makeStyle( tmpstyle, state );
 			}
-			return this.eatWikiText( tmpstyle, '' )( stream, state );
+			return this.eatWikiText( tmpstyle )( stream, state );
 		};
 	}
 
@@ -496,7 +492,7 @@ class CodeMirrorModeMediaWiki {
 				state.tokenize = state.stack.pop();
 				return this.makeLocalStyle( modeConfig.tags.htmlTagBracket, state );
 			}
-			return this.eatWikiText( modeConfig.tags.htmlTagAttribute, '' )( stream, state );
+			return this.eatWikiText( modeConfig.tags.htmlTagAttribute )( stream, state );
 		};
 	}
 
@@ -523,7 +519,7 @@ class CodeMirrorModeMediaWiki {
 				state.tokenize = state.stack.pop();
 				return this.makeLocalStyle( 'mw-exttag-bracket mw-ext-' + name, state );
 			}
-			return this.eatWikiText( 'mw-exttag-attribute mw-ext-' + name, '' )( stream, state );
+			return this.eatWikiText( 'mw-exttag-attribute mw-ext-' + name )( stream, state );
 		};
 	}
 
@@ -600,7 +596,7 @@ class CodeMirrorModeMediaWiki {
 			state.tokenize = this.inTable.bind( this );
 			return this.inTable( stream, state );
 		}
-		return this.eatWikiText( modeConfig.tags.tableDefinition, '' )( stream, state );
+		return this.eatWikiText( modeConfig.tags.tableDefinition )( stream, state );
 	}
 
 	inTableCaption( stream, state ) {
@@ -608,7 +604,7 @@ class CodeMirrorModeMediaWiki {
 			state.tokenize = this.inTable.bind( this );
 			return this.inTable( stream, state );
 		}
-		return this.eatWikiText( modeConfig.tags.tableCaption, '' )( stream, state );
+		return this.eatWikiText( modeConfig.tags.tableCaption )( stream, state );
 	}
 
 	inTable( stream, state ) {
@@ -639,7 +635,7 @@ class CodeMirrorModeMediaWiki {
 				return this.makeLocalStyle( modeConfig.tags.tableDelimiter, state );
 			}
 		}
-		return this.eatWikiText( '', '' )( stream, state );
+		return this.eatWikiText( '' )( stream, state );
 	}
 
 	eatTableRow( isStart, isHead ) {
@@ -667,7 +663,7 @@ class CodeMirrorModeMediaWiki {
 				}
 			}
 			const tag = isHead ? modeConfig.tags.strong : '';
-			return this.eatWikiText( tag, tag )( stream, state );
+			return this.eatWikiText( tag )( stream, state );
 		};
 	}
 
@@ -706,10 +702,9 @@ class CodeMirrorModeMediaWiki {
 
 	/**
 	 * @param {string} style
-	 * @param {string} mnemonicStyle
 	 * @return {string|Function}
 	 */
-	eatWikiText( style, mnemonicStyle ) {
+	eatWikiText( style ) {
 		return ( stream, state ) => {
 			let ch, tmp, mt, name, isCloseTag, tagname;
 			const sol = stream.sol();
@@ -799,7 +794,7 @@ class CodeMirrorModeMediaWiki {
 			switch ( ch ) {
 				case '&':
 					return this.makeStyle(
-						this.eatMnemonic( stream, style, mnemonicStyle ),
+						this.eatHtmlEntity( stream, style ),
 						state
 					);
 				case '\'':
@@ -1042,7 +1037,7 @@ class CodeMirrorModeMediaWiki {
 			 */
 			startState: () => {
 				return {
-					tokenize: this.eatWikiText( '', '' ),
+					tokenize: this.eatWikiText( '' ),
 					stack: [],
 					inHtmlTag: [],
 					extName: false,
