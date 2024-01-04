@@ -1,5 +1,5 @@
 import { Tag, tags } from '@lezer/highlight';
-import { HighlightStyle, StreamParser } from '@codemirror/language';
+import { TagStyle, StreamParser } from '@codemirror/language';
 
 /**
  * Configuration for the MediaWiki highlighting mode for CodeMirror.
@@ -9,6 +9,37 @@ import { HighlightStyle, StreamParser } from '@codemirror/language';
  * @class CodeMirrorModeMediaWikiConfig
  */
 class CodeMirrorModeMediaWikiConfig {
+
+	constructor() {
+		this.extHighlightStyles = [];
+		this.tokenTable = this.defaultTokenTable;
+	}
+
+	/**
+	 * Register a tag in CodeMirror. The generated CSS class will be of the form 'cm-mw-ext-tagname'
+	 * This is for internal use to dynamically register tags from other MediaWiki extensions.
+	 *
+	 * @see https://www.mediawiki.org/wiki/Extension:CodeMirror#Extension_integration
+	 * @param {string} tag
+	 * @param {Tag} parent
+	 * @internal
+	 */
+	addTag( tag, parent ) {
+		if ( this.tokenTable[ `mw-tag-${ tag }` ] ) {
+			return;
+		}
+		this.tokenTable[ `mw-tag-${ tag }` ] = Tag.define( parent );
+		this.tokenTable[ `mw-ext-${ tag }` ] = Tag.define( parent );
+		this.extHighlightStyles.push( {
+			tag: this.tokenTable[ `mw-tag-${ tag }` ],
+			class: `cm-mw-tag-${ tag }`
+		} );
+		this.extHighlightStyles.push( {
+			tag: this.tokenTable[ `mw-ext-${ tag }` ],
+			class: `cm-mw-ext-${ tag }`
+		} );
+	}
+
 	/**
 	 * All HTML/XML tags permitted in MediaWiki Core.
 	 *
@@ -112,7 +143,7 @@ class CodeMirrorModeMediaWikiConfig {
 	 * These are here so that they, like tags(), serve as constants that we can
 	 * reference in CodeMirrorModeMediaWiki.
 	 *
-	 * IMPORTANT: There should be a row in tokenTable() for each of these.
+	 * IMPORTANT: There should be a row in defaultTokenTable() for each of these.
 	 *
 	 * @return {Object<string>}
 	 * @private
@@ -154,13 +185,15 @@ class CodeMirrorModeMediaWikiConfig {
 
 	/**
 	 * These are custom tokens (a.k.a. tags) that aren't mapped to any of the standardized tags.
-	 * Make sure these are also defined in tags() above.
+	 * Make sure these are also defined in #customTags() above.
+	 *
+	 * TODO: pass parent Tags in Tag.define() where appropriate for better theming.
 	 *
 	 * @see https://codemirror.net/docs/ref/#language.StreamParser.tokenTable
 	 * @see https://lezer.codemirror.net/docs/ref/#highlight.Tag%5Edefine
 	 * @return {Object<Tag>}
 	 */
-	get tokenTable() {
+	get defaultTokenTable() {
 		return {
 			[ this.tags.em ]: Tag.define(),
 			[ this.tags.error ]: Tag.define(),
@@ -201,10 +234,10 @@ class CodeMirrorModeMediaWikiConfig {
 	 *
 	 * @see https://codemirror.net/docs/ref/#language.TagStyle
 	 * @param {StreamParser} context
-	 * @return {HighlightStyle}
+	 * @return {TagStyle[]}
 	 */
-	getHighlightStyle( context ) {
-		return HighlightStyle.define( [
+	getTagStyles( context ) {
+		return [
 			{
 				tag: tags[ this.tags.apostrophes ],
 				class: 'cm-mw-apostrophes'
@@ -493,8 +526,10 @@ class CodeMirrorModeMediaWikiConfig {
 			{
 				tag: context.tokenTable[ this.tags.template3Ground ],
 				class: 'cm-mw-template3-ground'
-			}
-		] );
+			},
+
+			...this.extHighlightStyles
+		];
 	}
 }
 

@@ -1,4 +1,11 @@
-import { LanguageSupport, StreamLanguage, StreamParser, StringStream, syntaxHighlighting } from '@codemirror/language';
+import {
+	HighlightStyle,
+	LanguageSupport,
+	StreamLanguage,
+	StreamParser,
+	StringStream,
+	syntaxHighlighting
+} from '@codemirror/language';
 import { mwModeConfig as modeConfig } from './codemirror.mode.mediawiki.config';
 import { Tag } from '@lezer/highlight';
 
@@ -25,6 +32,10 @@ class CodeMirrorModeMediaWiki {
 		this.oldStyle = null;
 		this.tokens = [];
 		this.oldTokens = [];
+		this.tokenTable = modeConfig.tokenTable;
+
+		// Dynamically register any tags that aren't already in CodeMirrorModeMediaWikiConfig
+		Object.keys( this.config.tags ).forEach( ( tag ) => modeConfig.addTag( tag ) );
 	}
 
 	eatHtmlEntity( stream, style ) {
@@ -392,7 +403,7 @@ class CodeMirrorModeMediaWiki {
 			state.tokenize = state.stack.pop();
 			return;
 		}
-		// FIXME '{{' brokes Link, sample [[z{{page]]
+		// FIXME '{{' breaks links, example: [[z{{page]]
 		if ( stream.match( /^[^|\]&~{}]+/ ) ) {
 			return this.makeLocalStyle( modeConfig.tags.linkToSection, state );
 		}
@@ -403,9 +414,6 @@ class CodeMirrorModeMediaWiki {
 		if ( stream.match( ']]' ) ) {
 			state.tokenize = state.stack.pop();
 			return this.makeLocalStyle( modeConfig.tags.linkBracket, state, 'nLink' );
-			// if ( !stream.eatSpace() ) {
-			// state.ImInBlock.push( 'LinkTrail' );
-			// }
 		}
 		return this.eatWikiText( modeConfig.tags.linkToSection )( stream, state );
 	}
@@ -454,6 +462,7 @@ class CodeMirrorModeMediaWiki {
 				name = name + stream.next();
 			}
 			stream.eatSpace();
+			name = name.toLowerCase();
 
 			if ( isHtmlTag ) {
 				if ( isCloseTag && !modeConfig.implicitlyClosedHtmlTags[ name ] ) {
@@ -497,14 +506,14 @@ class CodeMirrorModeMediaWiki {
 		};
 	}
 
-	eatNowiki( style ) {
+	eatNowiki() {
 		return ( stream ) => {
 			if ( stream.match( /^[^&]+/ ) ) {
-				return style;
+				return '';
 			}
 			// eat &
 			stream.next();
-			return this.eatHtmlEntity( stream, style, style );
+			return this.eatHtmlEntity( stream );
 		};
 	}
 
@@ -517,7 +526,7 @@ class CodeMirrorModeMediaWiki {
 			if ( stream.eat( '>' ) ) {
 				state.extName = name;
 
-				// FIXME: remove 'nowiki' and 'pre' from TagModes in extension.json after CM6 upgrade
+				// FIXME: remove nowiki and pre from TagModes in extension.json after CM6 upgrade
 				// leverage the tagModes system for <nowiki> and <pre>
 				if ( name === 'nowiki' || name === 'pre' ) {
 					// There's no actual processing within these tags (apart from HTML entities),
@@ -525,15 +534,14 @@ class CodeMirrorModeMediaWiki {
 					state.extMode = {
 						startState: () => {},
 						copyState: () => {},
-						token: this.eatNowiki( modeConfig.tags[ name ] )
+						token: this.eatNowiki()
 					};
 				} else if ( name in this.config.tagModes ) {
-					// FIXME: tracked at T348684
-					// state.extMode = CodeMirror.getMode(
-					//  this.config,
-					//  this.config.tagModes[ name ]
-					// );
-					// state.extState = CodeMirror.startState( state.extMode );
+					const mode = this.config.tagModes[ name ];
+					if ( mode === 'mediawiki' || mode === 'text/mediawiki' ) {
+						state.extMode = this.mediawiki;
+						state.extState = state.extMode.startState();
+					}
 				}
 
 				state.tokenize = this.eatExtTagArea( name );
@@ -590,13 +598,11 @@ class CodeMirrorModeMediaWiki {
 		return ( stream, state ) => {
 			let ret;
 			if ( state.extMode === false ) {
-				ret = origString === false && stream.sol() ? 'line-cm-mw-exttag' : modeConfig.tags.extTag;
+				ret = modeConfig.tags.extTag;
 				stream.skipToEnd();
 			} else {
-				ret = (
-					origString === false && stream.sol() ? 'line-cm-mw-tag-' : 'mw-tag-'
-				) + state.extName;
-				ret += ' ' + state.extMode.token( stream, state.extState, origString === false );
+				ret = `mw-tag-${ state.extName } ` +
+					state.extMode.token( stream, state.extState, origString === false );
 			}
 			if ( stream.eol() ) {
 				if ( origString !== false ) {
@@ -1195,10 +1201,10 @@ class CodeMirrorModeMediaWiki {
 			/**
 			 * Extra tokens to use in this parser.
 			 *
-			 * @see CodeMirrorConfigChanges.tokenTable
+			 * @see CodeMirrorModeMediaWikiConfig.tokenTable
 			 * @return {Object<Tag>}
 			 */
-			tokenTable: modeConfig.tokenTable
+			tokenTable: this.tokenTable
 		};
 	}
 }
@@ -1215,10 +1221,15 @@ class CodeMirrorModeMediaWiki {
  * @return {LanguageSupport}
  */
 export const mediaWikiLang = ( config = null ) => {
-	const parser = new CodeMirrorModeMediaWiki(
+	const mode = new CodeMirrorModeMediaWiki(
 		config || mw.config.get( 'extCodeMirrorConfig' )
-	).mediawiki;
+	);
+	const parser = mode.mediawiki;
 	const lang = StreamLanguage.define( parser );
-	const highlighter = syntaxHighlighting( modeConfig.getHighlightStyle( parser ) );
+	const highlighter = syntaxHighlighting(
+		HighlightStyle.define(
+			modeConfig.getTagStyles( parser )
+		)
+	);
 	return new LanguageSupport( lang, highlighter );
 };

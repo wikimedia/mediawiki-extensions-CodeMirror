@@ -2,7 +2,6 @@ import CodeMirror from '../../src/codemirror.js';
 import { mediaWikiLang } from '../../src/codemirror.mode.mediawiki.js';
 import { mwModeConfig } from '../../src/codemirror.mode.mediawiki.config.js';
 
-/* eslint-disable max-len */
 const testCases = [
 	{
 		title: 'p tags, extra closing tag',
@@ -14,14 +13,11 @@ const testCases = [
 		input: '<span title="a<b"><b title="a>b"></b></span>',
 		output: '<div class="cm-line"><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">span </span><span class="cm-mw-htmltag-attribute">title="a</span><span class="cm-mw-htmltag-attribute">&lt;b"</span><span class="cm-mw-htmltag-bracket">&gt;</span><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">b </span><span class="cm-mw-htmltag-attribute">title="a</span><span class="cm-mw-htmltag-bracket">&gt;</span>b"&gt;<span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">b</span><span class="cm-mw-htmltag-bracket">&gt;</span><span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">span</span><span class="cm-mw-htmltag-bracket">&gt;</span></div>'
 	},
-	// FIXME: implement tagModes system so other extensions can register tags in CodeMirror
-	// {
-	//  title: 'ref tag attributes',
-	//  input: '<ref name="a<b"/>',
-	//  output: extCiteLoaded ?
-	//   '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref </span><span class="cm-mw-exttag-attribute cm-mw-ext-ref">name="a&lt;b"</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">/&gt;</span></div>' :
-	//   '<div class="cm-line">&lt;ref name="a&lt;b"/&gt;</div>'
-	// },
+	{
+		title: 'ref tag attributes',
+		input: '<ref name="a<b"/>',
+		output: '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref </span><span class="cm-mw-exttag-attribute cm-mw-ext-ref">name="a&lt;b"</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">/&gt;</span></div>'
+	},
 	{
 		title: 'indented table with caption and inline headings',
 		input: ' ::{| class="wikitable"\n |+ Caption\n |-\n ! Uno !! Dos\n |-\n | Foo || Bar\n |}',
@@ -50,15 +46,13 @@ const testCases = [
 	{
 		title: 'nowiki',
 		input: '<nowiki>{{foo}}<p> </div> {{{</nowiki>\n<nowiki/><pre class="foo">\n\n {{bar}}</pre>',
-		output: '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-nowiki">nowiki</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&gt;</span><span class="cm-mw-tag-nowiki cm-mw-tag-nowiki">{{foo}}&lt;p&gt; &lt;/div&gt; {{{</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-nowiki">nowiki</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&gt;</span></div><div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-nowiki">nowiki</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">/&gt;</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-pre">pre </span><span class="cm-mw-exttag-attribute cm-mw-ext-pre">class="foo"</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&gt;</span></div><div class="cm-line"><br></div><div class="cm-line"><span class="cm-mw-tag-pre cm-mw-tag-pre"> {{bar}}</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-pre">pre</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&gt;</span></div>'
+		output: '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-nowiki">nowiki</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&gt;</span><span class="cm-mw-tag-nowiki">{{foo}}&lt;p&gt; &lt;/div&gt; {{{</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-nowiki">nowiki</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&gt;</span></div><div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-nowiki">nowiki</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">/&gt;</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-pre">pre </span><span class="cm-mw-exttag-attribute cm-mw-ext-pre">class="foo"</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&gt;</span></div><div class="cm-line"><br></div><div class="cm-line"><span class="cm-mw-tag-pre"> {{bar}}</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-pre">pre</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&gt;</span></div>'
 	},
-	// {
-	//  title: 'ref tag with cite web, extraneous curly braces',
-	//  input: '<ref>{{cite web|2=foo}}}}</ref>',
-	//  output: extCiteLoaded ?
-	//   '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-bracket">{{</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-name cm-mw-pagename">cite web</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-delimiter">|</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-argument-name">2=</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template">foo</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-bracket">}}</span><span class="cm-mw-tag-ref ">}}</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;</span></span></pre>' :
-	//   '<div class="cm-line">&lt;ref&gt;<span class="cm-mw-template-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template-ground cm-mw-template-name cm-mw-pagename">cite web</span><span class="cm-mw-template-ground cm-mw-template-delimiter">|</span><span class="cm-mw-template-ground cm-mw-template-argument-name">2=</span><span class="cm-mw-template-ground cm-mw-template">foo</span><span class="cm-mw-template-ground cm-mw-template-bracket">}}</span>}}&lt;/ref&gt;</span></pre>'
-	// },
+	{
+		title: 'ref tag with cite web, extraneous curly braces',
+		input: '<ref>{{cite web|2=foo}}}}</ref>',
+		output: '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-bracket">{{</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-pagename cm-mw-template-name">cite</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-pagename cm-mw-template-name"> web</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-delimiter">|</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-argument-name">2=</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template">foo</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-bracket">}}</span><span class="cm-mw-tag-ref">}</span><span class="cm-mw-tag-ref">}</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;</span></div>'
+	},
 	{
 		title: 'template with params and parser function',
 		input: '{{foo|1=bar|2={{{param|blah}}}|{{#if:{{{3|}}}|yes|no}}}}',
@@ -114,13 +108,11 @@ const testCases = [
 		input: 'my sig ~~~ ~~~~ ~~~~~~~',
 		output: '<div class="cm-line">my sig <span class="cm-mw-signature">~~~</span> <span class="cm-mw-signature">~~~~</span> <span class="cm-mw-signature">~~~~~</span>~~</div>'
 	},
-	// {
-	//  title: 'new',
-	//  input: '<ref></Ref>',
-	//  output: extCiteLoaded ?
-	//   '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-Ref">Ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-Ref">&gt;</span></div>' :
-	//   '<div class="cm-line">&lt;ref&gt;&lt;/Ref&gt;</div>'
-	// },
+	{
+		title: 'capitalization of tags',
+		input: '<ref></Ref>',
+		output: '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-ref">Ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;</span></div>'
+	},
 	{
 		title: 'multi-line tag',
 		input: '<div\nid="foo"\n>bar</div>',
@@ -130,6 +122,11 @@ const testCases = [
 		title: 'HTML entities',
 		input: '&#x2014;\n[[&#47;dev/null]]',
 		output: '<div class="cm-line"><span class="cm-mw-html-entity">&amp;#x2014;</span></div><div class="cm-line"><span class="cm-mw-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-link-ground cm-mw-html-entity">&amp;#47;</span><span class="cm-mw-link-ground cm-mw-link-pagename cm-mw-pagename">dev/null</span><span class="cm-mw-link-ground cm-mw-link-bracket">]]</span></div>'
+	},
+	{
+		title: 'Extension tag with no TagMode',
+		input: '<myextension>foo\nbar\nbaz</myextension>',
+		output: '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-myextension">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-myextension">myextension</span><span class="cm-mw-exttag-bracket cm-mw-ext-myextension">&gt;</span><span class="cm-mw-exttag">foo</span></div><div class="cm-line"><span class="cm-mw-exttag">bar</span></div><div class="cm-line"><span class="cm-mw-exttag">baz</span><span class="cm-mw-exttag-bracket cm-mw-ext-myextension">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-myextension">myextension</span><span class="cm-mw-exttag-bracket cm-mw-ext-myextension">&gt;</span></div>'
 	}
 ];
 
@@ -148,7 +145,15 @@ const mwLang = mediaWikiLang( {
 	} ],
 	tags: {
 		nowiki: true,
-		pre: true
+		pre: true,
+		ref: true,
+		references: true,
+		// Made-up tag, for testing when a corresponding TagMode is not configured.
+		myextension: true
+	},
+	tagModes: {
+		ref: 'mediawiki',
+		references: 'mediawiki'
 	}
 } );
 cm.initialize( [ ...cm.defaultExtensions, mwLang ] );
