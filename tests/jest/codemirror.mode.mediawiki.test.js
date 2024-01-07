@@ -82,12 +82,12 @@ const testCases = [
 	{
 		title: 'section headings',
 		input: '== My section ==\nFoo bar\n=== Blah ===\nBaz\n= { =\nText',
-		output: '<div class="cm-line"><span class="cm-mw-section-header cm-mw-section-2">==</span> My section <span class="cm-mw-section-header">==</span></div><div class="cm-line">Foo bar</div><div class="cm-line"><span class="cm-mw-section-header cm-mw-section-3">===</span> Blah <span class="cm-mw-section-header">===</span></div><div class="cm-line">Baz</div><div class="cm-line"><span class="cm-mw-section-header cm-mw-section-1">=</span> { <span class="cm-mw-section-header">=</span></div><div class="cm-line">Text</div>'
+		output: '<div class="cm-line"><span class="cm-mw-section-header cm-mw-section-2">==</span><span class="cm-mw-section"> My section </span><span class="cm-mw-section-header">==</span></div><div class="cm-line">Foo bar</div><div class="cm-line"><span class="cm-mw-section-header cm-mw-section-3">===</span><span class="cm-mw-section"> Blah </span><span class="cm-mw-section-header">===</span></div><div class="cm-line">Baz</div><div class="cm-line"><span class="cm-mw-section-header cm-mw-section-1">=</span><span class="cm-mw-section"> </span><span class="cm-mw-section">{</span><span class="cm-mw-section"> </span><span class="cm-mw-section-header">=</span></div><div class="cm-line">Text</div>'
 	},
 	{
 		title: 'section headings with trailing comments',
 		input: '== My section == <!-- comment --> \nFoo bar\n=== Blah ===<!--comment-->\nBaz\n== <i>a</i> <!-- comment --> == <!--comment-->',
-		output: '<div class="cm-line"><span class="cm-mw-section-header cm-mw-section-2">==</span> My section <span class="cm-mw-section-header">== </span><span class="cm-mw-comment">&lt;!-- comment --&gt;</span> </div><div class="cm-line">Foo bar</div><div class="cm-line"><span class="cm-mw-section-header cm-mw-section-3">===</span> Blah <span class="cm-mw-section-header">===</span><span class="cm-mw-comment">&lt;!--comment--&gt;</span></div><div class="cm-line">Baz</div><div class="cm-line"><span class="cm-mw-section-header cm-mw-section-2">==</span> <span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">i</span><span class="cm-mw-htmltag-bracket">&gt;</span>a<span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">i</span><span class="cm-mw-htmltag-bracket">&gt;</span> <span class="cm-mw-comment">&lt;!-- comment --&gt;</span> <span class="cm-mw-section-header">== </span><span class="cm-mw-comment">&lt;!--comment--&gt;</span></div>'
+		output: '<div class="cm-line"><span class="cm-mw-section-header cm-mw-section-2">==</span><span class="cm-mw-section"> My section </span><span class="cm-mw-section-header">== </span><span class="cm-mw-comment">&lt;!-- comment --&gt;</span> </div><div class="cm-line">Foo bar</div><div class="cm-line"><span class="cm-mw-section-header cm-mw-section-3">===</span><span class="cm-mw-section"> Blah </span><span class="cm-mw-section-header">===</span><span class="cm-mw-comment">&lt;!--comment--&gt;</span></div><div class="cm-line">Baz</div><div class="cm-line"><span class="cm-mw-section-header cm-mw-section-2">==</span><span class="cm-mw-section"> </span><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">i</span><span class="cm-mw-htmltag-bracket">&gt;</span><span class="cm-mw-section">a</span><span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">i</span><span class="cm-mw-htmltag-bracket">&gt;</span><span class="cm-mw-section"> </span><span class="cm-mw-comment">&lt;!-- comment --&gt;</span><span class="cm-mw-section"> </span><span class="cm-mw-section-header">== </span><span class="cm-mw-comment">&lt;!--comment--&gt;</span></div>'
 	},
 	{
 		title: 'bullets and numbering, with invalid leading spacing',
@@ -232,6 +232,7 @@ describe( 'CodeMirrorModeMediaWiki', () => {
 			'nowiki',
 			'pageName',
 			'pre',
+			'section',
 			'skipFormatting',
 			'strong',
 			'tableCaption',

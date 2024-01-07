@@ -137,6 +137,7 @@ class CodeMirrorModeMediaWikiConfig {
 			nowiki: 'mw-tag-nowiki',
 			pageName: 'mw-pagename',
 			pre: 'mw-tag-pre',
+			section: 'mw-section',
 			skipFormatting: 'mw-skipformatting',
 			strong: 'mw-strong',
 			tableCaption: 'mw-table-caption',
@@ -179,6 +180,7 @@ class CodeMirrorModeMediaWikiConfig {
 			[ this.tags.nowiki ]: Tag.define(),
 			[ this.tags.pageName ]: Tag.define(),
 			[ this.tags.pre ]: Tag.define(),
+			[ this.tags.section ]: Tag.define(),
 			[ this.tags.skipFormatting ]: Tag.define(),
 			[ this.tags.strong ]: Tag.define(),
 			[ this.tags.tableCaption ]: Tag.define(),
@@ -443,6 +445,10 @@ class CodeMirrorModeMediaWikiConfig {
 			{
 				tag: context.tokenTable[ this.tags.pre ],
 				class: 'cm-mw-tag-pre'
+			},
+			{
+				tag: context.tokenTable[ this.tags.section ],
+				class: 'cm-mw-section'
 			},
 			{
 				tag: context.tokenTable[ this.tags.skipFormatting ],

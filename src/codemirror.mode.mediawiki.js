@@ -175,9 +175,9 @@ class CodeMirrorModeMediaWiki {
 					stream.backUp( count );
 					state.tokenize = this.eatBlock( modeConfig.tags.sectionHeader, '<!--', false );
 				}
-				return null; // style is null
+				return modeConfig.tags.section; // style is null
 			}
-			return this.eatWikiText( '' )( stream, state );
+			return this.eatWikiText( modeConfig.tags.section )( stream, state );
 		};
 	}
 
@@ -381,8 +381,7 @@ class CodeMirrorModeMediaWiki {
 			);
 		}
 		return this.eatWikiText(
-			`${ modeConfig.tags.linkPageName } ${ modeConfig.tags.pageName }`,
-			modeConfig.tags.pageName
+			`${ modeConfig.tags.linkPageName } ${ modeConfig.tags.pageName }`
 		)( stream, state );
 	}
 
