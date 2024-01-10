@@ -7,6 +7,7 @@ import bidiIsolationExtension from './codemirror.bidiIsolation';
  * @property {jQuery} $textarea
  * @property {EditorView} view
  * @property {EditorState} state
+ * @property {boolean} readOnly
  */
 export default class CodeMirror {
 	/**
@@ -17,6 +18,7 @@ export default class CodeMirror {
 		this.$textarea = $( textarea );
 		this.view = null;
 		this.state = null;
+		this.readOnly = this.$textarea.prop( 'readonly' );
 	}
 
 	/**
@@ -32,7 +34,8 @@ export default class CodeMirror {
 			this.contentAttributesExtension,
 			this.phrasesExtension,
 			this.specialCharsExtension,
-			this.heightExtension
+			this.heightExtension,
+			EditorState.readOnly.of( this.readOnly )
 		];
 
 		// Add bidi isolation to tags on RTL pages (T358804).

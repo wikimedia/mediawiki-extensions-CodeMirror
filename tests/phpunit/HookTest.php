@@ -28,13 +28,18 @@ class HookTest extends MediaWikiIntegrationTestCase {
 	/**
 	 * @covers ::shouldLoadCodeMirror
 	 * @covers ::onEditPage__showEditForm_initial
+	 * @covers ::onEditPage__showReadOnlyForm_initial
 	 * @param bool $useCodeMirrorV6
 	 * @param int $expectedAddModuleCalls
 	 * @param string|null $expectedFirstModule
+	 * @param bool $readOnly
 	 * @dataProvider provideOnEditPageShowEditFormInitial
 	 */
 	public function testOnEditPageShowEditFormInitial(
-		bool $useCodeMirrorV6, int $expectedAddModuleCalls, ?string $expectedFirstModule
+		bool $useCodeMirrorV6,
+		int $expectedAddModuleCalls,
+		?string $expectedFirstModule,
+		bool $readOnly = false
 	) {
 		$this->overrideConfigValues( [
 			'CodeMirrorV6' => $useCodeMirrorV6,
@@ -55,16 +60,19 @@ class HookTest extends MediaWikiIntegrationTestCase {
 			} );
 
 		$hooks = new Hooks( $userOptionsLookup, $this->getServiceContainer()->getMainConfig() );
-		$hooks->onEditPage__showEditForm_initial( $this->createMock( EditPage::class ), $out );
+		$method = $readOnly ? 'onEditPage__showReadOnlyForm_initial' : 'onEditPage__showEditForm_initial';
+		$hooks->{$method}( $this->createMock( EditPage::class ), $out );
 	}
 
 	/**
 	 * @return Generator
 	 */
 	public static function provideOnEditPageShowEditFormInitial(): Generator {
-		// useCodeMirrorV6, expectedAddModuleCalls, expectedFirstModule
+		// useCodeMirrorV6, expectedAddModuleCalls, expectedFirstModule, readOnly
 		yield 'CM5' => [ false, 2, 'ext.CodeMirror.WikiEditor' ];
 		yield 'CM6' => [ true, 1, 'ext.CodeMirror.v6.WikiEditor' ];
+		yield 'CM5 read-only' => [ false, 0, null, true ];
+		yield 'CM6 read-only' => [ true, 1, 'ext.CodeMirror.v6.WikiEditor', true ];
 	}
 
 	/**
@@ -82,39 +90,35 @@ class HookTest extends MediaWikiIntegrationTestCase {
 	/**
 	 * @covers ::shouldLoadCodeMirror
 	 * @dataProvider provideShouldLoadCodeMirror
-	 * @param string|null $module
-	 * @param string|null $gadget
+	 * @param array $conds
 	 * @param bool $expectation
-	 * @param string $contentModel
-	 * @param bool $useCodeMirrorV6
-	 * @param bool $isRTL
 	 */
-	public function testShouldLoadCodeMirror(
-		?string $module,
-		?string $gadget,
-		bool $expectation,
-		string $contentModel = CONTENT_MODEL_WIKITEXT,
-		bool $useCodeMirrorV6 = false,
-		bool $isRTL = false
-	): void {
+	public function testShouldLoadCodeMirror( array $conds, bool $expectation ): void {
+		$conds = array_merge( [
+			'module' => null,
+			'gadget' => null,
+			'contentModel' => CONTENT_MODEL_WIKITEXT,
+			'useV6' => false,
+			'isRTL' => false
+		], $conds );
 		$this->overrideConfigValues( [
-			'CodeMirrorV6' => $useCodeMirrorV6,
+			'CodeMirrorV6' => $conds['useV6'],
 		] );
-		$out = $this->getMockOutputPage( $contentModel, $isRTL );
-		$out->method( 'getModules' )->willReturn( $module ? [ $module ] : [] );
+		$out = $this->getMockOutputPage( $conds['contentModel'], $conds['isRTL'] );
+		$out->method( 'getModules' )->willReturn( $conds['module'] ? [ $conds['module'] ] : [] );
 		$userOptionsLookup = $this->createMock( UserOptionsLookup::class );
 		$userOptionsLookup->method( 'getOption' )->willReturn( true );
 
-		if ( $gadget && !ExtensionRegistry::getInstance()->isLoaded( 'Gadgets' ) ) {
+		if ( $conds['gadget'] && !ExtensionRegistry::getInstance()->isLoaded( 'Gadgets' ) ) {
 			$this->markTestSkipped( 'Skipped as Gadgets extension is not available' );
 		}
 
-		$extensionRegistry = $this->getMockExtensionRegistry( (bool)$gadget );
+		$extensionRegistry = $this->getMockExtensionRegistry( (bool)$conds['gadget'] );
 		$extensionRegistry->method( 'getAttribute' )
 			->with( 'CodeMirrorContentModels' )
 			->willReturn( [ CONTENT_MODEL_WIKITEXT ] );
 
-		if ( $gadget ) {
+		if ( $conds['gadget'] ) {
 			$gadgetMock = $this->createMock( Gadget::class );
 			$gadgetMock->expects( $this->once() )
 				->method( 'isEnabled' )
@@ -125,14 +129,11 @@ class HookTest extends MediaWikiIntegrationTestCase {
 				->willReturn( $gadgetMock );
 			$gadgetRepoMock->expects( $this->once() )
 				->method( 'getGadgetIds' )
-				->willReturn( [ $gadget ] );
+				->willReturn( [ $conds['gadget'] ] );
 			GadgetRepo::setSingleton( $gadgetRepoMock );
 		}
 
-		$hooks = new Hooks(
-			$userOptionsLookup,
-			$this->getServiceContainer()->getMainConfig()
-		);
+		$hooks = new Hooks( $userOptionsLookup, $this->getServiceContainer()->getMainConfig() );
 		self::assertSame( $expectation, $hooks->shouldLoadCodeMirror( $out, $extensionRegistry ) );
 	}
 
@@ -140,13 +141,13 @@ class HookTest extends MediaWikiIntegrationTestCase {
 	 * @return Generator
 	 */
 	public function provideShouldLoadCodeMirror(): Generator {
-		// module, gadget, expectation, contentModel, shouldUseV6, isRTL
-		yield 'no modules, no gadgets, wikitext' => [ null, null, true ];
-		yield 'codeEditor, no gadgets, wikitext' => [ 'ext.codeEditor', null, false ];
-		yield 'no modules, wikEd, wikitext' => [ null, 'wikEd', false ];
-		yield 'no modules, no gadgets, CSS' => [ null, null, false, CONTENT_MODEL_CSS ];
-		yield 'CM5 wikitext RTL' => [ null, null, false, CONTENT_MODEL_WIKITEXT, false, true ];
-		yield 'CM6 wikitext RTL' => [ null, null, true, CONTENT_MODEL_WIKITEXT, true, true ];
+		// [ conditions, expectation ]
+		yield [ [], true ];
+		yield [ [ 'module' => 'ext.codeEditor' ], false ];
+		yield [ [ 'gadget' => 'wikEd' ], false ];
+		yield [ [ 'contentModel' => CONTENT_FORMAT_CSS ], false ];
+		yield [ [ 'isRTL' => true ], false ];
+		yield [ [ 'isRTL' => true, 'useV6' => true ], true ];
 	}
 
 	/**

@@ -153,8 +153,12 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 		);
 
 		const $codeMirrorButton = toolbar.$toolbar.find( '.tool[rel=CodeMirror]' );
-		$codeMirrorButton
-			.attr( 'id', 'mw-editbutton-codemirror' );
+		$codeMirrorButton.attr( 'id', 'mw-editbutton-codemirror' );
+
+		// Hide non-applicable buttons until WikiEditor better supports a read-only mode (T188817).
+		if ( this.readOnly ) {
+			this.$textarea.data( 'wikiEditor-context' ).$ui.addClass( 'ext-codemirror-readonly' );
+		}
 
 		if ( this.useCodeMirror ) {
 			this.enableCodeMirror();

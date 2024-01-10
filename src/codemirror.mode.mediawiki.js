@@ -1214,6 +1214,7 @@ class CodeMirrorModeMediaWiki {
  * Gets a LanguageSupport instance for the MediaWiki mode.
  *
  * @example
+ * import CodeMirror from './codemirror';
  * import { mediaWikiLang } from './codemirror.mode.mediawiki';
  * const cm = new CodeMirror( textarea );
  * cm.initialize( [ ...cm.defaultExtensions, mediaWikiLang() ] );

@@ -164,6 +164,7 @@
 		},
 		"ext.CodeMirror.v6.WikiEditor": {
 			"dependencies": [
+				"ext.wikiEditor",
 				"web2017-polyfills",
 				"mediawiki.api",
 				"mediawiki.user",
@@ -250,6 +251,7 @@
 	},
 	"Hooks": {
 		"EditPage::showEditForm:initial": "main",
+		"EditPage::showReadOnlyForm:initial": "main",
 		"GetPreferences": "main",
 		"ResourceLoaderGetConfigVars": "main"
 	},
