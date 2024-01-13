@@ -176,7 +176,8 @@
 				"web2017-polyfills",
 				"mediawiki.api",
 				"mediawiki.user",
-				"user.options"
+				"user.options",
+				"ext.CodeMirror.v6.messages"
 			],
 			"packageFiles": [
 				"dist/main.js"
@@ -188,6 +189,20 @@
 			],
 			"messages": [
 				"codemirror-toggle-label"
+			]
+		},
+		"ext.CodeMirror.v6.messages": {
+			"messages": [
+				"codemirror-find",
+				"codemirror-next",
+				"codemirror-previous",
+				"codemirror-all",
+				"codemirror-match-case",
+				"codemirror-regexp",
+				"codemirror-by-word",
+				"codemirror-replace",
+				"codemirror-replace-placeholder",
+				"codemirror-replace-all"
 			]
 		}
 	},

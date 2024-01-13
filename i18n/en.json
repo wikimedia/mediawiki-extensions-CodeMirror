@@ -8,5 +8,15 @@
 	"codemirror-toggle-label": "Syntax highlighting",
 	"codemirror-prefs-colorblind": "Enable colorblind-friendly scheme for syntax highlighting when editing wikitext",
 	"codemirror-prefs-colorblind-help": "If you use a gadget for syntax highlighting, this preference will not work.",
+	"codemirror-find": "Find",
+	"codemirror-next": "next",
+	"codemirror-previous": "previous",
+	"codemirror-all": "all",
+	"codemirror-match-case": "match case",
+	"codemirror-regexp": "regexp",
+	"codemirror-by-word": "by word",
+	"codemirror-replace": "replace",
+	"codemirror-replace-placeholder": "Replace",
+	"codemirror-replace-all": "replace all",
 	"prefs-accessibility": "Accessibility"
 }

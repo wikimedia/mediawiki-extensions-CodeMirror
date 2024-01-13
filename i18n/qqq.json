@@ -12,5 +12,15 @@
 	"codemirror-toggle-label": "Title tooltip for button to toggle CodeMirror in the editing toolbar.",
 	"codemirror-prefs-colorblind": "Used in user preferences as label for enabling the colorblind-friendly option.",
 	"codemirror-prefs-colorblind-help": "Used in user preferences as remark on the colorblind-friendly option.",
+	"codemirror-find": "Placeholder text for the input in the CodeMirror search dialog.",
+	"codemirror-next": "Label for the 'Next' button in the CodeMirror search dialog.",
+	"codemirror-previous": "Label for the 'Previous' button in the CodeMirror search dialog.",
+	"codemirror-all": "Label for the 'All' button in the CodeMirror search dialog.",
+	"codemirror-match-case": "Label for the 'match case' option in the CodeMirror search dialog.",
+	"codemirror-regexp": "Label for the 'regexp' button in the CodeMirror search dialog. This enables the user to search using regular expressions.",
+	"codemirror-by-word": "Label for the 'by word' button in the CodeMirror search dialog.",
+	"codemirror-replace": "Label for the 'replace' button in the CodeMirror search dialog.",
+	"codemirror-replace-placeholder": "Placeholder text for the 'Replace' input in the CodeMirror search dialog.",
+	"codemirror-replace-all": "Label for the 'replace all' button in the CodeMirror search dialog.",
 	"prefs-accessibility": "Section heading in the user prefences for accessibility topics."
 }

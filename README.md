@@ -58,3 +58,6 @@ Some may be removed pending user feedback:
   Use `.cm-mw-template-ground.cm-html-entity` instead.
 * Line-level styling for `<nowiki>`, `<pre>`, and any tag without an associated
   TagMode has been removed.
+* The browser's native search functionality (ala Ctrl+F) has been replaced with
+  search functionality built into CodeMirror. This is necessary to maintain
+  performance (see [T303664](https://phabricator.wikimedia.org/T303664)).
