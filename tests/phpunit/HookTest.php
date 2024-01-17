@@ -43,9 +43,15 @@ class HookTest extends MediaWikiIntegrationTestCase {
 
 		$out = $this->getMockOutputPage();
 		$out->method( 'getModules' )->willReturn( [] );
+		$isFirstCall = true;
 		$out->expects( $this->exactly( $expectedAddModuleCalls ) )
 			->method( 'addModules' )
-			->withConsecutive( [ $this->equalTo( $expectedFirstModule ) ] );
+			->willReturnCallback( function ( $modules ) use ( $expectedFirstModule, &$isFirstCall ) {
+				if ( $isFirstCall ) {
+					$this->assertSame( $expectedFirstModule, $modules );
+				}
+				$isFirstCall = false;
+			} );
 
 		( new Hooks( $userOptionsLookup, $this->getServiceContainer()->getMainConfig() ) )
 			->onBeforePageDisplay( $out, $this->createMock( Skin::class ) );
