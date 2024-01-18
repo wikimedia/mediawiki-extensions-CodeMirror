@@ -34,6 +34,11 @@ const testCases = [
 		output: '<div class="cm-line"><span class="cm-mw-free-extlink-protocol">https://</span><span class="cm-mw-free-extlink">wikimedia.</span><span class="cm-mw-free-extlink">org</span> <span class="cm-mw-link-ground cm-mw-extlink-bracket">[</span><span class="cm-mw-link-ground cm-mw-extlink-protocol">ftp://</span><span class="cm-mw-link-ground cm-mw-extlink">foo.bar</span><span class="cm-mw-link-ground"> </span><span class="cm-mw-link-ground cm-mw-extlink-text">FOO</span><span class="cm-mw-link-ground cm-mw-extlink-bracket">]</span> //archive.org</div>'
 	},
 	{
+		title: 'not free external links',
+		input: 'news: foo news:bar [news: baz]',
+		output: '<div class="cm-line">news: foo <span class="cm-mw-free-extlink-protocol">news:</span><span class="cm-mw-free-extlink">bar</span> [news: baz]</div>'
+	},
+	{
 		title: 'void tags',
 		input: 'a<br>b</br>c a<div>b<br>c</div>d',
 		output: '<div class="cm-line">a<span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">br</span><span class="cm-mw-htmltag-bracket">&gt;</span>b<span class="cm-mw-error">&lt;/br&gt;</span>c a<span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">div</span><span class="cm-mw-htmltag-bracket">&gt;</span>b<span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">br</span><span class="cm-mw-htmltag-bracket">&gt;</span>c<span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">div</span><span class="cm-mw-htmltag-bracket">&gt;</span>d</div>'
@@ -141,7 +146,7 @@ document.body.appendChild( textarea );
 const cm = new CodeMirror( textarea );
 // Stub the config normally provided by mw.config.get('extCodeMirrorConfig')
 const mwLang = mediaWikiLang( {
-	urlProtocols: 'ftp://|https://',
+	urlProtocols: 'ftp://|https://|news:',
 	doubleUnderscore: [ {
 		__notoc__: 'notoc'
 	} ],

@@ -21,7 +21,7 @@ class CodeMirrorModeMediaWiki {
 	constructor( config ) {
 		this.config = config;
 		// eslint-disable-next-line security/detect-non-literal-regexp
-		this.urlProtocols = new RegExp( `^(?:${ this.config.urlProtocols })`, 'i' );
+		this.urlProtocols = new RegExp( `^(?:${ this.config.urlProtocols })(?=[^\\s\u00a0{[\\]<>~).,'])`, 'i' );
 		this.isBold = false;
 		this.wasBold = false;
 		this.isItalic = false;
