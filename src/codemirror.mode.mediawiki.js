@@ -629,14 +629,6 @@ class CodeMirrorModeMediaWiki {
 		return this.eatWikiText( modeConfig.tags.tableDefinition )( stream, state );
 	}
 
-	inTableCaption( stream, state ) {
-		if ( stream.sol() && stream.match( /^[\s\u00a0]*[|!]/, false ) ) {
-			state.tokenize = this.inTable.bind( this );
-			return this.inTable( stream, state );
-		}
-		return this.eatWikiText( modeConfig.tags.tableCaption )( stream, state );
-	}
-
 	inTable( stream, state ) {
 		if ( stream.sol() ) {
 			stream.eatSpace();
@@ -648,7 +640,7 @@ class CodeMirrorModeMediaWiki {
 				}
 				if ( stream.eat( '+' ) ) {
 					stream.eatSpace();
-					state.tokenize = this.inTableCaption.bind( this );
+					state.tokenize = this.eatTableRow( true, false, true );
 					return this.makeLocalStyle( modeConfig.tags.tableDelimiter, state );
 				}
 				if ( stream.eat( '}' ) ) {
@@ -668,7 +660,14 @@ class CodeMirrorModeMediaWiki {
 		return this.eatWikiText( '' )( stream, state );
 	}
 
-	eatTableRow( isStart, isHead ) {
+	// isStart actually means whether there may be attributes */
+	eatTableRow( isStart, isHead, isCaption ) {
+		let tag = '';
+		if ( isCaption ) {
+			tag = modeConfig.tags.tableCaption;
+		} else if ( isHead ) {
+			tag = modeConfig.tags.strong;
+		}
 		return ( stream, state ) => {
 			if ( stream.sol() ) {
 				if ( stream.match( /^[\s\u00a0]*[|!]/, false ) ) {
@@ -677,22 +676,19 @@ class CodeMirrorModeMediaWiki {
 				}
 			} else {
 				if ( stream.match( /^[^'|{[<&~!]+/ ) ) {
-					return this.makeStyle( ( isHead ? modeConfig.tags.strong : '' ), state );
+					return this.makeStyle( tag, state );
 				}
-				if (
-					stream.match( '||' ) ||
-					( isHead && stream.match( '!!' ) ) ||
-					( isStart && stream.eat( '|' ) )
-				) {
+				if ( stream.match( '||' ) || ( isHead && stream.match( '!!' ) ) ) {
 					this.isBold = false;
 					this.isItalic = false;
-					if ( isStart ) {
-						state.tokenize = this.eatTableRow( false, isHead );
-					}
+					state.tokenize = this.eatTableRow( true, isHead, isCaption );
+					return this.makeLocalStyle( modeConfig.tags.tableDelimiter, state );
+				}
+				if ( isStart && stream.eat( '|' ) ) {
+					state.tokenize = this.eatTableRow( false, isHead, isCaption );
 					return this.makeLocalStyle( modeConfig.tags.tableDelimiter, state );
 				}
 			}
-			const tag = isHead ? modeConfig.tags.strong : '';
 			return this.eatWikiText( tag )( stream, state );
 		};
 	}
