@@ -89,6 +89,11 @@ const testCases = [
 		output: '<div class="cm-line"><span class="cm-mw-list">*</span> bullet A</div><div class="cm-line"><span class="cm-mw-list">*</span> bullet B</div><div class="cm-line"><span class="cm-mw-list">#</span> one</div><div class="cm-line"><span class="cm-mw-skipformatting"> </span># two</div>'
 	},
 	{
+		title: 'nested ordered, unordered and definition lists',
+		input: '*#;: item A\n#;:* item B\n;:*# item C\n:*#; item D',
+		output: '<div class="cm-line"><span class="cm-mw-list">*#;:</span> item A</div><div class="cm-line"><span class="cm-mw-list">#;:*</span> item B</div><div class="cm-line"><span class="cm-mw-list">;:*#</span> item C</div><div class="cm-line"><span class="cm-mw-indenting">:*#;</span> item D</div>'
+	},
+	{
 		title: 'link with bold text',
 		input: '[[Link title|\'\'\'bold link\'\'\']]',
 		output: '<div class="cm-line"><span class="cm-mw-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-link-ground cm-mw-link-pagename cm-mw-pagename">Link</span><span class="cm-mw-link-ground cm-mw-link-pagename cm-mw-pagename"> title</span><span class="cm-mw-link-ground cm-mw-link-delimiter">|</span><span class="cm-mw-link-ground cm-mw-link-text cm-mw-apostrophes">\'\'\'</span><span class="cm-mw-link-ground cm-mw-link-text cm-mw-strong">bold link</span><span class="cm-mw-link-ground cm-mw-link-text cm-mw-apostrophes">\'\'\'</span><span class="cm-mw-link-ground cm-mw-link-bracket">]]</span></div>'
