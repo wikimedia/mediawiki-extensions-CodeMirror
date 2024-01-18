@@ -67,7 +67,11 @@ pre.CodeMirror-line.cm-mw-section-5,
 pre.CodeMirror-line-like.cm-mw-section-5,
 pre.CodeMirror-line.cm-mw-section-6,
 pre.CodeMirror-line-like.cm-mw-section-6,
-.cm-mw-section-3 ~ *, .cm-mw-section-4 ~ *, .cm-mw-section-5 ~ *, .cm-mw-section-6 ~ * {
+/* TODO: remove overqualified `span` after CM6 upgrade */
+span.cm-mw-section-3 ~ *,
+span.cm-mw-section-4 ~ *,
+span.cm-mw-section-5 ~ *,
+span.cm-mw-section-6 ~ * {
 	font-weight: bold;
 }
 
