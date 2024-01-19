@@ -513,7 +513,7 @@ class CodeMirrorModeMediaWiki {
 			}
 			// eat &
 			stream.next();
-			return this.eatHtmlEntity( stream );
+			return this.eatHtmlEntity( stream, '' );
 		};
 	}
 
@@ -782,8 +782,9 @@ class CodeMirrorModeMediaWiki {
 						break;
 					case '*':
 					case '#':
+					case ';':
 						// Just consume all nested list and indention syntax when there is more
-						stream.match( /^[*#]*:*/ );
+						stream.match( /^[*#;:]*/ );
 						return modeConfig.tags.list;
 					case ':':
 						// Highlight indented tables :{|, bug T108454
@@ -792,7 +793,7 @@ class CodeMirrorModeMediaWiki {
 							state.tokenize = this.eatStartTable.bind( this );
 						}
 						// Just consume all nested list and indention syntax when there is more
-						stream.match( /^:*[*#]*/ );
+						stream.match( /^[*#;:]*/ );
 						return modeConfig.tags.indenting;
 					case ' ':
 						// Leading spaces is valid syntax for tables, bug T108454
