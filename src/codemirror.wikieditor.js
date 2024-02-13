@@ -1,6 +1,6 @@
 import CodeMirror from './codemirror';
-import { EditorSelection } from '@codemirror/state';
-import { EditorView, keymap } from '@codemirror/view';
+import { EditorState, EditorSelection } from '@codemirror/state';
+import { EditorView, drawSelection, keymap } from '@codemirror/view';
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
 import { searchKeymap } from '@codemirror/search';
 import { bracketMatching } from '@codemirror/language';
@@ -61,6 +61,8 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 				}
 			} ),
 			EditorView.lineWrapping,
+			EditorState.allowMultipleSelections.of( true ),
+			drawSelection(),
 			keymap.of( [
 				...defaultKeymap,
 				...searchKeymap,
