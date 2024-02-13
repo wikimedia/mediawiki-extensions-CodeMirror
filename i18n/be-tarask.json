@@ -1,9 +1,13 @@
 {
 	"@metadata": {
 		"authors": [
-			"Red Winged Duck"
+			"Red Winged Duck",
+			"Renessaince"
 		]
 	},
 	"codemirror-desc": "Забясьпечвае вылучэньне сынтаксысу ў рэдактары вікітэксту",
-	"codemirror-toggle-label": "Вылучэньне сынтаксысу"
+	"codemirror-toggle-label": "Вылучэньне сынтаксысу",
+	"codemirror-prefs-colorblind": "Уключыць прыдатную для дальтонікаў схему падсьвятленьня сынтаксу пры рэдагаваньні вікітэксту",
+	"codemirror-prefs-colorblind-help": "Калі вы карыстаецеся інструмэнтам падсьветкі сынтаксу, гэтая налада не працавацьме.",
+	"prefs-accessibility": "Даступнасьць"
 }
