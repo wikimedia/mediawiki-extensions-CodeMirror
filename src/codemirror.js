@@ -162,6 +162,15 @@ export default class CodeMirror {
 			parent: this.$textarea.parent()[ 0 ]
 		} );
 
+		// Add colorblind mode if preference is set.
+		// This currently is only to be used for the MediaWiki markup language.
+		if (
+			mw.user.options.get( 'usecodemirror-colorblind' ) &&
+			mw.config.get( 'wgPageContentModel' ) === 'wikitext'
+		) {
+			this.view.dom.classList.add( 'cm-mw-colorblind-colors' );
+		}
+
 		// Hide native textarea and sync CodeMirror contents upon submission.
 		this.$textarea.hide();
 		if ( this.$textarea[ 0 ].form ) {
