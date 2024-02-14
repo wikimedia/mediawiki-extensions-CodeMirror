@@ -5,6 +5,11 @@ import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
 import { searchKeymap } from '@codemirror/search';
 import { bracketMatching } from '@codemirror/language';
 
+// Necessary so that `require` doesn't get mangled into `__webpack_require__`,
+// which ResourceLoader won't recognize and thus be unable to load the virtual file.
+// See https://webpack-v3.jsx.app/api/module-variables/#__non_webpack_require__-webpack-specific-
+__non_webpack_require__( '../ext.CodeMirror.data.js' );
+
 /**
  * @class CodeMirrorWikiEditor
  */

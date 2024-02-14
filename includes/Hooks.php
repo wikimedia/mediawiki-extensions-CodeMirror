@@ -103,7 +103,7 @@ class Hooks implements
 		}
 
 		if ( $this->shouldUseV6( $out ) ) {
-			$out->addModules( 'ext.CodeMirror.v6.WikiEditor.init' );
+			$out->addModules( 'ext.CodeMirror.v6.WikiEditor' );
 		} else {
 			$out->addModules( 'ext.CodeMirror.WikiEditor' );
 

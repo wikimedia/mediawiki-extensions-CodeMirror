@@ -63,7 +63,7 @@ class HookTest extends MediaWikiIntegrationTestCase {
 	public function provideOnBeforePageDisplay(): array {
 		return [
 			[ false, 2, 'ext.CodeMirror.WikiEditor' ],
-			[ true, 1, 'ext.CodeMirror.v6.WikiEditor.init' ]
+			[ true, 1, 'ext.CodeMirror.v6.WikiEditor' ]
 		];
 	}
 
