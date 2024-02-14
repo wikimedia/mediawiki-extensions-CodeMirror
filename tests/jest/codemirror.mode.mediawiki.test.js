@@ -142,6 +142,12 @@ const testCases = [
 		title: 'Extension tag with no TagMode',
 		input: '<myextension>foo\nbar\nbaz</myextension>',
 		output: '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-myextension">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-myextension">myextension</span><span class="cm-mw-exttag-bracket cm-mw-ext-myextension">&gt;</span><span class="cm-mw-exttag">foo</span></div><div class="cm-line"><span class="cm-mw-exttag">bar</span></div><div class="cm-line"><span class="cm-mw-exttag">baz</span><span class="cm-mw-exttag-bracket cm-mw-ext-myextension">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-myextension">myextension</span><span class="cm-mw-exttag-bracket cm-mw-ext-myextension">&gt;</span></div>'
+	},
+	{
+		title: 'Special characters',
+		input: 'Soft­hyphen\nzero-width​space\nnon-breaking space\nnarrow nbsp',
+		// i18n messages are the keys because we don't stub mw.msg() in this test.
+		output: '<div class="cm-line">Soft<img class="cm-widgetBuffer" aria-hidden="true"><span class="cm-specialChar" title="codemirror-control-character" aria-label="codemirror-control-character">•</span><img class="cm-widgetBuffer" aria-hidden="true">hyphen</div><div class="cm-line">zero-width<img class="cm-widgetBuffer" aria-hidden="true"><span class="cm-specialChar" title="codemirror-special-char-zero-width-space" aria-label="codemirror-special-char-zero-width-space">•</span><img class="cm-widgetBuffer" aria-hidden="true">space</div><div class="cm-line">non-breaking<img class="cm-widgetBuffer" aria-hidden="true"><span class="cm-special-char-nbsp" title="codemirror-special-char-nbsp" aria-label="codemirror-special-char-nbsp">·</span><img class="cm-widgetBuffer" aria-hidden="true">space</div><div class="cm-line">narrow<img class="cm-widgetBuffer" aria-hidden="true"><span class="cm-special-char-nbsp" title="codemirror-special-char-narrow-nbsp" aria-label="codemirror-special-char-narrow-nbsp">·</span><img class="cm-widgetBuffer" aria-hidden="true">nbsp</div>'
 	}
 ];
 

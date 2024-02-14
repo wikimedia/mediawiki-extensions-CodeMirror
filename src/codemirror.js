@@ -1,5 +1,5 @@
 import { EditorState, Extension } from '@codemirror/state';
-import { EditorView, lineNumbers } from '@codemirror/view';
+import { EditorView, lineNumbers, highlightSpecialChars } from '@codemirror/view';
 
 /**
  * @class CodeMirror
@@ -29,7 +29,8 @@ export default class CodeMirror {
 	get defaultExtensions() {
 		const extensions = [
 			this.contentAttributesExtension,
-			this.phrasesExtension
+			this.phrasesExtension,
+			this.specialCharsExtension
 		];
 		const namespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
 
@@ -78,7 +79,67 @@ export default class CodeMirror {
 			'by word': mw.msg( 'codemirror-by-word' ),
 			replace: mw.msg( 'codemirror-replace' ),
 			Replace: mw.msg( 'codemirror-replace-placeholder' ),
-			'replace all': mw.msg( 'codemirror-replace-all' )
+			'replace all': mw.msg( 'codemirror-replace-all' ),
+			'Control character': mw.msg( 'codemirror-control-character' )
+		} );
+	}
+
+	/**
+	 * We give a small subset of special characters a tooltip explaining what they are.
+	 * The messages and for what characters are defined here.
+	 * Any character that does not have a message will instead use CM6 defaults,
+	 * which is the localization of 'codemirror-control-character' followed by the Unicode number.
+	 *
+	 * @see https://codemirror.net/docs/ref/#view.highlightSpecialChars
+	 * @return {Extension}
+	 */
+	get specialCharsExtension() {
+		// Keys are the decimal unicode number, values are the messages.
+		const messages = {
+			0: mw.msg( 'codemirror-special-char-null' ),
+			7: mw.msg( 'codemirror-special-char-bell' ),
+			8: mw.msg( 'codemirror-special-char-backspace' ),
+			10: mw.msg( 'codemirror-special-char-newline' ),
+			11: mw.msg( 'codemirror-special-char-vertical-tab' ),
+			13: mw.msg( 'codemirror-special-char-carriage-return' ),
+			27: mw.msg( 'codemirror-special-char-escape' ),
+			160: mw.msg( 'codemirror-special-char-nbsp' ),
+			8203: mw.msg( 'codemirror-special-char-zero-width-space' ),
+			8204: mw.msg( 'codemirror-special-char-zero-width-non-joiner' ),
+			8205: mw.msg( 'codemirror-special-char-zero-width-joiner' ),
+			8206: mw.msg( 'codemirror-special-char-left-to-right-mark' ),
+			8207: mw.msg( 'codemirror-special-char-right-to-left-mark' ),
+			8232: mw.msg( 'codemirror-special-char-line-separator' ),
+			8237: mw.msg( 'codemirror-special-char-left-to-right-override' ),
+			8238: mw.msg( 'codemirror-special-char-right-to-left-override' ),
+			8239: mw.msg( 'codemirror-special-char-narrow-nbsp' ),
+			8294: mw.msg( 'codemirror-special-char-left-to-right-isolate' ),
+			8295: mw.msg( 'codemirror-special-char-right-to-left-isolate' ),
+			8297: mw.msg( 'codemirror-special-char-pop-directional-isolate' ),
+			8233: mw.msg( 'codemirror-special-char-paragraph-separator' ),
+			65279: mw.msg( 'codemirror-special-char-zero-width-no-break-space' ),
+			65532: mw.msg( 'codemirror-special-char-object-replacement' )
+		};
+
+		return highlightSpecialChars( {
+			render: ( code, description, placeholder ) => {
+				description = messages[ code ] || mw.msg( 'codemirror-control-character', code );
+				const span = document.createElement( 'span' );
+				span.className = 'cm-specialChar';
+
+				// Special case non-breaking spaces (T181677).
+				if ( code === 160 || code === 8239 ) {
+					placeholder = '·';
+					span.className = 'cm-special-char-nbsp';
+				}
+
+				span.textContent = placeholder;
+				span.title = description;
+				span.setAttribute( 'aria-label', description );
+				return span;
+			},
+			// Highlight non-breaking spaces (T181677)
+			addSpecialChars: /\u00a0|\u202f/g
 		} );
 	}
 
