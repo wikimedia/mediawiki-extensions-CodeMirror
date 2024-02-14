@@ -28,7 +28,8 @@ export default class CodeMirror {
 	 */
 	get defaultExtensions() {
 		const extensions = [
-			this.contentAttributesExtension
+			this.contentAttributesExtension,
+			this.phrasesExtension
 		];
 		const namespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
 
@@ -55,6 +56,29 @@ export default class CodeMirror {
 			// use direction and language of the original textbox
 			dir: this.$textarea.attr( 'dir' ),
 			lang: this.$textarea.attr( 'lang' )
+		} );
+	}
+
+	/**
+	 * These are all potential messages used in a full-featured CodeMirror setup.
+	 * We lump them all here and supply it as default extensions because it is only a small cost
+	 * and we don't want localization to be overlooked by CodeMirror clients and subclasses.
+	 *
+	 * @see https://codemirror.net/examples/translate/
+	 * @return {Extension}
+	 */
+	get phrasesExtension() {
+		return EditorState.phrases.of( {
+			Find: mw.msg( 'codemirror-find' ),
+			next: mw.msg( 'codemirror-next' ),
+			previous: mw.msg( 'codemirror-previous' ),
+			all: mw.msg( 'codemirror-all' ),
+			'match case': mw.msg( 'codemirror-match-case' ),
+			regexp: mw.msg( 'codemirror-regexp' ),
+			'by word': mw.msg( 'codemirror-by-word' ),
+			replace: mw.msg( 'codemirror-replace' ),
+			Replace: mw.msg( 'codemirror-replace-placeholder' ),
+			'replace all': mw.msg( 'codemirror-replace-all' )
 		} );
 	}
 

@@ -10,5 +10,14 @@
 	"codemirror-toggle-label": "Syntaxhervorhebung",
 	"codemirror-prefs-colorblind": "Farbenfehlsichtigenfreundliches Schema für die Syntaxhervorhebung bei der Bearbeitung von Wikitext einschalten",
 	"codemirror-prefs-colorblind-help": "Wenn du ein Helferlein zur Syntaxhervorhebung verwendest, wird diese Einstellung nicht funktionieren.",
+	"codemirror-find": "Suchen",
+	"codemirror-next": "nächste",
+	"codemirror-previous": "vorherige",
+	"codemirror-all": "alle",
+	"codemirror-match-case": "groß/klein beachten",
+	"codemirror-by-word": "ganze Wörter",
+	"codemirror-replace": "ersetzen",
+	"codemirror-replace-placeholder": "Ersetzen",
+	"codemirror-replace-all": "alle ersetzen",
 	"prefs-accessibility": "Barrierefreiheit"
 }
