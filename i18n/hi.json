@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Abijeet Patro"
+		]
+	},
+	"codemirror-find": "खोजें",
+	"codemirror-next": "अगला",
+	"codemirror-previous": "पिछला",
+	"codemirror-all": "सभी",
+	"codemirror-replace-placeholder": "बदलें"
+}

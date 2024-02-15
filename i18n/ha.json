@@ -1,0 +1,23 @@
+{
+	"@metadata": {
+		"authors": [
+			"Ummabruka"
+		]
+	},
+	"codemirror-find": "Nemo",
+	"codemirror-next": "Nagaba",
+	"codemirror-all": "Duka",
+	"codemirror-match-case": "Daidaituwar lamari",
+	"codemirror-replace": "Maye gurbi",
+	"codemirror-replace-all": "Mayar da gurbin duka",
+	"codemirror-special-char-backspace": "Gogewa",
+	"codemirror-special-char-newline": "\nSabon jeri",
+	"codemirror-special-char-vertical-tab": "Shafin Dake fitowa a tasye",
+	"codemirror-special-char-nbsp": "Tazara mara yankewa",
+	"codemirror-special-char-left-to-right-mark": "Alamar hagu zuwa dama",
+	"codemirror-special-char-right-to-left-mark": "Alama daga dama zuwa hagu",
+	"codemirror-special-char-left-to-right-override": " Shafewa daga hagu zuwa dama",
+	"codemirror-special-char-left-to-right-isolate": "Kebe hagu zuwa dama",
+	"codemirror-special-char-right-to-left-isolate": "Kebe Daman xuwa hagu",
+	"codemirror-special-char-paragraph-separator": "Mai raba dakin layi"
+}
