@@ -10,5 +10,9 @@
 	"codemirror-toggle-label": "Evidenziazione della sintassi",
 	"codemirror-prefs-colorblind": "Attiva una combinazione di colori per daltonici per l'evidenziazione della sintassi del wikitesto",
 	"codemirror-prefs-colorblind-help": "Questa preferenza non funziona se usi un accessorio per l'evidenziazione della sintassi.",
+	"codemirror-find": "Trova",
+	"codemirror-regexp": "espressione regolare",
+	"codemirror-replace": "sostituisci",
+	"codemirror-replace-all": "sostituisci tutto",
 	"prefs-accessibility": "Accessibilità"
 }
