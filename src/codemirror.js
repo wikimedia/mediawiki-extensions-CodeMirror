@@ -1,4 +1,4 @@
-import { EditorState, Extension } from '@codemirror/state';
+import { EditorSelection, EditorState, Extension } from '@codemirror/state';
 import { EditorView, lineNumbers, highlightSpecialChars } from '@codemirror/view';
 
 /**
@@ -253,6 +253,30 @@ export default class CodeMirror {
 				this.view.dispatch( {
 					selection: { anchor: options.start, head: ( options.end || options.start ) }
 				} );
+				this.view.focus();
+				return $cmDom;
+			},
+			encapsulateSelection: ( options ) => {
+				// First set the selection, if applicable.
+				if ( options.selectionStart || options.selectionEnd ) {
+					this.view.dispatch( {
+						selection: {
+							anchor: options.selectionStart,
+							head: ( options.selectionEnd || options.selectionStart )
+						}
+					} );
+				}
+				// Do the actual replacements.
+				this.view.dispatch( this.view.state.changeByRange( ( range ) => ( {
+					changes: [
+						{ from: range.from, insert: options.pre },
+						{ from: range.to, insert: options.post }
+					],
+					range: EditorSelection.range(
+						range.from,
+						range.to + options.pre.length + options.post.length
+					)
+				} ) ) );
 				this.view.focus();
 				return $cmDom;
 			},
