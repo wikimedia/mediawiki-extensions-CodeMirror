@@ -192,6 +192,10 @@ export default class CodeMirror {
 		if ( this.$textarea[ 0 ].form ) {
 			this.$textarea[ 0 ].form.addEventListener( 'submit', () => {
 				this.$textarea.val( this.view.state.doc.toString() );
+				const scrollTop = document.getElementById( 'wpScrolltop' );
+				if ( scrollTop ) {
+					scrollTop.value = this.view.scrollDOM.scrollTop;
+				}
 			} );
 		}
 
