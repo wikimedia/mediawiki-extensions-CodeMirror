@@ -12,5 +12,5 @@
 	"codemirror-toggle-label": "Title tooltip for button to toggle CodeMirror in the editing toolbar.",
 	"codemirror-prefs-colorblind": "Used in user preferences as label for enabling the colorblind-friendly option.",
 	"codemirror-prefs-colorblind-help": "Used in user preferences as remark on the colorblind-friendly option.",
-	"prefs-accessibility": "Section heading in the user prefences for accessibility topics."
+	"prefs-accessibility": "Section heading in the user preferences for accessibility topics."
 }
