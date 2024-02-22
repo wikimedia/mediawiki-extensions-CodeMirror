@@ -30,7 +30,13 @@ export default class CodeMirror {
 		const extensions = [
 			this.contentAttributesExtension,
 			this.phrasesExtension,
-			this.specialCharsExtension
+			this.specialCharsExtension,
+			EditorView.theme( {
+				// Use the same height as the textarea
+				'.cm-content': {
+					height: this.$textarea.outerHeight() + 'px'
+				}
+			} )
 		];
 		const namespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
 
@@ -167,6 +173,8 @@ export default class CodeMirror {
 	 * @stable
 	 */
 	initialize( extensions = this.defaultExtensions ) {
+		mw.hook( 'ext.CodeMirror.initialize' ).fire( this.$textarea );
+
 		// Set up the initial EditorState of CodeMirror with contents of the native textarea.
 		this.state = EditorState.create( {
 			doc: this.$textarea.textSelection( 'getContents' ),
