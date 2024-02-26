@@ -14,9 +14,9 @@ __non_webpack_require__( '../ext.CodeMirror.data.js' );
  * @class CodeMirrorWikiEditor
  */
 export default class CodeMirrorWikiEditor extends CodeMirror {
-	constructor( $textarea, langExtension ) {
+	constructor( $textarea, langExtensions ) {
 		super( $textarea );
-		this.langExtension = langExtension;
+		this.langExtensions = langExtensions;
 		this.editRecoveryHandler = null;
 		this.useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
 	}
@@ -49,7 +49,7 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 		 */
 		const extensions = [
 			...this.defaultExtensions,
-			this.langExtension,
+			...this.langExtensions,
 			bracketMatching(),
 			history(),
 			// See also the default attributes at contentAttributesExtension() in the parent class.

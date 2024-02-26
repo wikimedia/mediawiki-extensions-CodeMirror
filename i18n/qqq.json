@@ -46,5 +46,8 @@
 	"codemirror-special-char-paragraph-separator": "Tooltip text shown when hovering over a paragraph separator character. See [[wikidata:Q87523339]] for possible translations.",
 	"codemirror-special-char-zero-width-no-break-space": "Tooltip text shown when hovering over a zero-width word joiner character. See [[wikidata:Q8069466]] for possible translations.",
 	"codemirror-special-char-object-replacement": "Tooltip text shown when hovering over a object replacement character. See [[wikidata:Q9398047]] for possible translations.",
+	"codemirror-fold-template": "Tooltip text shown when hovering over a foldable template.",
+	"codemirror-unfold": "Tooltip text shown when hovering over a placeholder for folded code.",
+	"codemirror-folded-code": "Aria label for a placeholder for folded code.",
 	"prefs-accessibility": "Section heading in the user preferences for accessibility topics."
 }
