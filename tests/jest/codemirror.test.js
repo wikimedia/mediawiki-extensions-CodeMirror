@@ -34,6 +34,12 @@ describe( 'initialize', () => {
 		initializeWithForm();
 		expect( cm.$textarea[ 0 ].form.addEventListener ).toHaveBeenCalledTimes( 1 );
 	} );
+
+	it( 'should retain the mw-editfont- class present on the textarea', () => {
+		cm.$textarea.addClass( 'mw-editfont-monospace' );
+		cm.initialize();
+		expect( cm.view.dom.querySelector( '.cm-content' ).classList ).toContain( 'mw-editfont-monospace' );
+	} );
 } );
 
 describe( 'logUsage', () => {

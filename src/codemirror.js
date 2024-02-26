@@ -51,12 +51,29 @@ export default class CodeMirror {
 	 * @return {Extension}
 	 */
 	get contentAttributesExtension() {
+		const classList = [];
+		// T245568: Sync text editor font preferences with CodeMirror
+		const fontClass = Array.from( this.$textarea[ 0 ].classList )
+			.find( ( style ) => style.startsWith( 'mw-editfont-' ) );
+		if ( fontClass ) {
+			classList.push( fontClass );
+		}
+		// Add colorblind mode if preference is set.
+		// This currently is only to be used for the MediaWiki markup language.
+		if (
+			mw.user.options.get( 'usecodemirror-colorblind' ) &&
+			mw.config.get( 'wgPageContentModel' ) === 'wikitext'
+		) {
+			classList.push( 'cm-mw-colorblind-colors' );
+		}
+
 		return EditorView.contentAttributes.of( {
 			// T259347: Use accesskey of the original textbox
 			accesskey: this.$textarea.attr( 'accesskey' ),
 			// use direction and language of the original textbox
 			dir: this.$textarea.attr( 'dir' ),
-			lang: this.$textarea.attr( 'lang' )
+			lang: this.$textarea.attr( 'lang' ),
+			class: classList.join( ' ' )
 		} );
 	}
 
@@ -161,15 +178,6 @@ export default class CodeMirror {
 			state: this.state,
 			parent: this.$textarea.parent()[ 0 ]
 		} );
-
-		// Add colorblind mode if preference is set.
-		// This currently is only to be used for the MediaWiki markup language.
-		if (
-			mw.user.options.get( 'usecodemirror-colorblind' ) &&
-			mw.config.get( 'wgPageContentModel' ) === 'wikitext'
-		) {
-			this.view.dom.classList.add( 'cm-mw-colorblind-colors' );
-		}
 
 		// Hide native textarea and sync CodeMirror contents upon submission.
 		this.$textarea.hide();
