@@ -1,9 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Sveinn í Felli"
+			"Sveinn í Felli",
+			"Stefán Örvar Sigmundsson"
 		]
 	},
-	"codemirror-toggle-label": "Málfræðilitun",
-	"codemirror-prefs-colorblind": "Virkja litblinduvænt litastef við áherslulitun málskipunar þegar wikitexta er breytt"
+	"codemirror-toggle-label": "Málskipanarljómun",
+	"codemirror-prefs-colorblind": "Virkja litblinduvænt litaskema við málskipanarljómun við breytingu á wiki-texta"
 }
