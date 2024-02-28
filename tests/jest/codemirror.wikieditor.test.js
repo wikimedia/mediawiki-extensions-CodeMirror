@@ -1,6 +1,4 @@
-mw.loader = {
-	getState: jest.fn().mockReturnValue( '1' )
-};
+mw.loader = { getState: jest.fn() };
 
 const CodeMirrorWikiEditor = require( '../../src/codemirror.wikieditor.js' ).default,
 	$textarea = $( '<textarea>' )
@@ -39,6 +37,39 @@ describe( 'addCodeMirrorToWikiEditor', () => {
 				groups: { codemirror: expect.any( Object ) }
 			} )
 		);
+	} );
+} );
+
+describe( 'enableCodeMirror', () => {
+	cmWe.$textarea.wikiEditor = jest.fn();
+
+	it( 'should use the height of the textarea if Realtime Preview disabled', () => {
+		mw.loader.getState.mockImplementation( ( module ) => {
+			if ( module === 'ext.wikiEditor' ) {
+				return 'ready';
+			}
+			if ( module === 'ext.wikiEditor.realtimepreview' ) {
+				return null;
+			}
+		} );
+		$textarea.css( 'height', '999px' );
+		cmWe.initialize();
+		// Height includes padding and border.
+		expect( $( cmWe.view.dom ).css( 'height' ) ).toStrictEqual( '1005px' );
+	} );
+
+	it( 'should use 100% height if Realtime Preview is enabled', () => {
+		mw.loader.getState.mockImplementation( ( module ) => {
+			if ( module === 'ext.wikiEditor' ) {
+				return 'ready';
+			}
+			if ( module === 'ext.wikiEditor.realtimepreview' ) {
+				return 'ready';
+			}
+		} );
+		$textarea.css( 'height', '999px' );
+		cmWe.initialize();
+		expect( $( cmWe.view.dom ).css( 'height' ) ).toStrictEqual( '100%' );
 	} );
 } );
 

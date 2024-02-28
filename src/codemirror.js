@@ -31,12 +31,7 @@ export default class CodeMirror {
 			this.contentAttributesExtension,
 			this.phrasesExtension,
 			this.specialCharsExtension,
-			EditorView.theme( {
-				// Use the same height as the textarea
-				'.cm-content': {
-					height: this.$textarea.outerHeight() + 'px'
-				}
-			} )
+			this.heightExtension
 		];
 		const namespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
 
@@ -45,6 +40,24 @@ export default class CodeMirror {
 			extensions.push( lineNumbers() );
 		}
 		return extensions;
+	}
+
+	/**
+	 * This extension sets the height of the CodeMirror editor to match the textarea.
+	 * Override this method to change the height of the editor.
+	 *
+	 * @return {Extension}
+	 * @stable
+	 */
+	get heightExtension() {
+		return EditorView.theme( {
+			'&': {
+				height: `${ this.$textarea.outerHeight() }px`
+			},
+			'.cm-scroller': {
+				overflow: 'auto'
+			}
+		} );
 	}
 
 	/**

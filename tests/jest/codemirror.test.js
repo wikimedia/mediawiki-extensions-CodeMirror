@@ -18,6 +18,13 @@ describe( 'initialize', () => {
 		expect( cm.view.state.doc.toString() ).toStrictEqual( 'foobar' );
 	} );
 
+	it( 'should set the height to the same as the textarea', () => {
+		$textarea.css( 'height', '100px' );
+		cm.initialize();
+		// 100 + 6 (padding/border) = 106
+		expect( $( cm.view.dom ).height() ).toStrictEqual( 106 );
+	} );
+
 	it( 'should instantiate an EditorView and add .cm-editor to the DOM', () => {
 		initializeWithForm();
 		expect( cm.view ).toBeInstanceOf( EditorView );
