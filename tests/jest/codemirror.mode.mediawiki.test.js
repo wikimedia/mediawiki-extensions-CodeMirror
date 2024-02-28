@@ -148,6 +148,11 @@ const testCases = [
 		input: 'Soft­hyphen\nzero-width​space\nnon-breaking space\nnarrow nbsp',
 		// i18n messages are the keys because we don't stub mw.msg() in this test.
 		output: '<div class="cm-line">Soft<img class="cm-widgetBuffer" aria-hidden="true"><span class="cm-specialChar" title="codemirror-control-character" aria-label="codemirror-control-character">•</span><img class="cm-widgetBuffer" aria-hidden="true">hyphen</div><div class="cm-line">zero-width<img class="cm-widgetBuffer" aria-hidden="true"><span class="cm-specialChar" title="codemirror-special-char-zero-width-space" aria-label="codemirror-special-char-zero-width-space">•</span><img class="cm-widgetBuffer" aria-hidden="true">space</div><div class="cm-line">non-breaking<img class="cm-widgetBuffer" aria-hidden="true"><span class="cm-special-char-nbsp" title="codemirror-special-char-nbsp" aria-label="codemirror-special-char-nbsp">·</span><img class="cm-widgetBuffer" aria-hidden="true">space</div><div class="cm-line">narrow<img class="cm-widgetBuffer" aria-hidden="true"><span class="cm-special-char-nbsp" title="codemirror-special-char-narrow-nbsp" aria-label="codemirror-special-char-narrow-nbsp">·</span><img class="cm-widgetBuffer" aria-hidden="true">nbsp</div>'
+	},
+	{
+		title: 'Nested template calls',
+		input: '{{foo|{{bar|[[Test]]|{{baz|[[Test2]]}}}}}}',
+		output: '<div class="cm-line"><span class="cm-mw-template-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template-ground cm-mw-pagename cm-mw-template-name">foo</span><span class="cm-mw-template-ground cm-mw-template-delimiter">|</span><span class="cm-mw-template2-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template2-ground cm-mw-pagename cm-mw-template-name">bar</span><span class="cm-mw-template2-ground cm-mw-template-delimiter">|</span><span class="cm-mw-template2-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-template2-link-ground cm-mw-link-pagename cm-mw-pagename">Test</span><span class="cm-mw-template2-link-ground cm-mw-link-bracket">]]</span><span class="cm-mw-template2-ground cm-mw-template-delimiter">|</span><span class="cm-mw-template3-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template3-ground cm-mw-pagename cm-mw-template-name">baz</span><span class="cm-mw-template3-ground cm-mw-template-delimiter">|</span><span class="cm-mw-template3-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-template3-link-ground cm-mw-link-pagename cm-mw-pagename">Test2</span><span class="cm-mw-template3-link-ground cm-mw-link-bracket">]]</span><span class="cm-mw-template3-ground cm-mw-template-bracket">}}</span><span class="cm-mw-template2-ground cm-mw-template-bracket">}}</span><span class="cm-mw-template-ground cm-mw-template-bracket">}}</span></div>'
 	}
 ];
 
@@ -242,7 +247,6 @@ describe( 'CodeMirrorModeMediaWiki', () => {
 			// Custom tags
 			'em',
 			'error',
-			'extGround',
 			'extNowiki',
 			'extPre',
 			'extTag',
@@ -253,7 +257,6 @@ describe( 'CodeMirrorModeMediaWiki', () => {
 			'freeExtLinkProtocol',
 			'htmlEntity',
 			'link',
-			'linkGround',
 			'linkPageName',
 			'nowiki',
 			'pageName',
@@ -262,14 +265,7 @@ describe( 'CodeMirrorModeMediaWiki', () => {
 			'skipFormatting',
 			'strong',
 			'tableCaption',
-			'templateGround',
-			'templateExtGround',
-			'templateLinkGround',
-			'templateVariableDelimiter',
-			'template2ExtGround',
-			'template2Ground',
-			'template3ExtGround',
-			'template3Ground'
+			'templateVariableDelimiter'
 		] );
 	} );
 } );
