@@ -82,13 +82,18 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 		this.initialize( extensions );
 
 		// Sync scroll position, selections, and focus state.
-		this.view.scrollDOM.scrollTop = scrollTop;
-		this.view.dispatch( {
-			selection: EditorSelection.create( [
-				EditorSelection.range( selectionStart, selectionEnd )
-			] ),
-			scrollIntoView: true
+		requestAnimationFrame( () => {
+			this.view.scrollDOM.scrollTop = scrollTop;
 		} );
+		if ( selectionStart !== 0 || selectionEnd !== 0 ) {
+			const range = EditorSelection.range( selectionStart, selectionEnd ),
+				scrollEffect = EditorView.scrollIntoView( range );
+			scrollEffect.value.isSnapshot = true;
+			this.view.dispatch( {
+				selection: EditorSelection.create( [ range ] ),
+				effects: scrollEffect
+			} );
+		}
 		if ( hasFocus ) {
 			this.view.focus();
 		}
