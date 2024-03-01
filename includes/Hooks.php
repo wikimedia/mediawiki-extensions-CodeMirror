@@ -5,17 +5,20 @@ namespace MediaWiki\Extension\CodeMirror;
 use ExtensionRegistry;
 use InvalidArgumentException;
 use MediaWiki\Config\Config;
+use MediaWiki\EditPage\EditPage;
 use MediaWiki\Extension\Gadgets\GadgetRepo;
-use MediaWiki\Hook\BeforePageDisplayHook;
+use MediaWiki\Hook\EditPage__showEditForm_initialHook;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
 use MediaWiki\ResourceLoader\Hook\ResourceLoaderGetConfigVarsHook;
 use MediaWiki\User\Options\UserOptionsLookup;
 use MediaWiki\User\User;
-use Skin;
 
+/**
+ * @phpcs:disable MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName
+ */
 class Hooks implements
-	BeforePageDisplayHook,
+	EditPage__showEditForm_initialHook,
 	ResourceLoaderGetConfigVarsHook,
 	GetPreferencesHook
 {
@@ -45,7 +48,6 @@ class Hooks implements
 	 * @return bool
 	 */
 	public function shouldLoadCodeMirror( OutputPage $out, ?ExtensionRegistry $extensionRegistry = null ): bool {
-		$extensionRegistry = $extensionRegistry ?: ExtensionRegistry::getInstance();
 		// Disable CodeMirror when CodeEditor is active on this page
 		// Depends on ext.codeEditor being added by \MediaWiki\EditPage\EditPage::showEditForm:initial
 		if ( in_array( 'ext.codeEditor', $out->getModules(), true ) ) {
@@ -55,12 +57,16 @@ class Hooks implements
 		if ( !$this->userOptionsLookup->getOption( $out->getUser(), 'usebetatoolbar' ) ) {
 			return false;
 		}
+		$extensionRegistry = $extensionRegistry ?: ExtensionRegistry::getInstance();
+		$contentModels = $extensionRegistry->getAttribute( 'CodeMirrorContentModels' );
 		$isRTL = $out->getTitle()->getPageLanguage()->isRTL();
-		return in_array( $out->getActionName(), [ 'edit', 'submit' ], true ) &&
-			// Disable CodeMirror if we're on an edit page with a conflicting gadget. See T178348.
-			!$this->conflictingGadgetsEnabled( $extensionRegistry, $out->getUser() ) &&
+		// Disable CodeMirror if we're on an edit page with a conflicting gadget. See T178348.
+		return !$this->conflictingGadgetsEnabled( $extensionRegistry, $out->getUser() ) &&
 			// CodeMirror 5 on textarea wikitext editors doesn't support RTL (T170001)
-			( !$isRTL || $this->shouldUseV6( $out ) );
+			( !$isRTL || $this->shouldUseV6( $out ) ) &&
+			// Limit to supported content models that use wikitext.
+			// See https://www.mediawiki.org/wiki/Content_handlers#Extension_content_handlers
+			in_array( $out->getTitle()->getContentModel(), $contentModels );
 	}
 
 	/**
@@ -89,15 +95,14 @@ class Hooks implements
 	}
 
 	/**
-	 * BeforePageDisplay hook handler
+	 * Load CodeMirror if necessary.
 	 *
-	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/BeforePageDisplay
+	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/EditPage::showEditForm:initial
 	 *
+	 * @param EditPage $editor
 	 * @param OutputPage $out
-	 * @param Skin $skin
-	 * @return void This hook must not abort, it must return no value
 	 */
-	public function onBeforePageDisplay( $out, $skin ): void {
+	public function onEditPage__showEditForm_initial( $editor, $out ): void {
 		if ( !$this->shouldLoadCodeMirror( $out ) ) {
 			return;
 		}
@@ -163,5 +168,4 @@ class Hooks implements
 			'section' => 'editing/accessibility',
 		];
 	}
-
 }

@@ -249,7 +249,7 @@
 		]
 	},
 	"Hooks": {
-		"BeforePageDisplay": "main",
+		"EditPage::showEditForm:initial": "main",
 		"GetPreferences": "main",
 		"ResourceLoaderGetConfigVars": "main"
 	},
@@ -264,6 +264,9 @@
 	},
 	"attributes": {
 		"CodeMirror": {
+			"ContentModels": [
+				"wikitext"
+			],
 			"PluginModules": [
 				"ext.CodeMirror.addons"
 			],

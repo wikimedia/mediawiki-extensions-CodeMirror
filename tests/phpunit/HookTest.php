@@ -3,7 +3,10 @@
 namespace MediaWiki\Extension\CodeMirror\Tests;
 
 use ExtensionRegistry;
+use Generator;
+use Language;
 use MediaWiki\Context\RequestContext;
+use MediaWiki\EditPage\EditPage;
 use MediaWiki\Extension\CodeMirror\Hooks;
 use MediaWiki\Extension\Gadgets\Gadget;
 use MediaWiki\Extension\Gadgets\GadgetRepo;
@@ -14,7 +17,6 @@ use MediaWiki\User\Options\UserOptionsLookup;
 use MediaWiki\User\User;
 use MediaWikiIntegrationTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Skin;
 
 /**
  * @group CodeMirror
@@ -25,14 +27,14 @@ class HookTest extends MediaWikiIntegrationTestCase {
 
 	/**
 	 * @covers ::shouldLoadCodeMirror
-	 * @covers ::onBeforePageDisplay
+	 * @covers ::onEditPage__showEditForm_initial
 	 * @param bool $useCodeMirrorV6
 	 * @param int $expectedAddModuleCalls
-	 * @param string $expectedFirstModule
-	 * @dataProvider provideOnBeforePageDisplay
+	 * @param string|null $expectedFirstModule
+	 * @dataProvider provideOnEditPageShowEditFormInitial
 	 */
-	public function testOnBeforePageDisplay(
-		bool $useCodeMirrorV6, int $expectedAddModuleCalls, string $expectedFirstModule
+	public function testOnEditPageShowEditFormInitial(
+		bool $useCodeMirrorV6, int $expectedAddModuleCalls, ?string $expectedFirstModule
 	) {
 		$this->overrideConfigValues( [
 			'CodeMirrorV6' => $useCodeMirrorV6,
@@ -46,24 +48,23 @@ class HookTest extends MediaWikiIntegrationTestCase {
 		$out->expects( $this->exactly( $expectedAddModuleCalls ) )
 			->method( 'addModules' )
 			->willReturnCallback( function ( $modules ) use ( $expectedFirstModule, &$isFirstCall ) {
-				if ( $isFirstCall ) {
+				if ( $isFirstCall && $modules !== null ) {
 					$this->assertSame( $expectedFirstModule, $modules );
 				}
 				$isFirstCall = false;
 			} );
 
-		( new Hooks( $userOptionsLookup, $this->getServiceContainer()->getMainConfig() ) )
-			->onBeforePageDisplay( $out, $this->createMock( Skin::class ) );
+		$hooks = new Hooks( $userOptionsLookup, $this->getServiceContainer()->getMainConfig() );
+		$hooks->onEditPage__showEditForm_initial( $this->createMock( EditPage::class ), $out );
 	}
 
 	/**
-	 * @return array[]
+	 * @return Generator
 	 */
-	public function provideOnBeforePageDisplay(): array {
-		return [
-			[ false, 2, 'ext.CodeMirror.WikiEditor' ],
-			[ true, 1, 'ext.CodeMirror.v6.WikiEditor' ]
-		];
+	public static function provideOnEditPageShowEditFormInitial(): Generator {
+		// useCodeMirrorV6, expectedAddModuleCalls, expectedFirstModule
+		yield 'CM5' => [ false, 2, 'ext.CodeMirror.WikiEditor' ];
+		yield 'CM6' => [ true, 1, 'ext.CodeMirror.v6.WikiEditor' ];
 	}
 
 	/**
@@ -81,9 +82,25 @@ class HookTest extends MediaWikiIntegrationTestCase {
 	/**
 	 * @covers ::shouldLoadCodeMirror
 	 * @dataProvider provideShouldLoadCodeMirror
+	 * @param string|null $module
+	 * @param string|null $gadget
+	 * @param bool $expectation
+	 * @param string $contentModel
+	 * @param bool $useCodeMirrorV6
+	 * @param bool $isRTL
 	 */
-	public function testShouldLoadCodeMirror( ?string $module, ?string $gadget, bool $expectation ): void {
-		$out = $this->getMockOutputPage();
+	public function testShouldLoadCodeMirror(
+		?string $module,
+		?string $gadget,
+		bool $expectation,
+		string $contentModel = CONTENT_MODEL_WIKITEXT,
+		bool $useCodeMirrorV6 = false,
+		bool $isRTL = false
+	): void {
+		$this->overrideConfigValues( [
+			'CodeMirrorV6' => $useCodeMirrorV6,
+		] );
+		$out = $this->getMockOutputPage( $contentModel, $isRTL );
 		$out->method( 'getModules' )->willReturn( $module ? [ $module ] : [] );
 		$userOptionsLookup = $this->createMock( UserOptionsLookup::class );
 		$userOptionsLookup->method( 'getOption' )->willReturn( true );
@@ -93,6 +110,9 @@ class HookTest extends MediaWikiIntegrationTestCase {
 		}
 
 		$extensionRegistry = $this->getMockExtensionRegistry( (bool)$gadget );
+		$extensionRegistry->method( 'getAttribute' )
+			->with( 'CodeMirrorContentModels' )
+			->willReturn( [ CONTENT_MODEL_WIKITEXT ] );
 
 		if ( $gadget ) {
 			$gadgetMock = $this->createMock( Gadget::class );
@@ -117,24 +137,33 @@ class HookTest extends MediaWikiIntegrationTestCase {
 	}
 
 	/**
-	 * @return array[]
+	 * @return Generator
 	 */
-	public function provideShouldLoadCodeMirror(): array {
-		return [
-			[ null, null, true ],
-			[ 'ext.codeEditor', null, false ],
-			[ null, 'wikEd', false ]
-		];
+	public function provideShouldLoadCodeMirror(): Generator {
+		// module, gadget, expectation, contentModel, shouldUseV6, isRTL
+		yield 'no modules, no gadgets, wikitext' => [ null, null, true ];
+		yield 'codeEditor, no gadgets, wikitext' => [ 'ext.codeEditor', null, false ];
+		yield 'no modules, wikEd, wikitext' => [ null, 'wikEd', false ];
+		yield 'no modules, no gadgets, CSS' => [ null, null, false, CONTENT_MODEL_CSS ];
+		yield 'CM5 wikitext RTL' => [ null, null, false, CONTENT_MODEL_WIKITEXT, false, true ];
+		yield 'CM6 wikitext RTL' => [ null, null, true, CONTENT_MODEL_WIKITEXT, true, true ];
 	}
 
 	/**
+	 * @param string $contentModel
+	 * @param bool $isRTL
 	 * @return OutputPage|MockObject
 	 */
-	private function getMockOutputPage() {
+	private function getMockOutputPage( string $contentModel = CONTENT_MODEL_WIKITEXT, bool $isRTL = false ) {
 		$out = $this->createMock( OutputPage::class );
 		$out->method( 'getUser' )->willReturn( $this->createMock( User::class ) );
 		$out->method( 'getActionName' )->willReturn( 'edit' );
-		$out->method( 'getTitle' )->willReturn( Title::makeTitle( NS_MAIN, __METHOD__ ) );
+		$title = $this->createMock( Title::class );
+		$title->method( 'getContentModel' )->willReturn( $contentModel );
+		$language = $this->createMock( Language::class );
+		$language->method( 'isRTL' )->willReturn( $isRTL );
+		$title->method( 'getPageLanguage' )->willReturn( $language );
+		$out->method( 'getTitle' )->willReturn( $title );
 		$request = $this->createMock( WebRequest::class );
 		$request->method( 'getRawVal' )->willReturn( null );
 		$out->method( 'getRequest' )->willReturn( $request );
