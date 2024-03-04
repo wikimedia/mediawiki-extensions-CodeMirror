@@ -39,7 +39,6 @@ class HookTest extends MediaWikiIntegrationTestCase {
 		] );
 		$userOptionsLookup = $this->createMock( UserOptionsLookup::class );
 		$userOptionsLookup->method( 'getOption' )->willReturn( true );
-		$this->setService( 'UserOptionsLookup', $userOptionsLookup );
 
 		$out = $this->getMockOutputPage();
 		$out->method( 'getModules' )->willReturn( [] );
@@ -87,7 +86,6 @@ class HookTest extends MediaWikiIntegrationTestCase {
 		$out->method( 'getModules' )->willReturn( $module ? [ $module ] : [] );
 		$userOptionsLookup = $this->createMock( UserOptionsLookup::class );
 		$userOptionsLookup->method( 'getOption' )->willReturn( true );
-		$this->setService( 'UserOptionsLookup', $userOptionsLookup );
 
 		if ( $gadget && !ExtensionRegistry::getInstance()->isLoaded( 'Gadgets' ) ) {
 			$this->markTestSkipped( 'Skipped as Gadgets extension is not available' );
