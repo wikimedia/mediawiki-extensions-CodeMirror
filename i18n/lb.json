@@ -1,10 +1,21 @@
 {
 	"@metadata": {
 		"authors": [
-			"Robby"
+			"Robby",
+			"Volvox"
 		]
 	},
 	"codemirror-desc": "Erméiglecht et am Wikitext-Editeur d'Syntax ervirzehiewen",
 	"codemirror-toggle-label": "Ervirhiewe vun der Syntax",
+	"codemirror-next": "nächst",
+	"codemirror-previous": "vireg",
+	"codemirror-all": "all",
+	"codemirror-replace": "ersetzen",
+	"codemirror-replace-placeholder": "Ersetzen",
+	"codemirror-replace-all": "all ersetzen",
+	"codemirror-special-char-null": "Nullzeechen",
+	"codemirror-special-char-newline": "Nei Zeil",
+	"codemirror-special-char-escape": "Escape-Zeechen",
+	"codemirror-special-char-line-separator": "Zeilen-Trennzeechen",
 	"prefs-accessibility": "Accessibilitéit"
 }
