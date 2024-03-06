@@ -71,9 +71,10 @@ class HookTest extends MediaWikiIntegrationTestCase {
 	 */
 	public function testPreferenceRegistered() {
 		$user = self::getTestUser()->getUser();
-		$this->setMwGlobals( 'wgTitle', Title::newFromText( __METHOD__ ) );
+		$context = RequestContext::getMain();
+		$context->setTitle( Title::newFromText( __METHOD__ ) );
 		$kinds = $this->getServiceContainer()->getUserOptionsManager()
-			->getOptionKinds( $user, RequestContext::getMain(), [ 'usecodemirror' => 1 ] );
+			->getOptionKinds( $user, $context, [ 'usecodemirror' => 1 ] );
 		self::assertEquals( 'registered', $kinds['usecodemirror'] );
 	}
 
