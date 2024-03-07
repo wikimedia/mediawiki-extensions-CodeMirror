@@ -33,9 +33,51 @@ class CodeMirrorModeMediaWiki {
 		this.tokens = [];
 		this.oldTokens = [];
 		this.tokenTable = modeConfig.tokenTable;
+		this.registerGroundTokens();
 
 		// Dynamically register any tags that aren't already in CodeMirrorModeMediaWikiConfig
 		Object.keys( this.config.tags ).forEach( ( tag ) => modeConfig.addTag( tag ) );
+	}
+
+	/**
+	 * Register the ground tokens. These aren't referenced directly in the StreamParser, nor do
+	 * they have a parent Tag, so we don't need them as constants like we do for other tokens.
+	 * See this.makeLocalStyle() for how these tokens are used.
+	 */
+	registerGroundTokens() {
+		[
+			'mw-ext-ground',
+			'mw-ext-link-ground',
+			'mw-ext2-ground',
+			'mw-ext2-link-ground',
+			'mw-ext3-ground',
+			'mw-ext3-link-ground',
+			'mw-link-ground',
+			'mw-template-ext-ground',
+			'mw-template-ext-link-ground',
+			'mw-template-ext2-ground',
+			'mw-template-ext2-link-ground',
+			'mw-template-ext3-ground',
+			'mw-template-ext3-link-ground',
+			'mw-template-ground',
+			'mw-template-link-ground',
+			'mw-template2-ext-ground',
+			'mw-template2-ext-link-ground',
+			'mw-template2-ext2-ground',
+			'mw-template2-ext2-link-ground',
+			'mw-template2-ext3-ground',
+			'mw-template2-ext3-link-ground',
+			'mw-template2-ground',
+			'mw-template2-link-ground',
+			'mw-template3-ext-ground',
+			'mw-template3-ext-link-ground',
+			'mw-template3-ext2-ground',
+			'mw-template3-ext2-link-ground',
+			'mw-template3-ext3-ground',
+			'mw-template3-ext3-link-ground',
+			'mw-template3-ground',
+			'mw-template3-link-ground'
+		].forEach( ( ground ) => modeConfig.addToken( ground ) );
 	}
 
 	eatHtmlEntity( stream, style ) {
@@ -67,44 +109,6 @@ class CodeMirrorModeMediaWiki {
 
 	makeLocalStyle( style, state, endGround ) {
 		let ground = '';
-		/**
-		 * List out token names in a comment for search purposes.
-		 *
-		 * Tokens used here include:
-		 * - mw-ext-ground
-		 * - mw-ext-link-ground
-		 * - mw-ext2-ground
-		 * - mw-ext2-link-ground
-		 * - mw-ext3-ground
-		 * - mw-ext3-link-ground
-		 * - mw-link-ground
-		 * - mw-template-ext-ground
-		 * - mw-template-ext-link-ground
-		 * - mw-template-ext2-ground
-		 * - mw-template-ext2-link-ground
-		 * - mw-template-ext3-ground
-		 * - mw-template-ext3-link-ground
-		 * - mw-template-link-ground
-		 * - mw-template2-ext-ground
-		 * - mw-template2-ext-link-ground
-		 * - mw-template2-ext2-ground
-		 * - mw-template2-ext2-link-ground
-		 * - mw-template2-ext3-ground
-		 * - mw-template2-ext3-link-ground
-		 * - mw-template2-ground
-		 * - mw-template2-link-ground
-		 * - mw-template3-ext-ground
-		 * - mw-template3-ext-link-ground
-		 * - mw-template3-ext2-ground
-		 * - mw-template3-ext2-link-ground
-		 * - mw-template3-ext3-ground
-		 * - mw-template3-ext3-link-ground
-		 * - mw-template3-ground
-		 * - mw-template3-link-ground
-		 *
-		 * NOTE: these should be defined in CodeMirrorModeMediaWikiConfig.tokenTable()
-		 *   and CodeMirrorModeMediaWikiConfig.highlightStyle()
-		 */
 		switch ( state.nTemplate ) {
 			case 0:
 				break;
