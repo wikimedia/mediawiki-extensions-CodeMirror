@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Gomoko",
+			"MacOS Weed",
 			"Thibaut120094",
 			"Trizek (WMF)",
 			"Verdy p",
@@ -12,5 +13,10 @@
 	"codemirror-toggle-label": "Mise en évidence de la syntaxe",
 	"codemirror-prefs-colorblind": "Activer le rendu accessible aux personnes distinguant difficilement certaines couleurs pour la mise en évidence de la syntaxe lors de la modification du wikicode",
 	"codemirror-prefs-colorblind-help": "Si vous utilisez un gadget pour la mise en évidence de la syntaxe, cette préférence ne fonctionnera pas.",
+	"codemirror-next": "suivant",
+	"codemirror-previous": "précédent",
+	"codemirror-special-char-null": "Caractère de contrôle",
+	"codemirror-special-char-bell": "Caractère d'appel",
+	"codemirror-special-char-backspace": "Retour arrière",
 	"prefs-accessibility": "Accessibilité"
 }
