@@ -1,5 +1,5 @@
 import CodeMirror from './codemirror';
-import { EditorState, EditorSelection, Extension } from '@codemirror/state';
+import { EditorState, EditorSelection } from '@codemirror/state';
 import { EditorView, drawSelection, keymap } from '@codemirror/view';
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
 import { searchKeymap } from '@codemirror/search';
@@ -99,23 +99,6 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 		}
 
 		mw.hook( 'ext.CodeMirror.switch' ).fire( true, $( this.view.dom ) );
-	}
-
-	/**
-	 * @inheritDoc
-	 *
-	 * Realtime Preview's ResizingDragBar makes the editor resizable,
-	 * so we need to set the height to 100%.
-	 *
-	 * @return {Extension}
-	 */
-	get heightExtension() {
-		if ( mw.loader.getState( 'ext.wikiEditor.realtimepreview' ) === 'ready' ) {
-			return EditorView.theme( {
-				'&': { height: '100%' }
-			} );
-		}
-		return super.heightExtension;
 	}
 
 	/**
