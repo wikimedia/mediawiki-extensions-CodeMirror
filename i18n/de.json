@@ -22,6 +22,7 @@
 	"codemirror-replace-all": "alle ersetzen",
 	"codemirror-control-character": "Steuerzeichen $1",
 	"codemirror-special-char-null": "Nullzeichen",
+	"codemirror-special-char-bell": "Bell-Zeichen",
 	"codemirror-special-char-backspace": "Rücktaste",
 	"codemirror-special-char-newline": "Neue Zeile",
 	"codemirror-special-char-vertical-tab": "Vertikaler Tab",
