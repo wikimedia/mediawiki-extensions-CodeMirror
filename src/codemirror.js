@@ -217,8 +217,6 @@ export default class CodeMirror {
 		// Also override textSelection() functions for the "real" hidden textarea to route to
 		// CodeMirror. We unregister this when switching to normal textarea mode.
 		this.$textarea.textSelection( 'register', this.cmTextSelection );
-
-		mw.hook( 'ext.CodeMirror.switch' ).fire( true, $( this.view.dom ) );
 	}
 
 	/**

@@ -221,7 +221,10 @@
 				"codemirror-special-char-pop-directional-isolate",
 				"codemirror-special-char-paragraph-separator",
 				"codemirror-special-char-zero-width-no-break-space",
-				"codemirror-special-char-object-replacement"
+				"codemirror-special-char-object-replacement",
+				"codemirror-fold-template",
+				"codemirror-unfold",
+				"codemirror-folded-code"
 			]
 		}
 	},

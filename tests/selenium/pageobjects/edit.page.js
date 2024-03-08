@@ -47,6 +47,14 @@ class EditPage extends Page {
 		return $( '.ve-ui-surface-source' );
 	}
 
+	get codeMirrorTemplateFoldingButton() {
+		return $( '.cm-tooltip-fold' );
+	}
+
+	get codeMirrorTemplateFoldingPlaceholder() {
+		return $( '.cm-foldPlaceholder' );
+	}
+
 	async cursorToPosition( index ) {
 		await this.clickText();
 

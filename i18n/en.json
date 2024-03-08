@@ -43,5 +43,8 @@
 	"codemirror-special-char-paragraph-separator": "Paragraph separator",
 	"codemirror-special-char-zero-width-no-break-space": "Word joiner",
 	"codemirror-special-char-object-replacement": "Object replacement character",
+	"codemirror-fold-template": "Fold template parameters",
+	"codemirror-unfold": "unfold",
+	"codemirror-folded-code": "folded code",
 	"prefs-accessibility": "Accessibility"
 }
