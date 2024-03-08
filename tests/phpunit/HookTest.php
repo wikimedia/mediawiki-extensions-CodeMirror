@@ -3,6 +3,7 @@
 namespace MediaWiki\Extension\CodeMirror\Tests;
 
 use ExtensionRegistry;
+use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\CodeMirror\Hooks;
 use MediaWiki\Extension\Gadgets\Gadget;
 use MediaWiki\Extension\Gadgets\GadgetRepo;
@@ -13,7 +14,6 @@ use MediaWiki\User\Options\UserOptionsLookup;
 use MediaWiki\User\User;
 use MediaWikiIntegrationTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use RequestContext;
 use Skin;
 
 /**
