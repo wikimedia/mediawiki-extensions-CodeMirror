@@ -47,6 +47,14 @@ describe( 'initialize', () => {
 		cm.initialize();
 		expect( cm.view.dom.querySelector( '.cm-content' ).classList ).toContain( 'mw-editfont-monospace' );
 	} );
+
+	it( "should copy the 'dir' and 'lang' attributes of the textarea to .cm-editor", () => {
+		cm.$textarea.prop( 'dir', 'rtl' )
+			.prop( 'lang', 'ar' );
+		cm.initialize();
+		expect( cm.view.dom.getAttribute( 'dir' ) ).toStrictEqual( 'rtl' );
+		expect( cm.view.dom.getAttribute( 'lang' ) ).toStrictEqual( 'ar' );
+	} );
 } );
 
 describe( 'logUsage', () => {

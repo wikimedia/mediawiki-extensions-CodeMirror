@@ -73,9 +73,7 @@ export default class CodeMirror {
 	}
 
 	/**
-	 * This specifies which attributes get added to the .cm-content element.
-	 * If you need to add more, add another Extension on initialization for the contentAttributes
-	 * Facet in the form of EditorView.contentAttributes.of( {Object} ).
+	 * This specifies which attributes get added to the .cm-content and .cm-editor elements.
 	 * Subclasses are safe to override this method, but attributes here are considered vital.
 	 *
 	 * @see https://codemirror.net/docs/ref/#view.EditorView^contentAttributes
@@ -98,14 +96,22 @@ export default class CodeMirror {
 			classList.push( 'cm-mw-colorblind-colors' );
 		}
 
-		return EditorView.contentAttributes.of( {
-			// T259347: Use accesskey of the original textbox
-			accesskey: this.$textarea.attr( 'accesskey' ),
-			// use direction and language of the original textbox
-			dir: this.$textarea.attr( 'dir' ),
-			lang: this.$textarea.attr( 'lang' ),
-			class: classList.join( ' ' )
-		} );
+		return [
+			// .cm-content element (the contenteditable area)
+			EditorView.contentAttributes.of( {
+				// T259347: Use accesskey of the original textbox
+				accesskey: this.$textarea.attr( 'accesskey' ),
+				// Classes need to be on .cm-content to have precedence over .cm-scroller
+				class: classList.join( ' ' )
+			} ),
+			// .cm-editor element (contains the whole CodeMirror UI)
+			EditorView.editorAttributes.of( {
+				// Use direction and language of the original textbox.
+				// These should be attributes of .cm-editor, not the .cm-content (T359589)
+				dir: this.$textarea.attr( 'dir' ),
+				lang: this.$textarea.attr( 'lang' )
+			} )
+		];
 	}
 
 	/**
