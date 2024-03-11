@@ -16,11 +16,6 @@
 		"MediaWiki": ">= 1.42.0"
 	},
 	"config": {
-		"CodeMirrorLineNumberingNamespaces": {
-			"value": null,
-			"description": "List of namespace IDs where line numbering should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere. Defaults to `null` for all namespaces.",
-			"public": true
-		},
 		"CodeMirrorV6": {
 			"value": false,
 			"description": "Temporary feature flag for the CodeMirror 6 upgrade."
@@ -30,6 +25,16 @@
 				"wikEd"
 			],
 			"description": "An array of gadget names that, if enabled, will prevent CodeMirror from loading on action=edit and action=submit.",
+			"public": true
+		},
+		"CodeMirrorTemplateFoldingNamespaces": {
+			"value": null,
+			"description": "List of namespace IDs where template folding should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere.",
+			"public": true
+		},
+		"CodeMirrorLineNumberingNamespaces": {
+			"value": null,
+			"description": "List of namespace IDs where line numbering should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere.",
 			"public": true
 		}
 	},
@@ -252,8 +257,7 @@
 	"Hooks": {
 		"EditPage::showEditForm:initial": "main",
 		"EditPage::showReadOnlyForm:initial": "main",
-		"GetPreferences": "main",
-		"ResourceLoaderGetConfigVars": "main"
+		"GetPreferences": "main"
 	},
 	"HookHandlers": {
 		"main": {

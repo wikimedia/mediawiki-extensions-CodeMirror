@@ -3,6 +3,11 @@ import { EditorView, lineNumbers, highlightSpecialChars } from '@codemirror/view
 import CodemirrorTextSelection from './codemirror.textSelection';
 import bidiIsolationExtension from './codemirror.bidiIsolation';
 
+// Necessary so that `require` doesn't get mangled into `__webpack_require__`,
+// which ResourceLoader won't recognize and thus be unable to load the virtual file.
+// See https://webpack-v3.jsx.app/api/module-variables/#__non_webpack_require__-webpack-specific-
+__non_webpack_require__( '../ext.CodeMirror.data.js' );
+
 /**
  * @class CodeMirror
  * @property {jQuery} $textarea
@@ -47,10 +52,11 @@ export default class CodeMirror {
 		}
 
 		// Set to [] to disable everywhere, or null to enable everywhere
-		const namespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
+		const namespaces = mw.config.get( 'extCodeMirrorConfig' ).lineNumberingNamespaces;
 		if ( !namespaces || namespaces.includes( mw.config.get( 'wgNamespaceNumber' ) ) ) {
 			extensions.push( lineNumbers() );
 		}
+
 		return extensions;
 	}
 

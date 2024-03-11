@@ -3,20 +3,23 @@ import { EditorState, EditorSelection } from '@codemirror/state';
 import { EditorView, drawSelection, keymap } from '@codemirror/view';
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
 import { searchKeymap } from '@codemirror/search';
-import { bracketMatching } from '@codemirror/language';
-
-// Necessary so that `require` doesn't get mangled into `__webpack_require__`,
-// which ResourceLoader won't recognize and thus be unable to load the virtual file.
-// See https://webpack-v3.jsx.app/api/module-variables/#__non_webpack_require__-webpack-specific-
-__non_webpack_require__( '../ext.CodeMirror.data.js' );
+import { bracketMatching, LanguageSupport } from '@codemirror/language';
 
 /**
  * @class CodeMirrorWikiEditor
+ * @property {LanguageSupport|Extension} langExtension
+ * @property {Function|null} editRecoveryHandler
+ * @property {boolean} useCodeMirror
  */
 export default class CodeMirrorWikiEditor extends CodeMirror {
-	constructor( $textarea, langExtensions ) {
+	/**
+	 * @constructor
+	 * @param {jQuery} $textarea
+	 * @param {LanguageSupport|Extension} langExtension
+	 */
+	constructor( $textarea, langExtension ) {
 		super( $textarea );
-		this.langExtensions = langExtensions;
+		this.langExtension = langExtension;
 		this.editRecoveryHandler = null;
 		this.useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
 	}
@@ -25,7 +28,8 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 	 * @inheritDoc
 	 */
 	setCodeMirrorPreference( prefValue ) {
-		this.useCodeMirror = prefValue; // Save state for function updateToolbarButton()
+		// Save state for function updateToolbarButton()
+		this.useCodeMirror = prefValue;
 		super.setCodeMirrorPreference( prefValue );
 	}
 
@@ -49,7 +53,7 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 		 */
 		const extensions = [
 			...this.defaultExtensions,
-			...this.langExtensions,
+			this.langExtension,
 			bracketMatching(),
 			history(),
 			// See also the default attributes at contentAttributesExtension() in the parent class.

@@ -8,6 +8,7 @@ import {
 } from '@codemirror/language';
 import { mwModeConfig as modeConfig } from './codemirror.mode.mediawiki.config';
 import { Tag } from '@lezer/highlight';
+import { templateFoldingExtension } from './codemirror.templateFolding';
 
 /**
  * Adapted from the original CodeMirror 5 stream parser by Pavel Astakhov
@@ -1202,7 +1203,7 @@ class CodeMirrorModeMediaWiki {
 			/**
 			 * Extra tokens to use in this parser.
 			 *
-			 * @see CodeMirrorModeMediaWikiConfig.tokenTable
+			 * @see CodeMirrorModeMediaWikiConfig.defaultTokenTable
 			 * @return {Object<Tag>}
 			 */
 			tokenTable: this.tokenTable
@@ -1223,15 +1224,22 @@ class CodeMirrorModeMediaWiki {
  * @return {LanguageSupport}
  */
 export const mediaWikiLang = ( config = null ) => {
-	const mode = new CodeMirrorModeMediaWiki(
-		config || mw.config.get( 'extCodeMirrorConfig' )
-	);
+	config = config || mw.config.get( 'extCodeMirrorConfig' );
+	const mode = new CodeMirrorModeMediaWiki( config );
 	const parser = mode.mediawiki;
 	const lang = StreamLanguage.define( parser );
-	const highlighter = syntaxHighlighting(
+	const langExtension = [ syntaxHighlighting(
 		HighlightStyle.define(
 			modeConfig.getTagStyles( parser )
 		)
-	);
-	return new LanguageSupport( lang, highlighter );
+	) ];
+
+	// Add template folding if in supported namespace.
+	const templateFoldingNs = config.templateFoldingNamespaces;
+	// Set to [] to disable everywhere, or null to enable everywhere.
+	if ( !templateFoldingNs || templateFoldingNs.includes( mw.config.get( 'wgNamespaceNumber' ) ) ) {
+		langExtension.push( templateFoldingExtension );
+	}
+
+	return new LanguageSupport( lang, langExtension );
 };
