@@ -1,5 +1,8 @@
 import { EditorState, Extension } from '@codemirror/state';
-import { EditorView, lineNumbers, highlightSpecialChars } from '@codemirror/view';
+import { EditorView, drawSelection, lineNumbers, highlightSpecialChars, keymap } from '@codemirror/view';
+import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
+import { searchKeymap } from '@codemirror/search';
+import { bracketMatching } from '@codemirror/language';
 import CodemirrorTextSelection from './codemirror.textSelection';
 import bidiIsolationExtension from './codemirror.bidiIsolation';
 
@@ -14,6 +17,7 @@ __non_webpack_require__( '../ext.CodeMirror.data.js' );
  * @property {EditorView} view
  * @property {EditorState} state
  * @property {boolean} readOnly
+ * @property {Function|null} editRecoveryHandler
  * @property {CodemirrorTextSelection} textSelection
  */
 export default class CodeMirror {
@@ -26,12 +30,12 @@ export default class CodeMirror {
 		this.view = null;
 		this.state = null;
 		this.readOnly = this.$textarea.prop( 'readonly' );
+		this.editRecoveryHandler = null;
 		this.textSelection = null;
 	}
 
 	/**
 	 * Extensions here should be applicable to all theoretical uses of CodeMirror in MediaWiki.
-	 * Don't assume CodeMirror is used for editing (i.e. "View source" of a protected page).
 	 * Subclasses are safe to override this method if needed.
 	 *
 	 * @see https://codemirror.net/docs/ref/#state.Extension
@@ -43,8 +47,26 @@ export default class CodeMirror {
 			this.phrasesExtension,
 			this.specialCharsExtension,
 			this.heightExtension,
-			EditorState.readOnly.of( this.readOnly )
+			bracketMatching(),
+			EditorState.readOnly.of( this.readOnly ),
+			keymap.of( [
+				...defaultKeymap,
+				...searchKeymap
+			] ),
+			EditorState.allowMultipleSelections.of( true ),
+			drawSelection()
 		];
+
+		// Add extensions relevant to editing (not read-only).
+		if ( !this.readOnly ) {
+			extensions.push( EditorView.updateListener.of( ( update ) => {
+				if ( update.docChanged && typeof this.editRecoveryHandler === 'function' ) {
+					this.editRecoveryHandler();
+				}
+			} ) );
+			extensions.push( history() );
+			extensions.push( keymap.of( historyKeymap ) );
+		}
 
 		// Add bidi isolation to tags on RTL pages (T358804).
 		if ( this.$textarea.attr( 'dir' ) === 'rtl' ) {
@@ -108,7 +130,8 @@ export default class CodeMirror {
 				// T259347: Use accesskey of the original textbox
 				accesskey: this.$textarea.attr( 'accesskey' ),
 				// Classes need to be on .cm-content to have precedence over .cm-scroller
-				class: classList.join( ' ' )
+				class: classList.join( ' ' ),
+				spellcheck: 'true'
 			} ),
 			// .cm-editor element (contains the whole CodeMirror UI)
 			EditorView.editorAttributes.of( {
@@ -199,7 +222,7 @@ export default class CodeMirror {
 				return span;
 			},
 			// Highlight non-breaking spaces (T181677)
-			addSpecialChars: /\u00a0|\u202f/g
+			addSpecialChars: /[\u00a0\u202f]/g
 		} );
 	}
 
@@ -211,6 +234,9 @@ export default class CodeMirror {
 	 */
 	initialize( extensions = this.defaultExtensions ) {
 		mw.hook( 'ext.CodeMirror.initialize' ).fire( this.$textarea );
+		mw.hook( 'editRecovery.loadEnd' ).add( ( data ) => {
+			this.editRecoveryHandler = data.fieldChangeHandler;
+		} );
 
 		// Set up the initial EditorState of CodeMirror with contents of the native textarea.
 		this.state = EditorState.create( {

@@ -183,7 +183,7 @@
 				}
 			],
 			"styles": [
-				"ext.CodeMirror.v6.WikiEditor.less",
+				"ext.CodeMirror.v6.less",
 				"mode/mediawiki/mediawiki.less",
 				"mode/mediawiki/colorblind-colors.less"
 			],

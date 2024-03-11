@@ -1,14 +1,11 @@
 import CodeMirror from './codemirror';
-import { EditorState, EditorSelection } from '@codemirror/state';
-import { EditorView, drawSelection, keymap } from '@codemirror/view';
-import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
-import { searchKeymap } from '@codemirror/search';
-import { bracketMatching, LanguageSupport } from '@codemirror/language';
+import { EditorSelection, Extension } from '@codemirror/state';
+import { EditorView } from '@codemirror/view';
+import { LanguageSupport } from '@codemirror/language';
 
 /**
  * @class CodeMirrorWikiEditor
  * @property {LanguageSupport|Extension} langExtension
- * @property {Function|null} editRecoveryHandler
  * @property {boolean} useCodeMirror
  */
 export default class CodeMirrorWikiEditor extends CodeMirror {
@@ -20,7 +17,6 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 	constructor( $textarea, langExtension ) {
 		super( $textarea );
 		this.langExtension = langExtension;
-		this.editRecoveryHandler = null;
 		this.useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
 	}
 
@@ -54,34 +50,12 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 		const extensions = [
 			...this.defaultExtensions,
 			this.langExtension,
-			bracketMatching(),
-			history(),
-			// See also the default attributes at contentAttributesExtension() in the parent class.
-			EditorView.contentAttributes.of( {
-				spellcheck: 'true'
-			} ),
 			EditorView.domEventHandlers( {
 				blur: () => this.$textarea.triggerHandler( 'blur' ),
 				focus: () => this.$textarea.triggerHandler( 'focus' )
 			} ),
-			EditorView.updateListener.of( ( update ) => {
-				if ( update.docChanged && typeof this.editRecoveryHandler === 'function' ) {
-					this.editRecoveryHandler();
-				}
-			} ),
-			EditorView.lineWrapping,
-			EditorState.allowMultipleSelections.of( true ),
-			drawSelection(),
-			keymap.of( [
-				...defaultKeymap,
-				...searchKeymap,
-				...historyKeymap
-			] )
+			EditorView.lineWrapping
 		];
-
-		mw.hook( 'editRecovery.loadEnd' ).add( ( data ) => {
-			this.editRecoveryHandler = data.fieldChangeHandler;
-		} );
 
 		this.initialize( extensions );
 
