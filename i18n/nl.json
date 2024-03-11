@@ -12,5 +12,6 @@
 	"codemirror-toggle-label": "Syntaxis accentueren",
 	"codemirror-prefs-colorblind": "Schakel een kleurenblindvriendelijk schema in voor syntaxisaccentuering bij het bewerken van wikitekst",
 	"codemirror-prefs-colorblind-help": "Als u een gadget gebruikt voor syntaxis-accentuering, werkt deze voorkeur niet.",
+	"codemirror-special-char-carriage-return": "Wagenterugloop",
 	"prefs-accessibility": "Toegankelijkheid"
 }

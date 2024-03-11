@@ -43,5 +43,8 @@
 	"codemirror-special-char-paragraph-separator": "מפריד פסקאות",
 	"codemirror-special-char-zero-width-no-break-space": "מצרף מילים",
 	"codemirror-special-char-object-replacement": "תו החלפת עצם",
+	"codemirror-fold-template": "קיפול פרמטרים של תבנית",
+	"codemirror-unfold": "הרחבה",
+	"codemirror-folded-code": "קוד מקופל",
 	"prefs-accessibility": "נגישות"
 }

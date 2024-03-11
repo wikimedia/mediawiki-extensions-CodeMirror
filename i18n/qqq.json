@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"McDutchie",
 			"Minh Nguyen",
 			"Raymond",
 			"Shirayuki",
@@ -42,7 +43,7 @@
 	"codemirror-special-char-narrow-nbsp": "Tooltip text shown when hovering over a narrow non-breaking space character. See [[wikidata:Q3058198]] for possible translations.",
 	"codemirror-special-char-left-to-right-isolate": "Tooltip text shown when hovering over a left-to-right isolate character. See [[wikidata:Q87523498]] for possible translations.",
 	"codemirror-special-char-right-to-left-isolate": "Tooltip text shown when hovering over a right-to-left isolate character. See [[wikidata:Q87523500]] for possible translations.",
-	"codemirror-special-char-pop-directional-isolate": "Tooltip text shown when hovering over a pop directional character. See [[wikidata:Q87523504]] for possible translations.",
+	"codemirror-special-char-pop-directional-isolate": "Tooltip text shown when hovering over a pop directional character. See [[wikidata:Q87523504]] for possible translations.\n\nIsolate override allows for overriding the default directional properties of a portion of text. The Pop Directional Isolate character tells the Unicode bidirectional text algorithm to \"pop\" or terminate the current isolate embedding or isolate override sequence, returning the directional properties to those of the surrounding text.",
 	"codemirror-special-char-paragraph-separator": "Tooltip text shown when hovering over a paragraph separator character. See [[wikidata:Q87523339]] for possible translations.",
 	"codemirror-special-char-zero-width-no-break-space": "Tooltip text shown when hovering over a zero-width word joiner character. See [[wikidata:Q8069466]] for possible translations.",
 	"codemirror-special-char-object-replacement": "Tooltip text shown when hovering over a object replacement character. See [[wikidata:Q9398047]] for possible translations.",

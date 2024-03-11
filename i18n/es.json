@@ -3,6 +3,7 @@
 		"authors": [
 			"Adamw",
 			"DiegoAmbrocio",
+			"Eulalio",
 			"Fitoschido",
 			"Macofe",
 			"MarcoAurelio",
@@ -13,5 +14,8 @@
 	"codemirror-toggle-label": "Resaltado de sintaxis",
 	"codemirror-prefs-colorblind": "Usar un esquema de colores accesible para daltónicos en el resaltador de sintaxis al editar código wiki",
 	"codemirror-prefs-colorblind-help": "Si utilizas un accesorio para el resaltado de sintaxis esta preferencia no funcionará.",
+	"codemirror-fold-template": "Parámetros de la plantilla",
+	"codemirror-unfold": "desplegar",
+	"codemirror-folded-code": "código plegado",
 	"prefs-accessibility": "Accesibilidad"
 }
