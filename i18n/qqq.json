@@ -46,7 +46,7 @@
 	"codemirror-special-char-pop-directional-isolate": "Tooltip text shown when hovering over a pop directional character. See [[wikidata:Q87523504]] for possible translations.\n\nIsolate override allows for overriding the default directional properties of a portion of text. The Pop Directional Isolate character tells the Unicode bidirectional text algorithm to \"pop\" or terminate the current isolate embedding or isolate override sequence, returning the directional properties to those of the surrounding text.",
 	"codemirror-special-char-paragraph-separator": "Tooltip text shown when hovering over a paragraph separator character. See [[wikidata:Q87523339]] for possible translations.",
 	"codemirror-special-char-zero-width-no-break-space": "Tooltip text shown when hovering over a zero-width word joiner character. See [[wikidata:Q8069466]] for possible translations.",
-	"codemirror-special-char-object-replacement": "Tooltip text shown when hovering over a object replacement character. See [[wikidata:Q9398047]] for possible translations.",
+	"codemirror-special-char-object-replacement": "Tooltip text shown when hovering over a object replacement character. See [[wikidata:Q9398047]] for possible translations.\n\nThe “object replacement character” (U+FFFC) is used as a placeholder in the text for another unspecified object, for example in a [[:w:Compound document|compound document]].",
 	"codemirror-fold-template": "Tooltip text shown when hovering over a foldable template.",
 	"codemirror-unfold": "Tooltip text shown when hovering over a placeholder for folded code.",
 	"codemirror-folded-code": "Aria label for a placeholder for folded code.",
