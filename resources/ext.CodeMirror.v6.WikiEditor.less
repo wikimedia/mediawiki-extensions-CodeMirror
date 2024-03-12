@@ -20,3 +20,15 @@
 	direction: ltr;
 	unicode-bidi: isolate;
 }
+
+// Hide all buttons except CodeMirror on read only pages (T301615)
+// This is the same hack that CodeEditor uses to customize the toolbar.
+// WikiEditor should be updated to better handle read only pages (T188817).
+.ext-codemirror-readonly {
+	.wikiEditor-section-secondary,
+	.group:not( .group-codemirror ),
+	.tabs,
+	.sections {
+		display: none;
+	}
+}

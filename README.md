@@ -50,6 +50,8 @@ Some may be removed pending user feedback:
 
 * Closing HTML tags that highlighted as an error now also highlight the closing '>'
 * Allow link titles to be both emboldened and italicized.
+* Wikitext syntax highlighting is shown on protected pages
+  ([T301615](https://phabricator.wikimedia.org/T301615))
 
 ### Deprecations and other changes
 

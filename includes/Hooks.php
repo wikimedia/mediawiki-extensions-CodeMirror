@@ -8,6 +8,7 @@ use MediaWiki\Config\Config;
 use MediaWiki\EditPage\EditPage;
 use MediaWiki\Extension\Gadgets\GadgetRepo;
 use MediaWiki\Hook\EditPage__showEditForm_initialHook;
+use MediaWiki\Hook\EditPage__showReadOnlyForm_initialHook;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
 use MediaWiki\ResourceLoader\Hook\ResourceLoaderGetConfigVarsHook;
@@ -19,6 +20,7 @@ use MediaWiki\User\User;
  */
 class Hooks implements
 	EditPage__showEditForm_initialHook,
+	EditPage__showReadOnlyForm_initialHook,
 	ResourceLoaderGetConfigVarsHook,
 	GetPreferencesHook
 {
@@ -117,6 +119,18 @@ class Hooks implements
 				// keep these modules in sync with ext.CodeMirror.js
 				$out->addModules( [ 'ext.CodeMirror.lib', 'ext.CodeMirror.mode.mediawiki' ] );
 			}
+		}
+	}
+
+	/**
+	 * Load CodeMirror 6 on read-only pages.
+	 *
+	 * @param EditPage $editor
+	 * @param OutputPage $out
+	 */
+	public function onEditPage__showReadOnlyForm_initial( $editor, $out ): void {
+		if ( $this->shouldUseV6( $out ) && $this->shouldLoadCodeMirror( $out ) ) {
+			$out->addModules( 'ext.CodeMirror.v6.WikiEditor' );
 		}
 	}
 
