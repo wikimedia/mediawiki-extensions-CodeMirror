@@ -1,5 +1,6 @@
 import { EditorSelection, EditorState, Extension } from '@codemirror/state';
 import { EditorView, lineNumbers, highlightSpecialChars } from '@codemirror/view';
+import bidiIsolationExtension from './codemirror.bidiIsolation';
 
 /**
  * @class CodeMirror
@@ -33,9 +34,14 @@ export default class CodeMirror {
 			this.specialCharsExtension,
 			this.heightExtension
 		];
-		const namespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
+
+		// Add bidi isolation to tags on RTL pages (T358804).
+		if ( this.$textarea.attr( 'dir' ) === 'rtl' ) {
+			extensions.push( bidiIsolationExtension );
+		}
 
 		// Set to [] to disable everywhere, or null to enable everywhere
+		const namespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
 		if ( !namespaces || namespaces.includes( mw.config.get( 'wgNamespaceNumber' ) ) ) {
 			extensions.push( lineNumbers() );
 		}
