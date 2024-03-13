@@ -83,7 +83,24 @@ describe( 'CodeMirror textSelection for the wikitext 2010 editor', () => {
 		);
 	} );
 
-	// Content is now "<div>foobaz</div>"
+	it( "correctly inserts the 'peri' option when using encapsulateSelection", async function () {
+		await browser.execute( () => {
+			$( '.cm-editor' ).textSelection( 'setContents', 'foobaz' )
+				.textSelection( 'encapsulateSelection', {
+					selectionStart: 0,
+					selectionEnd: 6,
+					pre: '<div>',
+					post: '</div>',
+					peri: 'Soundgarden',
+					replace: true
+				} );
+		} );
+		assert.strictEqual(
+			await browser.execute( () => $( '.cm-editor' ).textSelection( 'getContents' ) ),
+			'<div>Soundgarden</div>'
+		);
+	} );
+
 	it( 'scrolls to the correct place when using scrollToCaretPosition', async () => {
 		await browser.execute( () => {
 			const $cmEditor = $( '.cm-editor' );

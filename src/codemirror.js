@@ -1,5 +1,6 @@
-import { EditorSelection, EditorState, Extension } from '@codemirror/state';
+import { EditorState, Extension } from '@codemirror/state';
 import { EditorView, lineNumbers, highlightSpecialChars } from '@codemirror/view';
+import CodemirrorTextSelection from './codemirror.textSelection';
 import bidiIsolationExtension from './codemirror.bidiIsolation';
 
 /**
@@ -8,6 +9,7 @@ import bidiIsolationExtension from './codemirror.bidiIsolation';
  * @property {EditorView} view
  * @property {EditorState} state
  * @property {boolean} readOnly
+ * @property {CodemirrorTextSelection} textSelection
  */
 export default class CodeMirror {
 	/**
@@ -19,6 +21,7 @@ export default class CodeMirror {
 		this.view = null;
 		this.state = null;
 		this.readOnly = this.$textarea.prop( 'readonly' );
+		this.textSelection = null;
 	}
 
 	/**
@@ -270,77 +273,18 @@ export default class CodeMirror {
 	 * @return {Object}
 	 */
 	get cmTextSelection() {
-		const $cmDom = $( this.view.dom );
+		if ( !this.textSelection ) {
+			this.textSelection = new CodemirrorTextSelection( this.view );
+		}
 		return {
-			getContents: () => this.view.state.doc.toString(),
-			setContents: ( content ) => {
-				this.view.dispatch( {
-					changes: {
-						from: 0,
-						to: this.view.state.doc.length,
-						insert: content
-					}
-				} );
-				return $cmDom;
-			},
-			getSelection: () => {
-				return this.view.state.sliceDoc(
-					this.view.state.selection.main.from,
-					this.view.state.selection.main.to
-				);
-			},
-			setSelection: ( options = { start: 0, end: 0 } ) => {
-				this.view.dispatch( {
-					selection: { anchor: options.start, head: ( options.end || options.start ) }
-				} );
-				this.view.focus();
-				return $cmDom;
-			},
-			encapsulateSelection: ( options ) => {
-				// First set the selection, if applicable.
-				if ( options.selectionStart || options.selectionEnd ) {
-					this.view.dispatch( {
-						selection: {
-							anchor: options.selectionStart,
-							head: ( options.selectionEnd || options.selectionStart )
-						}
-					} );
-				}
-				// Do the actual replacements.
-				this.view.dispatch( this.view.state.changeByRange( ( range ) => ( {
-					changes: [
-						{ from: range.from, insert: options.pre },
-						{ from: range.to, insert: options.post }
-					],
-					range: EditorSelection.range(
-						range.from,
-						range.to + options.pre.length + options.post.length
-					)
-				} ) ) );
-				this.view.focus();
-				return $cmDom;
-			},
-			replaceSelection: ( value ) => {
-				this.view.dispatch(
-					this.view.state.replaceSelection( value )
-				);
-				return $cmDom;
-			},
-			getCaretPosition: ( options ) => {
-				if ( !options.startAndEnd ) {
-					return this.view.state.selection.main.head;
-				}
-				return [
-					this.view.state.selection.main.from,
-					this.view.state.selection.main.to
-				];
-			},
-			scrollToCaretPosition: () => {
-				this.view.dispatch( {
-					effects: EditorView.scrollIntoView( this.view.state.selection.main.head )
-				} );
-				return $cmDom;
-			}
+			getContents: () => this.textSelection.getContents(),
+			setContents: ( content ) => this.textSelection.setContents( content ),
+			getCaretPosition: ( options ) => this.textSelection.getCaretPosition( options ),
+			scrollToCaretPosition: () => this.textSelection.scrollToCaretPosition(),
+			getSelection: () => this.textSelection.getSelection(),
+			setSelection: ( options ) => this.textSelection.setSelection( options ),
+			replaceSelection: ( value ) => this.textSelection.replaceSelection( value ),
+			encapsulateSelection: ( options ) => this.textSelection.encapsulateSelection( options )
 		};
 	}
 }
