@@ -31,7 +31,6 @@ _NOTE: Consider using [Fresh](https://gerrit.wikimedia.org/g/fresh/) to run thes
 * `npm run test:i18n` for linting of i18n messages with banana-checker.
 * `npm run test:unit` for the new Jest unit tests.
 * `npm run selenium-test` for the Selenium tests.
-* `npm run test:bundlesize` to test if the gzip'd entrypoint is of acceptable size.
 
 Older QUnit tests are in `resources/mode/mediawiki/tests/qunit/`. These will
 eventually be moved over to `tests/qunit` and rewritten for CodeMirror 6.

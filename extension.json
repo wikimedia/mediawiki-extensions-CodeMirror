@@ -166,32 +166,24 @@
 				"codemirror-toggle-label"
 			]
 		},
-		"ext.CodeMirror.v6.WikiEditor": {
+		"ext.CodeMirror.v6": {
 			"dependencies": [
-				"ext.wikiEditor",
 				"web2017-polyfills",
 				"mediawiki.api",
 				"mediawiki.user",
 				"user.options",
-				"ext.CodeMirror.v6.messages"
+				"ext.CodeMirror.v6.lib"
 			],
 			"packageFiles": [
-				"dist/main.js",
+				"dist/codemirror.js",
 				{
 					"name": "ext.CodeMirror.data.js",
 					"callback": "MediaWiki\\Extension\\CodeMirror\\DataScript::makeScript"
 				}
 			],
 			"styles": [
-				"ext.CodeMirror.v6.less",
-				"mode/mediawiki/mediawiki.less",
-				"mode/mediawiki/colorblind-colors.less"
+				"ext.CodeMirror.v6.less"
 			],
-			"messages": [
-				"codemirror-toggle-label"
-			]
-		},
-		"ext.CodeMirror.v6.messages": {
 			"messages": [
 				"codemirror-find",
 				"codemirror-next",
@@ -230,6 +222,38 @@
 				"codemirror-fold-template",
 				"codemirror-unfold",
 				"codemirror-folded-code"
+			]
+		},
+		"ext.CodeMirror.v6.lib": {
+			"packageFiles": [
+				"dist/vendor.js"
+			],
+			"dependencies": [
+				"web2017-polyfills"
+			]
+		},
+		"ext.CodeMirror.v6.mode.mediawiki": {
+			"packageFiles": "dist/codemirror.mode.mediawiki.js",
+			"styles": [
+				"mode/mediawiki/mediawiki.less",
+				"mode/mediawiki/colorblind-colors.less"
+			],
+			"dependencies": [
+				"ext.CodeMirror.v6",
+				"ext.CodeMirror.v6.lib"
+			]
+		},
+		"ext.CodeMirror.v6.WikiEditor": {
+			"dependencies": [
+				"ext.wikiEditor",
+				"ext.CodeMirror.v6.lib",
+				"ext.CodeMirror.v6.mode.mediawiki"
+			],
+			"packageFiles": [
+				"dist/codemirror.wikieditor.mediawiki.js"
+			],
+			"messages": [
+				"codemirror-toggle-label"
 			]
 		}
 	},

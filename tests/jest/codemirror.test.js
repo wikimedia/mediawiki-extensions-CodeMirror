@@ -1,5 +1,5 @@
-const { EditorView } = require( '@codemirror/view' );
-const CodeMirror = require( '../../src/codemirror.js' ).default;
+import { EditorView } from '@codemirror/view';
+import CodeMirror from '../../src/codemirror.js';
 const $textarea = $( '<textarea>' ),
 	cm = new CodeMirror( $textarea );
 

@@ -1,3 +1,4 @@
+jest.mock( '../../ext.CodeMirror.data.js', () => jest.fn(), { virtual: true } );
 global.mw = require( '@wikimedia/mw-node-qunit/src/mockMediaWiki.js' )();
 mw.user = Object.assign( mw.user, {
 	options: {
@@ -12,8 +13,5 @@ mw.user = Object.assign( mw.user, {
 mw.config.get = jest.fn().mockReturnValue( '1000+ edits' );
 mw.track = jest.fn();
 mw.Api.prototype.saveOption = jest.fn();
-
-// eslint-disable-next-line no-underscore-dangle, camelcase
-global.__non_webpack_require__ = jest.fn();
 global.$ = require( 'jquery' );
 $.fn.textSelection = () => {};

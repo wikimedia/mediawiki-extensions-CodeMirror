@@ -14,7 +14,6 @@
 		"commonjs": true
 	},
 	"globals": {
-		"__non_webpack_require__": "readonly",
 		"Tree": "readonly"
 	},
 	"rules": {
