@@ -222,7 +222,7 @@ const foldKeymap = [
 ];
 
 /** @type {Extension} */
-export const templateFoldingExtension = [
+export default [
 	codeFolding( {
 		placeholderDOM( view ) {
 			const element = document.createElement( 'span' );

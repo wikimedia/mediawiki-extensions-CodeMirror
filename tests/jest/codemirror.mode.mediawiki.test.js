@@ -1,5 +1,5 @@
 import CodeMirror from '../../src/codemirror.js';
-import { mediaWikiLang } from '../../src/codemirror.mode.mediawiki.js';
+import mediaWikiLang from '../../src/codemirror.mode.mediawiki.js';
 import { mwModeConfig } from '../../src/codemirror.mode.mediawiki.config.js';
 
 // NOTE: each test case should have a space before the closing </div>
@@ -163,7 +163,7 @@ const textarea = document.createElement( 'textarea' );
 document.body.appendChild( textarea );
 const cm = new CodeMirror( textarea );
 // Stub the config normally provided by mw.config.get('extCodeMirrorConfig')
-const mwLang = mediaWikiLang( {
+const mwLang = mediaWikiLang( {}, {
 	urlProtocols: 'ftp://|https://|news:',
 	doubleUnderscore: [ {
 		__notoc__: 'notoc'

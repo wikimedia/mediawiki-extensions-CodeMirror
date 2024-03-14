@@ -1,5 +1,5 @@
 import CodeMirror from '../../src/codemirror.js';
-import { mediaWikiLang } from '../../src/codemirror.mode.mediawiki.js';
+import mediaWikiLang from '../../src/codemirror.mode.mediawiki.js';
 
 const testCases = [
 	{
@@ -14,9 +14,10 @@ const textarea = document.createElement( 'textarea' );
 textarea.dir = 'rtl';
 document.body.appendChild( textarea );
 const cm = new CodeMirror( textarea );
-const mwLang = mediaWikiLang( {
-	tags: {}
-} );
+const mwLang = mediaWikiLang(
+	{ bidiIsolation: true },
+	{ tags: {} }
+);
 cm.initialize( [ ...cm.defaultExtensions, mwLang ] );
 
 describe( 'CodeMirrorBidiIsolation', () => {

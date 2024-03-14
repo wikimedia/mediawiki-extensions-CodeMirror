@@ -8,7 +8,8 @@ import {
 } from '@codemirror/language';
 import { mwModeConfig as modeConfig } from './codemirror.mode.mediawiki.config';
 import { Tag } from '@lezer/highlight';
-import { templateFoldingExtension } from './codemirror.templateFolding';
+import templateFoldingExtension from './codemirror.templateFolding';
+import bidiIsolationExtension from './codemirror.bidiIsolation';
 
 /**
  * Adapted from the original CodeMirror 5 stream parser by Pavel Astakhov
@@ -1212,6 +1213,12 @@ class CodeMirrorModeMediaWiki {
 }
 
 /**
+ * @typedef {Object} mediaWikiLangConfig
+ * @property {boolean} [bidiIsolation=false] Enable bidi isolation around HTML tags.
+ *   This should generally always be enabled on RTL pages, but it comes with a performance cost.
+ */
+
+/**
  * Gets a LanguageSupport instance for the MediaWiki mode.
  *
  * @example
@@ -1220,12 +1227,13 @@ class CodeMirrorModeMediaWiki {
  * const cm = new CodeMirror( textarea );
  * cm.initialize( [ ...cm.defaultExtensions, mediaWikiLang() ] );
  *
- * @param {Object|null} [config] Used only by unit tests.
+ * @param {mediaWikiLangConfig} [config] Configuration options for the MediaWiki mode.
+ * @param {Object|null} [mwConfig] Ignore; used only by unit tests.
  * @return {LanguageSupport}
  */
-export const mediaWikiLang = ( config = null ) => {
-	config = config || mw.config.get( 'extCodeMirrorConfig' );
-	const mode = new CodeMirrorModeMediaWiki( config );
+export default ( config = { bidiIsolation: false }, mwConfig = null ) => {
+	mwConfig = mwConfig || mw.config.get( 'extCodeMirrorConfig' );
+	const mode = new CodeMirrorModeMediaWiki( mwConfig );
 	const parser = mode.mediawiki;
 	const lang = StreamLanguage.define( parser );
 	const langExtension = [ syntaxHighlighting(
@@ -1235,10 +1243,16 @@ export const mediaWikiLang = ( config = null ) => {
 	) ];
 
 	// Add template folding if in supported namespace.
-	const templateFoldingNs = config.templateFoldingNamespaces;
+	const templateFoldingNs = mwConfig.templateFoldingNamespaces;
 	// Set to [] to disable everywhere, or null to enable everywhere.
 	if ( !templateFoldingNs || templateFoldingNs.includes( mw.config.get( 'wgNamespaceNumber' ) ) ) {
 		langExtension.push( templateFoldingExtension );
+	}
+
+	// Bundle the bidi isolation extension, as it's coded specifically for MediaWiki.
+	// This is behind a config option for performance reasons (we only use it on RTL pages).
+	if ( config.bidiIsolation ) {
+		langExtension.push( bidiIsolationExtension );
 	}
 
 	return new LanguageSupport( lang, langExtension );

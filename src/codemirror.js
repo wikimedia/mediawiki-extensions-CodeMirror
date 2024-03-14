@@ -4,7 +4,6 @@ import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
 import { searchKeymap } from '@codemirror/search';
 import { bracketMatching } from '@codemirror/language';
 import CodemirrorTextSelection from './codemirror.textSelection';
-import bidiIsolationExtension from './codemirror.bidiIsolation';
 
 // Necessary so that `require` doesn't get mangled into `__webpack_require__`,
 // which ResourceLoader won't recognize and thus be unable to load the virtual file.
@@ -66,11 +65,6 @@ export default class CodeMirror {
 			} ) );
 			extensions.push( history() );
 			extensions.push( keymap.of( historyKeymap ) );
-		}
-
-		// Add bidi isolation to tags on RTL pages (T358804).
-		if ( this.$textarea.attr( 'dir' ) === 'rtl' ) {
-			extensions.push( bidiIsolationExtension );
 		}
 
 		// Set to [] to disable everywhere, or null to enable everywhere
