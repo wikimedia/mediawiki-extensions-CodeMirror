@@ -62,7 +62,6 @@
 				"jquery.textSelection",
 				"mediawiki.user",
 				"user.options",
-				"jquery.ui",
 				"oojs-ui.styles.icons-editing-styling"
 			],
 			"packageFiles": [
