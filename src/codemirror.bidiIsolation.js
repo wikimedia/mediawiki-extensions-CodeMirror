@@ -13,6 +13,7 @@ import { mwModeConfig } from './codemirror.mode.mediawiki.config';
 
 /**
  * @type {Decoration}
+ * @private
  */
 const isolate = Decoration.mark( {
 	class: 'cm-bidi-isolate',
@@ -22,6 +23,7 @@ const isolate = Decoration.mark( {
 /**
  * @param {EditorView} view
  * @return {RangeSet}
+ * @private
  */
 function computeIsolates( view ) {
 	const set = new RangeSetBuilder();
@@ -55,17 +57,17 @@ function computeIsolates( view ) {
 }
 
 /**
- * @class
- * @property {DecorationSet} isolates
- * @property {Tree} tree
+ * @private
  */
 class CodeMirrorBidiIsolation {
 	/**
 	 * @constructor
-	 * @param {EditorView} view
+	 * @param {EditorView} view The editor view.
 	 */
 	constructor( view ) {
+		/** @type {DecorationSet} */
 		this.isolates = computeIsolates( view );
+		/** @type {Tree} */
 		this.tree = syntaxTree( view.state );
 	}
 
@@ -84,6 +86,7 @@ class CodeMirrorBidiIsolation {
 
 /**
  * @type {PluginSpec}
+ * @private
  */
 const bidiIsolationSpec = {
 	provide: ( plugin ) => {
@@ -106,4 +109,14 @@ const bidiIsolationSpec = {
 	}
 };
 
+/**
+ * Bidirectional isolation plugin for CodeMirror for use on RTL pages.
+ * This ensures HTML and MediaWiki tags are always displayed left-to-right.
+ *
+ * Use this plugin by passing in `bidiIsolation: true` when instantiating
+ * a [CodeMirrorModeMediaWiki]{@link CodeMirrorModeMediaWiki} object.
+ *
+ * @module CodeMirrorBidiIsolation
+ * @see https://codemirror.net/examples/bidi/
+ */
 export default ViewPlugin.fromClass( CodeMirrorBidiIsolation, bidiIsolationSpec );

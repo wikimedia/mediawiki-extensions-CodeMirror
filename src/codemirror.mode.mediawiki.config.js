@@ -4,12 +4,23 @@ import { TagStyle, StreamParser } from '@codemirror/language';
 /**
  * Configuration for the MediaWiki highlighting mode for CodeMirror.
  * This is a separate class mainly to keep static configuration out of
- * the logic in CodeMirrorModeMediaWiki.
+ * the logic in {@link CodeMirrorModeMediaWiki}.
  *
- * @class CodeMirrorModeMediaWikiConfig
+ * @module CodeMirrorModeMediaWikiConfig
+ *
+ * @example
+ * // within MediaWiki:
+ * import { mwModeConfig } from 'ext.CodeMirror.v6.mode.mediawiki';
+ * // Reference tags by their constants in the tags property.
+ * if ( tag === mwModeConfig.tags.htmlTagBracket ) {
+ *   // …
+ * }
  */
 class CodeMirrorModeMediaWikiConfig {
 
+	/**
+	 * @internal
+	 */
 	constructor() {
 		this.extHighlightStyles = [];
 		this.tokenTable = this.defaultTokenTable;
@@ -23,6 +34,7 @@ class CodeMirrorModeMediaWikiConfig {
 	 * @see https://www.mediawiki.org/wiki/Extension:CodeMirror#Extension_integration
 	 * @param {string} tag
 	 * @param {Tag} [parent]
+	 * @private
 	 * @internal
 	 */
 	addTag( tag, parent = null ) {
@@ -39,6 +51,7 @@ class CodeMirrorModeMediaWikiConfig {
 	 *
 	 * @param {string} token
 	 * @param {Tag} [parent]
+	 * @private
 	 * @internal
 	 */
 	addToken( token, parent = null ) {
@@ -88,7 +101,8 @@ class CodeMirrorModeMediaWikiConfig {
 	}
 
 	/**
-	 * Mapping of MediaWiki-esque token identifiers to a standardized lezer highlighting tag.
+	 * Mapping of MediaWiki-esque token identifiers to
+	 * [standardized lezer highlighting tags]{@link https://lezer.codemirror.net/docs/ref/#highlight.tags}.
 	 * Values are one of the default highlighting tags. The idea is to use as many default tags as
 	 * possible so that theming (such as dark mode) can be applied with minimal effort. The
 	 * semantic meaning of the tag may not really match how it is used, but as per CodeMirror docs,
@@ -99,8 +113,9 @@ class CodeMirrorModeMediaWikiConfig {
 	 * in highlightStyle().
 	 *
 	 * @see https://lezer.codemirror.net/docs/ref/#highlight.tags
+	 * @member CodeMirrorModeMediaWikiConfig
+	 * @type {Object<string>}
 	 * @return {Object<string>}
-	 * @internal
 	 */
 	get tags() {
 		return {
@@ -195,6 +210,7 @@ class CodeMirrorModeMediaWikiConfig {
 	 * @see https://codemirror.net/docs/ref/#language.StreamParser.tokenTable
 	 * @see https://lezer.codemirror.net/docs/ref/#highlight.Tag%5Edefine
 	 * @return {Object<Tag>}
+	 * @internal
 	 */
 	get defaultTokenTable() {
 		return {
@@ -229,6 +245,7 @@ class CodeMirrorModeMediaWikiConfig {
 	 * @see https://codemirror.net/docs/ref/#language.TagStyle
 	 * @param {StreamParser} context
 	 * @return {TagStyle[]}
+	 * @internal
 	 */
 	getTagStyles( context ) {
 		return [
@@ -491,4 +508,8 @@ class CodeMirrorModeMediaWikiConfig {
 	}
 }
 
+/**
+ * @member CodeMirrorModeMediaWikiConfig
+ * @type {CodeMirrorModeMediaWikiConfig}
+ */
 export const mwModeConfig = new CodeMirrorModeMediaWikiConfig();
