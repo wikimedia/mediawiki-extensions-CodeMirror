@@ -31,6 +31,11 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		 * @type {boolean}
 		 */
 		this.useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
+		/**
+		 * The [Realtime Preview](https://w.wiki/9XgX) handler.
+		 * @type {Function|null}
+		 */
+		this.realtimePreviewHandler = null;
 	}
 
 	/**
@@ -70,10 +75,16 @@ class CodeMirrorWikiEditor extends CodeMirror {
 				blur: () => this.$textarea.triggerHandler( 'blur' ),
 				focus: () => this.$textarea.triggerHandler( 'focus' )
 			} ),
-			EditorView.lineWrapping
+			EditorView.lineWrapping,
+			EditorView.updateListener.of( ( update ) => {
+				if ( update.docChanged && typeof this.realtimePreviewHandler === 'function' ) {
+					this.realtimePreviewHandler();
+				}
+			} )
 		];
 
 		this.initialize( extensions );
+		this.addRealtimePreviewHandler();
 
 		// Sync scroll position, selections, and focus state.
 		requestAnimationFrame( () => {
@@ -102,6 +113,21 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		 * @stable to use
 		 */
 		mw.hook( 'ext.CodeMirror.switch' ).fire( true, $( this.view.dom ) );
+	}
+
+	/**
+	 * Adds the Realtime Preview handler. Realtime Preview reads from the textarea
+	 * via jQuery.textSelection, which will bubble up to CodeMirror automatically.
+	 *
+	 * @private
+	 */
+	addRealtimePreviewHandler() {
+		mw.hook( 'ext.WikiEditor.realtimepreview.enable' ).add( ( realtimePreview ) => {
+			this.realtimePreviewHandler = realtimePreview.getEventHandler().bind( realtimePreview );
+		} );
+		mw.hook( 'ext.WikiEditor.realtimepreview.disable' ).add( () => {
+			this.realtimePreviewHandler = null;
+		} );
 	}
 
 	/**
