@@ -42,9 +42,12 @@
 	"codemirror-special-char-narrow-nbsp": "Smalt, hard mellomrom",
 	"codemirror-special-char-left-to-right-isolate": "Venstre-til-høyre-isolering",
 	"codemirror-special-char-right-to-left-isolate": "Høyre-til-venstre-isolering",
-	"codemirror-special-char-pop-directional-isolate": "POP-retningsisolering",
+	"codemirror-special-char-pop-directional-isolate": "Avslutt retningsisolering",
 	"codemirror-special-char-paragraph-separator": "Avsnittsskiller",
 	"codemirror-special-char-zero-width-no-break-space": "Ordskjøter",
 	"codemirror-special-char-object-replacement": "Objekterstatningstegn",
+	"codemirror-fold-template": "Slå sammen malparametre",
+	"codemirror-unfold": "utvid",
+	"codemirror-folded-code": "sammenslått kode",
 	"prefs-accessibility": "Tilgjengelighet"
 }
