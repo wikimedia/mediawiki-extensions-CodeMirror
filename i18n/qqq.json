@@ -11,7 +11,10 @@
 	},
 	"codemirror-desc": "{{desc|name=Code Mirror|url=https://www.mediawiki.org/wiki/Extension:CodeMirror}}\n\nAdditional info: Discription of \"Syntax highlighting\" in wiki\n[[mw:Extension:SyntaxHighlight GeSHi]]",
 	"codemirror-toggle-label": "Title tooltip for button to toggle CodeMirror in the editing toolbar.",
+	"codemirror-prefs-summary": "Used in [[Special:Preferences]] in the section titled {{msg-mw|prefs-syntax-highlighting}}, at the top as a summary for the whole section.",
+	"codemirror-prefs-enable": "Used in user preferences as label for enabling syntax highlighting.",
 	"codemirror-prefs-colorblind": "Used in user preferences as label for enabling the colorblind-friendly option.",
+	"codemirror-v6-prefs-colorblind": "Used in user preferences as label for enabling the colorblind-friendly option. This is a shorter version of {{msg-mw|codemirror-prefs-colorblind}} shown under section {{msg-mw|prefs-syntax-highlighting}} on wikis using CodeMirror 6.",
 	"codemirror-prefs-colorblind-help": "Used in user preferences as remark on the colorblind-friendly option.",
 	"codemirror-find": "Placeholder text for the input in the CodeMirror search dialog.",
 	"codemirror-next": "Label for the 'Next' button in the CodeMirror search dialog.",
@@ -50,5 +53,6 @@
 	"codemirror-fold-template": "Tooltip text shown when hovering over a foldable template.",
 	"codemirror-unfold": "Tooltip text shown when hovering over a placeholder for folded code.",
 	"codemirror-folded-code": "Aria label for a placeholder for folded code.",
-	"prefs-accessibility": "Section heading in the user preferences for accessibility topics."
+	"prefs-accessibility": "Section heading in the user preferences for accessibility topics.",
+	"prefs-syntax-highlighting": "Used in [[Special:Preferences]], tab \"Editing\" ({{int:prefs-editing}})."
 }

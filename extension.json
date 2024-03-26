@@ -224,6 +224,15 @@
 				"codemirror-folded-code"
 			]
 		},
+		"ext.CodeMirror.v6.init": {
+			"dependencies": [
+				"ext.CodeMirror.v6",
+				"ext.CodeMirror.v6.mode.mediawiki"
+			],
+			"packageFiles": [
+				"dist/codemirror.mediawiki.js"
+			]
+		},
 		"ext.CodeMirror.v6.lib": {
 			"packageFiles": [
 				"dist/vendor.js"

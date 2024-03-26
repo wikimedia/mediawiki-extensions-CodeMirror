@@ -22,6 +22,7 @@ module.exports = [
 		input: [
 			'src/codemirror.js',
 			'src/codemirror.mode.mediawiki.js',
+			'src/codemirror.mediawiki.js',
 			'src/codemirror.wikieditor.mediawiki.js'
 		],
 

@@ -71,11 +71,6 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		const extensions = [
 			this.defaultExtensions,
 			this.langExtension,
-			EditorView.domEventHandlers( {
-				blur: () => this.$textarea.triggerHandler( 'blur' ),
-				focus: () => this.$textarea.triggerHandler( 'focus' )
-			} ),
-			EditorView.lineWrapping,
 			EditorView.updateListener.of( ( update ) => {
 				if ( update.docChanged && typeof this.realtimePreviewHandler === 'function' ) {
 					this.realtimePreviewHandler();
