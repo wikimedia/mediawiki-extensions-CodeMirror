@@ -467,6 +467,10 @@ class CodeMirrorModeMediaWikiConfig {
 				class: 'cm-mw-html-entity'
 			},
 			{
+				tag: context.tokenTable[ this.tags.link ],
+				class: 'cm-mw-link'
+			},
+			{
 				tag: context.tokenTable[ this.tags.linkPageName ],
 				class: 'cm-mw-link-pagename'
 			},

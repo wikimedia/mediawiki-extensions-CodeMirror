@@ -1,3 +1,5 @@
+import { StreamParser } from '@codemirror/language';
+import { Tag } from '@lezer/highlight';
 import CodeMirror from '../../src/codemirror.js';
 import mediaWikiLang from '../../src/codemirror.mode.mediawiki.js';
 import { mwModeConfig } from '../../src/codemirror.mode.mediawiki.config.js';
@@ -272,6 +274,120 @@ describe( 'CodeMirrorModeMediaWiki', () => {
 			'strong',
 			'tableCaption',
 			'templateVariableDelimiter'
+		] );
+	} );
+
+	it( 'configuration has a TagStyle for all expected CSS classes', () => {
+		/** @type {StreamParser} */
+		const mockContext = {
+			tokenTable: jest.fn().mockReturnValue( Tag.define() )
+		};
+		const cssClasses = mwModeConfig.getTagStyles( mockContext )
+			.map( ( tagStyle ) => tagStyle.class );
+		expect( cssClasses ).toStrictEqual( [
+			'cm-mw-apostrophes',
+			'cm-mw-apostrophes-bold',
+			'cm-mw-apostrophes-italic',
+			'cm-mw-comment',
+			'cm-mw-double-underscore',
+			'cm-mw-extlink',
+			'cm-mw-extlink-bracket',
+			'cm-mw-extlink-protocol',
+			'cm-mw-extlink-text',
+			'cm-mw-hr',
+			'cm-mw-htmltag-attribute',
+			'cm-mw-htmltag-bracket',
+			'cm-mw-htmltag-name',
+			'cm-mw-indenting',
+			'cm-mw-link-bracket',
+			'cm-mw-link-delimiter',
+			'cm-mw-link-text',
+			'cm-mw-link-tosection',
+			'cm-mw-list',
+			'cm-mw-parserfunction',
+			'cm-mw-parserfunction-bracket',
+			'cm-mw-parserfunction-delimiter',
+			'cm-mw-parserfunction-name',
+			'cm-mw-section-header',
+			'cm-mw-section-1',
+			'cm-mw-section-2',
+			'cm-mw-section-3',
+			'cm-mw-section-4',
+			'cm-mw-section-5',
+			'cm-mw-section-6',
+			'cm-mw-signature',
+			'cm-mw-table-bracket',
+			'cm-mw-table-definition',
+			'cm-mw-table-delimiter',
+			'cm-mw-template',
+			'cm-mw-template-argument-name',
+			'cm-mw-template-bracket',
+			'cm-mw-template-delimiter',
+			'cm-mw-pagename cm-mw-template-name',
+			'cm-mw-templatevariable',
+			'cm-mw-templatevariable-bracket',
+			'cm-mw-templatevariable-name',
+			// Custom tags
+			'cm-mw-em',
+			'cm-mw-error',
+			'cm-mw-ext-nowiki',
+			'cm-mw-ext-pre',
+			'cm-mw-exttag-bracket',
+			'cm-mw-exttag',
+			'cm-mw-exttag-attribute',
+			'cm-mw-exttag-name',
+			'cm-mw-free-extlink',
+			'cm-mw-free-extlink-protocol',
+			'cm-mw-html-entity',
+			'cm-mw-link',
+			'cm-mw-link-pagename',
+			'cm-mw-tag-nowiki',
+			'cm-mw-pagename',
+			'cm-mw-tag-pre',
+			'cm-mw-section',
+			'cm-mw-skipformatting',
+			'cm-mw-strong',
+			'cm-mw-table-caption',
+			'cm-mw-templatevariable-delimiter',
+			// Dynamically generated tags
+			'cm-mw-ext-ground',
+			'cm-mw-ext-link-ground',
+			'cm-mw-ext2-ground',
+			'cm-mw-ext2-link-ground',
+			'cm-mw-ext3-ground',
+			'cm-mw-ext3-link-ground',
+			'cm-mw-link-ground',
+			'cm-mw-template-ext-ground',
+			'cm-mw-template-ext-link-ground',
+			'cm-mw-template-ext2-ground',
+			'cm-mw-template-ext2-link-ground',
+			'cm-mw-template-ext3-ground',
+			'cm-mw-template-ext3-link-ground',
+			'cm-mw-template-ground',
+			'cm-mw-template-link-ground',
+			'cm-mw-template2-ext-ground',
+			'cm-mw-template2-ext-link-ground',
+			'cm-mw-template2-ext2-ground',
+			'cm-mw-template2-ext2-link-ground',
+			'cm-mw-template2-ext3-ground',
+			'cm-mw-template2-ext3-link-ground',
+			'cm-mw-template2-ground',
+			'cm-mw-template2-link-ground',
+			'cm-mw-template3-ext-ground',
+			'cm-mw-template3-ext-link-ground',
+			'cm-mw-template3-ext2-ground',
+			'cm-mw-template3-ext2-link-ground',
+			'cm-mw-template3-ext3-ground',
+			'cm-mw-template3-ext3-link-ground',
+			'cm-mw-template3-ground',
+			'cm-mw-template3-link-ground',
+			/** Added by the MW config stub above {@link mwLang} */
+			'cm-mw-tag-ref',
+			'cm-mw-ext-ref',
+			'cm-mw-tag-references',
+			'cm-mw-ext-references',
+			'cm-mw-tag-myextension',
+			'cm-mw-ext-myextension'
 		] );
 	} );
 } );
