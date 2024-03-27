@@ -8,25 +8,29 @@ import { mwModeConfig as modeConfig } from './codemirror.mode.mediawiki.config';
  * Check if a SyntaxNode is a template bracket (`{{` or `}}`)
  * @param {SyntaxNode} node The SyntaxNode to check
  * @return {boolean}
+ * @private
  */
 const isBracket = ( node ) => node.name.split( '_' ).includes( modeConfig.tags.templateBracket ),
 	/**
 	 * Check if a SyntaxNode is a template delimiter (`|`)
 	 * @param {SyntaxNode} node The SyntaxNode to check
 	 * @return {boolean}
+	 * @private
 	 */
 	isDelimiter = ( node ) => node.name.split( '_' ).includes( modeConfig.tags.templateDelimiter ),
 	/**
 	 * Check if a SyntaxNode is part of a template, except for the brackets
 	 * @param {SyntaxNode} node The SyntaxNode to check
 	 * @return {boolean}
+	 * @private
 	 */
 	isTemplate = ( node ) => /-template[a-z\d-]+ground/u.test( node.name ) && !isBracket( node ),
 	/**
 	 * Update the stack of opening (+) or closing (-) brackets
 	 * @param {EditorState} state EditorState instance
 	 * @param {SyntaxNode} node The SyntaxNode of the bracket
-	 * @return {1|-1}
+	 * @return {number}
+	 * @private
 	 */
 	stackUpdate = ( state, node ) => state.sliceDoc( node.from, node.from + 1 ) === '{' ? 1 : -1;
 
@@ -36,6 +40,7 @@ const isBracket = ( node ) => node.name.split( '_' ).includes( modeConfig.tags.t
  * @param {number|SyntaxNode} posOrNode Position or node
  * @param {Tree|null} [tree] Syntax tree
  * @return {{from: number, to: number}|null}
+ * @private
  */
 const foldable = ( state, posOrNode, tree ) => {
 	if ( typeof posOrNode === 'number' ) {
@@ -109,6 +114,7 @@ const foldable = ( state, posOrNode, tree ) => {
  * Create a tooltip for folding a template
  * @param {EditorState} state EditorState instance
  * @return {Tooltip|null}
+ * @private
  */
 const create = ( state ) => {
 	const { selection: { main: { head } } } = state,
@@ -146,7 +152,10 @@ const create = ( state ) => {
 	return null;
 };
 
-/** @type {KeyBinding[]} */
+/**
+ * @type {KeyBinding[]}
+ * @private
+ */
 const foldKeymap = [
 	{
 		// Fold the template at the selection/cursor
@@ -221,7 +230,14 @@ const foldKeymap = [
 	{ key: 'Ctrl-Alt-]', run: unfoldAll }
 ];
 
-/** @type {Extension} */
+/**
+ * CodeMirror extension providing
+ * [template folding](https://www.mediawiki.org/wiki/Help:Extension:CodeMirror#Template_folding)
+ * for the MediaWiki mode. This automatically applied when using {@link CodeMirrorModeMediaWiki}.
+ *
+ * @module CodeMirrorTemplateFolding
+ * @type {Extension}
+ */
 export default [
 	codeFolding( {
 		placeholderDOM( view ) {

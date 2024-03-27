@@ -2,20 +2,26 @@ import { EditorView } from '@codemirror/view';
 import { EditorSelection } from '@codemirror/state';
 
 /**
- * jQuery.textSelection implementation for CodeMirror.
+ * [jQuery.textSelection]{@link jQuery.fn.textSelection} implementation for CodeMirror.
+ * This is registered to both the textarea and the `.cm-editor` element.
  *
  * @see jQuery.fn.textSelection
- * @class CodemirrorTextSelection
- * @property {EditorView} view
- * @property {jQuery} $cmDom
  */
-export default class CodemirrorTextSelection {
+class CodeMirrorTextSelection {
 	/**
 	 * @constructor
 	 * @param {EditorView} view
 	 */
 	constructor( view ) {
+		/**
+		 * The CodeMirror view.
+		 * @type {EditorView}
+		 */
 		this.view = view;
+		/**
+		 * The CodeMirror DOM.
+		 * @type {jQuery}
+		 */
 		this.$cmDom = $( view.dom );
 	}
 
@@ -23,6 +29,7 @@ export default class CodemirrorTextSelection {
 	 * Get the contents of the editor.
 	 *
 	 * @return {string}
+	 * @stable to call
 	 */
 	getContents() {
 		return this.view.state.doc.toString();
@@ -33,6 +40,7 @@ export default class CodemirrorTextSelection {
 	 *
 	 * @param {string} content
 	 * @return {jQuery}
+	 * @stable to call
 	 */
 	setContents( content ) {
 		this.view.dispatch( {
@@ -48,8 +56,11 @@ export default class CodemirrorTextSelection {
 	/**
 	 * Get the current caret position.
 	 *
-	 * @param {Object} options
+	 * @param {Object} [options]
+	 * @param {boolean} [options.startAndEnd] Whether to return the start and end of the selection
+	 *   instead of the caret position.
 	 * @return {number[]|number}
+	 * @stable to call
 	 */
 	getCaretPosition( options ) {
 		if ( !options.startAndEnd ) {
@@ -65,6 +76,7 @@ export default class CodemirrorTextSelection {
 	 * Scroll the editor to the current caret position.
 	 *
 	 * @return {jQuery}
+	 * @stable to call
 	 */
 	scrollToCaretPosition() {
 		const scrollEffect = EditorView.scrollIntoView( this.view.state.selection.main.head );
@@ -79,6 +91,7 @@ export default class CodemirrorTextSelection {
 	 * Get the selected text.
 	 *
 	 * @return {string}
+	 * @stable to call
 	 */
 	getSelection() {
 		return this.view.state.sliceDoc(
@@ -91,7 +104,10 @@ export default class CodemirrorTextSelection {
 	 * Set the selected text.
 	 *
 	 * @param {Object} options
+	 * @param {number} options.start The start of the selection.
+	 * @param {number} [options.end=options.start] The end of the selection.
 	 * @return {jQuery}
+	 * @stable to call
 	 */
 	setSelection( options ) {
 		this.view.dispatch( {
@@ -106,6 +122,7 @@ export default class CodemirrorTextSelection {
 	 *
 	 * @param {string} value
 	 * @return {jQuery}
+	 * @stable to call
 	 */
 	replaceSelection( value ) {
 		this.view.dispatch(
@@ -118,13 +135,23 @@ export default class CodemirrorTextSelection {
 	 * Encapsulate the selected text with the given values.
 	 *
 	 * This is intentionally a near-identical implementation to jQuery.textSelection,
-	 * except it uses CodeMirror's EditorState.changeByRange when there are multiple selections.
+	 * except it uses CodeMirror's
+	 * [EditorState.changeByRange](https://codemirror.net/docs/ref/#state.EditorState.changeByRange)
+	 * when there are multiple selections.
 	 *
-	 * @see jQuery.fn.textSelection.encapsulateSelection
-	 * @todo Add support for 'ownline', 'selectPeri' and 'splitlines' options.
+	 * @todo Add support for 'ownline' and 'splitlines' options.
 	 *
 	 * @param {Object} options
+	 * @param {string} [options.pre] The text to insert before the cursor/selection.
+	 * @param {string} [options.post] The text to insert after the cursor/selection.
+	 * @param {string} [options.peri] Text to insert between pre and post and select afterwards.
+	 * @param {boolean} [options.replace=false] If there is a selection, replace it with peri
+	 *   instead of leaving it alone.
+	 * @param {boolean} [options.selectPeri=true] Select the peri text if it was inserted.
+	 * @param {number} [options.selectionStart] Position to start selection at.
+	 * @param {number} [options.selectionEnd=options.selectionStart] Position to end selection at.
 	 * @return {jQuery}
+	 * @stable to call
 	 */
 	encapsulateSelection( options ) {
 		let selectedText,
@@ -200,3 +227,5 @@ export default class CodemirrorTextSelection {
 		return this.$cmDom;
 	}
 }
+
+export default CodeMirrorTextSelection;

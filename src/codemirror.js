@@ -3,39 +3,71 @@ import { EditorView, drawSelection, lineNumbers, highlightSpecialChars, keymap }
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
 import { searchKeymap } from '@codemirror/search';
 import { bracketMatching } from '@codemirror/language';
-import CodemirrorTextSelection from './codemirror.textSelection';
+import CodeMirrorTextSelection from './codemirror.textSelection';
 
 require( '../ext.CodeMirror.data.js' );
 
 /**
- * @class CodeMirror
- * @property {jQuery} $textarea
- * @property {EditorView} view
- * @property {EditorState} state
- * @property {boolean} readOnly
- * @property {Function|null} editRecoveryHandler
- * @property {CodemirrorTextSelection} textSelection
+ * Interface for the CodeMirror editor.
+ *
+ * @example
+ * mw.loader.using( [
+ *   'ext.CodeMirror.v6',
+ *   'ext.CodeMirror.v6.mode.mediawiki'
+ * ] ).then( ( require ) => {
+ *   const CodeMirror = require( 'ext.CodeMirror.v6' );
+ *   const mediawikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
+ *   const cm = new CodeMirror( myTextarea );
+ *   cm.initialize( [ cm.defaultExtensions, mediawikiLang() ] );
+ * } );
  */
-export default class CodeMirror {
+class CodeMirror {
 	/**
-	 * @constructor
+	 * Instantiate a new CodeMirror instance.
+	 *
 	 * @param {HTMLTextAreaElement|jQuery|string} textarea Textarea to add syntax highlighting to.
+	 * @constructor
 	 */
 	constructor( textarea ) {
+		/**
+		 * The textarea that CodeMirror is bound to.
+		 * @type {jQuery}
+		 */
 		this.$textarea = $( textarea );
+		/**
+		 * The editor user interface.
+		 * @type {EditorView}
+		 */
 		this.view = null;
+		/**
+		 * The editor state.
+		 * @type {EditorState}
+		 */
 		this.state = null;
+		/**
+		 * Whether the textarea is read-only.
+		 * @type {boolean}
+		 */
 		this.readOnly = this.$textarea.prop( 'readonly' );
+		/**
+		 * The [edit recovery]{@link https://www.mediawiki.org/wiki/Manual:Edit_Recovery} handler.
+		 * @type {Function|null}
+		 */
 		this.editRecoveryHandler = null;
+		/**
+		 * jQuery.textSelection overrides for CodeMirror.
+		 * @type {CodeMirrorTextSelection}
+		 */
 		this.textSelection = null;
 	}
 
 	/**
+	 * Default extensions used by CodeMirror.
 	 * Extensions here should be applicable to all theoretical uses of CodeMirror in MediaWiki.
-	 * Subclasses are safe to override this method if needed.
 	 *
 	 * @see https://codemirror.net/docs/ref/#state.Extension
-	 * @return {Extension[]}
+	 * @type {Extension|Extension[]}
+	 * @stable to call
 	 */
 	get defaultExtensions() {
 		const extensions = [
@@ -77,8 +109,8 @@ export default class CodeMirror {
 	 * This extension sets the height of the CodeMirror editor to match the textarea.
 	 * Override this method to change the height of the editor.
 	 *
-	 * @return {Extension}
-	 * @stable
+	 * @type {Extension}
+	 * @stable to call and override
 	 */
 	get heightExtension() {
 		return EditorView.theme( {
@@ -92,11 +124,12 @@ export default class CodeMirror {
 	}
 
 	/**
-	 * This specifies which attributes get added to the .cm-content and .cm-editor elements.
+	 * This specifies which attributes get added to the `.cm-content` and `.cm-editor` elements.
 	 * Subclasses are safe to override this method, but attributes here are considered vital.
 	 *
 	 * @see https://codemirror.net/docs/ref/#view.EditorView^contentAttributes
-	 * @return {Extension}
+	 * @type {Extension}
+	 * @stable to call and override
 	 */
 	get contentAttributesExtension() {
 		const classList = [];
@@ -140,7 +173,9 @@ export default class CodeMirror {
 	 * and we don't want localization to be overlooked by CodeMirror clients and subclasses.
 	 *
 	 * @see https://codemirror.net/examples/translate/
-	 * @return {Extension}
+	 * @type {Extension}
+	 * @stable to call. Instead of overriding, pass in an additional `EditorState.phrases.of()`
+	 *   when calling `initialize()`.
 	 */
 	get phrasesExtension() {
 		return EditorState.phrases.of( {
@@ -165,7 +200,8 @@ export default class CodeMirror {
 	 * which is the localization of 'codemirror-control-character' followed by the Unicode number.
 	 *
 	 * @see https://codemirror.net/docs/ref/#view.highlightSpecialChars
-	 * @return {Extension}
+	 * @type {Extension}
+	 * @stable to call
 	 */
 	get specialCharsExtension() {
 		// Keys are the decimal unicode number, values are the messages.
@@ -220,10 +256,20 @@ export default class CodeMirror {
 	/**
 	 * Setup CodeMirror and add it to the DOM. This will hide the original textarea.
 	 *
-	 * @param {Extension[]} extensions
-	 * @stable
+	 * @param {Extension|Extension[]} [extensions=this.defaultExtensions] Extensions to use.
+	 * @fires CodeMirror~'ext.CodeMirror.initialize'
+	 * @stable to call and override
 	 */
 	initialize( extensions = this.defaultExtensions ) {
+		/**
+		 * Called just before CodeMirror is initialized.
+		 * This can be used to manipulate the DOM to suit CodeMirror
+		 * (i.e. if you manipulate WikiEditor's DOM, you may need this).
+		 *
+		 * @event CodeMirror~'ext.CodeMirror.initialize'
+		 * @param {jQuery} $textarea The textarea that CodeMirror is bound to.
+		 * @stable to use
+		 */
 		mw.hook( 'ext.CodeMirror.initialize' ).fire( this.$textarea );
 		mw.hook( 'editRecovery.loadEnd' ).add( ( data ) => {
 			this.editRecoveryHandler = data.fieldChangeHandler;
@@ -264,7 +310,7 @@ export default class CodeMirror {
 	 * Log usage of CodeMirror.
 	 *
 	 * @param {Object} data
-	 * @stable
+	 * @stable to call
 	 */
 	logUsage( data ) {
 		/* eslint-disable camelcase */
@@ -284,7 +330,7 @@ export default class CodeMirror {
 	 * Save CodeMirror enabled preference.
 	 *
 	 * @param {boolean} prefValue True, if CodeMirror should be enabled by default, otherwise false.
-	 * @stable
+	 * @stable to call and override
 	 */
 	setCodeMirrorPreference( prefValue ) {
 		// Skip for unnamed users
@@ -298,12 +344,13 @@ export default class CodeMirror {
 	/**
 	 * jQuery.textSelection overrides for CodeMirror.
 	 *
-	 * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/jQuery.plugin.textSelection
-	 * @return {Object}
+	 * @see jQuery.fn.textSelection
+	 * @type {Object}
+	 * @private
 	 */
 	get cmTextSelection() {
 		if ( !this.textSelection ) {
-			this.textSelection = new CodemirrorTextSelection( this.view );
+			this.textSelection = new CodeMirrorTextSelection( this.view );
 		}
 		return {
 			getContents: () => this.textSelection.getContents(),
@@ -317,3 +364,5 @@ export default class CodeMirror {
 		};
 	}
 }
+
+export default CodeMirror;

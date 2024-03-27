@@ -4,19 +4,32 @@ import { EditorView } from '@codemirror/view';
 import { LanguageSupport } from '@codemirror/language';
 
 /**
- * @class CodeMirrorWikiEditor
- * @property {LanguageSupport|Extension} langExtension
- * @property {boolean} useCodeMirror
+ * CodeMirror integration with
+ * [WikiEditor](https://www.mediawiki.org/wiki/Special:MyLanguage/Extension:WikiEditor).
+ *
+ * Use this class if you want WikiEditor's toolbar. If you don't need the toolbar,
+ * using {@link CodeMirror} directly will be considerably more efficient.
+ *
+ * @extends CodeMirror
  */
-export default class CodeMirrorWikiEditor extends CodeMirror {
+class CodeMirrorWikiEditor extends CodeMirror {
 	/**
 	 * @constructor
-	 * @param {jQuery} $textarea
-	 * @param {LanguageSupport|Extension} langExtension
+	 * @param {jQuery} $textarea The textarea to replace with CodeMirror.
+	 * @param {LanguageSupport|Extension} langExtension Language support and its extension(s).
+	 * @stable to call and override
 	 */
 	constructor( $textarea, langExtension ) {
 		super( $textarea );
+		/**
+		 * Language support and its extension(s).
+		 * @type {LanguageSupport|Extension}
+		 */
 		this.langExtension = langExtension;
+		/**
+		 * Whether CodeMirror is currently enabled.
+		 * @type {boolean}
+		 */
 		this.useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
 	}
 
@@ -30,7 +43,10 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 	}
 
 	/**
-	 * Replaces the default textarea with CodeMirror
+	 * Replaces the default textarea with CodeMirror.
+	 *
+	 * @fires CodeMirrorWikiEditor~'ext.CodeMirror.switch'
+	 * @stable to call
 	 */
 	enableCodeMirror() {
 		// If CodeMirror is already loaded, abort.
@@ -48,7 +64,7 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 		 * @see https://codemirror.net/docs/ref/#state.Extension
 		 */
 		const extensions = [
-			...this.defaultExtensions,
+			this.defaultExtensions,
 			this.langExtension,
 			EditorView.domEventHandlers( {
 				blur: () => this.$textarea.triggerHandler( 'blur' ),
@@ -76,11 +92,22 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 			this.view.focus();
 		}
 
+		/**
+		 * Called after CodeMirror is enabled or disabled in WikiEditor.
+		 *
+		 * @event CodeMirrorWikiEditor~'ext.CodeMirror.switch'
+		 * @param {boolean} enabled Whether CodeMirror is enabled.
+		 * @param {jQuery} $textarea The current "editor", either the
+		 *   original textarea or the `.cm-editor` element.
+		 * @stable to use
+		 */
 		mw.hook( 'ext.CodeMirror.switch' ).fire( true, $( this.view.dom ) );
 	}
 
 	/**
-	 * Adds the CodeMirror button to WikiEditor
+	 * Adds the CodeMirror button to WikiEditor.
+	 *
+	 * @stable to call
 	 */
 	addCodeMirrorToWikiEditor() {
 		const context = this.$textarea.data( 'wikiEditor-context' );
@@ -136,7 +163,9 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 	}
 
 	/**
-	 * Updates CodeMirror button on the toolbar according to the current state (on/off)
+	 * Updates CodeMirror button on the toolbar according to the current state (on/off).
+	 *
+	 * @private
 	 */
 	updateToolbarButton() {
 		// eslint-disable-next-line no-jquery/no-global-selector
@@ -150,7 +179,10 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 	}
 
 	/**
-	 * Enables or disables CodeMirror
+	 * Enables or disables CodeMirror.
+	 *
+	 * @fires CodeMirrorWikiEditor~'ext.CodeMirror.switch'
+	 * @stable to call
 	 */
 	switchCodeMirror() {
 		if ( this.view ) {
@@ -186,3 +218,5 @@ export default class CodeMirrorWikiEditor extends CodeMirror {
 		} );
 	}
 }
+
+export default CodeMirrorWikiEditor;

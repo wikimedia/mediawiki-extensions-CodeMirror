@@ -1,0 +1,52 @@
+{
+	"opts": {
+		"encoding": "utf8",
+		"destination": "docs/js",
+		"package": "package.json",
+		"readme": "README.md",
+		"recurse": true,
+		"template": "node_modules/jsdoc-wmf-theme"
+	},
+	"plugins": [
+		"plugins/markdown"
+	],
+	"source": {
+		"include": [ "src" ],
+		"includePattern": ".+\\.js$"
+	},
+	"tags": {},
+	"templates": {
+		"cleverLinks": true,
+		"default": {
+			"useLongnameInNav": true
+		},
+		"wmf": {
+			"maintitle": "CodeMirror",
+			"repository": "https://gerrit.wikimedia.org/g/mediawiki/extensions/CodeMirror",
+			"linkMap": {
+				"Decoration": "https://codemirror.net/docs/ref/#view.Decoration",
+				"DecorationSet": "https://codemirror.net/docs/ref/#view.DecorationSet",
+				"EditorState": "https://codemirror.net/docs/ref/#state.EditorState",
+				"EditorView": "https://codemirror.net/docs/ref/#view.EditorView",
+				"Error": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
+				"Extension": "https://codemirror.net/docs/ref/#state.Extension",
+				"HTMLTextAreaElement": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLTextAreaElement",
+				"jQuery": "https://api.jquery.com/Types/#jQuery",
+				"jQuery.fn.textSelection": "https://doc.wikimedia.org/mediawiki-core/master/js/jQueryPlugins.html#.textSelection",
+				"KeyBinding": "https://codemirror.net/docs/ref/#view.KeyBinding",
+				"LanguageSupport": "https://codemirror.net/docs/ref/#language.LanguageSupport",
+				"PluginSpec": "https://codemirror.net/docs/ref/#view.PluginSpec",
+				"Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+				"RangeSet": "https://codemirror.net/docs/ref/#state.RangeSet",
+				"StreamParser": "https://codemirror.net/docs/ref/#language.StreamParser",
+				"StringStream": "https://codemirror.net/docs/ref/#language.StringStream",
+				"SyntaxNode": "https://lezer.codemirror.net/docs/ref/#common.SyntaxNode",
+				"Tag": "https://lezer.codemirror.net/docs/ref/#highlight.Tag",
+				"TagStyle": "https://codemirror.net/docs/ref/#language.TagStyle",
+				"Tooltip": "https://codemirror.net/docs/ref/#view.Tooltip",
+				"Tree": "https://lezer.codemirror.net/docs/ref/#common.Tree",
+				"ViewUpdate": "https://codemirror.net/docs/ref/#view.ViewUpdate"
+			}
+		}
+	}
+}
