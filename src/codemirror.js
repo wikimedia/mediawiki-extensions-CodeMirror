@@ -258,6 +258,7 @@ class CodeMirror {
 	 *
 	 * @param {Extension|Extension[]} [extensions=this.defaultExtensions] Extensions to use.
 	 * @fires CodeMirror~'ext.CodeMirror.initialize'
+	 * @fires CodeMirror~'ext.CodeMirror.ready'
 	 * @stable to call and override
 	 */
 	initialize( extensions = this.defaultExtensions ) {
@@ -304,6 +305,49 @@ class CodeMirror {
 		// Also override textSelection() functions for the "real" hidden textarea to route to
 		// CodeMirror. We unregister this when switching to normal textarea mode.
 		this.$textarea.textSelection( 'register', this.cmTextSelection );
+
+		/**
+		 * Called just after CodeMirror is initialized.
+		 *
+		 * @event CodeMirror~'ext.CodeMirror.ready'
+		 * @param {jQuery} $view The CodeMirror view.
+		 * @stable to use
+		 */
+		mw.hook( 'ext.CodeMirror.ready' ).fire( $( this.view.dom ) );
+	}
+
+	/**
+	 * Destroy the CodeMirror instance and revert to the original textarea.
+	 *
+	 * @fires CodeMirror~'ext.CodeMirror.destroy'
+	 * @stable to call and override
+	 */
+	destroy() {
+		const scrollTop = this.view.scrollDOM.scrollTop;
+		const hasFocus = this.view.hasFocus;
+		const { from, to } = this.view.state.selection.ranges[ 0 ];
+		$( this.view.dom ).textSelection( 'unregister' );
+		this.$textarea.textSelection( 'unregister' );
+		this.$textarea.val( this.view.state.doc.toString() );
+		this.view.destroy();
+		this.view = null;
+		this.$textarea.show();
+		if ( hasFocus ) {
+			this.$textarea.trigger( 'focus' );
+		}
+		this.$textarea.prop( 'selectionStart', Math.min( from, to ) )
+			.prop( 'selectionEnd', Math.max( to, from ) );
+		this.$textarea.scrollTop( scrollTop );
+		this.textSelection = null;
+
+		/**
+		 * Called just after CodeMirror is destroyed and the original textarea is restored.
+		 *
+		 * @event CodeMirror~'ext.CodeMirror.destroy'
+		 * @param {jQuery} $textarea The original textarea.
+		 * @stable to use
+		 */
+		mw.hook( 'ext.CodeMirror.destroy' ).fire( this.$textarea );
 	}
 
 	/**

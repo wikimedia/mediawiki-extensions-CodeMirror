@@ -187,21 +187,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	switchCodeMirror() {
 		if ( this.view ) {
 			this.setCodeMirrorPreference( false );
-			const scrollTop = this.view.scrollDOM.scrollTop;
-			const hasFocus = this.view.hasFocus;
-			const { from, to } = this.view.state.selection.ranges[ 0 ];
-			$( this.view.dom ).textSelection( 'unregister' );
-			this.$textarea.textSelection( 'unregister' );
-			this.$textarea.val( this.view.state.doc.toString() );
-			this.view.destroy();
-			this.view = null;
-			this.$textarea.show();
-			if ( hasFocus ) {
-				this.$textarea.trigger( 'focus' );
-			}
-			this.$textarea.prop( 'selectionStart', Math.min( from, to ) )
-				.prop( 'selectionEnd', Math.max( to, from ) );
-			this.$textarea.scrollTop( scrollTop );
+			this.destroy();
 			mw.hook( 'ext.CodeMirror.switch' ).fire( false, this.$textarea );
 		} else {
 			this.enableCodeMirror();
