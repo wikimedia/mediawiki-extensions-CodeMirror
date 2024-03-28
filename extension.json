@@ -280,7 +280,8 @@
 	"Hooks": {
 		"EditPage::showEditForm:initial": "main",
 		"EditPage::showReadOnlyForm:initial": "main",
-		"GetPreferences": "main"
+		"GetPreferences": "main",
+		"ResourceLoaderGetConfigVars": "main"
 	},
 	"HookHandlers": {
 		"main": {
