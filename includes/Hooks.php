@@ -11,6 +11,7 @@ use MediaWiki\Hook\EditPage__showEditForm_initialHook;
 use MediaWiki\Hook\EditPage__showReadOnlyForm_initialHook;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
+use MediaWiki\ResourceLoader\Hook\ResourceLoaderGetConfigVarsHook;
 use MediaWiki\User\Options\UserOptionsLookup;
 use MediaWiki\User\User;
 
@@ -20,6 +21,7 @@ use MediaWiki\User\User;
 class Hooks implements
 	EditPage__showEditForm_initialHook,
 	EditPage__showReadOnlyForm_initialHook,
+	ResourceLoaderGetConfigVarsHook,
 	GetPreferencesHook
 {
 
@@ -139,6 +141,20 @@ class Hooks implements
 	 */
 	private function shouldUseV6( OutputPage $out ): bool {
 		return $this->useV6 || $out->getRequest()->getRawVal( 'cm6enable' );
+	}
+
+	/**
+	 * Hook handler for enabling bracket matching.
+	 *
+	 * TODO: Remove after migration to CodeMirror 6 is complete.
+	 *
+	 * @param array &$vars Array of variables to be added into the output of the startup module
+	 * @param string $skin
+	 * @param Config $config
+	 * @return void This hook must not abort, it must return no value
+	 */
+	public function onResourceLoaderGetConfigVars( array &$vars, $skin, Config $config ): void {
+		$vars['wgCodeMirrorLineNumberingNamespaces'] = $config->get( 'CodeMirrorLineNumberingNamespaces' );
 	}
 
 	/**
