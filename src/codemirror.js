@@ -155,7 +155,8 @@ class CodeMirror {
 				accesskey: this.$textarea.attr( 'accesskey' ),
 				// Classes need to be on .cm-content to have precedence over .cm-scroller
 				class: classList.join( ' ' ),
-				spellcheck: 'true'
+				spellcheck: 'true',
+				tabindex: this.$textarea.attr( 'tabindex' )
 			} ),
 			// .cm-editor element (contains the whole CodeMirror UI)
 			EditorView.editorAttributes.of( {
