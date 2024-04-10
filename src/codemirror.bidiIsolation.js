@@ -29,7 +29,7 @@ function computeIsolates( view ) {
 	const set = new RangeSetBuilder();
 
 	for ( const { from, to } of view.visibleRanges ) {
-		let startPos;
+		let startPos = null;
 		syntaxTree( view.state ).iterate( {
 			from,
 			to,
@@ -41,7 +41,7 @@ function computeIsolates( view ) {
 						mwModeConfig.tags.extTagBracket
 					].includes( tag ) );
 
-				if ( !startPos && isBracket ) {
+				if ( startPos === null && isBracket ) {
 					// If we find a bracket node, we keep track of the start position.
 					startPos = node.from;
 				} else if ( isBracket ) {
