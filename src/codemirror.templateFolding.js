@@ -1,6 +1,6 @@
 import { showTooltip, keymap, Tooltip, KeyBinding } from '@codemirror/view';
 import { StateField, Extension, EditorState } from '@codemirror/state';
-import { foldEffect, ensureSyntaxTree, foldedRanges, unfoldAll, unfoldEffect, codeFolding } from '@codemirror/language';
+import { foldEffect, syntaxTree, ensureSyntaxTree, foldedRanges, unfoldAll, unfoldEffect, codeFolding } from '@codemirror/language';
 import { SyntaxNode, Tree } from '@lezer/common';
 import { mwModeConfig as modeConfig } from './codemirror.mode.mediawiki.config';
 
@@ -222,6 +222,42 @@ const foldKeymap = [
 			if ( effects.length > 0 ) {
 				// Unfold the template(s) and redraw the selections
 				view.dispatch( { effects, selection } );
+				return true;
+			}
+			return false;
+		}
+	},
+	{
+		// Fold all templates in the document
+		key: 'Ctrl-Alt-[',
+		run( view ) {
+			const { state } = view,
+				tree = syntaxTree( state ),
+				effects = [];
+			/** The rightmost position of all selections, to be updated with folding */
+			let anchor = Math.max( ...state.selection.ranges.map( ( { to } ) => to ) ),
+				node = tree.topNode.firstChild;
+			while ( node ) {
+				const range = foldable( state, node, tree );
+				if ( range ) {
+					effects.push( foldEffect.of( range ) );
+					const { from, to } = range;
+					node = tree.resolve( to, 1 );
+					if ( from <= anchor && to > anchor ) {
+						// Update the anchor with the end of the last folded range
+						anchor = to;
+					}
+					continue;
+				}
+				node = node.nextSibling;
+			}
+			if ( effects.length > 0 ) {
+				const dom = view.dom.querySelector( '.cm-tooltip-fold' );
+				if ( dom ) {
+					dom.remove();
+				}
+				// Fold the template(s) and update the cursor position
+				view.dispatch( { effects, selection: { anchor } } );
 				return true;
 			}
 			return false;
