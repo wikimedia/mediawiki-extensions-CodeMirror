@@ -356,12 +356,10 @@ function init() {
 		} );
 	}
 
-	$( function () {
-		// Add CodeMirror button to the enhanced editing toolbar.
-		mw.hook( 'wikiEditor.toolbarReady' ).add( function ( $textarea ) {
-			$textbox1 = $textarea;
-			addCodeMirrorToWikiEditor();
-		} );
+	// Add CodeMirror button to the enhanced editing toolbar.
+	mw.hook( 'wikiEditor.toolbarReady' ).add( function ( $textarea ) {
+		$textbox1 = $textarea;
+		addCodeMirrorToWikiEditor();
 	} );
 
 	// Synchronize textarea with CodeMirror before leaving
