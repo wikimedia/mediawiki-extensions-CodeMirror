@@ -191,10 +191,10 @@ function init() {
 			const $codeMirror = $( codeMirror.getWrapperElement() );
 
 			codeMirror.on( 'focus', () => {
-				$textbox1.triggerHandler( 'focus' );
+				$textbox1[ 0 ].dispatchEvent( new Event( 'focus' ) );
 			} );
 			codeMirror.on( 'blur', () => {
-				$textbox1.triggerHandler( 'blur' );
+				$textbox1[ 0 ].dispatchEvent( new Event( 'blur' ) );
 			} );
 			mw.hook( 'editRecovery.loadEnd' ).add( ( data ) => {
 				codeMirror.on( 'change', data.fieldChangeHandler );
