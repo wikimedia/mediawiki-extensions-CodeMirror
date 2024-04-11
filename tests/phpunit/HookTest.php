@@ -45,7 +45,7 @@ class HookTest extends MediaWikiIntegrationTestCase {
 			'CodeMirrorV6' => $useCodeMirrorV6,
 		] );
 		$userOptionsLookup = $this->createMock( UserOptionsLookup::class );
-		$userOptionsLookup->method( 'getOption' )->willReturn( true );
+		$userOptionsLookup->method( 'getBoolOption' )->willReturn( true );
 
 		$out = $this->getMockOutputPage();
 		$out->method( 'getModules' )->willReturn( [] );
@@ -88,6 +88,35 @@ class HookTest extends MediaWikiIntegrationTestCase {
 	}
 
 	/**
+	 * @covers ::onGetPreferences
+	 */
+	public function testOnGetPreferencces(): void {
+		$user = self::getTestUser()->getUser();
+		$userOptionsLookup = $this->getServiceContainer()->getUserOptionsLookup();
+		$config = $this->getServiceContainer()->getMainConfig();
+
+		// CodeMirror 5
+		$this->overrideConfigValues( [ 'CodeMirrorV6' => false ] );
+		$hook = new Hooks( $userOptionsLookup, $config );
+		$preferences = [];
+		$hook->onGetPreferences( $user, $preferences );
+		self::assertArrayHasKey( 'usecodemirror', $preferences );
+		self::assertArrayHasKey( 'usecodemirror-colorblind', $preferences );
+		self::assertArrayNotHasKey( 'usecodemirror-summary', $preferences );
+		self::assertSame( 'api', $preferences['usecodemirror']['type'] );
+
+		// CodeMirror 6
+		$this->overrideConfigValues( [ 'CodeMirrorV6' => true ] );
+		$hook = new Hooks( $userOptionsLookup, $config );
+		$preferences = [];
+		$hook->onGetPreferences( $user, $preferences );
+		self::assertArrayHasKey( 'usecodemirror', $preferences );
+		self::assertArrayHasKey( 'usecodemirror-colorblind', $preferences );
+		self::assertArrayHasKey( 'usecodemirror-summary', $preferences );
+		self::assertSame( 'toggle', $preferences['usecodemirror']['type'] );
+	}
+
+	/**
 	 * @covers ::shouldLoadCodeMirror
 	 * @dataProvider provideShouldLoadCodeMirror
 	 * @param array $conds
@@ -99,7 +128,9 @@ class HookTest extends MediaWikiIntegrationTestCase {
 			'gadget' => null,
 			'contentModel' => CONTENT_MODEL_WIKITEXT,
 			'useV6' => false,
-			'isRTL' => false
+			'isRTL' => false,
+			'usecodemirror' => true,
+			'usebetatoolbar' => true,
 		], $conds );
 		$this->overrideConfigValues( [
 			'CodeMirrorV6' => $conds['useV6'],
@@ -107,7 +138,11 @@ class HookTest extends MediaWikiIntegrationTestCase {
 		$out = $this->getMockOutputPage( $conds['contentModel'], $conds['isRTL'] );
 		$out->method( 'getModules' )->willReturn( $conds['module'] ? [ $conds['module'] ] : [] );
 		$userOptionsLookup = $this->createMock( UserOptionsLookup::class );
-		$userOptionsLookup->method( 'getOption' )->willReturn( true );
+		$userOptionsLookup->method( 'getBoolOption' )
+			->willReturnMap( [
+				[ $out->getUser(), 'usecodemirror', 0, $conds['usecodemirror'] ],
+				[ $out->getUser(), 'usebetatoolbar', 0, $conds['usebetatoolbar'] ]
+			] );
 
 		if ( $conds['gadget'] && !ExtensionRegistry::getInstance()->isLoaded( 'Gadgets' ) ) {
 			$this->markTestSkipped( 'Skipped as Gadgets extension is not available' );
@@ -148,6 +183,12 @@ class HookTest extends MediaWikiIntegrationTestCase {
 		yield [ [ 'contentModel' => CONTENT_FORMAT_CSS ], false ];
 		yield [ [ 'isRTL' => true ], false ];
 		yield [ [ 'isRTL' => true, 'useV6' => true ], true ];
+		yield [ [ 'usebetatoolbar' => false ], false ];
+		yield [ [ 'usebetatoolbar' => false, 'useV6' => true ], true ];
+		yield [ [ 'usebetatoolbar' => false, 'usecodemirror' => false, 'useV6' => true ], false ];
+		yield [ [ 'usecodemirror' => false ], true ];
+		yield [ [ 'usecodemirror' => false, 'useV6' => true ], true ];
+		yield [ [ 'usecodemirror' => false, 'usebetatoolbar' => false, 'useV6' => true ], false ];
 	}
 
 	/**

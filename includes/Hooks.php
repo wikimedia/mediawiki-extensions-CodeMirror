@@ -55,10 +55,19 @@ class Hooks implements
 		if ( in_array( 'ext.codeEditor', $out->getModules(), true ) ) {
 			return false;
 		}
-		// Disable CodeMirror when the WikiEditor toolbar is not enabled in preferences
-		if ( !$this->userOptionsLookup->getOption( $out->getUser(), 'usebetatoolbar' ) ) {
+
+		$shouldUseV6 = $this->shouldUseV6( $out );
+		$useCodeMirror = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usecodemirror' );
+		$useWikiEditor = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usebetatoolbar' );
+		// Disable CodeMirror 5 when the WikiEditor toolbar is not enabled in preferences.
+		if ( !$shouldUseV6 && !$useWikiEditor ) {
 			return false;
 		}
+		// In CodeMirror 6, either WikiEditor or the 'usecodemirror' preference must be enabled.
+		if ( $shouldUseV6 && !$useWikiEditor && !$useCodeMirror ) {
+			return false;
+		}
+
 		$extensionRegistry = $extensionRegistry ?: ExtensionRegistry::getInstance();
 		$contentModels = $extensionRegistry->getAttribute( 'CodeMirrorContentModels' );
 		$isRTL = $out->getTitle()->getPageLanguage()->isRTL();
@@ -109,12 +118,18 @@ class Hooks implements
 			return;
 		}
 
+		$useCodeMirror = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usecodemirror' );
+		$useWikiEditor = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usebetatoolbar' );
+
 		if ( $this->shouldUseV6( $out ) ) {
-			$out->addModules( 'ext.CodeMirror.v6.WikiEditor' );
+			$out->addModules( $useWikiEditor ?
+				'ext.CodeMirror.v6.WikiEditor' :
+				'ext.CodeMirror.v6.init'
+			);
 		} else {
 			$out->addModules( 'ext.CodeMirror.WikiEditor' );
 
-			if ( $this->userOptionsLookup->getOption( $out->getUser(), 'usecodemirror' ) ) {
+			if ( $useCodeMirror ) {
 				// These modules are predelivered for performance when needed
 				// keep these modules in sync with ext.CodeMirror.js
 				$out->addModules( [ 'ext.CodeMirror.lib', 'ext.CodeMirror.mode.mediawiki' ] );
@@ -130,7 +145,11 @@ class Hooks implements
 	 */
 	public function onEditPage__showReadOnlyForm_initial( $editor, $out ): void {
 		if ( $this->shouldUseV6( $out ) && $this->shouldLoadCodeMirror( $out ) ) {
-			$out->addModules( 'ext.CodeMirror.v6.WikiEditor' );
+			$useWikiEditor = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usebetatoolbar' );
+			$out->addModules( $useWikiEditor ?
+				'ext.CodeMirror.v6.WikiEditor' :
+				'ext.CodeMirror.v6.init'
+			);
 		}
 	}
 
@@ -167,19 +186,45 @@ class Hooks implements
 	 * @return bool|void True or no return value to continue or false to abort
 	 */
 	public function onGetPreferences( $user, &$defaultPreferences ) {
+		if ( !$this->useV6 ) {
+			$defaultPreferences['usecodemirror'] = [
+				'type' => 'api',
+			];
+
+			// The following messages are generated upstream by the 'section' value
+			// * prefs-accessibility
+			$defaultPreferences['usecodemirror-colorblind'] = [
+				'type' => 'toggle',
+				'label-message' => 'codemirror-prefs-colorblind',
+				'help-message' => 'codemirror-prefs-colorblind-help',
+				'section' => 'editing/accessibility',
+			];
+			return;
+		}
+
+		// Show message with a link to the Help page under "Syntax highlighting".
+		// The following messages are generated upstream by the 'section' value:
+		// * prefs-syntax-highlighting
+		$defaultPreferences['usecodemirror-summary'] = [
+			'type' => 'info',
+			'default' => wfMessage( 'codemirror-prefs-summary' )->parse(),
+			'raw' => true,
+			'section' => 'editing/syntax-highlighting'
+		];
+
 		// CodeMirror is disabled by default for all users. It can enabled for everyone
 		// by default by adding '$wgDefaultUserOptions['usecodemirror'] = 1;' into LocalSettings.php
 		$defaultPreferences['usecodemirror'] = [
-			'type' => 'api',
+			'type' => 'toggle',
+			'label-message' => 'codemirror-prefs-enable',
+			'section' => 'editing/syntax-highlighting',
 		];
 
-		// The following messages are generated upstream by the 'section' value
-		// * prefs-accessibility
 		$defaultPreferences['usecodemirror-colorblind'] = [
 			'type' => 'toggle',
 			'label-message' => 'codemirror-prefs-colorblind',
-			'help-message' => 'codemirror-prefs-colorblind-help',
-			'section' => 'editing/accessibility',
+			'section' => 'editing/syntax-highlighting',
+			'disable-if' => [ '!==', 'usecodemirror', '1' ]
 		];
 	}
 }

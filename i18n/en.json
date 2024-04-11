@@ -7,6 +7,9 @@
 	},
 	"codemirror-desc": "Provides syntax highlighting in wikitext editor",
 	"codemirror-toggle-label": "Syntax highlighting",
+	"codemirror-prefs-summary": "You can learn more about this feature by reading the [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror help page].",
+	"codemirror-prefs-enable": "Enable syntax highlighting for wikitext",
+	"codemirror-v6-prefs-colorblind": "Use colorblind-friendly scheme",
 	"codemirror-prefs-colorblind": "Enable colorblind-friendly scheme for syntax highlighting when editing wikitext",
 	"codemirror-prefs-colorblind-help": "If you use a gadget for syntax highlighting, this preference will not work.",
 	"codemirror-find": "Find",
@@ -46,5 +49,6 @@
 	"codemirror-fold-template": "Fold template parameters",
 	"codemirror-unfold": "unfold",
 	"codemirror-folded-code": "folded code",
-	"prefs-accessibility": "Accessibility"
+	"prefs-accessibility": "Accessibility",
+	"prefs-syntax-highlighting": "Syntax highlighting"
 }

@@ -77,6 +77,11 @@ class CodeMirror {
 			this.heightExtension,
 			bracketMatching(),
 			EditorState.readOnly.of( this.readOnly ),
+			EditorView.domEventHandlers( {
+				blur: () => this.$textarea.triggerHandler( 'blur' ),
+				focus: () => this.$textarea.triggerHandler( 'focus' )
+			} ),
+			EditorView.lineWrapping,
 			keymap.of( [
 				...defaultKeymap,
 				...searchKeymap
@@ -290,10 +295,7 @@ class CodeMirror {
 		} );
 
 		// Add CodeMirror view to the DOM.
-		this.view = new EditorView( {
-			state: this.state,
-			parent: this.$textarea.parent()[ 0 ]
-		} );
+		this.#addCodeMirrorToDom();
 
 		// Hide native textarea and sync CodeMirror contents upon submission.
 		this.$textarea.hide();
@@ -324,6 +326,22 @@ class CodeMirror {
 	}
 
 	/**
+	 * Instantiate the EditorView, adding the CodeMirror editor to the DOM.
+	 * We use a dummy container to ensure that the editor will
+	 * always be placed where the textarea is.
+	 *
+	 * @private
+	 */
+	#addCodeMirrorToDom() {
+		this.$textarea.wrap( '<div class="ext-codemirror-wrapper"></div>' );
+
+		this.view = new EditorView( {
+			state: this.state,
+			parent: this.$textarea.parent()[ 0 ]
+		} );
+	}
+
+	/**
 	 * Destroy the CodeMirror instance and revert to the original textarea.
 	 *
 	 * @fires CodeMirror~'ext.CodeMirror.destroy'
@@ -335,6 +353,7 @@ class CodeMirror {
 		const { from, to } = this.view.state.selection.ranges[ 0 ];
 		$( this.view.dom ).textSelection( 'unregister' );
 		this.$textarea.textSelection( 'unregister' );
+		this.$textarea.unwrap( '.ext-codemirror-wrapper' );
 		this.$textarea.val( this.view.state.doc.toString() );
 		this.view.destroy();
 		this.view = null;
