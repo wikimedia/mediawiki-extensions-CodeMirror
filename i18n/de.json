@@ -10,6 +10,9 @@
 	},
 	"codemirror-desc": "Ermöglicht Syntaxhervorhebungen im Wikitext-Editor",
 	"codemirror-toggle-label": "Syntaxhervorhebung",
+	"codemirror-prefs-summary": "Weitere Informationen zu dieser Funktion findest du auf der [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror Hilfeseite].",
+	"codemirror-prefs-enable": "Syntaxhervorhebung für Wikitext aktivieren",
+	"codemirror-v6-prefs-colorblind": "Farbblindenfreundliches Schema verwenden",
 	"codemirror-prefs-colorblind": "Farbenfehlsichtigenfreundliches Schema für die Syntaxhervorhebung bei der Bearbeitung von Wikitext einschalten",
 	"codemirror-prefs-colorblind-help": "Wenn du ein Helferlein zur Syntaxhervorhebung verwendest, wird diese Einstellung nicht funktionieren.",
 	"codemirror-find": "Suchen",
@@ -48,5 +51,6 @@
 	"codemirror-special-char-object-replacement": "Ersetzungszeichen für Objekt",
 	"codemirror-unfold": "ausklappen",
 	"codemirror-folded-code": "eingeklappter Code",
-	"prefs-accessibility": "Barrierefreiheit"
+	"prefs-accessibility": "Barrierefreiheit",
+	"prefs-syntax-highlighting": "Syntaxhervorhebung"
 }
