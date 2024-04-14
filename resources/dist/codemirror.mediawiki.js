@@ -1,1 +1,1 @@
-"use strict";var e=require("ext.CodeMirror.v6"),i=require("ext.CodeMirror.v6.mode.mediawiki");require("ext.CodeMirror.v6.lib");var r=document.getElementById("wpTextbox1"),o=new e(r);o.initialize([o.defaultExtensions,i({bidiIsolation:"rtl"===r.dir})]);
+"use strict";var e=require("ext.CodeMirror.v6"),i=require("ext.CodeMirror.v6.mode.mediawiki");require("ext.CodeMirror.v6.lib");var r=document.getElementById("wpTextbox1"),o=new e(r),t=new URLSearchParams(window.location.search);o.initialize([o.defaultExtensions,i({bidiIsolation:"rtl"===r.dir&&t.get("cm6bidi")})]);
