@@ -28,6 +28,7 @@ class Hooks implements
 	private UserOptionsLookup $userOptionsLookup;
 	private array $conflictingGadgets;
 	private bool $useV6;
+	private bool $isSupportedRtlWiki;
 
 	/**
 	 * @param UserOptionsLookup $userOptionsLookup
@@ -40,6 +41,7 @@ class Hooks implements
 		$this->userOptionsLookup = $userOptionsLookup;
 		$this->useV6 = $config->get( 'CodeMirrorV6' );
 		$this->conflictingGadgets = $config->get( 'CodeMirrorConflictingGadgets' );
+		$this->isSupportedRtlWiki = $config->get( 'CodeMirrorRTL' );
 	}
 
 	/**
@@ -74,7 +76,7 @@ class Hooks implements
 		// Disable CodeMirror if we're on an edit page with a conflicting gadget. See T178348.
 		return !$this->conflictingGadgetsEnabled( $extensionRegistry, $out->getUser() ) &&
 			// CodeMirror 5 on textarea wikitext editors doesn't support RTL (T170001)
-			( !$isRTL || $this->shouldUseV6( $out ) ) &&
+			( !$isRTL || ( $this->shouldUseV6( $out ) && $this->isSupportedRtlWiki ) ) &&
 			// Limit to supported content models that use wikitext.
 			// See https://www.mediawiki.org/wiki/Content_handlers#Extension_content_handlers
 			in_array( $out->getTitle()->getContentModel(), $contentModels );
