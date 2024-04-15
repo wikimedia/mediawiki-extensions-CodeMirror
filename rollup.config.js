@@ -13,6 +13,7 @@ const terser = require( '@rollup/plugin-terser' );
 const importAliases = {
 	'./vendor.js': 'ext.CodeMirror.v6.lib',
 	'./codemirror.js': 'ext.CodeMirror.v6',
+	'./codemirror.wikieditor.js': 'ext.CodeMirror.v6.WikiEditor',
 	'./codemirror.mode.mediawiki.js': 'ext.CodeMirror.v6.mode.mediawiki'
 };
 
@@ -23,6 +24,7 @@ module.exports = [
 			'src/codemirror.js',
 			'src/codemirror.mode.mediawiki.js',
 			'src/codemirror.mediawiki.js',
+			'src/codemirror.wikieditor.js',
 			'src/codemirror.wikieditor.mediawiki.js'
 		],
 
