@@ -1,5 +1,5 @@
 import { EditorState, Extension } from '@codemirror/state';
-import { EditorView, drawSelection, lineNumbers, highlightSpecialChars, keymap } from '@codemirror/view';
+import { EditorView, ViewUpdate, drawSelection, lineNumbers, highlightSpecialChars, keymap } from '@codemirror/view';
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
 import { searchKeymap } from '@codemirror/search';
 import { bracketMatching } from '@codemirror/language';
@@ -75,6 +75,7 @@ class CodeMirror {
 			this.phrasesExtension,
 			this.specialCharsExtension,
 			this.heightExtension,
+			this.updateExtension,
 			bracketMatching(),
 			EditorState.readOnly.of( this.readOnly ),
 			EditorView.domEventHandlers( {
@@ -108,6 +109,30 @@ class CodeMirror {
 		}
 
 		return extensions;
+	}
+
+	/**
+	 * This extension listens for changes in the CodeMirror editor and fires
+	 * the `ext.CodeMirror.input` hook with the {@link ViewUpdate} object.
+	 *
+	 * @type {Extension}
+	 * @fires CodeMirror~'ext.CodeMirror.input'
+	 * @stable to call and override
+	 */
+	get updateExtension() {
+		return EditorView.updateListener.of( ( update ) => {
+			if ( update.docChanged ) {
+				/**
+				 * Called when document changes are made in CodeMirror.
+				 * The native textarea is not necessarily updated yet.
+				 *
+				 * @event CodeMirror~'ext.CodeMirror.input'
+				 * @param {ViewUpdate} update
+				 * @stable to use
+				 */
+				mw.hook( 'ext.CodeMirror.input' ).fire( update );
+			}
+		} );
 	}
 
 	/**
