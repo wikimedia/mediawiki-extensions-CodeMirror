@@ -9,11 +9,13 @@
 	},
 	"codemirror-desc": "Омогућава истицање синтаксе у уређивачу викитекста",
 	"codemirror-toggle-label": "Истицање синтаксе",
+	"codemirror-prefs-enable": "Омогући истицање синтаксе за викитекст",
 	"codemirror-find": "Пронађи",
 	"codemirror-next": "следеће",
 	"codemirror-all": "све",
 	"codemirror-regexp": "регекс",
 	"codemirror-replace": "замени",
 	"codemirror-replace-placeholder": "Замени",
-	"prefs-accessibility": "Приступачност"
+	"prefs-accessibility": "Приступачност",
+	"prefs-syntax-highlighting": "Истицање синтаксе"
 }

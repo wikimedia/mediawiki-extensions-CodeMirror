@@ -12,10 +12,14 @@
 	},
 	"codemirror-desc": "Proporciona resalte de la sintaxis en el editor de código wiki",
 	"codemirror-toggle-label": "Resaltado de sintaxis",
+	"codemirror-prefs-summary": "Puede obtener más información sobre esta función leyendo la [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror página de ayuda].",
+	"codemirror-prefs-enable": "Habilitar resaltado de sintaxis para wikitext",
+	"codemirror-v6-prefs-colorblind": "Utilice un esquema apto para daltónicos",
 	"codemirror-prefs-colorblind": "Usar un esquema de colores accesible para daltónicos en el resaltador de sintaxis al editar código wiki",
 	"codemirror-prefs-colorblind-help": "Si utilizas un accesorio para el resaltado de sintaxis esta preferencia no funcionará.",
 	"codemirror-fold-template": "Parámetros de la plantilla",
 	"codemirror-unfold": "desplegar",
 	"codemirror-folded-code": "código plegado",
-	"prefs-accessibility": "Accesibilidad"
+	"prefs-accessibility": "Accesibilidad",
+	"prefs-syntax-highlighting": "Resaltado de sintaxis"
 }

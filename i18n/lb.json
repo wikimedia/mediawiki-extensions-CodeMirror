@@ -17,5 +17,6 @@
 	"codemirror-special-char-newline": "Nei Zeil",
 	"codemirror-special-char-escape": "Escape-Zeechen",
 	"codemirror-special-char-line-separator": "Zeilen-Trennzeechen",
-	"prefs-accessibility": "Accessibilitéit"
+	"prefs-accessibility": "Accessibilitéit",
+	"prefs-syntax-highlighting": "Ervirhiewe vun der Syntax"
 }
