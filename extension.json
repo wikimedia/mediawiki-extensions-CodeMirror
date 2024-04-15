@@ -36,6 +36,10 @@
 			"value": null,
 			"description": "List of namespace IDs where line numbering should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere.",
 			"public": true
+		},
+		"CodeMirrorRTL": {
+			"value": true,
+			"description": "Temporary feature flag to control rollout of CodeMirror on RTL wikis."
 		}
 	},
 	"MessagesDirs": {
