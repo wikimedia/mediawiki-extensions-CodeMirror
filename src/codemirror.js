@@ -170,7 +170,7 @@ class CodeMirror {
 				dir: this.$textarea.attr( 'dir' ),
 				lang: this.$textarea.attr( 'lang' )
 			} ),
-			// The search panel should use the same direction as the interface langauge (T359611)
+			// The search panel should use the same direction as the interface language (T359611)
 			EditorView.theme( {
 				'.cm-panels': {
 					direction: document.dir
