@@ -5,6 +5,8 @@ const copy = require( 'rollup-plugin-copy' );
 const babel = require( '@rollup/plugin-babel' );
 const terser = require( '@rollup/plugin-terser' );
 
+const isProduction = process.env.BUILD === 'production';
+
 /**
  * Mapping of import paths to ResourceLoader module names.
  * See usage in 'plugins' below for explanation.
@@ -67,6 +69,12 @@ module.exports = [
 								`require("${ alias }")`,
 								`require("${ importAliases[ alias ] }")`
 							);
+							// Yuck, need to do the same with single apostrophes
+							// in the event terser is disabled such as during dev builds.
+							contents = contents.toString().replace(
+								`require('${ alias }')`,
+								`require('${ importAliases[ alias ] }')`
+							);
 						} );
 						return contents;
 					}
@@ -74,9 +82,9 @@ module.exports = [
 				hook: 'writeBundle'
 			} ),
 
-			babel( { babelHelpers: 'bundled' } ),
+			isProduction ? babel( { babelHelpers: 'bundled' } ) : null,
 
-			terser()
+			isProduction ? terser() : null
 		],
 
 		onwarn: ( warning, warn ) => {

@@ -3,7 +3,7 @@
 	"private": true,
 	"scripts": {
 		"start": "rollup -c --watch",
-		"build": "rollup -c",
+		"build": "rollup -c --environment BUILD:production",
 		"test": "npm run test:lint && npm run test:unit && npm run check-built-assets",
 		"test:lint": "npm run test:lint:styles && npm run test:lint:js && npm run test:lint:i18n",
 		"test:lint:js": "eslint --cache .",
