@@ -82,7 +82,7 @@ class CodeMirror {
 			this.specialCharsExtension,
 			this.heightExtension,
 			this.updateExtension,
-			bracketMatching(),
+			this.bracketMatchingExtension,
 			EditorState.readOnly.of( this.readOnly ),
 			EditorView.domEventHandlers( {
 				blur: () => this.$textarea.triggerHandler( 'blur' ),
@@ -115,6 +115,21 @@ class CodeMirror {
 		}
 
 		return extensions;
+	}
+
+	/**
+	 * This extension adds bracket matching to the CodeMirror editor.
+	 *
+	 * @return {Extension}
+	 */
+	get bracketMatchingExtension() {
+		return bracketMatching( mw.config.get( 'wgPageContentModel' ) === 'wikitext' ?
+			{
+				// Also match CJK full-width brackets (T362992)
+				// This is only for wikitext as it can be confusing in programming languages.
+				brackets: '()[]{}（）【】［］｛｝'
+			} : {}
+		);
 	}
 
 	/**
