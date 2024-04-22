@@ -1,11 +1,13 @@
 {
 	"@metadata": {
 		"authors": [
+			"Adriendelucca",
 			"Huñvreüs"
 		]
 	},
 	"codemirror-desc": "Pourchas a ra livañ ereadurezh en aozer wikitestenn",
 	"codemirror-toggle-label": "Livañ ereadurezh",
+	"codemirror-v6-prefs-colorblind": "Ober gant livioù azasaet d'ar re zaltonek",
 	"codemirror-prefs-colorblind": "Gweredekaat livioù dereat d’ar re na wel ket an holl anezho evit livañ an ereadurezh en ur aozañ wikitestenn",
 	"codemirror-prefs-colorblind-help": "Marteze ne yelo ket en-dro an ereadur-mañ ma rit gant ur bitrak livañ ereadurezh.",
 	"prefs-accessibility": "Diraezañ"

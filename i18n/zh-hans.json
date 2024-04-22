@@ -5,15 +5,36 @@
 			"Liuxinyu970226",
 			"Sean0115",
 			"Stang",
-			"Tranve"
+			"Tranve",
+			"沈澄心"
 		]
 	},
 	"codemirror-desc": "在wikitext编辑器中提供语法高亮显示",
 	"codemirror-toggle-label": "语法高亮",
+	"codemirror-prefs-summary": "您可阅读[https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror 帮助页面]了解有关此功能的更多信息。",
+	"codemirror-prefs-enable": "启用wikitext的语法高亮",
+	"codemirror-v6-prefs-colorblind": "使用色盲友好配色方案",
 	"codemirror-prefs-colorblind": "编辑wikitext时，启用对色盲用户友好的语法高亮配色方案",
 	"codemirror-prefs-colorblind-help": "如果您的语法高亮功能由小工具提供，本设置将不起作用。",
+	"codemirror-find": "查找",
+	"codemirror-next": "下一个",
+	"codemirror-previous": "上一个",
+	"codemirror-all": "全部",
+	"codemirror-match-case": "区分大小写",
+	"codemirror-regexp": "正则表达式",
+	"codemirror-replace": "替换",
+	"codemirror-replace-placeholder": "替换",
+	"codemirror-replace-all": "全部替换",
+	"codemirror-control-character": "控制字符$1",
+	"codemirror-special-char-null": "空字符",
+	"codemirror-special-char-bell": "响铃字符",
+	"codemirror-special-char-backspace": "退格符",
+	"codemirror-special-char-newline": "换行符",
+	"codemirror-special-char-escape": "转义符",
+	"codemirror-special-char-zero-width-no-break-space": "连字符",
 	"codemirror-fold-template": "折叠模板参数",
 	"codemirror-unfold": "展开",
 	"codemirror-folded-code": "被折叠的代码",
-	"prefs-accessibility": "无障碍"
+	"prefs-accessibility": "无障碍",
+	"prefs-syntax-highlighting": "语法高亮"
 }
