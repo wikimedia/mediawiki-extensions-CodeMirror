@@ -8,6 +8,7 @@ const terser = require( '@rollup/plugin-terser' );
 /**
  * Mapping of import paths to ResourceLoader module names.
  * See usage in 'plugins' below for explanation.
+ *
  * @type {Object}
  */
 const importAliases = {

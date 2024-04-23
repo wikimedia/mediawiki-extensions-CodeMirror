@@ -31,31 +31,37 @@ class CodeMirror {
 	constructor( textarea ) {
 		/**
 		 * The textarea that CodeMirror is bound to.
+		 *
 		 * @type {jQuery}
 		 */
 		this.$textarea = $( textarea );
 		/**
 		 * The editor user interface.
+		 *
 		 * @type {EditorView}
 		 */
 		this.view = null;
 		/**
 		 * The editor state.
+		 *
 		 * @type {EditorState}
 		 */
 		this.state = null;
 		/**
 		 * Whether the textarea is read-only.
+		 *
 		 * @type {boolean}
 		 */
 		this.readOnly = this.$textarea.prop( 'readonly' );
 		/**
 		 * The [edit recovery]{@link https://www.mediawiki.org/wiki/Manual:Edit_Recovery} handler.
+		 *
 		 * @type {Function|null}
 		 */
 		this.editRecoveryHandler = null;
 		/**
 		 * jQuery.textSelection overrides for CodeMirror.
+		 *
 		 * @type {CodeMirrorTextSelection}
 		 */
 		this.textSelection = null;

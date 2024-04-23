@@ -15,11 +15,13 @@ class CodeMirrorTextSelection {
 	constructor( view ) {
 		/**
 		 * The CodeMirror view.
+		 *
 		 * @type {EditorView}
 		 */
 		this.view = view;
 		/**
 		 * The CodeMirror DOM.
+		 *
 		 * @type {jQuery}
 		 */
 		this.$cmDom = $( view.dom );

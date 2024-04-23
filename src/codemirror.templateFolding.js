@@ -6,6 +6,7 @@ import { mwModeConfig as modeConfig } from './codemirror.mode.mediawiki.config';
 
 /**
  * Check if a SyntaxNode is a template bracket (`{{` or `}}`)
+ *
  * @param {SyntaxNode} node The SyntaxNode to check
  * @return {boolean}
  * @private
@@ -13,6 +14,7 @@ import { mwModeConfig as modeConfig } from './codemirror.mode.mediawiki.config';
 const isBracket = ( node ) => node.name.split( '_' ).includes( modeConfig.tags.templateBracket ),
 	/**
 	 * Check if a SyntaxNode is a template delimiter (`|`)
+	 *
 	 * @param {SyntaxNode} node The SyntaxNode to check
 	 * @return {boolean}
 	 * @private
@@ -20,6 +22,7 @@ const isBracket = ( node ) => node.name.split( '_' ).includes( modeConfig.tags.t
 	isDelimiter = ( node ) => node.name.split( '_' ).includes( modeConfig.tags.templateDelimiter ),
 	/**
 	 * Check if a SyntaxNode is part of a template, except for the brackets
+	 *
 	 * @param {SyntaxNode} node The SyntaxNode to check
 	 * @return {boolean}
 	 * @private
@@ -27,6 +30,7 @@ const isBracket = ( node ) => node.name.split( '_' ).includes( modeConfig.tags.t
 	isTemplate = ( node ) => /-template[a-z\d-]+ground/u.test( node.name ) && !isBracket( node ),
 	/**
 	 * Update the stack of opening (+) or closing (-) brackets
+	 *
 	 * @param {EditorState} state EditorState instance
 	 * @param {SyntaxNode} node The SyntaxNode of the bracket
 	 * @return {number}
@@ -36,6 +40,7 @@ const isBracket = ( node ) => node.name.split( '_' ).includes( modeConfig.tags.t
 
 /**
  * If the node is a template, find the range of the template parameters
+ *
  * @param {EditorState} state EditorState instance
  * @param {number|SyntaxNode} posOrNode Position or node
  * @param {Tree|null} [tree] Syntax tree
@@ -112,6 +117,7 @@ const foldable = ( state, posOrNode, tree ) => {
 
 /**
  * Create a tooltip for folding a template
+ *
  * @param {EditorState} state EditorState instance
  * @return {Tooltip|null}
  * @private

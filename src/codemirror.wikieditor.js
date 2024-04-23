@@ -23,16 +23,19 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		super( $textarea );
 		/**
 		 * Language support and its extension(s).
+		 *
 		 * @type {LanguageSupport|Extension}
 		 */
 		this.langExtension = langExtension;
 		/**
 		 * Whether CodeMirror is currently enabled.
+		 *
 		 * @type {boolean}
 		 */
 		this.useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
 		/**
 		 * The [Realtime Preview](https://w.wiki/9XgX) handler.
+		 *
 		 * @type {Function|null}
 		 */
 		this.realtimePreviewHandler = null;
