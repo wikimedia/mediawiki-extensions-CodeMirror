@@ -43,7 +43,7 @@
 		"jest-environment-jsdom": "29.7.0",
 		"jquery": "3.7.1",
 		"jsdoc": "4.0.2",
-		"jsdoc-wmf-theme": "0.0.13",
+		"jsdoc-wmf-theme": "1.0.0",
 		"rollup": "4.13.0",
 		"rollup-plugin-copy": "3.5.0",
 		"stylelint-config-wikimedia": "0.16.1",
