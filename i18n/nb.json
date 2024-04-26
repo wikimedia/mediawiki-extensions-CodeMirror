@@ -10,6 +10,9 @@
 	},
 	"codemirror-desc": "Gir syntaksfremheving i wikitekstredigereren",
 	"codemirror-toggle-label": "Syntaksfremheving",
+	"codemirror-prefs-summary": "Du kan lære mer om denne funksjonen ved å lese [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror hjelpesiden].",
+	"codemirror-prefs-enable": "Slå på syntaksfremheving for wikitekst",
+	"codemirror-v6-prefs-colorblind": "Bruk fargeblindvennlig fargeskala",
 	"codemirror-prefs-colorblind": "Aktiver modus for fargeblinde ved syntaksfremheving av wikitekst",
 	"codemirror-prefs-colorblind-help": "Hvis du bruker en tilleggsfunksjon for syntaksfremheving vil ikke dette alternativet ha noen effekt.",
 	"codemirror-find": "Finn",
@@ -49,5 +52,6 @@
 	"codemirror-fold-template": "Slå sammen malparametre",
 	"codemirror-unfold": "utvid",
 	"codemirror-folded-code": "sammenslått kode",
-	"prefs-accessibility": "Tilgjengelighet"
+	"prefs-accessibility": "Tilgjengelighet",
+	"prefs-syntax-highlighting": "Syntaksfremheving"
 }
