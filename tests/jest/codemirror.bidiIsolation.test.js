@@ -22,7 +22,12 @@ document.body.appendChild( textarea );
 const cm = new CodeMirror( textarea );
 const mwLang = mediaWikiLang(
 	{ bidiIsolation: true },
-	{ tags: { ref: true } }
+	{
+		doubleUnderscore: [ {}, {} ],
+		functionSynonyms: [ {}, {} ],
+		tags: { ref: true },
+		urlProtocols: 'http\\:\\/\\/'
+	}
 );
 cm.initialize( [ ...cm.defaultExtensions, mwLang ] );
 // Normally ran by mw.hook, but we don't mock the hook system in the Jest tests.

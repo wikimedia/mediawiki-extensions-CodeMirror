@@ -1,15 +1,18 @@
 const {
+	CompletionSource,
 	HighlightStyle,
 	LanguageSupport,
 	StreamLanguage,
 	StreamParser,
 	StringStream,
 	Tag,
+	ensureSyntaxTree,
 	syntaxHighlighting
 } = require( 'ext.CodeMirror.v6.lib' );
 const mwModeConfig = require( './codemirror.mediawiki.config.js' );
 const bidiIsolationExtension = require( './codemirror.mediawiki.bidiIsolation.js' );
 const templateFoldingExtension = require( './codemirror.mediawiki.templateFolding.js' );
+const autocompleteExtension = require( './codemirror.mediawiki.autocomplete.js' );
 
 /**
  * MediaWiki language support for CodeMirror 6.
@@ -35,8 +38,7 @@ class CodeMirrorModeMediaWiki {
 	 */
 	constructor( config ) {
 		this.config = config;
-
-		this.urlProtocols = new RegExp( `^(?:${ this.config.urlProtocols })(?=[^\\s\u00a0{[\\]<>~).,'])`, 'i' );
+		this.urlProtocols = new RegExp( `^(?:${ config.urlProtocols })(?=[^\\s\u00a0{[\\]<>~).,'])`, 'i' );
 		this.isBold = false;
 		this.wasBold = false;
 		this.isItalic = false;
@@ -51,7 +53,25 @@ class CodeMirrorModeMediaWiki {
 		this.registerGroundTokens();
 
 		// Dynamically register any tags that aren't already in CodeMirrorModeMediaWikiConfig
-		Object.keys( this.config.tags ).forEach( ( tag ) => mwModeConfig.addTag( tag ) );
+		Object.keys( config.tags ).forEach( ( tag ) => mwModeConfig.addTag( tag ) );
+
+		this.functionSynonyms = [
+			...Object.keys( config.functionSynonyms[ 0 ] )
+				.map( ( label ) => ( { type: 'function', label } ) ),
+			...Object.keys( config.functionSynonyms[ 1 ] )
+				.map( ( label ) => ( { type: 'constant', label } ) )
+		];
+		this.doubleUnderscore = [
+			...Object.keys( config.doubleUnderscore[ 0 ] ),
+			...Object.keys( config.doubleUnderscore[ 1 ] )
+		].map( ( label ) => ( { type: 'constant', label } ) );
+		const extTags = Object.keys( config.tags );
+		this.extTags = extTags.map( ( label ) => ( { type: 'type', label } ) );
+		this.htmlTags = Object.keys( mwModeConfig.permittedHtmlTags )
+			.filter( ( tag ) => !extTags.includes( tag ) )
+			.map( ( label ) => ( { type: 'type', label } ) );
+		this.protocols = config.urlProtocols.split( '|' )
+			.map( ( label ) => ( { type: 'namespace', label: label.replace( /\\([:/])/g, '$1' ) } ) );
 	}
 
 	/**
@@ -1098,6 +1118,87 @@ class CodeMirrorModeMediaWiki {
 	}
 
 	/**
+	 * Autocompletion for magic words and tag names.
+	 *
+	 * @return {CompletionSource}
+	 * @private
+	 */
+	get completionSource() {
+		return ( context ) => {
+			const { state, pos, explicit } = context,
+				tree = ensureSyntaxTree( state, pos ),
+				node = tree && tree.resolve( pos, -1 );
+			if ( !node ) {
+				return null;
+			}
+			const types = new Set( node.name.split( '_' ) ),
+				isParserFunction = types.has( mwModeConfig.tags.parserFunctionName ),
+				{ from, to } = node,
+				search = state.sliceDoc( from, to );
+			if ( explicit || isParserFunction && search.includes( '#' ) ) {
+				const validFor = /^[^|{}<>[\]#]*$/;
+				if ( isParserFunction || types.has( mwModeConfig.tags.templateName ) && !search.includes( ':' ) ) {
+					return {
+						from,
+						options: this.functionSynonyms,
+						validFor
+					};
+				}
+			} else if ( !types.has( mwModeConfig.tags.comment ) &&
+				!types.has( mwModeConfig.tags.templateVariableName ) &&
+				!types.has( mwModeConfig.tags.templateName ) &&
+				!types.has( mwModeConfig.tags.linkPageName ) &&
+				!types.has( mwModeConfig.tags.linkToSection ) &&
+				!types.has( mwModeConfig.tags.extLink )
+			) {
+				let mt = context.matchBefore( /__(?:(?!__)[^\s<>[\]{}|#])*$/ );
+				if ( mt ) {
+					return {
+						from: mt.from,
+						options: this.doubleUnderscore,
+						validFor: /^[^\s<>[\]{}|#]*$/
+					};
+				}
+				mt = context.matchBefore( /<\/?[a-z\d]*$/i );
+				const extTags = [ ...types ].filter( ( t ) => t.startsWith( 'mw-tag-' ) ).map( ( s ) => s.slice( 7 ) );
+				if ( mt && mt.to - mt.from > 1 ) {
+					const validFor = /^[a-z\d]*$/i;
+					if ( mt.text[ 1 ] === '/' ) {
+						const extTag = extTags[ extTags.length - 1 ],
+							options = [
+								...this.htmlTags.filter( ( { label } ) => !(
+									label in mwModeConfig.implicitlyClosedHtmlTags
+								) ),
+								...extTag ? [ { type: 'type', label: extTag, boost: 50 } ] : []
+							];
+						return { from: mt.from + 2, options, validFor };
+					}
+					return {
+						from: mt.from + 1,
+						options: [
+							...this.htmlTags,
+							...this.extTags.filter( ( { label } ) => !extTags.includes( label ) )
+						],
+						validFor
+					};
+				}
+				if ( !types.has( mwModeConfig.tags.linkText ) &&
+					!types.has( mwModeConfig.tags.extLinkText ) ) {
+					mt = context.matchBefore( /(?:^|[^[])\[[a-z:/]+$/i );
+					if ( mt ) {
+						return {
+							from: mt.from + ( mt.text[ 1 ] === '[' ? 2 : 1 ),
+							options: this.protocols,
+							validFor: /^[a-z:/]*$/i
+						};
+					}
+				}
+			}
+			return null;
+		};
+	}
+
+	/**
 	 * @see https://codemirror.net/docs/ref/#language.StreamParser
 	 * @return {StreamParser}
 	 * @private
@@ -1257,7 +1358,18 @@ class CodeMirrorModeMediaWiki {
 			 * @return {Object<Tag>}
 			 * @private
 			 */
-			tokenTable: this.tokenTable
+			tokenTable: this.tokenTable,
+
+			/**
+			 * @see https://codemirror.net/docs/ref/#language.StreamParser.languageData
+			 * @return {Object<any>}
+			 * @private
+			 */
+			languageData: {
+				// TODO: Rewrite the comment command using jQuery.textSelection
+				commentTokens: { block: { open: '<!--', close: '-->' } },
+				autocomplete: this.completionSource
+			}
 		};
 	}
 }
@@ -1271,6 +1383,7 @@ class CodeMirrorModeMediaWiki {
  * @param {boolean} [config.bidiIsolation=false] Enable bidi isolation around HTML tags.
  *   This should generally always be enabled on RTL pages, but it comes with a performance cost.
  * @param {boolean} [config.templateFolding=true] Enable template folding.
+ * @param {boolean} [config.autocomplete=true] Enable autocompletion.
  * @param {Object|null} [mwConfig] Ignore; used only by unit tests.
  * @return {LanguageSupport}
  * @stable to call
@@ -1291,6 +1404,9 @@ const mediaWikiLang = ( config = { bidiIsolation: false }, mwConfig = null ) => 
 	mw.hook( 'ext.CodeMirror.ready' ).add( ( $textarea, cm ) => {
 		if ( config.templateFolding !== false ) {
 			cm.preferences.registerExtension( 'templateFolding', templateFoldingExtension, cm.view );
+		}
+		if ( config.autocomplete !== false ) {
+			cm.preferences.registerExtension( 'autocomplete', autocompleteExtension, cm.view );
 		}
 		if ( config.bidiIsolation ) {
 			cm.preferences.registerExtension( 'bidiIsolation', bidiIsolationExtension, cm.view );

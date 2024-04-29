@@ -16,7 +16,7 @@ const {
 	unfoldAll,
 	unfoldEffect
 } = require( 'ext.CodeMirror.v6.lib' );
-const modeConfig = require( './codemirror.mediawiki.config.js' );
+const mwModeConfig = require( './codemirror.mediawiki.config.js' );
 
 /**
  * Check if a SyntaxNode is a template bracket (`{{` or `}}`)
@@ -25,7 +25,7 @@ const modeConfig = require( './codemirror.mediawiki.config.js' );
  * @return {boolean}
  * @private
  */
-const isBracket = ( node ) => node.name.split( '_' ).includes( modeConfig.tags.templateBracket ),
+const isBracket = ( node ) => node.name.split( '_' ).includes( mwModeConfig.tags.templateBracket ),
 	/**
 	 * Check if a SyntaxNode is a template delimiter (`|`)
 	 *
@@ -33,7 +33,7 @@ const isBracket = ( node ) => node.name.split( '_' ).includes( modeConfig.tags.t
 	 * @return {boolean}
 	 * @private
 	 */
-	isDelimiter = ( node ) => node.name.split( '_' ).includes( modeConfig.tags.templateDelimiter ),
+	isDelimiter = ( node ) => node.name.split( '_' ).includes( mwModeConfig.tags.templateDelimiter ),
 	/**
 	 * Check if a SyntaxNode is part of a template, except for the brackets
 	 *
@@ -41,7 +41,7 @@ const isBracket = ( node ) => node.name.split( '_' ).includes( modeConfig.tags.t
 	 * @return {boolean}
 	 * @private
 	 */
-	isTemplate = ( node ) => /-template[a-z\d-]+ground/u.test( node.name ) && !isBracket( node ),
+	isTemplate = ( node ) => /-template[a-z\d-]+ground/.test( node.name ) && !isBracket( node ),
 	/**
 	 * Update the stack of opening (+) or closing (-) brackets
 	 *
