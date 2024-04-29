@@ -277,4 +277,7 @@ ve.ui.CodeMirrorAction.prototype.getPosFromOffset = function ( veOffset ) {
 
 /* Registration */
 
-ve.ui.actionFactory.register( ve.ui.CodeMirrorAction );
+// eslint-disable-next-line no-jquery/no-global-selector
+if ( $( '.mw-body-content .mw-parser-output' ).attr( 'dir' ) === 'ltr' ) {
+	ve.ui.actionFactory.register( ve.ui.CodeMirrorAction );
+}
