@@ -114,8 +114,12 @@ class CodeMirrorModeMediaWiki {
 		return style;
 	}
 
+	isNested( state ) {
+		return state.nExt > 0 || state.nTemplate > 0 || state.nLink > 0;
+	}
+
 	makeStyle( style, state, endGround ) {
-		if ( this.isBold ) {
+		if ( this.isBold || state.nDt > 0 ) {
 			style += ' ' + modeConfig.tags.strong;
 		}
 		if ( this.isItalic ) {
@@ -747,6 +751,15 @@ class CodeMirrorModeMediaWiki {
 		return this.makeLocalStyle( modeConfig.tags.freeExtLink, state );
 	}
 
+	eatList( stream, state ) {
+		// Just consume all nested list and indention syntax when there is more
+		const mt = stream.match( /^[*#;:]*/u );
+		if ( mt && !this.isNested( state ) && mt[ 0 ].includes( ';' ) ) {
+			state.nDt += mt[ 0 ].split( ';' ).length - 1;
+		}
+		return this.makeLocalStyle( modeConfig.tags.list, state );
+	}
+
 	/**
 	 * @param {string} style
 	 * @return {string|Function}
@@ -798,21 +811,19 @@ class CodeMirrorModeMediaWiki {
 								modeConfig.tags[ `sectionHeader${ tmp[ 1 ].length + 1 }` ];
 						}
 						break;
+					case ';':
+						stream.backUp( 1 );
+						// fall through
 					case '*':
 					case '#':
-					case ';':
-						// Just consume all nested list and indention syntax when there is more
-						stream.match( /^[*#;:]*/ );
-						return modeConfig.tags.list;
+						return this.eatList( stream, state );
 					case ':':
 						// Highlight indented tables :{|, bug T108454
 						if ( stream.match( /^:*{\|/, false ) ) {
 							state.stack.push( state.tokenize );
 							state.tokenize = this.eatStartTable.bind( this );
 						}
-						// Just consume all nested list and indention syntax when there is more
-						stream.match( /^[*#;:]*/ );
-						return modeConfig.tags.indenting;
+						return this.eatList( stream, state );
 					case ' ':
 						// Leading spaces is valid syntax for tables, bug T108454
 						if ( stream.match( /^[\s\u00a0]*:*{\|/, false ) ) {
@@ -1018,6 +1029,12 @@ class CodeMirrorModeMediaWiki {
 						}
 					}
 					break;
+				case ':':
+					if ( state.nDt > 0 && !this.isNested( state ) ) {
+						state.nDt--;
+						return modeConfig.tags.indenting;
+					}
+					break;
 				default:
 					if ( /[\s\u00a0]/.test( ch ) ) {
 						stream.eatSpace();
@@ -1097,7 +1114,8 @@ class CodeMirrorModeMediaWiki {
 					extState: false,
 					nTemplate: 0,
 					nLink: 0,
-					nExt: 0
+					nExt: 0,
+					nDt: 0
 				};
 			},
 
@@ -1118,7 +1136,8 @@ class CodeMirrorModeMediaWiki {
 					extState: state.extMode !== false && state.extMode.copyState( state.extState ),
 					nTemplate: state.nTemplate,
 					nLink: state.nLink,
-					nExt: state.nExt
+					nExt: state.nExt,
+					nDt: state.nDt
 				};
 			},
 
@@ -1146,6 +1165,7 @@ class CodeMirrorModeMediaWiki {
 
 				if ( stream.sol() ) {
 					// reset bold and italic status in every new line
+					state.nDt = 0;
 					this.isBold = false;
 					this.isItalic = false;
 					this.firstSingleLetterWord = null;

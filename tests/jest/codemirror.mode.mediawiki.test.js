@@ -105,7 +105,12 @@ const testCases = [
 	{
 		title: 'nested ordered, unordered and definition lists',
 		input: '*#;: item A\n#;:* item B\n;:*# item C\n:*#; item D',
-		output: '<div class="cm-line"><span class="cm-mw-list">*#;:</span> item A</div><div class="cm-line"><span class="cm-mw-list">#;:*</span> item B</div><div class="cm-line"><span class="cm-mw-list">;:*#</span> item C</div><div class="cm-line"><span class="cm-mw-indenting">:*#;</span> item D </div>'
+		output: '<div class="cm-line"><span class="cm-mw-list">*#;:</span><span class="cm-mw-strong"> item</span><span class="cm-mw-strong"> A</span></div><div class="cm-line"><span class="cm-mw-list">#;:*</span><span class="cm-mw-strong"> item</span><span class="cm-mw-strong"> B</span></div><div class="cm-line"><span class="cm-mw-list">;:*#</span><span class="cm-mw-strong"> item</span><span class="cm-mw-strong"> C</span></div><div class="cm-line"><span class="cm-mw-list">:*#;</span><span class="cm-mw-strong"> item</span><span class="cm-mw-strong"> D</span><span class="cm-mw-strong"> </span></div>'
+	},
+	{
+		title: 'one-line definition list',
+		input: ';term:definition\n;term\n:definition',
+		output: '<div class="cm-line"><span class="cm-mw-list">;</span><span class="cm-mw-strong">term</span><span class="cm-mw-indenting">:</span>definition</div><div class="cm-line"><span class="cm-mw-list">;</span><span class="cm-mw-strong">term</span></div><div class="cm-line"><span class="cm-mw-list">:</span>definition </div>'
 	},
 	{
 		title: 'link with bold text',
