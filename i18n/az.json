@@ -8,7 +8,14 @@
 	},
 	"codemirror-desc": "Vikimətn redaktorunda kodun rəngli olmasını təmin edir",
 	"codemirror-toggle-label": "Kodun rənglənməsi",
+	"codemirror-prefs-summary": "Siz [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror yardım səhifəsini] oxumaqla bu funksiya haqqında ətraflı öyrənə bilərsiniz.",
+	"codemirror-prefs-enable": "Vikimətn üçün sintaksisin vurğulanmasını aktivləşdirin",
+	"codemirror-v6-prefs-colorblind": "Rəng korlarına uyğun sxemdən istifadə edin",
 	"codemirror-prefs-colorblind": "Vikimətn redaktə edərkən rəng korluğuna uyğun sintaksis sxemini aktivləşdir",
 	"codemirror-prefs-colorblind-help": "Sintaksis üçün hansısa qadcetdən istifadə etsəniz, bu seçim işləməyəcək.",
+	"codemirror-find": "Tap",
+	"codemirror-next": "növbəti",
+	"codemirror-previous": "əvvəlki",
+	"codemirror-all": "hamısı",
 	"prefs-accessibility": "Əlçatanlıq"
 }
