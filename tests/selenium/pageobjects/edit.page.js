@@ -4,41 +4,75 @@ const Page = require( 'wdio-mediawiki/Page' );
 
 // Copied from mediawiki-core edit.page.js
 class EditPage extends Page {
-	openForEditing( title ) {
-		super.openTitle( title, { action: 'edit', vehidebetadialog: 1, hidewelcomedialog: 1 } );
+	async openForEditing( title, cm6enable = false ) {
+		const queryParams = {
+			action: 'edit',
+			vehidebetadialog: 1,
+			hidewelcomedialog: 1
+		};
+		if ( cm6enable ) {
+			queryParams.cm6enable = '1';
+		}
+		await super.openTitle( title, queryParams );
 	}
 
-	get wikiEditorToolbar() { return $( '#wikiEditor-ui-toolbar' ); }
-	get legacyTextInput() { return $( '#wpTextbox1' ); }
-	clickText() {
-		if ( this.visualEditorSave.isDisplayed() ) {
-			this.visualEditorSurface.click();
-		} else if ( this.legacyTextInput.isDisplayed() ) {
-			this.legacyTextInput.click();
+	get wikiEditorToolbar() {
+		return $( '#wikiEditor-ui-toolbar' );
+	}
+
+	get legacyTextInput() {
+		return $( '#wpTextbox1' );
+	}
+
+	get legacyCodeMirrorButton() {
+		return $( '#mw-editbutton-codemirror' );
+	}
+
+	async clickText() {
+		if ( await this.visualEditorSave.isDisplayed() ) {
+			await this.visualEditorSurface.click();
+		} else if ( await this.legacyTextInput.isDisplayed() ) {
+			await this.legacyTextInput.click();
 		} else {
 			// Click the container, if using WikiEditor etc.
-			this.legacyTextInput.parentElement().click();
+			await this.legacyTextInput.parentElement().click();
 		}
 	}
 
-	get visualEditorSave() { return $( '.ve-ui-toolbar-saveButton' ); }
-	get visualEditorToggle() { return $( '.ve-init-mw-editSwitch' ); }
-	get visualEditorSurface() { return $( '.ve-ui-surface-source' ); }
+	get visualEditorSave() {
+		return $( '.ve-ui-toolbar-saveButton' );
+	}
 
-	cursorToPosition( index ) {
-		this.clickText();
+	get visualEditorSurface() {
+		return $( '.ve-ui-surface-source' );
+	}
+
+	get codeMirrorTemplateFoldingButton() {
+		return $( '.cm-tooltip-fold' );
+	}
+
+	get codeMirrorTemplateFoldingPlaceholder() {
+		return $( '.cm-foldPlaceholder' );
+	}
+
+	async cursorToPosition( index ) {
+		await this.clickText();
 
 		// Second "Control" deactivates the modifier.
 		const keys = [ 'Control', 'Home', 'Control' ];
 		for ( let i = 0; i < index; i++ ) {
 			keys.push( 'ArrowRight' );
 		}
-		browser.keys( keys );
+		await browser.keys( keys );
 	}
 
-	getHighlightedMatchingBrackets() {
-		const elements = $$( '.CodeMirror-line .cm-mw-matchingbracket' );
-		const matchingTexts = elements.map( function ( el ) {
+	get highlightedBrackets() {
+		return $$( '.CodeMirror-line .cm-mw-matchingbracket' );
+	}
+
+	async getHighlightedMatchingBrackets() {
+		await this.highlightedBrackets[ 0 ].waitForDisplayed();
+		const matchingTexts = await this.highlightedBrackets.map( function ( el ) {
 			return el.getText();
 		} );
 		return matchingTexts.join( '' );
