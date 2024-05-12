@@ -1,22 +1,31 @@
 'use strict';
 
-const BlankPage = require( 'wdio-mediawiki/BlankPage' );
-const Util = require( 'wdio-mediawiki/Util' );
+const Api = require( 'wdio-mediawiki/Api' ),
+	BlankPage = require( 'wdio-mediawiki/BlankPage' ),
+	LoginPage = require( 'wdio-mediawiki/LoginPage' ),
+	Util = require( 'wdio-mediawiki/Util' );
 
 class UserPreferences {
-	setPreferences( preferences ) {
-		BlankPage.open();
+	async loginAsOther() {
+		const username = Util.getTestString( 'User-' );
+		const password = Util.getTestString();
+		await Api.createAccount( await Api.bot(), username, password );
+		await LoginPage.login( username, password );
+	}
+
+	async setPreferences( preferences ) {
+		await BlankPage.open();
 		Util.waitForModuleState( 'mediawiki.base' );
 
-		return browser.execute( function ( prefs ) {
+		return await browser.execute( function ( prefs ) {
 			return mw.loader.using( 'mediawiki.api' ).then( function () {
 				return new mw.Api().saveOptions( prefs );
 			} );
 		}, preferences );
 	}
 
-	enableWikitext2010EditorWithCodeMirror() {
-		this.setPreferences( {
+	async enableWikitext2010EditorWithCodeMirror() {
+		await this.setPreferences( {
 			usebetatoolbar: '1',
 			usecodemirror: '1',
 			'visualeditor-enable': '0',
@@ -24,8 +33,8 @@ class UserPreferences {
 		} );
 	}
 
-	enableWikitext2017EditorWithCodeMirror() {
-		this.setPreferences( {
+	async enableWikitext2017EditorWithCodeMirror() {
+		await this.setPreferences( {
 			usebetatoolbar: null,
 			usecodemirror: '1',
 			'visualeditor-enable': '1',
