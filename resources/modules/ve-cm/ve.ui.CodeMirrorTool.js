@@ -82,14 +82,17 @@ ve.ui.CodeMirrorTool.prototype.onSurfaceChange = function ( oldSurface, newSurfa
 
 ve.ui.CodeMirrorTool.prototype.onUpdateState = function () {};
 
-/* Registration */
+// eslint-disable-next-line no-jquery/no-global-selector
+if ( $( '.mw-body-content .mw-parser-output' ).attr( 'dir' ) === 'ltr' ) {
+	/* Registration */
 
-ve.ui.toolFactory.register( ve.ui.CodeMirrorTool );
+	ve.ui.toolFactory.register( ve.ui.CodeMirrorTool );
 
-/* Command */
+	/* Command */
 
-ve.ui.commandRegistry.register(
-	new ve.ui.Command(
-		'codeMirror', 'codeMirror', 'toggle'
-	)
-);
+	ve.ui.commandRegistry.register(
+		new ve.ui.Command(
+			'codeMirror', 'codeMirror', 'toggle'
+		)
+	);
+}
