@@ -10,6 +10,19 @@ import { LanguageSupport } from '@codemirror/language';
  * Use this class if you want WikiEditor's toolbar. If you don't need the toolbar,
  * using {@link CodeMirror} directly will be considerably more efficient.
  *
+ * @example
+ * mw.loader.using( [
+ *   'ext.wikiEditor',
+ *   'ext.CodeMirror.v6.WikiEditor',
+ *   'ext.CodeMirror.v6.mode.mediawiki'
+ * ] ).then( ( require ) => {
+ *   mw.addWikiEditor( myTextarea );
+ *   const CodeMirrorWikiEditor = require( 'ext.CodeMirror.v6.WikiEditor' );
+ *   const mediawikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
+ *   const cmWe = new CodeMirrorWikiEditor( myTextarea );
+ *   cmWe.initialize( [ cmWe.defaultExtensions, mediawikiLang() ] );
+ *   cmWe.addCodeMirrorToWikiEditor();
+ * } );
  * @extends CodeMirror
  */
 class CodeMirrorWikiEditor extends CodeMirror {
