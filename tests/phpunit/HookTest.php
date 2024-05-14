@@ -70,9 +70,9 @@ class HookTest extends MediaWikiIntegrationTestCase {
 	public static function provideOnEditPageShowEditFormInitial(): Generator {
 		// useCodeMirrorV6, expectedAddModuleCalls, expectedFirstModule, readOnly
 		yield 'CM5' => [ false, 2, 'ext.CodeMirror.WikiEditor' ];
-		yield 'CM6' => [ true, 1, 'ext.CodeMirror.v6.WikiEditor' ];
+		yield 'CM6' => [ true, 1, 'ext.CodeMirror.v6.WikiEditor.init' ];
 		yield 'CM5 read-only' => [ false, 0, null, true ];
-		yield 'CM6 read-only' => [ true, 1, 'ext.CodeMirror.v6.WikiEditor', true ];
+		yield 'CM6 read-only' => [ true, 1, 'ext.CodeMirror.v6.WikiEditor.init', true ];
 	}
 
 	/**

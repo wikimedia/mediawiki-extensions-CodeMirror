@@ -125,7 +125,7 @@ class Hooks implements
 
 		if ( $this->shouldUseV6( $out ) ) {
 			$out->addModules( $useWikiEditor ?
-				'ext.CodeMirror.v6.WikiEditor' :
+				'ext.CodeMirror.v6.WikiEditor.init' :
 				'ext.CodeMirror.v6.init'
 			);
 		} else {
@@ -149,7 +149,7 @@ class Hooks implements
 		if ( $this->shouldUseV6( $out ) && $this->shouldLoadCodeMirror( $out ) ) {
 			$useWikiEditor = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usebetatoolbar' );
 			$out->addModules( $useWikiEditor ?
-				'ext.CodeMirror.v6.WikiEditor' :
+				'ext.CodeMirror.v6.WikiEditor.init' :
 				'ext.CodeMirror.v6.init'
 			);
 		}
