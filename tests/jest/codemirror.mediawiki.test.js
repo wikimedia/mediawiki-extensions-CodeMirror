@@ -24,8 +24,8 @@ const testCases = [
 	},
 	{
 		title: 'indented table with caption and inline headings',
-		input: ' ::{| class="wikitable"\n |+ Caption\n |-\n ! Uno !! Dos\n |-\n | Foo || Bar\n |}',
-		output: '<div class="cm-line"><span class="cm-mw-indenting"> ::</span><span class="cm-mw-table-bracket">{| </span><span class="cm-mw-table-definition">class</span><span class="cm-mw-table-definition">="wikitable"</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> |+ </span><span class="cm-mw-table-caption">Caption</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> |-</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> ! </span><span class="cm-mw-strong">Uno </span><span class="cm-mw-table-delimiter">!!</span><span class="cm-mw-strong"> Dos</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> |-</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> | </span>Foo <span class="cm-mw-table-delimiter">||</span> Bar</div><div class="cm-line"><span class="cm-mw-table-bracket"> |}</span> </div>'
+		input: ':{|\n|}\n :: {| class="wikitable"\n |+ Caption\n |-\n ! Uno !! Dos\n |-\n | Foo || Bar\n |}',
+		output: '<div class="cm-line"><span class="cm-mw-list">:</span><span class="cm-mw-table-bracket">{|</span></div><div class="cm-line"><span class="cm-mw-table-bracket">|}</span></div><div class="cm-line"><span class="cm-mw-indenting"> :: </span><span class="cm-mw-table-bracket">{| </span><span class="cm-mw-table-definition">class</span><span class="cm-mw-table-definition">="wikitable"</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> |+ </span><span class="cm-mw-table-caption">Caption</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> |-</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> ! </span><span class="cm-mw-strong">Uno </span><span class="cm-mw-table-delimiter">!!</span><span class="cm-mw-strong"> Dos</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> |-</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> | </span>Foo <span class="cm-mw-table-delimiter">||</span> Bar</div><div class="cm-line"><span class="cm-mw-table-bracket"> |}</span> </div>'
 	},
 	{
 		title: 'apostrophe before italic',
@@ -34,8 +34,8 @@ const testCases = [
 	},
 	{
 		title: 'free external links',
-		input: 'https://wikimedia.org [ftp://foo.bar FOO] //archive.org',
-		output: '<div class="cm-line"><span class="cm-mw-free-extlink-protocol">https://</span><span class="cm-mw-free-extlink">wikimedia.</span><span class="cm-mw-free-extlink">org</span> <span class="cm-mw-link-ground cm-mw-extlink-bracket">[</span><span class="cm-mw-link-ground cm-mw-extlink-protocol">ftp://</span><span class="cm-mw-link-ground cm-mw-extlink">foo.bar</span><span class="cm-mw-link-ground"> </span><span class="cm-mw-link-ground cm-mw-extlink-text">FOO</span><span class="cm-mw-link-ground cm-mw-extlink-bracket">]</span> //archive.org </div>'
+		input: '//archive.org [ftp://foo.bar FOO] https://wikimedia.org/~\nx',
+		output: '<div class="cm-line">//archive.org <span class="cm-mw-link-ground cm-mw-extlink-bracket">[</span><span class="cm-mw-link-ground cm-mw-extlink-protocol">ftp://</span><span class="cm-mw-link-ground cm-mw-extlink">foo.bar</span><span class="cm-mw-link-ground"> </span><span class="cm-mw-link-ground cm-mw-extlink-text">FOO</span><span class="cm-mw-link-ground cm-mw-extlink-bracket">]</span> <span class="cm-mw-free-extlink-protocol">https://</span><span class="cm-mw-free-extlink">wikimedia.</span><span class="cm-mw-free-extlink">org/~</span></div><div class="cm-line">x </div>'
 	},
 	{
 		title: 'not free external links',
@@ -162,6 +162,16 @@ const testCases = [
 		title: 'Nested template calls',
 		input: '{{foo|{{bar|[[Test]]|{{baz|[[Test2]]}}}}}}',
 		output: '<div class="cm-line"><span class="cm-mw-template-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template-ground cm-mw-pagename cm-mw-template-name">foo</span><span class="cm-mw-template-ground cm-mw-template-delimiter">|</span><span class="cm-mw-template2-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template2-ground cm-mw-pagename cm-mw-template-name">bar</span><span class="cm-mw-template2-ground cm-mw-template-delimiter">|</span><span class="cm-mw-template2-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-template2-link-ground cm-mw-link-pagename cm-mw-pagename">Test</span><span class="cm-mw-template2-link-ground cm-mw-link-bracket">]]</span><span class="cm-mw-template2-ground cm-mw-template-delimiter">|</span><span class="cm-mw-template3-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template3-ground cm-mw-pagename cm-mw-template-name">baz</span><span class="cm-mw-template3-ground cm-mw-template-delimiter">|</span><span class="cm-mw-template3-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-template3-link-ground cm-mw-link-pagename cm-mw-pagename">Test2</span><span class="cm-mw-template3-link-ground cm-mw-link-bracket">]]</span><span class="cm-mw-template3-ground cm-mw-template-bracket">}}</span><span class="cm-mw-template2-ground cm-mw-template-bracket">}}</span><span class="cm-mw-template-ground cm-mw-template-bracket">}}</span> </div>'
+	},
+	{
+		title: 'Tag name followed by punctuations',
+		input: '<pre-foobar><p? ><b!--',
+		output: '<div class="cm-line">&lt;pre-foobar&gt;&lt;p? &gt;&lt;b!-- </div>'
+	},
+	{
+		title: 'Localized parser function',
+		input: '{{מיון רגיל:AAA}}',
+		output: '<div class="cm-line"><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">{{</span><span class="cm-mw-ext-ground cm-mw-parserfunction-name">מיון רגיל</span><span class="cm-mw-ext-ground cm-mw-parserfunction-delimiter">:</span><span class="cm-mw-ext-ground cm-mw-parserfunction">AAA</span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">}}</span> </div>'
 	}
 ];
 
@@ -176,7 +186,8 @@ const mwLang = mediaWikiLang( {}, {
 		__notoc__: 'notoc'
 	} ],
 	functionSynonyms: [ {}, {
-		'!': '!'
+		'!': '!',
+		'מיון רגיל': 'defaultsort'
 	} ],
 	tags: {
 		nowiki: true,
