@@ -278,6 +278,10 @@ ve.ui.CodeMirrorAction.prototype.getPosFromOffset = function ( veOffset ) {
 /* Registration */
 
 // eslint-disable-next-line no-jquery/no-global-selector
-if ( $( '.mw-body-content .mw-parser-output' ).attr( 'dir' ) === 'ltr' ) {
+var contentDir = $( '.mw-body-content .mw-parser-output' ).attr( 'dir' ) ||
+	// New pages will use wgPageContentLanguage which is set on the html element.
+	document.documentElement.dir;
+
+if ( contentDir === 'ltr' ) {
 	ve.ui.actionFactory.register( ve.ui.CodeMirrorAction );
 }

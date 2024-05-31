@@ -83,13 +83,15 @@ ve.ui.CodeMirrorTool.prototype.onSurfaceChange = function ( oldSurface, newSurfa
 ve.ui.CodeMirrorTool.prototype.onUpdateState = function () {};
 
 // eslint-disable-next-line no-jquery/no-global-selector
-if ( $( '.mw-body-content .mw-parser-output' ).attr( 'dir' ) === 'ltr' ) {
-	/* Registration */
+var contentDir = $( '.mw-body-content .mw-parser-output' ).attr( 'dir' ) ||
+	// New pages will use wgPageContentLanguage which is set on the html element.
+	document.documentElement.dir;
 
+if ( contentDir === 'ltr' ) {
+	/* Registration */
 	ve.ui.toolFactory.register( ve.ui.CodeMirrorTool );
 
 	/* Command */
-
 	ve.ui.commandRegistry.register(
 		new ve.ui.Command(
 			'codeMirror', 'codeMirror', 'toggle'
