@@ -28,29 +28,31 @@ const isolate = Decoration.mark( {
 function computeIsolates( view ) {
 	const set = new RangeSetBuilder();
 
-	for ( const { from, to } of view.visibleRanges ) {
-		let startPos = null;
-		syntaxTree( view.state ).iterate( {
-			from,
-			to,
-			enter( node ) {
-				// Determine if this is a bracket node (start or end of a tag).
-				const isBracket = node.name.split( '_' )
-					.some( ( tag ) => [
-						mwModeConfig.tags.htmlTagBracket,
-						mwModeConfig.tags.extTagBracket
-					].includes( tag ) );
+	if ( view.editorAttrs.dir === 'rtl' ) {
+		for ( const { from, to } of view.visibleRanges ) {
+			let startPos = null;
+			syntaxTree( view.state ).iterate( {
+				from,
+				to,
+				enter( node ) {
+					// Determine if this is a bracket node (start or end of a tag).
+					const isBracket = node.name.split( '_' )
+						.some( ( tag ) => [
+							mwModeConfig.tags.htmlTagBracket,
+							mwModeConfig.tags.extTagBracket
+						].includes( tag ) );
 
-				if ( startPos === null && isBracket ) {
-					// If we find a bracket node, we keep track of the start position.
-					startPos = node.from;
-				} else if ( isBracket ) {
-					// When we find the closing bracket, add the isolate.
-					set.add( startPos, node.to, isolate );
-					startPos = null;
+					if ( startPos === null && isBracket ) {
+						// If we find a bracket node, we keep track of the start position.
+						startPos = node.from;
+					} else if ( isBracket ) {
+						// When we find the closing bracket, add the isolate.
+						set.add( startPos, node.to, isolate );
+						startPos = null;
+					}
 				}
-			}
-		} );
+			} );
+		}
 	}
 
 	return set.finish();
@@ -69,6 +71,8 @@ class CodeMirrorBidiIsolation {
 		this.isolates = computeIsolates( view );
 		/** @type {Tree} */
 		this.tree = syntaxTree( view.state );
+		/** @type {Direction} */
+		this.dir = view.textDirection;
 	}
 
 	/**
@@ -76,7 +80,8 @@ class CodeMirrorBidiIsolation {
 	 */
 	update( update ) {
 		if ( update.docChanged || update.viewportChanged ||
-			syntaxTree( update.state ) !== this.tree
+			syntaxTree( update.state ) !== this.tree ||
+			update.view.textDirection !== this.dir
 		) {
 			this.isolates = computeIsolates( update.view );
 			this.tree = syntaxTree( update.state );

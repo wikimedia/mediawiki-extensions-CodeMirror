@@ -1,4 +1,4 @@
-import { EditorState, Extension } from '@codemirror/state';
+import { EditorState, Extension, Compartment } from '@codemirror/state';
 import {
 	EditorView,
 	drawSelection,
@@ -6,7 +6,8 @@ import {
 	highlightSpecialChars,
 	keymap,
 	rectangularSelection,
-	crosshairCursor
+	crosshairCursor,
+	ViewUpdate
 } from '@codemirror/view';
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
 import { searchKeymap } from '@codemirror/search';
@@ -73,6 +74,12 @@ class CodeMirror {
 		 * @type {CodeMirrorTextSelection}
 		 */
 		this.textSelection = null;
+		/**
+		 * Language direction extension.
+		 *
+		 * @type {Compartment}
+		 */
+		this.dirCompartment = new Compartment();
 	}
 
 	/**
@@ -91,6 +98,7 @@ class CodeMirror {
 			this.heightExtension,
 			this.updateExtension,
 			this.bracketMatchingExtension,
+			this.dirExtension,
 			EditorState.readOnly.of( this.readOnly ),
 			EditorView.domEventHandlers( {
 				blur: () => this.$textarea.triggerHandler( 'blur' ),
@@ -221,9 +229,8 @@ class CodeMirror {
 			} ),
 			// .cm-editor element (contains the whole CodeMirror UI)
 			EditorView.editorAttributes.of( {
-				// Use direction and language of the original textbox.
+				// Use language of the original textbox.
 				// These should be attributes of .cm-editor, not the .cm-content (T359589)
-				dir: this.$textarea.attr( 'dir' ),
 				lang: this.$textarea.attr( 'lang' )
 			} ),
 			// The search panel should use the same direction as the interface language (T359611)
@@ -319,6 +326,29 @@ class CodeMirror {
 			// Highlight non-breaking spaces (T181677)
 			addSpecialChars: /[\u00a0\u202f]/g
 		} );
+	}
+
+	get dirExtension() {
+		return [
+			this.dirCompartment.of( EditorView.editorAttributes.of( {
+				// Use direction of the original textbox.
+				// These should be attributes of .cm-editor, not the .cm-content (T359589)
+				dir: this.$textarea.attr( 'dir' )
+			} ) ),
+			keymap.of( [ {
+				key: 'Mod-Shift-x',
+				run: ( view ) => {
+					const dir = this.$textarea.attr( 'dir' ) === 'rtl' ? 'ltr' : 'rtl';
+					this.$textarea.attr( 'dir', dir );
+					view.dispatch( {
+						effects: this.dirCompartment.reconfigure(
+							EditorView.editorAttributes.of( { dir } )
+						)
+					} );
+					return true;
+				}
+			} ] )
+		];
 	}
 
 	/**
