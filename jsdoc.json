@@ -44,7 +44,8 @@
 				"TagStyle": "https://codemirror.net/docs/ref/#language.TagStyle",
 				"Tooltip": "https://codemirror.net/docs/ref/#view.Tooltip",
 				"Tree": "https://lezer.codemirror.net/docs/ref/#common.Tree",
-				"ViewUpdate": "https://codemirror.net/docs/ref/#view.ViewUpdate"
+				"ViewUpdate": "https://codemirror.net/docs/ref/#view.ViewUpdate",
+				"ve.ui.Surface": "https://doc.wikimedia.org/visualeditor-standalone/master/ve.ui.Surface.html"
 			}
 		}
 	}

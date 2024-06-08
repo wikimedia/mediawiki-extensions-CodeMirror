@@ -58,8 +58,10 @@ class DataScript {
 
 		// initialize configuration
 		$config = [
+			'useV6' => $mwConfig->get( 'CodeMirrorV6' ),
 			'lineNumberingNamespaces' => $mwConfig->get( 'CodeMirrorLineNumberingNamespaces' ),
 			'templateFoldingNamespaces' => $mwConfig->get( 'CodeMirrorTemplateFoldingNamespaces' ),
+			'isSupportedRtlWiki' => $mwConfig->get( 'CodeMirrorRTL' ),
 			'pluginModules' => $registry->getAttribute( 'CodeMirrorPluginModules' ),
 			'tagModes' => $tagModes,
 			'tags' => array_fill_keys( $tagNames, true ),

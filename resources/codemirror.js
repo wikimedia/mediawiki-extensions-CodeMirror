@@ -37,10 +37,23 @@ class CodeMirror {
 	/**
 	 * Instantiate a new CodeMirror instance.
 	 *
-	 * @param {HTMLTextAreaElement|jQuery|string} textarea Textarea to add syntax highlighting to.
+	 * @param {HTMLTextAreaElement|jQuery|string|ve.ui.Surface} textarea Textarea to
+	 *   add syntax highlighting to.
 	 * @constructor
 	 */
 	constructor( textarea ) {
+		if ( textarea.constructor.name === 'VeUiMWWikitextSurface' ) {
+			/**
+			 * The VisualEditor surface CodeMirror is bound to.
+			 *
+			 * @type {ve.ui.Surface}
+			 */
+			this.surface = textarea;
+
+			// Let the content editable mimic the textarea.
+			// eslint-disable-next-line no-jquery/variable-pattern
+			textarea = this.surface.getView().$attachedRootNode;
+		}
 		/**
 		 * The textarea that CodeMirror is bound to.
 		 *
@@ -64,7 +77,9 @@ class CodeMirror {
 		 *
 		 * @type {boolean}
 		 */
-		this.readOnly = this.$textarea.prop( 'readonly' );
+		this.readOnly = this.surface ?
+			this.surface.getModel().isReadOnly() :
+			this.$textarea.prop( 'readonly' );
 		/**
 		 * The [edit recovery]{@link https://www.mediawiki.org/wiki/Manual:Edit_Recovery} handler.
 		 *
@@ -78,11 +93,17 @@ class CodeMirror {
 		 */
 		this.textSelection = null;
 		/**
-		 * Language direction extension.
+		 * Compartment for the language direction Extension.
 		 *
 		 * @type {Compartment}
 		 */
 		this.dirCompartment = new Compartment();
+		/**
+		 * Compartment for the special characters Extension.
+		 *
+		 * @type {Compartment}
+		 */
+		this.specialCharsCompartment = new Compartment();
 	}
 
 	/**
@@ -97,7 +118,7 @@ class CodeMirror {
 		const extensions = [
 			this.contentAttributesExtension,
 			this.phrasesExtension,
-			this.specialCharsExtension,
+			this.specialCharsCompartment.of( this.specialCharsExtension ),
 			this.heightExtension,
 			this.updateExtension,
 			this.bracketMatchingExtension,
@@ -187,7 +208,7 @@ class CodeMirror {
 	get heightExtension() {
 		return EditorView.theme( {
 			'&': {
-				height: `${ this.$textarea.outerHeight() }px`
+				height: this.surface ? '100%' : `${ this.$textarea.outerHeight() }px`
 			},
 			'.cm-scroller': {
 				overflow: 'auto'
@@ -205,19 +226,22 @@ class CodeMirror {
 	 */
 	get contentAttributesExtension() {
 		const classList = [];
-		// T245568: Sync text editor font preferences with CodeMirror
-		const fontClass = Array.from( this.$textarea[ 0 ].classList )
-			.find( ( style ) => style.startsWith( 'mw-editfont-' ) );
-		if ( fontClass ) {
-			classList.push( fontClass );
-		}
-		// Add colorblind mode if preference is set.
-		// This currently is only to be used for the MediaWiki markup language.
-		if (
-			mw.user.options.get( 'usecodemirror-colorblind' ) &&
-			mw.config.get( 'wgPageContentModel' ) === 'wikitext'
-		) {
-			classList.push( 'cm-mw-colorblind-colors' );
+		// T245568: Sync text editor font preferences with CodeMirror,
+		// but don't do this for the 2017 wikitext editor.
+		if ( !this.surface ) {
+			const fontClass = Array.from( this.$textarea[ 0 ].classList )
+				.find( ( style ) => style.startsWith( 'mw-editfont-' ) );
+			if ( fontClass ) {
+				classList.push( fontClass );
+			}
+			// Add colorblind mode if preference is set.
+			// This currently is only to be used for the MediaWiki markup language.
+			if (
+				mw.user.options.get( 'usecodemirror-colorblind' ) &&
+				mw.config.get( 'wgPageContentModel' ) === 'wikitext'
+			) {
+				classList.push( 'cm-mw-colorblind-colors' );
+			}
 		}
 
 		return [
@@ -379,7 +403,9 @@ class CodeMirror {
 
 		// Set up the initial EditorState of CodeMirror with contents of the native textarea.
 		this.state = EditorState.create( {
-			doc: this.$textarea.textSelection( 'getContents' ),
+			doc: this.surface ?
+				this.surface.getDom() :
+				this.$textarea.textSelection( 'getContents' ),
 			extensions
 		} );
 
@@ -387,15 +413,17 @@ class CodeMirror {
 		this.addCodeMirrorToDom();
 
 		// Hide native textarea and sync CodeMirror contents upon submission.
-		this.$textarea.hide();
-		if ( this.$textarea[ 0 ].form ) {
-			this.$textarea[ 0 ].form.addEventListener( 'submit', () => {
-				this.$textarea.val( this.view.state.doc.toString() );
-				const scrollTop = document.getElementById( 'wpScrolltop' );
-				if ( scrollTop ) {
-					scrollTop.value = this.view.scrollDOM.scrollTop;
-				}
-			} );
+		if ( !this.surface ) {
+			this.$textarea.hide();
+			if ( this.$textarea[ 0 ].form ) {
+				this.$textarea[ 0 ].form.addEventListener( 'submit', () => {
+					this.$textarea.val( this.view.state.doc.toString() );
+					const scrollTop = document.getElementById( 'wpScrolltop' );
+					if ( scrollTop ) {
+						scrollTop.value = this.view.scrollDOM.scrollTop;
+					}
+				} );
+			}
 		}
 
 		// Register $.textSelection() on the .cm-editor element.
@@ -426,7 +454,9 @@ class CodeMirror {
 
 		this.view = new EditorView( {
 			state: this.state,
-			parent: this.$textarea.parent()[ 0 ]
+			parent: this.surface ?
+				this.surface.getView().$element[ 0 ] :
+				this.$textarea.parent()[ 0 ]
 		} );
 	}
 
@@ -443,7 +473,9 @@ class CodeMirror {
 		$( this.view.dom ).textSelection( 'unregister' );
 		this.$textarea.textSelection( 'unregister' );
 		this.$textarea.unwrap( '.ext-codemirror-wrapper' );
-		this.$textarea.val( this.view.state.doc.toString() );
+		if ( !this.surface ) {
+			this.$textarea.val( this.view.state.doc.toString() );
+		}
 		this.view.destroy();
 		this.view = null;
 		this.$textarea.show();
@@ -470,8 +502,10 @@ class CodeMirror {
 	 *
 	 * @param {Object} data
 	 * @stable to call
+	 * @internal
+	 * @ignore
 	 */
-	logUsage( data ) {
+	static logUsage( data ) {
 		/* eslint-disable camelcase */
 		const event = Object.assign( {
 			session_token: mw.user.sessionId(),
@@ -491,7 +525,7 @@ class CodeMirror {
 	 * @param {boolean} prefValue True, if CodeMirror should be enabled by default, otherwise false.
 	 * @stable to call and override
 	 */
-	setCodeMirrorPreference( prefValue ) {
+	static setCodeMirrorPreference( prefValue ) {
 		// Skip for unnamed users
 		if ( !mw.user.isNamed() ) {
 			return;

@@ -278,6 +278,34 @@
 			"packageFiles": [
 				"codemirror.wikieditor.mediawiki.init.js"
 			]
+		},
+		"ext.CodeMirror.v6.visualEditor": {
+			"dependencies": [
+				"ext.visualEditor.mwcore",
+				"ext.visualEditor.mwmeta",
+				"mediawiki.api",
+				"user.options",
+				"ext.CodeMirror.v6"
+			],
+			"scripts": [
+				"ve-cm/ve.ui.CodeMirrorAction.v6.js",
+				"ve-cm/ve.ui.CodeMirrorTool.v6.js"
+			],
+			"styles": [
+				"ve-cm/ve.ui.CodeMirror.v6.less"
+			],
+			"messages": [
+				"codemirror-toggle-label"
+			]
+		},
+		"ext.CodeMirror.visualEditor.init": {
+			"packageFiles": [
+				"ve-cm/ve.ui.CodeMirror.init.js",
+				{
+					"name": "ext.CodeMirror.data.js",
+					"callback": "MediaWiki\\Extension\\CodeMirror\\DataScript::makeScript"
+				}
+			]
 		}
 	},
 	"ResourceFileModulePaths": {
@@ -333,7 +361,7 @@
 		},
 		"VisualEditor": {
 			"PluginModules": [
-				"ext.CodeMirror.visualEditor"
+				"ext.CodeMirror.visualEditor.init"
 			]
 		},
 		"EventLogging": {
