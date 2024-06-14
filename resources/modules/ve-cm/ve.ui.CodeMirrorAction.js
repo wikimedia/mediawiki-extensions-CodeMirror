@@ -51,8 +51,7 @@ ve.ui.CodeMirrorAction.static.isLineNumbering = function () {
  * @return {boolean} Action was executed
  */
 ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
-	const action = this,
-		surface = this.surface,
+	const surface = this.surface,
 		surfaceView = surface.getView(),
 		doc = surface.getModel().getDocument();
 
@@ -133,7 +132,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 
 				if ( cmOptions.lineNumbers ) {
 					// Transfer gutter width to VE overlay.
-					const updateGutter = function ( cmDisplay ) {
+					const updateGutter = ( cmDisplay ) => {
 						surfaceView.$documentNode.css( 'margin-left', cmDisplay.gutters.offsetWidth );
 					};
 					CodeMirror.on( surface.mirror.display, 'updateGutter', updateGutter );
@@ -144,15 +143,15 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 
 				// As the action is regenerated each time, we need to store bound listeners
 				// in the mirror for later disconnection.
-				surface.mirror.veTransactionListener = action.onDocumentPrecommit.bind( action );
-				surface.mirror.veLangChangeListener = action.onLangChange.bind( action );
-				surface.mirror.veSelectListener = action.onSelect.bind( action );
+				surface.mirror.veTransactionListener = this.onDocumentPrecommit.bind( this );
+				surface.mirror.veLangChangeListener = this.onLangChange.bind( this );
+				surface.mirror.veSelectListener = this.onSelect.bind( this );
 
 				doc.on( 'precommit', surface.mirror.veTransactionListener );
 				surfaceView.getDocument().on( 'langChange', surface.mirror.veLangChangeListener );
 				surface.getModel().on( 'select', surface.mirror.veSelectListener );
 
-				action.onLangChange();
+				this.onLangChange();
 
 				ve.init.target.once( 'surfaceReady', () => {
 					if ( surface.mirror ) {
@@ -227,7 +226,6 @@ ve.ui.CodeMirrorAction.prototype.onLangChange = function () {
  */
 ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 	const replacements = [],
-		action = this,
 		store = this.surface.getModel().getDocument().getStore(),
 		mirror = this.surface.mirror;
 
@@ -237,9 +235,9 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 			offset += op.length;
 		} else if ( op.type === 'replace' ) {
 			replacements.push( {
-				start: action.getPosFromOffset( offset ),
+				start: this.getPosFromOffset( offset ),
 				// Don't bother recalculating end offset if not a removal, replaceRange works with just one arg
-				end: op.remove.length ? action.getPosFromOffset( offset + op.remove.length ) : undefined,
+				end: op.remove.length ? this.getPosFromOffset( offset + op.remove.length ) : undefined,
 				data: new ve.dm.ElementLinearData( store, op.insert ).getSourceText()
 			} );
 			offset += op.remove.length;
