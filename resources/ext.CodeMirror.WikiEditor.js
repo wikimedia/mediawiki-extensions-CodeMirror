@@ -148,8 +148,7 @@ function init() {
 		const config = mw.config.get( 'extCodeMirrorConfig' );
 
 		mw.loader.using( codeMirrorCoreModules.concat( config.pluginModules ), () => {
-			let $codeMirror, cmOptions,
-				selectionStart = $textbox1.prop( 'selectionStart' ),
+			const selectionStart = $textbox1.prop( 'selectionStart' ),
 				selectionEnd = $textbox1.prop( 'selectionEnd' ),
 				scrollTop = $textbox1.scrollTop(),
 				hasFocus = $textbox1.is( ':focus' );
@@ -164,7 +163,7 @@ function init() {
 			CodeMirror.keyMap.pcDefault[ 'Alt-Left' ] = false;
 			CodeMirror.keyMap.pcDefault[ 'Alt-Right' ] = false;
 
-			cmOptions = {
+			const cmOptions = {
 				mwConfig: config,
 				// styleActiveLine: true, // disabled since Bug: T162204, maybe should be optional
 				lineWrapping: true,
@@ -190,7 +189,7 @@ function init() {
 			};
 
 			codeMirror = CodeMirror.fromTextArea( $textbox1[ 0 ], cmOptions );
-			$codeMirror = $( codeMirror.getWrapperElement() );
+			const $codeMirror = $( codeMirror.getWrapperElement() );
 
 			codeMirror.on( 'focus', () => {
 				$textbox1.triggerHandler( 'focus' );
@@ -305,8 +304,7 @@ function init() {
 	 * Adds the CodeMirror button to WikiEditor
 	 */
 	function addCodeMirrorToWikiEditor() {
-		let $codeMirrorButton,
-			context = $textbox1.data( 'wikiEditor-context' ),
+		const context = $textbox1.data( 'wikiEditor-context' ),
 			toolbar = context && context.modules && context.modules.toolbar;
 
 		// Guard against something having removed WikiEditor (T271457)
@@ -338,7 +336,7 @@ function init() {
 			}
 		);
 
-		$codeMirrorButton = toolbar.$toolbar.find( '.tool[rel=CodeMirror]' );
+		const $codeMirrorButton = toolbar.$toolbar.find( '.tool[rel=CodeMirror]' );
 		$codeMirrorButton
 			.attr( 'id', 'mw-editbutton-codemirror' );
 

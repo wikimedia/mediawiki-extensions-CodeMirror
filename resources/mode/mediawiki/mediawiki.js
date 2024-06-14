@@ -21,7 +21,7 @@
 
 	CodeMirror.defineMode( 'mediawiki', ( config /* , parserConfig */ ) => {
 
-		let mwConfig = config.mwConfig,
+		const mwConfig = config.mwConfig,
 
 			urlProtocols = new RegExp( '^(?:' + mwConfig.urlProtocols + ')', 'i' ),
 			permittedHtmlTags = { b: true, bdi: true, del: true, i: true, ins: true,
@@ -34,8 +34,8 @@
 				kbd: true, samp: true, data: true, time: true, mark: true, br: true,
 				wbr: true, hr: true, li: true, dt: true, dd: true, td: true, th: true,
 				tr: true, noinclude: true, includeonly: true, onlyinclude: true },
-			voidHtmlTags = { br: true, hr: true, wbr: true },
-			isBold, isItalic, firstsingleletterword, firstmultiletterword, firstspace, mBold, mItalic, mTokens = [],
+			voidHtmlTags = { br: true, hr: true, wbr: true };
+		let isBold, isItalic, firstsingleletterword, firstmultiletterword, firstspace, mBold, mItalic, mTokens = [],
 			mStyle;
 
 		function makeStyle( style, state, endGround ) {
@@ -464,9 +464,9 @@
 
 		function eatExtTagArea( name ) {
 			return function ( stream, state ) {
-				let origString = false,
-					from = stream.pos,
-					to,
+				let to,
+					origString = false;
+				const from = stream.pos,
 
 					pattern = new RegExp( '</' + name + '\\s*>', 'i' ),
 					m = pattern.exec( from ? stream.string.slice( from ) : stream.string );
@@ -634,8 +634,8 @@
 
 		function eatWikiText( style, mnemonicStyle ) {
 			return function ( stream, state ) {
-				let ch, tmp, mt, name, isCloseTag, tagname,
-					sol = stream.sol();
+				let ch, tmp, mt, name, isCloseTag, tagname;
+				const sol = stream.sol();
 
 				function chain( parser ) {
 					state.stack.push( state.tokenize );
@@ -994,13 +994,12 @@
 
 	function eatNowiki( style, lineStyle ) {
 		return function ( stream, state, ownLine ) {
-			let s;
 			if ( ownLine && stream.sol() ) {
 				state.ownLine = true;
 			} else if ( ownLine === false && state.ownLine ) {
 				state.ownLine = false;
 			}
-			s = ( state.ownLine ? lineStyle : style );
+			const s = ( state.ownLine ? lineStyle : style );
 			if ( stream.match( /^[^&]+/ ) ) {
 				return s;
 			}

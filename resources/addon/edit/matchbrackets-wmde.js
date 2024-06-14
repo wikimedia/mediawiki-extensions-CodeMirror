@@ -51,8 +51,8 @@
       nestedBracketsToSkip = 0,
       lineNo = where.line,
       line = cm.getLine( lineNo ),
-      pos = where.ch,
-      maxScanLen = ( config && config.maxScanLineLength ) || 10000,
+      pos = where.ch;
+    const maxScanLen = ( config && config.maxScanLineLength ) || 10000,
       maxScanLines = ( config && config.maxScanLines ) || 1000;
 
     // Check the limit for the current line

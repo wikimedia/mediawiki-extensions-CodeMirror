@@ -6,14 +6,12 @@ require( './ext.CodeMirror.data.js' );
  * @param {Object} data
  */
 function logUsage( data ) {
-	let event, editCountBucket;
-
 	/* eslint-disable camelcase */
-	event = Object.assign( {
+	const event = Object.assign( {
 		session_token: mw.user.sessionId(),
 		user_id: mw.user.getId()
 	}, data );
-	editCountBucket = mw.config.get( 'wgUserEditCountBucket' );
+	const editCountBucket = mw.config.get( 'wgUserEditCountBucket' );
 	if ( editCountBucket !== null ) {
 		event.user_edit_count_bucket = editCountBucket;
 	}

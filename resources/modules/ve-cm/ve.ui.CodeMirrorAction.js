@@ -226,12 +226,12 @@ ve.ui.CodeMirrorAction.prototype.onLangChange = function () {
  * @param {ve.dm.Transaction} tx
  */
 ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
-	let offset = 0,
-		replacements = [],
+	const replacements = [],
 		action = this,
 		store = this.surface.getModel().getDocument().getStore(),
 		mirror = this.surface.mirror;
 
+	let offset = 0;
 	tx.operations.forEach( ( op ) => {
 		if ( op.type === 'retain' ) {
 			offset += op.length;

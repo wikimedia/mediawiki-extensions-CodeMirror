@@ -12,8 +12,7 @@
 		"CodeMirror": "readonly"
 	},
 	"rules": {
-		"max-len": "off",
-		"prefer-const": "warn"
+		"max-len": "off"
 	},
 	"overrides": [
 		{
