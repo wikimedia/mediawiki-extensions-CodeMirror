@@ -22,7 +22,7 @@
 	CodeMirror.defineMode( 'mediawiki', function ( config /* , parserConfig */ ) {
 
 		var mwConfig = config.mwConfig,
-			// eslint-disable-next-line security/detect-non-literal-regexp
+
 			urlProtocols = new RegExp( '^(?:' + mwConfig.urlProtocols + ')', 'i' ),
 			permittedHtmlTags = { b: true, bdi: true, del: true, i: true, ins: true,
 				u: true, font: true, big: true, small: true, sub: true, sup: true,
@@ -420,7 +420,7 @@
 
 		function eatHtmlTagAttribute( name ) {
 			return function ( stream, state ) {
-				// eslint-disable-next-line security/detect-unsafe-regex
+
 				if ( stream.match( /^(?:"[^<">]*"|'[^<'>]*'|[^>/<{&~])+/ ) ) {
 					return makeLocalStyle( 'mw-htmltag-attribute', state );
 				}
@@ -441,7 +441,7 @@
 
 		function eatExtTagAttribute( name ) {
 			return function ( stream, state ) {
-				// eslint-disable-next-line security/detect-unsafe-regex
+
 				if ( stream.match( /^(?:"[^">]*"|'[^'>]*'|[^>/<{&~])+/ ) ) {
 					return makeLocalStyle( 'mw-exttag-attribute mw-ext-' + name, state );
 				}
@@ -467,7 +467,7 @@
 				var origString = false,
 					from = stream.pos,
 					to,
-					// eslint-disable-next-line security/detect-non-literal-regexp
+
 					pattern = new RegExp( '</' + name + '\\s*>', 'i' ),
 					m = pattern.exec( from ? stream.string.slice( from ) : stream.string );
 
@@ -657,7 +657,7 @@
 							}
 							break;
 						case '=':
-							// eslint-disable-next-line security/detect-unsafe-regex
+
 							tmp = stream.match( /^(={0,5})(.+?(=\1\s*)(<!--(?!.*-->.*\S).*?)?)$/ );
 							if ( tmp ) { // Title
 								stream.backUp( tmp[ 2 ].length );
@@ -759,7 +759,7 @@
 								return makeLocalStyle( 'mw-parserfunction-bracket', state );
 							}
 							// Check for parser function without '#'
-							// eslint-disable-next-line security/detect-unsafe-regex
+
 							name = stream.match( /^([^\s\u00a0}[\]<{'|&:]+)(:|[\s\u00a0]*)(\}\}?)?(.)?/ );
 							if ( name ) {
 								stream.backUp( name[ 0 ].length );

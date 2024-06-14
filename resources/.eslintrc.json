@@ -5,12 +5,15 @@
 		"wikimedia/jquery",
 		"wikimedia/mediawiki"
 	],
+	"parserOptions": {
+		"sourceType": "commonjs"
+	},
 	"globals": {
 		"CodeMirror": "readonly"
 	},
 	"rules": {
 		"max-len": "off",
-		"no-implicit-globals": "off"
+		"es-x/no-object-assign": "warn"
 	},
 	"overrides": [
 		{
@@ -22,6 +25,5 @@
 				"indent": [ "error", 2 ]
 			}
 		}
-	],
-	"ignorePatterns": [ "dist/" ]
+	]
 }

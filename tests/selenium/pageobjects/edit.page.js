@@ -72,9 +72,7 @@ class EditPage extends Page {
 
 	async getHighlightedMatchingBrackets() {
 		await this.highlightedBrackets[ 0 ].waitForDisplayed();
-		const matchingTexts = await this.highlightedBrackets.map( function ( el ) {
-			return el.getText();
-		} );
+		const matchingTexts = await this.highlightedBrackets.map( ( el ) => el.getText() );
 		return matchingTexts.join( '' );
 	}
 }

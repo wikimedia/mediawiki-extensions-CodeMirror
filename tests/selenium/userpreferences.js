@@ -17,11 +17,7 @@ class UserPreferences {
 		await BlankPage.open();
 		Util.waitForModuleState( 'mediawiki.base' );
 
-		return await browser.execute( function ( prefs ) {
-			return mw.loader.using( 'mediawiki.api' ).then( function () {
-				return new mw.Api().saveOptions( prefs );
-			} );
-		}, preferences );
+		return await browser.execute( ( prefs ) => mw.loader.using( 'mediawiki.api' ).then( () => new mw.Api().saveOptions( prefs ) ), preferences );
 	}
 
 	async enableWikitext2010EditorWithCodeMirror() {

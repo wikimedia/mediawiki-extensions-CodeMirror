@@ -35,7 +35,7 @@ class CodeMirrorModeMediaWiki {
 	 */
 	constructor( config ) {
 		this.config = config;
-		// eslint-disable-next-line security/detect-non-literal-regexp
+
 		this.urlProtocols = new RegExp( `^(?:${ this.config.urlProtocols })(?=[^\\s\u00a0{[\\]<>~).,'])`, 'i' );
 		this.isBold = false;
 		this.wasBold = false;
@@ -512,7 +512,7 @@ class CodeMirrorModeMediaWiki {
 
 	eatHtmlTagAttribute( name ) {
 		return ( stream, state ) => {
-			// eslint-disable-next-line security/detect-unsafe-regex
+
 			if ( stream.match( /^(?:"[^<">]*"|'[^<'>]*'|[^>/<{&~])+/ ) ) {
 				return this.makeLocalStyle( modeConfig.tags.htmlTagAttribute, state );
 			}
@@ -544,7 +544,7 @@ class CodeMirrorModeMediaWiki {
 
 	eatExtTagAttribute( name ) {
 		return ( stream, state ) => {
-			// eslint-disable-next-line security/detect-unsafe-regex
+
 			if ( stream.match( /^(?:"[^">]*"|'[^'>]*'|[^>/<{&~])+/ ) ) {
 				return this.makeLocalStyle( `${ modeConfig.tags.extTagAttribute } mw-ext-${ name }`, state );
 			}
@@ -583,7 +583,7 @@ class CodeMirrorModeMediaWiki {
 	eatExtTagArea( name ) {
 		return ( stream, state ) => {
 			const from = stream.pos,
-				// eslint-disable-next-line security/detect-non-literal-regexp
+
 				pattern = new RegExp( `</${ name }\\s*>`, 'i' ),
 				m = pattern.exec( from ? stream.string.slice( from ) : stream.string );
 			let origString = false,
@@ -791,7 +791,7 @@ class CodeMirrorModeMediaWiki {
 						}
 						break;
 					case '=':
-						// eslint-disable-next-line security/detect-unsafe-regex
+
 						tmp = stream.match( /^(={0,5})(.+?(=\1\s*)(<!--(?!.*-->.*\S).*?)?)$/ );
 						// Title
 						if ( tmp ) {
@@ -916,7 +916,7 @@ class CodeMirrorModeMediaWiki {
 							);
 						}
 						// Check for parser function without '#'
-						// eslint-disable-next-line security/detect-unsafe-regex
+
 						name = stream.match( /^([^\s\u00a0}[\]<{'|&:]+)(:|[\s\u00a0]*)(\}\}?)?(.)?/ );
 						if ( name ) {
 							stream.backUp( name[ 0 ].length );
@@ -1104,20 +1104,18 @@ class CodeMirrorModeMediaWiki {
 			 * @return {Object}
 			 * @private
 			 */
-			startState: () => {
-				return {
-					tokenize: this.eatWikiText( '' ),
-					stack: [],
-					inHtmlTag: [],
-					extName: false,
-					extMode: false,
-					extState: false,
-					nTemplate: 0,
-					nLink: 0,
-					nExt: 0,
-					nDt: 0
-				};
-			},
+			startState: () => ( {
+				tokenize: this.eatWikiText( '' ),
+				stack: [],
+				inHtmlTag: [],
+				extName: false,
+				extMode: false,
+				extState: false,
+				nTemplate: 0,
+				nLink: 0,
+				nExt: 0,
+				nDt: 0
+			} ),
 
 			/**
 			 * Copies the given state.
@@ -1126,20 +1124,18 @@ class CodeMirrorModeMediaWiki {
 			 * @return {Object}
 			 * @private
 			 */
-			copyState: ( state ) => {
-				return {
-					tokenize: state.tokenize,
-					stack: state.stack.concat( [] ),
-					inHtmlTag: state.inHtmlTag.concat( [] ),
-					extName: state.extName,
-					extMode: state.extMode,
-					extState: state.extMode !== false && state.extMode.copyState( state.extState ),
-					nTemplate: state.nTemplate,
-					nLink: state.nLink,
-					nExt: state.nExt,
-					nDt: state.nDt
-				};
-			},
+			copyState: ( state ) => ( {
+				tokenize: state.tokenize,
+				stack: state.stack.concat( [] ),
+				inHtmlTag: state.inHtmlTag.concat( [] ),
+				extName: state.extName,
+				extMode: state.extMode,
+				extState: state.extMode !== false && state.extMode.copyState( state.extState ),
+				nTemplate: state.nTemplate,
+				nLink: state.nLink,
+				nExt: state.nExt,
+				nDt: state.nDt
+			} ),
 
 			/**
 			 * Reads one token, advancing the stream past it,

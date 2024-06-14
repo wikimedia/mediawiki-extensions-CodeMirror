@@ -9,7 +9,7 @@ function logUsage( data ) {
 	var event, editCountBucket;
 
 	/* eslint-disable camelcase */
-	event = $.extend( {
+	event = Object.assign( {
 		session_token: mw.user.sessionId(),
 		user_id: mw.user.getId()
 	}, data );

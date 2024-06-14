@@ -94,11 +94,9 @@ const bidiIsolationSpec = {
 		 * @param {EditorView} view
 		 * @return {DecorationSet}
 		 */
-		const access = ( view ) => {
-			return view.plugin( plugin ) ?
-				( view.plugin( plugin ).isolates || Decoration.none ) :
-				Decoration.none;
-		};
+		const access = ( view ) => view.plugin( plugin ) ?
+			( view.plugin( plugin ).isolates || Decoration.none ) :
+			Decoration.none;
 
 		// Use the lowest precedence to ensure that other decorations
 		// don't break up the isolating decorations.

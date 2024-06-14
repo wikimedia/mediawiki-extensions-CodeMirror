@@ -37,7 +37,7 @@
 		"@wdio/spec-reporter": "7.29.1",
 		"@wikimedia/mw-node-qunit": "7.2.0",
 		"dotenv": "8.2.0",
-		"eslint-config-wikimedia": "0.27.0",
+		"eslint-config-wikimedia": "0.28.2",
 		"grunt-banana-checker": "0.13.0",
 		"jest": "29.7.0",
 		"jest-environment-jsdom": "29.7.0",

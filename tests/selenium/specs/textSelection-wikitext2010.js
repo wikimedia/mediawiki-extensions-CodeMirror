@@ -35,9 +35,7 @@ describe( 'CodeMirror textSelection for the wikitext 2010 editor', () => {
 			$( '.cm-editor' ).textSelection( 'setSelection', { start: 3, end: 6 } );
 		} );
 		assert.strictEqual(
-			await browser.execute( () => {
-				return $( '.cm-editor' ).textSelection( 'getSelection' );
-			} ),
+			await browser.execute( () => $( '.cm-editor' ).textSelection( 'getSelection' ) ),
 			'bar'
 		);
 	} );
@@ -60,14 +58,12 @@ describe( 'CodeMirror textSelection for the wikitext 2010 editor', () => {
 			6
 		);
 		assert.deepStrictEqual(
-			await browser.execute( () => {
-				return $( '.cm-editor' ).textSelection( 'getCaretPosition', { startAndEnd: true } );
-			} ),
+			await browser.execute( () => $( '.cm-editor' ).textSelection( 'getCaretPosition', { startAndEnd: true } ) ),
 			[ 3, 6 ]
 		);
 	} );
 
-	it( 'correctly wraps the selected text when using encapsulateSelection', async function () {
+	it( 'correctly wraps the selected text when using encapsulateSelection', async () => {
 		await browser.execute( () => {
 			$( '.cm-editor' ).textSelection( 'setContents', 'foobaz' )
 				.textSelection( 'encapsulateSelection', {
@@ -83,7 +79,7 @@ describe( 'CodeMirror textSelection for the wikitext 2010 editor', () => {
 		);
 	} );
 
-	it( "correctly inserts the 'peri' option when using encapsulateSelection", async function () {
+	it( "correctly inserts the 'peri' option when using encapsulateSelection", async () => {
 		await browser.execute( () => {
 			$( '.cm-editor' ).textSelection( 'setContents', 'foobaz' )
 				.textSelection( 'encapsulateSelection', {
