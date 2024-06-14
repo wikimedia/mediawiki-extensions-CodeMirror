@@ -2,7 +2,7 @@
 	'use strict';
 
 	function eatMnemonic( stream, style, mnemonicStyle ) {
-		var ok;
+		let ok;
 		if ( stream.eat( '#' ) ) {
 			if ( stream.eat( 'x' ) ) {
 				ok = stream.eatWhile( /[a-fA-F\d]/ ) && stream.eat( ';' );
@@ -19,9 +19,9 @@
 		return style;
 	}
 
-	CodeMirror.defineMode( 'mediawiki', function ( config /* , parserConfig */ ) {
+	CodeMirror.defineMode( 'mediawiki', ( config /* , parserConfig */ ) => {
 
-		var mwConfig = config.mwConfig,
+		let mwConfig = config.mwConfig,
 
 			urlProtocols = new RegExp( '^(?:' + mwConfig.urlProtocols + ')', 'i' ),
 			permittedHtmlTags = { b: true, bdi: true, del: true, i: true, ins: true,
@@ -49,7 +49,7 @@
 		}
 
 		function makeLocalStyle( style, state, endGround ) {
-			var ground = '';
+			let ground = '';
 			switch ( state.nTemplate ) {
 				case 0:
 					break;
@@ -363,9 +363,9 @@
 		}
 
 		function eatLinkText() {
-			var linkIsBold, linkIsItalic;
+			let linkIsBold, linkIsItalic;
 			return function ( stream, state ) {
-				var tmpstyle;
+				let tmpstyle;
 				if ( stream.match( ']]' ) ) {
 					state.tokenize = state.stack.pop();
 					return makeLocalStyle( 'mw-link-bracket', state, 'nLink' );
@@ -394,7 +394,7 @@
 
 		function eatTagName( chars, isCloseTag, isHtmlTag ) {
 			return function ( stream, state ) {
-				var name = '';
+				let name = '';
 				while ( chars > 0 ) {
 					chars--;
 					name = name + stream.next();
@@ -464,7 +464,7 @@
 
 		function eatExtTagArea( name ) {
 			return function ( stream, state ) {
-				var origString = false,
+				let origString = false,
 					from = stream.pos,
 					to,
 
@@ -503,7 +503,7 @@
 
 		function eatExtTokens( origString ) {
 			return function ( stream, state ) {
-				var ret;
+				let ret;
 				if ( state.extMode === false ) {
 					ret = ( origString === false && stream.sol() ? 'line-cm-mw-exttag' : 'mw-exttag' );
 					stream.skipToEnd();
@@ -634,7 +634,7 @@
 
 		function eatWikiText( style, mnemonicStyle ) {
 			return function ( stream, state ) {
-				var ch, tmp, mt, name, isCloseTag, tagname,
+				let ch, tmp, mt, name, isCloseTag, tagname,
 					sol = stream.sol();
 
 				function chain( parser ) {
@@ -870,7 +870,7 @@
 			// firstsingleletterword has maximum priority
 			// firstmultiletterword has medium priority
 			// firstspace has low priority
-			var end = stream.pos,
+			const end = stream.pos,
 				str = stream.string.slice( 0, end - 3 ),
 				x1 = str.slice( -1, -1 + 1 ),
 				x2 = str.slice( -2, -2 + 1 );
@@ -911,7 +911,7 @@
 				};
 			},
 			token: function ( stream, state ) {
-				var style, p, t, f,
+				let style, p, t, f,
 					readyTokens = [],
 					tmpTokens = [];
 
@@ -975,7 +975,7 @@
 				return t.style;
 			},
 			blankLine: function ( state ) {
-				var ret;
+				let ret;
 				if ( state.extName ) {
 					if ( state.extMode ) {
 						ret = '';
@@ -994,7 +994,7 @@
 
 	function eatNowiki( style, lineStyle ) {
 		return function ( stream, state, ownLine ) {
-			var s;
+			let s;
 			if ( ownLine && stream.sol() ) {
 				state.ownLine = true;
 			} else if ( ownLine === false && state.ownLine ) {
@@ -1009,22 +1009,18 @@
 		};
 	}
 
-	CodeMirror.defineMode( 'mw-tag-pre', function ( /* config, parserConfig */ ) {
-		return {
-			startState: function () {
-				return {};
-			},
-			token: eatNowiki( 'mw-tag-pre', 'line-cm-mw-tag-pre' )
-		};
-	} );
+	CodeMirror.defineMode( 'mw-tag-pre', ( /* config, parserConfig */ ) => ( {
+		startState: function () {
+			return {};
+		},
+		token: eatNowiki( 'mw-tag-pre', 'line-cm-mw-tag-pre' )
+	} ) );
 
-	CodeMirror.defineMode( 'mw-tag-nowiki', function ( /* config, parserConfig */ ) {
-		return {
-			startState: function () {
-				return {};
-			},
-			token: eatNowiki( 'mw-tag-nowiki', 'line-cm-mw-tag-nowiki' )
-		};
-	} );
+	CodeMirror.defineMode( 'mw-tag-nowiki', ( /* config, parserConfig */ ) => ( {
+		startState: function () {
+			return {};
+		},
+		token: eatNowiki( 'mw-tag-nowiki', 'line-cm-mw-tag-nowiki' )
+	} ) );
 
 }( CodeMirror ) );

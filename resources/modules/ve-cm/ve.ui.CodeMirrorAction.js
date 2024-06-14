@@ -39,7 +39,7 @@ ve.ui.CodeMirrorAction.static.isLineNumbering = function () {
 		return false;
 	}
 
-	var namespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
+	const namespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
 	// Set to [] to disable everywhere, or null to enable everywhere
 	return !namespaces ||
 		namespaces.indexOf( mw.config.get( 'wgNamespaceNumber' ) ) !== -1;
@@ -51,7 +51,7 @@ ve.ui.CodeMirrorAction.static.isLineNumbering = function () {
  * @return {boolean} Action was executed
  */
 ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
-	var action = this,
+	const action = this,
 		surface = this.surface,
 		surfaceView = surface.getView(),
 		doc = surface.getModel().getDocument();
@@ -62,20 +62,20 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 			'ext.CodeMirror.lib',
 			'ext.CodeMirror.mode.mediawiki',
 			'jquery.client'
-		] ).then( function () {
-			var config = mw.config.get( 'extCodeMirrorConfig' );
+		] ).then( () => {
+			const config = mw.config.get( 'extCodeMirrorConfig' );
 
 			if ( !surface.mirror ) {
 				// Action was toggled to false since promise started
 				return;
 			}
-			mw.loader.using( config.pluginModules, function () {
+			mw.loader.using( config.pluginModules, () => {
 				if ( !surface.mirror ) {
 					// Action was toggled to false since promise started
 					return;
 				}
-				var tabSizeValue = surfaceView.documentView.documentNode.$element.css( 'tab-size' );
-				var cmOptions = {
+				const tabSizeValue = surfaceView.documentView.documentNode.$element.css( 'tab-size' );
+				const cmOptions = {
 					value: surface.getDom(),
 					mwConfig: config,
 					readOnly: 'nocursor',
@@ -120,8 +120,8 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 					surfaceView.$element.addClass( 'cm-mw-colorblind-colors' );
 				}
 
-				var profile = $.client.profile();
-				var supportsTransparentText = 'WebkitTextFillColor' in document.body.style &&
+				const profile = $.client.profile();
+				const supportsTransparentText = 'WebkitTextFillColor' in document.body.style &&
 					// Disable on Firefox+OSX (T175223)
 					!( profile.layout === 'gecko' && profile.platform === 'mac' );
 
@@ -133,7 +133,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 
 				if ( cmOptions.lineNumbers ) {
 					// Transfer gutter width to VE overlay.
-					var updateGutter = function ( cmDisplay ) {
+					const updateGutter = function ( cmDisplay ) {
 						surfaceView.$documentNode.css( 'margin-left', cmDisplay.gutters.offsetWidth );
 					};
 					CodeMirror.on( surface.mirror.display, 'updateGutter', updateGutter );
@@ -154,7 +154,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 
 				action.onLangChange();
 
-				ve.init.target.once( 'surfaceReady', function () {
+				ve.init.target.once( 'surfaceReady', () => {
 					if ( surface.mirror ) {
 						surface.mirror.refresh();
 					}
@@ -177,7 +177,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 			// Reset gutter.
 			surfaceView.$documentNode.css( 'margin-left', '' );
 
-			var mirrorElement = surface.mirror.getWrapperElement();
+			const mirrorElement = surface.mirror.getWrapperElement();
 			mirrorElement.parentNode.removeChild( mirrorElement );
 		}
 
@@ -193,7 +193,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
  * @param {ve.dm.Selection} selection
  */
 ve.ui.CodeMirrorAction.prototype.onSelect = function ( selection ) {
-	var range = selection.getCoveringRange();
+	const range = selection.getCoveringRange();
 
 	// Do not re-trigger bracket matching as long as something is selected
 	if ( !range || !range.isCollapsed() ) {
@@ -207,7 +207,7 @@ ve.ui.CodeMirrorAction.prototype.onSelect = function ( selection ) {
  * Handle langChange events from the document view
  */
 ve.ui.CodeMirrorAction.prototype.onLangChange = function () {
-	var surface = this.surface,
+	const surface = this.surface,
 		doc = surface.getView().getDocument(),
 		dir = doc.getDir(), lang = doc.getLang();
 
@@ -226,13 +226,13 @@ ve.ui.CodeMirrorAction.prototype.onLangChange = function () {
  * @param {ve.dm.Transaction} tx
  */
 ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
-	var offset = 0,
+	let offset = 0,
 		replacements = [],
 		action = this,
 		store = this.surface.getModel().getDocument().getStore(),
 		mirror = this.surface.mirror;
 
-	tx.operations.forEach( function ( op ) {
+	tx.operations.forEach( ( op ) => {
 		if ( op.type === 'retain' ) {
 			offset += op.length;
 		} else if ( op.type === 'replace' ) {
@@ -247,7 +247,7 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 	} );
 
 	// Apply replacements in reverse to avoid having to shift offsets
-	for ( var i = replacements.length - 1; i >= 0; i-- ) {
+	for ( let i = replacements.length - 1; i >= 0; i-- ) {
 		mirror.replaceRange(
 			replacements[ i ].data,
 			replacements[ i ].start,
@@ -277,11 +277,13 @@ ve.ui.CodeMirrorAction.prototype.getPosFromOffset = function ( veOffset ) {
 
 /* Registration */
 
-// eslint-disable-next-line no-jquery/no-global-selector
-var contentDir = $( '.mw-body-content .mw-parser-output' ).attr( 'dir' ) ||
-	// New pages will use wgPageContentLanguage which is set on the html element.
-	document.documentElement.dir;
+{
+	// eslint-disable-next-line no-jquery/no-global-selector
+	const contentDir = $( '.mw-body-content .mw-parser-output' ).attr( 'dir' ) ||
+		// New pages will use wgPageContentLanguage which is set on the html element.
+		document.documentElement.dir;
 
-if ( contentDir === 'ltr' ) {
-	ve.ui.actionFactory.register( ve.ui.CodeMirrorAction );
+	if ( contentDir === 'ltr' ) {
+		ve.ui.actionFactory.register( ve.ui.CodeMirrorAction );
+	}
 }

@@ -8,7 +8,7 @@
 	 *
 	 * @type {Object}
 	 */
-	var config = mw.config.get( 'extCodeMirrorConfig' ),
+	const config = mw.config.get( 'extCodeMirrorConfig' ),
 		extCiteLoaded = config.tagModes.ref,
 		testCases = [
 			{
@@ -146,7 +146,7 @@
 	 * @param {Function} callback Ran after CodeMirror has been initialized.
 	 */
 	function setup( wikitext, callback ) {
-		var $textarea = $( '<textarea>' );
+		const $textarea = $( '<textarea>' );
 
 		$textarea.val( wikitext );
 		$( '#qunit-fixture' ).append( $textarea );
@@ -167,24 +167,22 @@
 		$( '#qunit-fixture' ).find( '.CodeMirror' ).remove();
 	}
 
-	testCases.forEach( function ( testCase ) {
-		QUnit.test( 'Syntax highlighting: ' + testCase.title, function ( assert ) {
-			return mw.loader.using( config.pluginModules ).then( function () {
-				setup( testCase.input, function () {
-					var html = $( '.CodeMirror-code' ).html()
-						// CodeMirror does this only on WebKit browsers. Strip it to ensure tests
-						// pass across all browsers.
-						.replace( / style="padding-right: 0\.1px;"/g, '' )
-						// Reduce noise we don't really care about to make tests more readable.
-						.replace( / role="presentation"/g, '' )
-						.replace( / class="\s*CodeMirror-line\s*"/g, '' );
-					assert.strictEqual(
-						html,
-						testCase.output,
-						'Textarea contents'
-					);
-				} );
+	testCases.forEach( ( testCase ) => {
+		QUnit.test( 'Syntax highlighting: ' + testCase.title, ( assert ) => mw.loader.using( config.pluginModules ).then( () => {
+			setup( testCase.input, () => {
+				const html = $( '.CodeMirror-code' ).html()
+				// CodeMirror does this only on WebKit browsers. Strip it to ensure tests
+				// pass across all browsers.
+					.replace( / style="padding-right: 0\.1px;"/g, '' )
+				// Reduce noise we don't really care about to make tests more readable.
+					.replace( / role="presentation"/g, '' )
+					.replace( / class="\s*CodeMirror-line\s*"/g, '' );
+				assert.strictEqual(
+					html,
+					testCase.output,
+					'Textarea contents'
+				);
 			} );
-		} );
+		} ) );
 	} );
 }() );

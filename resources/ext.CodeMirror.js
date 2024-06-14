@@ -6,7 +6,7 @@ require( './ext.CodeMirror.data.js' );
  * @param {Object} data
  */
 function logUsage( data ) {
-	var event, editCountBucket;
+	let event, editCountBucket;
 
 	/* eslint-disable camelcase */
 	event = Object.assign( {

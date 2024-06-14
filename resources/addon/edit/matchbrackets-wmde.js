@@ -37,7 +37,7 @@
   }
 
   /* eslint-enable */
-  var surroundingBrackets = {
+  const surroundingBrackets = {
     '(': ')',
     ')': false,
     '[': ']',
@@ -47,7 +47,7 @@
   };
 
   function findSurroundingBrackets( cm, where, config ) {
-    var from, to, ch,
+    let from, to, ch,
       nestedBracketsToSkip = 0,
       lineNo = where.line,
       line = cm.getLine( lineNo ),
@@ -140,13 +140,13 @@
   }
 
   function stillTheSameMarks( marks, config ) {
-    var same = config.currentMarks &&
+    const same = config.currentMarks &&
       // No need to compare the details if it's not even the same amount
       config.currentMarks.length === marks.length &&
       // We need the flexibility because the order can be closing → opening bracket as well
-      marks.every( function ( mark ) {
+      marks.every( ( mark ) => {
         // These are typically only 2 elements for the opening and closing bracket
-        for ( var i = 0; i < config.currentMarks.length; i++ ) {
+        for ( let i = 0; i < config.currentMarks.length; i++ ) {
           // Ordered from "most likely to change" to "least likely" for performance
           if ( config.currentMarks[i].from.ch === mark.from.ch &&
             config.currentMarks[i].from.line === mark.from.line &&

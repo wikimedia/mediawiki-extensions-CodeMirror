@@ -39,7 +39,7 @@ ve.ui.CodeMirrorTool.prototype.onSelect = function () {
 	// Parent method
 	ve.ui.CodeMirrorTool.super.prototype.onSelect.apply( this, arguments );
 
-	var useCodeMirror = !!this.toolbar.surface.mirror;
+	const useCodeMirror = !!this.toolbar.surface.mirror;
 	this.setActive( useCodeMirror );
 
 	new mw.Api().saveOption( 'usecodemirror', useCodeMirror ? 1 : 0 );
@@ -58,13 +58,13 @@ ve.ui.CodeMirrorTool.prototype.onSelect = function () {
  * @inheritdoc
  */
 ve.ui.CodeMirrorTool.prototype.onSurfaceChange = function ( oldSurface, newSurface ) {
-	var isDisabled = newSurface.getMode() !== 'source';
+	const isDisabled = newSurface.getMode() !== 'source';
 
 	this.setDisabled( isDisabled );
 	if ( !isDisabled ) {
-		var command = this.getCommand();
-		var surface = this.toolbar.getSurface();
-		var useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
+		const command = this.getCommand();
+		const surface = this.toolbar.getSurface();
+		const useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
 		command.execute( surface, [ useCodeMirror ] );
 		this.setActive( useCodeMirror );
 
@@ -82,19 +82,21 @@ ve.ui.CodeMirrorTool.prototype.onSurfaceChange = function ( oldSurface, newSurfa
 
 ve.ui.CodeMirrorTool.prototype.onUpdateState = function () {};
 
-// eslint-disable-next-line no-jquery/no-global-selector
-var contentDir = $( '.mw-body-content .mw-parser-output' ).attr( 'dir' ) ||
-	// New pages will use wgPageContentLanguage which is set on the html element.
-	document.documentElement.dir;
+{
+	// eslint-disable-next-line no-jquery/no-global-selector
+	const contentDir = $( '.mw-body-content .mw-parser-output' ).attr( 'dir' ) ||
+		// New pages will use wgPageContentLanguage which is set on the html element.
+		document.documentElement.dir;
 
-if ( contentDir === 'ltr' ) {
-	/* Registration */
-	ve.ui.toolFactory.register( ve.ui.CodeMirrorTool );
+	if ( contentDir === 'ltr' ) {
+		/* Registration */
+		ve.ui.toolFactory.register( ve.ui.CodeMirrorTool );
 
-	/* Command */
-	ve.ui.commandRegistry.register(
-		new ve.ui.Command(
-			'codeMirror', 'codeMirror', 'toggle'
-		)
-	);
+		/* Command */
+		ve.ui.commandRegistry.register(
+			new ve.ui.Command(
+				'codeMirror', 'codeMirror', 'toggle'
+			)
+		);
+	}
 }

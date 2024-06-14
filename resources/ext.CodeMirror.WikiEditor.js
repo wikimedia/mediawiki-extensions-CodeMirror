@@ -1,10 +1,10 @@
 function init() {
-	var extCodeMirror = require( 'ext.CodeMirror' );
-	var codeMirror, $textbox1, realtimePreviewHandler;
+	const extCodeMirror = require( 'ext.CodeMirror' );
+	let codeMirror, $textbox1, realtimePreviewHandler;
 
-	var useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
+	let useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
 
-	var originHooksTextarea = $.valHooks.textarea;
+	const originHooksTextarea = $.valHooks.textarea;
 	// define jQuery hook for searching and replacing text using JS if CodeMirror is enabled, see Bug: T108711
 	$.valHooks.textarea = {
 		get: function ( elem ) {
@@ -27,7 +27,7 @@ function init() {
 
 	// jQuery.textSelection overrides for CodeMirror.
 	// See jQuery.textSelection.js for method documentation
-	var cmTextSelection = {
+	const cmTextSelection = {
 		getContents: function () {
 			return codeMirror.doc.getValue();
 		},
@@ -51,7 +51,7 @@ function init() {
 			return this;
 		},
 		getCaretPosition: function ( options ) {
-			var caretPos = codeMirror.doc.indexFromPos( codeMirror.doc.getCursor( true ) ),
+			const caretPos = codeMirror.doc.indexFromPos( codeMirror.doc.getCursor( true ) ),
 				endPos = codeMirror.doc.indexFromPos( codeMirror.doc.getCursor( false ) );
 			if ( options.startAndEnd ) {
 				return [ caretPos, endPos ];
@@ -83,14 +83,14 @@ function init() {
 			return false;
 		}
 
-		var namespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
+		const namespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
 		// Set to [] to disable everywhere, or null to enable everywhere
 		return !namespaces ||
 			namespaces.indexOf( mw.config.get( 'wgNamespaceNumber' ) ) !== -1;
 	}
 
 	// Keep these modules in sync with MediaWiki\Extension\CodeMirror\Hooks.php
-	var codeMirrorCoreModules = [
+	const codeMirrorCoreModules = [
 		'ext.CodeMirror.lib',
 		'ext.CodeMirror.mode.mediawiki'
 	];
@@ -100,15 +100,15 @@ function init() {
 	 * and react to changes coming from WikiEditor (including Realtime Preview if its enabled).
 	 */
 	function setupSizing() {
-		var $codeMirror = $( codeMirror.getWrapperElement() );
+		const $codeMirror = $( codeMirror.getWrapperElement() );
 
 		// Only add resizing corner if realtime preview is enabled,
 		// because that feature provides height resizing (even when preview isn't used).
 		if ( mw.loader.getState( 'ext.wikiEditor.realtimepreview' ) === 'ready' ) {
 			codeMirror.setSize( '100%', $textbox1.parent().height() );
 		}
-		var $resizableHandle = $codeMirror.find( '.ui-resizable-handle' );
-		mw.hook( 'ext.WikiEditor.realtimepreview.enable' ).add( function ( realtimePreview ) {
+		const $resizableHandle = $codeMirror.find( '.ui-resizable-handle' );
+		mw.hook( 'ext.WikiEditor.realtimepreview.enable' ).add( ( realtimePreview ) => {
 			// CodeMirror may have been turned on and then off again before realtimepreview is enabled, in which case it will be null.
 			if ( !codeMirror ) {
 				return;
@@ -121,7 +121,7 @@ function init() {
 			// Fix the width and height of the CodeMirror area.
 			codeMirror.setSize( '100%', realtimePreview.twoPaneLayout.$element.height() );
 		} );
-		mw.hook( 'ext.WikiEditor.realtimepreview.resize' ).add( function ( resizingBar ) {
+		mw.hook( 'ext.WikiEditor.realtimepreview.resize' ).add( ( resizingBar ) => {
 			// CodeMirror may have been turned off after realtimepreview was opened, in which case it will be null.
 			if ( !codeMirror ) {
 				return;
@@ -129,7 +129,7 @@ function init() {
 			// Keep in sync with the height of the pane.
 			codeMirror.setSize( '100%', resizingBar.getResizedPane().height() );
 		} );
-		mw.hook( 'ext.WikiEditor.realtimepreview.disable' ).add( function () {
+		mw.hook( 'ext.WikiEditor.realtimepreview.disable' ).add( () => {
 			// Re-show the corner resize handle.
 			$resizableHandle.show();
 			// CodeMirror may have been turned off after realtimepreview was opened, in which case it will be null.
@@ -145,10 +145,10 @@ function init() {
 	 * Replaces the default textarea with CodeMirror
 	 */
 	function enableCodeMirror() {
-		var config = mw.config.get( 'extCodeMirrorConfig' );
+		const config = mw.config.get( 'extCodeMirrorConfig' );
 
-		mw.loader.using( codeMirrorCoreModules.concat( config.pluginModules ), function () {
-			var $codeMirror, cmOptions,
+		mw.loader.using( codeMirrorCoreModules.concat( config.pluginModules ), () => {
+			let $codeMirror, cmOptions,
 				selectionStart = $textbox1.prop( 'selectionStart' ),
 				selectionEnd = $textbox1.prop( 'selectionEnd' ),
 				scrollTop = $textbox1.scrollTop(),
@@ -192,13 +192,13 @@ function init() {
 			codeMirror = CodeMirror.fromTextArea( $textbox1[ 0 ], cmOptions );
 			$codeMirror = $( codeMirror.getWrapperElement() );
 
-			codeMirror.on( 'focus', function () {
+			codeMirror.on( 'focus', () => {
 				$textbox1.triggerHandler( 'focus' );
 			} );
-			codeMirror.on( 'blur', function () {
+			codeMirror.on( 'blur', () => {
 				$textbox1.triggerHandler( 'blur' );
 			} );
-			mw.hook( 'editRecovery.loadEnd' ).add( function ( data ) {
+			mw.hook( 'editRecovery.loadEnd' ).add( ( data ) => {
 				codeMirror.on( 'change', data.fieldChangeHandler );
 			} );
 
@@ -250,7 +250,7 @@ function init() {
 	 */
 	function updateToolbarButton() {
 		// eslint-disable-next-line no-jquery/no-global-selector
-		var $button = $( '#mw-editbutton-codemirror' );
+		const $button = $( '#mw-editbutton-codemirror' );
 
 		$button.toggleClass( 'mw-editbutton-codemirror-active', !!useCodeMirror );
 
@@ -264,7 +264,7 @@ function init() {
 	 * Enables or disables CodeMirror
 	 */
 	function switchCodeMirror() {
-		var selectionObj, selectionStart, selectionEnd, scrollTop, hasFocus, $codeMirror;
+		let selectionObj, selectionStart, selectionEnd, scrollTop, hasFocus, $codeMirror;
 
 		if ( codeMirror ) {
 			scrollTop = codeMirror.getScrollInfo().top;
@@ -305,7 +305,7 @@ function init() {
 	 * Adds the CodeMirror button to WikiEditor
 	 */
 	function addCodeMirrorToWikiEditor() {
-		var $codeMirrorButton,
+		let $codeMirrorButton,
 			context = $textbox1.data( 'wikiEditor-context' ),
 			toolbar = context && context.modules && context.modules.toolbar;
 
@@ -357,13 +357,13 @@ function init() {
 	}
 
 	// Add CodeMirror button to the enhanced editing toolbar.
-	mw.hook( 'wikiEditor.toolbarReady' ).add( function ( $textarea ) {
+	mw.hook( 'wikiEditor.toolbarReady' ).add( ( $textarea ) => {
 		$textbox1 = $textarea;
 		addCodeMirrorToWikiEditor();
 	} );
 
 	// Synchronize textarea with CodeMirror before leaving
-	window.addEventListener( 'beforeunload', function () {
+	window.addEventListener( 'beforeunload', () => {
 		if ( codeMirror ) {
 			codeMirror.save();
 		}
