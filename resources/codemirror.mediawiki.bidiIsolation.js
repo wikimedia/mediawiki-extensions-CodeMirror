@@ -1,15 +1,17 @@
-import {
+const {
 	Decoration,
 	DecorationSet,
 	Direction,
 	EditorView,
 	PluginSpec,
+	Prec,
+	RangeSet,
+	RangeSetBuilder,
 	ViewPlugin,
-	ViewUpdate
-} from '@codemirror/view';
-import { Prec, RangeSet, RangeSetBuilder } from '@codemirror/state';
-import { syntaxTree } from '@codemirror/language';
-import { mwModeConfig } from './codemirror.mode.mediawiki.config';
+	ViewUpdate,
+	syntaxTree
+} = require( 'ext.CodeMirror.v6.lib' );
+const mwModeConfig = require( './codemirror.mediawiki.config.js' );
 
 /**
  * @type {Decoration}
@@ -122,4 +124,4 @@ const bidiIsolationSpec = {
  * @module CodeMirrorBidiIsolation
  * @see https://codemirror.net/examples/bidi/
  */
-export default ViewPlugin.fromClass( CodeMirrorBidiIsolation, bidiIsolationSpec );
+module.exports = ViewPlugin.fromClass( CodeMirrorBidiIsolation, bidiIsolationSpec );

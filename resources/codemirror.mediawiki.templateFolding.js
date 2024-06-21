@@ -1,8 +1,22 @@
-import { showTooltip, keymap, Tooltip, KeyBinding } from '@codemirror/view';
-import { StateField, Extension, EditorState } from '@codemirror/state';
-import { foldEffect, syntaxTree, ensureSyntaxTree, foldedRanges, unfoldAll, unfoldEffect, codeFolding } from '@codemirror/language';
-import { SyntaxNode, Tree } from '@lezer/common';
-import { mwModeConfig as modeConfig } from './codemirror.mode.mediawiki.config';
+const {
+	EditorState,
+	Extension,
+	KeyBinding,
+	StateField,
+	SyntaxNode,
+	Tree,
+	Tooltip,
+	codeFolding,
+	ensureSyntaxTree,
+	foldEffect,
+	foldedRanges,
+	keymap,
+	showTooltip,
+	syntaxTree,
+	unfoldAll,
+	unfoldEffect
+} = require( 'ext.CodeMirror.v6.lib' );
+const modeConfig = require( './codemirror.mediawiki.config.js' );
 
 /**
  * Check if a SyntaxNode is a template bracket (`{{` or `}}`)
@@ -280,7 +294,7 @@ const foldKeymap = [
  * @module CodeMirrorTemplateFolding
  * @type {Extension}
  */
-export default [
+const templateFoldingExtension = [
 	codeFolding( {
 		placeholderDOM( view ) {
 			const element = document.createElement( 'span' );
@@ -314,3 +328,5 @@ export default [
 	} ),
 	keymap.of( foldKeymap )
 ];
+
+module.exports = templateFoldingExtension;

@@ -1,5 +1,5 @@
-import CodeMirrorWikiEditor from './codemirror.wikieditor';
-import mediaWikiLang from './codemirror.mode.mediawiki';
+const CodeMirrorWikiEditor = require( 'ext.CodeMirror.v6.WikiEditor' );
+const mediaWikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
 
 // TODO: remove URL feature flag once bidi isolation is more stable.
 const urlParams = new URLSearchParams( window.location.search );

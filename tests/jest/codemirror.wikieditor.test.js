@@ -1,6 +1,6 @@
 mw.loader = { getState: jest.fn() };
 
-const CodeMirrorWikiEditor = require( '../../src/codemirror.wikieditor.js' ).default,
+const CodeMirrorWikiEditor = require( '../../resources/codemirror.wikieditor.js' ),
 	$textarea = $( '<textarea>' )
 		.text( 'The Smashing Pumpkins' ),
 	cmWe = new CodeMirrorWikiEditor( $textarea );

@@ -6,23 +6,19 @@
 		"wikimedia/mediawiki"
 	],
 	"parserOptions": {
-		"sourceType": "module"
-	},
-	"env": {
-		"browser": true,
-		"commonjs": true
+		"sourceType": "commonjs"
 	},
 	"globals": {
-		"Tree": "readonly"
+		"CodeMirror": "readonly"
 	},
 	"rules": {
 		"max-len": "off",
-		"es-x/no-array-prototype-includes": "off"
+		"es-x/no-object-assign": "warn"
 	},
 	"overrides": [
 		{
 			"files": [
-				"addon/edit/*.js"
+				"addon/*.js"
 			],
 			"rules": {
 				"computed-property-spacing": [ "error", "never" ],

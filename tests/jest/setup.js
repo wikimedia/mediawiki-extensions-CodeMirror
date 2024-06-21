@@ -1,4 +1,8 @@
-jest.mock( '../../ext.CodeMirror.data.js', () => jest.fn(), { virtual: true } );
+const mockBundle = require( '../../resources/lib/codemirror6.bundle.dist.js' );
+jest.mock( 'ext.CodeMirror.v6.lib', () => mockBundle, { virtual: true } );
+const mockCodeMirror = require( '../../resources/codemirror.js' );
+jest.mock( 'ext.CodeMirror.v6', () => mockCodeMirror, { virtual: true } );
+jest.mock( '../../resources/ext.CodeMirror.data.js', () => jest.fn(), { virtual: true } );
 global.mw = require( '@wikimedia/mw-node-qunit/src/mockMediaWiki.js' )();
 mw.user = Object.assign( mw.user, {
 	options: {

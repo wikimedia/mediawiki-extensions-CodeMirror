@@ -1,5 +1,4 @@
-import { EditorView } from '@codemirror/view';
-import { EditorSelection } from '@codemirror/state';
+const { EditorSelection, EditorView } = require( 'ext.CodeMirror.v6.lib' );
 
 /**
  * [jQuery.textSelection]{@link jQuery.fn.textSelection} implementation for CodeMirror.
@@ -230,4 +229,4 @@ class CodeMirrorTextSelection {
 	}
 }
 
-export default CodeMirrorTextSelection;
+module.exports = CodeMirrorTextSelection;

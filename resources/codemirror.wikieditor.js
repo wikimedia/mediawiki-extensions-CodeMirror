@@ -1,7 +1,10 @@
-import CodeMirror from './codemirror';
-import { EditorSelection, Extension } from '@codemirror/state';
-import { EditorView } from '@codemirror/view';
-import { LanguageSupport } from '@codemirror/language';
+const {
+	EditorSelection,
+	EditorView,
+	Extension,
+	LanguageSupport
+} = require( 'ext.CodeMirror.v6.lib' );
+const CodeMirror = require( 'ext.CodeMirror.v6' );
 
 /**
  * CodeMirror integration with
@@ -242,4 +245,4 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	}
 }
 
-export default CodeMirrorWikiEditor;
+module.exports = CodeMirrorWikiEditor;

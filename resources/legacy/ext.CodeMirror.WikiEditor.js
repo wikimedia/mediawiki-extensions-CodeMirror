@@ -146,7 +146,6 @@ function init() {
 	 */
 	function enableCodeMirror() {
 		const config = mw.config.get( 'extCodeMirrorConfig' );
-
 		mw.loader.using( codeMirrorCoreModules.concat( config.pluginModules ), () => {
 			const selectionStart = $textbox1.prop( 'selectionStart' ),
 				selectionEnd = $textbox1.prop( 'selectionEnd' ),

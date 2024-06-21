@@ -1,5 +1,5 @@
-import CodeMirror from './codemirror';
-import mediaWikiLang from './codemirror.mode.mediawiki';
+const CodeMirror = require( 'ext.CodeMirror.v6' );
+const mediaWikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
 
 const textarea = document.getElementById( 'wpTextbox1' );
 const cm = new CodeMirror( textarea );

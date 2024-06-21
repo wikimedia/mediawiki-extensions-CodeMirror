@@ -1,20 +1,23 @@
-import { EditorState, Extension, Compartment } from '@codemirror/state';
-import {
+const {
+	EditorState,
 	EditorView,
-	drawSelection,
-	lineNumbers,
-	highlightSpecialChars,
-	keymap,
-	rectangularSelection,
+	Extension,
+	Compartment,
+	ViewUpdate,
+	bracketMatching,
 	crosshairCursor,
-	ViewUpdate
-} from '@codemirror/view';
-import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
-import { searchKeymap } from '@codemirror/search';
-import { bracketMatching } from '@codemirror/language';
-import CodeMirrorTextSelection from './codemirror.textSelection';
-
-require( '../ext.CodeMirror.data.js' );
+	defaultKeymap,
+	drawSelection,
+	highlightSpecialChars,
+	history,
+	historyKeymap,
+	keymap,
+	lineNumbers,
+	rectangularSelection,
+	searchKeymap
+} = require( 'ext.CodeMirror.v6.lib' );
+const CodeMirrorTextSelection = require( './codemirror.textSelection.js' );
+require( './ext.CodeMirror.data.js' );
 
 /**
  * Interface for the CodeMirror editor.
@@ -381,7 +384,7 @@ class CodeMirror {
 		} );
 
 		// Add CodeMirror view to the DOM.
-		this.#addCodeMirrorToDom();
+		this.addCodeMirrorToDom();
 
 		// Hide native textarea and sync CodeMirror contents upon submission.
 		this.$textarea.hide();
@@ -418,7 +421,7 @@ class CodeMirror {
 	 *
 	 * @private
 	 */
-	#addCodeMirrorToDom() {
+	addCodeMirrorToDom() {
 		this.$textarea.wrap( '<div class="ext-codemirror-wrapper"></div>' );
 
 		this.view = new EditorView( {
@@ -521,4 +524,4 @@ class CodeMirror {
 	}
 }
 
-export default CodeMirror;
+module.exports = CodeMirror;

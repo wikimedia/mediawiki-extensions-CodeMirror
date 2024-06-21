@@ -1,5 +1,5 @@
-import CodeMirror from '../../src/codemirror.js';
-import mediaWikiLang from '../../src/codemirror.mode.mediawiki.js';
+const CodeMirror = require( '../../resources/codemirror.js' );
+const mediaWikiLang = require( '../../resources/codemirror.mediawiki.js' );
 
 const testCases = [
 	{

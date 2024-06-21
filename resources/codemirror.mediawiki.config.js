@@ -1,5 +1,9 @@
-import { Tag, tags } from '@lezer/highlight';
-import { TagStyle, StreamParser } from '@codemirror/language';
+const {
+	StreamParser,
+	Tag,
+	TagStyle,
+	tags
+} = require( 'ext.CodeMirror.v6.lib' );
 
 /**
  * Configuration for the MediaWiki highlighting mode for CodeMirror.
@@ -10,7 +14,7 @@ import { TagStyle, StreamParser } from '@codemirror/language';
  *
  * @example
  * // within MediaWiki:
- * import { mwModeConfig } from 'ext.CodeMirror.v6.mode.mediawiki';
+ * const { mwModeConfig } = require( 'ext.CodeMirror.v6.mode.mediawiki' );
  * // Reference tags by their constants in the tags property.
  * if ( tag === mwModeConfig.tags.htmlTagBracket ) {
  *   // …
@@ -118,7 +122,7 @@ class CodeMirrorModeMediaWikiConfig {
 	 * @return {Object<string>}
 	 */
 	get tags() {
-		return {
+		return Object.assign( {
 			apostrophes: 'character',
 			apostrophesBold: 'strong',
 			apostrophesItalic: 'emphasis',
@@ -160,9 +164,8 @@ class CodeMirrorModeMediaWikiConfig {
 			templateName: 'moduleKeyword',
 			templateVariable: 'atom',
 			templateVariableBracket: 'brace',
-			templateVariableName: 'variableName',
-			...this.#customTags
-		};
+			templateVariableName: 'variableName'
+		}, this.customTags );
 	}
 
 	/**
@@ -175,7 +178,7 @@ class CodeMirrorModeMediaWikiConfig {
 	 * @return {Object<string>}
 	 * @private
 	 */
-	get #customTags() {
+	get customTags() {
 		return {
 			em: 'mw-em',
 			error: 'mw-error',
@@ -203,7 +206,7 @@ class CodeMirrorModeMediaWikiConfig {
 
 	/**
 	 * These are custom tokens (a.k.a. tags) that aren't mapped to any of the standardized tags.
-	 * Make sure these are also defined in #customTags() above.
+	 * Make sure these are also defined in customTags() above.
 	 *
 	 * TODO: pass parent Tags in Tag.define() where appropriate for better theming.
 	 *
@@ -516,4 +519,6 @@ class CodeMirrorModeMediaWikiConfig {
  * @member CodeMirrorModeMediaWikiConfig
  * @type {CodeMirrorModeMediaWikiConfig}
  */
-export const mwModeConfig = new CodeMirrorModeMediaWikiConfig();
+const mwModeConfig = new CodeMirrorModeMediaWikiConfig();
+
+module.exports = mwModeConfig;

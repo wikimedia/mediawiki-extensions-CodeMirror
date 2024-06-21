@@ -1,15 +1,15 @@
-import {
+const {
 	HighlightStyle,
 	LanguageSupport,
 	StreamLanguage,
 	StreamParser,
 	StringStream,
+	Tag,
 	syntaxHighlighting
-} from '@codemirror/language';
-import { mwModeConfig as modeConfig } from './codemirror.mode.mediawiki.config';
-import { Tag } from '@lezer/highlight';
-import templateFoldingExtension from './codemirror.templateFolding';
-import bidiIsolationExtension from './codemirror.bidiIsolation';
+} = require( 'ext.CodeMirror.v6.lib' );
+const mwModeConfig = require( './codemirror.mediawiki.config.js' );
+const bidiIsolationExtension = require( './codemirror.mediawiki.bidiIsolation.js' );
+const templateFoldingExtension = require( './codemirror.mediawiki.templateFolding.js' );
 
 /**
  * MediaWiki language support for CodeMirror 6.
@@ -47,11 +47,11 @@ class CodeMirrorModeMediaWiki {
 		this.oldStyle = null;
 		this.tokens = [];
 		this.oldTokens = [];
-		this.tokenTable = modeConfig.tokenTable;
+		this.tokenTable = mwModeConfig.tokenTable;
 		this.registerGroundTokens();
 
 		// Dynamically register any tags that aren't already in CodeMirrorModeMediaWikiConfig
-		Object.keys( this.config.tags ).forEach( ( tag ) => modeConfig.addTag( tag ) );
+		Object.keys( this.config.tags ).forEach( ( tag ) => mwModeConfig.addTag( tag ) );
 	}
 
 	/**
@@ -94,7 +94,7 @@ class CodeMirrorModeMediaWiki {
 			'mw-template3-ext3-link-ground',
 			'mw-template3-ground',
 			'mw-template3-link-ground'
-		].forEach( ( ground ) => modeConfig.addToken( ground ) );
+		].forEach( ( ground ) => mwModeConfig.addToken( ground ) );
 	}
 
 	eatHtmlEntity( stream, style ) {
@@ -109,7 +109,7 @@ class CodeMirrorModeMediaWiki {
 			ok = stream.eatWhile( /[\w.\-:]/ ) && stream.eat( ';' );
 		}
 		if ( ok ) {
-			return modeConfig.tags.htmlEntity;
+			return mwModeConfig.tags.htmlEntity;
 		}
 		return style;
 	}
@@ -120,10 +120,10 @@ class CodeMirrorModeMediaWiki {
 
 	makeStyle( style, state, endGround ) {
 		if ( this.isBold || state.nDt > 0 ) {
-			style += ' ' + modeConfig.tags.strong;
+			style += ' ' + mwModeConfig.tags.strong;
 		}
 		if ( this.isItalic ) {
-			style += ' ' + modeConfig.tags.em;
+			style += ' ' + mwModeConfig.tags.em;
 		}
 		return this.makeLocalStyle( style, state, endGround );
 	}
@@ -196,7 +196,7 @@ class CodeMirrorModeMediaWiki {
 			if ( stream.eat( char ) ) {
 				return this.makeLocalStyle( style, state );
 			}
-			return this.makeLocalStyle( modeConfig.tags.error, state );
+			return this.makeLocalStyle( mwModeConfig.tags.error, state );
 		};
 	}
 
@@ -205,89 +205,89 @@ class CodeMirrorModeMediaWiki {
 			if ( stream.match( /^[^&<[{~]+/ ) ) {
 				if ( stream.eol() ) {
 					stream.backUp( count );
-					state.tokenize = this.eatEnd( modeConfig.tags.sectionHeader );
+					state.tokenize = this.eatEnd( mwModeConfig.tags.sectionHeader );
 				} else if ( stream.match( /^<!--(?!.*?-->.*?=)/, false ) ) {
 					// T171074: handle trailing comments
 					stream.backUp( count );
-					state.tokenize = this.eatBlock( modeConfig.tags.sectionHeader, '<!--', false );
+					state.tokenize = this.eatBlock( mwModeConfig.tags.sectionHeader, '<!--', false );
 				}
-				return modeConfig.tags.section; // style is null
+				return mwModeConfig.tags.section; // style is null
 			}
-			return this.eatWikiText( modeConfig.tags.section )( stream, state );
+			return this.eatWikiText( mwModeConfig.tags.section )( stream, state );
 		};
 	}
 
 	inVariable( stream, state ) {
 		if ( stream.match( /^[^{}|]+/ ) ) {
-			return this.makeLocalStyle( modeConfig.tags.templateVariableName, state );
+			return this.makeLocalStyle( mwModeConfig.tags.templateVariableName, state );
 		}
 		if ( stream.eat( '|' ) ) {
 			state.tokenize = this.inVariableDefault.bind( this );
-			return this.makeLocalStyle( modeConfig.tags.templateVariableDelimiter, state );
+			return this.makeLocalStyle( mwModeConfig.tags.templateVariableDelimiter, state );
 		}
 		if ( stream.match( '}}}' ) ) {
 			state.tokenize = state.stack.pop();
-			return this.makeLocalStyle( modeConfig.tags.templateVariableBracket, state );
+			return this.makeLocalStyle( mwModeConfig.tags.templateVariableBracket, state );
 		}
 		if ( stream.match( '{{{' ) ) {
 			state.stack.push( state.tokenize );
-			return this.makeLocalStyle( modeConfig.tags.templateVariableBracket, state );
+			return this.makeLocalStyle( mwModeConfig.tags.templateVariableBracket, state );
 		}
 		stream.next();
-		return this.makeLocalStyle( modeConfig.tags.templateVariableName, state );
+		return this.makeLocalStyle( mwModeConfig.tags.templateVariableName, state );
 	}
 
 	inVariableDefault( stream, state ) {
 		if ( stream.match( /^[^{}[<&~]+/ ) ) {
-			return this.makeLocalStyle( modeConfig.tags.templateVariable, state );
+			return this.makeLocalStyle( mwModeConfig.tags.templateVariable, state );
 		}
 		if ( stream.match( '}}}' ) ) {
 			state.tokenize = state.stack.pop();
-			return this.makeLocalStyle( modeConfig.tags.templateVariableBracket, state );
+			return this.makeLocalStyle( mwModeConfig.tags.templateVariableBracket, state );
 		}
-		return this.eatWikiText( modeConfig.tags.templateVariable )( stream, state );
+		return this.eatWikiText( mwModeConfig.tags.templateVariable )( stream, state );
 	}
 
 	inParserFunctionName( stream, state ) {
 		// FIXME: {{#name}} and {{uc}} are wrong, must have ':'
 		if ( stream.match( /^#?[^:}{~]+/ ) ) {
-			return this.makeLocalStyle( modeConfig.tags.parserFunctionName, state );
+			return this.makeLocalStyle( mwModeConfig.tags.parserFunctionName, state );
 		}
 		if ( stream.eat( ':' ) ) {
 			state.tokenize = this.inParserFunctionArguments.bind( this );
-			return this.makeLocalStyle( modeConfig.tags.parserFunctionDelimiter, state );
+			return this.makeLocalStyle( mwModeConfig.tags.parserFunctionDelimiter, state );
 		}
 		if ( stream.match( '}}' ) ) {
 			state.tokenize = state.stack.pop();
-			return this.makeLocalStyle( modeConfig.tags.parserFunctionBracket, state, 'nExt' );
+			return this.makeLocalStyle( mwModeConfig.tags.parserFunctionBracket, state, 'nExt' );
 		}
-		return this.eatWikiText( modeConfig.tags.parserFunction )( stream, state );
+		return this.eatWikiText( mwModeConfig.tags.parserFunction )( stream, state );
 	}
 
 	inParserFunctionArguments( stream, state ) {
 		if ( stream.match( /^[^|}{[<&~]+/ ) ) {
-			return this.makeLocalStyle( modeConfig.tags.parserFunction, state );
+			return this.makeLocalStyle( mwModeConfig.tags.parserFunction, state );
 		} else if ( stream.eat( '|' ) ) {
-			return this.makeLocalStyle( modeConfig.tags.parserFunctionDelimiter, state );
+			return this.makeLocalStyle( mwModeConfig.tags.parserFunctionDelimiter, state );
 		} else if ( stream.match( '}}' ) ) {
 			state.tokenize = state.stack.pop();
-			return this.makeLocalStyle( modeConfig.tags.parserFunctionBracket, state, 'nExt' );
+			return this.makeLocalStyle( mwModeConfig.tags.parserFunctionBracket, state, 'nExt' );
 		}
-		return this.eatWikiText( modeConfig.tags.parserFunction )( stream, state );
+		return this.eatWikiText( mwModeConfig.tags.parserFunction )( stream, state );
 	}
 
 	eatTemplatePageName( haveAte ) {
 		return ( stream, state ) => {
 			if ( stream.match( /^[\s\u00a0]*\|[\s\u00a0]*/ ) ) {
 				state.tokenize = this.eatTemplateArgument( true );
-				return this.makeLocalStyle( modeConfig.tags.templateDelimiter, state );
+				return this.makeLocalStyle( mwModeConfig.tags.templateDelimiter, state );
 			}
 			if ( stream.match( /^[\s\u00a0]*\}\}/ ) ) {
 				state.tokenize = state.stack.pop();
-				return this.makeLocalStyle( modeConfig.tags.templateBracket, state, 'nTemplate' );
+				return this.makeLocalStyle( mwModeConfig.tags.templateBracket, state, 'nTemplate' );
 			}
 			if ( stream.match( /^[\s\u00a0]*<!--.*?-->/ ) ) {
-				return this.makeLocalStyle( modeConfig.tags.comment, state );
+				return this.makeLocalStyle( mwModeConfig.tags.comment, state );
 			}
 			if ( haveAte && stream.sol() ) {
 				// @todo error message
@@ -297,14 +297,14 @@ class CodeMirrorModeMediaWiki {
 			}
 			if ( stream.match( /^[\s\u00a0]*[^\s\u00a0|}<{&~]+/ ) ) {
 				state.tokenize = this.eatTemplatePageName( true );
-				return this.makeLocalStyle( modeConfig.tags.templateName, state );
+				return this.makeLocalStyle( mwModeConfig.tags.templateName, state );
 			} else if ( stream.eatSpace() ) {
 				if ( stream.eol() === true ) {
-					return this.makeLocalStyle( modeConfig.tags.templateName, state );
+					return this.makeLocalStyle( mwModeConfig.tags.templateName, state );
 				}
-				return this.makeLocalStyle( modeConfig.tags.templateName, state );
+				return this.makeLocalStyle( mwModeConfig.tags.templateName, state );
 			}
-			return this.eatWikiText( modeConfig.tags.templateName )( stream, state );
+			return this.eatWikiText( mwModeConfig.tags.templateName )( stream, state );
 		};
 	}
 
@@ -313,19 +313,19 @@ class CodeMirrorModeMediaWiki {
 			if ( expectArgName && stream.eatWhile( /[^=|}{[<&~]/ ) ) {
 				if ( stream.eat( '=' ) ) {
 					state.tokenize = this.eatTemplateArgument( false );
-					return this.makeLocalStyle( modeConfig.tags.templateArgumentName, state );
+					return this.makeLocalStyle( mwModeConfig.tags.templateArgumentName, state );
 				}
-				return this.makeLocalStyle( modeConfig.tags.template, state );
+				return this.makeLocalStyle( mwModeConfig.tags.template, state );
 			} else if ( stream.eatWhile( /[^|}{[<&~]/ ) ) {
-				return this.makeLocalStyle( modeConfig.tags.template, state );
+				return this.makeLocalStyle( mwModeConfig.tags.template, state );
 			} else if ( stream.eat( '|' ) ) {
 				state.tokenize = this.eatTemplateArgument( true );
-				return this.makeLocalStyle( modeConfig.tags.templateDelimiter, state );
+				return this.makeLocalStyle( mwModeConfig.tags.templateDelimiter, state );
 			} else if ( stream.match( '}}' ) ) {
 				state.tokenize = state.stack.pop();
-				return this.makeLocalStyle( modeConfig.tags.templateBracket, state, 'nTemplate' );
+				return this.makeLocalStyle( mwModeConfig.tags.templateBracket, state, 'nTemplate' );
 			}
-			return this.eatWikiText( modeConfig.tags.template )( stream, state );
+			return this.eatWikiText( mwModeConfig.tags.template )( stream, state );
 		};
 	}
 
@@ -342,7 +342,7 @@ class CodeMirrorModeMediaWiki {
 			} else {
 				state.tokenize = this.inExternalLink.bind( this );
 			}
-			return this.makeLocalStyle( modeConfig.tags.extLinkProtocol, state );
+			return this.makeLocalStyle( mwModeConfig.tags.extLinkProtocol, state );
 		};
 	}
 
@@ -355,7 +355,7 @@ class CodeMirrorModeMediaWiki {
 		}
 		if ( stream.match( /^[\s\u00a0]*\]/ ) ) {
 			state.tokenize = state.stack.pop();
-			return this.makeLocalStyle( modeConfig.tags.extLinkBracket, state, 'nLink' );
+			return this.makeLocalStyle( mwModeConfig.tags.extLinkBracket, state, 'nLink' );
 		}
 		if ( stream.eatSpace() ) {
 			state.tokenize = this.inExternalLinkText.bind( this );
@@ -369,9 +369,9 @@ class CodeMirrorModeMediaWiki {
 					stream.next();
 				}
 			}
-			return this.makeStyle( modeConfig.tags.extLink, state );
+			return this.makeStyle( mwModeConfig.tags.extLink, state );
 		}
-		return this.eatWikiText( modeConfig.tags.extLink )( stream, state );
+		return this.eatWikiText( mwModeConfig.tags.extLink )( stream, state );
 	}
 
 	inExternalLinkText( stream, state ) {
@@ -383,12 +383,12 @@ class CodeMirrorModeMediaWiki {
 		}
 		if ( stream.eat( ']' ) ) {
 			state.tokenize = state.stack.pop();
-			return this.makeLocalStyle( modeConfig.tags.extLinkBracket, state, 'nLink' );
+			return this.makeLocalStyle( mwModeConfig.tags.extLinkBracket, state, 'nLink' );
 		}
 		if ( stream.match( /^[^'\]{&~<]+/ ) ) {
-			return this.makeStyle( modeConfig.tags.extLinkText, state );
+			return this.makeStyle( mwModeConfig.tags.extLinkText, state );
 		}
-		return this.eatWikiText( modeConfig.tags.extLinkText )( stream, state );
+		return this.eatWikiText( mwModeConfig.tags.extLinkText )( stream, state );
 	}
 
 	inLink( stream, state ) {
@@ -400,24 +400,24 @@ class CodeMirrorModeMediaWiki {
 		}
 		if ( stream.match( /^[\s\u00a0]*#[\s\u00a0]*/ ) ) {
 			state.tokenize = this.inLinkToSection.bind( this );
-			return this.makeLocalStyle( modeConfig.tags.link, state );
+			return this.makeLocalStyle( mwModeConfig.tags.link, state );
 		}
 		if ( stream.match( /^[\s\u00a0]*\|[\s\u00a0]*/ ) ) {
 			state.tokenize = this.eatLinkText();
-			return this.makeLocalStyle( modeConfig.tags.linkDelimiter, state );
+			return this.makeLocalStyle( mwModeConfig.tags.linkDelimiter, state );
 		}
 		if ( stream.match( /^[\s\u00a0]*\]\]/ ) ) {
 			state.tokenize = state.stack.pop();
-			return this.makeLocalStyle( modeConfig.tags.linkBracket, state, 'nLink' );
+			return this.makeLocalStyle( mwModeConfig.tags.linkBracket, state, 'nLink' );
 		}
 		if ( stream.match( /^[\s\u00a0]*[^\s\u00a0#|\]&~{]+/ ) || stream.eatSpace() ) {
 			return this.makeStyle(
-				`${ modeConfig.tags.linkPageName } ${ modeConfig.tags.pageName }`,
+				`${ mwModeConfig.tags.linkPageName } ${ mwModeConfig.tags.pageName }`,
 				state
 			);
 		}
 		return this.eatWikiText(
-			`${ modeConfig.tags.linkPageName } ${ modeConfig.tags.pageName }`
+			`${ mwModeConfig.tags.linkPageName } ${ mwModeConfig.tags.pageName }`
 		)( stream, state );
 	}
 
@@ -430,17 +430,17 @@ class CodeMirrorModeMediaWiki {
 		}
 		// FIXME '{{' breaks links, example: [[z{{page]]
 		if ( stream.match( /^[^|\]&~{}]+/ ) ) {
-			return this.makeLocalStyle( modeConfig.tags.linkToSection, state );
+			return this.makeLocalStyle( mwModeConfig.tags.linkToSection, state );
 		}
 		if ( stream.eat( '|' ) ) {
 			state.tokenize = this.eatLinkText();
-			return this.makeLocalStyle( modeConfig.tags.linkDelimiter, state );
+			return this.makeLocalStyle( mwModeConfig.tags.linkDelimiter, state );
 		}
 		if ( stream.match( ']]' ) ) {
 			state.tokenize = state.stack.pop();
-			return this.makeLocalStyle( modeConfig.tags.linkBracket, state, 'nLink' );
+			return this.makeLocalStyle( mwModeConfig.tags.linkBracket, state, 'nLink' );
 		}
-		return this.eatWikiText( modeConfig.tags.linkToSection )( stream, state );
+		return this.eatWikiText( mwModeConfig.tags.linkToSection )( stream, state );
 	}
 
 	eatLinkText() {
@@ -449,28 +449,28 @@ class CodeMirrorModeMediaWiki {
 			let tmpstyle;
 			if ( stream.match( ']]' ) ) {
 				state.tokenize = state.stack.pop();
-				return this.makeLocalStyle( modeConfig.tags.linkBracket, state, 'nLink' );
+				return this.makeLocalStyle( mwModeConfig.tags.linkBracket, state, 'nLink' );
 			}
 			if ( stream.match( '\'\'\'' ) ) {
 				linkIsBold = !linkIsBold;
 				return this.makeLocalStyle(
-					`${ modeConfig.tags.linkText } ${ modeConfig.tags.apostrophes }`,
+					`${ mwModeConfig.tags.linkText } ${ mwModeConfig.tags.apostrophes }`,
 					state
 				);
 			}
 			if ( stream.match( '\'\'' ) ) {
 				linkIsItalic = !linkIsItalic;
 				return this.makeLocalStyle(
-					`${ modeConfig.tags.linkText } ${ modeConfig.tags.apostrophes }`,
+					`${ mwModeConfig.tags.linkText } ${ mwModeConfig.tags.apostrophes }`,
 					state
 				);
 			}
-			tmpstyle = modeConfig.tags.linkText;
+			tmpstyle = mwModeConfig.tags.linkText;
 			if ( linkIsBold ) {
-				tmpstyle += ' ' + modeConfig.tags.strong;
+				tmpstyle += ' ' + mwModeConfig.tags.strong;
 			}
 			if ( linkIsItalic ) {
-				tmpstyle += ' ' + modeConfig.tags.em;
+				tmpstyle += ' ' + mwModeConfig.tags.em;
 			}
 			if ( stream.match( /^[^'\]{&~<]+/ ) ) {
 				return this.makeStyle( tmpstyle, state );
@@ -490,23 +490,23 @@ class CodeMirrorModeMediaWiki {
 			name = name.toLowerCase();
 
 			if ( isHtmlTag ) {
-				if ( isCloseTag && !modeConfig.implicitlyClosedHtmlTags[ name ] ) {
-					state.tokenize = this.eatChar( '>', modeConfig.tags.htmlTagBracket );
+				if ( isCloseTag && !mwModeConfig.implicitlyClosedHtmlTags[ name ] ) {
+					state.tokenize = this.eatChar( '>', mwModeConfig.tags.htmlTagBracket );
 				} else {
 					state.tokenize = this.eatHtmlTagAttribute( name );
 				}
-				return this.makeLocalStyle( modeConfig.tags.htmlTagName, state );
+				return this.makeLocalStyle( mwModeConfig.tags.htmlTagName, state );
 			}
 			// it is the extension tag
 			if ( isCloseTag ) {
 				state.tokenize = this.eatChar(
 					'>',
-					`${ modeConfig.tags.extTagBracket } mw-ext-${ name }`
+					`${ mwModeConfig.tags.extTagBracket } mw-ext-${ name }`
 				);
 			} else {
 				state.tokenize = this.eatExtTagAttribute( name );
 			}
-			return this.makeLocalStyle( `${ modeConfig.tags.extTagName } mw-ext-${ name }`, state );
+			return this.makeLocalStyle( `${ mwModeConfig.tags.extTagName } mw-ext-${ name }`, state );
 		};
 	}
 
@@ -514,20 +514,20 @@ class CodeMirrorModeMediaWiki {
 		return ( stream, state ) => {
 
 			if ( stream.match( /^(?:"[^<">]*"|'[^<'>]*'|[^>/<{&~])+/ ) ) {
-				return this.makeLocalStyle( modeConfig.tags.htmlTagAttribute, state );
+				return this.makeLocalStyle( mwModeConfig.tags.htmlTagAttribute, state );
 			}
 			if ( stream.eat( '>' ) ) {
-				if ( !( name in modeConfig.implicitlyClosedHtmlTags ) ) {
+				if ( !( name in mwModeConfig.implicitlyClosedHtmlTags ) ) {
 					state.inHtmlTag.push( name );
 				}
 				state.tokenize = state.stack.pop();
-				return this.makeLocalStyle( modeConfig.tags.htmlTagBracket, state );
+				return this.makeLocalStyle( mwModeConfig.tags.htmlTagBracket, state );
 			}
 			if ( stream.match( '/>' ) ) {
 				state.tokenize = state.stack.pop();
-				return this.makeLocalStyle( modeConfig.tags.htmlTagBracket, state );
+				return this.makeLocalStyle( mwModeConfig.tags.htmlTagBracket, state );
 			}
-			return this.eatWikiText( modeConfig.tags.htmlTagAttribute )( stream, state );
+			return this.eatWikiText( mwModeConfig.tags.htmlTagAttribute )( stream, state );
 		};
 	}
 
@@ -546,7 +546,7 @@ class CodeMirrorModeMediaWiki {
 		return ( stream, state ) => {
 
 			if ( stream.match( /^(?:"[^">]*"|'[^'>]*'|[^>/<{&~])+/ ) ) {
-				return this.makeLocalStyle( `${ modeConfig.tags.extTagAttribute } mw-ext-${ name }`, state );
+				return this.makeLocalStyle( `${ mwModeConfig.tags.extTagAttribute } mw-ext-${ name }`, state );
 			}
 			if ( stream.eat( '>' ) ) {
 				state.extName = name;
@@ -570,13 +570,13 @@ class CodeMirrorModeMediaWiki {
 				}
 
 				state.tokenize = this.eatExtTagArea( name );
-				return this.makeLocalStyle( `${ modeConfig.tags.extTagBracket } mw-ext-${ name }`, state );
+				return this.makeLocalStyle( `${ mwModeConfig.tags.extTagBracket } mw-ext-${ name }`, state );
 			}
 			if ( stream.match( '/>' ) ) {
 				state.tokenize = state.stack.pop();
-				return this.makeLocalStyle( `${ modeConfig.tags.extTagBracket } mw-ext-${ name }`, state );
+				return this.makeLocalStyle( `${ mwModeConfig.tags.extTagBracket } mw-ext-${ name }`, state );
 			}
-			return this.eatWikiText( `${ modeConfig.tags.extTagAttribute } mw-ext-${ name }` )( stream, state );
+			return this.eatWikiText( `${ mwModeConfig.tags.extTagAttribute } mw-ext-${ name }` )( stream, state );
 		};
 	}
 
@@ -615,7 +615,7 @@ class CodeMirrorModeMediaWiki {
 			stream.next(); // eat <
 			stream.next(); // eat /
 			state.tokenize = this.eatTagName( name.length, true, false );
-			return this.makeLocalStyle( `${ modeConfig.tags.extTagBracket } mw-ext-${ name }`, state );
+			return this.makeLocalStyle( `${ mwModeConfig.tags.extTagBracket } mw-ext-${ name }`, state );
 		};
 	}
 
@@ -623,7 +623,7 @@ class CodeMirrorModeMediaWiki {
 		return ( stream, state ) => {
 			let ret;
 			if ( state.extMode === false ) {
-				ret = modeConfig.tags.extTag;
+				ret = mwModeConfig.tags.extTag;
 				stream.skipToEnd();
 			} else {
 				ret = `mw-tag-${ state.extName } ` +
@@ -643,7 +643,7 @@ class CodeMirrorModeMediaWiki {
 		stream.match( '{|' );
 		stream.eatSpace();
 		state.tokenize = this.inTableDefinition.bind( this );
-		return modeConfig.tags.tableBracket;
+		return mwModeConfig.tags.tableBracket;
 	}
 
 	inTableDefinition( stream, state ) {
@@ -651,7 +651,7 @@ class CodeMirrorModeMediaWiki {
 			state.tokenize = this.inTable.bind( this );
 			return this.inTable( stream, state );
 		}
-		return this.eatWikiText( modeConfig.tags.tableDefinition )( stream, state );
+		return this.eatWikiText( mwModeConfig.tags.tableDefinition )( stream, state );
 	}
 
 	inTable( stream, state ) {
@@ -661,25 +661,25 @@ class CodeMirrorModeMediaWiki {
 				if ( stream.eat( '-' ) ) {
 					stream.eatSpace();
 					state.tokenize = this.inTableDefinition.bind( this );
-					return this.makeLocalStyle( modeConfig.tags.tableDelimiter, state );
+					return this.makeLocalStyle( mwModeConfig.tags.tableDelimiter, state );
 				}
 				if ( stream.eat( '+' ) ) {
 					stream.eatSpace();
 					state.tokenize = this.eatTableRow( true, false, true );
-					return this.makeLocalStyle( modeConfig.tags.tableDelimiter, state );
+					return this.makeLocalStyle( mwModeConfig.tags.tableDelimiter, state );
 				}
 				if ( stream.eat( '}' ) ) {
 					state.tokenize = state.stack.pop();
-					return this.makeLocalStyle( modeConfig.tags.tableBracket, state );
+					return this.makeLocalStyle( mwModeConfig.tags.tableBracket, state );
 				}
 				stream.eatSpace();
 				state.tokenize = this.eatTableRow( true, false );
-				return this.makeLocalStyle( modeConfig.tags.tableDelimiter, state );
+				return this.makeLocalStyle( mwModeConfig.tags.tableDelimiter, state );
 			}
 			if ( stream.eat( '!' ) ) {
 				stream.eatSpace();
 				state.tokenize = this.eatTableRow( true, true );
-				return this.makeLocalStyle( modeConfig.tags.tableDelimiter, state );
+				return this.makeLocalStyle( mwModeConfig.tags.tableDelimiter, state );
 			}
 		}
 		return this.eatWikiText( '' )( stream, state );
@@ -689,9 +689,9 @@ class CodeMirrorModeMediaWiki {
 	eatTableRow( isStart, isHead, isCaption ) {
 		let tag = '';
 		if ( isCaption ) {
-			tag = modeConfig.tags.tableCaption;
+			tag = mwModeConfig.tags.tableCaption;
 		} else if ( isHead ) {
-			tag = modeConfig.tags.strong;
+			tag = mwModeConfig.tags.strong;
 		}
 		return ( stream, state ) => {
 			if ( stream.sol() ) {
@@ -707,11 +707,11 @@ class CodeMirrorModeMediaWiki {
 					this.isBold = false;
 					this.isItalic = false;
 					state.tokenize = this.eatTableRow( true, isHead, isCaption );
-					return this.makeLocalStyle( modeConfig.tags.tableDelimiter, state );
+					return this.makeLocalStyle( mwModeConfig.tags.tableDelimiter, state );
 				}
 				if ( isStart && stream.eat( '|' ) ) {
 					state.tokenize = this.eatTableRow( false, isHead, isCaption );
-					return this.makeLocalStyle( modeConfig.tags.tableDelimiter, state );
+					return this.makeLocalStyle( mwModeConfig.tags.tableDelimiter, state );
 				}
 			}
 			return this.eatWikiText( tag )( stream, state );
@@ -721,7 +721,7 @@ class CodeMirrorModeMediaWiki {
 	eatFreeExternalLinkProtocol( stream, state ) {
 		stream.match( this.urlProtocols );
 		state.tokenize = this.eatFreeExternalLink.bind( this );
-		return this.makeLocalStyle( modeConfig.tags.freeExtLinkProtocol, state );
+		return this.makeLocalStyle( mwModeConfig.tags.freeExtLinkProtocol, state );
 	}
 
 	eatFreeExternalLink( stream, state ) {
@@ -731,24 +731,24 @@ class CodeMirrorModeMediaWiki {
 			if ( stream.peek() === '~' ) {
 				if ( !stream.match( /^~~~+/, false ) ) {
 					stream.match( /^~*/ );
-					return this.makeLocalStyle( modeConfig.tags.freeExtLink, state );
+					return this.makeLocalStyle( mwModeConfig.tags.freeExtLink, state );
 				}
 			} else if ( stream.peek() === '{' ) {
 				if ( !stream.match( '{{', false ) ) {
 					stream.next();
-					return this.makeLocalStyle( modeConfig.tags.freeExtLink, state );
+					return this.makeLocalStyle( mwModeConfig.tags.freeExtLink, state );
 				}
 			} else if ( stream.peek() === '\'' ) {
 				if ( !stream.match( '\'\'', false ) ) {
 					stream.next();
-					return this.makeLocalStyle( modeConfig.tags.freeExtLink, state );
+					return this.makeLocalStyle( mwModeConfig.tags.freeExtLink, state );
 				}
 			} else if ( stream.match( /^[).,]+(?=[^\s\u00a0{[\]<>~).,])/ ) ) {
-				return this.makeLocalStyle( modeConfig.tags.freeExtLink, state );
+				return this.makeLocalStyle( mwModeConfig.tags.freeExtLink, state );
 			}
 		}
 		state.tokenize = state.stack.pop();
-		return this.makeLocalStyle( modeConfig.tags.freeExtLink, state );
+		return this.makeLocalStyle( mwModeConfig.tags.freeExtLink, state );
 	}
 
 	eatList( stream, state ) {
@@ -757,7 +757,7 @@ class CodeMirrorModeMediaWiki {
 		if ( mt && !this.isNested( state ) && mt[ 0 ].includes( ';' ) ) {
 			state.nDt += mt[ 0 ].split( ';' ).length - 1;
 		}
-		return this.makeLocalStyle( modeConfig.tags.list, state );
+		return this.makeLocalStyle( mwModeConfig.tags.list, state );
 	}
 
 	/**
@@ -781,13 +781,13 @@ class CodeMirrorModeMediaWiki {
 				if ( !stream.match( '//', false ) && stream.match( this.urlProtocols ) ) {
 					state.stack.push( state.tokenize );
 					state.tokenize = this.eatFreeExternalLink.bind( this );
-					return this.makeLocalStyle( modeConfig.tags.freeExtLinkProtocol, state );
+					return this.makeLocalStyle( mwModeConfig.tags.freeExtLinkProtocol, state );
 				}
 				ch = stream.next();
 				switch ( ch ) {
 					case '-':
 						if ( stream.match( /^---+/ ) ) {
-							return modeConfig.tags.hr;
+							return mwModeConfig.tags.hr;
 						}
 						break;
 					case '=':
@@ -798,7 +798,7 @@ class CodeMirrorModeMediaWiki {
 							stream.backUp( tmp[ 2 ].length );
 							state.stack.push( state.tokenize );
 							state.tokenize = this.eatSectionHeader( tmp[ 3 ].length );
-							return modeConfig.tags.sectionHeader + ' ' +
+							return mwModeConfig.tags.sectionHeader + ' ' +
 								/**
 								 * Tokens used here include:
 								 * - cm-mw-section-1
@@ -808,12 +808,12 @@ class CodeMirrorModeMediaWiki {
 								 * - cm-mw-section-5
 								 * - cm-mw-section-6
 								 */
-								modeConfig.tags[ `sectionHeader${ tmp[ 1 ].length + 1 }` ];
+								mwModeConfig.tags[ `sectionHeader${ tmp[ 1 ].length + 1 }` ];
 						}
 						break;
 					case ';':
 						stream.backUp( 1 );
-						// fall through
+					// fall through
 					case '*':
 					case '#':
 						return this.eatList( stream, state );
@@ -831,11 +831,11 @@ class CodeMirrorModeMediaWiki {
 							if ( stream.match( /^:+/ ) ) { // ::{|
 								state.stack.push( state.tokenize );
 								state.tokenize = this.eatStartTable.bind( this );
-								return modeConfig.tags.indenting;
+								return mwModeConfig.tags.indenting;
 							}
 							stream.eat( '{' );
 						} else {
-							return modeConfig.tags.skipFormatting;
+							return mwModeConfig.tags.skipFormatting;
 						}
 					// break is not necessary here
 					// falls through
@@ -844,7 +844,7 @@ class CodeMirrorModeMediaWiki {
 							stream.eatSpace();
 							state.stack.push( state.tokenize );
 							state.tokenize = this.inTableDefinition.bind( this );
-							return modeConfig.tags.tableBracket;
+							return mwModeConfig.tags.tableBracket;
 						}
 				}
 			} else {
@@ -867,10 +867,10 @@ class CodeMirrorModeMediaWiki {
 							this.prepareItalicForCorrection( stream );
 						}
 						this.isBold = !this.isBold;
-						return this.makeLocalStyle( modeConfig.tags.apostrophesBold, state );
+						return this.makeLocalStyle( mwModeConfig.tags.apostrophesBold, state );
 					} else if ( stream.eat( '\'' ) ) { // italic
 						this.isItalic = !this.isItalic;
-						return this.makeLocalStyle( modeConfig.tags.apostrophesItalic, state );
+						return this.makeLocalStyle( mwModeConfig.tags.apostrophesItalic, state );
 					}
 					break;
 				case '[':
@@ -880,7 +880,7 @@ class CodeMirrorModeMediaWiki {
 							state.nLink++;
 							state.stack.push( state.tokenize );
 							state.tokenize = this.inLink.bind( this );
-							return this.makeLocalStyle( modeConfig.tags.linkBracket, state );
+							return this.makeLocalStyle( mwModeConfig.tags.linkBracket, state );
 						}
 					} else {
 						mt = stream.match( this.urlProtocols );
@@ -889,7 +889,7 @@ class CodeMirrorModeMediaWiki {
 							stream.backUp( mt[ 0 ].length );
 							state.stack.push( state.tokenize );
 							state.tokenize = this.eatExternalLinkProtocol( mt[ 0 ].length );
-							return this.makeLocalStyle( modeConfig.tags.extLinkBracket, state );
+							return this.makeLocalStyle( mwModeConfig.tags.extLinkBracket, state );
 						}
 					}
 					break;
@@ -901,7 +901,7 @@ class CodeMirrorModeMediaWiki {
 						state.stack.push( state.tokenize );
 						state.tokenize = this.inVariable.bind( this );
 						return this.makeLocalStyle(
-							modeConfig.tags.templateVariableBracket,
+							mwModeConfig.tags.templateVariableBracket,
 							state
 						);
 					} else if ( stream.match( /^{(?!{(?!{))[\s\u00a0]*/ ) ) {
@@ -911,7 +911,7 @@ class CodeMirrorModeMediaWiki {
 							state.stack.push( state.tokenize );
 							state.tokenize = this.inParserFunctionName.bind( this );
 							return this.makeLocalStyle(
-								modeConfig.tags.parserFunctionBracket,
+								mwModeConfig.tags.parserFunctionBracket,
 								state
 							);
 						}
@@ -931,7 +931,7 @@ class CodeMirrorModeMediaWiki {
 								state.stack.push( state.tokenize );
 								state.tokenize = this.inParserFunctionName.bind( this );
 								return this.makeLocalStyle(
-									modeConfig.tags.parserFunctionBracket,
+									mwModeConfig.tags.parserFunctionBracket,
 									state
 								);
 							}
@@ -940,39 +940,39 @@ class CodeMirrorModeMediaWiki {
 						state.nTemplate++;
 						state.stack.push( state.tokenize );
 						state.tokenize = this.eatTemplatePageName( false );
-						return this.makeLocalStyle( modeConfig.tags.templateBracket, state );
+						return this.makeLocalStyle( mwModeConfig.tags.templateBracket, state );
 					}
 					break;
 				case '<':
 					isCloseTag = !!stream.eat( '/' );
 					tagname = stream.match( /^[^>/\s\u00a0.*,[\]{}$^+?|/\\'`~<=!@#%&()-]+/ );
 					if ( stream.match( '!--' ) ) { // comment
-						return chain( this.eatBlock( modeConfig.tags.comment, '-->' ) );
+						return chain( this.eatBlock( mwModeConfig.tags.comment, '-->' ) );
 					}
 					if ( tagname ) {
 						tagname = tagname[ 0 ].toLowerCase();
 						if ( tagname in this.config.tags ) {
 							// Parser function
 							if ( isCloseTag === true ) {
-								return modeConfig.tags.error;
+								return mwModeConfig.tags.error;
 							}
 							stream.backUp( tagname.length );
 							state.stack.push( state.tokenize );
 							state.tokenize = this.eatTagName( tagname.length, isCloseTag, false );
-							return this.makeLocalStyle( `${ modeConfig.tags.extTagBracket } mw-ext-${ tagname }`, state );
+							return this.makeLocalStyle( `${ mwModeConfig.tags.extTagBracket } mw-ext-${ tagname }`, state );
 						}
-						if ( tagname in modeConfig.permittedHtmlTags ) {
+						if ( tagname in mwModeConfig.permittedHtmlTags ) {
 							// Html tag
 							if ( isCloseTag === true && tagname !== state.inHtmlTag.pop() ) {
 								// Increment position so that the closing '>' gets highlighted red.
 								stream.pos++;
-								return modeConfig.tags.error;
+								return mwModeConfig.tags.error;
 							}
 							if (
 								isCloseTag === true &&
-								tagname in modeConfig.implicitlyClosedHtmlTags
+								tagname in mwModeConfig.implicitlyClosedHtmlTags
 							) {
-								return modeConfig.tags.error;
+								return mwModeConfig.tags.error;
 							}
 							stream.backUp( tagname.length );
 							state.stack.push( state.tokenize );
@@ -980,17 +980,17 @@ class CodeMirrorModeMediaWiki {
 								tagname.length,
 								// Opening void tags should also be treated as the closing tag.
 								isCloseTag ||
-									( tagname in modeConfig.implicitlyClosedHtmlTags ),
+								( tagname in mwModeConfig.implicitlyClosedHtmlTags ),
 								true
 							);
-							return this.makeLocalStyle( modeConfig.tags.htmlTagBracket, state );
+							return this.makeLocalStyle( mwModeConfig.tags.htmlTagBracket, state );
 						}
 						stream.backUp( tagname.length );
 					}
 					break;
 				case '~':
 					if ( stream.match( /^~{2,4}/ ) ) {
-						return modeConfig.tags.signature;
+						return mwModeConfig.tags.signature;
 					}
 					break;
 				// Maybe double underscored Magic Word such as __TOC__
@@ -1008,7 +1008,7 @@ class CodeMirrorModeMediaWiki {
 						}
 						// Optimization: skip regex function for EOL and backup-ed symbols
 						return this.makeStyle( style, state );
-					// Check on double underscore Magic Word
+						// Check on double underscore Magic Word
 					} else if ( tmp === 2 ) {
 						// The same as the end of function except '_' inside and '__' at the end.
 						name = stream.match( /^([^\s\u00a0>}[\]<{'|&:~]+?)__/ );
@@ -1017,7 +1017,7 @@ class CodeMirrorModeMediaWiki {
 								'__' + name[ 0 ].toLowerCase() in this.config.doubleUnderscore[ 0 ] ||
 								'__' + name[ 0 ] in this.config.doubleUnderscore[ 1 ]
 							) {
-								return modeConfig.tags.doubleUnderscore;
+								return mwModeConfig.tags.doubleUnderscore;
 							}
 							if ( !stream.eol() ) {
 								// Two underscore symbols at the end can be the
@@ -1032,7 +1032,7 @@ class CodeMirrorModeMediaWiki {
 				case ':':
 					if ( state.nDt > 0 && !this.isNested( state ) ) {
 						state.nDt--;
-						return modeConfig.tags.indenting;
+						return mwModeConfig.tags.indenting;
 					}
 					break;
 				default:
@@ -1266,14 +1266,14 @@ class CodeMirrorModeMediaWiki {
  * @return {LanguageSupport}
  * @stable to call
  */
-export default ( config = { bidiIsolation: false }, mwConfig = null ) => {
+const mediaWikiLang = ( config = { bidiIsolation: false }, mwConfig = null ) => {
 	mwConfig = mwConfig || mw.config.get( 'extCodeMirrorConfig' );
 	const mode = new CodeMirrorModeMediaWiki( mwConfig );
 	const parser = mode.mediawiki;
 	const lang = StreamLanguage.define( parser );
 	const langExtension = [ syntaxHighlighting(
 		HighlightStyle.define(
-			modeConfig.getTagStyles( parser )
+			mwModeConfig.getTagStyles( parser )
 		)
 	) ];
 
@@ -1292,3 +1292,5 @@ export default ( config = { bidiIsolation: false }, mwConfig = null ) => {
 
 	return new LanguageSupport( lang, langExtension );
 };
+
+module.exports = mediaWikiLang;

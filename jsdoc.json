@@ -11,7 +11,8 @@
 		"node_modules/jsdoc-wmf-theme/plugins/default"
 	],
 	"source": {
-		"include": [ "src" ],
+		"include": [ "resources" ],
+		"exclude": [ "resources/legacy", "resources/lib" ],
 		"includePattern": ".+\\.js$"
 	},
 	"tags": {},
@@ -25,9 +26,10 @@
 			"repository": "https://gerrit.wikimedia.org/g/mediawiki/extensions/CodeMirror",
 			"linkMap": {
 				"jQuery.fn.textSelection": "https://doc.wikimedia.org/mediawiki-core/master/js/jQueryPlugins.html#.textSelection",
-
+				"Compartment": "https://codemirror.net/docs/ref/#state.Compartment",
 				"Decoration": "https://codemirror.net/docs/ref/#view.Decoration",
 				"DecorationSet": "https://codemirror.net/docs/ref/#view.DecorationSet",
+				"Direction": "https://codemirror.net/docs/ref/#view.Direction",
 				"EditorState": "https://codemirror.net/docs/ref/#state.EditorState",
 				"EditorView": "https://codemirror.net/docs/ref/#view.EditorView",
 				"Extension": "https://codemirror.net/docs/ref/#state.Extension",

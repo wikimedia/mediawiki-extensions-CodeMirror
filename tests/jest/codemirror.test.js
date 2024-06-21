@@ -1,5 +1,6 @@
-import { EditorView } from '@codemirror/view';
-import CodeMirror from '../../src/codemirror.js';
+/* eslint-disable-next-line n/no-missing-require */
+const { EditorView } = require( 'ext.CodeMirror.v6.lib' );
+const CodeMirror = require( '../../resources/codemirror.js' );
 const $textarea = $( '<textarea>' ),
 	cm = new CodeMirror( $textarea );
 

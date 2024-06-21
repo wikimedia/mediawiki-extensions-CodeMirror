@@ -1,11 +1,12 @@
 {
 	"name": "CodeMirror",
-	"version": "5.0.0",
+	"version": "6.0.0",
 	"author": [
 		"[https://www.mediawiki.org/wiki/User:Pastakhov Pavel Astakhov]",
 		"[https://www.mediawiki.org/wiki/User:Florianschmidtwelzow Florian Schmidt]",
 		"Marijn Haverbeke",
 		"MusikAnimal",
+		"Bhsd",
 		"[https://raw.githubusercontent.com/codemirror/CodeMirror/master/AUTHORS CodeMirror contributors]"
 	],
 	"url": "https://www.mediawiki.org/wiki/Extension:CodeMirror",
@@ -58,9 +59,9 @@
 				"user.options"
 			],
 			"packageFiles": [
-				"ext.CodeMirror.js",
+				"legacy/ext.CodeMirror.js",
 				{
-					"name": "ext.CodeMirror.data.js",
+					"name": "legacy/ext.CodeMirror.data.js",
 					"callback": "MediaWiki\\Extension\\CodeMirror\\DataScript::makeScript"
 				}
 			]
@@ -74,10 +75,10 @@
 				"oojs-ui.styles.icons-editing-styling"
 			],
 			"packageFiles": [
-				"ext.CodeMirror.WikiEditor.js"
+				"legacy/ext.CodeMirror.WikiEditor.js"
 			],
 			"styles": [
-				"ext.CodeMirror.less"
+				"legacy/ext.CodeMirror.less"
 			],
 			"messages": [
 				"codemirror-toggle-label"
@@ -89,22 +90,22 @@
 			],
 			"styles": [
 				"lib/codemirror/lib/codemirror.css",
-				"lib/codemirror-fixes.less"
+				"legacy/codemirror-fixes.less"
 			]
 		},
 		"ext.CodeMirror.addons": {
 			"scripts": [
-				"addon/edit/matchbrackets-wmde.js"
+				"legacy/addon/matchbrackets-wmde.js"
 			],
 			"dependencies": [
 				"ext.CodeMirror.lib"
 			]
 		},
 		"ext.CodeMirror.mode.mediawiki": {
-			"packageFiles": "mode/mediawiki/mediawiki.js",
+			"packageFiles": "legacy/mode/mediawiki/mediawiki.js",
 			"styles": [
-				"mode/mediawiki/mediawiki.less",
-				"mode/mediawiki/colorblind-colors.less"
+				"codemirror.mediawiki.less",
+				"codemirror.mediawiki.colorblind.less"
 			],
 			"dependencies": [
 				"ext.CodeMirror.lib"
@@ -160,11 +161,11 @@
 				"ext.CodeMirror"
 			],
 			"scripts": [
-				"modules/ve-cm/ve.ui.CodeMirrorAction.js",
-				"modules/ve-cm/ve.ui.CodeMirrorTool.js"
+				"legacy/modules/ve-cm/ve.ui.CodeMirrorAction.js",
+				"legacy/modules/ve-cm/ve.ui.CodeMirrorTool.js"
 			],
 			"styles": [
-				"modules/ve-cm/ve.ui.CodeMirror.less"
+				"legacy/modules/ve-cm/ve.ui.CodeMirror.less"
 			],
 			"messages": [
 				"codemirror-toggle-label"
@@ -172,21 +173,21 @@
 		},
 		"ext.CodeMirror.v6": {
 			"dependencies": [
-				"web2017-polyfills",
 				"mediawiki.api",
 				"mediawiki.user",
 				"user.options",
 				"ext.CodeMirror.v6.lib"
 			],
 			"packageFiles": [
-				"dist/codemirror.js",
+				"codemirror.js",
+				"codemirror.textSelection.js",
 				{
 					"name": "ext.CodeMirror.data.js",
 					"callback": "MediaWiki\\Extension\\CodeMirror\\DataScript::makeScript"
 				}
 			],
 			"styles": [
-				"ext.CodeMirror.v6.less"
+				"codemirror.less"
 			],
 			"messages": [
 				"codemirror-find",
@@ -234,22 +235,24 @@
 				"ext.CodeMirror.v6.mode.mediawiki"
 			],
 			"packageFiles": [
-				"dist/codemirror.mediawiki.js"
+				"codemirror.mediawiki.init.js"
 			]
 		},
 		"ext.CodeMirror.v6.lib": {
 			"packageFiles": [
-				"dist/vendor.js"
-			],
-			"dependencies": [
-				"web2017-polyfills"
+				"lib/codemirror6.bundle.dist.js"
 			]
 		},
 		"ext.CodeMirror.v6.mode.mediawiki": {
-			"packageFiles": "dist/codemirror.mode.mediawiki.js",
+			"packageFiles": [
+				"codemirror.mediawiki.js",
+				"codemirror.mediawiki.config.js",
+				"codemirror.mediawiki.bidiIsolation.js",
+				"codemirror.mediawiki.templateFolding.js"
+			],
 			"styles": [
-				"mode/mediawiki/mediawiki.less",
-				"mode/mediawiki/colorblind-colors.less"
+				"codemirror.mediawiki.less",
+				"codemirror.mediawiki.colorblind.less"
 			],
 			"dependencies": [
 				"ext.CodeMirror.v6",
@@ -258,11 +261,10 @@
 		},
 		"ext.CodeMirror.v6.WikiEditor": {
 			"dependencies": [
-				"ext.wikiEditor",
-				"ext.CodeMirror.v6"
+				"ext.wikiEditor"
 			],
 			"packageFiles": [
-				"dist/codemirror.wikieditor.js"
+				"codemirror.wikieditor.js"
 			],
 			"messages": [
 				"codemirror-toggle-label"
@@ -274,7 +276,7 @@
 				"ext.CodeMirror.v6.mode.mediawiki"
 			],
 			"packageFiles": [
-				"dist/codemirror.wikieditor.mediawiki.js"
+				"codemirror.wikieditor.mediawiki.init.js"
 			]
 		}
 	},
@@ -287,8 +289,8 @@
 		"usecodemirror": 0
 	},
 	"QUnitTestModule": {
-		"localBasePath": "resources/mode/mediawiki/tests",
-		"remoteExtPath": "CodeMirror/resources/mode/mediawiki/tests",
+		"localBasePath": "resources/legacy/mode/mediawiki/tests",
+		"remoteExtPath": "CodeMirror/resources/legacy/mode/mediawiki/tests",
 		"packageFiles": [
 			"qunit/CodeMirror.mediawiki.test.js"
 		],
