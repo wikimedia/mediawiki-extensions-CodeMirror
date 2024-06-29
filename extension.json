@@ -310,6 +310,9 @@
 			"services": [
 				"UserOptionsLookup",
 				"MainConfig"
+			],
+			"optional_services": [
+				"GadgetsRepo"
 			]
 		}
 	},

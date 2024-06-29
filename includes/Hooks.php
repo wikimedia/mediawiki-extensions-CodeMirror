@@ -29,19 +29,23 @@ class Hooks implements
 	private array $conflictingGadgets;
 	private bool $useV6;
 	private bool $isSupportedRtlWiki;
+	private ?GadgetRepo $gadgetRepo;
 
 	/**
 	 * @param UserOptionsLookup $userOptionsLookup
 	 * @param Config $config
+	 * @param GadgetRepo|null $gadgetRepo
 	 */
 	public function __construct(
 		UserOptionsLookup $userOptionsLookup,
-		Config $config
+		Config $config,
+		?GadgetRepo $gadgetRepo
 	) {
 		$this->userOptionsLookup = $userOptionsLookup;
 		$this->useV6 = $config->get( 'CodeMirrorV6' );
 		$this->conflictingGadgets = $config->get( 'CodeMirrorConflictingGadgets' );
 		$this->isSupportedRtlWiki = $config->get( 'CodeMirrorRTL' );
+		$this->gadgetRepo = $gadgetRepo;
 	}
 
 	/**
@@ -88,15 +92,13 @@ class Hooks implements
 	 * @return bool
 	 */
 	private function conflictingGadgetsEnabled( ExtensionRegistry $extensionRegistry, User $user ): bool {
-		if ( !$extensionRegistry->isLoaded( 'Gadgets' ) ) {
+		if ( !$extensionRegistry->isLoaded( 'Gadgets' ) || !$this->gadgetRepo ) {
 			return false;
 		}
-		// @phan-suppress-next-line PhanUndeclaredClassMethod Code path won't be followed if class doesn't exist.
-		$gadgetRepo = GadgetRepo::singleton();
-		$conflictingGadgets = array_intersect( $this->conflictingGadgets, $gadgetRepo->getGadgetIds() );
+		$conflictingGadgets = array_intersect( $this->conflictingGadgets, $this->gadgetRepo->getGadgetIds() );
 		foreach ( $conflictingGadgets as $conflictingGadget ) {
 			try {
-				if ( $gadgetRepo->getGadget( $conflictingGadget )->isEnabled( $user ) ) {
+				if ( $this->gadgetRepo->getGadget( $conflictingGadget )->isEnabled( $user ) ) {
 					return true;
 				}
 			} catch ( InvalidArgumentException $e ) {

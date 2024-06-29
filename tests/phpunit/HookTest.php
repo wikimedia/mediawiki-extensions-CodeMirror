@@ -59,7 +59,7 @@ class HookTest extends MediaWikiIntegrationTestCase {
 				$isFirstCall = false;
 			} );
 
-		$hooks = new Hooks( $userOptionsLookup, $this->getServiceContainer()->getMainConfig() );
+		$hooks = new Hooks( $userOptionsLookup, $this->getServiceContainer()->getMainConfig(), null );
 		$method = $readOnly ? 'onEditPage__showReadOnlyForm_initial' : 'onEditPage__showEditForm_initial';
 		$hooks->{$method}( $this->createMock( EditPage::class ), $out );
 	}
@@ -97,7 +97,7 @@ class HookTest extends MediaWikiIntegrationTestCase {
 
 		// CodeMirror 5
 		$this->overrideConfigValues( [ 'CodeMirrorV6' => false ] );
-		$hook = new Hooks( $userOptionsLookup, $config );
+		$hook = new Hooks( $userOptionsLookup, $config, null );
 		$preferences = [];
 		$hook->onGetPreferences( $user, $preferences );
 		self::assertArrayHasKey( 'usecodemirror', $preferences );
@@ -107,7 +107,7 @@ class HookTest extends MediaWikiIntegrationTestCase {
 
 		// CodeMirror 6
 		$this->overrideConfigValues( [ 'CodeMirrorV6' => true ] );
-		$hook = new Hooks( $userOptionsLookup, $config );
+		$hook = new Hooks( $userOptionsLookup, $config, null );
 		$preferences = [];
 		$hook->onGetPreferences( $user, $preferences );
 		self::assertArrayHasKey( 'usecodemirror', $preferences );
@@ -153,6 +153,7 @@ class HookTest extends MediaWikiIntegrationTestCase {
 			->with( 'CodeMirrorContentModels' )
 			->willReturn( [ CONTENT_MODEL_WIKITEXT ] );
 
+		$gadgetRepoMock = null;
 		if ( $conds['gadget'] ) {
 			$gadgetMock = $this->createMock( Gadget::class );
 			$gadgetMock->expects( $this->once() )
@@ -165,10 +166,9 @@ class HookTest extends MediaWikiIntegrationTestCase {
 			$gadgetRepoMock->expects( $this->once() )
 				->method( 'getGadgetIds' )
 				->willReturn( [ $conds['gadget'] ] );
-			GadgetRepo::setSingleton( $gadgetRepoMock );
 		}
 
-		$hooks = new Hooks( $userOptionsLookup, $this->getServiceContainer()->getMainConfig() );
+		$hooks = new Hooks( $userOptionsLookup, $this->getServiceContainer()->getMainConfig(), $gadgetRepoMock );
 		self::assertSame( $expectation, $hooks->shouldLoadCodeMirror( $out, $extensionRegistry ) );
 	}
 
