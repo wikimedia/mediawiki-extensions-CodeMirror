@@ -7,6 +7,7 @@ const assert = require( 'assert' ),
 	UserPreferences = require( '../userpreferences' ),
 	Util = require( 'wdio-mediawiki/Util' );
 
+// Skipped on 2024-03-20 in 1012801
 // Disable as test is consistently failing on CI.
 describe.skip( 'CodeMirror bracket match highlighting for the wikitext 2017 editor', () => {
 	let title;
