@@ -6,7 +6,10 @@
 	},
 	"codemirror-desc": "Вики-текст редактор чохь синтаксис беснашца къастор латадо.",
 	"codemirror-toggle-label": "Синтаксис беснашца къастор",
+	"codemirror-prefs-summary": "ХӀокху функцех лаьцна кхин дӀа а хаа йиш йу хьан [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror гӀоьнан агӀо] йешна.",
 	"codemirror-prefs-colorblind": "Дальтоникашна латайе синтаксис серлайаккхар вики-текстан хийцам беш",
 	"codemirror-prefs-colorblind-help": "Синтаксис серлайаккха ахьа гаджет лелош йелахь, хӀокху болхбира бац.",
-	"prefs-accessibility": "ТӀекхачар"
+	"codemirror-special-char-nbsp": "Хаддаза кӀайдарг",
+	"prefs-accessibility": "ТӀекхачар",
+	"prefs-syntax-highlighting": "Синтаксис беснашца къастор"
 }
