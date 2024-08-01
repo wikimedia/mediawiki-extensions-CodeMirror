@@ -165,13 +165,15 @@
 				"legacy/modules/ve-cm/ve.ui.CodeMirrorTool.js"
 			],
 			"styles": [
-				"legacy/modules/ve-cm/ve.ui.CodeMirror.less"
+				"legacy/modules/ve-cm/ve.ui.CodeMirror.less",
+				"legacy/ext.CodeMirror.less"
 			],
 			"messages": [
 				"codemirror-toggle-label"
 			]
 		},
 		"ext.CodeMirror.v6": {
+			"class": "MediaWiki\\ResourceLoader\\CodexModule",
 			"dependencies": [
 				"mediawiki.api",
 				"mediawiki.user",
@@ -181,6 +183,9 @@
 			"packageFiles": [
 				"codemirror.js",
 				"codemirror.textSelection.js",
+				"codemirror.search.js",
+				"codemirror.gotoLine.js",
+				"codemirror.panel.js",
 				{
 					"name": "ext.CodeMirror.data.js",
 					"callback": "MediaWiki\\Extension\\CodeMirror\\DataScript::makeScript"
@@ -189,44 +194,57 @@
 			"styles": [
 				"codemirror.less"
 			],
+			"codexStyleOnly": true,
+			"codexComponents": [
+				"CdxButton",
+				"CdxCheckbox",
+				"CdxLabel",
+				"CdxTextInput",
+				"CdxToggleButton",
+				"CdxToggleButtonGroup"
+			],
 			"messages": [
+				"codemirror-all",
+				"codemirror-all-tooltip",
+				"codemirror-by-word",
+				"codemirror-control-character",
+				"codemirror-done",
 				"codemirror-find",
+				"codemirror-fold-template",
+				"codemirror-folded-code",
+				"codemirror-goto-line",
+				"codemirror-goto-line-go",
+				"codemirror-match-case",
 				"codemirror-next",
 				"codemirror-previous",
-				"codemirror-all",
-				"codemirror-match-case",
 				"codemirror-regexp",
-				"codemirror-by-word",
 				"codemirror-replace",
-				"codemirror-replace-placeholder",
 				"codemirror-replace-all",
-				"codemirror-control-character",
-				"codemirror-special-char-null",
-				"codemirror-special-char-bell",
+				"codemirror-replace-placeholder",
 				"codemirror-special-char-backspace",
-				"codemirror-special-char-newline",
-				"codemirror-special-char-vertical-tab",
+				"codemirror-special-char-bell",
 				"codemirror-special-char-carriage-return",
 				"codemirror-special-char-escape",
-				"codemirror-special-char-nbsp",
-				"codemirror-special-char-zero-width-space",
-				"codemirror-special-char-zero-width-non-joiner",
-				"codemirror-special-char-zero-width-joiner",
-				"codemirror-special-char-left-to-right-mark",
-				"codemirror-special-char-right-to-left-mark",
-				"codemirror-special-char-line-separator",
-				"codemirror-special-char-left-to-right-override",
-				"codemirror-special-char-right-to-left-override",
-				"codemirror-special-char-narrow-nbsp",
 				"codemirror-special-char-left-to-right-isolate",
-				"codemirror-special-char-right-to-left-isolate",
-				"codemirror-special-char-pop-directional-isolate",
-				"codemirror-special-char-paragraph-separator",
-				"codemirror-special-char-zero-width-no-break-space",
+				"codemirror-special-char-left-to-right-mark",
+				"codemirror-special-char-left-to-right-override",
+				"codemirror-special-char-line-separator",
+				"codemirror-special-char-narrow-nbsp",
+				"codemirror-special-char-nbsp",
+				"codemirror-special-char-newline",
+				"codemirror-special-char-null",
 				"codemirror-special-char-object-replacement",
-				"codemirror-fold-template",
-				"codemirror-unfold",
-				"codemirror-folded-code"
+				"codemirror-special-char-paragraph-separator",
+				"codemirror-special-char-pop-directional-isolate",
+				"codemirror-special-char-right-to-left-isolate",
+				"codemirror-special-char-right-to-left-mark",
+				"codemirror-special-char-right-to-left-override",
+				"codemirror-special-char-vertical-tab",
+				"codemirror-special-char-zero-width-joiner",
+				"codemirror-special-char-zero-width-no-break-space",
+				"codemirror-special-char-zero-width-non-joiner",
+				"codemirror-special-char-zero-width-space",
+				"codemirror-unfold"
 			]
 		},
 		"ext.CodeMirror.v6.init": {
@@ -265,6 +283,9 @@
 			],
 			"packageFiles": [
 				"codemirror.wikieditor.js"
+			],
+			"styles": [
+				"codemirror.wikieditor.less"
 			],
 			"messages": [
 				"codemirror-toggle-label",

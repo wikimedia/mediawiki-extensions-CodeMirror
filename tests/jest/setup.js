@@ -19,3 +19,4 @@ mw.track = jest.fn();
 mw.Api.prototype.saveOption = jest.fn();
 global.$ = require( 'jquery' );
 $.fn.textSelection = () => {};
+window.matchMedia = jest.fn().mockReturnValue( { matches: false } );

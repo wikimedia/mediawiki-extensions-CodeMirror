@@ -1,6 +1,13 @@
-@import 'mediawiki.mixins';
+@import 'mediawiki.skin.variables.less';
 
-/* TODO: Replace with ext.CodeMirror.v6.less following CM6 upgrade */
+@matching-bracket-border-color: #eee;
+@matching-bracket-box-shadow-color: #999;
+
+// CM5 dark mode fixes, see T365311
+.mw-body-content .CodeMirror {
+	background-color: inherit;
+	color: inherit;
+}
 
 .wikiEditor-ui .CodeMirror {
 	line-height: 1.5em;
@@ -12,4 +19,33 @@
 	.CodeMirror-lines {
 		padding: 0;
 	}
+}
+
+.CodeMirror-gutters {
+	background-color: @background-color-interactive-subtle;
+	border-right-color: @border-color-subtle;
+}
+
+.CodeMirror-line::selection,
+.CodeMirror-line > span::selection,
+.CodeMirror-line > span > span::selection {
+	background: #d9d9d9;
+
+	@media screen {
+		html.skin-theme-clientpref-night & {
+			background: #233;
+		}
+	}
+
+	@media screen and ( prefers-color-scheme: dark ) {
+		html.skin-theme-clientpref-os {
+			background: #233;
+		}
+	}
+}
+
+.cm-mw-matchingbracket {
+	background-color: @matching-bracket-border-color;
+	box-shadow: inset 0 0 1px 1px @matching-bracket-box-shadow-color;
+	font-weight: bold;
 }

@@ -21477,7 +21477,7 @@ class SearchCursor {
             let norm = this.normalize(str);
             for (let i = 0, pos = start;; i++) {
                 let code = norm.charCodeAt(i);
-                let match = this.match(code, pos);
+                let match = this.match(code, pos, this.bufferPos + this.bufferStart);
                 if (i == norm.length - 1) {
                     if (match) {
                         this.value = match;
@@ -21490,13 +21490,13 @@ class SearchCursor {
             }
         }
     }
-    match(code, pos) {
+    match(code, pos, end) {
         let match = null;
         for (let i = 0; i < this.matches.length; i += 2) {
             let index = this.matches[i], keep = false;
             if (this.query.charCodeAt(index) == code) {
                 if (index == this.query.length - 1) {
-                    match = { from: this.matches[i + 1], to: pos + 1 };
+                    match = { from: this.matches[i + 1], to: end };
                 }
                 else {
                     this.matches[i]++;
@@ -21510,7 +21510,7 @@ class SearchCursor {
         }
         if (this.query.charCodeAt(0) == code) {
             if (this.query.length == 1)
-                match = { from: pos, to: pos + 1 };
+                match = { from: pos, to: end };
             else
                 this.matches.push(1, pos);
         }
@@ -21858,12 +21858,12 @@ const matchHighlighter = /*@__PURE__*/ViewPlugin.fromClass(class {
             if (conf.wholeWords) {
                 query = state.sliceDoc(range.from, range.to); // TODO: allow and include leading/trailing space?
                 check = state.charCategorizer(range.head);
-                if (!(insideWordBoundaries(check, state, range.from, range.to)
-                    && insideWord(check, state, range.from, range.to)))
+                if (!(insideWordBoundaries(check, state, range.from, range.to) &&
+                    insideWord(check, state, range.from, range.to)))
                     return Decoration.none;
             }
             else {
-                query = state.sliceDoc(range.from, range.to).trim();
+                query = state.sliceDoc(range.from, range.to);
                 if (!query)
                     return Decoration.none;
             }
@@ -22126,10 +22126,10 @@ class RegExpQuery extends QueryType {
             this.prevMatchInRange(state, curTo, state.doc.length);
     }
     getReplacement(result) {
-        return this.spec.unquote(this.spec.replace.replace(/\$([$&\d+])/g, (m, i) => i == "$" ? "$"
+        return this.spec.unquote(this.spec.replace).replace(/\$([$&\d+])/g, (m, i) => i == "$" ? "$"
             : i == "&" ? result.match[0]
                 : i != "0" && +i < result.match.length ? result.match[i]
-                    : m));
+                    : m);
     }
     matchAll(state, limit) {
         let cursor = regexpCursor(this.spec, state, 0, state.doc.length), ranges = [];
@@ -22422,7 +22422,7 @@ Default search-related key bindings.
  - Mod-f: [`openSearchPanel`](https://codemirror.net/6/docs/ref/#search.openSearchPanel)
  - F3, Mod-g: [`findNext`](https://codemirror.net/6/docs/ref/#search.findNext)
  - Shift-F3, Shift-Mod-g: [`findPrevious`](https://codemirror.net/6/docs/ref/#search.findPrevious)
- - Alt-g: [`gotoLine`](https://codemirror.net/6/docs/ref/#search.gotoLine)
+ - Mod-Alt-g: [`gotoLine`](https://codemirror.net/6/docs/ref/#search.gotoLine)
  - Mod-d: [`selectNextOccurrence`](https://codemirror.net/6/docs/ref/#search.selectNextOccurrence)
 */
 const searchKeymap = [
@@ -22431,7 +22431,7 @@ const searchKeymap = [
     { key: "Mod-g", run: findNext, shift: findPrevious, scope: "editor search-panel", preventDefault: true },
     { key: "Escape", run: closeSearchPanel, scope: "editor search-panel" },
     { key: "Mod-Shift-l", run: selectSelectionMatches },
-    { key: "Alt-g", run: gotoLine },
+    { key: "Mod-Alt-g", run: gotoLine },
     { key: "Mod-d", run: selectNextOccurrence, preventDefault: true },
 ];
 class SearchPanel {

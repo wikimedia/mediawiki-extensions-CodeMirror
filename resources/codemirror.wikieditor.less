@@ -1,0 +1,55 @@
+@import 'mediawiki.skin.variables.less';
+
+// Overrides for WikiEditor.
+
+.wikiEditor-ui-text .cm-editor {
+	border: inherit;
+}
+
+.cm-mw-toggle-wikieditor {
+	.oo-ui-icon-syntax-highlight {
+		background-color: @color-base;
+		// The SVG is just barely over 300 bytes, and is also only temporary
+		// until an official icon has been established in Codex/OOUI (T174145).
+		/* @embed */
+		@url: url( codemirror.icon.svg );
+		-webkit-mask-image: @url;
+		mask-image: @url;
+		-webkit-mask-size: @size-icon-medium;
+		mask-size: @size-icon-medium;
+		-webkit-mask-repeat: no-repeat;
+		mask-repeat: no-repeat;
+		-webkit-mask-position: center;
+		mask-position: center;
+	}
+
+	&:hover {
+		background-color: @background-color-interactive;
+	}
+
+	&.oo-ui-toggleWidget-on {
+		.oo-ui-labelElement-label {
+			color: @color-progressive;
+		}
+
+		.oo-ui-icon-syntax-highlight {
+			background-color: @color-progressive;
+		}
+	}
+
+	&.oo-ui-buttonElement-frameless.oo-ui-labelElement.oo-ui-iconElement:first-child {
+		margin-left: 0;
+	}
+}
+
+// Hide all buttons except CodeMirror on read only pages (T301615)
+// This is the same hack that CodeEditor uses to customize the toolbar.
+// WikiEditor should be updated to better handle read only pages (T188817).
+.ext-codemirror-readonly {
+	.wikiEditor-section-secondary,
+	.group:not( .group-codemirror ),
+	.tabs,
+	.sections {
+		display: none;
+	}
+}
