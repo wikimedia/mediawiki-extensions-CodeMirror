@@ -5,6 +5,7 @@
 			"McDutchie",
 			"Metalhead64",
 			"PerfektesChaos",
+			"TMg",
 			"TomatoCake"
 		]
 	},
@@ -45,10 +46,11 @@
 	"codemirror-special-char-narrow-nbsp": "Schmales geschütztes Leerzeichen",
 	"codemirror-special-char-left-to-right-isolate": "Von links nach rechts isolieren",
 	"codemirror-special-char-right-to-left-isolate": "Von rechts nach links isolieren",
-	"codemirror-special-char-pop-directional-isolate": "Pop-Richtungsisolation",
+	"codemirror-special-char-pop-directional-isolate": "Richtungsisolierung zurücksetzen",
 	"codemirror-special-char-paragraph-separator": "Absatztrennzeichen",
 	"codemirror-special-char-zero-width-no-break-space": "Wortverbinder",
 	"codemirror-special-char-object-replacement": "Ersetzungszeichen für Objekt",
+	"codemirror-fold-template": "Vorlagenparameter einklappen",
 	"codemirror-unfold": "ausklappen",
 	"codemirror-folded-code": "eingeklappter Code",
 	"prefs-accessibility": "Barrierefreiheit",
