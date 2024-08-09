@@ -267,7 +267,8 @@
 				"codemirror.wikieditor.js"
 			],
 			"messages": [
-				"codemirror-toggle-label"
+				"codemirror-toggle-label",
+				"codemirror-toggle-label-short"
 			]
 		},
 		"ext.CodeMirror.v6.WikiEditor.init": {

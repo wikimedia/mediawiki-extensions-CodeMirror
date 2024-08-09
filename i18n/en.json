@@ -7,6 +7,7 @@
 	},
 	"codemirror-desc": "Provides syntax highlighting in wikitext editor",
 	"codemirror-toggle-label": "Syntax highlighting",
+	"codemirror-toggle-label-short": "Syntax",
 	"codemirror-prefs-summary": "You can learn more about this feature by reading the [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror help page].",
 	"codemirror-prefs-enable": "Enable syntax highlighting for wikitext",
 	"codemirror-v6-prefs-colorblind": "Use colorblind-friendly scheme",
