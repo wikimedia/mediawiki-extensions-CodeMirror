@@ -2,7 +2,8 @@ const {
 	EditorSelection,
 	EditorView,
 	Extension,
-	LanguageSupport
+	LanguageSupport,
+	openSearchPanel
 } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirror = require( 'ext.CodeMirror.v6' );
 
@@ -55,6 +56,12 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		 * @type {Function|null}
 		 */
 		this.realtimePreviewHandler = null;
+		/**
+		 * The old WikiEditor search button, to be restored if CodeMirror is disabled.
+		 *
+		 * @type {jQuery}
+		 */
+		this.$oldSearchBtn = null;
 	}
 
 	/**
@@ -116,6 +123,19 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		if ( hasFocus ) {
 			this.view.focus();
 		}
+
+		// Hijack the search button to open the CodeMirror search panel
+		// instead of the WikiEditor search dialog.
+		// eslint-disable-next-line no-jquery/no-global-selector
+		const $searchBtn = $( '.wikiEditor-ui .group-search a' );
+		this.$oldSearchBtn = $searchBtn.clone( true );
+		$searchBtn.off( 'click keydown keypress' )
+			.on( 'click keydown', ( e ) => {
+				if ( e.type === 'click' || ( e.type === 'keydown' && e.key === 'Enter' ) ) {
+					openSearchPanel( this.view );
+					e.preventDefault();
+				}
+			} );
 
 		/**
 		 * Called after CodeMirror is enabled or disabled in WikiEditor.
@@ -234,6 +254,8 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		if ( this.view ) {
 			this.setCodeMirrorPreference( false );
 			this.destroy();
+			// eslint-disable-next-line no-jquery/no-global-selector
+			$( '.wikiEditor-ui .group-search a' ).replaceWith( this.$oldSearchBtn );
 			mw.hook( 'ext.CodeMirror.switch' ).fire( false, this.$textarea );
 		} else {
 			this.enableCodeMirror();
