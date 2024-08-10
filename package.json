@@ -40,7 +40,7 @@
 		"jsdoc": "4.0.3",
 		"jsdoc-wmf-theme": "1.1.0",
 		"rollup": "4.13.0",
-		"stylelint-config-wikimedia": "0.16.1",
+		"stylelint-config-wikimedia": "0.17.2",
 		"wdio-mediawiki": "2.5.0"
 	}
 }
