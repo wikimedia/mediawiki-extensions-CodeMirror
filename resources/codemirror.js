@@ -3,6 +3,7 @@ const {
 	EditorView,
 	Extension,
 	Compartment,
+	KeyBinding,
 	ViewUpdate,
 	bracketMatching,
 	crosshairCursor,
@@ -14,6 +15,7 @@ const {
 	keymap,
 	lineNumbers,
 	rectangularSelection,
+	redo,
 	searchKeymap
 } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirrorTextSelection = require( './codemirror.textSelection.js' );
@@ -151,7 +153,13 @@ class CodeMirror {
 				}
 			} ) );
 			extensions.push( history() );
-			extensions.push( keymap.of( historyKeymap ) );
+			extensions.push( keymap.of(
+				historyKeymap.concat( /** @type {KeyBinding} */ {
+					win: 'Ctrl-Shift-z',
+					run: redo,
+					preventDefault: true
+				} )
+			) );
 		}
 
 		// Set to [] to disable everywhere, or null to enable everywhere
