@@ -221,6 +221,7 @@
 				"codemirror-replace",
 				"codemirror-replace-all",
 				"codemirror-replace-placeholder",
+				"codemirror-find-results",
 				"codemirror-special-char-backspace",
 				"codemirror-special-char-bell",
 				"codemirror-special-char-carriage-return",
