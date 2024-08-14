@@ -17,5 +17,11 @@
 	"codemirror-next": "növbəti",
 	"codemirror-previous": "əvvəlki",
 	"codemirror-all": "hamısı",
+	"codemirror-match-case": "sadəcə bu söz",
+	"codemirror-regexp": "requlyar ifadə",
+	"codemirror-by-word": "sözlə",
+	"codemirror-replace": "dəyiş",
+	"codemirror-replace-placeholder": "Dəyiş",
+	"codemirror-replace-all": "hamısını dəyiş",
 	"prefs-accessibility": "Əlçatanlıq"
 }
