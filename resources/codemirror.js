@@ -125,8 +125,12 @@ class CodeMirror {
 			this.dirExtension,
 			EditorState.readOnly.of( this.readOnly ),
 			EditorView.domEventHandlers( {
-				blur: () => this.$textarea.triggerHandler( 'blur' ),
-				focus: () => this.$textarea.triggerHandler( 'focus' )
+				blur: () => {
+					this.$textarea[ 0 ].dispatchEvent( new Event( 'blur' ) );
+				},
+				focus: () => {
+					this.$textarea[ 0 ].dispatchEvent( new Event( 'focus' ) );
+				}
 			} ),
 			EditorView.lineWrapping,
 			keymap.of( [
