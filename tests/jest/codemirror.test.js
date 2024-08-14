@@ -60,7 +60,7 @@ describe( 'initialize', () => {
 
 describe( 'logUsage', () => {
 	it( 'should track usage of CodeMirror with the correct data', () => {
-		cm.logUsage( {
+		CodeMirror.logUsage( {
 			editor: 'wikitext',
 			enabled: true,
 			toggled: false
@@ -85,14 +85,14 @@ describe( 'setCodeMirrorPreference', () => {
 	} );
 
 	it( 'should save using the API with the correct value', () => {
-		cm.setCodeMirrorPreference( true );
+		CodeMirror.setCodeMirrorPreference( true );
 		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledWith( 'usecodemirror', 1 );
 		expect( mw.user.options.set ).toHaveBeenCalledWith( 'usecodemirror', 1 );
 	} );
 
 	it( 'should not save preferences if the user is not named', () => {
 		mw.user.isNamed = jest.fn().mockReturnValue( false );
-		cm.setCodeMirrorPreference( true );
+		CodeMirror.setCodeMirrorPreference( true );
 		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledTimes( 0 );
 		expect( mw.user.options.set ).toHaveBeenCalledTimes( 0 );
 	} );

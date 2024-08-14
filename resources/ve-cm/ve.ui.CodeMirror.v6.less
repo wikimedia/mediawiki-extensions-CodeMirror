@@ -1,0 +1,131 @@
+.ve-init-mw-desktopArticleTarget {
+	.cm-editor {
+		background: transparent;
+		border: 0;
+		box-sizing: border-box;
+		height: auto;
+		left: 0;
+		pointer-events: none;
+		// stylelint-disable-next-line declaration-no-important
+		position: absolute !important;
+		top: 0;
+		width: 100%;
+
+		// Skin specific paddings
+		.skin-vector & {
+			padding: 0 1rem;
+
+			@media screen and ( min-width: 982px ) {
+				.skin-vector-legacy& {
+					padding: 0 1.5rem;
+				}
+			}
+		}
+
+		.skin-minerva &,
+		.skin-monobook & {
+			padding: 0;
+		}
+	}
+
+	.cm-gutters {
+		background-color: transparent;
+		padding-right: 8px;
+		/* @noflip */
+		border-right: 0;
+	}
+
+	/* RTL rules need to apply to the content, not the interface language */
+	.cm-editor[ dir='rtl' ] .cm-gutters {
+		/* @noflip */
+		padding-left: 8px;
+		/* @noflip */
+		padding-right: initial;
+	}
+
+	.cm-focused {
+		outline: 0;
+	}
+
+	.cm-line {
+		padding: 0;
+	}
+
+	.cm-content {
+		padding: 0;
+	}
+
+	.cm-gutterElement {
+		// stylelint-disable-next-line declaration-no-important
+		padding: 0 3px 0 4px !important;
+	}
+
+	.CodeMirror-selected {
+		display: none;
+	}
+
+	// Ensure surfaces are using identical font rules
+	.cm-scroller,
+	.cm-scroller *,
+	.ve-ui-mwWikitextSurface .ve-ce-paragraphNode {
+		// The following are already set by mw-editfont-monospace on the parent: font-size, font-family
+		word-wrap: break-word;
+		// Support: Chrome<76, Firefox<69
+		// Fallback for browsers which don't support break-spaces
+		white-space: pre-wrap;
+		word-break: normal;
+		-webkit-hyphens: manual;
+		-moz-hyphens: manual;
+		-ms-hyphens: manual;
+		hyphens: manual;
+		-webkit-font-variant-ligatures: contextual;
+		font-variant-ligatures: contextual;
+
+		// Monospace fonts can change width when bold
+		// stylelint-disable-next-line declaration-no-important
+		font-weight: normal !important;
+		// T252965
+		line-break: initial;
+	}
+
+	.cm-mw-section-1,
+	.cm-mw-section-1 ~ *,
+	.cm-mw-section-2,
+	.cm-mw-section-2 ~ *,
+	/* TODO: remove overqualified `span` after CM6 upgrade */
+	span.cm-mw-section-3 ~ *,
+	span.cm-mw-section-4 ~ *,
+	span.cm-mw-section-5 ~ *,
+	span.cm-mw-section-6 ~ * {
+		font-size: inherit;
+		line-height: inherit;
+		font-weight: inherit;
+	}
+
+	.mw-content-ltr .ve-ce-paragraphNode {
+		margin-left: 6px !important; /* stylelint-disable-line declaration-no-important */
+	}
+
+	.mw-content-rtl .ve-ce-paragraphNode {
+		/* @noflip */
+		margin-right: 6px !important; /* stylelint-disable-line declaration-no-important */
+	}
+
+	.cm-activeLineGutter {
+		background-color: transparent;
+		border-right: 0;
+	}
+}
+
+.ve-ce-documentNode-codeEditor-hide {
+	opacity: 0.4;
+
+	&::selection,
+	& *::selection {
+		background: #6da9f7 !important; /* stylelint-disable-line declaration-no-important */
+	}
+}
+
+.ve-ce-documentNode-codeEditor-webkit-hide {
+	-webkit-text-fill-color: transparent;
+}

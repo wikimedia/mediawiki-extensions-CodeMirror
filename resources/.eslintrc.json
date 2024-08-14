@@ -13,7 +13,8 @@
 		"commonjs": true
 	},
 	"globals": {
-		"Tree": "readonly"
+		"Tree": "readonly",
+		"ve": "readonly"
 	},
 	"rules": {
 		"max-len": "off",

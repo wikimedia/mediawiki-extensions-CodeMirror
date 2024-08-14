@@ -63,7 +63,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	setCodeMirrorPreference( prefValue ) {
 		// Save state for function updateToolbarButton()
 		this.useCodeMirror = prefValue;
-		super.setCodeMirrorPreference( prefValue );
+		CodeMirror.setCodeMirrorPreference( prefValue );
 	}
 
 	/**
@@ -193,7 +193,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		}
 		this.updateToolbarButton();
 
-		this.logUsage( {
+		CodeMirror.logUsage( {
 			editor: 'wikitext',
 			enabled: this.useCodeMirror,
 			toggled: false,
@@ -235,7 +235,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		}
 		this.updateToolbarButton();
 
-		this.logUsage( {
+		CodeMirror.logUsage( {
 			editor: 'wikitext',
 			enabled: this.useCodeMirror,
 			toggled: true,

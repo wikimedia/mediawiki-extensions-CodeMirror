@@ -1262,6 +1262,7 @@ class CodeMirrorModeMediaWiki {
  * @param {Object} [config] Configuration options for the MediaWiki mode.
  * @param {boolean} [config.bidiIsolation=false] Enable bidi isolation around HTML tags.
  *   This should generally always be enabled on RTL pages, but it comes with a performance cost.
+ * @param {boolean} [config.templateFolding=true] Enable template folding.
  * @param {Object|null} [mwConfig] Ignore; used only by unit tests.
  * @return {LanguageSupport}
  * @stable to call
@@ -1277,10 +1278,11 @@ const mediaWikiLang = ( config = { bidiIsolation: false }, mwConfig = null ) => 
 		)
 	) ];
 
-	// Add template folding if in supported namespace.
-	const templateFoldingNs = mwConfig.templateFoldingNamespaces;
 	// Set to [] to disable everywhere, or null to enable everywhere.
-	if ( !templateFoldingNs || templateFoldingNs.includes( mw.config.get( 'wgNamespaceNumber' ) ) ) {
+	const templateFoldingNs = mwConfig.templateFoldingNamespaces;
+	const shouldUseFolding = !templateFoldingNs || templateFoldingNs.includes( mw.config.get( 'wgNamespaceNumber' ) );
+	// Add template folding if in supported namespace.
+	if ( shouldUseFolding && ( config.templateFolding || config.templateFolding === undefined ) ) {
 		langExtension.push( templateFoldingExtension );
 	}
 
