@@ -725,7 +725,7 @@ class CodeMirrorModeMediaWiki {
 	}
 
 	eatFreeExternalLink( stream, state ) {
-		if ( stream.eol() ) {
+		if ( stream.sol() ) {
 			// @todo error message
 		} else if ( stream.match( /^[^\s\u00a0{[\]<>~).,']*/ ) ) {
 			if ( stream.peek() === '~' ) {
@@ -819,16 +819,17 @@ class CodeMirrorModeMediaWiki {
 						return this.eatList( stream, state );
 					case ':':
 						// Highlight indented tables :{|, bug T108454
-						if ( stream.match( /^:*{\|/, false ) ) {
+						if ( stream.match( /^:*[\s\u00a0]*{\|/, false ) ) {
 							state.stack.push( state.tokenize );
 							state.tokenize = this.eatStartTable.bind( this );
 						}
 						return this.eatList( stream, state );
 					case ' ':
 						// Leading spaces is valid syntax for tables, bug T108454
-						if ( stream.match( /^[\s\u00a0]*:*{\|/, false ) ) {
+						if ( stream.match( /^[\s\u00a0]*(?::+[\s\u00a0]*)?{\|/, false ) ) {
 							stream.eatSpace();
 							if ( stream.match( /^:+/ ) ) { // ::{|
+								stream.eatSpace();
 								state.stack.push( state.tokenize );
 								state.tokenize = this.eatStartTable.bind( this );
 								return mwModeConfig.tags.indenting;
@@ -916,15 +917,21 @@ class CodeMirrorModeMediaWiki {
 							);
 						}
 						// Check for parser function without '#'
-
-						name = stream.match( /^([^\s\u00a0}[\]<{'|&:]+)(:|[\s\u00a0]*)(\}\}?)?(.)?/ );
+						name = stream.match( /^([^}[\]<{|:]+)(.)?/, false );
 						if ( name ) {
-							stream.backUp( name[ 0 ].length );
+							const [ , f, delimiter ] = name,
+								ff = delimiter === ':' ? f : f.trim(),
+								ffLower = ff.toLowerCase(),
+								{ config: { functionSynonyms } } = this;
 							if (
-								( name[ 2 ] === ':' || name[ 4 ] === undefined || name[ 3 ] === '}}' ) &&
+								( !delimiter || delimiter === ':' || delimiter === '}' ) &&
 								(
-									name[ 1 ].toLowerCase() in this.config.functionSynonyms[ 0 ] ||
-									name[ 1 ] in this.config.functionSynonyms[ 1 ]
+									Object.prototype.hasOwnProperty.call(
+										functionSynonyms[ 0 ], ffLower
+									) ||
+									Object.prototype.hasOwnProperty.call(
+										functionSynonyms[ 1 ], ff
+									)
 								)
 							) {
 								state.nExt++;
@@ -944,11 +951,11 @@ class CodeMirrorModeMediaWiki {
 					}
 					break;
 				case '<':
-					isCloseTag = !!stream.eat( '/' );
-					tagname = stream.match( /^[^>/\s\u00a0.*,[\]{}$^+?|/\\'`~<=!@#%&()-]+/ );
 					if ( stream.match( '!--' ) ) { // comment
 						return chain( this.eatBlock( mwModeConfig.tags.comment, '-->' ) );
 					}
+					isCloseTag = !!stream.eat( '/' );
+					tagname = stream.match( /^[a-z][^>/\s\u00a0]*/i );
 					if ( tagname ) {
 						tagname = tagname[ 0 ].toLowerCase();
 						if ( tagname in this.config.tags ) {
