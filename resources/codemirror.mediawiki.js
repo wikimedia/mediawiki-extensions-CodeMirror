@@ -1286,19 +1286,16 @@ const mediaWikiLang = ( config = { bidiIsolation: false }, mwConfig = null ) => 
 		)
 	) ];
 
-	// Set to [] to disable everywhere, or null to enable everywhere.
-	const templateFoldingNs = mwConfig.templateFoldingNamespaces;
-	const shouldUseFolding = !templateFoldingNs || templateFoldingNs.includes( mw.config.get( 'wgNamespaceNumber' ) );
-	// Add template folding if in supported namespace.
-	if ( shouldUseFolding && ( config.templateFolding || config.templateFolding === undefined ) ) {
-		langExtension.push( templateFoldingExtension );
-	}
-
-	// Bundle the bidi isolation extension, as it's coded specifically for MediaWiki.
-	// This is behind a config option for performance reasons (we only use it on RTL pages).
-	if ( config.bidiIsolation ) {
-		langExtension.push( bidiIsolationExtension );
-	}
+	// Register MW-specific Extensions into CodeMirror preferences. Whether they are enabled
+	// or not is determined by the user's preferences and wiki configuration.
+	mw.hook( 'ext.CodeMirror.ready' ).add( ( $textarea, cm ) => {
+		if ( config.templateFolding !== false ) {
+			cm.preferences.registerExtension( 'templateFolding', templateFoldingExtension, cm.view );
+		}
+		if ( config.bidiIsolation ) {
+			cm.preferences.registerExtension( 'bidiIsolation', bidiIsolationExtension, cm.view );
+		}
+	} );
 
 	return new LanguageSupport( lang, langExtension );
 };

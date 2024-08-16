@@ -4,6 +4,7 @@ const assert = require( 'assert' ),
 	EditPage = require( '../pageobjects/edit.page' ),
 	FixtureContent = require( '../fixturecontent' ),
 	UserPreferences = require( '../userpreferences' ),
+	Api = require( 'wdio-mediawiki/Api.js' ),
 	Util = require( 'wdio-mediawiki/Util' );
 
 describe( 'CodeMirror bracket match highlighting for the wikitext 2010 editor', () => {
@@ -30,5 +31,10 @@ describe( 'CodeMirror bracket match highlighting for the wikitext 2010 editor', 
 	it( 'matches according to cursor movement', async () => {
 		await EditPage.cursorToPosition( 3 );
 		assert.strictEqual( await EditPage.getHighlightedMatchingBrackets(), '{}' );
+	} );
+
+	after( async () => {
+		const bot = await Api.bot();
+		bot.delete( title, 'Test cleanup' ).catch( ( e ) => console.error( e ) );
 	} );
 } );

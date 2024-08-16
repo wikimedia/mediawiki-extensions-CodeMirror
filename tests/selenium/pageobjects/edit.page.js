@@ -4,15 +4,13 @@ const Page = require( 'wdio-mediawiki/Page' );
 
 // Copied from mediawiki-core edit.page.js
 class EditPage extends Page {
-	async openForEditing( title, cm6enable = false ) {
+	async openForEditing( title ) {
 		const queryParams = {
 			action: 'edit',
 			vehidebetadialog: 1,
-			hidewelcomedialog: 1
+			hidewelcomedialog: 1,
+			cm6enable: 1
 		};
-		if ( cm6enable ) {
-			queryParams.cm6enable = '1';
-		}
 		await super.openTitle( title, queryParams );
 	}
 
@@ -67,7 +65,7 @@ class EditPage extends Page {
 	}
 
 	get highlightedBrackets() {
-		return $$( '.CodeMirror-line .cm-mw-matchingbracket' );
+		return $$( '.cm-line .cm-matchingBracket' );
 	}
 
 	async getHighlightedMatchingBrackets() {

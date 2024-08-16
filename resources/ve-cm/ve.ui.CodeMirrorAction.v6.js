@@ -85,20 +85,15 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 					've-ce-documentNode-codeEditor-hide'
 			);
 
-			// TODO: pass bidiIsolation option to mediawikiLang() when it's more stable.
 			surface.mirror.initialize( surface.mirror.defaultExtensions.concat( mediawikiLang( {
+				// These should never be enabled in VE
+				bidiIsolation: false,
 				templateFolding: false
 			} ), lineHeightExtension ) );
+
 			// Force infinite viewport in CodeMirror to prevent misalignment of
 			// the VE surface and the CodeMirror view. See T357482#10076432.
 			surface.mirror.view.viewState.printing = true;
-
-			// Disable the Extension that highlights special characters.
-			surface.mirror.view.dispatch( {
-				effects: surface.mirror.specialCharsCompartment.reconfigure(
-					codeMirrorLib.EditorView.editorAttributes.of( [] )
-				)
-			} );
 
 			// Account for the gutter width in the margin.
 			action.updateGutterWidth( doc.getDir() );
@@ -158,7 +153,12 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
  * @param {string} dir Document direction
  */
 ve.ui.CodeMirrorAction.prototype.updateGutterWidth = function ( dir ) {
-	const guttersWidth = this.surface.mirror.view.dom.querySelector( '.cm-gutters' ).getBoundingClientRect().width;
+	const gutter = this.surface.mirror.view.dom.querySelector( '.cm-gutters' );
+	if ( !gutter ) {
+		// Line numbering is disabled.
+		return;
+	}
+	const guttersWidth = gutter.getBoundingClientRect().width;
 	this.surface.getView().$documentNode.css( {
 		'margin-left': dir === 'rtl' ? 0 : guttersWidth,
 		'margin-right': dir === 'rtl' ? guttersWidth : 0

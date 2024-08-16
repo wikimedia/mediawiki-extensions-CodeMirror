@@ -228,5 +228,9 @@ class Hooks implements
 			'section' => 'editing/syntax-highlighting',
 			'disable-if' => [ '!==', 'usecodemirror', '1' ]
 		];
+
+		$defaultPreferences['codemirror-preferences'] = [
+			'type' => 'api',
+		];
 	}
 }

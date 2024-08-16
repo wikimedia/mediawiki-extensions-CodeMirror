@@ -1,14 +1,15 @@
 const {
+	Compartment,
 	EditorState,
 	EditorView,
 	Extension,
-	Compartment,
 	KeyBinding,
 	ViewUpdate,
 	bracketMatching,
 	crosshairCursor,
 	defaultKeymap,
 	drawSelection,
+	highlightActiveLine,
 	highlightSpecialChars,
 	history,
 	historyKeymap,
@@ -20,6 +21,7 @@ const {
 const CodeMirrorTextSelection = require( './codemirror.textSelection.js' );
 const CodeMirrorSearch = require( './codemirror.search.js' );
 const CodeMirrorGotoLine = require( './codemirror.gotoLine.js' );
+const CodeMirrorPreferences = require( './codemirror.preferences.js' );
 require( './ext.CodeMirror.data.js' );
 
 /**
@@ -96,17 +98,23 @@ class CodeMirror {
 		 */
 		this.textSelection = null;
 		/**
-		 * Compartment for the language direction Extension.
+		 * Compartment to control the direction of the editor.
 		 *
 		 * @type {Compartment}
 		 */
 		this.dirCompartment = new Compartment();
 		/**
-		 * Compartment for the special characters Extension.
+		 * The CodeMirror preferences panel.
 		 *
-		 * @type {Compartment}
+		 * @type {CodeMirrorPreferences}
 		 */
-		this.specialCharsCompartment = new Compartment();
+		this.preferences = new CodeMirrorPreferences( {
+			bracketMatching: this.bracketMatchingExtension,
+			lineNumbering: this.lineNumberingExtension,
+			lineWrapping: this.lineWrappingExtension,
+			activeLine: this.activeLineExtension,
+			specialChars: this.specialCharsExtension
+		}, !!this.surface );
 	}
 
 	/**
@@ -121,12 +129,11 @@ class CodeMirror {
 		const extensions = [
 			this.contentAttributesExtension,
 			this.phrasesExtension,
-			this.specialCharsCompartment.of( this.specialCharsExtension ),
 			this.heightExtension,
 			this.updateExtension,
-			this.bracketMatchingExtension,
 			this.dirExtension,
 			this.searchExtension,
+			this.preferences.extension,
 			EditorState.readOnly.of( this.readOnly ),
 			EditorView.domEventHandlers( {
 				blur: () => {
@@ -136,7 +143,6 @@ class CodeMirror {
 					this.$textarea[ 0 ].dispatchEvent( new Event( 'focus' ) );
 				}
 			} ),
-			EditorView.lineWrapping,
 			keymap.of( defaultKeymap ),
 			EditorState.allowMultipleSelections.of( true ),
 			drawSelection(),
@@ -161,13 +167,34 @@ class CodeMirror {
 			) );
 		}
 
-		// Set to [] to disable everywhere, or null to enable everywhere
-		const namespaces = mw.config.get( 'extCodeMirrorConfig' ).lineNumberingNamespaces;
-		if ( !namespaces || namespaces.includes( mw.config.get( 'wgNamespaceNumber' ) ) ) {
-			extensions.push( lineNumbers() );
-		}
-
 		return extensions;
+	}
+
+	/**
+	 * Extension for highlighting the active line.
+	 *
+	 * @return {Extension}
+	 */
+	get activeLineExtension() {
+		return highlightActiveLine();
+	}
+
+	/**
+	 * Extension for line wrapping.
+	 *
+	 * @return {Extension}
+	 */
+	get lineWrappingExtension() {
+		return EditorView.lineWrapping;
+	}
+
+	/**
+	 * Extension for line numbering.
+	 *
+	 * @return {Extension|Extension[]}
+	 */
+	get lineNumberingExtension() {
+		return lineNumbers();
 	}
 
 	/**
@@ -319,7 +346,7 @@ class CodeMirror {
 	 * @stable to call
 	 */
 	get specialCharsExtension() {
-		// Keys are the decimal unicode number, values are the messages.
+		// Keys are the decimal Unicode number, values are the messages.
 		const messages = {
 			0: mw.msg( 'codemirror-special-char-null' ),
 			7: mw.msg( 'codemirror-special-char-bell' ),
@@ -368,6 +395,12 @@ class CodeMirror {
 		} );
 	}
 
+	/**
+	 * This extension adds the ability to change the direction of the editor.
+	 *
+	 * @type {Extension}
+	 * @stable to call
+	 */
 	get dirExtension() {
 		return [
 			this.dirCompartment.of( EditorView.editorAttributes.of( {
@@ -449,10 +482,11 @@ class CodeMirror {
 		 * Called just after CodeMirror is initialized.
 		 *
 		 * @event CodeMirror~'ext.CodeMirror.ready'
-		 * @param {jQuery} $view The CodeMirror view.
+		 * @param {jQuery} $view The CodeMirror view element.
+		 * @param {EditorState} state The CodeMirror instance.
 		 * @stable to use
 		 */
-		mw.hook( 'ext.CodeMirror.ready' ).fire( $( this.view.dom ) );
+		mw.hook( 'ext.CodeMirror.ready' ).fire( $( this.view.dom ), this );
 	}
 
 	/**

@@ -15,7 +15,7 @@ describe( 'CodeMirror template folding for the wikitext 2010 editor', () => {
 		await LoginPage.loginAdmin();
 		await FixtureContent.createFixturePage( title );
 		await UserPreferences.enableWikitext2010EditorWithCodeMirror();
-		await EditPage.openForEditing( title, true );
+		await EditPage.openForEditing( title );
 		await EditPage.wikiEditorToolbar.waitForDisplayed();
 		await browser.execute( () => {
 			$( '.cm-editor' ).textSelection( 'setContents', '{{foo|1={{bar|{{baz|{{PAGENAME}}}}}}}}' );

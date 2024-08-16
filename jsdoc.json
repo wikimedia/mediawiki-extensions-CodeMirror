@@ -25,7 +25,6 @@
 			"maintitle": "CodeMirror",
 			"repository": "https://gerrit.wikimedia.org/g/mediawiki/extensions/CodeMirror",
 			"linkMap": {
-				"jQuery.fn.textSelection": "https://doc.wikimedia.org/mediawiki-core/master/js/jQueryPlugins.html#.textSelection",
 				"Compartment": "https://codemirror.net/docs/ref/#state.Compartment",
 				"Decoration": "https://codemirror.net/docs/ref/#view.Decoration",
 				"DecorationSet": "https://codemirror.net/docs/ref/#view.DecorationSet",
@@ -35,6 +34,7 @@
 				"Extension": "https://codemirror.net/docs/ref/#state.Extension",
 				"KeyBinding": "https://codemirror.net/docs/ref/#view.KeyBinding",
 				"LanguageSupport": "https://codemirror.net/docs/ref/#language.LanguageSupport",
+				"mw.Api": "https://doc.wikimedia.org/mediawiki-core/master/js/mw.Api.html",
 				"Panel": "https://codemirror.net/docs/ref/#view.Panel",
 				"PluginSpec": "https://codemirror.net/docs/ref/#view.PluginSpec",
 				"RangeSet": "https://codemirror.net/docs/ref/#state.RangeSet",
@@ -49,7 +49,12 @@
 				"Tooltip": "https://codemirror.net/docs/ref/#view.Tooltip",
 				"Tree": "https://lezer.codemirror.net/docs/ref/#common.Tree",
 				"ViewUpdate": "https://codemirror.net/docs/ref/#view.ViewUpdate",
-				"ve.ui.Surface": "https://doc.wikimedia.org/visualeditor-standalone/master/ve.ui.Surface.html"
+				"jQuery.fn.textSelection": "https://doc.wikimedia.org/mediawiki-core/master/js/jQueryPlugins.html#.textSelection",
+				"ve.dm.Selection": "https://doc.wikimedia.org/visualeditor-standalone/master/ve.dm.Selection.html",
+				"ve.dm.Transaction": "https://doc.wikimedia.org/visualeditor-standalone/master/ve.dm.Transaction.html",
+				"ve.ui.Action": "https://doc.wikimedia.org/visualeditor-standalone/master/ve.ui.Action.html",
+				"ve.ui.Surface": "https://doc.wikimedia.org/visualeditor-standalone/master/ve.ui.Surface.html",
+				"ve.ui.Tool": "https://doc.wikimedia.org/visualeditor-standalone/master/ve.ui.Tool.html"
 			}
 		}
 	}

@@ -37,6 +37,19 @@
 			"value": null,
 			"description": "List of namespace IDs where line numbering should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere.",
 			"public": true
+		},
+		"CodeMirrorDefaultPreferences": {
+			"value": {
+				"activeLine": false,
+				"bidiIsolation": false,
+				"bracketMatching": true,
+				"lineNumbering": true,
+				"lineWrapping": true,
+				"specialChars": true,
+				"templateFolding": true
+			},
+			"description": "Defaults for CodeMirror user preferences. See https://w.wiki/BwzZ for more information.",
+			"public": true
 		}
 	},
 	"MessagesDirs": {
@@ -179,9 +192,10 @@
 			"packageFiles": [
 				"codemirror.js",
 				"codemirror.textSelection.js",
+				"codemirror.panel.js",
 				"codemirror.search.js",
 				"codemirror.gotoLine.js",
-				"codemirror.panel.js",
+				"codemirror.preferences.js",
 				{
 					"name": "ext.CodeMirror.data.js",
 					"callback": "MediaWiki\\Extension\\CodeMirror\\DataScript::makeScript"
@@ -195,6 +209,7 @@
 				"CdxButton",
 				"CdxCheckbox",
 				"CdxLabel",
+				"CdxField",
 				"CdxTextInput",
 				"CdxToggleButton",
 				"CdxToggleButtonGroup"
@@ -203,21 +218,27 @@
 				"codemirror-all",
 				"codemirror-all-tooltip",
 				"codemirror-by-word",
+				"codemirror-close",
 				"codemirror-control-character",
 				"codemirror-done",
 				"codemirror-find",
-				"codemirror-fold-template",
+				"codemirror-find-results",
 				"codemirror-folded-code",
 				"codemirror-goto-line",
 				"codemirror-goto-line-go",
 				"codemirror-match-case",
 				"codemirror-next",
+				"codemirror-prefs-activeline",
+				"codemirror-prefs-bracketmatching",
+				"codemirror-prefs-linenumbering",
+				"codemirror-prefs-linewrapping",
+				"codemirror-prefs-specialchars",
+				"codemirror-prefs-title",
 				"codemirror-previous",
 				"codemirror-regexp",
 				"codemirror-replace",
 				"codemirror-replace-all",
 				"codemirror-replace-placeholder",
-				"codemirror-find-results",
 				"codemirror-special-char-backspace",
 				"codemirror-special-char-bell",
 				"codemirror-special-char-carriage-return",
@@ -272,6 +293,11 @@
 			"dependencies": [
 				"ext.CodeMirror.v6",
 				"ext.CodeMirror.v6.lib"
+			],
+			"messages": [
+				"codemirror-fold-template",
+				"codemirror-prefs-bidiisolation",
+				"codemirror-prefs-templatefolding"
 			]
 		},
 		"ext.CodeMirror.v6.WikiEditor": {
@@ -334,7 +360,8 @@
 	"ForeignResourcesDir": "resources/lib",
 	"DefaultUserOptions": {
 		"usecodemirror": 0,
-		"usecodemirror-colorblind": 0
+		"usecodemirror-colorblind": 0,
+		"codemirror-preferences": ""
 	},
 	"QUnitTestModule": {
 		"localBasePath": "resources/legacy/mode/mediawiki/tests",

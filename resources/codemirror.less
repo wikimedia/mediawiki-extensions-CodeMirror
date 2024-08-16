@@ -1,38 +1,17 @@
 @import 'mediawiki.skin.variables.less';
+@import './codemirror.mixins.less';
 
 .cm-editor {
 	border: @border-width-base @border-style-base @border-color-subtle;
 
 	.cm-selectionBackground {
 		background: #d9d9d9;
-
-		@media screen {
-			html.skin-theme-clientpref-night & {
-				background: #222;
-			}
-		}
-
-		@media screen and ( prefers-color-scheme: dark ) {
-			html.skin-theme-clientpref-os & {
-				background: #222;
-			}
-		}
+		.darkmode( background, #222 );
 	}
 
 	&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {
 		background: #d7d4f0;
-
-		@media screen {
-			html.skin-theme-clientpref-night & {
-				background: #233;
-			}
-		}
-
-		@media screen and ( prefers-color-scheme: dark ) {
-			html.skin-theme-clientpref-os & {
-				background: #233;
-			}
-		}
+		.darkmode( background, #233 );
 	}
 }
 
@@ -85,6 +64,11 @@
 	border-left-color: @color-emphasized;
 }
 
+.cm-editor .cm-activeLine {
+	background-color: rgba( 204, 238, 255, 0.27 );
+	.darkmode( background-color, rgba( 71, 71, 124, 0.2 ) );
+}
+
 .cm-editor .cm-tooltip {
 	background-color: @background-color-neutral-subtle;
 	border-color: @border-color-base;
@@ -106,11 +90,20 @@
 	.cm-mw-panel {
 		border-bottom: @border-style-base @border-width-base @border-color-subtle;
 		padding: @spacing-50;
+		position: relative;
+	}
+
+	.cm-mw-panel--fieldset legend {
+		margin-bottom: @spacing-50;
 	}
 
 	.cm-mw-panel--text-input {
 		flex-basis: 0;
 		flex-grow: 1;
+	}
+
+	.cm-mw-panel--checkbox {
+		margin-bottom: @spacing-25;
 	}
 
 	.cm-mw-panel--row {
@@ -135,6 +128,12 @@
 		.cdx-icon {
 			background-color: @color-inverted;
 		}
+	}
+
+	.cm-mw-panel-close {
+		position: absolute;
+		right: @spacing-50;
+		top: @spacing-50;
 	}
 }
 
@@ -169,4 +168,9 @@
 .cm-mw-icon--next {
 	background-color: @color-base;
 	.cdx-mixin-css-icon( @cdx-icon-next, @color-base, @size-icon-medium, true );
+}
+
+.cm-mw-icon--close {
+	background-color: @color-base;
+	.cdx-mixin-css-icon( @cdx-icon-close, @color-base, @size-icon-medium, true );
 }

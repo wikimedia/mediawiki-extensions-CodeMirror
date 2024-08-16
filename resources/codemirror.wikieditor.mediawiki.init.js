@@ -6,12 +6,10 @@ const urlParams = new URLSearchParams( window.location.search );
 
 if ( mw.loader.getState( 'ext.wikiEditor' ) ) {
 	mw.hook( 'wikiEditor.toolbarReady' ).add( ( $textarea ) => {
-		const cmWE = new CodeMirrorWikiEditor(
-			$textarea,
-			mediaWikiLang( {
-				bidiIsolation: $textarea.attr( 'dir' ) === 'rtl' && urlParams.get( 'cm6bidi' )
-			} )
-		);
+		const mwLang = mediaWikiLang( {
+			bidiIsolation: urlParams.get( 'cm6bidi' )
+		} );
+		const cmWE = new CodeMirrorWikiEditor( $textarea, mwLang );
 		cmWE.addCodeMirrorToWikiEditor();
 	} );
 }

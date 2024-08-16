@@ -24,17 +24,9 @@ class UserPreferences {
 		await this.setPreferences( {
 			usebetatoolbar: '1',
 			usecodemirror: '1',
+			'codemirror-preferences': '{"bracketMatching":1,"lineWrapping":1,"activeLine":0,"specialChars":1,"bidiIsolation":0}',
 			'visualeditor-enable': '0',
 			'visualeditor-newwikitext': '0'
-		} );
-	}
-
-	async enableWikitext2017EditorWithCodeMirror() {
-		await this.setPreferences( {
-			usebetatoolbar: null,
-			usecodemirror: '1',
-			'visualeditor-enable': '1',
-			'visualeditor-newwikitext': '1'
 		} );
 	}
 }

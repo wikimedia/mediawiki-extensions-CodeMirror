@@ -6,8 +6,13 @@ jest.mock( '../../resources/ext.CodeMirror.data.js', () => jest.fn(), { virtual:
 global.mw = require( '@wikimedia/mw-node-qunit/src/mockMediaWiki.js' )();
 mw.user = Object.assign( mw.user, {
 	options: {
-		// Only called for 'usecodemirror' option.
-		get: jest.fn().mockReturnValue( 1 ),
+		get: jest.fn().mockImplementation( ( key ) => {
+			if ( key === 'codemirror-preferences' ) {
+				return '{"bracketMatching":1,"lineWrapping":1,"activeLine":0,"specialChars":1,"bidiIsolation":1}';
+			}
+			// Only called for 'usecodemirror' option.
+			return '1';
+		} ),
 		set: jest.fn()
 	},
 	sessionId: jest.fn().mockReturnValue( 'abc' ),

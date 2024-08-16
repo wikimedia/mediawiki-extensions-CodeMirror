@@ -1,5 +1,6 @@
 const CodeMirror = require( '../../resources/codemirror.js' );
 const mediaWikiLang = require( '../../resources/codemirror.mediawiki.js' );
+const bidiIsolationExtension = require( '../../resources/codemirror.mediawiki.bidiIsolation.js' );
 
 const testCases = [
 	{
@@ -24,6 +25,8 @@ const mwLang = mediaWikiLang(
 	{ tags: { ref: true } }
 );
 cm.initialize( [ ...cm.defaultExtensions, mwLang ] );
+// Normally ran by mw.hook, but we don't mock the hook system in the Jest tests.
+cm.preferences.registerExtension( 'bidiIsolation', bidiIsolationExtension, cm.view );
 
 describe( 'CodeMirrorBidiIsolation', () => {
 	it.each( testCases )(

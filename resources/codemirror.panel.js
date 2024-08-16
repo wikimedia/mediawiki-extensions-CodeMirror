@@ -12,9 +12,7 @@ class CodeMirrorPanel {
 	 * @constructor
 	 */
 	constructor() {
-		/**
-		 * @type {EditorView}
-		 */
+		/** @type {EditorView} */
 		this.view = undefined;
 	}
 
@@ -199,6 +197,27 @@ class CodeMirrorPanel {
 		} );
 
 		return btn;
+	}
+
+	/**
+	 * Get a CSS-only Codex Fieldset.
+	 *
+	 * @param {string} legendText
+	 * @param {...HTMLElement[]} fields
+	 * @return {Element}
+	 */
+	getFieldset( legendText, ...fields ) {
+		const fieldset = document.createElement( 'fieldset' );
+		fieldset.className = 'cm-mw-panel--fieldset cdx-field';
+		const legend = document.createElement( 'legend' );
+		legend.className = 'cdx-label';
+		const innerSpan = document.createElement( 'span' );
+		innerSpan.className = 'cdx-label__label__text';
+		innerSpan.textContent = legendText;
+		legend.appendChild( innerSpan );
+		fieldset.appendChild( legend );
+		fieldset.append( ...fields );
+		return fieldset;
 	}
 }
 

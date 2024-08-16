@@ -1,0 +1,13 @@
+.darkmode( @prop, @value ) {
+	@media screen {
+		html.skin-theme-clientpref-night & {
+			@{prop}: @value;
+		}
+	}
+
+	@media screen and ( prefers-color-scheme: dark ) {
+		html.skin-theme-clientpref-os & {
+			@{prop}: @value;
+		}
+	}
+}
