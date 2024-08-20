@@ -89,6 +89,9 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 			surface.mirror.initialize( surface.mirror.defaultExtensions.concat( mediawikiLang( {
 				templateFolding: false
 			} ), lineHeightExtension ) );
+			// Force infinite viewport in CodeMirror to prevent misalignment of
+			// the VE surface and the CodeMirror view. See T357482#10076432.
+			surface.mirror.view.viewState.printing = true;
 
 			// Disable the Extension that highlights special characters.
 			surface.mirror.view.dispatch( {
