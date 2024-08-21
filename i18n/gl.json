@@ -6,6 +6,9 @@
 			"Toliño"
 		]
 	},
-	"codemirror-desc": "Proporciona un resalte da sintaxe no editor de texto wiki",
-	"codemirror-toggle-label": "Resaltado de sintaxe"
+	"codemirror-desc": "Proporciona un resaltado de sintaxe no editor de texto wiki",
+	"codemirror-toggle-label": "Resaltado de sintaxe",
+	"codemirror-prefs-colorblind": "Activar o esquema para as persoas daltónicas que resalta a sintaxe ao editar o texto wiki",
+	"codemirror-prefs-colorblind-help": "Se usas un trebello para o resaltado de sintaxe, esta preferencia non funcionará.",
+	"prefs-accessibility": "Accesibilidade"
 }
