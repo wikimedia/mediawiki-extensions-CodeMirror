@@ -819,9 +819,10 @@ class CodeMirrorModeMediaWiki {
 						return this.eatList( stream, state );
 					case ':':
 						// Highlight indented tables :{|, bug T108454
-						if ( stream.match( /^:*[\s\u00a0]*{\|/, false ) ) {
+						if ( stream.match( /^:*[\s\u00a0]*(?={\|)/ ) ) {
 							state.stack.push( state.tokenize );
 							state.tokenize = this.eatStartTable.bind( this );
+							return mwModeConfig.tags.indenting;
 						}
 						return this.eatList( stream, state );
 					case ' ':
