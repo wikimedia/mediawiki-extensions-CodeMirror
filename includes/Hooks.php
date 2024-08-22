@@ -226,7 +226,7 @@ class Hooks implements
 
 		$defaultPreferences['usecodemirror-colorblind'] = [
 			'type' => 'toggle',
-			'label-message' => 'codemirror-prefs-colorblind',
+			'label-message' => 'codemirror-v6-prefs-colorblind',
 			'section' => 'editing/syntax-highlighting',
 			'disable-if' => [ '!==', 'usecodemirror', '1' ]
 		];
