@@ -67,7 +67,7 @@
 	// Ensure surfaces are using identical font rules
 	.cm-scroller,
 	.cm-scroller *,
-	.ve-ui-mwWikitextSurface .ve-ce-paragraphNode {
+	.ext-codemirror-wrapper .ve-ce-paragraphNode {
 		// The following are already set by mw-editfont-monospace on the parent: font-size, font-family
 		word-wrap: break-word;
 		// Support: Chrome<76, Firefox<69
@@ -102,11 +102,11 @@
 		font-weight: inherit;
 	}
 
-	.mw-content-ltr .ve-ce-paragraphNode {
+	.ext-codemirror-wrapper .mw-content-ltr .ve-ce-paragraphNode {
 		margin-left: 6px !important; /* stylelint-disable-line declaration-no-important */
 	}
 
-	.mw-content-rtl .ve-ce-paragraphNode {
+	.ext-codemirror-wrapper .mw-content-rtl .ve-ce-paragraphNode {
 		/* @noflip */
 		margin-right: 6px !important; /* stylelint-disable-line declaration-no-important */
 	}
@@ -117,7 +117,7 @@
 	}
 }
 
-.ve-ce-documentNode-codeEditor-hide {
+.ext-codemirror-wrapper .ve-ce-documentNode-codeEditor-hide {
 	opacity: 0.4;
 
 	&::selection,
@@ -126,6 +126,6 @@
 	}
 }
 
-.ve-ce-documentNode-codeEditor-webkit-hide {
+.ext-codemirror-wrapper .ve-ce-documentNode-codeEditor-webkit-hide {
 	-webkit-text-fill-color: transparent;
 }
