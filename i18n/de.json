@@ -11,6 +11,7 @@
 	},
 	"codemirror-desc": "Ermöglicht Syntaxhervorhebungen im Wikitext-Editor",
 	"codemirror-toggle-label": "Syntaxhervorhebung",
+	"codemirror-toggle-label-short": "Syntax",
 	"codemirror-prefs-summary": "Weitere Informationen zu dieser Funktion findest du auf der [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror Hilfeseite].",
 	"codemirror-prefs-enable": "Syntaxhervorhebung für Wikitext aktivieren",
 	"codemirror-v6-prefs-colorblind": "Farbblindenfreundliches Schema verwenden",
