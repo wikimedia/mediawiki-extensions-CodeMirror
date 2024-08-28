@@ -14,6 +14,7 @@
 	},
 	"codemirror-desc": "提供 wikitext 編輯器語法醒目標示",
 	"codemirror-toggle-label": "語法醒目標示",
+	"codemirror-toggle-label-short": "語法",
 	"codemirror-prefs-summary": "您可以透過閱讀[https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror 幫助頁面]來了解此功能的更多資訊。",
 	"codemirror-prefs-enable": "啟用 wikitext 的語法突顯",
 	"codemirror-v6-prefs-colorblind": "使用對色覺辨認障礙友善的方案",

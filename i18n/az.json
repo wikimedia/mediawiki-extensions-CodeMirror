@@ -8,6 +8,7 @@
 	},
 	"codemirror-desc": "Vikimətn redaktorunda kodun rəngli olmasını təmin edir",
 	"codemirror-toggle-label": "Kodun rənglənməsi",
+	"codemirror-toggle-label-short": "Sintaksis",
 	"codemirror-prefs-summary": "Siz [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror yardım səhifəsini] oxumaqla bu funksiya haqqında ətraflı öyrənə bilərsiniz.",
 	"codemirror-prefs-enable": "Vikimətn üçün sintaksisin vurğulanmasını aktivləşdirin",
 	"codemirror-v6-prefs-colorblind": "Rəng korlarına uyğun sxemdən istifadə edin",
@@ -23,5 +24,15 @@
 	"codemirror-replace": "dəyiş",
 	"codemirror-replace-placeholder": "Dəyiş",
 	"codemirror-replace-all": "hamısını dəyiş",
-	"prefs-accessibility": "Əlçatanlıq"
+	"codemirror-control-character": "$1 nəzarət simvolu",
+	"codemirror-special-char-null": "Boş simvol",
+	"codemirror-special-char-bell": "Zəng simvolu",
+	"codemirror-special-char-newline": "Yeni sətir",
+	"codemirror-special-char-vertical-tab": "Şaquli vərəqə",
+	"codemirror-special-char-carriage-return": "Karetin dönüşü simvolu",
+	"codemirror-special-char-escape": "Escape simvolu",
+	"codemirror-special-char-nbsp": "Qırılmayan boşluq",
+	"codemirror-special-char-zero-width-space": "Sıfır genişlikli boşluq",
+	"prefs-accessibility": "Əlçatanlıq",
+	"prefs-syntax-highlighting": "Sintaksis vurğulanması"
 }

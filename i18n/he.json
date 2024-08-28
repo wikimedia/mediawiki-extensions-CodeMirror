@@ -7,6 +7,7 @@
 	},
 	"codemirror-desc": "צביעת תחביר בעורך קוד ויקי",
 	"codemirror-toggle-label": "צביעת תחביר",
+	"codemirror-toggle-label-short": "תחביר",
 	"codemirror-prefs-summary": "אפשר ללמוד עוד על התכונה הזאת על־ידי קריאת [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror דף העזרה].",
 	"codemirror-prefs-enable": "הפעלת צביעת תחביר עבור קוד ויקי",
 	"codemirror-v6-prefs-colorblind": "להשתמש בערכת צבעים ידידותית לעיוורי צבעים",
