@@ -7,6 +7,7 @@
 	},
 	"codemirror-desc": "Дава потцртување на синтаксата во уредувачот на викитекст",
 	"codemirror-toggle-label": "Истакнување на синтакса",
+	"codemirror-toggle-label-short": "Синтакса",
 	"codemirror-prefs-summary": "Повеќе за оваа функција можете да дознаете на [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror помошната страница].",
 	"codemirror-prefs-enable": "Овозможи истакнување на синтакса во викитекст",
 	"codemirror-v6-prefs-colorblind": "Користи шема погодна за далтонисти",
