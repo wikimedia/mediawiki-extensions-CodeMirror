@@ -1,5 +1,14 @@
 require( './ext.CodeMirror.data.js' );
 
+if ( mw.config.get( 'extCodeMirrorConfig' ).useV6 ) {
+	const deprecationFn = mw.log.makeDeprecated(
+		'CodeMirror5-deprecation',
+		'CodeMirror 5 has been deprecated in MediaWiki 1.43 and will be removed in 1.44. ' +
+		'Please migrate to CodeMirror 6. See https://w.wiki/B3pr for more information.'
+	);
+	deprecationFn();
+}
+
 /**
  * Log usage of CodeMirror.
  *
