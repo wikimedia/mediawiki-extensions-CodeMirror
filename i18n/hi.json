@@ -1,9 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"Abijeet Patro"
+			"Abijeet Patro",
+			"AnupamM"
 		]
 	},
+	"codemirror-toggle-label-short": "वाक्यविन्यास",
 	"codemirror-find": "खोजें",
 	"codemirror-next": "अगला",
 	"codemirror-previous": "पिछला",
