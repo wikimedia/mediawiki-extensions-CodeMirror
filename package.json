@@ -15,7 +15,7 @@
 		"doc": "jsdoc -c jsdoc.json"
 	},
 	"engines": {
-		"node": "18.20.2"
+		"node": "18.20.4"
 	},
 	"devDependencies": {
 		"@codemirror/commands": "6.2.5",
