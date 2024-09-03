@@ -222,12 +222,6 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 		store = this.surface.getModel().getDocument().getStore();
 	let offset = 0;
 
-	const documentNode = document.querySelector( '.ve-ce-documentNode' );
-	const guttersWidth = parseInt( document.querySelector( '.cm-gutters' ).offsetWidth );
-	const marginProperty = this.surface.getModel().getDocument().getDir() === 'rtl' ? 'margin-right' : 'margin-left';
-	// XXX: Why 6px?
-	documentNode.style[ marginProperty ] = ( guttersWidth - 6 ) + 'px';
-
 	tx.operations.forEach( ( op ) => {
 		if ( op.type === 'retain' ) {
 			offset += op.length;
@@ -245,6 +239,8 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 	for ( let i = replacements.length - 1; i >= 0; i-- ) {
 		this.surface.mirror.view.dispatch( { changes: replacements[ i ] } );
 	}
+
+	action.updateGutterWidth( this.surface.getModel().getDocument().getDir() );
 };
 
 /* Registration */
