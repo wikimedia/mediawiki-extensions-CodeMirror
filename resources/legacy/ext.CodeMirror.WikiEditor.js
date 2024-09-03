@@ -236,9 +236,6 @@ function init() {
 				$codeMirror.addClass( 'cm-mw-colorblind-colors' );
 			}
 
-			// T365311: Apply color inversion until dark syntax styles are chosen
-			$codeMirror.addClass( 'notheme skin-invert' );
-
 			// T305333: Reload CodeMirror to fix a cursor caret issue.
 			codeMirror.refresh();
 

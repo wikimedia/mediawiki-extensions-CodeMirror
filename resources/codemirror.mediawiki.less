@@ -1,16 +1,20 @@
-@comment-color: #72777d;
-@error-color: #d73333;
-@link-color: #000aaa;
-@parser-function-color: #d73333;
-@table-color: #d08;
-@template-color: #80c;
-@template-variable-color: #ac6600;
-@wikitext-formatting-color: #0076dd;
-@xml-tag-color: #14866d;
+@import 'mediawiki.skin.variables.less';
 
+@error-color: @color-destructive;
+@link-color: @color-progressive;
+@parser-function-color: @color-destructive;
+@table-color: #d08;
+@table-color-dark: #ff5edd;
+@template-color: #80c;
+@template-color-dark: #af84e6;
+@template-variable-color: #ac6600;
+@wikitext-formatting-color: @color-progressive--focus;
+@wikitext-formatting-color-dark: @color-progressive--hover;
+@xml-tag-color: @color-content-added;
 @template-background-color: #a11;
-@ext-background-color: #70a;
+@ext-background-color: #eee;
 @link-background-color: #219;
+@skip-formatting-color: #adf;
 
 .ground( @template: 0, @ext: 0, @link: 0 ) {
 	@template-shade: fade( @template-background-color, 4% * @template );
@@ -19,44 +23,76 @@
 	background-color: average( average( @template-shade, @ext-shade ), @link-shade );
 }
 
-/* stylelint-disable declaration-block-single-line-max-declarations */
-/* stylelint-disable @stylistic/block-closing-brace-space-after */
-/* stylelint-disable @stylistic/block-opening-brace-newline-after */
-/* stylelint-disable @stylistic/block-opening-brace-newline-before */
-/* stylelint-disable @stylistic/declaration-block-semicolon-newline-after */
-/* stylelint-disable @stylistic/selector-list-comma-newline-after */
+.darkmode( @prop, @value ) {
+	@media screen {
+		html.skin-theme-clientpref-night & {
+			@{prop}: @value;
+		}
+	}
 
-// See T365311
-.CodeMirror { color: inherit; }
+	@media screen and ( prefers-color-scheme: dark ) {
+		html.skin-theme-clientpref-os & {
+			@{prop}: @value;
+		}
+	}
+}
 
-.cm-mw-pagename { text-decoration: underline; }
+.wikitext-formatting-color {
+	color: @wikitext-formatting-color;
+	.darkmode( color, @wikitext-formatting-color-dark );
+}
 
-// TODO: It appears like this was never used. Remove?
-.cm-mw-matching { background-color: #ffd700; }
+.cm-mw-pagename {
+	text-decoration: underline;
+}
 
-.cm-mw-skipformatting { background-color: #adf; }
+.cm-mw-skipformatting {
+	background-color: @skip-formatting-color;
+}
 .cm-mw-list,
-.cm-mw-indenting { color: @wikitext-formatting-color; font-weight: bold; }
+.cm-mw-indenting {
+	.wikitext-formatting-color();
+	font-weight: bold;
+}
 // FIXME: Remove camelCase variant after CM6 upgrade is complete (also check Global Search)
 .cm-mw-doubleUnderscore,
 .cm-mw-double-underscore,
-.cm-mw-signature, .cm-mw-hr { color: @wikitext-formatting-color; font-weight: bold; background-color: #eee; }
+.cm-mw-signature,
+.cm-mw-hr {
+	.wikitext-formatting-color();
+	font-weight: bold;
+	background-color: @background-color-disabled-subtle;
+}
+
 // TODO: Deprecate .cm-mw-mnemonic in favor of -html-entity
-.cm-mw-mnemonic, .cm-mw-html-entity { color: @xml-tag-color; }
-.cm-mw-comment { color: @comment-color; font-weight: normal; }
-.cm-mw-apostrophes-bold, .cm-mw-apostrophes-italic { color: @wikitext-formatting-color; }
-.cm-mw-strong { font-weight: bold; }
+.cm-mw-mnemonic,
+.cm-mw-html-entity {
+	color: @xml-tag-color;
+}
+.cm-mw-comment {
+	color: @color-subtle;
+	font-weight: normal;
+}
+.cm-mw-apostrophes-bold,
+.cm-mw-apostrophes-italic {
+	.wikitext-formatting-color();
+}
+.cm-mw-strong {
+	font-weight: bold;
+}
 
 // FIXME: Remove .CodeMirror-line rules after CM6 upgrade
 pre.CodeMirror-line.cm-mw-section-1,
 pre.CodeMirror-line-like.cm-mw-section-1,
-.cm-mw-section-1, .cm-mw-section-1 ~ * {
+.cm-mw-section-1,
+.cm-mw-section-1 ~ * {
 	font-size: 1.8em;
 	line-height: 1.2em;
 }
 pre.CodeMirror-line.cm-mw-section-2,
 pre.CodeMirror-line-like.cm-mw-section-2,
-.cm-mw-section-2, .cm-mw-section-2 ~ * {
+.cm-mw-section-2,
+.cm-mw-section-2 ~ * {
 	font-size: 1.5em;
 	line-height: 1.2em;
 }
@@ -76,48 +112,92 @@ span.cm-mw-section-6 ~ * {
 	font-weight: bold;
 }
 
-.cm-mw-template { color: @template-color; font-weight: normal; }
+.cm-mw-template {
+	color: @template-color;
+	font-weight: normal;
+
+	html.skin-theme-clientpref-night & {
+		color: @template-color-dark;
+	}
+
+	@media ( prefers-color-scheme: dark ) {
+		html.skin-theme-clientpref-os & {
+			color: @template-color-dark;
+		}
+	}
+}
+
 // TODO: deprecate/remove after CM6 upgrade
-.cm-mw-template-name-mnemonic { font-weight: normal; }
+.cm-mw-template-name-mnemonic {
+	font-weight: normal;
+}
+
 .cm-mw-template-name,
 .cm-mw-template-argument-name,
 .cm-mw-template-delimiter,
-.cm-mw-template-bracket { color: @template-color; font-weight: bold; }
+.cm-mw-template-bracket {
+	color: @template-color;
+	font-weight: bold;
+	.darkmode( color, @template-color-dark );
+}
 
 .cm-mw-templatevariable,
-.cm-mw-templatevariable-bracket { color: @template-variable-color; font-weight: normal; }
+.cm-mw-templatevariable-bracket {
+	color: @template-variable-color;
+	font-weight: normal;
+}
 .cm-mw-templatevariable-name,
-.cm-mw-templatevariable-delimiter { color: @template-variable-color; font-weight: bold; }
+.cm-mw-templatevariable-delimiter {
+	color: @template-variable-color;
+	font-weight: bold;
+}
 
-.cm-mw-parserfunction { font-weight: normal; }
+.cm-mw-parserfunction {
+	font-weight: normal;
+}
 .cm-mw-parserfunction-name,
 .cm-mw-parserfunction-bracket,
-.cm-mw-parserfunction-delimiter { color: @parser-function-color; font-weight: bold; }
+.cm-mw-parserfunction-delimiter {
+	color: @parser-function-color;
+	font-weight: bold;
+}
 
 pre.CodeMirror-line.cm-mw-exttag,
 pre.CodeMirror-line-like.cm-mw-exttag {
 	.ground( @ext: 0.5 );
 }
-.cm-mw-exttag { .ground( @ext: 1 ); }
+.cm-mw-exttag {
+	.ground( @ext: 1 );
+}
 .cm-mw-exttag-name,
-.cm-mw-htmltag-name { color: @xml-tag-color; font-weight: bold; }
+.cm-mw-htmltag-name {
+	color: @xml-tag-color;
+	font-weight: bold;
+}
 .cm-mw-exttag-bracket,
 .cm-mw-exttag-attribute,
 .cm-mw-htmltag-bracket,
-.cm-mw-htmltag-attribute { color: @xml-tag-color; font-weight: normal; }
+.cm-mw-htmltag-attribute {
+	color: @xml-tag-color;
+	font-weight: normal;
+}
 
+.cm-mw-tag-pre,
+.cm-mw-tag-nowiki,
 pre.CodeMirror-line.cm-mw-tag-pre,
 pre.CodeMirror-line-like.cm-mw-tag-pre,
-.cm-mw-tag-pre,
 pre.CodeMirror-line.cm-mw-tag-nowiki,
-pre.CodeMirror-line-like.cm-mw-tag-nowiki,
-.cm-mw-tag-nowiki {
+pre.CodeMirror-line-like.cm-mw-tag-nowiki {
 	background-color: rgba( 0, 0, 0, 0.04 );
+	.darkmode( background-color, rgba( 255, 255, 255, 0.06 ) );
 }
 
 .cm-mw-link,
 .cm-mw-link-tosection,
-.cm-mw-section-header { color: @wikitext-formatting-color; font-weight: normal; }
+.cm-mw-section-header {
+	.wikitext-formatting-color();
+	font-weight: normal;
+}
 .cm-mw-link-pagename,
 .cm-mw-link-bracket,
 .cm-mw-link-delimiter,
@@ -130,52 +210,109 @@ pre.CodeMirror-line-like.cm-mw-tag-nowiki,
 }
 .cm-mw-extlink-protocol,
 .cm-mw-free-extlink-protocol,
-.cm-mw-extlink-bracket { color: @link-color; font-weight: bold; }
+.cm-mw-extlink-bracket {
+	color: @link-color;
+	font-weight: bold;
+}
 
 .cm-mw-table-bracket,
-.cm-mw-table-delimiter { color: @table-color; font-weight: bold; }
-.cm-mw-table-definition { color: @table-color; font-weight: normal; }
-.cm-mw-table-caption { font-weight: bold; }
+.cm-mw-table-delimiter {
+	color: @table-color;
+	font-weight: bold;
+	.darkmode( color, @table-color-dark );
+}
+.cm-mw-table-definition {
+	color: @table-color;
+	font-weight: normal;
+	.darkmode( color, @table-color-dark );
+}
+.cm-mw-table-caption {
+	font-weight: bold;
+}
 
-.cm-mw-template2-ground { .ground( @template: 1 ); }
-.cm-mw-template3-ground { .ground( @template: 2 ); }
+.cm-mw-template2-ground {
+	.ground( @template: 1 );
+}
+.cm-mw-template3-ground {
+	.ground( @template: 2 );
+}
 .cm-mw-ext-ground,
-.cm-mw-template-ext-ground { .ground( @ext: 1 ); }
+.cm-mw-template-ext-ground {
+	.ground( @ext: 1 );
+}
 .cm-mw-ext2-ground,
-.cm-mw-template-ext2-ground { .ground( @ext: 2 ); }
+.cm-mw-template-ext2-ground {
+	.ground( @ext: 2 );
+}
 .cm-mw-ext3-ground,
-.cm-mw-template-ext3-ground { .ground( @ext: 3 ); }
+.cm-mw-template-ext3-ground {
+	.ground( @ext: 3 );
+}
 .cm-mw-link-ground,
 .cm-mw-ext-link-ground,
-.cm-mw-template-link-ground { .ground( @link: 1 ); }
+.cm-mw-template-link-ground {
+	.ground( @link: 1 );
+}
 .cm-mw-ext2-link-ground,
-.cm-mw-template-ext-link-ground { .ground( @ext: 1, @link: 1 ); }
+.cm-mw-template-ext-link-ground {
+	.ground( @ext: 1, @link: 1 );
+}
 .cm-mw-ext3-link-ground,
-.cm-mw-template-ext2-link-ground { .ground( @ext: 2, @link: 1 ); }
-.cm-mw-template-ext3-link-ground { .ground( @ext: 3, @link: 1 ); }
+.cm-mw-template-ext2-link-ground {
+	.ground( @ext: 2, @link: 1 );
+}
+.cm-mw-template-ext3-link-ground {
+	.ground( @ext: 3, @link: 1 );
+}
 
-.cm-mw-template2-ext-ground { .ground( @template: 1, @ext: 1 ); }
-.cm-mw-template2-ext2-ground { .ground( @template: 1, @ext: 2 ); }
-.cm-mw-template2-ext3-ground { .ground( @template: 1, @ext: 3 ); }
-.cm-mw-template2-link-ground { .ground( @template: 1, @link: 1 ); }
-.cm-mw-template2-ext-link-ground { .ground( @template: 1, @ext: 1, @link: 1 ); }
-.cm-mw-template2-ext2-link-ground { .ground( @template: 1, @ext: 2, @link: 1 ); }
-.cm-mw-template2-ext3-link-ground { .ground( @template: 1, @ext: 3, @link: 1 ); }
+.cm-mw-template2-ext-ground {
+	.ground( @template: 1, @ext: 1 );
+}
+.cm-mw-template2-ext2-ground {
+	.ground( @template: 1, @ext: 2 );
+}
+.cm-mw-template2-ext3-ground {
+	.ground( @template: 1, @ext: 3 );
+}
+.cm-mw-template2-link-ground {
+	.ground( @template: 1, @link: 1 );
+}
+.cm-mw-template2-ext-link-ground {
+	.ground( @template: 1, @ext: 1, @link: 1 );
+}
+.cm-mw-template2-ext2-link-ground {
+	.ground( @template: 1, @ext: 2, @link: 1 );
+}
+.cm-mw-template2-ext3-link-ground {
+	.ground( @template: 1, @ext: 3, @link: 1 );
+}
 
-.cm-mw-template3-ext-ground { .ground( @template: 2, @ext: 1 ); }
-.cm-mw-template3-ext2-ground { .ground( @template: 2, @ext: 2 ); }
-.cm-mw-template3-ext3-ground { .ground( @template: 2, @ext: 3 ); }
-.cm-mw-template3-link-ground { .ground( @template: 2, @link: 1 ); }
-.cm-mw-template3-ext-link-ground { .ground( @template: 2, @ext: 1, @link: 1 ); }
-.cm-mw-template3-ext2-link-ground { .ground( @template: 2, @ext: 2, @link: 1 ); }
-.cm-mw-template3-ext3-link-ground { .ground( @template: 2, @ext: 3, @link: 1 ); }
+.cm-mw-template3-ext-ground {
+	.ground( @template: 2, @ext: 1 );
+}
+.cm-mw-template3-ext2-ground {
+	.ground( @template: 2, @ext: 2 );
+}
+.cm-mw-template3-ext3-ground {
+	.ground( @template: 2, @ext: 3 );
+}
+.cm-mw-template3-link-ground {
+	.ground( @template: 2, @link: 1 );
+}
+.cm-mw-template3-ext-link-ground {
+	.ground( @template: 2, @ext: 1, @link: 1 );
+}
+.cm-mw-template3-ext2-link-ground {
+	.ground( @template: 2, @ext: 2, @link: 1 );
+}
+.cm-mw-template3-ext3-link-ground {
+	.ground( @template: 2, @ext: 3, @link: 1 );
+}
 
-.cm-mw-error { color: @error-color; }
+.cm-mw-error {
+	color: @error-color;
+}
 
-.cm-mw-em { font-style: italic; }
-
-.cm-mw-matchingbracket {
-	background-color: #eee;
-	box-shadow: inset 0 0 1px 1px #999;
-	font-weight: bold;
+.cm-mw-em {
+	font-style: italic;
 }

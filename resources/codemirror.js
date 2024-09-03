@@ -15,10 +15,11 @@ const {
 	keymap,
 	lineNumbers,
 	rectangularSelection,
-	redo,
-	searchKeymap
+	redo
 } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirrorTextSelection = require( './codemirror.textSelection.js' );
+const CodeMirrorSearch = require( './codemirror.search.js' );
+const CodeMirrorGotoLine = require( './codemirror.gotoLine.js' );
 require( './ext.CodeMirror.data.js' );
 
 /**
@@ -125,6 +126,7 @@ class CodeMirror {
 			this.updateExtension,
 			this.bracketMatchingExtension,
 			this.dirExtension,
+			this.searchExtension,
 			EditorState.readOnly.of( this.readOnly ),
 			EditorView.domEventHandlers( {
 				blur: () => {
@@ -135,10 +137,7 @@ class CodeMirror {
 				}
 			} ),
 			EditorView.lineWrapping,
-			keymap.of( [
-				...defaultKeymap,
-				...searchKeymap
-			] ),
+			keymap.of( defaultKeymap ),
 			EditorState.allowMultipleSelections.of( true ),
 			drawSelection(),
 			rectangularSelection(),
@@ -169,6 +168,18 @@ class CodeMirror {
 		}
 
 		return extensions;
+	}
+
+	/**
+	 * Extension for search and goto line functionality.
+	 *
+	 * @return {Extension|Extension[]}
+	 */
+	get searchExtension() {
+		return [
+			new CodeMirrorSearch().extension,
+			new CodeMirrorGotoLine().extension
+		];
 	}
 
 	/**
@@ -293,16 +304,6 @@ class CodeMirror {
 	 */
 	get phrasesExtension() {
 		return EditorState.phrases.of( {
-			Find: mw.msg( 'codemirror-find' ),
-			next: mw.msg( 'codemirror-next' ),
-			previous: mw.msg( 'codemirror-previous' ),
-			all: mw.msg( 'codemirror-all' ),
-			'match case': mw.msg( 'codemirror-match-case' ),
-			regexp: mw.msg( 'codemirror-regexp' ),
-			'by word': mw.msg( 'codemirror-by-word' ),
-			replace: mw.msg( 'codemirror-replace' ),
-			Replace: mw.msg( 'codemirror-replace-placeholder' ),
-			'replace all': mw.msg( 'codemirror-replace-all' ),
 			'Control character': mw.msg( 'codemirror-control-character' )
 		} );
 	}
