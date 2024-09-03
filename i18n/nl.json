@@ -10,6 +10,7 @@
 	},
 	"codemirror-desc": "Biedt accentuering van tekst in de wikitekst tekstverwerker",
 	"codemirror-toggle-label": "Syntaxis accentueren",
+	"codemirror-toggle-label-short": "Syntaxis",
 	"codemirror-prefs-summary": "Op de [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror hulppagina] kunt u meer over deze functie lezen.",
 	"codemirror-prefs-enable": "Syntaxiskleuring inschakelen voor wikitekst",
 	"codemirror-v6-prefs-colorblind": "Kleurenblindvriendelijk schema gebruiken",
