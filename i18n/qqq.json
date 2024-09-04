@@ -3,11 +3,11 @@
 		"authors": [
 			"McDutchie",
 			"Minh Nguyen",
+			"MusikAnimal",
 			"Raymond",
 			"Shirayuki",
 			"SkyDaisy9",
-			"pastakhov",
-			"MusikAnimal"
+			"pastakhov"
 		]
 	},
 	"codemirror-desc": "{{desc|name=Code Mirror|url=https://www.mediawiki.org/wiki/Extension:CodeMirror}}\n\nAdditional info: Description of \"Syntax highlighting\" in wiki\n[[mw:Extension:SyntaxHighlight GeSHi]]",
