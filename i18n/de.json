@@ -11,7 +11,7 @@
 	},
 	"codemirror-desc": "Ermöglicht Syntaxhervorhebungen im Wikitext-Editor",
 	"codemirror-toggle-label": "Syntaxhervorhebung",
-	"codemirror-prefs-colorblind": "Farbenfehlsichtigenfreundliches Schema für die Syntaxhervorhebung bei der Bearbeitung von Wikitext einschalten",
+	"codemirror-prefs-colorblind": "Zum Bearbeiten von Wikitext ein für Farbenfehlsichtige freundliches Farbschema zur Syntaxhervorhebung verwenden",
 	"codemirror-prefs-colorblind-help": "Wenn du ein Helferlein zur Syntaxhervorhebung verwendest, wird diese Einstellung nicht funktionieren.",
 	"codemirror-find": "Suchen",
 	"codemirror-next": "nächste",
