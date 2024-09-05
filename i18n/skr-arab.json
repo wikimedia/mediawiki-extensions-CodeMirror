@@ -5,5 +5,11 @@
 		]
 	},
 	"codemirror-toggle-label-short": "نحو",
+	"codemirror-next": "اڳلا لبھو",
+	"codemirror-all": "یکے",
+	"codemirror-regexp": "باقاعدہ اظہار",
+	"codemirror-replace-all": "سارے بدل گھنو",
+	"codemirror-done": "تھی ڳیا",
+	"codemirror-goto-line-go": "ڄلو",
 	"prefs-accessibility": "رسائیت"
 }
