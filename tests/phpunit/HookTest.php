@@ -144,10 +144,6 @@ class HookTest extends MediaWikiIntegrationTestCase {
 				[ $out->getUser(), 'usebetatoolbar', 0, $conds['usebetatoolbar'] ]
 			] );
 
-		if ( $conds['gadget'] && !ExtensionRegistry::getInstance()->isLoaded( 'Gadgets' ) ) {
-			$this->markTestSkipped( 'Skipped as Gadgets extension is not available' );
-		}
-
 		$extensionRegistry = $this->getMockExtensionRegistry( (bool)$conds['gadget'] );
 		$extensionRegistry->method( 'getAttribute' )
 			->with( 'CodeMirrorContentModels' )
@@ -155,6 +151,8 @@ class HookTest extends MediaWikiIntegrationTestCase {
 
 		$gadgetRepoMock = null;
 		if ( $conds['gadget'] ) {
+			$this->markTestSkippedIfExtensionNotLoaded( 'Gadgets' );
+
 			$gadgetMock = $this->createMock( Gadget::class );
 			$gadgetMock->expects( $this->once() )
 				->method( 'isEnabled' )
@@ -194,7 +192,7 @@ class HookTest extends MediaWikiIntegrationTestCase {
 	/**
 	 * @param string $contentModel
 	 * @param bool $isRTL
-	 * @return OutputPage|MockObject
+	 * @return OutputPage&MockObject
 	 */
 	private function getMockOutputPage( string $contentModel = CONTENT_MODEL_WIKITEXT, bool $isRTL = false ) {
 		$out = $this->createMock( OutputPage::class );
@@ -214,7 +212,7 @@ class HookTest extends MediaWikiIntegrationTestCase {
 
 	/**
 	 * @param bool $gadgetsEnabled
-	 * @return MockObject|ExtensionRegistry
+	 * @return ExtensionRegistry&MockObject
 	 */
 	private function getMockExtensionRegistry( bool $gadgetsEnabled ) {
 		$mock = $this->createMock( ExtensionRegistry::class );

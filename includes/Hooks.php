@@ -74,7 +74,7 @@ class Hooks implements
 			return false;
 		}
 
-		$extensionRegistry = $extensionRegistry ?: ExtensionRegistry::getInstance();
+		$extensionRegistry ??= ExtensionRegistry::getInstance();
 		$contentModels = $extensionRegistry->getAttribute( 'CodeMirrorContentModels' );
 		$isRTL = $out->getTitle()->getPageLanguage()->isRTL();
 		// Disable CodeMirror if we're on an edit page with a conflicting gadget. See T178348.
