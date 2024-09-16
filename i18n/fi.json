@@ -4,10 +4,25 @@
 			"01miki10",
 			"Nike",
 			"Pyscowicz",
+			"Samoasambia",
 			"Yupik"
 		]
 	},
 	"codemirror-desc": "Lisää syntaksin korostuksen wikitekstin muokkaimeen",
 	"codemirror-toggle-label": "Syntaksin korostus",
-	"prefs-accessibility": "Saavutettavuus"
+	"codemirror-toggle-label-short": "Syntaksi",
+	"codemirror-find": "Etsi",
+	"codemirror-next": "Etsi seuraava",
+	"codemirror-previous": "Etsi edellinen",
+	"codemirror-all": "Kaikki",
+	"codemirror-all-tooltip": "Valitse kaikki osumat",
+	"codemirror-regexp": "Säännöllinen lauseke",
+	"codemirror-replace": "Korvaa",
+	"codemirror-replace-placeholder": "Korvaa",
+	"codemirror-replace-all": "Korvaa kaikki",
+	"codemirror-done": "Valmis",
+	"codemirror-goto-line": "Siirry riville",
+	"codemirror-goto-line-go": "Siirry",
+	"prefs-accessibility": "Saavutettavuus",
+	"prefs-syntax-highlighting": "Syntaksin korostus"
 }
