@@ -245,8 +245,4 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 
 /* Registration */
 
-// eslint-disable-next-line no-jquery/no-global-selector
-const isRTL = $( '.mw-body-content .mw-parser-output' ).attr( 'dir' ) === 'rtl';
-if ( !isRTL || ( isRTL && mw.config.get( 'extCodeMirrorConfig' ).isSupportedRtlWiki ) ) {
-	ve.ui.actionFactory.register( ve.ui.CodeMirrorAction );
-}
+ve.ui.actionFactory.register( ve.ui.CodeMirrorAction );
