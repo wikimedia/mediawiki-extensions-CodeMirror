@@ -4,10 +4,13 @@
 			"01miki10",
 			"Nike",
 			"Pyscowicz",
-			"Yupik"
+			"Yupik",
+			"Samoasambia"
 		]
 	},
 	"codemirror-desc": "Lisää syntaksin korostuksen wikitekstin muokkaimeen",
 	"codemirror-toggle-label": "Syntaksin korostus",
+	"codemirror-find": "Etsi",
+	"codemirror-replace-placeholder": "Korvaa",
 	"prefs-accessibility": "Saavutettavuus"
 }
