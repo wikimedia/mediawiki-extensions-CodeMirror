@@ -1,10 +1,21 @@
 {
 	"@metadata": {
 		"authors": [
-			"Hakimi97"
+			"Hakimi97",
+			"Tofeiku"
 		]
 	},
 	"codemirror-prefs-colorblind": "Dayakan skema mesra buta warna untuk penyerlahan sintaks semasa menyunting wikiteks",
 	"codemirror-prefs-colorblind-help": "Jika anda menggunakan gajet untuk menyerlahkan sintaks, pilihan ini tidak akan berfungsi.",
+	"codemirror-next": "Cari seterusnya",
+	"codemirror-previous": "Cari sebelumnya",
+	"codemirror-all": "Semua",
+	"codemirror-all-tooltip": "Pilih semua padanan",
+	"codemirror-by-word": "Mengikut perkataan",
+	"codemirror-replace": "Ganti",
+	"codemirror-replace-all": "Ganti semua",
+	"codemirror-done": "Selesai",
+	"codemirror-goto-line": "Pergi ke baris",
+	"codemirror-goto-line-go": "Pergi",
 	"prefs-accessibility": "Kebolehcapaian"
 }
