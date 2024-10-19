@@ -2,15 +2,15 @@
 
 namespace MediaWiki\Extension\CodeMirror\Tests;
 
-use ExtensionRegistry;
 use Generator;
-use Language;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\EditPage\EditPage;
 use MediaWiki\Extension\CodeMirror\Hooks;
 use MediaWiki\Extension\Gadgets\Gadget;
 use MediaWiki\Extension\Gadgets\GadgetRepo;
+use MediaWiki\Language\Language;
 use MediaWiki\Output\OutputPage;
+use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\Request\WebRequest;
 use MediaWiki\Title\Title;
 use MediaWiki\User\Options\UserOptionsLookup;

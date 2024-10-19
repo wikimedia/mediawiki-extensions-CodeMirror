@@ -22,8 +22,8 @@
 
 namespace MediaWiki\Extension\CodeMirror;
 
-use ExtensionRegistry;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\ResourceLoader as RL;
 use MediaWiki\ResourceLoader\ResourceLoader;
 
