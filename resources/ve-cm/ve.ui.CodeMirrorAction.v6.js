@@ -240,7 +240,7 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 		this.surface.mirror.view.dispatch( { changes: replacements[ i ] } );
 	}
 
-	action.updateGutterWidth( this.surface.getModel().getDocument().getDir() );
+	action.updateGutterWidth( this.surface.getView().getDocument().getDir() );
 };
 
 /* Registration */
