@@ -25,6 +25,7 @@
 	"codemirror-replace-placeholder": "Replace",
 	"codemirror-replace-all": "Replace all",
 	"codemirror-done": "Done",
+	"codemirror-find-results": "$1 of $2",
 	"codemirror-goto-line": "Go to line",
 	"codemirror-goto-line-go": "Go",
 	"codemirror-control-character": "Control character $1",

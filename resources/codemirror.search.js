@@ -4,13 +4,16 @@ const {
 	closeSearchPanel,
 	findNext,
 	findPrevious,
+	getSearchQuery,
 	keymap,
+	openSearchPanel,
 	replaceAll,
 	replaceNext,
 	runScopeHandlers,
 	search,
-	searchKeymap,
 	selectMatches,
+	selectNextOccurrence,
+	selectSelectionMatches,
 	setSearchQuery
 } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirrorPanel = require( './codemirror.panel.js' );
@@ -70,6 +73,14 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 		 * @type {HTMLButtonElement}
 		 */
 		this.replaceAllButton = undefined;
+		/**
+		 * @type {HTMLButtonElement}
+		 */
+		this.doneButton = undefined;
+		/**
+		 * @type {HTMLSpanElement}
+		 */
+		this.findResultsText = undefined;
 	}
 
 	/**
@@ -83,7 +94,14 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 					return this.panel;
 				}
 			} ),
-			keymap.of( searchKeymap )
+			keymap.of( [
+				{ key: 'Mod-f', run: openSearchPanel, scope: 'editor search-panel' },
+				{ key: 'F3', run: this.findNext.bind( this ), shift: this.findPrevious.bind( this ), scope: 'editor search-panel', preventDefault: true },
+				{ key: 'Mod-g', run: this.findNext.bind( this ), shift: this.findPrevious.bind( this ), scope: 'editor search-panel', preventDefault: true },
+				{ key: 'Escape', run: closeSearchPanel, scope: 'editor search-panel' },
+				{ key: 'Mod-Shift-l', run: selectSelectionMatches },
+				{ key: 'Mod-d', run: selectNextOccurrence, preventDefault: true }
+			] )
 		];
 	}
 
@@ -102,11 +120,17 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 		// Search input.
 		const [ searchInputWrapper, searchInput ] = this.getTextInput(
 			'search',
-			this.searchQuery.search || '',
+			this.searchQuery.search || this.view.state.sliceDoc(
+				this.view.state.selection.main.from,
+				this.view.state.selection.main.to
+			),
 			'codemirror-find'
 		);
 		this.searchInput = searchInput;
 		this.searchInput.setAttribute( 'main-field', 'true' );
+		this.findResultsText = document.createElement( 'span' );
+		this.findResultsText.className = 'cm-mw-find-results';
+		searchInputWrapper.appendChild( this.findResultsText );
 		firstRow.appendChild( searchInputWrapper );
 
 		this.appendPrevAndNextButtons( firstRow );
@@ -146,7 +170,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 		buttonGroup.appendChild( this.prevButton );
 		this.prevButton.addEventListener( 'click', ( e ) => {
 			e.preventDefault();
-			findPrevious( this.view );
+			this.findPrevious();
 		} );
 
 		// "Next" button.
@@ -154,7 +178,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 		buttonGroup.appendChild( this.nextButton );
 		this.nextButton.addEventListener( 'click', ( e ) => {
 			e.preventDefault();
-			findNext( this.view );
+			this.findNext();
 		} );
 
 		firstRow.appendChild( buttonGroup );
@@ -225,6 +249,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 		this.replaceButton.addEventListener( 'click', ( e ) => {
 			e.preventDefault();
 			replaceNext( this.view );
+			this.updateNumMatchesText();
 		} );
 
 		// "Replace all" button.
@@ -234,12 +259,13 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 		this.replaceAllButton.addEventListener( 'click', ( e ) => {
 			e.preventDefault();
 			replaceAll( this.view );
+			this.updateNumMatchesText();
 		} );
 
 		// "Done" button.
-		const doneButton = this.getButton( 'codemirror-done' );
-		row.appendChild( doneButton );
-		doneButton.addEventListener( 'click', ( e ) => {
+		this.doneButton = this.getButton( 'codemirror-done' );
+		row.appendChild( this.doneButton );
+		this.doneButton.addEventListener( 'click', ( e ) => {
 			e.preventDefault();
 			closeSearchPanel( this.view );
 			this.view.focus();
@@ -254,12 +280,46 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 	onKeydown( event ) {
 		if ( runScopeHandlers( this.view, event, 'search-panel' ) ) {
 			event.preventDefault();
-		} else if ( event.key === 'Enter' && event.target === this.searchInput ) {
+			return;
+		}
+
+		if ( this.view.state.readOnly ) {
+			// Use normal tab behaviour if the editor is read-only.
+			return;
+		}
+
+		if ( event.key === 'Enter' && event.target === this.searchInput ) {
 			event.preventDefault();
-			( event.shiftKey ? findPrevious : findNext )( this.view );
+			( event.shiftKey ? this.findPrevious : this.findNext ).call( this );
 		} else if ( event.key === 'Enter' && event.target === this.replaceInput ) {
 			event.preventDefault();
 			replaceNext( this.view );
+			this.updateNumMatchesText();
+		} else if ( event.key === 'Tab' ) {
+			if ( !event.shiftKey && event.target === this.searchInput ) {
+				// Tabbing from the search input should focus the replaceInput.
+				event.preventDefault();
+				this.replaceInput.focus();
+			} else if ( event.shiftKey && event.target === this.replaceInput ) {
+				// Shift+Tabbing from the replaceInput should focus the searchInput.
+				event.preventDefault();
+				this.searchInput.focus();
+			} else if ( !event.shiftKey && event.target === this.doneButton ) {
+				// Tabbing from the "Done" button should focus the prevButton.
+				event.preventDefault();
+				this.prevButton.focus();
+			} else if ( !event.shiftKey && event.target === this.wholeWordButton ) {
+				// Tabbing from the "Whole word" button should focus the editor,
+				// or the next focusable panel if there is one.
+				event.preventDefault();
+				const el = this.view.dom.querySelector( '.cm-mw-panel--search-panel' );
+				if ( el && el.nextElementSibling && el.nextElementSibling.classList.contains( 'cm-panel' ) ) {
+					const input = el.nextElementSibling.querySelector( 'input' );
+					( input || el.nextElementSibling ).focus();
+				} else {
+					this.view.focus();
+				}
+			}
 		}
 	}
 
@@ -282,6 +342,55 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 				effects: setSearchQuery.of( query )
 			} );
 		}
+		this.updateNumMatchesText( query );
+	}
+
+	/**
+	 * Find the previous match.
+	 *
+	 * @return {boolean} Whether a match was found.
+	 */
+	findPrevious() {
+		const ret = findPrevious( this.view );
+		this.updateNumMatchesText();
+		return ret;
+	}
+
+	/**
+	 * Find the next match.
+	 *
+	 * @return {boolean} Whether a match was found.
+	 */
+	findNext() {
+		const ret = findNext( this.view );
+		this.updateNumMatchesText();
+		return ret;
+	}
+
+	/**
+	 * Show the number of matches for the given {@link SearchQuery}
+	 * and the index of the current match in the find input.
+	 *
+	 * @param {SearchQuery} [query]
+	 */
+	updateNumMatchesText( query ) {
+		const cursor = query ?
+			query.getCursor( this.view.state ) :
+			getSearchQuery( this.view.state ).getCursor( this.view.state );
+		let count = 0,
+			current = 1;
+		const { from, to } = this.view.state.selection.main;
+		let item = cursor.next();
+		while ( !item.done ) {
+			if ( item.value.from === from && item.value.to === to ) {
+				current = count + 1;
+			}
+			item = cursor.next();
+			count++;
+		}
+		this.findResultsText.textContent = count ?
+			mw.msg( 'codemirror-find-results', current, count ) :
+			'';
 	}
 
 	/**

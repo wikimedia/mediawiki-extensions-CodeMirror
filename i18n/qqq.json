@@ -30,6 +30,7 @@
 	"codemirror-replace-placeholder": "Placeholder text for the 'Replace' input in the CodeMirror search panel.",
 	"codemirror-replace-all": "Label for the 'Replace all' button in the CodeMirror search panel.",
 	"codemirror-done": "Label for the 'Done' button in CodeMirror panels.\n{{Identical|Done}}",
+	"codemirror-find-results": "Label for find results showing how many results were found ($2), and which one is currently highlighted ($1).\n{{Identical|Of}}",
 	"codemirror-goto-line": "Label for the 'Go to line' input field.",
 	"codemirror-goto-line-go": "Label for the 'Go to line' submit button.\n{{Identical|Go}}",
 	"codemirror-control-character": "Tooltip text shown when hovering over special characters. $1 is the Unicode value of the special character.",
