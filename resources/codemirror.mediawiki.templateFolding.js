@@ -320,7 +320,10 @@ const templateFoldingExtension = [
 	StateField.define( {
 		create,
 		update( tooltip, { state, docChanged, selection } ) {
-			return docChanged || selection ? create( state ) : tooltip;
+			if ( docChanged ) {
+				return null;
+			}
+			return selection ? create( state ) : tooltip;
 		},
 		provide( f ) {
 			return showTooltip.from( f );
