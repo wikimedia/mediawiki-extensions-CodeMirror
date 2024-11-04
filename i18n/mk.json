@@ -25,6 +25,7 @@
 	"codemirror-replace-placeholder": "Замени",
 	"codemirror-replace-all": "Замени сè",
 	"codemirror-done": "Готово",
+	"codemirror-find-results": "$1 од $2",
 	"codemirror-goto-line": "Оди на редот",
 	"codemirror-goto-line-go": "Оди",
 	"codemirror-control-character": "Контролен знак $1",

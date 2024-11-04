@@ -26,6 +26,7 @@
 	"codemirror-replace-placeholder": "Dəyiş",
 	"codemirror-replace-all": "Hamısını dəyiş",
 	"codemirror-done": "Oldu",
+	"codemirror-find-results": "$2 nəticədən $1",
 	"codemirror-goto-line": "Sətrə get",
 	"codemirror-goto-line-go": "Get",
 	"codemirror-control-character": "$1 nəzarət simvolu",

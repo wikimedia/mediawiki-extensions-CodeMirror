@@ -29,6 +29,7 @@
 	"codemirror-replace-placeholder": "Ersetzen",
 	"codemirror-replace-all": "Alle ersetzen",
 	"codemirror-done": "Fertig",
+	"codemirror-find-results": "$1 von $2",
 	"codemirror-goto-line": "Gehe zur Zeile",
 	"codemirror-goto-line-go": "Los",
 	"codemirror-control-character": "Steuerzeichen $1",

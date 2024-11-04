@@ -14,6 +14,7 @@
 	"codemirror-replace": "Ersetzen",
 	"codemirror-replace-placeholder": "Ersetzen",
 	"codemirror-replace-all": "All ersetzen",
+	"codemirror-find-results": "$1 vu(n) $2",
 	"codemirror-special-char-null": "Nullzeechen",
 	"codemirror-special-char-newline": "Nei Zeil",
 	"codemirror-special-char-escape": "Escape-Zeechen",

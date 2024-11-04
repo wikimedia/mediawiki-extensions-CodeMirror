@@ -11,6 +11,7 @@
 	"codemirror-replace": "ਬਦਲੋ",
 	"codemirror-replace-all": "ਸਾਰੇ ਬਦਲੋ",
 	"codemirror-done": "ਹੋ ਗਿਆ",
+	"codemirror-find-results": "$2 ਵਿੱਚੋਂ $1",
 	"codemirror-goto-line": "ਲਕੀਰ ਤੇ ਜਾਓ",
 	"codemirror-goto-line-go": "ਜਾਓ"
 }

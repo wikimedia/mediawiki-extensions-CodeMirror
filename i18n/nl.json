@@ -28,6 +28,7 @@
 	"codemirror-replace-placeholder": "Vervangen",
 	"codemirror-replace-all": "Alles vervangen",
 	"codemirror-done": "Klaar",
+	"codemirror-find-results": "$1 van $2",
 	"codemirror-goto-line": "Naar regel",
 	"codemirror-goto-line-go": "Gaan",
 	"codemirror-control-character": "Controleteken $1",

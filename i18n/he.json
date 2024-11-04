@@ -25,6 +25,7 @@
 	"codemirror-replace-placeholder": "החלפה",
 	"codemirror-replace-all": "להחליף הכול",
 	"codemirror-done": "בוצע",
+	"codemirror-find-results": "$1 מתוך $2",
 	"codemirror-goto-line": "לעבור לשורה",
 	"codemirror-goto-line-go": "לעבור",
 	"codemirror-control-character": "תו בקרה $1",
