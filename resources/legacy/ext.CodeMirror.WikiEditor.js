@@ -196,6 +196,16 @@ function init() {
 			codeMirror.on( 'blur', () => {
 				$textbox1[ 0 ].dispatchEvent( new Event( 'blur' ) );
 			} );
+			codeMirror.on( 'keydown', ( _, e ) => {
+				if ( e.ctrlKey || e.metaKey ) {
+					// Possibly a WikiEditor keyboard shortcut
+					if ( !$textbox1[ 0 ].dispatchEvent( new KeyboardEvent( 'keydown', e ) ) ) {
+						// If it was actually a WikiEditor keyboard shortcut, the default would be prevented
+						// for the dispatched event and hence dispatchEvent() would return false
+						e.preventDefault();
+					}
+				}
+			} );
 			mw.hook( 'editRecovery.loadEnd' ).add( ( data ) => {
 				codeMirror.on( 'change', data.fieldChangeHandler );
 			} );
