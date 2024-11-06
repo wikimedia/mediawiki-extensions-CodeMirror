@@ -158,13 +158,13 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
  * @param {string} dir Document direction
  */
 ve.ui.CodeMirrorAction.prototype.updateGutterWidth = function ( dir ) {
-	const guttersWidth = this.surface.mirror.view.dom.querySelector( '.cm-gutters' ).offsetWidth;
+	const guttersWidth = this.surface.mirror.view.dom.querySelector( '.cm-gutters' ).getBoundingClientRect().width;
 	this.surface.getView().$documentNode.css( {
-		'margin-left': dir === 'rtl' ? 0 : guttersWidth - 6,
-		'margin-right': dir === 'rtl' ? guttersWidth - 6 : 0
+		'margin-left': dir === 'rtl' ? 0 : guttersWidth,
+		'margin-right': dir === 'rtl' ? guttersWidth : 0
 	} );
 	// Also update width of .cm-content due to apparent Chromium bug.
-	this.surface.mirror.view.contentDOM.style.width = 'calc(100% - ' + ( guttersWidth + 1 ) + 'px)';
+	this.surface.mirror.view.contentDOM.style.width = 'calc(100% - ' + guttersWidth + 'px)';
 };
 
 /**
@@ -218,7 +218,6 @@ ve.ui.CodeMirrorAction.prototype.onSelect = function ( selection ) {
  */
 ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 	const replacements = [],
-		action = this,
 		store = this.surface.getModel().getDocument().getStore();
 	let offset = 0;
 
@@ -227,8 +226,8 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 			offset += op.length;
 		} else if ( op.type === 'replace' ) {
 			replacements.push( {
-				from: action.surface.getModel().getSourceOffsetFromOffset( offset ),
-				to: action.surface.getModel().getSourceOffsetFromOffset( offset + op.remove.length ),
+				from: this.surface.getModel().getSourceOffsetFromOffset( offset ),
+				to: this.surface.getModel().getSourceOffsetFromOffset( offset + op.remove.length ),
 				insert: new ve.dm.ElementLinearData( store, op.insert ).getSourceText()
 			} );
 			offset += op.remove.length;
@@ -240,7 +239,7 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 		this.surface.mirror.view.dispatch( { changes: replacements[ i ] } );
 	}
 
-	action.updateGutterWidth( this.surface.getView().getDocument().getDir() );
+	this.updateGutterWidth( this.surface.getView().getDocument().getDir() );
 };
 
 /* Registration */
