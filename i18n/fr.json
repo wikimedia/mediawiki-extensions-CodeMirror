@@ -51,5 +51,8 @@
 	"codemirror-special-char-paragraph-separator": "Séparateur de paragraphes",
 	"codemirror-special-char-zero-width-no-break-space": "Jointure de mots",
 	"codemirror-special-char-object-replacement": "Caractère de remplacement d’objet",
+	"codemirror-fold-template": "Paramètres du modèle dépliable",
+	"codemirror-unfold": "affiché",
+	"codemirror-folded-code": "code affiché",
 	"prefs-accessibility": "Accessibilité"
 }
