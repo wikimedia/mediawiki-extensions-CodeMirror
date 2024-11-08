@@ -21,6 +21,7 @@
 	"codemirror-replace": "바꾸기",
 	"codemirror-replace-placeholder": "바꾸기",
 	"codemirror-replace-all": "모두 바꾸기",
+	"codemirror-find-results": "$1 / $2",
 	"codemirror-control-character": "제어 문자 $1",
 	"codemirror-special-char-null": "널 문자",
 	"codemirror-special-char-bell": "벨 문자",
