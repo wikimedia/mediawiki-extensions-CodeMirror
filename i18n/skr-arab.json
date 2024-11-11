@@ -12,6 +12,7 @@
 	"codemirror-replace": "بدل گھنو",
 	"codemirror-replace-all": "سارے بدل گھنو",
 	"codemirror-done": "تھی ڳیا",
+	"codemirror-find-results": "$2 وچوں $1 واں",
 	"codemirror-goto-line-go": "ڄلو",
 	"prefs-accessibility": "رسائیت"
 }

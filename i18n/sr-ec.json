@@ -20,6 +20,7 @@
 	"codemirror-replace-placeholder": "Замени",
 	"codemirror-replace-all": "Замени све",
 	"codemirror-done": "Готово",
+	"codemirror-find-results": "$1 од $2",
 	"prefs-accessibility": "Приступачност",
 	"prefs-syntax-highlighting": "Истицање синтаксе"
 }
