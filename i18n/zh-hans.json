@@ -30,6 +30,7 @@
 	"codemirror-replace-placeholder": "替换",
 	"codemirror-replace-all": "全部替换",
 	"codemirror-done": "完成",
+	"codemirror-find-results": "第$1个，共$2个",
 	"codemirror-goto-line": "前往指定行",
 	"codemirror-goto-line-go": "前往",
 	"codemirror-control-character": "控制字符$1",
