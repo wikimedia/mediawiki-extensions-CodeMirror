@@ -9,7 +9,8 @@
 			"Thibaut120094",
 			"Trizek (WMF)",
 			"Verdy p",
-			"Wladek92"
+			"Wladek92",
+			"Mahabarata"
 		]
 	},
 	"codemirror-desc": "Fournit une mise en évidence de la syntaxe dans l’éditeur de wikicode",
@@ -22,8 +23,9 @@
 	"codemirror-prefs-colorblind-help": "Si vous utilisez un gadget pour la mise en évidence de la syntaxe, cette préférence ne fonctionnera pas.",
 	"codemirror-find": "Trouver",
 	"codemirror-next": "Trouver le suivant",
-	"codemirror-previous": "précédent",
+	"codemirror-previous": "Trouver le précédent",
 	"codemirror-all": "Tous",
+	"codemirror-all-tooltip": "Sélectionner toutes les correspondances",
 	"codemirror-match-case": "Respecter la casse",
 	"codemirror-regexp": "Expression régulière",
 	"codemirror-by-word": "Par mot",
@@ -32,6 +34,7 @@
 	"codemirror-replace-all": "Remplacer tout",
 	"codemirror-done": "Fait",
 	"codemirror-goto-line": "Aller à la ligne",
+	"codemirror-goto-line-go": "Lancer",
 	"codemirror-control-character": "Caractère de contrôle $1",
 	"codemirror-special-char-null": "Caractère de contrôle",
 	"codemirror-special-char-bell": "Caractère d'appel",
@@ -56,6 +59,9 @@
 	"codemirror-special-char-paragraph-separator": "Séparateur de paragraphes",
 	"codemirror-special-char-zero-width-no-break-space": "Jointure de mots",
 	"codemirror-special-char-object-replacement": "Caractère de remplacement d’objet",
+	"codemirror-fold-template": "Paramètres du modèle dépliable",
+	"codemirror-unfold": "affiché",
+	"codemirror-folded-code": "code affiché",
 	"prefs-accessibility": "Accessibilité",
 	"prefs-syntax-highlighting": "Coloration syntaxique"
 }
