@@ -333,7 +333,8 @@
 	},
 	"ForeignResourcesDir": "resources/lib",
 	"DefaultUserOptions": {
-		"usecodemirror": 0
+		"usecodemirror": 0,
+		"usecodemirror-colorblind": 0
 	},
 	"QUnitTestModule": {
 		"localBasePath": "resources/legacy/mode/mediawiki/tests",
