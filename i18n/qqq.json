@@ -72,5 +72,7 @@
 	"codemirror-unfold": "Tooltip text shown when hovering over a placeholder for folded code.",
 	"codemirror-folded-code": "Aria label for a placeholder for folded code.",
 	"prefs-accessibility": "Section heading in the user preferences for accessibility topics.",
-	"prefs-syntax-highlighting": "Used in [[Special:Preferences]], tab \"Editing\" ({{int:prefs-editing}})."
+	"prefs-syntax-highlighting": "Used in [[Special:Preferences]], tab \"Editing\" ({{int:prefs-editing}}).",
+	"codemirror-beta-feature-title": "Title of the BetaFeature for the new version of CodeMirror.",
+	"codemirror-beta-feature-description": "Description of the BetaFeature for the new version of CodeMirror."
 }
