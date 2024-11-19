@@ -4,6 +4,8 @@
 			"Cabal"
 		]
 	},
+	"codemirror-toggle-label": "ਵਾਕ-ਵਿਉਂਤ ਉਜਾਗਰ ਕਰੋ",
+	"codemirror-toggle-label-short": "ਵਾਕ-ਵਿਉਂਤ",
 	"codemirror-next": "ਅੱਗੇ ਲੱਭੋ",
 	"codemirror-previous": "ਪਿੱਛੇ ਲੱਭੋ",
 	"codemirror-all": "ਸਾਰੇ",
@@ -12,5 +14,6 @@
 	"codemirror-replace-all": "ਸਾਰੇ ਬਦਲੋ",
 	"codemirror-done": "ਹੋ ਗਿਆ",
 	"codemirror-goto-line": "ਲਕੀਰ ਤੇ ਜਾਓ",
-	"codemirror-goto-line-go": "ਜਾਓ"
+	"codemirror-goto-line-go": "ਜਾਓ",
+	"prefs-syntax-highlighting": "ਵਾਕ-ਵਿਉਂਤ ਉਜਾਗਰ ਕਰੋ"
 }
