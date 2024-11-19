@@ -101,7 +101,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 			} );
 
 			// Account for the gutter width in the margin.
-			action.updateGutterWidth( doc.getDir() );
+			action.updateGutterWidth( surfaceView.getDocument().getDir() );
 
 			// Set focus on the surface view.
 			surfaceView.focus();
