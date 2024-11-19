@@ -12,6 +12,7 @@
 	"codemirror-prefs-enable": "Enable syntax highlighting for wikitext",
 	"codemirror-prefs-title": "Syntax highlighting preferences",
 	"codemirror-prefs-templatefolding": "Enable folding of template parameters",
+	"codemirror-prefs-autocomplete": "Enable autocompletion",
 	"codemirror-prefs-bidiisolation": "Isolate bidirectional text",
 	"codemirror-prefs-bracketmatching": "Enable bracket matching",
 	"codemirror-prefs-linenumbering": "Show line numbers",

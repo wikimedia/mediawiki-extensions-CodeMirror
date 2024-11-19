@@ -17,6 +17,7 @@
 	"codemirror-prefs-enable": "Used in user preferences as label for enabling syntax highlighting.",
 	"codemirror-prefs-title": "Syntax highlighting preferences",
 	"codemirror-prefs-templatefolding": "Label for the option to enable folding of template parameters in the CodeMirror preferences panel.",
+	"codemirror-prefs-autocomplete": "Label for the option to enable autocompletion in the CodeMirror preferences panel.",
 	"codemirror-prefs-bidiisolation": "Label for the option to enable bidirectional text isolation in the CodeMirror preferences panel.",
 	"codemirror-prefs-bracketmatching": "Label for the option to enable bracket matching in the CodeMirror preferences panel.",
 	"codemirror-prefs-linenumbering": "Label for the option to show line numbers in the CodeMirror preferences panel.",

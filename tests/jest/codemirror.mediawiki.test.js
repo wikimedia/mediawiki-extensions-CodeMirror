@@ -184,7 +184,7 @@ const mwLang = mediaWikiLang( {}, {
 	urlProtocols: 'ftp://|https://|news:',
 	doubleUnderscore: [ {
 		__notoc__: 'notoc'
-	} ],
+	}, {} ],
 	functionSynonyms: [ {}, {
 		'!': '!',
 		'מיון רגיל': 'defaultsort'
