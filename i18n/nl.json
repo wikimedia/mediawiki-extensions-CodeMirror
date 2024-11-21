@@ -15,6 +15,7 @@
 	"codemirror-prefs-enable": "Syntaxiskleuring inschakelen voor wikitekst",
 	"codemirror-prefs-title": "Voorkeuren voor syntaxiskleuring",
 	"codemirror-prefs-templatefolding": "Sjabloonparameters inklapbaar maken",
+	"codemirror-prefs-autocomplete": "Automatisch aanvullen inschakelen",
 	"codemirror-prefs-bidiisolation": "Tweerichtingstekst afzonderen",
 	"codemirror-prefs-bracketmatching": "Overeenkomstige haakjes uitlichten",
 	"codemirror-prefs-linenumbering": "Regelnummers weergeven",

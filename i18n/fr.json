@@ -20,6 +20,7 @@
 	"codemirror-prefs-enable": "Activer la coloration syntaxique du wikicode",
 	"codemirror-prefs-title": "Préférences de mise en évidence de la syntaxe",
 	"codemirror-prefs-templatefolding": "Activer l'escamotage des paramètres du modèle",
+	"codemirror-prefs-autocomplete": "Activer la saisie semi-automatique",
 	"codemirror-prefs-bidiisolation": "Isoler le texte bidirectionnel",
 	"codemirror-prefs-bracketmatching": "Activer la correspondance des parenthèses",
 	"codemirror-prefs-linenumbering": "Afficher les numéros de ligne",

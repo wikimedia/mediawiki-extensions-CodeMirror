@@ -12,6 +12,7 @@
 	"codemirror-prefs-enable": "הפעלת צביעת תחביר עבור קוד ויקי",
 	"codemirror-prefs-title": "העדפות צביעת תחביר",
 	"codemirror-prefs-templatefolding": "הפעלת קיפול פרמטרים של תבניות",
+	"codemirror-prefs-autocomplete": "הפעלת השלמה אוטומטית",
 	"codemirror-prefs-bidiisolation": "בידוד טקסט דו־כיווני",
 	"codemirror-prefs-bracketmatching": "הפעלת התאמת סוגריים",
 	"codemirror-prefs-linenumbering": "הצגת מספרי שורות",
