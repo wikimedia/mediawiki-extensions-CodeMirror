@@ -218,21 +218,10 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 */
 	get extension() {
 		return [
-			keymap.of( {
-				key: 'Mod-Shift-,',
-				run: ( view ) => {
-					this.view = view;
-					const effects = [ this.prefsToggleEffect.of( true ) ];
-					if ( !this.view.state.field( this.panelStateField, false ) ) {
-						effects.push( StateEffect.appendConfig.of( [ this.panelStateField ] ) );
-					}
-					this.view.dispatch( { effects } );
-					this.view.dom.querySelector(
-						'.cm-mw-preferences-panel input:first-child'
-					).focus();
-					return true;
-				}
-			} ),
+			// Keymap for toggling the preferences panel.
+			keymap.of( [
+				{ key: 'Mod-Shift-,', run: ( view ) => this.toggle( view, true ) }
+			] ),
 			// Compartmentalized extensions
 			Object.keys( this.extensionRegistry ).map(
 				( name ) => this.compartmentRegistry[ name ].of(
@@ -280,17 +269,34 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * Toggle display of the preferences panel.
 	 *
 	 * @param {EditorView} view
-	 * @param {boolean} [force]
+	 * @param {boolean} [force] Force the panel to open or close.
 	 * @return {boolean}
 	 */
 	toggle( view, force ) {
 		this.view = view;
-		const bool = typeof force === 'boolean' ?
-			force :
-			!this.view.state.field( this.panelStateField );
-		this.view.dispatch( {
-			effects: this.prefsToggleEffect.of( bool )
-		} );
+		const effects = [];
+		let bool;
+
+		// Add the panel state field to the state if it doesn't exist.
+		if ( !this.view.state.field( this.panelStateField, false ) ) {
+			effects.push( StateEffect.appendConfig.of( [ this.panelStateField ] ) );
+			bool = true;
+		} else {
+			bool = !this.view.state.field( this.panelStateField );
+		}
+		if ( typeof force === 'boolean' ) {
+			bool = force;
+		}
+		effects.push( this.prefsToggleEffect.of( bool ) );
+		this.view.dispatch( { effects } );
+
+		// If the panel is being opened, focus the first input.
+		if ( bool ) {
+			this.view.dom.querySelector(
+				'.cm-mw-preferences-panel input:first-child'
+			).focus();
+		}
+
 		return true;
 	}
 

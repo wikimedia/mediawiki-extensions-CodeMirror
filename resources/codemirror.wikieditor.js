@@ -137,6 +137,35 @@ class CodeMirrorWikiEditor extends CodeMirror {
 				}
 			} );
 
+		// Add a 'Settings' button to the search group of the toolbar, in the 'Advanced' section.
+		this.$textarea.wikiEditor(
+			'addToToolbar',
+			{
+				section: 'advanced',
+				groups: {
+					search: {
+						tools: {
+							CodeMirrorPreferences: {
+								type: 'element',
+								element: () => {
+									const button = new OO.ui.ButtonWidget( {
+										title: mw.msg( 'codemirror-prefs-title' ),
+										icon: 'settings',
+										framed: false,
+										classes: [ 'tool', 'cm-mw-settings' ]
+									} );
+									button.on( 'click',
+										() => this.preferences.toggle( this.view, true )
+									);
+									return button.$element;
+								}
+							}
+						}
+					}
+				}
+			}
+		);
+
 		/**
 		 * Called after CodeMirror is enabled or disabled in WikiEditor.
 		 *
@@ -178,6 +207,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 			return;
 		}
 
+		// Add 'Syntax' button to main toolbar.
 		this.$textarea.wikiEditor(
 			'addToToolbar',
 			{
@@ -206,6 +236,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 			}
 		);
 
+		// Set the ID of the CodeMirror button for styling.
 		const $codeMirrorButton = toolbar.$toolbar.find( '.tool[rel=CodeMirror]' );
 		$codeMirrorButton.attr( 'id', 'mw-editbutton-codemirror' );
 
