@@ -29,8 +29,8 @@ const testCases = [
 	},
 	{
 		title: 'apostrophe before italic',
-		input: 'plain l\'\'\'italic\'\'plain',
-		output: '<div class="cm-line">plain l\'<span class="cm-mw-apostrophes-italic">\'\'</span><span class="cm-mw-em">italic</span><span class="cm-mw-apostrophes-italic">\'\'</span>plain </div>'
+		input: 'plain l\'\'\'italic\'\'plain\n \'\'\'x\'\'\n\'\'[[foo]]\'\'\'',
+		output: '<div class="cm-line">plain l\'<span class="cm-mw-apostrophes">\'\'</span><span class="cm-mw-em">italic</span><span class="cm-mw-apostrophes">\'\'</span>plain</div><div class="cm-line"><span class="cm-mw-skipformatting"> </span>\'<span class="cm-mw-apostrophes">\'\'</span><span class="cm-mw-em">x</span><span class="cm-mw-apostrophes">\'\'</span></div><div class="cm-line"><span class="cm-mw-apostrophes">\'\'</span><span class="cm-mw-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-link-ground cm-mw-link-pagename cm-mw-pagename cm-mw-em">foo</span><span class="cm-mw-link-ground cm-mw-link-bracket">]]</span><span class="cm-mw-em">\'</span><span class="cm-mw-apostrophes">\'\'</span> </div>'
 	},
 	{
 		title: 'free external links',
@@ -172,6 +172,11 @@ const testCases = [
 		title: 'Localized parser function',
 		input: '{{מיון רגיל:AAA}}',
 		output: '<div class="cm-line"><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">{{</span><span class="cm-mw-ext-ground cm-mw-parserfunction-name">מיון רגיל</span><span class="cm-mw-ext-ground cm-mw-parserfunction-delimiter">:</span><span class="cm-mw-ext-ground cm-mw-parserfunction">AAA</span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">}}</span> </div>'
+	},
+	{
+		title: 'Very long line (T366035)',
+		input: '__notoc__<p>'.repeat( 500 ) + '\n<p>',
+		output: '<div class="cm-line">' + '<span class="cm-mw-double-underscore">__notoc__</span><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">p</span><span class="cm-mw-htmltag-bracket">&gt;</span>'.repeat( 500 ) + '</div><div class="cm-line">&lt;p&gt; </div>'
 	}
 ];
 
@@ -220,15 +225,14 @@ describe( 'CodeMirrorModeMediaWiki', () => {
 				selection: { anchor: input.length + 1 }
 			} );
 			cm.$textarea.textSelection = jest.fn().mockReturnValue( input );
-			expect( cm.view.dom.querySelector( '.cm-content' ).innerHTML ).toStrictEqual( output );
+			expect( cm.view.dom.querySelector( '.cm-content' ).innerHTML.split( /(?=<(?:div|span))/ ) )
+				.toStrictEqual( output.split( /(?=<(?:div|span))/ ) );
 		}
 	);
 
 	it( 'configuration contains all expected tokens', () => {
 		expect( Object.keys( mwModeConfig.tags ) ).toStrictEqual( [
 			'apostrophes',
-			'apostrophesBold',
-			'apostrophesItalic',
 			'comment',
 			'doubleUnderscore',
 			'extLink',
@@ -302,8 +306,6 @@ describe( 'CodeMirrorModeMediaWiki', () => {
 			.map( ( tagStyle ) => tagStyle.class );
 		expect( cssClasses ).toStrictEqual( [
 			'cm-mw-apostrophes',
-			'cm-mw-apostrophes-bold',
-			'cm-mw-apostrophes-italic',
 			'cm-mw-comment',
 			'cm-mw-double-underscore',
 			'cm-mw-extlink',

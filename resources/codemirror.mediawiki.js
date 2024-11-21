@@ -15,6 +15,22 @@ const templateFoldingExtension = require( './codemirror.mediawiki.templateFoldin
 const autocompleteExtension = require( './codemirror.mediawiki.autocomplete.js' );
 const openLinksExtension = require( './codemirror.mediawiki.openLinks.js' );
 
+const copyState = ( state ) => {
+	const newState = {};
+	for ( const key in state ) {
+		const val = state[ key ];
+		if ( Array.isArray( val ) ) {
+			newState[ key ] = [ ...val ];
+		} else if ( key === 'extState' ) {
+			newState.extState =
+				( state.extName && state.extMode && state.extMode.copyState || copyState )( val );
+		} else {
+			newState[ key ] = key !== 'data' && val && typeof val === 'object' ? Object.assign( {}, val ) : val;
+		}
+	}
+	return newState;
+};
+
 /**
  * MediaWiki language support for CodeMirror 6.
  * Adapted from the original CodeMirror 5 stream parser by Pavel Astakhov.
@@ -40,16 +56,6 @@ class CodeMirrorModeMediaWiki {
 	constructor( config ) {
 		this.config = config;
 		this.urlProtocols = new RegExp( `^(?:${ config.urlProtocols })(?=[^\\s\u00a0{[\\]<>~).,'])`, 'i' );
-		this.isBold = false;
-		this.wasBold = false;
-		this.isItalic = false;
-		this.wasItalic = false;
-		this.firstSingleLetterWord = null;
-		this.firstMultiLetterWord = null;
-		this.firstSpace = null;
-		this.oldStyle = null;
-		this.tokens = [];
-		this.oldTokens = [];
 		this.tokenTable = mwModeConfig.tokenTable;
 		this.registerGroundTokens();
 
@@ -136,17 +142,18 @@ class CodeMirrorModeMediaWiki {
 	}
 
 	isNested( state ) {
-		return state.nExt > 0 || state.nTemplate > 0 || state.nLink > 0;
+		return state.nExt > 0 || state.nTemplate > 0 || state.nLink > 0 || state.nExtLink > 0;
+	}
+
+	makeFullStyle( style, state ) {
+		return ( typeof style === 'string' ?
+			style :
+			`${ style[ 0 ] } ${ state.bold || state.nDt > 0 ? mwModeConfig.tags.strong : '' } ${ state.italic ? mwModeConfig.tags.em : '' }`
+		).replace( /\s{2,}/g, ' ' ).trim() || ' ';
 	}
 
 	makeStyle( style, state, endGround ) {
-		if ( this.isBold || state.nDt > 0 ) {
-			style += ' ' + mwModeConfig.tags.strong;
-		}
-		if ( this.isItalic ) {
-			style += ' ' + mwModeConfig.tags.em;
-		}
-		return this.makeLocalStyle( style, state, endGround );
+		return [ this.makeLocalStyle( style, state, endGround ) ];
 	}
 
 	makeLocalStyle( style, state, endGround ) {
@@ -177,7 +184,7 @@ class CodeMirrorModeMediaWiki {
 				ground += '-ext3';
 				break;
 		}
-		if ( state.nLink > 0 ) {
+		if ( state.nLink > 0 || state.nExtLink > 0 ) {
 			ground += '-link';
 		}
 		if ( ground !== '' ) {
@@ -314,7 +321,7 @@ class CodeMirrorModeMediaWiki {
 				// @todo error message
 				state.nTemplate--;
 				state.tokenize = state.stack.pop();
-				return;
+				return '';
 			}
 			if ( stream.match( /^[\s\u00a0]*[^\s\u00a0|}<{&~]+/ ) ) {
 				state.tokenize = this.eatTemplatePageName( true );
@@ -357,7 +364,7 @@ class CodeMirrorModeMediaWiki {
 				stream.next();
 			}
 			if ( stream.eol() ) {
-				state.nLink--;
+				state.nExtLink--;
 				// @todo error message
 				state.tokenize = state.stack.pop();
 			} else {
@@ -369,14 +376,14 @@ class CodeMirrorModeMediaWiki {
 
 	inExternalLink( stream, state ) {
 		if ( stream.sol() ) {
-			state.nLink--;
+			state.nExtLink--;
 			// @todo error message
 			state.tokenize = state.stack.pop();
-			return;
+			return '';
 		}
 		if ( stream.match( /^[\s\u00a0]*\]/ ) ) {
 			state.tokenize = state.stack.pop();
-			return this.makeLocalStyle( mwModeConfig.tags.extLinkBracket, state, 'nLink' );
+			return this.makeLocalStyle( mwModeConfig.tags.extLinkBracket, state, 'nExtLink' );
 		}
 		if ( stream.eatSpace() ) {
 			state.tokenize = this.inExternalLinkText.bind( this );
@@ -397,14 +404,14 @@ class CodeMirrorModeMediaWiki {
 
 	inExternalLinkText( stream, state ) {
 		if ( stream.sol() ) {
-			state.nLink--;
+			state.nExtLink--;
 			// @todo error message
 			state.tokenize = state.stack.pop();
-			return;
+			return '';
 		}
 		if ( stream.eat( ']' ) ) {
 			state.tokenize = state.stack.pop();
-			return this.makeLocalStyle( mwModeConfig.tags.extLinkBracket, state, 'nLink' );
+			return this.makeLocalStyle( mwModeConfig.tags.extLinkBracket, state, 'nExtLink' );
 		}
 		if ( stream.match( /^[^'\]{&~<]+/ ) ) {
 			return this.makeStyle( mwModeConfig.tags.extLinkText, state );
@@ -417,7 +424,7 @@ class CodeMirrorModeMediaWiki {
 			state.nLink--;
 			// @todo error message
 			state.tokenize = state.stack.pop();
-			return;
+			return '';
 		}
 		if ( stream.match( /^[\s\u00a0]*#[\s\u00a0]*/ ) ) {
 			state.tokenize = this.inLinkToSection.bind( this );
@@ -447,7 +454,7 @@ class CodeMirrorModeMediaWiki {
 			// @todo error message
 			state.nLink--;
 			state.tokenize = state.stack.pop();
-			return;
+			return '';
 		}
 		// FIXME '{{' breaks links, example: [[z{{page]]
 		if ( stream.match( /^[^|\]&~{}]+/ ) ) {
@@ -641,7 +648,7 @@ class CodeMirrorModeMediaWiki {
 	}
 
 	eatExtTokens( origString ) {
-		return ( stream, state ) => {
+		const tokenize = ( stream, state ) => {
 			let ret;
 			if ( state.extMode === false ) {
 				ret = mwModeConfig.tags.extTag;
@@ -658,6 +665,8 @@ class CodeMirrorModeMediaWiki {
 			}
 			return this.makeLocalStyle( ret, state );
 		};
+		Object.defineProperty( tokenize, 'name', { value: 'eatExtTokens' } );
+		return tokenize;
 	}
 
 	eatStartTable( stream, state ) {
@@ -725,12 +734,14 @@ class CodeMirrorModeMediaWiki {
 					return this.makeStyle( tag, state );
 				}
 				if ( stream.match( '||' ) || ( isHead && stream.match( '!!' ) ) ) {
-					this.isBold = false;
-					this.isItalic = false;
+					state.bold = false;
+					state.italic = false;
 					state.tokenize = this.eatTableRow( true, isHead, isCaption );
 					return this.makeLocalStyle( mwModeConfig.tags.tableDelimiter, state );
 				}
 				if ( isStart && stream.eat( '|' ) ) {
+					state.bold = false;
+					state.italic = false;
 					state.tokenize = this.eatTableRow( false, isHead, isCaption );
 					return this.makeLocalStyle( mwModeConfig.tags.tableDelimiter, state );
 				}
@@ -774,7 +785,7 @@ class CodeMirrorModeMediaWiki {
 
 	eatList( stream, state ) {
 		// Just consume all nested list and indention syntax when there is more
-		const mt = stream.match( /^[*#;:]*/u );
+		const mt = stream.match( /^[*#;:]*/ );
 		if ( mt && !this.isNested( state ) && mt[ 0 ].includes( ';' ) ) {
 			state.nDt += mt[ 0 ].split( ';' ).length - 1;
 		}
@@ -886,14 +897,14 @@ class CodeMirrorModeMediaWiki {
 						break;
 					}
 					if ( stream.match( '\'\'' ) ) { // bold
-						if ( !( this.firstSingleLetterWord || stream.match( '\'\'', false ) ) ) {
-							this.prepareItalicForCorrection( stream );
+						if ( !( state.data.firstSingleLetterWord || stream.match( '\'\'', false ) ) ) {
+							this.prepareItalicForCorrection( stream, state );
 						}
-						this.isBold = !this.isBold;
-						return this.makeLocalStyle( mwModeConfig.tags.apostrophesBold, state );
+						state.bold = !state.bold;
+						return this.makeLocalStyle( mwModeConfig.tags.apostrophes, state );
 					} else if ( stream.eat( '\'' ) ) { // italic
-						this.isItalic = !this.isItalic;
-						return this.makeLocalStyle( mwModeConfig.tags.apostrophesItalic, state );
+						state.italic = !state.italic;
+						return this.makeLocalStyle( mwModeConfig.tags.apostrophes, state );
 					}
 					break;
 				case '[':
@@ -908,7 +919,7 @@ class CodeMirrorModeMediaWiki {
 					} else {
 						mt = stream.match( this.urlProtocols );
 						if ( mt ) {
-							state.nLink++;
+							state.nExtLink++;
 							stream.backUp( mt[ 0 ].length );
 							state.stack.push( state.tokenize );
 							state.tokenize = this.eatExternalLinkProtocol( mt[ 0 ].length );
@@ -1088,34 +1099,33 @@ class CodeMirrorModeMediaWiki {
 	 * @see https://phabricator.wikimedia.org/T108455
 	 *
 	 * @param {StringStream} stream
+	 * @param {Object} state
 	 * @private
 	 */
-	prepareItalicForCorrection( stream ) {
+	prepareItalicForCorrection( stream, state ) {
 		// See Parser::doQuotes() in MediaWiki Core, it works similarly.
-		// this.firstSingleLetterWord has maximum priority
-		// this.firstMultiLetterWord has medium priority
-		// this.firstSpace has low priority
+		// firstSingleLetterWord has maximum priority
+		// firstMultiLetterWord has medium priority
+		// firstSpace has low priority
 		const end = stream.pos,
 			str = stream.string.slice( 0, end - 3 ),
 			x1 = str.slice( -1 ),
 			x2 = str.slice( -2, -1 );
 
-		// this.firstSingleLetterWord always is undefined here
+		// firstSingleLetterWord always is undefined here
 		if ( x1 === ' ' ) {
-			if ( this.firstMultiLetterWord || this.firstSpace ) {
+			if ( state.data.firstMultiLetterWord || state.data.firstSpace ) {
 				return;
 			}
-			this.firstSpace = end;
+			state.data.firstSpace = end;
 		} else if ( x2 === ' ' ) {
-			this.firstSingleLetterWord = end;
-		} else if ( this.firstMultiLetterWord ) {
+			state.data.firstSingleLetterWord = end;
+		} else if ( state.data.firstMultiLetterWord ) {
 			return;
 		} else {
-			this.firstMultiLetterWord = end;
+			state.data.firstMultiLetterWord = end;
 		}
-		// remember bold and italic state for later restoration
-		this.wasBold = this.isBold;
-		this.wasItalic = this.isItalic;
+		state.data.mark = end;
 	}
 
 	/**
@@ -1223,8 +1233,19 @@ class CodeMirrorModeMediaWiki {
 				extState: false,
 				nTemplate: 0,
 				nLink: 0,
+				nExtLink: 0,
 				nExt: 0,
-				nDt: 0
+				nDt: 0,
+				bold: false,
+				italic: false,
+				data: {
+					firstSingleLetterWord: null,
+					firstMultiLetterWord: null,
+					firstSpace: null,
+					readyTokens: [],
+					oldToken: null,
+					mark: null
+				}
 			} ),
 
 			/**
@@ -1234,18 +1255,7 @@ class CodeMirrorModeMediaWiki {
 			 * @return {Object}
 			 * @private
 			 */
-			copyState: ( state ) => ( {
-				tokenize: state.tokenize,
-				stack: state.stack.concat( [] ),
-				inHtmlTag: state.inHtmlTag.concat( [] ),
-				extName: state.extName,
-				extMode: state.extMode,
-				extState: state.extMode !== false && state.extMode.copyState( state.extState ),
-				nTemplate: state.nTemplate,
-				nLink: state.nLink,
-				nExt: state.nExt,
-				nDt: state.nDt
-			} ),
+			copyState,
 
 			/**
 			 * Reads one token, advancing the stream past it,
@@ -1257,89 +1267,95 @@ class CodeMirrorModeMediaWiki {
 			 * @private
 			 */
 			token: ( stream, state ) => {
-				let style, p, t, f,
-					readyTokens = [],
-					tmpTokens = [];
-
-				if ( this.oldTokens.length > 0 ) {
-					// just send saved tokens till they exists
-					t = this.oldTokens.shift();
-					stream.pos = t.pos;
-					state = t.state;
-					return t.style;
+				const { data } = state,
+					{ readyTokens } = data;
+				let { oldToken } = data;
+				while ( oldToken && (
+					// If the start of PartialParse is after the current position
+					stream.pos > oldToken.pos ||
+					stream.pos === oldToken.pos && state.tokenize !== oldToken.state.tokenize
+				) ) {
+					oldToken = readyTokens.shift();
 				}
-
-				if ( stream.sol() ) {
+				if ( // check the start
+					oldToken &&
+					stream.pos === oldToken.pos &&
+					stream.string === oldToken.string
+				) {
+					const { pos, string, state: other, style } = readyTokens[ 0 ];
+					delete other.bold;
+					delete other.italic;
+					Object.assign( state, other );
+					if (
+						!( state.extName && state.extMode ) &&
+						state.nLink === 0 &&
+						typeof style === 'string' &&
+						style.includes( mwModeConfig.tags.apostrophes )
+					) {
+						if ( data.mark === pos ) {
+							// rollback
+							data.mark = null;
+							// add one apostrophe, next token will be italic (two apostrophes)
+							stream.string = string.slice( 0, pos - 2 );
+							const s = state.tokenize( stream, state );
+							stream.string = string;
+							oldToken.pos++;
+							data.oldToken = oldToken;
+							return this.makeFullStyle( s, state );
+						}
+						const length = pos - stream.pos;
+						if ( length !== 3 ) {
+							state.italic = !state.italic;
+						}
+						if ( length !== 2 ) {
+							state.bold = !state.bold;
+						}
+					} else if ( typeof style === 'string' && style.includes( mwModeConfig.tags.tableDelimiter ) ) {
+						state.bold = false;
+						state.italic = false;
+					}
+					// return first saved token
+					data.oldToken = readyTokens.shift();
+					stream.pos = pos;
+					stream.string = string;
+					return this.makeFullStyle( style, state );
+				} else if ( stream.sol() ) {
 					// reset bold and italic status in every new line
+					state.bold = false;
+					state.italic = false;
 					state.nDt = 0;
-					this.isBold = false;
-					this.isItalic = false;
-					this.firstSingleLetterWord = null;
-					this.firstMultiLetterWord = null;
-					this.firstSpace = null;
+					data.firstSingleLetterWord = null;
+					data.firstMultiLetterWord = null;
+					data.firstSpace = null;
+					if ( state.tokenize.name === 'eatExtTokens' ) {
+						state.tokenize = state.stack.pop();
+					}
 				}
-
+				readyTokens.length = 0;
+				data.mark = null;
+				data.oldToken = { pos: stream.pos, string: stream.string, state: copyState( state ), style: '' };
+				const { start } = stream;
 				do {
 					// get token style
-					style = state.tokenize( stream, state );
-					f = this.firstSingleLetterWord || this.firstMultiLetterWord || this.firstSpace;
-					if ( f ) {
-						// rollback point exists
-						if ( f !== p ) {
-							// new rollback point
-							p = f;
-							// it's not first rollback point
-							if ( tmpTokens.length > 0 ) {
-								// save tokens
-								readyTokens = readyTokens.concat( tmpTokens );
-								tmpTokens = [];
-							}
-						}
-						// save token
-						tmpTokens.push( {
-							pos: stream.pos,
-							style,
-							state: ( state.extMode || this.mediawiki ).copyState( state )
-						} );
-					} else {
-						// rollback point does not exist
-						// remember style before possible rollback point
-						this.oldStyle = style;
-						// just return token style
-						return style;
-					}
+					stream.start = stream.pos;
+					const st = state.tokenize( stream, state );
+					// save token
+					readyTokens.push( {
+						pos: stream.pos,
+						string: stream.string,
+						state: copyState( state ),
+						style: st
+					} );
 				} while ( !stream.eol() );
-
-				if ( this.isBold && this.isItalic ) {
-					// needs to rollback
-					// restore status
-					this.isItalic = this.wasItalic;
-					this.isBold = this.wasBold;
-					this.firstSingleLetterWord = null;
-					this.firstMultiLetterWord = null;
-					this.firstSpace = null;
-					if ( readyTokens.length > 0 ) {
-						// it contains tickets before the point of rollback
-						// add one apostrophe, next token will be italic (two apostrophes)
-						readyTokens[ readyTokens.length - 1 ].pos++;
-						// for sending tokens till the point of rollback
-						this.oldTokens = readyTokens;
-					} else {
-						// there are no tickets before the point of rollback
-						stream.pos = tmpTokens[ 0 ].pos - 2; // eat( '\'')
-						// send saved Style
-						return this.oldStyle;
-					}
-				} else {
-					// do not need to rollback
-					// send all saved tokens
-					this.oldTokens = readyTokens.concat( tmpTokens );
+				if ( !state.bold || !state.italic ) {
+					// no need to rollback
+					data.mark = null;
 				}
-				// return first saved token
-				t = this.oldTokens.shift();
-				stream.pos = t.pos;
-				state = t.state;
-				return t.style;
+				stream.start = start;
+				stream.pos = data.oldToken.pos;
+				stream.string = data.oldToken.string;
+				Object.assign( state, data.oldToken.state );
+				return '';
 			},
 
 			/**
