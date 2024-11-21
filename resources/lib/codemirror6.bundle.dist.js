@@ -23449,19 +23449,20 @@ class SearchCursor {
             let str = fromCodePoint(next), start = this.bufferStart + this.bufferPos;
             this.bufferPos += codePointSize(next);
             let norm = this.normalize(str);
-            for (let i = 0, pos = start;; i++) {
-                let code = norm.charCodeAt(i);
-                let match = this.match(code, pos, this.bufferPos + this.bufferStart);
-                if (i == norm.length - 1) {
-                    if (match) {
-                        this.value = match;
-                        return this;
+            if (norm.length)
+                for (let i = 0, pos = start;; i++) {
+                    let code = norm.charCodeAt(i);
+                    let match = this.match(code, pos, this.bufferPos + this.bufferStart);
+                    if (i == norm.length - 1) {
+                        if (match) {
+                            this.value = match;
+                            return this;
+                        }
+                        break;
                     }
-                    break;
+                    if (pos == start && i < str.length && str.charCodeAt(i) == code)
+                        pos++;
                 }
-                if (pos == start && i < str.length && str.charCodeAt(i) == code)
-                    pos++;
-            }
         }
     }
     match(code, pos, end) {
@@ -24018,9 +24019,11 @@ class StringQuery extends QueryType {
     }
     nextMatch(state, curFrom, curTo) {
         let cursor = stringCursor(this.spec, state, curTo, state.doc.length).nextOverlapping();
-        if (cursor.done)
-            cursor = stringCursor(this.spec, state, 0, curFrom).nextOverlapping();
-        return cursor.done ? null : cursor.value;
+        if (cursor.done) {
+            let end = Math.min(state.doc.length, curFrom + this.spec.unquoted.length);
+            cursor = stringCursor(this.spec, state, 0, end).nextOverlapping();
+        }
+        return cursor.done || cursor.value.from == curFrom && cursor.value.to == curTo ? null : cursor.value;
     }
     // Searching in reverse is, rather than implementing an inverted search
     // cursor, done by scanning chunk after chunk forward.
@@ -24038,8 +24041,10 @@ class StringQuery extends QueryType {
         }
     }
     prevMatch(state, curFrom, curTo) {
-        return this.prevMatchInRange(state, 0, curFrom) ||
-            this.prevMatchInRange(state, curTo, state.doc.length);
+        let found = this.prevMatchInRange(state, 0, curFrom);
+        if (!found)
+            found = this.prevMatchInRange(state, Math.max(0, curTo - this.spec.unquoted.length), state.doc.length);
+        return found && (found.from != curFrom || found.to != curTo) ? found : null;
     }
     getReplacement(_result) { return this.spec.unquote(this.spec.replace); }
     matchAll(state, limit) {
@@ -24283,9 +24288,10 @@ const replaceNext = /*@__PURE__*/searchCommand((view, { query }) => {
     let { state } = view, { from, to } = state.selection.main;
     if (state.readOnly)
         return false;
-    let next = query.nextMatch(state, from, from);
-    if (!next)
+    let match = query.nextMatch(state, from, from);
+    if (!match)
         return false;
+    let next = match;
     let changes = [], selection, replacement;
     let effects = [];
     if (next.from == from && next.to == to) {
@@ -24295,7 +24301,7 @@ const replaceNext = /*@__PURE__*/searchCommand((view, { query }) => {
         effects.push(EditorView.announce.of(state.phrase("replaced match on line $", state.doc.lineAt(from).number) + "."));
     }
     if (next) {
-        let off = changes.length == 0 || changes[0].from >= next.to ? 0 : next.to - next.from - replacement.length;
+        let off = changes.length == 0 || changes[0].from >= match.to ? 0 : match.to - match.from - replacement.length;
         selection = EditorSelection.single(next.from - off, next.to - off);
         effects.push(announceMatch(view, next));
         effects.push(state.facet(searchConfigFacet).scrollToMatch(selection.main, view));

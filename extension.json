@@ -242,6 +242,7 @@
 				"codemirror-prefs-title",
 				"codemirror-previous",
 				"codemirror-regexp",
+				"codemirror-regexp-invalid",
 				"codemirror-replace",
 				"codemirror-replace-all",
 				"codemirror-replace-placeholder",
