@@ -11,6 +11,7 @@
 	"codemirror-toggle-label": "문법 강조",
 	"codemirror-prefs-enable": "위키텍스트에 대한 구문 강조 활성화",
 	"codemirror-prefs-title": "구문 강조 환경 설정",
+	"codemirror-prefs-autocomplete": "자동 완성 활성화",
 	"codemirror-prefs-bidiisolation": "양방향 텍스트 분리",
 	"codemirror-prefs-bracketmatching": "대괄호 일치 활성화",
 	"codemirror-prefs-linenumbering": "줄 번호 보이기",
