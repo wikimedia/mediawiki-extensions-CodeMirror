@@ -35,6 +35,7 @@
 	"codemirror-all-tooltip": "Tooltip shown when hovering over the 'All' button in the CodeMirror search panel.",
 	"codemirror-match-case": "Tooltip for the 'Match case' button in the CodeMirror search panel.",
 	"codemirror-regexp": "Tooltip for the 'Regular expression' button in the CodeMirror search panel.",
+	"codemirror-regexp-invalid": "Error message shown when the regular expression entered in the CodeMirror search panel is invalid.",
 	"codemirror-by-word": "Tooltip for the 'By word' button in the CodeMirror search panel.",
 	"codemirror-replace": "Label for the 'Replace' button in the CodeMirror search panel.",
 	"codemirror-replace-placeholder": "Placeholder text for the 'Replace' input in the CodeMirror search panel.",

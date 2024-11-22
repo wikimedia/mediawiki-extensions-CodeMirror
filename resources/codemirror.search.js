@@ -38,6 +38,10 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 		 */
 		this.searchInput = undefined;
 		/**
+		 * @type {HTMLDivElement}
+		 */
+		this.searchInputWrapper = undefined;
+		/**
 		 * @type {HTMLInputElement}
 		 */
 		this.replaceInput = undefined;
@@ -128,10 +132,11 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 		);
 		this.searchInput = searchInput;
 		this.searchInput.setAttribute( 'main-field', 'true' );
+		this.searchInputWrapper = searchInputWrapper;
 		this.findResultsText = document.createElement( 'span' );
 		this.findResultsText.className = 'cm-mw-find-results';
-		searchInputWrapper.appendChild( this.findResultsText );
-		firstRow.appendChild( searchInputWrapper );
+		this.searchInputWrapper.appendChild( this.findResultsText );
+		firstRow.appendChild( this.searchInputWrapper );
 
 		this.appendPrevAndNextButtons( firstRow );
 
@@ -374,9 +379,24 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 	 * @param {SearchQuery} [query]
 	 */
 	updateNumMatchesText( query ) {
+		if ( !!this.searchQuery.search && this.searchQuery.regexp && !this.searchQuery.valid ) {
+			this.searchInputWrapper.classList.add( 'cdx-text-input--status-error' );
+			this.findResultsText.textContent = mw.msg( 'codemirror-regexp-invalid' );
+			return;
+		}
 		const cursor = query ?
 			query.getCursor( this.view.state ) :
 			getSearchQuery( this.view.state ).getCursor( this.view.state );
+
+		// Clear error state
+		this.searchInputWrapper.classList.remove( 'cdx-text-input--status-error' );
+
+		// Remove messaging if there's no search query.
+		if ( !this.searchQuery.search ) {
+			this.findResultsText.textContent = '';
+			return;
+		}
+
 		let count = 0,
 			current = 1;
 		const { from, to } = this.view.state.selection.main;
@@ -398,6 +418,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 	 */
 	getTextInput( name, value = '', placeholder = '' ) {
 		const [ container, input ] = super.getTextInput( name, value, placeholder );
+		input.autocomplete = 'off';
 		input.addEventListener( 'change', this.commit.bind( this ) );
 		input.addEventListener( 'keyup', this.commit.bind( this ) );
 		return [ container, input ];
