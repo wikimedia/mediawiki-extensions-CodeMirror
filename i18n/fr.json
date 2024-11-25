@@ -38,6 +38,7 @@
 	"codemirror-all-tooltip": "Sélectionner toutes les correspondances",
 	"codemirror-match-case": "Respecter la casse",
 	"codemirror-regexp": "Expression régulière",
+	"codemirror-regexp-invalid": "Expression régulière non valide",
 	"codemirror-by-word": "Par mot",
 	"codemirror-replace": "Remplacer",
 	"codemirror-replace-placeholder": "Remplacer",

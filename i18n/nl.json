@@ -33,6 +33,7 @@
 	"codemirror-all-tooltip": "Alle overeenkomsten selecteren",
 	"codemirror-match-case": "Hoofdlettergevoelig",
 	"codemirror-regexp": "Reguliere expressie",
+	"codemirror-regexp-invalid": "Ongeldige reguliere expressie",
 	"codemirror-by-word": "Op woord",
 	"codemirror-replace": "Vervangen",
 	"codemirror-replace-placeholder": "Vervangen",

@@ -30,6 +30,7 @@
 	"codemirror-all-tooltip": "Изберете ги сите совпаѓања",
 	"codemirror-match-case": "Разликувај големи/мали букви",
 	"codemirror-regexp": "Рег. израз",
+	"codemirror-regexp-invalid": "Неважечки регуларен израз",
 	"codemirror-by-word": "По збор",
 	"codemirror-replace": "Замени",
 	"codemirror-replace-placeholder": "Замени",

@@ -6,6 +6,7 @@
 			"Kaganer",
 			"Kareyac",
 			"Okras",
+			"Stjn",
 			"WindEwriX"
 		]
 	},
@@ -17,6 +18,7 @@
 	"codemirror-next": "Найти далее",
 	"codemirror-all": "Все",
 	"codemirror-regexp": "Регулярное выражение",
+	"codemirror-regexp-invalid": "Ошибочное регулярное выражение",
 	"codemirror-replace-all": "Заменить все",
 	"codemirror-done": "Готово",
 	"codemirror-goto-line": "Перейти к строке",
