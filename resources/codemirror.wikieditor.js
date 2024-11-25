@@ -57,9 +57,15 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		 */
 		this.realtimePreviewHandler = null;
 		/**
+		 * The WikiEditor search button, which is usurped to open the CodeMirror search panel.
+		 *
+		 * @type {jQuery|null}
+		 */
+		this.$searchBtn = null;
+		/**
 		 * The old WikiEditor search button, to be restored if CodeMirror is disabled.
 		 *
-		 * @type {jQuery}
+		 * @type {jQuery|null}
 		 */
 		this.$oldSearchBtn = null;
 	}
@@ -127,9 +133,10 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		// Hijack the search button to open the CodeMirror search panel
 		// instead of the WikiEditor search dialog.
 		// eslint-disable-next-line no-jquery/no-global-selector
-		const $searchBtn = $( '.wikiEditor-ui .group-search a' );
-		this.$oldSearchBtn = $searchBtn.clone( true );
-		$searchBtn.off( 'click keydown keypress' )
+		this.$searchBtn = $( '.wikiEditor-ui .group-search .tool' );
+		this.$oldSearchBtn = this.$searchBtn.clone( true );
+		this.$searchBtn.find( 'a' )
+			.off( 'click keydown keypress' )
 			.on( 'click keydown', ( e ) => {
 				if ( e.type === 'click' || ( e.type === 'keydown' && e.key === 'Enter' ) ) {
 					openSearchPanel( this.view );
@@ -143,7 +150,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 			{
 				section: 'advanced',
 				groups: {
-					search: {
+					codemirror: {
 						tools: {
 							CodeMirrorPreferences: {
 								type: 'element',
@@ -152,7 +159,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 										title: mw.msg( 'codemirror-prefs-title' ),
 										icon: 'settings',
 										framed: false,
-										classes: [ 'tool', 'cm-mw-settings' ]
+										classes: [ 'tool' ]
 									} );
 									button.on( 'click',
 										() => this.preferences.toggle( this.view, true )
@@ -285,8 +292,11 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		if ( this.view ) {
 			this.setCodeMirrorPreference( false );
 			this.destroy();
-			// eslint-disable-next-line no-jquery/no-global-selector
-			$( '.wikiEditor-ui .group-search a' ).replaceWith( this.$oldSearchBtn );
+			this.$searchBtn.replaceWith( this.$oldSearchBtn );
+			this.$textarea.wikiEditor( 'removeFromToolbar', {
+				section: 'advanced',
+				group: 'codemirror'
+			} );
 			mw.hook( 'ext.CodeMirror.switch' ).fire( false, this.$textarea );
 		} else {
 			this.enableCodeMirror();
