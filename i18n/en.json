@@ -67,5 +67,7 @@
 	"codemirror-unfold": "unfold",
 	"codemirror-folded-code": "folded code",
 	"prefs-accessibility": "Accessibility",
-	"prefs-syntax-highlighting": "Syntax highlighting"
+	"prefs-syntax-highlighting": "Syntax highlighting",
+	"codemirror-beta-feature-title": "Improved Syntax Highlighting",
+	"codemirror-beta-feature-description": "Get early access to new syntax highlighting and editing features such as template folding and autocompletion."
 }

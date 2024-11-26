@@ -388,6 +388,7 @@
 		"EditPage::showEditForm:initial": "main",
 		"EditPage::showReadOnlyForm:initial": "main",
 		"GetPreferences": "main",
+		"GetBetaFeaturePreferences": "main",
 		"ResourceLoaderGetConfigVars": "main"
 	},
 	"HookHandlers": {

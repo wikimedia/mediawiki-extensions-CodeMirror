@@ -5,6 +5,7 @@ namespace MediaWiki\Extension\CodeMirror;
 use InvalidArgumentException;
 use MediaWiki\Config\Config;
 use MediaWiki\EditPage\EditPage;
+use MediaWiki\Extension\BetaFeatures\BetaFeatures;
 use MediaWiki\Extension\Gadgets\GadgetRepo;
 use MediaWiki\Hook\EditPage__showEditForm_initialHook;
 use MediaWiki\Hook\EditPage__showReadOnlyForm_initialHook;
@@ -29,6 +30,7 @@ class Hooks implements
 	private array $conflictingGadgets;
 	private bool $useV6;
 	private ?GadgetRepo $gadgetRepo;
+	private string $extensionAssetsPath;
 
 	/**
 	 * @param UserOptionsLookup $userOptionsLookup
@@ -44,6 +46,7 @@ class Hooks implements
 		$this->useV6 = $config->get( 'CodeMirrorV6' );
 		$this->conflictingGadgets = $config->get( 'CodeMirrorConflictingGadgets' );
 		$this->gadgetRepo = $gadgetRepo;
+		$this->extensionAssetsPath = $config->get( 'ExtensionAssetsPath' );
 	}
 
 	/**
@@ -161,7 +164,10 @@ class Hooks implements
 	 * @todo Remove check for cm6enable flag after migration is complete
 	 */
 	private function shouldUseV6( OutputPage $out ): bool {
-		return $this->useV6 || $out->getRequest()->getRawVal( 'cm6enable' );
+		return $this->useV6 || $out->getRequest()->getRawVal( 'cm6enable' ) || (
+			ExtensionRegistry::getInstance()->isLoaded( 'BetaFeatures' ) &&
+			BetaFeatures::isFeatureEnabled( $out->getUser(), 'codemirror-beta-feature-enable' )
+		);
 	}
 
 	/**
@@ -231,6 +237,28 @@ class Hooks implements
 
 		$defaultPreferences['codemirror-preferences'] = [
 			'type' => 'api',
+		];
+	}
+
+	/**
+	 * GetBetaFeaturePreferences hook handler
+	 *
+	 * @param User $user
+	 * @param array &$betaPrefs
+	 */
+	public function onGetBetaFeaturePreferences( User $user, array &$betaPrefs ): void {
+		if ( $this->useV6 ) {
+			return;
+		}
+		$betaPrefs[ 'codemirror-beta-feature-enable' ] = [
+			'label-message' => 'codemirror-beta-feature-title',
+			'desc-message' => 'codemirror-beta-feature-description',
+			'screenshot' => [
+				'ltr' => $this->extensionAssetsPath . '/CodeMirror/resources/images/codemirror.beta-feature-ltr.svg',
+				'rtl' => $this->extensionAssetsPath . '/CodeMirror/resources/images/codemirror.beta-feature-rtl.svg'
+			],
+			'info-link' => 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror',
+			'discussion-link' => 'https://www.mediawiki.org/wiki/Help_talk:Extension:CodeMirror'
 		];
 	}
 }

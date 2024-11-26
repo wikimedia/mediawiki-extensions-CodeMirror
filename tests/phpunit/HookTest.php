@@ -14,7 +14,6 @@ use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\Request\WebRequest;
 use MediaWiki\Title\Title;
 use MediaWiki\User\Options\UserOptionsLookup;
-use MediaWiki\User\User;
 use MediaWikiIntegrationTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -196,7 +195,7 @@ class HookTest extends MediaWikiIntegrationTestCase {
 	 */
 	private function getMockOutputPage( string $contentModel = CONTENT_MODEL_WIKITEXT, bool $isRTL = false ) {
 		$out = $this->createMock( OutputPage::class );
-		$out->method( 'getUser' )->willReturn( $this->createMock( User::class ) );
+		$out->method( 'getUser' )->willReturn( $this->getTestUser()->getUser() );
 		$out->method( 'getActionName' )->willReturn( 'edit' );
 		$title = $this->createMock( Title::class );
 		$title->method( 'getContentModel' )->willReturn( $contentModel );
