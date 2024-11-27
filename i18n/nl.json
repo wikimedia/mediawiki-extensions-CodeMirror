@@ -70,5 +70,7 @@
 	"codemirror-unfold": "uitklappen",
 	"codemirror-folded-code": "ingeklapte code",
 	"prefs-accessibility": "Toegankelijkheid",
-	"prefs-syntax-highlighting": "Syntaxiskleuring"
+	"prefs-syntax-highlighting": "Syntaxiskleuring",
+	"codemirror-beta-feature-title": "Verbeterde syntaxiskleuring",
+	"codemirror-beta-feature-description": "Krijg vroegtijdig toegang tot nieuwe functies voor syntaxiskleuring en bewerking, zoals sjablonen samenvouwen en automatisch aanvullen."
 }

@@ -71,5 +71,7 @@
 	"codemirror-unfold": "ausklappen",
 	"codemirror-folded-code": "eingeklappter Code",
 	"prefs-accessibility": "Barrierefreiheit",
-	"prefs-syntax-highlighting": "Syntaxhervorhebung"
+	"prefs-syntax-highlighting": "Syntaxhervorhebung",
+	"codemirror-beta-feature-title": "Verbesserte Syntaxhervorhebung",
+	"codemirror-beta-feature-description": "Erhalte frühzeitigen Zugriff auf neue Funktionen zur Syntaxhervorhebung und Bearbeitung, wie z. B. Vorlagenfaltung und Autovervollständigung."
 }

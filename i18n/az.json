@@ -48,5 +48,7 @@
 	"codemirror-special-char-nbsp": "Qırılmayan boşluq",
 	"codemirror-special-char-zero-width-space": "Sıfır genişlikli boşluq",
 	"prefs-accessibility": "Əlçatanlıq",
-	"prefs-syntax-highlighting": "Sintaksis vurğulanması"
+	"prefs-syntax-highlighting": "Sintaksis vurğulanması",
+	"codemirror-beta-feature-title": "Təkmilləşdirilmiş Sintaksis Vurğulanması",
+	"codemirror-beta-feature-description": "Şablon qatlama və avtomatik tamamlama kimi yeni sintaksisin vurğulanması və redaktə xüsusiyyətlərinə erkən giriş əldə edin."
 }

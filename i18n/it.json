@@ -25,6 +25,7 @@
 	"codemirror-all-tooltip": "Seleziona tutte le corrispondenze",
 	"codemirror-match-case": "Maiuscole/minuscole",
 	"codemirror-regexp": "Espressione regolare",
+	"codemirror-regexp-invalid": "Espressione regolare non valida",
 	"codemirror-by-word": "Per parola",
 	"codemirror-replace": "Sostituisci",
 	"codemirror-replace-all": "Sostituisci tutto",

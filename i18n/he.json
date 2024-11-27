@@ -67,5 +67,7 @@
 	"codemirror-unfold": "הרחבה",
 	"codemirror-folded-code": "קוד מקופל",
 	"prefs-accessibility": "נגישות",
-	"prefs-syntax-highlighting": "צביעת תחביר"
+	"prefs-syntax-highlighting": "צביעת תחביר",
+	"codemirror-beta-feature-title": "צביעת תחביר משופרת",
+	"codemirror-beta-feature-description": "קבלת גישה מוקדמת לתכונות חדשות של צביעת תחביר ועריכה כגון קיפול תבניות והשלמה אוטומטית."
 }

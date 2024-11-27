@@ -48,5 +48,6 @@
 	"codemirror-special-char-right-to-left-override": "오른쪽에서 왼쪽으로 재정의",
 	"codemirror-folded-code": "접힌 코드",
 	"prefs-accessibility": "접근성",
-	"prefs-syntax-highlighting": "문법 강조"
+	"prefs-syntax-highlighting": "문법 강조",
+	"codemirror-beta-feature-title": "개선된 구문 강조"
 }
