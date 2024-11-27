@@ -4,12 +4,13 @@
 			"Chrumps",
 			"Rail",
 			"Railfail536",
-			"Woytecr"
+			"Woytecr",
+			"Msz2001"
 		]
 	},
 	"codemirror-desc": "Dostarcza podświetlanie składni w edytorze wikitekstu",
 	"codemirror-toggle-label": "Podświetlanie składni",
-	"codemirror-prefs-colorblind": "Podczas edytowania wikitekstu włącz schemat kolorystyczny podświetlania składni przyjazny osobom ze ślepotą barw",
+	"codemirror-prefs-colorblind": "Włącz schemat kolorystyczny podświetlania składni wikiteksu przyjazny osobom ze ślepotą barw",
 	"codemirror-prefs-colorblind-help": "Jeśli używasz gadżetu do podświetlania składni, ta preferencja nie zadziała.",
 	"prefs-accessibility": "Dostępność"
 }
