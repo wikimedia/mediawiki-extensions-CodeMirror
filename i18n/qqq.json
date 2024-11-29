@@ -7,6 +7,7 @@
 			"Raymond",
 			"Shirayuki",
 			"SkyDaisy9",
+			"Stjn",
 			"pastakhov"
 		]
 	},
@@ -33,7 +34,7 @@
 	"codemirror-previous": "Tooltip text for the 'Find previous' button in the CodeMirror search panel.",
 	"codemirror-all": "Label for the 'All' button in the CodeMirror search panel, which finds all the results. See also {{msg-mw|codemirror-all-tooltip}}.",
 	"codemirror-all-tooltip": "Tooltip shown when hovering over the 'All' button in the CodeMirror search panel.",
-	"codemirror-match-case": "Tooltip for the 'Match case' button in the CodeMirror search panel.",
+	"codemirror-match-case": "Tooltip for the 'Match case' button in the CodeMirror search panel.\n\n{{Identical|Match case}}",
 	"codemirror-regexp": "Tooltip for the 'Regular expression' button in the CodeMirror search panel.",
 	"codemirror-regexp-invalid": "Error message shown when the regular expression entered in the CodeMirror search panel is invalid.",
 	"codemirror-by-word": "Tooltip for the 'By word' button in the CodeMirror search panel.",
@@ -44,8 +45,8 @@
 	"codemirror-find-results": "Label for find results showing how many results were found ($2), and which one is currently highlighted ($1).\n{{Identical|Of}}",
 	"codemirror-goto-line": "Label for the 'Go to line' input field.",
 	"codemirror-goto-line-go": "Label for the 'Go to line' submit button.\n{{Identical|Go}}",
-	"codemirror-control-character": "Tooltip text shown when hovering over special characters. $1 is the Unicode value of the special character.",
-	"codemirror-special-char-null": "Tooltip text shown when hovering over a null character. See [[wikidata:Q617945]] for possible translations.",
+	"codemirror-control-character": "Tooltip text shown when hovering over special characters. See [[wikidata:Q617945]] for possible translations.\n\n$1 is the Unicode value of the special character.",
+	"codemirror-special-char-null": "Tooltip text shown when hovering over a null character. See [[wikidata:Q861529]] for possible translations.",
 	"codemirror-special-char-bell": "Tooltip text shown when hovering over a bell character. See [[wikidata:Q815674]] for possible translations.",
 	"codemirror-special-char-backspace": "Tooltip text shown when hovering over a backspace character. See [[wikidata:Q110028699]] for possible translations.",
 	"codemirror-special-char-newline": "Tooltip text shown when hovering over a newline character. See [[wikidata:Q184914]] for possible translations.",

@@ -75,5 +75,7 @@
 	"codemirror-unfold": "affiché",
 	"codemirror-folded-code": "code affiché",
 	"prefs-accessibility": "Accessibilité",
-	"prefs-syntax-highlighting": "Coloration syntaxique"
+	"prefs-syntax-highlighting": "Coloration syntaxique",
+	"codemirror-beta-feature-title": "Mise en évidence améliorée de la syntaxe",
+	"codemirror-beta-feature-description": "Bénéficiez d'un accès anticipé aux nouvelles fonctionnalités de mise en évidence et d'édition de la syntaxe, telles que l'escamotage des modèles et la saisie semi-automatique."
 }
