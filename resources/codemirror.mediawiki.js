@@ -1374,6 +1374,8 @@ class CodeMirrorModeMediaWiki {
 	}
 }
 
+let handler;
+
 /**
  * Gets a LanguageSupport instance for the MediaWiki mode.
  *
@@ -1401,7 +1403,10 @@ const mediaWikiLang = ( config = { bidiIsolation: false }, mwConfig = null ) => 
 
 	// Register MW-specific Extensions into CodeMirror preferences. Whether they are enabled
 	// or not is determined by the user's preferences and wiki configuration.
-	mw.hook( 'ext.CodeMirror.ready' ).add( ( $textarea, cm ) => {
+	if ( handler ) {
+		mw.hook( 'ext.CodeMirror.ready' ).remove( handler );
+	}
+	handler = ( $textarea, cm ) => {
 		if ( config.templateFolding !== false ) {
 			cm.preferences.registerExtension( 'templateFolding', templateFoldingExtension, cm.view );
 		}
@@ -1411,7 +1416,8 @@ const mediaWikiLang = ( config = { bidiIsolation: false }, mwConfig = null ) => 
 		if ( config.bidiIsolation ) {
 			cm.preferences.registerExtension( 'bidiIsolation', bidiIsolationExtension, cm.view );
 		}
-	} );
+	};
+	mw.hook( 'ext.CodeMirror.ready' ).add( handler );
 
 	return new LanguageSupport( lang, langExtension );
 };
