@@ -3,12 +3,14 @@
 		"authors": [
 			"FShbib",
 			"Shbib Al-Subaie",
-			"ديفيد"
+			"ديفيد",
+			"محمد أحمد عبد الفتاح"
 		]
 	},
 	"codemirror-desc": "يوفر تسليط الضوء على بناء الجملة في محرر نص الويكي",
 	"codemirror-toggle-label": "تسليط الضوء على التركيب",
 	"codemirror-prefs-colorblind": "فعّل مخططًا متوافقًا مع عمى الألوان لتعليم الصيغة عند تعديل نص ويكي.",
 	"codemirror-prefs-colorblind-help": "لن يعمل هذا التفضيل إذا كنت تستخدم إضافةً لتعليم الصيغة.",
-	"prefs-accessibility": "إمكانية الوصول"
+	"prefs-accessibility": "إمكانية الوصول",
+	"codemirror-beta-feature-title": "إبراز نحو محسن"
 }

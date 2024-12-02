@@ -11,7 +11,7 @@
 			"pastakhov"
 		]
 	},
-	"codemirror-desc": "{{desc|name=Code Mirror|url=https://www.mediawiki.org/wiki/Extension:CodeMirror}}\n\nAdditional info: Description of \"Syntax highlighting\" in wiki\n[[mw:Extension:SyntaxHighlight GeSHi]]",
+	"codemirror-desc": "{{desc|name=CodeMirror|url=https://www.mediawiki.org/wiki/Extension:CodeMirror}}\n\nAdditional info: Description of \"syntax highlighting\" in wiki\n[[mw:Extension:SyntaxHighlight]]",
 	"codemirror-toggle-label": "Title tooltip for button to toggle CodeMirror in the editing toolbar.",
 	"codemirror-toggle-label-short": "Label shown next to the CodeMirror icon in the editing toolbar. This message should be as brief as possible. {{msg-mw|codemirror-toggle-label}} is the full message, and is shown as the tooltip for the button.",
 	"codemirror-prefs-summary": "Used in [[Special:Preferences]] in the section titled {{msg-mw|prefs-syntax-highlighting}}, at the top as a summary for the whole section.",
