@@ -6,6 +6,18 @@ const {
 } = require( 'ext.CodeMirror.v6.lib' );
 
 /**
+ * Keymap for autocompletion.
+ *
+ * @type {CodeMirrorKeyBinding}
+ * @memberof module:CodeMirrorAutocomplete
+ */
+const autocompleteKeymap = {
+	key: 'Tab',
+	aliases: [ 'Enter' ],
+	run: acceptCompletion
+};
+
+/**
  * CodeMirror extension providing
  * autocompletion
  * for the MediaWiki mode. This automatically applied when using {@link CodeMirrorModeMediaWiki}.
@@ -15,7 +27,10 @@ const {
  */
 const autocompleteExtension = [
 	autocompletion( { defaultKeymap: true } ),
-	keymap.of( [ { key: 'Tab', run: acceptCompletion } ] )
+	keymap.of( [ autocompleteKeymap ] )
 ];
 
-module.exports = autocompleteExtension;
+module.exports = {
+	autocompleteExtension,
+	autocompleteKeymap
+};

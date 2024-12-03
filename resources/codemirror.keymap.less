@@ -1,0 +1,110 @@
+@import 'mediawiki.skin.variables.less';
+
+/*!
+ * Styles for CodeMirror CSS-only Codex Dialog.
+ *
+ * The width is intentionally increased for desktop screens compared to Codex defaults.
+ *
+ * CSS adapted from VisualEditor's ve.ui.CommandHelpDialog.less
+ * Courtesy of VisualEditor team (MIT license)
+ */
+
+.cdx-dialog-backdrop {
+	opacity: @opacity-transparent;
+
+	&.cm-mw-dialog--hidden {
+		display: none;
+	}
+
+	&.cm-mw-dialog-animate-show {
+		opacity: @opacity-base;
+	}
+}
+
+.cdx-dialog.cm-mw-keymap-dialog {
+	max-width: @min-width-breakpoint-desktop;
+
+	.cdx-dialog__body {
+		font-size: @font-size-small;
+	}
+
+	.cm-mw-keymap-dialog__keybindings {
+		columns: 3 19.5em;
+
+		&.cm-mw-keymap-dialog__keybindings--two-col {
+			column-count: 2;
+		}
+	}
+
+	.cm-mw-keymap-section {
+		/*
+		 * HACK: Prevent splitting over columns. This should be done with
+		 * column-break-inside but it's not well supported yet.
+		 */
+		display: inline-block;
+		width: 100%;
+
+		h4 {
+			text-align: center;
+			margin: 0;
+			padding: 0;
+		}
+	}
+
+	.cm-mw-keymap-list {
+		margin: 0.5em 0 1.5em 0;
+
+		dd {
+			display: inline-block;
+			margin: 0;
+			vertical-align: top;
+			width: calc( 45% - 1em );
+		}
+
+		dt {
+			display: inline-block;
+			padding-right: 1em;
+			text-align: right;
+			vertical-align: top;
+			width: 55%;
+
+			> kbd {
+				display: block;
+
+				/* Enlarge vertical spacing in a list of shortcuts for one action */
+
+				~ kbd {
+					margin-top: 0.5em;
+				}
+			}
+		}
+
+		dd,
+		dt {
+			line-height: @line-height-xx-small;
+			margin: 0.5em 0;
+		}
+	}
+
+	.cm-mw-keymap-key {
+		border: 0;
+		font-style: normal;
+		font-weight: bold;
+
+		> kbd { /* stylelint-disable-line no-descending-specificity */
+			background-color: @background-color-neutral-subtle;
+			color: @color-base;
+			border: @border-width-base @border-style-base @border-color-subtle;
+			border-radius: @border-radius-base;
+			box-shadow: @box-shadow-drop-small, @box-shadow-inset-medium @box-shadow-color-inverted;
+			display: inline-block;
+			font-family: @font-family-monospace--fallback;
+			line-height: @line-height-xx-small;
+			padding: 0.1em 0.4em;
+			margin: -0.1em 0.3em 0;
+			text-shadow: 0 1px 0 @color-inverted;
+			text-transform: uppercase;
+			text-align: center;
+		}
+	}
+}

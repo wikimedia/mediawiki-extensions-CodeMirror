@@ -212,7 +212,7 @@ class CodeMirrorTextSelection {
 		const lines = selectedText.split( '\n' );
 		if ( options.splitlines ) {
 			insertText = lines.map(
-				( selText ) => options.pre + selText + options.post
+				( line ) => line.length ? options.pre + line + options.post : ''
 			).join( '\n' );
 		}
 
@@ -240,13 +240,14 @@ class CodeMirrorTextSelection {
 		// Leave resultant selection untouched for 'selectPeri' and 'splitlines' options.
 		// TODO: jQuery.textSelection should probably have the same behaviour.
 		if ( options.selectPeri && ( isSample || options.splitlines ) ) {
-			const splitlinesUsed = options.splitlines && selectedText.includes( '\n' );
-			this.setSelection( {
-				start: startPos + ( splitlinesUsed ? 0 : options.pre.length ),
-				end: splitlinesUsed ?
-					endPos + ( options.pre.length + options.post.length ) * lines.length :
-					startPos + options.pre.length + selectedText.length
-			} );
+			let start = startPos + options.pre.length;
+			let end = startPos + options.pre.length + selectedText.length;
+			if ( options.splitlines && selectedText.includes( '\n' ) ) {
+				start = startPos;
+				end = endPos + ( options.pre.length + options.post.length ) *
+					lines.filter( Boolean ).length;
+			}
+			this.setSelection( { start, end } );
 		} else {
 			this.setSelection( {
 				start: startPos + insertText.length

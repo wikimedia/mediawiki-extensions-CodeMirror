@@ -209,18 +209,21 @@
 				"codemirror.search.js",
 				"codemirror.gotoLine.js",
 				"codemirror.preferences.js",
+				"codemirror.keymap.js",
 				{
 					"name": "ext.CodeMirror.data.js",
 					"callback": "MediaWiki\\Extension\\CodeMirror\\DataScript::makeScript"
 				}
 			],
 			"styles": [
-				"codemirror.less"
+				"codemirror.less",
+				"codemirror.keymap.less"
 			],
 			"codexStyleOnly": true,
 			"codexComponents": [
 				"CdxButton",
 				"CdxCheckbox",
+				"CdxDialog",
 				"CdxLabel",
 				"CdxField",
 				"CdxTextInput",
@@ -239,6 +242,33 @@
 				"codemirror-folded-code",
 				"codemirror-goto-line",
 				"codemirror-goto-line-go",
+				"codemirror-keymap-blankline",
+				"codemirror-keymap-codefolding",
+				"codemirror-keymap-crosshair",
+				"codemirror-keymap-cursor-modifiers",
+				"codemirror-keymap-direction",
+				"codemirror-keymap-find",
+				"codemirror-keymap-fold",
+				"codemirror-keymap-foldall",
+				"codemirror-keymap-help",
+				"codemirror-keymap-help-close",
+				"codemirror-keymap-help-title",
+				"codemirror-keymap-history",
+				"codemirror-keymap-indent",
+				"codemirror-keymap-insert",
+				"codemirror-keymap-multicursor",
+				"codemirror-keymap-other",
+				"codemirror-keymap-outdent",
+				"codemirror-keymap-paragraph",
+				"codemirror-keymap-preferences",
+				"codemirror-keymap-redo",
+				"codemirror-keymap-redoselection",
+				"codemirror-keymap-search",
+				"codemirror-keymap-selectnext",
+				"codemirror-keymap-undo",
+				"codemirror-keymap-undoselection",
+				"codemirror-keymap-unfold",
+				"codemirror-keymap-unfoldall",
 				"codemirror-match-case",
 				"codemirror-next",
 				"codemirror-prefs-activeline",
@@ -279,7 +309,8 @@
 				"codemirror-special-char-zero-width-space",
 				"codemirror-unfold",
 				"parentheses-end",
-				"parentheses-start"
+				"parentheses-start",
+				"pipe-separator"
 			]
 		},
 		"ext.CodeMirror.v6.init": {
@@ -304,23 +335,40 @@
 				"codemirror.mediawiki.codeFolding.js",
 				"codemirror.mediawiki.matchTag.js",
 				"codemirror.mediawiki.autocomplete.js",
-				"codemirror.mediawiki.openLinks.js"
+				"codemirror.mediawiki.openLinks.js",
+				"codemirror.mediawiki.keymap.js"
 			],
 			"styles": [
 				"codemirror.mediawiki.less",
 				"codemirror.mediawiki.colorblind.less"
 			],
 			"dependencies": [
-				"jquery.client",
 				"mediawiki.Title",
 				"ext.CodeMirror.v6",
 				"ext.CodeMirror.v6.lib"
 			],
 			"messages": [
 				"codemirror-fold",
+				"codemirror-keymap-autocomplete",
+				"codemirror-keymap-blockquote",
+				"codemirror-keymap-bold",
+				"codemirror-keymap-comment",
+				"codemirror-keymap-computercode",
+				"codemirror-keymap-heading",
+				"codemirror-keymap-heading-n",
+				"codemirror-keymap-italic",
+				"codemirror-keymap-link",
+				"codemirror-keymap-openlinks",
+				"codemirror-keymap-preformatted",
+				"codemirror-keymap-reference",
+				"codemirror-keymap-strikethrough",
+				"codemirror-keymap-subscript",
+				"codemirror-keymap-superscript",
+				"codemirror-keymap-textstyling",
+				"codemirror-keymap-underline",
+				"codemirror-prefs-autocomplete",
 				"codemirror-prefs-bidiisolation",
 				"codemirror-prefs-codefolding",
-				"codemirror-prefs-autocomplete",
 				"codemirror-prefs-openlinks"
 			]
 		},

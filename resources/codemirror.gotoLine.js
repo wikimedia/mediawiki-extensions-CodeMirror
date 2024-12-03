@@ -1,7 +1,6 @@
 const {
 	EditorSelection,
 	EditorView,
-	Prec,
 	StateEffect,
 	StateEffectType,
 	StateField,
@@ -67,21 +66,18 @@ class CodeMirrorGotoLine extends CodeMirrorPanel {
 	 * @inheritDoc
 	 */
 	get extension() {
-		// Use Prec.highest to ensure that this keymap is used before the default searchKeymap.
-		return Prec.highest(
-			keymap.of( {
-				key: 'Mod-Alt-g',
-				run: ( view ) => {
-					this.view = view;
-					const effects = [ this.toggleEffect.of( true ) ];
-					if ( !this.view.state.field( this.panelStateField, false ) ) {
-						effects.push( StateEffect.appendConfig.of( [ this.panelStateField ] ) );
-					}
-					this.view.dispatch( { effects } );
-					return true;
+		return keymap.of( {
+			key: 'Mod-Alt-g',
+			run: ( view ) => {
+				this.view = view;
+				const effects = [ this.toggleEffect.of( true ) ];
+				if ( !this.view.state.field( this.panelStateField, false ) ) {
+					effects.push( StateEffect.appendConfig.of( [ this.panelStateField ] ) );
 				}
-			} )
-		);
+				this.view.dispatch( { effects } );
+				return true;
+			}
+		} );
 	}
 
 	/**

@@ -13,7 +13,7 @@ require( './ext.CodeMirror.data.js' );
 
 /**
  * CodeMirrorPreferences is a panel that allows users to configure CodeMirror preferences.
- * It is toggled by pressing `Mod`-`Shift`-`,` (or `Command`+`Shift`+`,` on macOS).
+ * It is toggled by pressing `Ctrl`-`Shift`-`,` (or `Command`-`Shift`-`,` on macOS).
  *
  * Note that this code, like MediaWiki Core, refers to the user's preferences as "options".
  * In this class, "preferences" refer to the user's preferences for CodeMirror, which
@@ -23,6 +23,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	/**
 	 * @param {Object} extensionRegistry Key-value pairs of CodeMirror Extensions.
 	 * @param {boolean} [isVisualEditor=false] Whether the VE 2017 editor is being used.
+	 * @fires CodeMirror~'ext.CodeMirror.preferences.ready'
 	 */
 	constructor( extensionRegistry, isVisualEditor = false ) {
 		super();
@@ -94,6 +95,14 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		 * @type {Object}
 		 */
 		this.preferences = this.fetchPreferences();
+
+		/**
+		 * Fired just before {@link CodeMirrorPreferences} has been instantiated.
+		 *
+		 * @event CodeMirror~'ext.CodeMirror.preferences.ready'
+		 * @param {CodeMirrorPreferences} preferences
+		 */
+		mw.hook( 'ext.CodeMirror.preferences.ready' ).fire( this );
 	}
 
 	/**
@@ -259,6 +268,16 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 			this.toggle( this.view, false );
 		} );
 
+		/**
+		 * Fired when the preferences panel is constructed, just before it is displayed.
+		 *
+		 * @event CodeMirror~'ext.CodeMirror.preferences.display'
+		 * @param {HTMLDivElement} container The preferences panel container.
+		 * @internal
+		 * @private
+		 */
+		mw.hook( 'ext.CodeMirror.preferences.display' ).fire( container );
+
 		return {
 			dom: container,
 			top: true
@@ -327,6 +346,19 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 				effects: compartment.reconfigure( input.checked ? extension : [] )
 			} );
 			this.setPreference( name, input.checked );
+
+			/**
+			 * Fired when a CodeMirror preference is changed.
+			 * The preference may not have been saved to the database yet.
+			 *
+			 * @event CodeMirror~'ext.CodeMirror.preferences.change'
+			 * @param {string} name The name of the preference, and the corresponding key
+			 *   in the {@link CodeMirrorPreferences#extensionRegistry extensionRegistry}
+			 *   and {@link CodeMirrorPreferences#compartmentRegistry compartmentRegistry}
+			 *   properties.
+			 * @param {boolean} value The new value of the preference.
+			 */
+			mw.hook( 'ext.CodeMirror.preferences.change' ).fire( name, input.checked );
 		} );
 		return [ wrapper, input ];
 	}
