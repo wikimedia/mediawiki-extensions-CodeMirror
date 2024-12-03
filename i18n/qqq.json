@@ -7,10 +7,11 @@
 			"Raymond",
 			"Shirayuki",
 			"SkyDaisy9",
-			"pastakhov"
+			"pastakhov",
+			"Stjn"
 		]
 	},
-	"codemirror-desc": "{{desc|name=Code Mirror|url=https://www.mediawiki.org/wiki/Extension:CodeMirror}}\n\nAdditional info: Description of \"Syntax highlighting\" in wiki\n[[mw:Extension:SyntaxHighlight GeSHi]]",
+	"codemirror-desc": "{{desc|name=CodeMirror|url=https://www.mediawiki.org/wiki/Extension:CodeMirror}}\n\nAdditional info: Description of \"syntax highlighting\" in wiki\n[[mw:Extension:SyntaxHighlight]]",
 	"codemirror-toggle-label": "Title tooltip for button to toggle CodeMirror in the editing toolbar.",
 	"codemirror-toggle-label-short": "Label shown next to the CodeMirror icon in the editing toolbar. This message should be as brief as possible. {{msg-mw|codemirror-toggle-label}} is the full message, and is shown as the tooltip for the button.",
 	"codemirror-prefs-summary": "Used in [[Special:Preferences]] in the section titled {{msg-mw|prefs-syntax-highlighting}}, at the top as a summary for the whole section.",
@@ -23,7 +24,7 @@
 	"codemirror-previous": "Tooltip text for the 'Find previous' button in the CodeMirror search panel.",
 	"codemirror-all": "Label for the 'All' button in the CodeMirror search panel, which finds all the results. See also {{msg-mw|codemirror-all-tooltip}}.",
 	"codemirror-all-tooltip": "Tooltip shown when hovering over the 'All' button in the CodeMirror search panel.",
-	"codemirror-match-case": "Tooltip for the 'Match case' button in the CodeMirror search panel.",
+	"codemirror-match-case": "Tooltip for the 'Match case' button in the CodeMirror search panel.\n\n{{Identical|Match case}}",
 	"codemirror-regexp": "Tooltip for the 'Regular expression' button in the CodeMirror search panel.",
 	"codemirror-by-word": "Tooltip for the 'By word' button in the CodeMirror search panel.",
 	"codemirror-replace": "Label for the 'Replace' button in the CodeMirror search panel.",
@@ -32,8 +33,8 @@
 	"codemirror-done": "Label for the 'Done' button in CodeMirror panels.\n{{Identical|Done}}",
 	"codemirror-goto-line": "Label for the 'Go to line' input field.",
 	"codemirror-goto-line-go": "Label for the 'Go to line' submit button.\n{{Identical|Go}}",
-	"codemirror-control-character": "Tooltip text shown when hovering over special characters. $1 is the Unicode value of the special character.",
-	"codemirror-special-char-null": "Tooltip text shown when hovering over a null character. See [[wikidata:Q617945]] for possible translations.",
+	"codemirror-control-character": "Tooltip text shown when hovering over special characters. See [[wikidata:Q617945]] for possible translations.\n\n$1 is the Unicode value of the special character.",
+	"codemirror-special-char-null": "Tooltip text shown when hovering over a null character. See [[wikidata:Q861529]] for possible translations.",
 	"codemirror-special-char-bell": "Tooltip text shown when hovering over a bell character. See [[wikidata:Q815674]] for possible translations.",
 	"codemirror-special-char-backspace": "Tooltip text shown when hovering over a backspace character. See [[wikidata:Q110028699]] for possible translations.",
 	"codemirror-special-char-newline": "Tooltip text shown when hovering over a newline character. See [[wikidata:Q184914]] for possible translations.",
