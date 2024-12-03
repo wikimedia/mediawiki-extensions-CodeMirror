@@ -13,6 +13,7 @@ const {
 	highlightSpecialChars,
 	history,
 	historyKeymap,
+	indentUnit,
 	keymap,
 	lineNumbers,
 	rectangularSelection,
@@ -134,6 +135,7 @@ class CodeMirror {
 			this.dirExtension,
 			this.searchExtension,
 			this.preferences.extension,
+			indentUnit.of( '\t' ),
 			EditorState.readOnly.of( this.readOnly ),
 			EditorView.domEventHandlers( {
 				blur: () => {
