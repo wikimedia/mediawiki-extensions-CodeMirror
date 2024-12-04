@@ -22,6 +22,26 @@ mw.user = Object.assign( mw.user, {
 mw.config.get = jest.fn().mockReturnValue( '1000+ edits' );
 mw.track = jest.fn();
 mw.Api.prototype.saveOption = jest.fn();
+mw.hook = jest.fn( ( name ) => ( {
+	fire: jest.fn( ( ...args ) => {
+		if ( mw.hook.mockHooks[ name ] ) {
+			mw.hook.mockHooks[ name ].forEach( ( callback ) => callback( ...args ) );
+		}
+	} ),
+	add: jest.fn( ( callback ) => {
+		if ( !mw.hook.mockHooks[ name ] ) {
+			mw.hook.mockHooks[ name ] = [];
+		}
+		mw.hook.mockHooks[ name ].push( callback );
+	} ),
+	remove: jest.fn( ( callback ) => {
+		if ( mw.hook.mockHooks[ name ] ) {
+			mw.hook.mockHooks[ name ] = mw.hook.mockHooks[ name ]
+				.filter( ( cb ) => cb !== callback );
+		}
+	} )
+} ) );
+mw.hook.mockHooks = {};
 global.$ = require( 'jquery' );
 $.fn.textSelection = () => {};
 window.matchMedia = jest.fn().mockReturnValue( { matches: false } );

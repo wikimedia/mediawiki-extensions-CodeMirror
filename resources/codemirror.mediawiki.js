@@ -1406,15 +1406,17 @@ const mediaWikiLang = ( config = { bidiIsolation: false }, mwConfig = null ) => 
 	if ( handler ) {
 		mw.hook( 'ext.CodeMirror.ready' ).remove( handler );
 	}
-	handler = ( $textarea, cm ) => {
-		if ( config.templateFolding !== false ) {
-			cm.preferences.registerExtension( 'templateFolding', templateFoldingExtension, cm.view );
-		}
-		if ( config.autocomplete !== false ) {
-			cm.preferences.registerExtension( 'autocomplete', autocompleteExtension, cm.view );
-		}
-		if ( config.bidiIsolation ) {
-			cm.preferences.registerExtension( 'bidiIsolation', bidiIsolationExtension, cm.view );
+	handler = ( _$textarea, cm ) => {
+		if ( cm.view ) { // T380840
+			if ( config.templateFolding !== false ) {
+				cm.preferences.registerExtension( 'templateFolding', templateFoldingExtension, cm.view );
+			}
+			if ( config.autocomplete !== false ) {
+				cm.preferences.registerExtension( 'autocomplete', autocompleteExtension, cm.view );
+			}
+			if ( config.bidiIsolation ) {
+				cm.preferences.registerExtension( 'bidiIsolation', bidiIsolationExtension, cm.view );
+			}
 		}
 	};
 	mw.hook( 'ext.CodeMirror.ready' ).add( handler );

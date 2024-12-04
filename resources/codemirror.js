@@ -92,6 +92,12 @@ class CodeMirror {
 		 */
 		this.editRecoveryHandler = null;
 		/**
+		 * The form `submit` event handler.
+		 *
+		 * @type {Function|null}
+		 */
+		this.formSubmitEventHandler = null;
+		/**
 		 * jQuery.textSelection overrides for CodeMirror.
 		 *
 		 * @type {CodeMirrorTextSelection}
@@ -462,13 +468,14 @@ class CodeMirror {
 		if ( !this.surface ) {
 			this.$textarea.hide();
 			if ( this.$textarea[ 0 ].form ) {
-				this.$textarea[ 0 ].form.addEventListener( 'submit', () => {
+				this.formSubmitEventHandler = () => {
 					this.$textarea.val( this.view.state.doc.toString() );
 					const scrollTop = document.getElementById( 'wpScrolltop' );
 					if ( scrollTop ) {
 						scrollTop.value = this.view.scrollDOM.scrollTop;
 					}
-				} );
+				};
+				this.$textarea[ 0 ].form.addEventListener( 'submit', this.formSubmitEventHandler );
 			}
 		}
 
@@ -515,7 +522,7 @@ class CodeMirror {
 	 */
 	destroy() {
 		const scrollTop = this.view.scrollDOM.scrollTop;
-		const hasFocus = this.view.hasFocus;
+		const hasFocus = this.surface ? this.surface.getView().isFocused() : this.view.hasFocus;
 		const { from, to } = this.view.state.selection.ranges[ 0 ];
 		$( this.view.dom ).textSelection( 'unregister' );
 		this.$textarea.textSelection( 'unregister' );
@@ -533,6 +540,12 @@ class CodeMirror {
 			.prop( 'selectionEnd', Math.max( to, from ) );
 		this.$textarea.scrollTop( scrollTop );
 		this.textSelection = null;
+
+		// remove all hook handlers and event listeners
+		if ( this.formSubmitEventHandler && this.$textarea[ 0 ].form ) {
+			this.$textarea[ 0 ].form.removeEventListener( 'submit', this.formSubmitEventHandler );
+			this.formSubmitEventHandler = null;
+		}
 
 		/**
 		 * Called just after CodeMirror is destroyed and the original textarea is restored.
