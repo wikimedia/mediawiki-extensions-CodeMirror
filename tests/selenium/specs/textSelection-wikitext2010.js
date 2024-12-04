@@ -97,6 +97,29 @@ describe( 'CodeMirror textSelection for the wikitext 2010 editor', () => {
 		);
 	} );
 
+	it( "applies 'pre'/'post' to each line when 'splitlines' is used with encapsulateSelection", async () => {
+		await browser.execute( () => {
+			const testStr = 'foo\nbar\nbaz';
+			$( '.cm-editor' ).textSelection( 'setContents', testStr )
+				.textSelection( 'encapsulateSelection', {
+					selectionStart: 0,
+					selectionEnd: testStr.length,
+					pre: '<div>',
+					post: '</div>',
+					splitlines: true
+				} );
+		} );
+		const expected = '<div>foo</div>\n<div>bar</div>\n<div>baz</div>';
+		assert.strictEqual(
+			await browser.execute( () => $( '.cm-editor' ).textSelection( 'getContents' ) ),
+			expected
+		);
+		assert.strictEqual(
+			await browser.execute( () => $( '.cm-editor' ).textSelection( 'getSelection' ) ),
+			expected
+		);
+	} );
+
 	it( 'scrolls to the correct place when using scrollToCaretPosition', async () => {
 		await browser.execute( () => {
 			const $cmEditor = $( '.cm-editor' );
