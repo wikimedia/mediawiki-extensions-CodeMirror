@@ -7,10 +7,11 @@
 			"Shirayuki",
 			"SkyDaisy9",
 			"pastakhov",
-			"MusikAnimal"
+			"MusikAnimal",
+			"Stjn"
 		]
 	},
-	"codemirror-desc": "{{desc|name=Code Mirror|url=https://www.mediawiki.org/wiki/Extension:CodeMirror}}\n\nAdditional info: Description of \"Syntax highlighting\" in wiki\n[[mw:Extension:SyntaxHighlight GeSHi]]",
+	"codemirror-desc": "{{desc|name=CodeMirror|url=https://www.mediawiki.org/wiki/Extension:CodeMirror}}\n\nAdditional info: Description of \"syntax highlighting\" in wiki\n[[mw:Extension:SyntaxHighlight]]",
 	"codemirror-toggle-label": "Title tooltip for button to toggle CodeMirror in the editing toolbar.",
 	"codemirror-prefs-colorblind": "Used in user preferences as label for enabling the colorblind-friendly option.",
 	"codemirror-prefs-colorblind-help": "Used in user preferences as remark on the colorblind-friendly option.",
@@ -24,8 +25,8 @@
 	"codemirror-replace": "Label for the 'replace' button in the CodeMirror search dialog.",
 	"codemirror-replace-placeholder": "Placeholder text for the 'Replace' input in the CodeMirror search panel.",
 	"codemirror-replace-all": "Label for the 'replace all' button in the CodeMirror search dialog.",
-	"codemirror-control-character": "Tooltip text shown when hovering over special characters. $1 is the Unicode value of the special character.",
-	"codemirror-special-char-null": "Tooltip text shown when hovering over a null character. See [[wikidata:Q617945]] for possible translations.",
+	"codemirror-control-character": "Tooltip text shown when hovering over special characters. See [[wikidata:Q617945]] for possible translations.\n\n$1 is the Unicode value of the special character.",
+	"codemirror-special-char-null": "Tooltip text shown when hovering over a null character. See [[wikidata:Q861529]] for possible translations.",
 	"codemirror-special-char-bell": "Tooltip text shown when hovering over a bell character. See [[wikidata:Q815674]] for possible translations.",
 	"codemirror-special-char-backspace": "Tooltip text shown when hovering over a backspace character. See [[wikidata:Q110028699]] for possible translations.",
 	"codemirror-special-char-newline": "Tooltip text shown when hovering over a newline character. See [[wikidata:Q184914]] for possible translations.",
