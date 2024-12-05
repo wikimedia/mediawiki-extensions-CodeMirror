@@ -10,12 +10,12 @@ const testCases = [
 	{
 		title: 'p tags, extra closing tag',
 		input: 'this is <p><div>content</p></p>',
-		output: '<div class="cm-line">this is <span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">p</span><span class="cm-mw-htmltag-bracket">&gt;</span><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">div</span><span class="cm-mw-htmltag-bracket">&gt;</span>content<span class="cm-mw-error">&lt;/p&gt;</span><span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">p</span><span class="cm-mw-htmltag-bracket">&gt;</span> </div>'
+		output: '<div class="cm-line">this is <span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">p</span><span class="cm-mw-htmltag-bracket">&gt;&lt;</span><span class="cm-mw-htmltag-name">div</span><span class="cm-mw-htmltag-bracket">&gt;</span>content<span class="cm-mw-error">&lt;/p&gt;</span><span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">p</span><span class="cm-mw-htmltag-bracket">&gt;</span> </div>'
 	},
 	{
 		title: 'HTML tag attributes',
 		input: '<span title="a<b"><b title="a>b"></b></span>',
-		output: '<div class="cm-line"><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">span </span><span class="cm-mw-htmltag-attribute">title="a</span><span class="cm-mw-htmltag-attribute">&lt;b"</span><span class="cm-mw-htmltag-bracket">&gt;</span><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">b </span><span class="cm-mw-htmltag-attribute">title="a</span><span class="cm-mw-htmltag-bracket">&gt;</span>b"&gt;<span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">b</span><span class="cm-mw-htmltag-bracket">&gt;</span><span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">span</span><span class="cm-mw-htmltag-bracket">&gt;</span> </div>'
+		output: '<div class="cm-line"><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">span </span><span class="cm-mw-htmltag-attribute">title="a&lt;b"</span><span class="cm-mw-htmltag-bracket">&gt;&lt;</span><span class="cm-mw-htmltag-name">b </span><span class="cm-mw-htmltag-attribute">title="a</span><span class="cm-mw-htmltag-bracket">&gt;</span>b"&gt;<span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">b</span><span class="cm-mw-htmltag-bracket">&gt;&lt;/</span><span class="cm-mw-htmltag-name">span</span><span class="cm-mw-htmltag-bracket">&gt;</span> </div>'
 	},
 	{
 		title: 'ref tag attributes',
@@ -25,7 +25,7 @@ const testCases = [
 	{
 		title: 'indented table with caption and inline headings',
 		input: ':{|\n|}\n: {|\n|}\n :: {| class="wikitable"\n |+ Caption\n |-\n ! Uno !! Dos\n |-\n | Foo || Bar\n |}',
-		output: '<div class="cm-line"><span class="cm-mw-indenting">:</span><span class="cm-mw-table-bracket">{|</span></div><div class="cm-line"><span class="cm-mw-table-bracket">|}</span></div><div class="cm-line"><span class="cm-mw-indenting">: </span><span class="cm-mw-table-bracket">{|</span></div><div class="cm-line"><span class="cm-mw-table-bracket">|}</span></div><div class="cm-line"><span class="cm-mw-indenting"> :: </span><span class="cm-mw-table-bracket">{| </span><span class="cm-mw-table-definition">class</span><span class="cm-mw-table-definition">="wikitable"</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> |+ </span><span class="cm-mw-table-caption">Caption</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> |-</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> ! </span><span class="cm-mw-strong">Uno </span><span class="cm-mw-table-delimiter">!!</span><span class="cm-mw-strong"> Dos</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> |-</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> | </span>Foo <span class="cm-mw-table-delimiter">||</span> Bar</div><div class="cm-line"><span class="cm-mw-table-bracket"> |}</span> </div>'
+		output: '<div class="cm-line"><span class="cm-mw-indenting">:</span><span class="cm-mw-table-bracket">{|</span></div><div class="cm-line"><span class="cm-mw-table-bracket">|}</span></div><div class="cm-line"><span class="cm-mw-indenting">: </span><span class="cm-mw-table-bracket">{|</span></div><div class="cm-line"><span class="cm-mw-table-bracket">|}</span></div><div class="cm-line"><span class="cm-mw-indenting"> :: </span><span class="cm-mw-table-bracket">{| </span><span class="cm-mw-table-definition">class="wikitable"</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> |+ </span><span class="cm-mw-table-caption">Caption</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> |-</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> ! </span><span class="cm-mw-strong">Uno </span><span class="cm-mw-table-delimiter">!!</span><span class="cm-mw-strong"> Dos</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> |-</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> | </span>Foo <span class="cm-mw-table-delimiter">||</span> Bar</div><div class="cm-line"><span class="cm-mw-table-bracket"> |}</span> </div>'
 	},
 	{
 		title: 'apostrophe before italic',
@@ -35,7 +35,7 @@ const testCases = [
 	{
 		title: 'free external links',
 		input: '//archive.org [ftp://foo.bar FOO] https://wikimedia.org/~\nx',
-		output: '<div class="cm-line">//archive.org <span class="cm-mw-link-ground cm-mw-extlink-bracket">[</span><span class="cm-mw-link-ground cm-mw-extlink-protocol">ftp://</span><span class="cm-mw-link-ground cm-mw-extlink">foo.bar</span><span class="cm-mw-link-ground"> </span><span class="cm-mw-link-ground cm-mw-extlink-text">FOO</span><span class="cm-mw-link-ground cm-mw-extlink-bracket">]</span> <span class="cm-mw-free-extlink-protocol">https://</span><span class="cm-mw-free-extlink">wikimedia.</span><span class="cm-mw-free-extlink">org/~</span></div><div class="cm-line">x </div>'
+		output: '<div class="cm-line">//archive.org <span class="cm-mw-link-ground cm-mw-extlink-bracket">[</span><span class="cm-mw-link-ground cm-mw-extlink-protocol">ftp://</span><span class="cm-mw-link-ground cm-mw-extlink">foo.bar</span><span class="cm-mw-link-ground"> </span><span class="cm-mw-link-ground cm-mw-extlink-text">FOO</span><span class="cm-mw-link-ground cm-mw-extlink-bracket">]</span> <span class="cm-mw-free-extlink-protocol">https://</span><span class="cm-mw-free-extlink">wikimedia.org/~</span></div><div class="cm-line">x </div>'
 	},
 	{
 		title: 'not free external links',
@@ -60,7 +60,7 @@ const testCases = [
 	{
 		title: 'ref tag with cite web, extraneous curly braces',
 		input: '<ref>{{cite web|2=foo}}}}</ref>',
-		output: '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-bracket">{{</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-pagename cm-mw-template-name">cite</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-pagename cm-mw-template-name"> web</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-delimiter">|</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-argument-name">2=</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template">foo</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-bracket">}}</span><span class="cm-mw-tag-ref">}</span><span class="cm-mw-tag-ref">}</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;</span> </div>'
+		output: '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-bracket">{{</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-pagename cm-mw-template-name">cite web</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-delimiter">|</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-argument-name">2=</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template">foo</span><span class="cm-mw-tag-ref cm-mw-template-ground cm-mw-template-bracket">}}</span><span class="cm-mw-tag-ref">}}</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;</span> </div>'
 	},
 	{
 		title: 'template with params and parser function',
@@ -70,7 +70,7 @@ const testCases = [
 	{
 		title: 'T277767: newlines and comments in template names',
 		input: '{{#if: | {{some template\n<!-- comment --> }} }}',
-		output: '<div class="cm-line"><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">{{</span><span class="cm-mw-ext-ground cm-mw-parserfunction-name">#if</span><span class="cm-mw-ext-ground cm-mw-parserfunction-delimiter">:</span><span class="cm-mw-ext-ground cm-mw-parserfunction"> </span><span class="cm-mw-ext-ground cm-mw-parserfunction-delimiter">|</span><span class="cm-mw-ext-ground cm-mw-parserfunction"> </span><span class="cm-mw-template-ext-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template-ext-ground cm-mw-pagename cm-mw-template-name">some</span><span class="cm-mw-template-ext-ground cm-mw-pagename cm-mw-template-name"> template</span></div><div class="cm-line"><span class="cm-mw-template-ext-ground cm-mw-comment">&lt;!-- comment --&gt;</span><span class="cm-mw-template-ext-ground cm-mw-template-bracket"> }}</span><span class="cm-mw-ext-ground cm-mw-parserfunction"> </span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">}}</span> </div>'
+		output: '<div class="cm-line"><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">{{</span><span class="cm-mw-ext-ground cm-mw-parserfunction-name">#if</span><span class="cm-mw-ext-ground cm-mw-parserfunction-delimiter">:</span><span class="cm-mw-ext-ground cm-mw-parserfunction"> </span><span class="cm-mw-ext-ground cm-mw-parserfunction-delimiter">|</span><span class="cm-mw-ext-ground cm-mw-parserfunction"> </span><span class="cm-mw-template-ext-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template-ext-ground cm-mw-pagename cm-mw-template-name">some template</span></div><div class="cm-line"><span class="cm-mw-template-ext-ground cm-mw-comment">&lt;!-- comment --&gt;</span><span class="cm-mw-template-ext-ground cm-mw-template-bracket"> }}</span><span class="cm-mw-ext-ground cm-mw-parserfunction"> </span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">}}</span> </div>'
 	},
 	{
 		title: 'T108450: template transclusion where the template name is a parameter',
@@ -90,7 +90,7 @@ const testCases = [
 	{
 		title: 'section headings',
 		input: '== My section ==\nFoo bar\n=== Blah ===\nBaz\n= { =\nText',
-		output: '<div class="cm-line"><span class="cm-mw-section-header cm-mw-section-2">==</span><span class="cm-mw-section"> My section </span><span class="cm-mw-section-header">==</span></div><div class="cm-line">Foo bar</div><div class="cm-line"><span class="cm-mw-section-header cm-mw-section-3">===</span><span class="cm-mw-section"> Blah </span><span class="cm-mw-section-header">===</span></div><div class="cm-line">Baz</div><div class="cm-line"><span class="cm-mw-section-header cm-mw-section-1">=</span><span class="cm-mw-section"> </span><span class="cm-mw-section">{</span><span class="cm-mw-section"> </span><span class="cm-mw-section-header">=</span></div><div class="cm-line">Text </div>'
+		output: '<div class="cm-line"><span class="cm-mw-section-header cm-mw-section-2">==</span><span class="cm-mw-section"> My section </span><span class="cm-mw-section-header">==</span></div><div class="cm-line">Foo bar</div><div class="cm-line"><span class="cm-mw-section-header cm-mw-section-3">===</span><span class="cm-mw-section"> Blah </span><span class="cm-mw-section-header">===</span></div><div class="cm-line">Baz</div><div class="cm-line"><span class="cm-mw-section-header cm-mw-section-1">=</span><span class="cm-mw-section"> { </span><span class="cm-mw-section-header">=</span></div><div class="cm-line">Text </div>'
 	},
 	{
 		title: 'section headings with trailing comments',
@@ -105,7 +105,7 @@ const testCases = [
 	{
 		title: 'nested ordered, unordered and definition lists',
 		input: '*#;: item A\n#;:* item B\n;:*# item C\n:*#; item D',
-		output: '<div class="cm-line"><span class="cm-mw-list">*#;:</span><span class="cm-mw-strong"> item</span><span class="cm-mw-strong"> A</span></div><div class="cm-line"><span class="cm-mw-list">#;:*</span><span class="cm-mw-strong"> item</span><span class="cm-mw-strong"> B</span></div><div class="cm-line"><span class="cm-mw-list">;:*#</span><span class="cm-mw-strong"> item</span><span class="cm-mw-strong"> C</span></div><div class="cm-line"><span class="cm-mw-list">:*#;</span><span class="cm-mw-strong"> item</span><span class="cm-mw-strong"> D</span><span class="cm-mw-strong"> </span></div>'
+		output: '<div class="cm-line"><span class="cm-mw-list">*#;:</span><span class="cm-mw-strong"> item A</span></div><div class="cm-line"><span class="cm-mw-list">#;:*</span><span class="cm-mw-strong"> item B</span></div><div class="cm-line"><span class="cm-mw-list">;:*#</span><span class="cm-mw-strong"> item C</span></div><div class="cm-line"><span class="cm-mw-list">:*#;</span><span class="cm-mw-strong"> item D </span></div>'
 	},
 	{
 		title: 'one-line definition list',
@@ -115,7 +115,7 @@ const testCases = [
 	{
 		title: 'link with bold text',
 		input: '[[Link title|\'\'\'bold link\'\'\']]',
-		output: '<div class="cm-line"><span class="cm-mw-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-link-ground cm-mw-link-pagename cm-mw-pagename">Link</span><span class="cm-mw-link-ground cm-mw-link-pagename cm-mw-pagename"> title</span><span class="cm-mw-link-ground cm-mw-link-delimiter">|</span><span class="cm-mw-link-ground cm-mw-link-text cm-mw-apostrophes">\'\'\'</span><span class="cm-mw-link-ground cm-mw-link-text cm-mw-strong">bold link</span><span class="cm-mw-link-ground cm-mw-link-text cm-mw-apostrophes">\'\'\'</span><span class="cm-mw-link-ground cm-mw-link-bracket">]]</span> </div>'
+		output: '<div class="cm-line"><span class="cm-mw-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-link-ground cm-mw-link-pagename cm-mw-pagename">Link title</span><span class="cm-mw-link-ground cm-mw-link-delimiter">|</span><span class="cm-mw-link-ground cm-mw-link-text cm-mw-apostrophes">\'\'\'</span><span class="cm-mw-link-ground cm-mw-link-text cm-mw-strong">bold link</span><span class="cm-mw-link-ground cm-mw-link-text cm-mw-apostrophes">\'\'\'</span><span class="cm-mw-link-ground cm-mw-link-bracket">]]</span> </div>'
 	},
 	{
 		title: 'horizontal rule',
@@ -135,7 +135,7 @@ const testCases = [
 	{
 		title: 'capitalization of tags',
 		input: '<ref></Ref>',
-		output: '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-ref">Ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;</span> </div>'
+		output: '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-ref">Ref</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&gt;</span> </div>'
 	},
 	{
 		title: 'multi-line tag',

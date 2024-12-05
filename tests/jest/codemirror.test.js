@@ -5,13 +5,6 @@ const $textarea = $( '<textarea>' ),
 	cm = new CodeMirror( $textarea );
 
 describe( 'initialize', () => {
-	const initializeWithForm = () => {
-		const form = document.createElement( 'form' );
-		form.append( cm.$textarea[ 0 ] );
-		cm.$textarea[ 0 ].form.addEventListener = jest.fn();
-		cm.initialize();
-	};
-
 	it( 'should create the EditorState with the value of the textarea', () => {
 		cm.$textarea.val( 'foobar' );
 		cm.$textarea.textSelection = jest.fn().mockReturnValue( 'foobar' );
@@ -27,7 +20,7 @@ describe( 'initialize', () => {
 	} );
 
 	it( 'should instantiate an EditorView and add .cm-editor to the DOM', () => {
-		initializeWithForm();
+		cm.initialize();
 		expect( cm.view ).toBeInstanceOf( EditorView );
 		expect( cm.view.dom ).toBeInstanceOf( HTMLDivElement );
 		expect( cm.$textarea[ 0 ].nextSibling ).toStrictEqual( cm.view.dom );
@@ -36,11 +29,6 @@ describe( 'initialize', () => {
 	it( 'should hide the native textarea', () => {
 		cm.initialize();
 		expect( cm.$textarea[ 0 ].style.display ).toStrictEqual( 'none' );
-	} );
-
-	it( 'should add a listener for form submission', () => {
-		initializeWithForm();
-		expect( cm.$textarea[ 0 ].form.addEventListener ).toHaveBeenCalledTimes( 1 );
 	} );
 
 	it( 'should retain the mw-editfont- class present on the textarea', () => {

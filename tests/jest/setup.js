@@ -44,4 +44,8 @@ mw.hook = jest.fn( ( name ) => ( {
 mw.hook.mockHooks = {};
 global.$ = require( 'jquery' );
 $.fn.textSelection = () => {};
-window.matchMedia = jest.fn().mockReturnValue( { matches: false } );
+window.matchMedia = jest.fn().mockReturnValue( {
+	matches: false,
+	addEventListener: jest.fn(),
+	removeEventListener: jest.fn()
+} );
