@@ -67,6 +67,9 @@
 
 	.cm-content {
 		padding: 0;
+		// T381714: Disable the automatic minimum size, so it can shrink
+		// See https://www.w3.org/TR/css-flexbox-1/#min-size-auto
+		min-width: 0;
 	}
 
 	.CodeMirror-selected {
