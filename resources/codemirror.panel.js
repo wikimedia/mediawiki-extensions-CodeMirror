@@ -167,6 +167,7 @@ class CodeMirrorPanel {
 		// * cdx-toggle-button--toggled-off
 		btn.className = 'cdx-toggle-button cdx-toggle-button--framed ' +
 			`cdx-toggle-button--toggled-${ checked ? 'on' : 'off' } cm-mw-panel--toggle-button`;
+		btn.type = 'button';
 		btn.dataset.checked = String( checked );
 		btn.setAttribute( 'aria-pressed', checked );
 		// The following messages may be used here:
