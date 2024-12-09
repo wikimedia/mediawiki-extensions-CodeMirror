@@ -35,6 +35,7 @@
 	"codemirror-all-tooltip": "选择所有匹配项",
 	"codemirror-match-case": "区分大小写",
 	"codemirror-regexp": "正则表达式",
+	"codemirror-regexp-invalid": "正则表达式无效",
 	"codemirror-by-word": "逐字",
 	"codemirror-replace": "替换",
 	"codemirror-replace-placeholder": "替换",
@@ -71,5 +72,7 @@
 	"codemirror-unfold": "展开",
 	"codemirror-folded-code": "被折叠的代码",
 	"prefs-accessibility": "无障碍",
-	"prefs-syntax-highlighting": "语法高亮"
+	"prefs-syntax-highlighting": "语法高亮",
+	"codemirror-beta-feature-title": "增强版语法高亮",
+	"codemirror-beta-feature-description": "提前试用新版语法高亮及编辑功能，例如模板折叠和自动补全。"
 }

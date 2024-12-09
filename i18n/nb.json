@@ -19,7 +19,7 @@
 	"codemirror-prefs-bidiisolation": "Isoler tekst med forskjellig skriveretning",
 	"codemirror-prefs-bracketmatching": "Aktiver parentesmatching",
 	"codemirror-prefs-linenumbering": "Vis linjenumre",
-	"codemirror-prefs-linewrapping": "Bryt teksten i lange linjer",
+	"codemirror-prefs-linewrapping": "Tekstbryting",
 	"codemirror-prefs-activeline": "Marker den aktive linja",
 	"codemirror-prefs-specialchars": "Vis spesialtegn",
 	"codemirror-v6-prefs-colorblind": "Bruk fargeblindvennlig fargeskala",
