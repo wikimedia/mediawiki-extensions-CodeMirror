@@ -36,7 +36,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	 * @param {LanguageSupport|Extension} langExtension Language support and its extension(s).
 	 * @stable to call and override
 	 */
-	constructor( $textarea, langExtension ) {
+	constructor( $textarea, langExtension = [] ) {
 		super( $textarea );
 		/**
 		 * Language support and its extension(s).
@@ -56,6 +56,18 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		 * @type {Function|null}
 		 */
 		this.realtimePreviewHandler = null;
+		/**
+		 * The `ext.WikiEditor.realtimepreview.enable` hook handler.
+		 *
+		 * @type {Function|null}
+		 */
+		this.realtimePreviewEnableHandler = null;
+		/**
+		 * The `ext.WikiEditor.realtimepreview.disable` hook handler.
+		 *
+		 * @type {Function|null}
+		 */
+		this.realtimePreviewDisableHandler = null;
 		/**
 		 * The WikiEditor search button, which is usurped to open the CodeMirror search panel.
 		 *
@@ -192,12 +204,24 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	 * @private
 	 */
 	addRealtimePreviewHandler() {
-		mw.hook( 'ext.WikiEditor.realtimepreview.enable' ).add( ( realtimePreview ) => {
+		this.realtimePreviewEnableHandler = ( realtimePreview ) => {
 			this.realtimePreviewHandler = realtimePreview.getEventHandler().bind( realtimePreview );
-		} );
-		mw.hook( 'ext.WikiEditor.realtimepreview.disable' ).add( () => {
+		};
+		this.realtimePreviewDisableHandler = () => {
 			this.realtimePreviewHandler = null;
-		} );
+		};
+		mw.hook( 'ext.WikiEditor.realtimepreview.enable' ).add( this.realtimePreviewEnableHandler );
+		mw.hook( 'ext.WikiEditor.realtimepreview.disable' ).add( this.realtimePreviewDisableHandler );
+	}
+
+	/**
+	 * Removes the Realtime Preview handler.
+	 *
+	 * @private
+	 */
+	removeRealtimePreviewHandler() {
+		mw.hook( 'ext.WikiEditor.realtimepreview.enable' ).remove( this.realtimePreviewEnableHandler );
+		mw.hook( 'ext.WikiEditor.realtimepreview.disable' ).remove( this.realtimePreviewDisableHandler );
 	}
 
 	/**
@@ -292,6 +316,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		if ( this.view ) {
 			this.setCodeMirrorPreference( false );
 			this.destroy();
+			this.removeRealtimePreviewHandler();
 			this.$searchBtn.replaceWith( this.$oldSearchBtn );
 			this.$textarea.wikiEditor( 'removeFromToolbar', {
 				section: 'advanced',

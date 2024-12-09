@@ -1,4 +1,5 @@
 const {
+	Extension,
 	autocompletion,
 	acceptCompletion,
 	keymap
