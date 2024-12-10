@@ -164,10 +164,17 @@ class Hooks implements
 	 * @todo Remove check for cm6enable flag after migration is complete
 	 */
 	private function shouldUseV6( OutputPage $out ): bool {
-		return $this->useV6 || $out->getRequest()->getRawVal( 'cm6enable' ) || (
-			ExtensionRegistry::getInstance()->isLoaded( 'BetaFeatures' ) &&
-			BetaFeatures::isFeatureEnabled( $out->getUser(), 'codemirror-beta-feature-enable' )
-		);
+		return $this->useV6 || $out->getRequest()->getBool( 'cm6enable' ) ||
+			$this->isBetaFeatureEnabled( $out->getUser() );
+	}
+
+	/**
+	 * @param User $user
+	 * @return bool
+	 */
+	private function isBetaFeatureEnabled( User $user ): bool {
+		return ExtensionRegistry::getInstance()->isLoaded( 'BetaFeatures' ) &&
+			BetaFeatures::isFeatureEnabled( $user, 'codemirror-beta-feature-enable' );
 	}
 
 	/**
@@ -194,7 +201,7 @@ class Hooks implements
 	 * @return bool|void True or no return value to continue or false to abort
 	 */
 	public function onGetPreferences( $user, &$defaultPreferences ) {
-		if ( !$this->useV6 ) {
+		if ( !$this->useV6 && !$this->isBetaFeatureEnabled( $user ) ) {
 			$defaultPreferences['usecodemirror'] = [
 				'type' => 'api',
 			];
