@@ -75,6 +75,7 @@ describe( 'CodeMirrorPanel', () => {
 		expect( toggleButtonOn.className ).toBe(
 			'cdx-toggle-button cdx-toggle-button--framed cdx-toggle-button--toggled-on cm-mw-panel--toggle-button'
 		);
+		expect( toggleButtonOn.type ).toBe( 'button' );
 		expect( toggleButtonOn.dataset.checked ).toBe( 'true' );
 		expect( toggleButtonOn.getAttribute( 'aria-pressed' ) ).toBe( 'true' );
 		expect( toggleButtonOn.title ).toBe( 'bar' );
@@ -88,6 +89,7 @@ describe( 'CodeMirrorPanel', () => {
 		expect( toggleButtonOff.className ).toBe(
 			'cdx-toggle-button cdx-toggle-button--framed cdx-toggle-button--toggled-off cm-mw-panel--toggle-button'
 		);
+		expect( toggleButtonOff.type ).toBe( 'button' );
 		expect( toggleButtonOff.dataset.checked ).toBe( 'false' );
 		expect( toggleButtonOff.getAttribute( 'aria-pressed' ) ).toBe( 'false' );
 	} );
