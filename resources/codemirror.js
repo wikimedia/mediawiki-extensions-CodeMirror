@@ -492,7 +492,7 @@ class CodeMirror {
 		 *
 		 * @event CodeMirror~'ext.CodeMirror.ready'
 		 * @param {jQuery} $view The CodeMirror view element.
-		 * @param {EditorState} state The CodeMirror instance.
+		 * @param {CodeMirror} cm The CodeMirror instance.
 		 * @stable to use
 		 */
 		mw.hook( 'ext.CodeMirror.ready' ).fire( $( this.view.dom ), this );
