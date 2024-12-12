@@ -10,5 +10,12 @@
 	"codemirror-toggle-label": "Оцветяване на синтаксиса",
 	"codemirror-prefs-colorblind": "Активиране на удобна за далтонисти схема за оцветяване на синтаксиса при редактиране на уикитекст",
 	"codemirror-prefs-colorblind-help": "Ако използвате джаджа за оцветяване на синтаксиса, тази настройка няма да работи.",
+	"codemirror-find": "Търсене",
+	"codemirror-replace-placeholder": "Замяна",
+	"codemirror-special-char-newline": "Нов ред",
+	"codemirror-special-char-line-separator": "Разделител на редове",
+	"codemirror-fold-template": "Сгъване на параметрите на шаблона",
+	"codemirror-unfold": "разгъване",
+	"codemirror-folded-code": "сгънат код",
 	"prefs-accessibility": "Достъпност"
 }
