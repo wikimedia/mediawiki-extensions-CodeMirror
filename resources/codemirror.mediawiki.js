@@ -1,18 +1,16 @@
 const {
-	CompletionSource,
 	HighlightStyle,
 	LanguageSupport,
 	StreamLanguage,
 	StreamParser,
 	StringStream,
 	Tag,
-	ensureSyntaxTree,
 	syntaxHighlighting
 } = require( 'ext.CodeMirror.v6.lib' );
 const mwModeConfig = require( './codemirror.mediawiki.config.js' );
 const bidiIsolationExtension = require( './codemirror.mediawiki.bidiIsolation.js' );
 const { codeFoldingExtension } = require( './codemirror.mediawiki.codeFolding.js' );
-const { autocompleteExtension } = require( './codemirror.mediawiki.autocomplete.js' );
+const { autocompleteExtension, completionSource } = require( './codemirror.mediawiki.autocomplete.js' );
 const openLinksExtension = require( './codemirror.mediawiki.openLinks.js' );
 const mwKeymap = require( './codemirror.mediawiki.keymap.js' );
 
@@ -80,6 +78,9 @@ class CodeMirrorModeMediaWiki {
 			.map( ( label ) => ( { type: 'type', label } ) );
 		this.protocols = config.urlProtocols.split( '|' )
 			.map( ( label ) => ( { type: 'namespace', label: label.replace( /\\([:/])/g, '$1' ) } ) );
+		this.nsRegex = new RegExp( `^(${
+			Object.keys( mw.config.get( 'wgNamespaceIds' ) ).filter( Boolean ).join( '|' ).replace( /_/g, ' ' )
+		})\\s*:\\s*`, 'i' );
 	}
 
 	/**
@@ -1130,87 +1131,6 @@ class CodeMirrorModeMediaWiki {
 	}
 
 	/**
-	 * Autocompletion for magic words and tag names.
-	 *
-	 * @type {CompletionSource}
-	 * @private
-	 */
-	get completionSource() {
-		return ( context ) => {
-			const { state, pos, explicit } = context,
-				tree = ensureSyntaxTree( state, pos ),
-				node = tree && tree.resolve( pos, -1 );
-			if ( !node ) {
-				return null;
-			}
-			const types = new Set( node.name.split( '_' ) ),
-				isParserFunction = types.has( mwModeConfig.tags.parserFunctionName ),
-				{ from, to } = node,
-				search = state.sliceDoc( from, to );
-			if ( explicit || isParserFunction && search.includes( '#' ) ) {
-				const validFor = /^[^|{}<>[\]#]*$/;
-				if ( isParserFunction || types.has( mwModeConfig.tags.templateName ) && !search.includes( ':' ) ) {
-					return {
-						from,
-						options: this.functionSynonyms,
-						validFor
-					};
-				}
-			} else if ( !types.has( mwModeConfig.tags.comment ) &&
-				!types.has( mwModeConfig.tags.templateVariableName ) &&
-				!types.has( mwModeConfig.tags.templateName ) &&
-				!types.has( mwModeConfig.tags.linkPageName ) &&
-				!types.has( mwModeConfig.tags.linkToSection ) &&
-				!types.has( mwModeConfig.tags.extLink )
-			) {
-				let mt = context.matchBefore( /__(?:(?!__)[^\s<>[\]{}|#])*$/ );
-				if ( mt ) {
-					return {
-						from: mt.from,
-						options: this.doubleUnderscore,
-						validFor: /^[^\s<>[\]{}|#]*$/
-					};
-				}
-				mt = context.matchBefore( /<\/?[a-z\d]*$/i );
-				const extTags = [ ...types ].filter( ( t ) => t.startsWith( 'mw-tag-' ) ).map( ( s ) => s.slice( 7 ) );
-				if ( mt && mt.to - mt.from > 1 ) {
-					const validFor = /^[a-z\d]*$/i;
-					if ( mt.text[ 1 ] === '/' ) {
-						const extTag = extTags[ extTags.length - 1 ],
-							options = [
-								...this.htmlTags.filter( ( { label } ) => !(
-									label in mwModeConfig.implicitlyClosedHtmlTags
-								) ),
-								...extTag ? [ { type: 'type', label: extTag, boost: 50 } ] : []
-							];
-						return { from: mt.from + 2, options, validFor };
-					}
-					return {
-						from: mt.from + 1,
-						options: [
-							...this.htmlTags,
-							...this.extTags.filter( ( { label } ) => !extTags.includes( label ) )
-						],
-						validFor
-					};
-				}
-				if ( !types.has( mwModeConfig.tags.linkText ) &&
-					!types.has( mwModeConfig.tags.extLinkText ) ) {
-					mt = context.matchBefore( /(?:^|[^[])\[[a-z:/]+$/i );
-					if ( mt ) {
-						return {
-							from: mt.from + ( mt.text[ 1 ] === '[' ? 2 : 1 ),
-							options: this.protocols,
-							validFor: /^[a-z:/]*$/i
-						};
-					}
-				}
-			}
-			return null;
-		};
-	}
-
-	/**
 	 * @see https://codemirror.net/docs/ref/#language.StreamParser
 	 * @type {StreamParser}
 	 * @private
@@ -1384,7 +1304,7 @@ class CodeMirrorModeMediaWiki {
 			 * @private
 			 */
 			languageData: {
-				autocomplete: this.completionSource
+				autocomplete: completionSource( this )
 			}
 		};
 	}

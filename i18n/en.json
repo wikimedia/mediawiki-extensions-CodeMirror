@@ -109,6 +109,7 @@
 	"codemirror-keymap-preferences": "Syntax highlighting preferences",
 	"codemirror-keymap-help": "Keyboard shortcuts",
 	"codemirror-keymap-autocomplete": "Select autocomplete suggestion",
+	"codemirror-keymap-startcompletion": "Show autocomplete suggestions",
 	"codemirror-keymap-cursor-modifiers": "Cursor modifiers",
 	"codemirror-keymap-multicursor": "Hold $1 and click to create multiple cursors.",
 	"codemirror-keymap-crosshair": "Hold $1 then click and drag to make rectangular selections.",

@@ -27,6 +27,7 @@
 			"linkMap": {
 				"Command": "https://codemirror.net/docs/ref/#view.Command",
 				"Compartment": "https://codemirror.net/docs/ref/#state.Compartment",
+				"CompletionSource": "https://codemirror.net/docs/ref/#autocomplete.CompletionSource",
 				"Decoration": "https://codemirror.net/docs/ref/#view.Decoration",
 				"DecorationSet": "https://codemirror.net/docs/ref/#view.DecorationSet",
 				"Direction": "https://codemirror.net/docs/ref/#view.Direction",

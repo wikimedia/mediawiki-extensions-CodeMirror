@@ -163,7 +163,9 @@ class CodeMirrorMediaWikiKeymap {
 		}
 
 		// Autocompletion
-		this.keymap.registerKeyBindingHelp( 'other', 'autocomplete', autocompleteKeymap );
+		for ( const keyBinding of autocompleteKeymap ) {
+			this.keymap.registerKeyBindingHelp( 'other', keyBinding.tool, keyBinding );
+		}
 
 		// Open links
 		this.keymap.cursorModifiers.set( 'openLinks', mw.msg(

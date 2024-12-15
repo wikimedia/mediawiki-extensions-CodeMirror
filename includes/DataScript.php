@@ -64,6 +64,7 @@ class DataScript {
 			'codeFoldingNamespaces' => $mwConfig->get( 'CodeMirrorCodeFoldingNamespaces' ),
 			'autocompleteNamespaces' => $mwConfig->get( 'CodeMirrorAutocompleteNamespaces' ),
 			'openLinksNamespaces' => $mwConfig->get( 'CodeMirrorOpenLinksNamespaces' ),
+			'titleCompletion' => $mwConfig->get( 'CodeMirrorTitleCompletion' ),
 			'pluginModules' => $registry->getAttribute( 'CodeMirrorPluginModules' ),
 			'tagModes' => $tagModes,
 			'tags' => array_fill_keys( $tagNames, true ),

@@ -48,6 +48,11 @@
 			"description": "List of namespace IDs where line numbering should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere.",
 			"public": true
 		},
+		"CodeMirrorTitleCompletion": {
+			"value": true,
+			"description": "Whether to enable title completion.",
+			"public": true
+		},
 		"CodeMirrorDefaultPreferences": {
 			"value": {
 				"activeLine": false,
@@ -369,6 +374,7 @@
 				"codemirror-keymap-openlinks",
 				"codemirror-keymap-preformatted",
 				"codemirror-keymap-reference",
+				"codemirror-keymap-startcompletion",
 				"codemirror-keymap-strikethrough",
 				"codemirror-keymap-subscript",
 				"codemirror-keymap-superscript",
