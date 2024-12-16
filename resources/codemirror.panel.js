@@ -215,6 +215,19 @@ class CodeMirrorPanel {
 		const innerSpan = document.createElement( 'span' );
 		innerSpan.className = 'cdx-label__label__text';
 		innerSpan.textContent = legendText;
+		const helpSpan = document.createElement( 'span' );
+		helpSpan.className = 'cm-mw-panel--help';
+		const helpLink = document.createElement( 'a' );
+		helpLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror';
+		helpLink.target = '_blank';
+		helpLink.textContent = mw.msg( 'codemirror-prefs-help' );
+		helpSpan.append(
+			' ',
+			mw.msg( 'parentheses-start' ),
+			helpLink,
+			mw.msg( 'parentheses-end' )
+		);
+		innerSpan.appendChild( helpSpan );
 		legend.appendChild( innerSpan );
 		fieldset.appendChild( legend );
 		fieldset.append( ...fields );

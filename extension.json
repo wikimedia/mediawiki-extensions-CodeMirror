@@ -236,6 +236,7 @@
 				"codemirror-next",
 				"codemirror-prefs-activeline",
 				"codemirror-prefs-bracketmatching",
+				"codemirror-prefs-help",
 				"codemirror-prefs-linenumbering",
 				"codemirror-prefs-linewrapping",
 				"codemirror-prefs-specialchars",
@@ -269,7 +270,9 @@
 				"codemirror-special-char-zero-width-no-break-space",
 				"codemirror-special-char-zero-width-non-joiner",
 				"codemirror-special-char-zero-width-space",
-				"codemirror-unfold"
+				"codemirror-unfold",
+				"parentheses-end",
+				"parentheses-start"
 			]
 		},
 		"ext.CodeMirror.v6.init": {
