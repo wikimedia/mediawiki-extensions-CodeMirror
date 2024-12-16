@@ -67,5 +67,7 @@
 	"codemirror-unfold": "расклопи",
 	"codemirror-folded-code": "слопен код",
 	"prefs-accessibility": "Пристапност",
-	"prefs-syntax-highlighting": "Истакнување на синтакса"
+	"prefs-syntax-highlighting": "Истакнување на синтакса",
+	"codemirror-beta-feature-title": "Подобрено нагласување на синтакса",
+	"codemirror-beta-feature-description": "Добијте ран пристап до новото нагласување на синтакса и можностите за уредување како склопување на предлошки и самодополнување."
 }
