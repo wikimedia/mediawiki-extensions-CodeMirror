@@ -15,6 +15,7 @@
 	"codemirror-prefs-summary": "Weitere Informationen zu dieser Funktion findest du auf der [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror Hilfeseite].",
 	"codemirror-prefs-enable": "Syntaxhervorhebung für Wikitext aktivieren",
 	"codemirror-prefs-title": "Einstellungen zur Syntaxhervorhebung",
+	"codemirror-prefs-help": "Hilfe",
 	"codemirror-prefs-templatefolding": "Aktivieren der Faltung von Vorlagenparametern",
 	"codemirror-prefs-autocomplete": "Autovervollständigung aktivieren",
 	"codemirror-prefs-bidiisolation": "Bidirektionalen Text isolieren",
