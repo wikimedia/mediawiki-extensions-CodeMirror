@@ -38,6 +38,11 @@
 			"description": "List of namespace IDs where autocompletion should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere.",
 			"public": true
 		},
+		"CodeMirrorOpenLinksNamespaces": {
+			"value": null,
+			"description": "List of namespace IDs where opening of links by modifier + click should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere.",
+			"public": true
+		},
 		"CodeMirrorLineNumberingNamespaces": {
 			"value": null,
 			"description": "List of namespace IDs where line numbering should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere.",
@@ -52,7 +57,8 @@
 				"lineWrapping": true,
 				"specialChars": true,
 				"templateFolding": true,
-				"autocomplete": true
+				"autocomplete": true,
+				"openLinks": true
 			},
 			"description": "Defaults for CodeMirror user preferences. See https://w.wiki/BwzZ for more information.",
 			"public": true
@@ -295,13 +301,16 @@
 				"codemirror.mediawiki.config.js",
 				"codemirror.mediawiki.bidiIsolation.js",
 				"codemirror.mediawiki.templateFolding.js",
-				"codemirror.mediawiki.autocomplete.js"
+				"codemirror.mediawiki.autocomplete.js",
+				"codemirror.mediawiki.openLinks.js"
 			],
 			"styles": [
 				"codemirror.mediawiki.less",
 				"codemirror.mediawiki.colorblind.less"
 			],
 			"dependencies": [
+				"jquery.client",
+				"mediawiki.Title",
 				"ext.CodeMirror.v6",
 				"ext.CodeMirror.v6.lib"
 			],
@@ -309,7 +318,8 @@
 				"codemirror-fold-template",
 				"codemirror-prefs-bidiisolation",
 				"codemirror-prefs-templatefolding",
-				"codemirror-prefs-autocomplete"
+				"codemirror-prefs-autocomplete",
+				"codemirror-prefs-openlinks"
 			]
 		},
 		"ext.CodeMirror.v6.WikiEditor": {

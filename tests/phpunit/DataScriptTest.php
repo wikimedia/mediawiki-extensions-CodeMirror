@@ -18,6 +18,7 @@ class DataScriptTest extends \MediaWikiIntegrationTestCase {
 		$this->assertStringContainsString( '"lineNumberingNamespaces":', $script );
 		$this->assertStringContainsString( '"templateFoldingNamespaces":', $script );
 		$this->assertStringContainsString( '"autocompleteNamespaces":', $script );
+		$this->assertStringContainsString( '"openLinksNamespaces":', $script );
 		$this->assertStringContainsString( '"pluginModules":', $script );
 		$this->assertStringContainsString( '"tagModes":', $script );
 		$this->assertStringContainsString( '"tags":', $script );

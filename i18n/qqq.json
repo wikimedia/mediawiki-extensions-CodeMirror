@@ -8,7 +8,8 @@
 			"Shirayuki",
 			"SkyDaisy9",
 			"Stjn",
-			"pastakhov"
+			"pastakhov",
+			"Bhsd"
 		]
 	},
 	"codemirror-desc": "{{desc|name=CodeMirror|url=https://www.mediawiki.org/wiki/Extension:CodeMirror}}\n\nAdditional info: Description of \"syntax highlighting\" in wiki\n[[mw:Extension:SyntaxHighlight]]",
@@ -20,6 +21,7 @@
 	"codemirror-prefs-help": "Label for the help link in the CodeMirror preferences panel. This message wrapped with the {{msg-mw|parentheses-start}} and {{msg-mw|parentheses-end}} messages.",
 	"codemirror-prefs-templatefolding": "Label for the option to enable folding of template parameters in the CodeMirror preferences panel.",
 	"codemirror-prefs-autocomplete": "Label for the option to enable autocompletion in the CodeMirror preferences panel.",
+	"codemirror-prefs-openlinks": "Label for the option to open links by modifier + click in the CodeMirror preferences panel.",
 	"codemirror-prefs-bidiisolation": "Label for the option to enable bidirectional text isolation in the CodeMirror preferences panel.",
 	"codemirror-prefs-bracketmatching": "Label for the option to enable bracket matching in the CodeMirror preferences panel.",
 	"codemirror-prefs-linenumbering": "Label for the option to show line numbers in the CodeMirror preferences panel.",

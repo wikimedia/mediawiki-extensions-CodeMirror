@@ -182,7 +182,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		// Some preferences can be set per-namespace through wiki configuration.
 		// Values are an array of namespace IDs, [] to disable everywhere,
 		// or null to enable everywhere.
-		const namespacePrefs = [ 'lineNumbering', 'templateFolding', 'autocomplete' ];
+		const namespacePrefs = [ 'lineNumbering', 'templateFolding', 'autocomplete', 'openLinks' ];
 		if ( namespacePrefs.includes( prefName ) ) {
 			const namespaces = mw.config.get( 'extCodeMirrorConfig' )[ prefName + 'Namespaces' ];
 			return !namespaces || namespaces.includes( mw.config.get( 'wgNamespaceNumber' ) );

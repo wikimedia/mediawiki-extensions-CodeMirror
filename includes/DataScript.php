@@ -63,6 +63,7 @@ class DataScript {
 			'lineNumberingNamespaces' => $mwConfig->get( 'CodeMirrorLineNumberingNamespaces' ),
 			'templateFoldingNamespaces' => $mwConfig->get( 'CodeMirrorTemplateFoldingNamespaces' ),
 			'autocompleteNamespaces' => $mwConfig->get( 'CodeMirrorAutocompleteNamespaces' ),
+			'openLinksNamespaces' => $mwConfig->get( 'CodeMirrorOpenLinksNamespaces' ),
 			'pluginModules' => $registry->getAttribute( 'CodeMirrorPluginModules' ),
 			'tagModes' => $tagModes,
 			'tags' => array_fill_keys( $tagNames, true ),

@@ -44,6 +44,11 @@ mw.hook = jest.fn( ( name ) => ( {
 mw.hook.mockHooks = {};
 global.$ = require( 'jquery' );
 $.fn.textSelection = () => {};
+$.client = {
+	profile: jest.fn().mockReturnValue( {
+		platform: 'linux'
+	} )
+};
 window.matchMedia = jest.fn().mockReturnValue( {
 	matches: false,
 	addEventListener: jest.fn(),

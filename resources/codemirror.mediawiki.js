@@ -13,6 +13,7 @@ const mwModeConfig = require( './codemirror.mediawiki.config.js' );
 const bidiIsolationExtension = require( './codemirror.mediawiki.bidiIsolation.js' );
 const templateFoldingExtension = require( './codemirror.mediawiki.templateFolding.js' );
 const autocompleteExtension = require( './codemirror.mediawiki.autocomplete.js' );
+const openLinksExtension = require( './codemirror.mediawiki.openLinks.js' );
 
 /**
  * MediaWiki language support for CodeMirror 6.
@@ -1386,6 +1387,7 @@ let handler;
  *   This should generally always be enabled on RTL pages, but it comes with a performance cost.
  * @param {boolean} [config.templateFolding=true] Enable template folding.
  * @param {boolean} [config.autocomplete=true] Enable autocompletion.
+ * @param {boolean} [config.openLinks=true] Enable opening of links.
  * @param {Object|null} [mwConfig] Ignore; used only by unit tests.
  * @return {LanguageSupport}
  * @stable to call
@@ -1413,6 +1415,9 @@ const mediaWikiLang = ( config = { bidiIsolation: false }, mwConfig = null ) => 
 			}
 			if ( config.autocomplete !== false ) {
 				cm.preferences.registerExtension( 'autocomplete', autocompleteExtension, cm.view );
+			}
+			if ( config.openLinks !== false ) {
+				cm.preferences.registerExtension( 'openLinks', openLinksExtension, cm.view );
 			}
 			if ( config.bidiIsolation ) {
 				cm.preferences.registerExtension( 'bidiIsolation', bidiIsolationExtension, cm.view );
