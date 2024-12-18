@@ -19,6 +19,7 @@
 	"codemirror-prefs-summary": "Vous pouvez en savoir plus sur cette fonctionnalité en lisant la [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror page d'aide].",
 	"codemirror-prefs-enable": "Activer la coloration syntaxique du wikicode",
 	"codemirror-prefs-title": "Préférences de mise en évidence de la syntaxe",
+	"codemirror-prefs-help": "aide",
 	"codemirror-prefs-templatefolding": "Activer l'escamotage des paramètres du modèle",
 	"codemirror-prefs-autocomplete": "Activer la saisie semi-automatique",
 	"codemirror-prefs-bidiisolation": "Isoler le texte bidirectionnel",

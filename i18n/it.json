@@ -11,6 +11,7 @@
 	"codemirror-toggle-label-short": "Sintassi",
 	"codemirror-prefs-enable": "Attiva l'evidenziazione della sintassi per il wikitesto",
 	"codemirror-prefs-title": "Preferenze di evidenziazione della sintassi",
+	"codemirror-prefs-help": "aiuto",
 	"codemirror-prefs-bidiisolation": "Isola il testo bidirezionale",
 	"codemirror-prefs-linenumbering": "Mostra i numeri di riga",
 	"codemirror-prefs-activeline": "Evidenzia la riga attiva",

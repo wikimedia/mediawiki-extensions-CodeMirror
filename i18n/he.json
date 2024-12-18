@@ -11,6 +11,7 @@
 	"codemirror-prefs-summary": "אפשר ללמוד עוד על התכונה הזאת על־ידי קריאת [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror דף העזרה].",
 	"codemirror-prefs-enable": "הפעלת צביעת תחביר עבור קוד ויקי",
 	"codemirror-prefs-title": "העדפות צביעת תחביר",
+	"codemirror-prefs-help": "עזרה",
 	"codemirror-prefs-templatefolding": "הפעלת קיפול פרמטרים של תבניות",
 	"codemirror-prefs-autocomplete": "הפעלת השלמה אוטומטית",
 	"codemirror-prefs-bidiisolation": "בידוד טקסט דו־כיווני",

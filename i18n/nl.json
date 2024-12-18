@@ -14,6 +14,7 @@
 	"codemirror-prefs-summary": "Op de [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror hulppagina] kunt u meer over deze functie lezen.",
 	"codemirror-prefs-enable": "Syntaxiskleuring inschakelen voor wikitekst",
 	"codemirror-prefs-title": "Voorkeuren voor syntaxiskleuring",
+	"codemirror-prefs-help": "hulp",
 	"codemirror-prefs-templatefolding": "Sjabloonparameters inklapbaar maken",
 	"codemirror-prefs-autocomplete": "Automatisch aanvullen inschakelen",
 	"codemirror-prefs-bidiisolation": "Tweerichtingstekst afzonderen",
