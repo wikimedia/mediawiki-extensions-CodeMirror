@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Bhsd",
 			"Diskdance",
 			"GuoPC",
 			"Liuxinyu970226",
@@ -16,7 +17,7 @@
 	"codemirror-prefs-summary": "您可阅读[https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror 帮助页面]了解有关此功能的更多信息。",
 	"codemirror-prefs-enable": "启用wikitext的语法高亮",
 	"codemirror-prefs-title": "语法高亮首选项",
-	"codemirror-prefs-templatefolding": "启用模板参数折叠",
+	"codemirror-prefs-codefolding": "启用代码折叠",
 	"codemirror-prefs-autocomplete": "启用自动填充",
 	"codemirror-prefs-bidiisolation": "隔离双向文本",
 	"codemirror-prefs-bracketmatching": "启用括号匹配",
@@ -68,7 +69,7 @@
 	"codemirror-special-char-paragraph-separator": "段落分隔符",
 	"codemirror-special-char-zero-width-no-break-space": "连字符",
 	"codemirror-special-char-object-replacement": "对象替换字符",
-	"codemirror-fold-template": "折叠模板参数",
+	"codemirror-fold": "折叠代码",
 	"codemirror-unfold": "展开",
 	"codemirror-folded-code": "被折叠的代码",
 	"prefs-accessibility": "无障碍",

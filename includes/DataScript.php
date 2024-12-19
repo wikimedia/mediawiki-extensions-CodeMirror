@@ -61,7 +61,7 @@ class DataScript {
 			'useV6' => $mwConfig->get( 'CodeMirrorV6' ),
 			'defaultPreferences' => $mwConfig->get( 'CodeMirrorDefaultPreferences' ),
 			'lineNumberingNamespaces' => $mwConfig->get( 'CodeMirrorLineNumberingNamespaces' ),
-			'templateFoldingNamespaces' => $mwConfig->get( 'CodeMirrorTemplateFoldingNamespaces' ),
+			'codeFoldingNamespaces' => $mwConfig->get( 'CodeMirrorCodeFoldingNamespaces' ),
 			'autocompleteNamespaces' => $mwConfig->get( 'CodeMirrorAutocompleteNamespaces' ),
 			'openLinksNamespaces' => $mwConfig->get( 'CodeMirrorOpenLinksNamespaces' ),
 			'pluginModules' => $registry->getAttribute( 'CodeMirrorPluginModules' ),

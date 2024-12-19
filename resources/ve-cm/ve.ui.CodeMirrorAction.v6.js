@@ -88,7 +88,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 			surface.mirror.initialize( surface.mirror.defaultExtensions.concat( mediawikiLang( {
 				// These should never be enabled in VE
 				bidiIsolation: false,
-				templateFolding: false
+				codeFolding: false
 			} ), lineHeightExtension ) );
 
 			// Force infinite viewport in CodeMirror to prevent misalignment of
