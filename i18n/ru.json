@@ -16,6 +16,7 @@
 	"codemirror-prefs-summary": "Вы можете узнать больше об этой функции, прочитав [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror справочную страницу].",
 	"codemirror-prefs-enable": "Включить подсветку синтаксиса для вики-текста",
 	"codemirror-prefs-title": "Настройки подсветки синтаксиса",
+	"codemirror-prefs-help": "справка",
 	"codemirror-prefs-templatefolding": "Включить сворачивание параметров шаблонов",
 	"codemirror-prefs-autocomplete": "Включить автодополнение",
 	"codemirror-prefs-bidiisolation": "Изолировать двунаправленный текст",

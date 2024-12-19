@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Bhsd",
 			"McDutchie",
 			"Minh Nguyen",
 			"MusikAnimal",
@@ -8,8 +9,7 @@
 			"Shirayuki",
 			"SkyDaisy9",
 			"Stjn",
-			"pastakhov",
-			"Bhsd"
+			"pastakhov"
 		]
 	},
 	"codemirror-desc": "{{desc|name=CodeMirror|url=https://www.mediawiki.org/wiki/Extension:CodeMirror}}\n\nAdditional info: Description of \"syntax highlighting\" in wiki\n[[mw:Extension:SyntaxHighlight]]",

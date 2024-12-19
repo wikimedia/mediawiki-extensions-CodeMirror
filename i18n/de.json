@@ -18,6 +18,7 @@
 	"codemirror-prefs-help": "Hilfe",
 	"codemirror-prefs-templatefolding": "Aktivieren der Faltung von Vorlagenparametern",
 	"codemirror-prefs-autocomplete": "Autovervollständigung aktivieren",
+	"codemirror-prefs-openlinks": "Öffnen von Links per Hilfstaste + Klick aktivieren",
 	"codemirror-prefs-bidiisolation": "Bidirektionalen Text isolieren",
 	"codemirror-prefs-bracketmatching": "Klammernübereinstimmung aktivieren",
 	"codemirror-prefs-linenumbering": "Zeilennummern anzeigen",
