@@ -19,6 +19,7 @@
 	"codemirror-prefs-help": "справка",
 	"codemirror-prefs-templatefolding": "Включить сворачивание параметров шаблонов",
 	"codemirror-prefs-autocomplete": "Включить автодополнение",
+	"codemirror-prefs-openlinks": "Включить открытие ссылок по клику с нажатой клавишей-модификатором",
 	"codemirror-prefs-bidiisolation": "Изолировать двунаправленный текст",
 	"codemirror-prefs-bracketmatching": "Включить согласование скобок",
 	"codemirror-prefs-linenumbering": "Показывать номера строк",

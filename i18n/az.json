@@ -15,6 +15,7 @@
 	"codemirror-prefs-help": "kömək",
 	"codemirror-prefs-templatefolding": "Şablon parametrlərinin gizlədilməsini aktivləşdir",
 	"codemirror-prefs-autocomplete": "Avtomatik tamamlamağı aktivləşdir",
+	"codemirror-prefs-openlinks": "Dəyişdirici + kliklə linklərin açılmasını aktivləşdir",
 	"codemirror-prefs-bidiisolation": "İki istiqamətli mətni təcrid et",
 	"codemirror-prefs-bracketmatching": "Mötərizə uyğunluğunu aktivləşdir",
 	"codemirror-prefs-linenumbering": "Sətir nömrələrini göstər",

@@ -22,6 +22,7 @@
 	"codemirror-prefs-help": "aide",
 	"codemirror-prefs-templatefolding": "Activer l'escamotage des paramètres du modèle",
 	"codemirror-prefs-autocomplete": "Activer la saisie semi-automatique",
+	"codemirror-prefs-openlinks": "Activer l'ouverture des liens par modificateur + clic",
 	"codemirror-prefs-bidiisolation": "Isoler le texte bidirectionnel",
 	"codemirror-prefs-bracketmatching": "Activer la correspondance des parenthèses",
 	"codemirror-prefs-linenumbering": "Afficher les numéros de ligne",
