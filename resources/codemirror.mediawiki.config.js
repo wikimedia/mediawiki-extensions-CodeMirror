@@ -124,8 +124,6 @@ class CodeMirrorModeMediaWikiConfig {
 	get tags() {
 		return Object.assign( {
 			apostrophes: 'character',
-			apostrophesBold: 'strong',
-			apostrophesItalic: 'emphasis',
 			comment: 'comment',
 			doubleUnderscore: 'controlKeyword',
 			extLink: 'url',
@@ -237,7 +235,8 @@ class CodeMirrorModeMediaWikiConfig {
 			[ this.tags.skipFormatting ]: Tag.define(),
 			[ this.tags.strong ]: Tag.define(),
 			[ this.tags.tableCaption ]: Tag.define(),
-			[ this.tags.templateVariableDelimiter ]: Tag.define()
+			[ this.tags.templateVariableDelimiter ]: Tag.define(),
+			'': Tag.define()
 		};
 	}
 
@@ -255,14 +254,6 @@ class CodeMirrorModeMediaWikiConfig {
 			{
 				tag: tags[ this.tags.apostrophes ],
 				class: 'cm-mw-apostrophes'
-			},
-			{
-				tag: tags[ this.tags.apostrophesBold ],
-				class: 'cm-mw-apostrophes-bold'
-			},
-			{
-				tag: tags[ this.tags.apostrophesItalic ],
-				class: 'cm-mw-apostrophes-italic'
 			},
 			{
 				tag: tags[ this.tags.comment ],
