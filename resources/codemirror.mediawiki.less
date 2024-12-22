@@ -30,7 +30,7 @@
 }
 
 .cm-mw-pagename {
-	text-decoration: underline;
+	text-decoration: @text-decoration-underline;
 }
 
 .cm-mw-skipformatting {
@@ -301,4 +301,28 @@ pre.CodeMirror-line-like.cm-mw-tag-nowiki {
 
 .cm-mw-em {
 	font-style: italic;
+}
+
+.cm-mw-open-links {
+	.cm-mw-template-name:hover,
+	.cm-mw-link-pagename:hover,
+	/* Visually combine external links and protocols during Mod + click */
+	.cm-mw-extlink-protocol:hover,
+	.cm-mw-extlink:hover,
+	.cm-mw-extlink-protocol:hover + .cm-mw-extlink,
+	.cm-mw-free-extlink-protocol:hover,
+	.cm-mw-free-extlink:hover,
+	.cm-mw-free-extlink-protocol:hover + .cm-mw-free-extlink {
+		color: @color-progressive--hover;
+		cursor: @cursor-base--hover;
+		text-decoration: @text-decoration-underline;
+	}
+
+	// Separate rule in case :has is not selected.
+	.cm-mw-extlink-protocol:has( + .cm-mw-extlink:hover ),
+	.cm-mw-free-extlink-protocol:has( + .cm-mw-free-extlink:hover ) {
+		color: @color-progressive--hover;
+		cursor: @cursor-base--hover;
+		text-decoration: @text-decoration-underline;
+	}
 }

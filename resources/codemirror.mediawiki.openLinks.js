@@ -4,10 +4,10 @@ const {
 	ensureSyntaxTree
 } = require( 'ext.CodeMirror.v6.lib' );
 const mwModeConfig = require( './codemirror.mediawiki.config.js' );
+const { platform } = $.client.profile();
 
-const { platform } = $.client.profile(),
-	modKey = platform === 'mac' || platform === 'ipad' || platform === 'iphone' ? 'metaKey' : 'ctrlKey',
-	linkTypes = [ 'template-name', 'link-pagename', 'extlink-protocol', 'extlink', 'free-extlink-protocol', 'free-extlink' ];
+const isMac = platform === 'mac' || platform === 'ipad' || platform === 'iphone',
+	modKey = isMac ? 'Meta' : 'Control';
 
 /**
  * CodeMirror extension that opens links by modifier-clicking for the MediaWiki mode.
@@ -18,19 +18,27 @@ const { platform } = $.client.profile(),
  */
 const openLinksExtension = [
 	EditorView.domEventHandlers( {
+		/**
+		 * Handle the mousedown event to open links.
+		 *
+		 * @param {MouseEvent} e
+		 * @param {EditorView} view
+		 * @return {boolean}
+		 * @private
+		 */
 		mousedown( e, view ) {
-			if ( !e[ modKey ] || e.button !== 0 ) {
-				return;
+			if ( !( isMac ? e.metaKey : e.ctrlKey ) || e.button !== 0 ) {
+				return false;
 			}
 			const position = view.posAtCoords( e );
 			if ( !position ) {
-				return;
+				return false;
 			}
 			const { state } = view,
 				tree = ensureSyntaxTree( state, position ),
 				node = tree && tree.resolve( position, 1 );
 			if ( !node ) {
-				return;
+				return false;
 			}
 			const { name, from, to } = node,
 				names = name.split( '_' );
@@ -52,11 +60,39 @@ const openLinksExtension = [
 				open( state.sliceDoc( node.prevSibling.from, to ), '_blank' );
 				return true;
 			}
-		}
-	} ),
-	EditorView.theme( {
-		[ linkTypes.map( ( type ) => `.cm-mw-${ type }` ).join() ]: {
-			cursor: 'pointer'
+			return false;
+		},
+		/**
+		 * Add the `.cm-mw-open-links` CSS class to the editor when the mod key is pressed.
+		 *
+		 * @param {KeyboardEvent} e
+		 * @private
+		 */
+		keydown( e ) {
+			if ( e.key !== modKey ) {
+				return;
+			}
+
+			// Add .cm-mw-open-links from all CodeMirror instances.
+			for ( const dom of document.querySelectorAll( '.cm-content' ) ) {
+				dom.classList.add( 'cm-mw-open-links' );
+			}
+		},
+		/**
+		 * Remove `.cm-mw-open-link` when the modifier key is released.
+		 *
+		 * @param {KeyboardEvent} e
+		 * @private
+		 */
+		keyup( e ) {
+			if ( e.key !== modKey ) {
+				return;
+			}
+
+			// Remove .cm-mw-open-links from all CodeMirror instances.
+			for ( const dom of document.querySelectorAll( '.cm-content' ) ) {
+				dom.classList.remove( 'cm-mw-open-links' );
+			}
 		}
 	} )
 ];
