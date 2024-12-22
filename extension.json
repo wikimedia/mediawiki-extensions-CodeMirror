@@ -28,9 +28,9 @@
 			"description": "An array of gadget names that, if enabled, will prevent CodeMirror from loading on action=edit and action=submit.",
 			"public": true
 		},
-		"CodeMirrorTemplateFoldingNamespaces": {
+		"CodeMirrorCodeFoldingNamespaces": {
 			"value": null,
-			"description": "List of namespace IDs where template folding should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere.",
+			"description": "List of namespace IDs where code folding should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere.",
 			"public": true
 		},
 		"CodeMirrorAutocompleteNamespaces": {
@@ -56,7 +56,7 @@
 				"lineNumbering": true,
 				"lineWrapping": true,
 				"specialChars": true,
-				"templateFolding": true,
+				"codeFolding": true,
 				"autocomplete": true,
 				"openLinks": true
 			},
@@ -300,7 +300,8 @@
 				"codemirror.mediawiki.js",
 				"codemirror.mediawiki.config.js",
 				"codemirror.mediawiki.bidiIsolation.js",
-				"codemirror.mediawiki.templateFolding.js",
+				"codemirror.mediawiki.codeFolding.js",
+				"codemirror.mediawiki.matchTag.js",
 				"codemirror.mediawiki.autocomplete.js",
 				"codemirror.mediawiki.openLinks.js"
 			],
@@ -315,9 +316,9 @@
 				"ext.CodeMirror.v6.lib"
 			],
 			"messages": [
-				"codemirror-fold-template",
+				"codemirror-fold",
 				"codemirror-prefs-bidiisolation",
-				"codemirror-prefs-templatefolding",
+				"codemirror-prefs-codefolding",
 				"codemirror-prefs-autocomplete",
 				"codemirror-prefs-openlinks"
 			]

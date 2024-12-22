@@ -45,11 +45,11 @@ class EditPage extends Page {
 		return $( '.ve-ui-surface-source' );
 	}
 
-	get codeMirrorTemplateFoldingButton() {
+	get codeMirrorCodeFoldingButton() {
 		return $( '.cm-tooltip-fold' );
 	}
 
-	get codeMirrorTemplateFoldingPlaceholder() {
+	get codeMirrorCodeFoldingPlaceholder() {
 		return $( '.cm-foldPlaceholder' );
 	}
 

@@ -11,7 +11,7 @@ const {
 } = require( 'ext.CodeMirror.v6.lib' );
 const mwModeConfig = require( './codemirror.mediawiki.config.js' );
 const bidiIsolationExtension = require( './codemirror.mediawiki.bidiIsolation.js' );
-const templateFoldingExtension = require( './codemirror.mediawiki.templateFolding.js' );
+const codeFoldingExtension = require( './codemirror.mediawiki.codeFolding.js' );
 const autocompleteExtension = require( './codemirror.mediawiki.autocomplete.js' );
 const openLinksExtension = require( './codemirror.mediawiki.openLinks.js' );
 
@@ -1401,7 +1401,7 @@ let handler;
  * @param {Object} [config] Configuration options for the MediaWiki mode.
  * @param {boolean} [config.bidiIsolation=false] Enable bidi isolation around HTML tags.
  *   This should generally always be enabled on RTL pages, but it comes with a performance cost.
- * @param {boolean} [config.templateFolding=true] Enable template folding.
+ * @param {boolean} [config.codeFolding=true] Enable code folding.
  * @param {boolean} [config.autocomplete=true] Enable autocompletion.
  * @param {boolean} [config.openLinks=true] Enable opening of links.
  * @param {Object|null} [mwConfig] Ignore; used only by unit tests.
@@ -1426,8 +1426,8 @@ const mediaWikiLang = ( config = { bidiIsolation: false }, mwConfig = null ) => 
 	}
 	handler = ( _$textarea, cm ) => {
 		if ( cm.view ) { // T380840
-			if ( config.templateFolding !== false ) {
-				cm.preferences.registerExtension( 'templateFolding', templateFoldingExtension, cm.view );
+			if ( config.codeFolding !== false ) {
+				cm.preferences.registerExtension( 'codeFolding', codeFoldingExtension, cm.view );
 			}
 			if ( config.autocomplete !== false ) {
 				cm.preferences.registerExtension( 'autocomplete', autocompleteExtension, cm.view );
