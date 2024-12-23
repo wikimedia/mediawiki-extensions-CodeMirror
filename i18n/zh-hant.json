@@ -9,7 +9,8 @@
 			"Sean0115",
 			"Waihorace",
 			"Winston Sung",
-			"Xiplus"
+			"Xiplus",
+			"沈澄心"
 		]
 	},
 	"codemirror-desc": "提供 wikitext 編輯器語法醒目標示",
@@ -17,6 +18,7 @@
 	"codemirror-toggle-label-short": "語法",
 	"codemirror-prefs-summary": "您可以透過閱讀[https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror 幫助頁面]來了解此功能的更多資訊。",
 	"codemirror-prefs-enable": "啟用 wikitext 的語法突顯",
+	"codemirror-prefs-help": "說明",
 	"codemirror-v6-prefs-colorblind": "使用對色覺辨認障礙友善的方案",
 	"codemirror-prefs-colorblind": "編輯wikitext時，啟用對色盲用戶友好的語法高亮配色方案",
 	"codemirror-prefs-colorblind-help": "如果您的語法高亮功能由小工具提供，本設置將不起作用。",
@@ -58,7 +60,6 @@
 	"codemirror-special-char-paragraph-separator": "段落分隔字元",
 	"codemirror-special-char-zero-width-no-break-space": "連詞字元",
 	"codemirror-special-char-object-replacement": "物件替代字元",
-	"codemirror-fold-template": "摺疊模板參數",
 	"codemirror-unfold": "展開",
 	"codemirror-folded-code": "折疊的代碼",
 	"prefs-accessibility": "無障礙",

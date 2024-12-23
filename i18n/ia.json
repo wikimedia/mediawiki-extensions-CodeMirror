@@ -50,7 +50,6 @@
 	"codemirror-special-char-paragraph-separator": "Separator de paragraphos",
 	"codemirror-special-char-zero-width-no-break-space": "Jungitor de parolas",
 	"codemirror-special-char-object-replacement": "Character de substitution pro objecto",
-	"codemirror-fold-template": "Plicar le parametros del patrono",
 	"codemirror-unfold": "displicar",
 	"codemirror-folded-code": "codice plicate",
 	"prefs-accessibility": "Accessibilitate",

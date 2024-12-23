@@ -17,6 +17,7 @@
 	"codemirror-prefs-summary": "您可阅读[https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror 帮助页面]了解有关此功能的更多信息。",
 	"codemirror-prefs-enable": "启用wikitext的语法高亮",
 	"codemirror-prefs-title": "语法高亮首选项",
+	"codemirror-prefs-help": "帮助",
 	"codemirror-prefs-codefolding": "启用代码折叠",
 	"codemirror-prefs-autocomplete": "启用自动填充",
 	"codemirror-prefs-bidiisolation": "隔离双向文本",

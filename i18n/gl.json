@@ -37,7 +37,6 @@
 	"codemirror-special-char-narrow-nbsp": "Espazo inseparable estreito",
 	"codemirror-special-char-paragraph-separator": "Separador de parágrafos",
 	"codemirror-special-char-object-replacement": "Carácter de substitución do obxecto",
-	"codemirror-fold-template": "Encartar os parámetros do modelo",
 	"codemirror-unfold": "despregar",
 	"codemirror-folded-code": "código encartado",
 	"prefs-accessibility": "Accesibilidade",

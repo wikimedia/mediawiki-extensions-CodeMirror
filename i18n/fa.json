@@ -37,7 +37,6 @@
 	"codemirror-special-char-line-separator": "جداکنندهٔ خط",
 	"codemirror-special-char-narrow-nbsp": "فاصلهٔ نشکن باریک",
 	"codemirror-special-char-object-replacement": "نویسهٔ جایگزین شیء",
-	"codemirror-fold-template": "نهفتن پارامترهای الگو",
 	"codemirror-unfold": "گشودن",
 	"codemirror-folded-code": "کد تاشده",
 	"prefs-accessibility": "دسترسی‌پذیری"
