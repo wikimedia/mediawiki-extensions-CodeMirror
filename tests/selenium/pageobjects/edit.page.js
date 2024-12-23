@@ -27,14 +27,9 @@ class EditPage extends Page {
 	}
 
 	async clickText() {
-		if ( await this.visualEditorSave.isDisplayed() ) {
-			await this.visualEditorSurface.click();
-		} else if ( await this.legacyTextInput.isDisplayed() ) {
-			await this.legacyTextInput.click();
-		} else {
-			// Click the container, if using WikiEditor etc.
-			await this.legacyTextInput.parentElement().click();
-		}
+		const cm = $( '.cm-content' );
+		await cm.isDisplayed();
+		await cm.click();
 	}
 
 	get visualEditorSave() {
@@ -53,15 +48,8 @@ class EditPage extends Page {
 		return $( '.cm-foldPlaceholder' );
 	}
 
-	async cursorToPosition( index ) {
-		await this.clickText();
-
-		// Second "Control" deactivates the modifier.
-		const keys = [ 'Control', 'Home', 'Control' ];
-		for ( let i = 0; i < index; i++ ) {
-			keys.push( 'ArrowRight' );
-		}
-		await browser.keys( keys );
+	get highlightedBracket() {
+		return $( '.cm-line .cm-matchingBracket' );
 	}
 
 	get highlightedBrackets() {
@@ -69,7 +57,6 @@ class EditPage extends Page {
 	}
 
 	async getHighlightedMatchingBrackets() {
-		await this.highlightedBrackets[ 0 ].waitForDisplayed();
 		const matchingTexts = await this.highlightedBrackets.map( ( el ) => el.getText() );
 		return matchingTexts.join( '' );
 	}
