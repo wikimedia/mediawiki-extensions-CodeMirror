@@ -43,6 +43,11 @@ const isClosing = ( node, type, state, first ) => isBracket( node, type ) &&
  */
 const getName = ( state, node ) => state.sliceDoc( node.from, node.to ).trim().toLowerCase();
 
+/**
+ * Class representing a tag along with its placement and state.
+ *
+ * @ignore
+ */
 class Tag {
 	get closing() {
 		return isClosing( this.first, this.type, this.state, true );
