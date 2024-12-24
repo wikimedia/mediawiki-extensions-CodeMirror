@@ -197,6 +197,7 @@
 			"class": "MediaWiki\\ResourceLoader\\CodexModule",
 			"dependencies": [
 				"mediawiki.api",
+				"mediawiki.language",
 				"mediawiki.user",
 				"user.options",
 				"ext.CodeMirror.v6.lib"

@@ -202,7 +202,9 @@ class CodeMirror {
 	 * @return {Extension|Extension[]}
 	 */
 	get lineNumberingExtension() {
-		return lineNumbers();
+		return lineNumbers( {
+			formatNumber: ( num ) => mw.language.convertNumber( num )
+		} );
 	}
 
 	/**
