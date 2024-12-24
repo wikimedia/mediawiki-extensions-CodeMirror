@@ -66,6 +66,9 @@
 }
 
 .cm-editor .cm-cursor {
+	// CodeMirror defines this in JavaScript and flipping the property
+	// causes mismatch thus a noflip is needed.
+	/* @noflip */
 	border-left-color: @color-emphasized;
 }
 
