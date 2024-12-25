@@ -9,6 +9,7 @@ const {
 	crosshairCursor,
 	defaultKeymap,
 	drawSelection,
+	dropCursor,
 	highlightActiveLine,
 	highlightSpecialChars,
 	history,
@@ -155,7 +156,8 @@ class CodeMirror {
 			EditorState.allowMultipleSelections.of( true ),
 			drawSelection(),
 			rectangularSelection(),
-			crosshairCursor()
+			crosshairCursor(),
+			dropCursor()
 		];
 
 		// Add extensions relevant to editing (not read-only).
