@@ -1,3 +1,5 @@
+@import 'mediawiki.skin.variables.less';
+
 .darkmode( @prop, @value ) {
 	@media screen {
 		html.skin-theme-clientpref-night & {
@@ -9,5 +11,24 @@
 		html.skin-theme-clientpref-os & {
 			@{prop}: @value;
 		}
+	}
+}
+
+// NOTE: Only for use of icons in the WikiEditor toolbar.
+.embed-img( @image ) {
+	background-color: @color-base-fixed;
+	/* @embed */
+	@url: url( 'images/codemirror.wikieditor.@{image}.svg' );
+	-webkit-mask-image: @url;
+	mask-image: @url;
+	-webkit-mask-size: @size-icon-medium;
+	mask-size: @size-icon-medium;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+	mask-position: center;
+
+	.oo-ui-toggleWidget-on & {
+		background-color: @color-progressive;
 	}
 }

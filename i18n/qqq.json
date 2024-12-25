@@ -30,7 +30,6 @@
 	"codemirror-prefs-linewrapping": "Label for the option to wrap lines in the CodeMirror preferences panel.",
 	"codemirror-prefs-activeline": "Label for the option to highlight the active line in the CodeMirror preferences panel.",
 	"codemirror-prefs-specialchars": "Label for the option to show special characters in the CodeMirror preferences panel.",
-	"codemirror-v6-prefs-colorblind": "Used in user preferences as label for enabling the colorblind-friendly option. This is a shorter version of {{msg-mw|codemirror-prefs-colorblind}} shown under section {{msg-mw|prefs-syntax-highlighting}} on wikis using CodeMirror 6.",
 	"codemirror-prefs-whitespace": "Label for the option to highlight whitespace in the CodeMirror preferences panel.",
 	"codemirror-prefs-colorblind": "Used in user preferences as label for enabling the colorblind-friendly option.",
 	"codemirror-prefs-colorblind-help": "Used in user preferences as remark on the colorblind-friendly option.",

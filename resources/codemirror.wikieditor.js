@@ -1,4 +1,12 @@
-const { EditorView, Extension, LanguageSupport } = require( 'ext.CodeMirror.v6.lib' );
+const {
+	EditorView,
+	Extension,
+	LanguageSupport,
+	StateCommand,
+	indentLess,
+	indentMore,
+	openSearchPanel
+} = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirror = require( 'ext.CodeMirror.v6' );
 
 /**
@@ -89,34 +97,31 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		} );
 
 		// Add 'Syntax' button to main toolbar.
-		this.$textarea.wikiEditor(
-			'addToToolbar',
-			{
-				section: 'main',
-				groups: {
-					codemirror: {
-						tools: {
-							CodeMirror: {
-								type: 'element',
-								element: () => {
-									// OOUI has already been loaded by WikiEditor.
-									const button = new OO.ui.ToggleButtonWidget( {
-										label: mw.msg( 'codemirror-toggle-label-short' ),
-										title: mw.msg( 'codemirror-toggle-label' ),
-										icon: 'syntax-highlight',
-										value: !this.isActive,
-										framed: false,
-										classes: [ 'tool', 'cm-mw-toggle-wikieditor' ]
-									} );
-									button.on( 'change', () => this.toggle() );
-									return button.$element;
-								}
+		this.$textarea.wikiEditor( 'addToToolbar', {
+			section: 'main',
+			groups: {
+				codemirror: {
+					tools: {
+						CodeMirror: {
+							type: 'element',
+							element: () => {
+								// OOUI has already been loaded by WikiEditor.
+								const button = new OO.ui.ToggleButtonWidget( {
+									label: mw.msg( 'codemirror-toggle-label-short' ),
+									title: mw.msg( 'codemirror-toggle-label' ),
+									icon: 'syntax-highlight',
+									value: !this.isActive,
+									framed: false,
+									classes: [ 'tool', 'cm-mw-toggle-wikieditor' ]
+								} );
+								button.on( 'change', () => this.toggle() );
+								return button.$element;
 							}
 						}
 					}
 				}
 			}
-		);
+		} );
 
 		// Set the ID of the CodeMirror button for styling.
 		const codeMirrorButton = toolbar.$toolbar[ 0 ].querySelector( '.tool[rel=CodeMirror]' );
@@ -126,6 +131,16 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		if ( this.readOnly ) {
 			this.context.$ui.addClass( 'ext-codemirror-readonly' );
 		}
+
+		// Similarly, add a unique CSS for the content model.
+		// CSS classes used here may include but are not limited to:
+		// * ext-codemirror-mediawiki
+		// * ext-codemirror-javascript
+		// * ext-codemirror-css
+		// * ext-codemirror-json
+		this.context.$ui.addClass(
+			`ext-codemirror-${ ( mw.config.get( 'cmMode' ) || this.contentModel ).toLowerCase() }`
+		);
 
 		super.initialize( extensions );
 	}
@@ -189,25 +204,21 @@ class CodeMirrorWikiEditor extends CodeMirror {
 				}
 			} );
 
-		// Add a 'Settings' button to the search group of the toolbar, in the 'Advanced' section.
-		this.$textarea.wikiEditor(
-			'addToToolbar',
-			{
+		if ( this.contentModel === 'wikitext' ) {
+			// Add a 'Settings' button to the search group, in the 'Advanced' section.
+			this.$textarea.wikiEditor( 'addToToolbar', {
 				section: 'advanced',
 				groups: {
 					codemirror: {
 						tools: {
-							CodeMirrorPreferences: this.getTool(
-								'CodeMirrorPreferences',
-								() => this.preferences.toggle( this.view, true ),
-								'codemirror-keymap-preferences',
-								'settings'
-							)
+							CodeMirrorPreferences: this.preferencesTool
 						}
 					}
 				}
-			}
-		);
+			} );
+		} else {
+			this.addCodeFormattingButtonsToToolbar();
+		}
 	}
 
 	/**
@@ -218,14 +229,29 @@ class CodeMirrorWikiEditor extends CodeMirror {
 
 		CodeMirror.setCodeMirrorPreference( false );
 
-		// Restore original search button.
-		this.$searchBtn.replaceWith( this.$oldSearchBtn );
+		if ( this.contentModel === 'wikitext' ) {
+			// Restore original search button.
+			this.$searchBtn.replaceWith( this.$oldSearchBtn );
 
-		// Remove the CodeMirror preferences button from the toolbar.
-		this.$textarea.wikiEditor( 'removeFromToolbar', {
-			section: 'advanced',
-			group: 'codemirror'
-		} );
+			// Remove the CodeMirror preferences button from the advanced section.
+			this.$textarea.wikiEditor( 'removeFromToolbar', {
+				section: 'advanced',
+				group: 'codemirror'
+			} );
+		} else {
+			// Remove the CodeMirror preferences button from the secondary section.
+			this.$textarea.wikiEditor( 'removeFromToolbar', {
+				section: 'secondary',
+				group: 'codemirror'
+			} );
+			// Remove the main toolbar buttons that we added.
+			for ( const group of [ 'format', 'preferences', 'search' ] ) {
+				this.$textarea.wikiEditor( 'removeFromToolbar', {
+					section: 'main',
+					group: `codemirror-${ group }`
+				} );
+			}
+		}
 	}
 
 	/**
@@ -289,12 +315,71 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	}
 
 	/**
+	 * For use in non-wikitext content models.
+	 *
+	 * @private
+	 */
+	addCodeFormattingButtonsToToolbar() {
+		this.$textarea.wikiEditor( 'addToToolbar', { section: 'main', groups: {
+			'codemirror-format': {
+				tools: {
+					indentMore: this.getTool( 'indent', () => indentMore( this.stateCommand ) ),
+					indentLess: this.getTool( 'outdent', () => indentLess( this.stateCommand ) )
+				}
+			},
+			'codemirror-preferences': {
+				tools: {
+					whitespace: this.getToggleTool( 'whitespace', 'pilcrow' ),
+					lineWrapping: this.getToggleTool( 'lineWrapping', 'wrapping' ),
+					autocomplete: this.getToggleTool( 'autocomplete', 'check-all' )
+				}
+			},
+			'codemirror-search': {
+				tools: {
+					gotoLine: this.getTool(
+						'gotoLine',
+						() => this.gotoLine.run( this.view ),
+						'codemirror-goto-line'
+					),
+					search: this.getTool(
+						'search',
+						() => openSearchPanel( this.view ),
+						'codemirror-keymap-find',
+						'articleSearch'
+					)
+				}
+			}
+		} } );
+		this.$textarea.wikiEditor( 'addToToolbar', {
+			section: 'secondary',
+			groups: {
+				codemirror: {
+					tools: {
+						CodeMirrorPreferences: this.preferencesTool
+					}
+				}
+			}
+		} );
+	}
+
+	/**
 	 * The WikiEditor context.
 	 *
 	 * @type {Object}
 	 */
 	get context() {
 		return this.$textarea.data( 'wikiEditor-context' );
+	}
+
+	/**
+	 * @type {StateCommand}
+	 * @private
+	 */
+	get stateCommand() {
+		return {
+			state: this.view.state,
+			dispatch: this.view.dispatch.bind( this.view )
+		};
 	}
 
 	/**
@@ -311,6 +396,10 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		return {
 			// Possible messages include but are not limited to:
 			// * codemirror-keymap-preferences
+			// * codemirror-keymap-indent
+			// * codemirror-keymap-outdent
+			// * codemirror-keymap-goto-line
+			// * codemirror-keymap-find
 			label: mw.msg( label || `codemirror-keymap-${ name.toLowerCase() }` ),
 			type: 'button',
 			oouiIcon: icon || name,
@@ -351,6 +440,21 @@ class CodeMirrorWikiEditor extends CodeMirror {
 				return button.$element;
 			}
 		};
+	}
+
+	/**
+	 * The WikiEditor configuration for the preferences tool.
+	 *
+	 * @type {Object}
+	 * @private
+	 */
+	get preferencesTool() {
+		return this.getTool(
+			'CodeMirrorPreferences',
+			() => this.preferences.toggle( this.view, true ),
+			'codemirror-keymap-preferences',
+			'settings'
+		);
 	}
 }
 

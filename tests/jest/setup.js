@@ -63,7 +63,8 @@ global.mockMwConfigGet = ( config = {} ) => {
 			}
 		},
 		wgMFMode: null,
-		wgNamespaceIds: {}
+		wgNamespaceIds: {},
+		wgPageContentModel: 'wikitext'
 	}, config );
 	mw.config.get = jest.fn().mockImplementation( ( key ) => mockConfig[ key ] );
 };

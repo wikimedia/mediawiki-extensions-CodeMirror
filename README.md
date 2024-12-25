@@ -17,10 +17,10 @@ See the [change log](https://www.mediawiki.org/wiki/Extension:CodeMirror#Change_
 Use of CodeMirror 6 is controlled by the `wgCodeMirrorV6` configuration setting, or by
 passing in `cm6enable=1` in the URL query string.
 
-CodeMirror 6 requires the use of NPM to bundle the dependencies. These are bundled in
-[resources/codemirror.bundle.js](resources/codemirror.bundle.js), built using [Rollup](https://rollupjs.org/),
-and packaged as the `ext.CodeMirror.v6.lib` ResourceLoader module. If you make changes to the
-versions of the dependencies, you will need to run `npm run build` to update the ResourceLoader module.
+CodeMirror 6 requires the use of NPM to bundle the dependencies. These are built using
+[Rollup](https://rollupjs.org/) and packaged as ResourceLoader-compatible modules under `lib/`.
+If you make changes to the versions of `@codemirror` or `@lezer` packages,
+you will need to run `npm run build` to update the ResourceLoader modules.
 
 ### NPM commands
 

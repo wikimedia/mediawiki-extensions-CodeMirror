@@ -30,7 +30,8 @@
 					"CodeMirrorTextSelection",
 					"Command",
 					"Hook",
-					"LanguageSupport"
+					"LanguageSupport",
+					"StateCommand"
 				]
 			}
 		]
