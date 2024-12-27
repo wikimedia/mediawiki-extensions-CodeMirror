@@ -205,7 +205,22 @@ class CodeMirror {
 	 */
 	get lineNumberingExtension() {
 		return lineNumbers( {
-			formatNumber: ( num ) => mw.language.convertNumber( num )
+			formatNumber: ( num ) => {
+				const numberString = String( num );
+				const transformTable = mw.language.getDigitTransformTable();
+				if ( mw.config.get( 'wgTranslateNumerals' ) && transformTable ) {
+					let convertedNumber = '';
+					for ( let i = 0; i < numberString.length; i++ ) {
+						if ( Object.prototype.hasOwnProperty.call( transformTable, numberString[ i ] ) ) {
+							convertedNumber += transformTable[ numberString[ i ] ];
+						} else {
+							convertedNumber += numberString[ i ];
+						}
+					}
+					return convertedNumber;
+				}
+				return numberString;
+			}
 		} );
 	}
 
