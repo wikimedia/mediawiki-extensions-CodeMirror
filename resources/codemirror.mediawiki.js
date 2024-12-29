@@ -1131,7 +1131,7 @@ class CodeMirrorModeMediaWiki {
 	/**
 	 * Autocompletion for magic words and tag names.
 	 *
-	 * @return {CompletionSource}
+	 * @type {CompletionSource}
 	 * @private
 	 */
 	get completionSource() {
@@ -1211,7 +1211,7 @@ class CodeMirrorModeMediaWiki {
 
 	/**
 	 * @see https://codemirror.net/docs/ref/#language.StreamParser
-	 * @return {StreamParser}
+	 * @type {StreamParser}
 	 * @private
 	 */
 	get mediawiki() {

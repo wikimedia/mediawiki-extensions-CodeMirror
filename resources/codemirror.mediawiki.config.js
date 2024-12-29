@@ -76,7 +76,7 @@ class CodeMirrorModeMediaWikiConfig {
 	 * instead of adding them here.
 	 *
 	 * @see https://www.mediawiki.org/wiki/Extension:CodeMirror#Extension_integration
-	 * @return {Object}
+	 * @type {Object}
 	 */
 	get permittedHtmlTags() {
 		return {
@@ -96,7 +96,7 @@ class CodeMirrorModeMediaWikiConfig {
 	/**
 	 * HTML tags that are only self-closing.
 	 *
-	 * @return {Object}
+	 * @type {Object}
 	 */
 	get implicitlyClosedHtmlTags() {
 		return {
@@ -119,7 +119,6 @@ class CodeMirrorModeMediaWikiConfig {
 	 * @see https://lezer.codemirror.net/docs/ref/#highlight.tags
 	 * @member CodeMirrorModeMediaWikiConfig
 	 * @type {Object<string>}
-	 * @return {Object<string>}
 	 */
 	get tags() {
 		return Object.assign( {
@@ -173,7 +172,7 @@ class CodeMirrorModeMediaWikiConfig {
 	 *
 	 * IMPORTANT: There should be a row in defaultTokenTable() for each of these.
 	 *
-	 * @return {Object<string>}
+	 * @type {Object<string>}
 	 * @private
 	 */
 	get customTags() {
@@ -210,7 +209,7 @@ class CodeMirrorModeMediaWikiConfig {
 	 *
 	 * @see https://codemirror.net/docs/ref/#language.StreamParser.tokenTable
 	 * @see https://lezer.codemirror.net/docs/ref/#highlight.Tag%5Edefine
-	 * @return {Object<Tag>}
+	 * @type {Object<Tag>}
 	 * @internal
 	 */
 	get defaultTokenTable() {
