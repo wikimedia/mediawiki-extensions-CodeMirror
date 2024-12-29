@@ -31,6 +31,7 @@ class Hooks implements
 	private bool $useV6;
 	private ?GadgetRepo $gadgetRepo;
 	private string $extensionAssetsPath;
+	private bool $readOnly = false;
 
 	/**
 	 * @param UserOptionsLookup $userOptionsLookup
@@ -50,14 +51,15 @@ class Hooks implements
 	}
 
 	/**
-	 * Checks if CodeMirror for textarea wikitext editor should be loaded on this page or not.
+	 * Checks if any CodeMirror modules should be loaded on this page or not.
+	 * Ultimately ::loadCodeMirrorOnEditPage() decides which module(s) get loaded.
 	 *
 	 * @param OutputPage $out
 	 * @param ExtensionRegistry|null $extensionRegistry Overridden in tests.
 	 * @return bool
 	 */
 	public function shouldLoadCodeMirror( OutputPage $out, ?ExtensionRegistry $extensionRegistry = null ): bool {
-		// Disable CodeMirror when CodeEditor is active on this page
+		// Disable CodeMirror when CodeEditor is active on this page.
 		// Depends on ext.codeEditor being added by \MediaWiki\EditPage\EditPage::showEditForm:initial
 		if ( in_array( 'ext.codeEditor', $out->getModules(), true ) ) {
 			return false;
@@ -76,15 +78,25 @@ class Hooks implements
 		}
 
 		$extensionRegistry ??= ExtensionRegistry::getInstance();
+		// Keys are content models, values are the corresponding CodeMirror modes.
 		$contentModels = $extensionRegistry->getAttribute( 'CodeMirrorContentModels' );
+		$contentModel = $out->getTitle()->getContentModel();
+		// b/c: CodeMirrorContentModels extension attribute used to be a flat string array.
+		$isSupportedContentModel = $contentModel && (
+			isset( $contentModels[ $contentModel ] ) ||
+			in_array( $contentModel, $contentModels, true )
+		);
 		$isRTL = $out->getTitle()->getPageLanguage()->isRTL();
-		// Disable CodeMirror if we're on an edit page with a conflicting gadget. See T178348.
+		// Disable CodeMirror if we're on an edit page with a conflicting gadget (T178348)
 		return !$this->conflictingGadgetsEnabled( $extensionRegistry, $out->getUser() ) &&
-			// CodeMirror 5 on textarea wikitext editors doesn't support RTL (T170001)
-			( !$isRTL || $this->shouldUseV6( $out ) ) &&
-			// Limit to supported content models that use wikitext.
+			// CodeMirror 5 on any textarea doesn't support RTL (T170001)
+			( !$isRTL || $shouldUseV6 ) &&
+			// Limit to supported content models. CM5 only supports wikitext.
 			// See https://www.mediawiki.org/wiki/Content_handlers#Extension_content_handlers
-			in_array( $out->getTitle()->getContentModel(), $contentModels );
+			(
+				( $shouldUseV6 && $isSupportedContentModel ) ||
+				( !$shouldUseV6 && $contentModel === CONTENT_MODEL_WIKITEXT )
+			);
 	}
 
 	/**
@@ -111,8 +123,6 @@ class Hooks implements
 	}
 
 	/**
-	 * Load CodeMirror if necessary.
-	 *
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/EditPage::showEditForm:initial
 	 *
 	 * @param EditPage $editor
@@ -127,11 +137,12 @@ class Hooks implements
 		$useWikiEditor = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usebetatoolbar' );
 
 		if ( $this->shouldUseV6( $out ) ) {
-			$out->addModules( $useWikiEditor ?
-				'ext.CodeMirror.v6.WikiEditor.init' :
-				'ext.CodeMirror.v6.init'
-			);
-		} else {
+			// Pre-deliver modules for faster loading.
+			$this->loadCodeMirrorOnEditPage( $out );
+		} elseif ( $useWikiEditor ) {
+			// Legacy CM5
+
+			// ext.CodeMirror.WikiEditor adds the toggle button to the toolbar.
 			$out->addModules( 'ext.CodeMirror.WikiEditor' );
 
 			if ( $useCodeMirror ) {
@@ -143,18 +154,48 @@ class Hooks implements
 	}
 
 	/**
-	 * Load CodeMirror 6 on read-only pages.
+	 * Set client-side JS variables and pre-deliver modules for optimal performance.
+	 * `cmRLModules` is a list of modules that will be lazy-loaded by the client, and,
+	 * if the 'usecodemirror' preference is enabled, pre-delivered by ResourceLoader.
+	 *
+	 * @param OutputPage $out
+	 */
+	private function loadCodeMirrorOnEditPage( OutputPage $out ): void {
+		$useCodeMirror = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usecodemirror' );
+		$useWikiEditor = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usebetatoolbar' );
+		$modules = [
+			'ext.CodeMirror.v6',
+			...( $useWikiEditor ? [ 'ext.CodeMirror.v6.WikiEditor' ] : [] ),
+			'ext.CodeMirror.v6.lib',
+			'ext.CodeMirror.v6.init',
+			'ext.CodeMirror.v6.mode.mediawiki'
+		];
+
+		if ( $useCodeMirror ) {
+			// Pre-deliver modules if we know we're going to need them.
+			$out->addModules( $modules );
+		} elseif ( $useWikiEditor ) {
+			// Load only the init module, which will add the toolbar button
+			// and lazy-load the rest of the modules via the cmRLModules config variable.
+			$out->addModules( 'ext.CodeMirror.v6.init' );
+		}
+
+		$out->addJsConfigVars( [
+			'cmRLModules' => $modules,
+			'cmReadOnly' => $this->readOnly,
+		] );
+	}
+
+	/**
+	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/EditPage::showReadOnlyForm:initial
 	 *
 	 * @param EditPage $editor
 	 * @param OutputPage $out
 	 */
 	public function onEditPage__showReadOnlyForm_initial( $editor, $out ): void {
 		if ( $this->shouldUseV6( $out ) && $this->shouldLoadCodeMirror( $out ) ) {
-			$useWikiEditor = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usebetatoolbar' );
-			$out->addModules( $useWikiEditor ?
-				'ext.CodeMirror.v6.WikiEditor.init' :
-				'ext.CodeMirror.v6.init'
-			);
+			$this->readOnly = true;
+			$this->loadCodeMirrorOnEditPage( $out );
 		}
 	}
 

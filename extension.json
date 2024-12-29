@@ -272,7 +272,9 @@
 				"codemirror-match-case",
 				"codemirror-next",
 				"codemirror-prefs-activeline",
+				"codemirror-prefs-autocomplete",
 				"codemirror-prefs-bracketmatching",
+				"codemirror-prefs-codefolding",
 				"codemirror-prefs-help",
 				"codemirror-prefs-linenumbering",
 				"codemirror-prefs-linewrapping",
@@ -314,12 +316,18 @@
 			]
 		},
 		"ext.CodeMirror.v6.init": {
-			"dependencies": [
-				"ext.CodeMirror.v6",
-				"ext.CodeMirror.v6.mode.mediawiki"
-			],
 			"packageFiles": [
-				"codemirror.mediawiki.init.js"
+				"codemirror.init.js"
+			],
+			"dependencies": [
+				"user.options"
+			],
+			"styles": [
+				"codemirror.wikieditor.less"
+			],
+			"messages": [
+				"codemirror-toggle-label",
+				"codemirror-toggle-label-short"
 			]
 		},
 		"ext.CodeMirror.v6.lib": {
@@ -368,13 +376,13 @@
 				"codemirror-keymap-underline",
 				"codemirror-prefs-autocomplete",
 				"codemirror-prefs-bidiisolation",
-				"codemirror-prefs-codefolding",
 				"codemirror-prefs-openlinks"
 			]
 		},
 		"ext.CodeMirror.v6.WikiEditor": {
 			"dependencies": [
-				"ext.wikiEditor"
+				"ext.wikiEditor",
+				"ext.CodeMirror.v6"
 			],
 			"packageFiles": [
 				"codemirror.wikieditor.js"
@@ -385,15 +393,6 @@
 			"messages": [
 				"codemirror-toggle-label",
 				"codemirror-toggle-label-short"
-			]
-		},
-		"ext.CodeMirror.v6.WikiEditor.init": {
-			"dependencies": [
-				"ext.CodeMirror.v6.WikiEditor",
-				"ext.CodeMirror.v6.mode.mediawiki"
-			],
-			"packageFiles": [
-				"codemirror.wikieditor.mediawiki.init.js"
 			]
 		},
 		"ext.CodeMirror.v6.visualEditor": {
@@ -468,9 +467,9 @@
 	},
 	"attributes": {
 		"CodeMirror": {
-			"ContentModels": [
-				"wikitext"
-			],
+			"ContentModels": {
+				"wikitext": "mediawiki"
+			},
 			"PluginModules": [
 				"ext.CodeMirror.addons"
 			],
