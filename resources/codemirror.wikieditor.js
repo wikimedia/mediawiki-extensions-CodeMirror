@@ -251,6 +251,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 									// OOUI has already been loaded by WikiEditor.
 									const button = new OO.ui.ToggleButtonWidget( {
 										label: mw.msg( 'codemirror-toggle-label-short' ),
+										title: mw.msg( 'codemirror-toggle-label' ),
 										icon: 'syntax-highlight',
 										value: this.useCodeMirror,
 										framed: false,
