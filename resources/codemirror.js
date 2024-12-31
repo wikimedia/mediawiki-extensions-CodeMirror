@@ -183,7 +183,7 @@ class CodeMirror {
 	/**
 	 * Extension for highlighting the active line.
 	 *
-	 * @return {Extension}
+	 * @type {Extension}
 	 */
 	get activeLineExtension() {
 		return highlightActiveLine();
@@ -192,7 +192,7 @@ class CodeMirror {
 	/**
 	 * Extension for line wrapping.
 	 *
-	 * @return {Extension}
+	 * @type {Extension}
 	 */
 	get lineWrappingExtension() {
 		return EditorView.lineWrapping;
@@ -201,7 +201,7 @@ class CodeMirror {
 	/**
 	 * Extension for line numbering.
 	 *
-	 * @return {Extension|Extension[]}
+	 * @type {Extension}
 	 */
 	get lineNumberingExtension() {
 		return lineNumbers( {
@@ -212,7 +212,7 @@ class CodeMirror {
 	/**
 	 * Extension for search and goto line functionality.
 	 *
-	 * @return {Extension|Extension[]}
+	 * @type {Extension}
 	 */
 	get searchExtension() {
 		return [
@@ -224,7 +224,7 @@ class CodeMirror {
 	/**
 	 * This extension adds bracket matching to the CodeMirror editor.
 	 *
-	 * @return {Extension}
+	 * @type {Extension}
 	 */
 	get bracketMatchingExtension() {
 		return bracketMatching( mw.config.get( 'wgPageContentModel' ) === 'wikitext' ?

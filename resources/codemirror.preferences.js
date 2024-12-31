@@ -99,7 +99,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	/**
 	 * The default CodeMirror preferences, as defined by `$wgCodeMirrorPreferences`.
 	 *
-	 * @return {Object}
+	 * @type {Object}
 	 */
 	get defaultPreferences() {
 		return mw.config.get( 'extCodeMirrorConfig' ).defaultPreferences;
