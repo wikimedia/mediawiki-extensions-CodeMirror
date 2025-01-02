@@ -9,5 +9,10 @@
 	"codemirror-toggle-label": "Isticanje sintakse",
 	"codemirror-prefs-colorblind": "Omogući shemu s istaknutom sintaksom prilikom uređivanja wikiteksta (prilagođeno osobama s poremećajem prepoznavanja boja)",
 	"codemirror-prefs-colorblind-help": "Ako rabite dodatak za isticanje sintakse, ova postavka neće funkcionirati.",
+	"codemirror-find": "Traži",
+	"codemirror-replace-placeholder": "Zamijeni",
+	"codemirror-special-char-backspace": "Backspace",
+	"codemirror-special-char-newline": "Novi red",
+	"codemirror-special-char-carriage-return": "Novi red",
 	"prefs-accessibility": "Pristupačnost"
 }

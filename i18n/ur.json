@@ -8,5 +8,13 @@
 	"codemirror-toggle-label": "سنٹیکس روشن گر",
 	"codemirror-prefs-colorblind": "ویکی مندرجات میں ترمیم کے دوران سنٹیکس کو نمایاں کرنے لیے رنگوندا دوست سہولت کو فعال کریں",
 	"codemirror-prefs-colorblind-help": "اگر آپ سنٹیکس کو نمایاں کرنے لیے کسی آلہ کو استعمال کر رہے ہیں تو یہ سہولت کام نہیں کرے گی۔",
+	"codemirror-find": "تلاش کریں",
+	"codemirror-replace-placeholder": "تبدیل کریں",
+	"codemirror-control-character": "کنٹرول کیریکٹر $1",
+	"codemirror-special-char-null": "خالی کیریکٹر",
+	"codemirror-special-char-bell": "بیل کیریکٹر",
+	"codemirror-special-char-backspace": "بیک اسپیس",
+	"codemirror-special-char-newline": "نئی سطر",
+	"codemirror-folded-code": "تہ شدہ کوڈ",
 	"prefs-accessibility": "رسائی"
 }
