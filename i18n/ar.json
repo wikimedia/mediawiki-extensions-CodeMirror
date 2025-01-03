@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Cigaryno",
 			"FShbib",
 			"Shbib Al-Subaie",
 			"ديفيد",
@@ -9,6 +10,7 @@
 	},
 	"codemirror-desc": "يوفر تسليط الضوء على بناء الجملة في محرر نص الويكي",
 	"codemirror-toggle-label": "تسليط الضوء على التركيب",
+	"codemirror-toggle-label-short": "صياغة",
 	"codemirror-prefs-colorblind": "فعّل مخططًا متوافقًا مع عمى الألوان لتعليم الصيغة عند تعديل نص ويكي.",
 	"codemirror-prefs-colorblind-help": "لن يعمل هذا التفضيل إذا كنت تستخدم إضافةً لتعليم الصيغة.",
 	"prefs-accessibility": "إمكانية الوصول",
