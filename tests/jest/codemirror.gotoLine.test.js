@@ -11,7 +11,10 @@ describe( 'CodeMirrorGotoLine', () => {
 	} );
 
 	it( 'should show the goto line panel with Mod-Alt-g and close it with Escape', () => {
-		const cm = new CodeMirror( document.createElement( 'textarea' ) );
+		const form = document.createElement( 'form' );
+		const textarea = document.createElement( 'textarea' );
+		form.appendChild( textarea );
+		const cm = new CodeMirror( textarea );
 		cm.initialize();
 		cm.view.contentDOM.dispatchEvent(
 			new KeyboardEvent( 'keydown', { key: 'g', altKey: true, ctrlKey: true } )
@@ -23,7 +26,10 @@ describe( 'CodeMirrorGotoLine', () => {
 	} );
 
 	it( 'Submission should move the cursor to the specified line', () => {
-		const cm = new CodeMirror( document.createElement( 'textarea' ) );
+		const form = document.createElement( 'form' );
+		const textarea = document.createElement( 'textarea' );
+		form.appendChild( textarea );
+		const cm = new CodeMirror( textarea );
 		cm.initialize();
 		cm.textSelection.setContents( 'Foobar\n'.repeat( 10 ) );
 		cm.textSelection.setSelection( { start: 5 } );

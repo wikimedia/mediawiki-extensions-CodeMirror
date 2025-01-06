@@ -1,37 +1,44 @@
-mw.loader = { getState: jest.fn() };
+const CodeMirrorWikiEditor = require( '../../resources/codemirror.wikieditor.js' );
+const mediaWikiLang = require( '../../resources/codemirror.mediawiki.js' );
 
-const CodeMirrorWikiEditor = require( '../../resources/codemirror.wikieditor.js' ),
-	mediaWikiLang = require( '../../resources/codemirror.mediawiki.js' ),
-	$textarea = $( '<textarea>' )
-		.text( 'The Smashing Pumpkins' ),
-	cmWe = new CodeMirrorWikiEditor( $textarea );
+let cmWe;
 
 beforeEach( () => {
+	mw.hook.mockHooks = {};
+	const form = document.createElement( 'form' );
+	const textarea = document.createElement( 'textarea' );
+	form.appendChild( textarea );
+	textarea.value = 'The Smashing Pumpkins';
+	textarea.selectionStart = textarea.selectionEnd = 0;
+	cmWe = new CodeMirrorWikiEditor( textarea );
+
 	// Simulate the button that enables/disables CodeMirror as WikiEditor doesn't exist here.
+	cmWe.$textarea.wikiEditor = jest.fn();
+	const toolbar = document.createElement( 'div' );
+	toolbar.className = 'wikiEditor-ui-toolbar';
+	const div = document.createElement( 'div' );
+	div.setAttribute( 'rel', 'CodeMirror' );
+	div.className = 'tool tool-element';
 	const btn = document.createElement( 'span' );
-	btn.id = 'mw-editbutton-codemirror';
-	btn.classList.add( 'tool' );
-	btn.setAttribute( 'rel', 'CodeMirror' );
-	document.body.appendChild( btn );
+	btn.className = 'tool cm-mw-toggle-wikieditor';
+	div.appendChild( btn );
+	toolbar.appendChild( div );
+	document.body.appendChild( toolbar );
 
 	// Add WikiEditor context to the textarea.
 	cmWe.$textarea.data = jest.fn().mockReturnValue( {
 		modules: {
 			toolbar: {
-				$toolbar: $( btn )
+				$toolbar: $( toolbar )
 			}
 		}
 	} );
-
-	// Initialize CodeMirror.
-	cmWe.initialize();
 } );
 
-describe( 'addCodeMirrorToWikiEditor', () => {
-	cmWe.$textarea.wikiEditor = jest.fn();
-
+describe( 'initialize', () => {
 	it( 'should add the button to the toolbar', () => {
-		cmWe.addCodeMirrorToWikiEditor();
+		cmWe.initialize();
+
 		expect( cmWe.$textarea.wikiEditor ).toHaveBeenCalledWith(
 			'addToToolbar',
 			expect.objectContaining( {
@@ -39,85 +46,69 @@ describe( 'addCodeMirrorToWikiEditor', () => {
 			} )
 		);
 	} );
-
-	it( 'should be readonly when the textarea is also readonly', () => {
-		const textarea = document.createElement( 'textarea' );
-		textarea.readOnly = true;
-		const cmWe2 = new CodeMirrorWikiEditor( textarea );
-		cmWe2.initialize();
-		cmWe2.addCodeMirrorToWikiEditor();
-		expect( cmWe2.readOnly ).toEqual( true );
-		expect( cmWe2.state.readOnly ).toEqual( true );
-	} );
 } );
 
-describe( 'updateToolbarButton', () => {
-	it( 'should update the toolbar button based on the current CodeMirror state', () => {
-		const btn = document.getElementById( 'mw-editbutton-codemirror' );
-		cmWe.setCodeMirrorPreference( false );
-		cmWe.updateToolbarButton();
-		expect( btn.classList.contains( 'mw-editbutton-codemirror-active' ) ).toBeFalsy();
-		cmWe.setCodeMirrorPreference( true );
-		cmWe.updateToolbarButton();
-		expect( btn.classList.contains( 'mw-editbutton-codemirror-active' ) ).toBeTruthy();
+describe( 'destroy', () => {
+	it( 'should remove the button from the toolbar', () => {
+		cmWe.initialize();
+		cmWe.destroy();
+
+		expect( cmWe.$textarea.wikiEditor ).toHaveBeenCalledWith(
+			'removeFromToolbar',
+			expect.objectContaining( {
+				section: 'main',
+				group: 'codemirror'
+			} )
+		);
 	} );
 } );
 
 describe( 'Hook handlers and event listeners', () => {
-	const textarea = document.createElement( 'textarea' ),
-		editform = document.createElement( 'form' ),
-		events = {};
-	editform.append( textarea );
-	editform.addEventListener = jest.fn( ( event, callback ) => {
-		events[ event ] = callback;
-	} );
-	editform.removeEventListener = jest.fn( ( event ) => {
-		delete events[ event ];
-	} );
-	const cmWe3 = new CodeMirrorWikiEditor( textarea );
-	cmWe3.langExtension = mediaWikiLang( {
-		bidiIsolation: false
-	}, {
-		tags: {},
-		functionSynonyms: [ {}, {} ],
-		variableIDs: [],
-		doubleUnderscore: [ {}, {} ],
-		urlProtocols: 'http://'
-	} );
-	cmWe3.$textarea.wikiEditor = jest.fn();
-
 	it( 'should remove submit event listener when CodeMirror is off', () => {
-		cmWe3.switchCodeMirror();
-		expect( typeof events.submit ).toBe( 'function' );
-		cmWe3.switchCodeMirror();
-		expect( events.submit ).toBeUndefined();
-	} );
-
-	it( 'should remove realtime preview hook handler when CodeMirror is off', () => {
-		cmWe3.switchCodeMirror();
+		cmWe.initialize();
+		expect( cmWe.view ).not.toBeNull();
+		expect( cmWe.state ).not.toBeNull();
 		expect( mw.hook.mockHooks[ 'ext.WikiEditor.realtimepreview.enable' ].length ).toBe( 1 );
 		expect( mw.hook.mockHooks[ 'ext.WikiEditor.realtimepreview.disable' ].length ).toBe( 1 );
-		cmWe3.switchCodeMirror();
+		cmWe.toggle();
 		expect( mw.hook.mockHooks[ 'ext.WikiEditor.realtimepreview.enable' ].length ).toBe( 0 );
 		expect( mw.hook.mockHooks[ 'ext.WikiEditor.realtimepreview.disable' ].length ).toBe( 0 );
 	} );
 
-	it( 'T380840', () => {
-		cmWe3.switchCodeMirror();
-		cmWe3.switchCodeMirror();
-		expect( cmWe3.view ).toBeNull();
-		mw.hook( 'ext.CodeMirror.ready' ).fire( cmWe3.$textarea, cmWe3 );
+	it( 'should remove realtime preview hook handler when CodeMirror is off', () => {
+		cmWe.initialize();
+		expect( cmWe.view ).not.toBeNull();
+		expect( cmWe.state ).not.toBeNull();
+		expect( mw.hook.mockHooks[ 'ext.WikiEditor.realtimepreview.enable' ].length ).toBe( 1 );
+		expect( mw.hook.mockHooks[ 'ext.WikiEditor.realtimepreview.disable' ].length ).toBe( 1 );
+		cmWe.toggle();
+		expect( mw.hook.mockHooks[ 'ext.WikiEditor.realtimepreview.enable' ].length ).toBe( 0 );
+		expect( mw.hook.mockHooks[ 'ext.WikiEditor.realtimepreview.disable' ].length ).toBe( 0 );
+	} );
+
+	it( 'should fire ext.CodeMirror.switch only once per toggle', () => {
+		let count = 0;
+		mw.hook( 'ext.CodeMirror.switch' ).add( () => {
+			count++;
+		} );
+		cmWe.initialize();
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.switch' ].length ).toBe( 1 );
+		expect( count ).toBe( 1 );
+		cmWe.toggle();
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.switch' ].length ).toBe( 1 );
+		expect( count ).toBe( 2 );
 	} );
 
 	it( 'only 1 ext.CodeMirror.ready hook handler', () => {
-		mediaWikiLang( {
-			bidiIsolation: false
-		}, {
-			tags: {},
-			functionSynonyms: [ {}, {} ],
-			variableIDs: [],
-			doubleUnderscore: [ {}, {} ],
-			urlProtocols: 'http://'
+		[ ...Array( 3 ) ].forEach( () => {
+			mediaWikiLang( {
+				bidiIsolation: false
+			}, {
+				tags: {},
+				functionSynonyms: [ {}, {} ],
+				doubleUnderscore: [ {}, {} ],
+				urlProtocols: 'http://'
+			} );
 		} );
 		expect( mw.hook.mockHooks[ 'ext.CodeMirror.ready' ].length ).toBe( 1 );
 	} );

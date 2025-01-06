@@ -29,6 +29,7 @@
 					"CodeMirrorPreferences",
 					"CodeMirrorTextSelection",
 					"Command",
+					"Hook",
 					"LanguageSupport"
 				]
 			}

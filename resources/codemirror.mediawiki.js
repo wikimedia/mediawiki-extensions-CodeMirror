@@ -1345,7 +1345,7 @@ const mediaWikiLang = ( config = { bidiIsolation: false }, mwConfig = null ) => 
 		mw.hook( 'ext.CodeMirror.ready' ).remove( handler );
 	}
 
-	handler = ( _$textarea, cm ) => {
+	handler = ( cm ) => {
 		// T380840
 		if ( !cm.view ) {
 			return;

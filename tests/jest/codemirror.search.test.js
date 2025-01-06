@@ -4,7 +4,10 @@ const CodeMirror = require( '../../resources/codemirror.js' );
 const CodeMirrorSearch = require( '../../resources/codemirror.search.js' );
 
 const getCmWithSearchOpen = ( content = '' ) => {
-	const cm = new CodeMirror( document.createElement( 'textarea' ) );
+	const form = document.createElement( 'form' );
+	const textarea = document.createElement( 'textarea' );
+	form.appendChild( textarea );
+	const cm = new CodeMirror( textarea );
 	cm.initialize();
 	cm.textSelection.setContents( content );
 	cm.view.contentDOM.dispatchEvent(

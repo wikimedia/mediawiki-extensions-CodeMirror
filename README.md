@@ -1,16 +1,18 @@
 The CodeMirror extension provides syntax highlighting in MediaWiki wikitext editors using
 the [CodeMirror library](https://codemirror.net/).
 
-CodeMirror 6 homepage: [https://www.mediawiki.org/wiki/Extension:CodeMirror/6](https://www.mediawiki.org/wiki/Extension:CodeMirror/6)
+Extension homepage:
+[https://www.mediawiki.org/wiki/Extension:CodeMirror](https://www.mediawiki.org/wiki/Special:MyLanguage/Extension:CodeMirror)
 
-JS documentation: [https://doc.wikimedia.org/CodeMirror](https://doc.wikimedia.org/CodeMirror)
+JS documentation:
+[https://doc.wikimedia.org/CodeMirror](https://doc.wikimedia.org/CodeMirror)
 
 ## Development
 
 ### Preface
 
 Extension:CodeMirror is currently in the process of being upgraded to the new major version, CodeMirror 6.
-See the [change log](https://www.mediawiki.org/wiki/Extension:CodeMirror/6#Change_log) for details.
+See the [change log](https://www.mediawiki.org/wiki/Extension:CodeMirror#Change_log) for details.
 
 Use of CodeMirror 6 is controlled by the `wgCodeMirrorV6` configuration setting, or by
 passing in `cm6enable=1` in the URL query string.

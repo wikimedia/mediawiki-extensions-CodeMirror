@@ -43,6 +43,16 @@ describe( 'CodeMirrorKeymap', () => {
 		const cmKeymap = new CodeMirrorKeymap();
 		expect( cmKeymap.getShortcutHtml( shortcut ).outerHTML ).toStrictEqual( expected );
 	} );
+} );
+
+describe( 'CodeMirrorKeymap (integration)', () => {
+	let textarea;
+
+	beforeEach( () => {
+		textarea = document.createElement( 'textarea' );
+		const form = document.createElement( 'form' );
+		form.appendChild( textarea );
+	} );
 
 	it( 'should register a keybinding with an EditorView', () => {
 		// eslint-disable-next-line n/no-unsupported-features/node-builtins
@@ -50,7 +60,7 @@ describe( 'CodeMirrorKeymap', () => {
 			value: 'Windows',
 			writable: true
 		} );
-		const cm = new CodeMirror( document.createElement( 'textarea' ) );
+		const cm = new CodeMirror( textarea );
 		cm.initialize();
 		const cmKeymap = new CodeMirrorKeymap();
 		const run = jest.fn();
@@ -67,7 +77,7 @@ describe( 'CodeMirrorKeymap', () => {
 		mw.loader.using = jest.fn().mockReturnValue( {
 			then: ( callback ) => callback()
 		} );
-		const cm = new CodeMirror( document.createElement( 'textarea' ) );
+		const cm = new CodeMirror( textarea );
 		cm.initialize();
 		cm.view.contentDOM.dispatchEvent( new KeyboardEvent( 'keydown', { key: '/', shiftKey: true, ctrlKey: true } ) );
 		expect( document.querySelector( '.cm-mw-keymap-dialog' ) ).not.toBeNull();
