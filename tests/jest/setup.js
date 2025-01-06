@@ -54,3 +54,4 @@ window.matchMedia = jest.fn().mockReturnValue( {
 	addEventListener: jest.fn(),
 	removeEventListener: jest.fn()
 } );
+mw.language.getDigitTransformTable = jest.fn().mockReturnValue( [] );
