@@ -11,6 +11,8 @@
 	"codemirror-desc": "Lisää syntaksin korostuksen wikitekstin muokkaimeen",
 	"codemirror-toggle-label": "Syntaksin korostus",
 	"codemirror-toggle-label-short": "Syntaksi",
+	"codemirror-prefs-help": "ohje",
+	"codemirror-close": "Sulje",
 	"codemirror-find": "Etsi",
 	"codemirror-next": "Etsi seuraava",
 	"codemirror-previous": "Etsi edellinen",
@@ -24,5 +26,6 @@
 	"codemirror-goto-line": "Siirry riville",
 	"codemirror-goto-line-go": "Siirry",
 	"prefs-accessibility": "Saavutettavuus",
-	"prefs-syntax-highlighting": "Syntaksin korostus"
+	"prefs-syntax-highlighting": "Syntaksin korostus",
+	"codemirror-beta-feature-title": "Parannettu syntaksin korostus"
 }
