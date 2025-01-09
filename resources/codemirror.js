@@ -3,27 +3,24 @@ const {
 	EditorState,
 	EditorView,
 	Extension,
-	KeyBinding,
 	ViewUpdate,
 	bracketMatching,
 	crosshairCursor,
-	defaultKeymap,
 	drawSelection,
 	dropCursor,
 	highlightActiveLine,
 	highlightSpecialChars,
 	history,
-	historyKeymap,
 	indentUnit,
 	keymap,
 	lineNumbers,
-	rectangularSelection,
-	redo
+	rectangularSelection
 } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirrorTextSelection = require( './codemirror.textSelection.js' );
 const CodeMirrorSearch = require( './codemirror.search.js' );
 const CodeMirrorGotoLine = require( './codemirror.gotoLine.js' );
 const CodeMirrorPreferences = require( './codemirror.preferences.js' );
+const CodeMirrorKeymap = require( './codemirror.keymap.js' );
 require( './ext.CodeMirror.data.js' );
 
 /**
@@ -123,6 +120,12 @@ class CodeMirror {
 			activeLine: this.activeLineExtension,
 			specialChars: this.specialCharsExtension
 		}, !!this.surface );
+		/**
+		 * CodeMirror key mappings and help dialog.
+		 *
+		 * @type {CodeMirrorKeymap}
+		 */
+		this.keymap = new CodeMirrorKeymap();
 	}
 
 	/**
@@ -142,6 +145,7 @@ class CodeMirror {
 			this.dirExtension,
 			this.searchExtension,
 			this.preferences.extension,
+			this.keymap.extension,
 			indentUnit.of( '\t' ),
 			EditorState.readOnly.of( this.readOnly ),
 			EditorView.domEventHandlers( {
@@ -152,7 +156,6 @@ class CodeMirror {
 					this.$textarea[ 0 ].dispatchEvent( new Event( 'focus' ) );
 				}
 			} ),
-			keymap.of( defaultKeymap ),
 			EditorState.allowMultipleSelections.of( true ),
 			drawSelection(),
 			rectangularSelection(),
@@ -168,13 +171,6 @@ class CodeMirror {
 				}
 			} ) );
 			extensions.push( history() );
-			extensions.push( keymap.of(
-				historyKeymap.concat( /** @type {KeyBinding} */ {
-					win: 'Ctrl-Shift-z',
-					run: redo,
-					preventDefault: true
-				} )
-			) );
 		}
 
 		return extensions;
@@ -435,8 +431,9 @@ class CodeMirror {
 				// These should be attributes of .cm-editor, not the .cm-content (T359589)
 				dir: this.$textarea.attr( 'dir' )
 			} ) ),
+			// Register key binding for changing direction in CodeMirrorKeymap.
 			keymap.of( [ {
-				key: 'Mod-Shift-x',
+				key: this.keymap.keymapHelpRegistry.other.direction.key,
 				run: ( view ) => {
 					const dir = this.$textarea.attr( 'dir' ) === 'rtl' ? 'ltr' : 'rtl';
 					this.$textarea.attr( 'dir', dir );

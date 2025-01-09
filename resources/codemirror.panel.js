@@ -5,6 +5,7 @@ const { EditorView, Extension, Panel } = require( 'ext.CodeMirror.v6.lib' );
  * This class provides methods to create CSS-only Codex components.
  *
  * @see https://codemirror.net/docs/ref/#h_panels
+ * @todo Move HTML generation to Mustache templates.
  * @abstract
  */
 class CodeMirrorPanel {
@@ -220,11 +221,19 @@ class CodeMirrorPanel {
 		const helpLink = document.createElement( 'a' );
 		helpLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror';
 		helpLink.target = '_blank';
-		helpLink.textContent = mw.msg( 'codemirror-prefs-help' );
+		helpLink.textContent = mw.msg( 'codemirror-prefs-help' ).toLowerCase();
+		// Click listener added in CodeMirrorKeymap since we don't have a CodeMirror instance here.
+		const shortcutLink = document.createElement( 'a' );
+		shortcutLink.className = 'cm-mw-panel--kbd-help';
+		shortcutLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror#Keyboard_shortcuts';
+		shortcutLink.textContent = mw.msg( 'codemirror-keymap-help-title' ).toLowerCase();
+		shortcutLink.onclick = ( e ) => e.preventDefault();
 		helpSpan.append(
 			' ',
 			mw.msg( 'parentheses-start' ),
 			helpLink,
+			mw.msg( 'pipe-separator' ),
+			shortcutLink,
 			mw.msg( 'parentheses-end' )
 		);
 		innerSpan.appendChild( helpSpan );

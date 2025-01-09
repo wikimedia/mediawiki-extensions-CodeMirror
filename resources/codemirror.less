@@ -82,6 +82,8 @@
 	border-color: @border-color-base;
 }
 
+// Panels
+
 .cm-editor .cm-panels {
 	background-color: @background-color-neutral-subtle;
 	border-bottom: 0;
@@ -99,6 +101,10 @@
 		border-bottom: @border-style-base @border-width-base @border-color-subtle;
 		padding: @spacing-50;
 		position: relative;
+	}
+
+	.cm-mw-panel--help {
+		font-weight: @font-weight-normal;
 	}
 
 	.cm-mw-panel--fieldset legend {
@@ -144,6 +150,8 @@
 		top: @spacing-50;
 	}
 }
+
+// Find and replace
 
 .cm-mw-find-results {
 	color: @color-placeholder;

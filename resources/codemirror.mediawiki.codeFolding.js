@@ -2,7 +2,6 @@ const {
 	EditorState,
 	EditorView,
 	Extension,
-	KeyBinding,
 	StateEffect,
 	StateField,
 	SyntaxNode,
@@ -296,8 +295,10 @@ const traverse = ( state, tree, effects, node, end, anchor, update ) => {
 };
 
 /**
- * @type {KeyBinding[]}
- * @private
+ * Keymap for folding templates.
+ *
+ * @type {CodeMirrorKeyBinding[]}
+ * @memberof module:CodeMirrorCodeFolding
  */
 const foldKeymap = [
 	{
@@ -414,4 +415,4 @@ const codeFoldingExtension = [
 	keymap.of( foldKeymap )
 ];
 
-module.exports = codeFoldingExtension;
+module.exports = { codeFoldingExtension };

@@ -11,9 +11,10 @@ const {
 } = require( 'ext.CodeMirror.v6.lib' );
 const mwModeConfig = require( './codemirror.mediawiki.config.js' );
 const bidiIsolationExtension = require( './codemirror.mediawiki.bidiIsolation.js' );
-const codeFoldingExtension = require( './codemirror.mediawiki.codeFolding.js' );
-const autocompleteExtension = require( './codemirror.mediawiki.autocomplete.js' );
+const { codeFoldingExtension } = require( './codemirror.mediawiki.codeFolding.js' );
+const { autocompleteExtension } = require( './codemirror.mediawiki.autocomplete.js' );
 const openLinksExtension = require( './codemirror.mediawiki.openLinks.js' );
+const mwKeymap = require( './codemirror.mediawiki.keymap.js' );
 
 const copyState = ( state ) => {
 	const newState = {};
@@ -1379,12 +1380,10 @@ class CodeMirrorModeMediaWiki {
 
 			/**
 			 * @see https://codemirror.net/docs/ref/#language.StreamParser.languageData
-			 * @return {Object<any>}
+			 * @return {Object}
 			 * @private
 			 */
 			languageData: {
-				// TODO: Rewrite the comment command using jQuery.textSelection
-				commentTokens: { block: { open: '<!--', close: '-->' } },
 				autocomplete: this.completionSource
 			}
 		};
@@ -1424,20 +1423,27 @@ const mediaWikiLang = ( config = { bidiIsolation: false }, mwConfig = null ) => 
 	if ( handler ) {
 		mw.hook( 'ext.CodeMirror.ready' ).remove( handler );
 	}
+
 	handler = ( _$textarea, cm ) => {
-		if ( cm.view ) { // T380840
-			if ( config.codeFolding !== false ) {
-				cm.preferences.registerExtension( 'codeFolding', codeFoldingExtension, cm.view );
-			}
-			if ( config.autocomplete !== false ) {
-				cm.preferences.registerExtension( 'autocomplete', autocompleteExtension, cm.view );
-			}
-			if ( config.openLinks !== false ) {
-				cm.preferences.registerExtension( 'openLinks', openLinksExtension, cm.view );
-			}
-			if ( config.bidiIsolation ) {
-				cm.preferences.registerExtension( 'bidiIsolation', bidiIsolationExtension, cm.view );
-			}
+		// T380840
+		if ( !cm.view ) {
+			return;
+		}
+
+		// Register MW-specific keymaps.
+		mwKeymap( cm );
+
+		if ( config.codeFolding !== false ) {
+			cm.preferences.registerExtension( 'codeFolding', codeFoldingExtension, cm.view );
+		}
+		if ( config.autocomplete !== false ) {
+			cm.preferences.registerExtension( 'autocomplete', autocompleteExtension, cm.view );
+		}
+		if ( config.openLinks !== false ) {
+			cm.preferences.registerExtension( 'openLinks', openLinksExtension, cm.view );
+		}
+		if ( config.bidiIsolation ) {
+			cm.preferences.registerExtension( 'bidiIsolation', bidiIsolationExtension, cm.view );
 		}
 	};
 	mw.hook( 'ext.CodeMirror.ready' ).add( handler );
