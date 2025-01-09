@@ -237,6 +237,12 @@ class CodeMirrorWikiEditor extends CodeMirror {
 			return;
 		}
 
+		// Remove the initial toggle button that may have been added by the init script.
+		this.$textarea.wikiEditor( 'removeFromToolbar', {
+			section: 'main',
+			group: 'codemirror'
+		} );
+
 		// Add 'Syntax' button to main toolbar.
 		this.$textarea.wikiEditor(
 			'addToToolbar',
@@ -267,7 +273,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 			}
 		);
 
-		// Set the ID of the CodeMirror button for styling.
+		// Set the ID of the CodeMirror button.
 		const $codeMirrorButton = toolbar.$toolbar.find( '.tool[rel=CodeMirror]' );
 		$codeMirrorButton.attr( 'id', 'mw-editbutton-codemirror' );
 

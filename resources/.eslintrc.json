@@ -28,7 +28,8 @@
 					"CodeMirrorModeMediaWiki",
 					"CodeMirrorPreferences",
 					"CodeMirrorTextSelection",
-					"Command"
+					"Command",
+					"LanguageSupport"
 				]
 			}
 		]
