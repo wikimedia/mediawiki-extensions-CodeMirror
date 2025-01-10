@@ -16,5 +16,13 @@
 	"codemirror-replace-placeholder": "बदलें",
 	"codemirror-replace-all": "सभी बदलें",
 	"codemirror-done": "पूर्ण हुआ",
-	"codemirror-goto-line-go": "जाएँ"
+	"codemirror-goto-line-go": "जाएँ",
+	"codemirror-keymap-help-close": "बंद करें",
+	"codemirror-keymap-bold": "बोल्ड",
+	"codemirror-keymap-link": "कड़ी",
+	"codemirror-keymap-history": "इतिहास",
+	"codemirror-keymap-undo": "पूर्ववत करें",
+	"codemirror-keymap-redo": "फिर से करें",
+	"codemirror-keymap-insert": "जोड़ें",
+	"codemirror-keymap-other": "अन्य"
 }
