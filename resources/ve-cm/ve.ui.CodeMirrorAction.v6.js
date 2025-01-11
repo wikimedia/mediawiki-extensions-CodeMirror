@@ -198,7 +198,12 @@ ve.ui.CodeMirrorAction.prototype.onSelect = function ( selection ) {
 		return;
 	}
 
-	const offset = this.surface.getModel().getSourceOffsetFromOffset( range.from );
+	// T382769: the selection range from `textSelection( 'setContents' )`
+	// exceeds the document length
+	const offset = Math.min(
+		this.surface.getModel().getSourceOffsetFromOffset( range.from ),
+		this.surface.mirror.view.state.doc.length
+	);
 
 	this.surface.mirror.view.dispatch( {
 		selection: {
@@ -236,7 +241,18 @@ ve.ui.CodeMirrorAction.prototype.onDocumentPrecommit = function ( tx ) {
 
 	// Apply replacements in reverse to avoid having to shift offsets
 	for ( let i = replacements.length - 1; i >= 0; i-- ) {
-		this.surface.mirror.view.dispatch( { changes: replacements[ i ] } );
+		// T382769: the replacement range from `textSelection( 'setContents' )`
+		// exceeds the document length by one character and inserts an extra newline
+		const { from, to, insert } = replacements[ i ],
+			isSetContents = to === this.surface.mirror.view.state.doc.length + 1 &&
+				insert.endsWith( '\n' );
+		this.surface.mirror.view.dispatch( {
+			changes: {
+				from,
+				to: isSetContents ? to - 1 : to,
+				insert: isSetContents ? insert.slice( 0, -1 ) : insert
+			}
+		} );
 	}
 
 	this.updateGutterWidth( this.surface.getView().getDocument().getDir() );
