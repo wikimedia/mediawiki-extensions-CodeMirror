@@ -9,10 +9,12 @@ use MediaWiki\Extension\BetaFeatures\BetaFeatures;
 use MediaWiki\Extension\Gadgets\GadgetRepo;
 use MediaWiki\Hook\EditPage__showEditForm_initialHook;
 use MediaWiki\Hook\EditPage__showReadOnlyForm_initialHook;
+use MediaWiki\Hook\UploadForm_initialHook;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
 use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\ResourceLoader\Hook\ResourceLoaderGetConfigVarsHook;
+use Mediawiki\Specials\SpecialUpload;
 use MediaWiki\User\Options\UserOptionsLookup;
 use MediaWiki\User\User;
 
@@ -22,6 +24,7 @@ use MediaWiki\User\User;
 class Hooks implements
 	EditPage__showEditForm_initialHook,
 	EditPage__showReadOnlyForm_initialHook,
+	UploadForm_initialHook,
 	ResourceLoaderGetConfigVarsHook,
 	GetPreferencesHook
 {
@@ -56,9 +59,14 @@ class Hooks implements
 	 *
 	 * @param OutputPage $out
 	 * @param ExtensionRegistry|null $extensionRegistry Overridden in tests.
+	 * @param bool $supportWikiEditor
 	 * @return bool
 	 */
-	public function shouldLoadCodeMirror( OutputPage $out, ?ExtensionRegistry $extensionRegistry = null ): bool {
+	public function shouldLoadCodeMirror(
+		OutputPage $out,
+		?ExtensionRegistry $extensionRegistry = null,
+		bool $supportWikiEditor = true
+	): bool {
 		// Disable CodeMirror when CodeEditor is active on this page.
 		// Depends on ext.codeEditor being added by \MediaWiki\EditPage\EditPage::showEditForm:initial
 		if ( in_array( 'ext.codeEditor', $out->getModules(), true ) ) {
@@ -67,7 +75,8 @@ class Hooks implements
 
 		$shouldUseV6 = $this->shouldUseV6( $out );
 		$useCodeMirror = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usecodemirror' );
-		$useWikiEditor = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usebetatoolbar' );
+		$useWikiEditor = $supportWikiEditor &&
+			$this->userOptionsLookup->getBoolOption( $out->getUser(), 'usebetatoolbar' );
 		// Disable CodeMirror 5 when the WikiEditor toolbar is not enabled in preferences.
 		if ( !$shouldUseV6 && !$useWikiEditor ) {
 			return false;
@@ -159,10 +168,12 @@ class Hooks implements
 	 * if the 'usecodemirror' preference is enabled, pre-delivered by ResourceLoader.
 	 *
 	 * @param OutputPage $out
+	 * @param bool $supportWikiEditor
 	 */
-	private function loadCodeMirrorOnEditPage( OutputPage $out ): void {
+	private function loadCodeMirrorOnEditPage( OutputPage $out, bool $supportWikiEditor = true ): void {
 		$useCodeMirror = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usecodemirror' );
-		$useWikiEditor = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usebetatoolbar' );
+		$useWikiEditor = $supportWikiEditor &&
+			$this->userOptionsLookup->getBoolOption( $out->getUser(), 'usebetatoolbar' );
 		$modules = [
 			'ext.CodeMirror.v6',
 			...( $useWikiEditor ? [ 'ext.CodeMirror.v6.WikiEditor' ] : [] ),
@@ -196,6 +207,18 @@ class Hooks implements
 		if ( $this->shouldUseV6( $out ) && $this->shouldLoadCodeMirror( $out ) ) {
 			$this->readOnly = true;
 			$this->loadCodeMirrorOnEditPage( $out );
+		}
+	}
+
+	/**
+	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/UploadForm:initial
+	 *
+	 * @param SpecialUpload $upload
+	 */
+	public function onUploadForm_initial( $upload ): void {
+		$out = $upload->getOutput();
+		if ( $this->shouldUseV6( $out ) && $this->shouldLoadCodeMirror( $out, null, false ) ) {
+			$this->loadCodeMirrorOnEditPage( $out, false );
 		}
 	}
 

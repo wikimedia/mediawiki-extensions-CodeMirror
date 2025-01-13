@@ -2,8 +2,9 @@
  * Main entry point for CodeMirror initialization on action=edit.
  */
 
+const isSpecialUpload = mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Upload';
 const useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
-const useWikiEditor = mw.user.options.get( 'usebetatoolbar' ) > 0;
+const useWikiEditor = !isSpecialUpload && mw.user.options.get( 'usebetatoolbar' ) > 0;
 const resourceLoaderModules = mw.config.get( 'cmRLModules' );
 
 /**
@@ -41,7 +42,8 @@ function init( fromToggleButton = false ) {
 				cmWE.addCodeMirrorToWikiEditor();
 			} );
 		} else {
-			const textarea = document.getElementById( 'wpTextbox1' );
+			const id = isSpecialUpload ? 'wpUploadDescription' : 'wpTextbox1';
+			const textarea = document.getElementById( id );
 			const cm = new CodeMirror( textarea );
 			cm.initialize( [ ...cm.defaultExtensions, langSupport ] );
 		}
