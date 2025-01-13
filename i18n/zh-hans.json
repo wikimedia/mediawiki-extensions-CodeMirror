@@ -76,5 +76,5 @@
 	"prefs-accessibility": "无障碍",
 	"prefs-syntax-highlighting": "语法高亮",
 	"codemirror-beta-feature-title": "增强版语法高亮",
-	"codemirror-beta-feature-description": "提前试用新版语法高亮及编辑功能，例如模板折叠和自动补全。"
+	"codemirror-beta-feature-description": "提前试用新版语法高亮及编辑功能，例如代码折叠和自动补全。"
 }

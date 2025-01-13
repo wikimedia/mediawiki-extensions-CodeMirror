@@ -17,7 +17,7 @@
 	"codemirror-prefs-help": "hulp",
 	"codemirror-prefs-codefolding": "Code opvouwen inschakelen",
 	"codemirror-prefs-autocomplete": "Automatisch aanvullen inschakelen",
-	"codemirror-prefs-openlinks": "Koppelingen openen middels hulptoets + klikken",
+	"codemirror-prefs-openlinks": "Koppelingen openen met hulptoets + klikken",
 	"codemirror-prefs-bidiisolation": "Tweerichtingstekst afzonderen",
 	"codemirror-prefs-bracketmatching": "Overeenkomstige haakjes uitlichten",
 	"codemirror-prefs-linenumbering": "Regelnummers weergeven",
@@ -74,5 +74,5 @@
 	"prefs-accessibility": "Toegankelijkheid",
 	"prefs-syntax-highlighting": "Syntaxiskleuring",
 	"codemirror-beta-feature-title": "Verbeterde syntaxiskleuring",
-	"codemirror-beta-feature-description": "Krijg vroegtijdig toegang tot nieuwe functies voor syntaxiskleuring en bewerking, zoals sjablonen samenvouwen en automatisch aanvullen."
+	"codemirror-beta-feature-description": "Krijg vroegtijdig toegang tot nieuwe functies voor syntaxiskleuring en bewerking, zoals code samenvouwen en automatisch aanvullen."
 }
