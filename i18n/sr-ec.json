@@ -41,6 +41,7 @@
 	"codemirror-keymap-redoselection": "Понови избор",
 	"codemirror-keymap-indent": "Повећај увлачење",
 	"codemirror-keymap-outdent": "Смањи увлачење",
+	"codemirror-keymap-blockquote": "Блок цитат",
 	"codemirror-keymap-heading": "Наслов (1-6)",
 	"codemirror-keymap-heading-n": "Наслов $1",
 	"codemirror-keymap-search": "Претрага",
