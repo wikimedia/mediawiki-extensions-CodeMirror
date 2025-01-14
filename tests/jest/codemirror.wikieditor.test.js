@@ -80,6 +80,7 @@ describe( 'Hook handlers and event listeners', () => {
 	}, {
 		tags: {},
 		functionSynonyms: [ {}, {} ],
+		variableIDs: [],
 		doubleUnderscore: [ {}, {} ],
 		urlProtocols: 'http://'
 	} );
@@ -114,6 +115,7 @@ describe( 'Hook handlers and event listeners', () => {
 		}, {
 			tags: {},
 			functionSynonyms: [ {}, {} ],
+			variableIDs: [],
 			doubleUnderscore: [ {}, {} ],
 			urlProtocols: 'http://'
 		} );

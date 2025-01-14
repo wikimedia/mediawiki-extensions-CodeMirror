@@ -957,17 +957,18 @@ class CodeMirrorModeMediaWiki {
 							const [ , f, delimiter ] = name,
 								ff = delimiter === ':' ? f : f.trim(),
 								ffLower = ff.toLowerCase(),
-								{ config: { functionSynonyms } } = this;
+								{ config: { functionSynonyms, variableIDs } } = this,
+								insensitiveName = Object.prototype.hasOwnProperty.call(
+									functionSynonyms[ 0 ], ffLower
+								) && functionSynonyms[ 0 ][ ffLower ],
+								sensitiveName = Object.prototype.hasOwnProperty.call(
+									functionSynonyms[ 1 ], ff
+								) && functionSynonyms[ 1 ][ ff ],
+								canonicalName = insensitiveName || sensitiveName;
 							if (
 								( !delimiter || delimiter === ':' || delimiter === '}' ) &&
-								(
-									Object.prototype.hasOwnProperty.call(
-										functionSynonyms[ 0 ], ffLower
-									) ||
-									Object.prototype.hasOwnProperty.call(
-										functionSynonyms[ 1 ], ff
-									)
-								)
+								canonicalName &&
+								( delimiter === ':' || variableIDs.includes( canonicalName ) )
 							) {
 								state.nExt++;
 								state.stack.push( state.tokenize );

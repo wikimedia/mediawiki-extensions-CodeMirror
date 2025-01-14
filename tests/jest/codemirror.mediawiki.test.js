@@ -68,6 +68,11 @@ const testCases = [
 		output: '<div class="cm-line"><span class="cm-mw-template-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template-ground cm-mw-pagename cm-mw-template-name">foo</span><span class="cm-mw-template-ground cm-mw-template-delimiter">|</span><span class="cm-mw-template-ground cm-mw-template-argument-name">1=</span><span class="cm-mw-template-ground cm-mw-template">bar</span><span class="cm-mw-template-ground cm-mw-template-delimiter">|</span><span class="cm-mw-template-ground cm-mw-template-argument-name">2=</span><span class="cm-mw-template-ground cm-mw-templatevariable-bracket">{{{</span><span class="cm-mw-template-ground cm-mw-templatevariable-name">param</span><span class="cm-mw-template-ground cm-mw-templatevariable-delimiter">|</span><span class="cm-mw-template-ground cm-mw-templatevariable">blah</span><span class="cm-mw-template-ground cm-mw-templatevariable-bracket">}}}</span><span class="cm-mw-template-ground cm-mw-template-delimiter">|</span><span class="cm-mw-template-ext-ground cm-mw-parserfunction-bracket">{{</span><span class="cm-mw-template-ext-ground cm-mw-parserfunction-name">#if</span><span class="cm-mw-template-ext-ground cm-mw-parserfunction-delimiter">:</span><span class="cm-mw-template-ext-ground cm-mw-templatevariable-bracket">{{{</span><span class="cm-mw-template-ext-ground cm-mw-templatevariable-name">3</span><span class="cm-mw-template-ext-ground cm-mw-templatevariable-delimiter">|</span><span class="cm-mw-template-ext-ground cm-mw-templatevariable-bracket">}}}</span><span class="cm-mw-template-ext-ground cm-mw-parserfunction-delimiter">|</span><span class="cm-mw-template-ext-ground cm-mw-parserfunction">yes</span><span class="cm-mw-template-ext-ground cm-mw-parserfunction-delimiter">|</span><span class="cm-mw-template-ext-ground cm-mw-parserfunction">no</span><span class="cm-mw-template-ext-ground cm-mw-parserfunction-bracket">}}</span><span class="cm-mw-template-ground cm-mw-template-bracket">}}</span> </div>'
 	},
 	{
+		title: 'parser function-like template',
+		input: '{{ns}}{{NS:}}{{!}}{{#if}}{{מיון רגיל}}',
+		output: '<div class="cm-line"><span class="cm-mw-template-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template-ground cm-mw-pagename cm-mw-template-name">ns</span><span class="cm-mw-template-ground cm-mw-template-bracket">}}</span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">{{</span><span class="cm-mw-ext-ground cm-mw-parserfunction-name">NS</span><span class="cm-mw-ext-ground cm-mw-parserfunction-delimiter">:</span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">}}{{</span><span class="cm-mw-ext-ground cm-mw-parserfunction-name">!</span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">}}{{</span><span class="cm-mw-ext-ground cm-mw-parserfunction-name">#if</span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">}}</span><span class="cm-mw-template-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template-ground cm-mw-pagename cm-mw-template-name">מיון רגיל</span><span class="cm-mw-template-ground cm-mw-template-bracket">}}</span> </div>'
+	},
+	{
 		title: 'T277767: newlines and comments in template names',
 		input: '{{#if: | {{some template\n<!-- comment --> }} }}',
 		output: '<div class="cm-line"><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">{{</span><span class="cm-mw-ext-ground cm-mw-parserfunction-name">#if</span><span class="cm-mw-ext-ground cm-mw-parserfunction-delimiter">:</span><span class="cm-mw-ext-ground cm-mw-parserfunction"> </span><span class="cm-mw-ext-ground cm-mw-parserfunction-delimiter">|</span><span class="cm-mw-ext-ground cm-mw-parserfunction"> </span><span class="cm-mw-template-ext-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template-ext-ground cm-mw-pagename cm-mw-template-name">some template</span></div><div class="cm-line"><span class="cm-mw-template-ext-ground cm-mw-comment">&lt;!-- comment --&gt;</span><span class="cm-mw-template-ext-ground cm-mw-template-bracket"> }}</span><span class="cm-mw-ext-ground cm-mw-parserfunction"> </span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">}}</span> </div>'
@@ -189,10 +194,15 @@ const mwLang = mediaWikiLang( {}, {
 	doubleUnderscore: [ {
 		__notoc__: 'notoc'
 	}, {} ],
-	functionSynonyms: [ {}, {
+	functionSynonyms: [ {
+		ns: 'ns'
+	}, {
 		'!': '!',
 		'מיון רגיל': 'defaultsort'
 	} ],
+	variableIDs: [
+		'!'
+	],
 	tags: {
 		nowiki: true,
 		pre: true,

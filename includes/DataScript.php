@@ -52,6 +52,7 @@ class DataScript {
 		$registry = ExtensionRegistry::getInstance();
 		$parser = MediaWikiServices::getInstance()->getParser();
 		$mwConfig = MediaWikiServices::getInstance()->getMainConfig();
+		$magicWordFactory = $parser->getMagicWordFactory();
 
 		$tagModes = $registry->getAttribute( 'CodeMirrorTagModes' );
 		$tagNames = array_merge( $parser->getTags(), array_keys( $tagModes ) );
@@ -70,12 +71,12 @@ class DataScript {
 			'tags' => array_fill_keys( $tagNames, true ),
 			'doubleUnderscore' => [ [], [] ],
 			'functionSynonyms' => $parser->getFunctionSynonyms(),
+			'variableIDs' => $magicWordFactory->getVariableIDs(),
 			'urlProtocols' => $parser->getUrlProtocols(),
 			'linkTrailCharacters' => $lang->linkTrail(),
 		];
 
 		$mw = $lang->getMagicWords();
-		$magicWordFactory = $parser->getMagicWordFactory();
 		foreach ( $magicWordFactory->getDoubleUnderscoreArray()->getNames() as $name ) {
 			if ( isset( $mw[$name] ) ) {
 				$caseSensitive = array_shift( $mw[$name] ) == 0 ? 0 : 1;

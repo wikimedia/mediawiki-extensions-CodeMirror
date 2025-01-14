@@ -24,6 +24,7 @@ const cm = new CodeMirror( textarea, mediaWikiLang(
 	{
 		doubleUnderscore: [ {}, {} ],
 		functionSynonyms: [ {}, {} ],
+		variableIDs: [],
 		tags: { ref: true },
 		urlProtocols: 'http\\:\\/\\/'
 	}

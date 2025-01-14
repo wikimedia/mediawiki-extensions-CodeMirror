@@ -19,7 +19,8 @@ const mwLang = mediaWikiLang( {}, {
 		'מיון רגיל': 'defaultsort'
 	} ],
 	tags: { nowiki: true, indicator: true, ref: true },
-	tagModes: { ref: 'text/mediawiki' }
+	tagModes: { ref: 'text/mediawiki' },
+	variableIDs: []
 } );
 const cm = new CodeMirror( textarea, mwLang );
 cm.initialize();
