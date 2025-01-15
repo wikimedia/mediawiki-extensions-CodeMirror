@@ -200,24 +200,32 @@ class CodeMirror {
 	 * @type {Extension}
 	 */
 	get lineNumberingExtension() {
-		return lineNumbers( {
-			formatNumber: ( num ) => {
-				const numberString = String( num );
-				const transformTable = mw.language.getDigitTransformTable();
-				if ( mw.config.get( 'wgTranslateNumerals' ) && transformTable ) {
-					let convertedNumber = '';
-					for ( let i = 0; i < numberString.length; i++ ) {
-						if ( Object.prototype.hasOwnProperty.call( transformTable, numberString[ i ] ) ) {
-							convertedNumber += transformTable[ numberString[ i ] ];
-						} else {
-							convertedNumber += numberString[ i ];
+		return [
+			lineNumbers( {
+				formatNumber: ( num ) => {
+					const numberString = String( num );
+					const transformTable = mw.language.getDigitTransformTable();
+					if ( mw.config.get( 'wgTranslateNumerals' ) && transformTable ) {
+						let convertedNumber = '';
+						for ( let i = 0; i < numberString.length; i++ ) {
+							// eslint-disable-next-line max-len
+							if ( Object.prototype.hasOwnProperty.call( transformTable, numberString[ i ] ) ) {
+								convertedNumber += transformTable[ numberString[ i ] ];
+							} else {
+								convertedNumber += numberString[ i ];
+							}
 						}
+						return convertedNumber;
 					}
-					return convertedNumber;
+					return numberString;
 				}
-				return numberString;
-			}
-		} );
+			} ),
+			EditorView.theme( {
+				'.cm-lineNumbers .cm-gutterElement': {
+					textAlign: 'end'
+				}
+			} )
+		];
 	}
 
 	/**
