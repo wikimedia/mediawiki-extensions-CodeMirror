@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Pikne"
+			"Pikne",
+			"Rivoz"
 		]
 	},
 	"codemirror-desc": "Võimaldab vikiteksti toimetis süntaksi esiletõstu.",
@@ -35,6 +36,13 @@
 	"codemirror-done": "Valmis",
 	"codemirror-find-results": "$1 $2-st",
 	"codemirror-unfold": "voldi lahti",
+	"codemirror-keymap-help-close": "Sulge",
+	"codemirror-keymap-textstyling": "Kirjalaad",
+	"codemirror-keymap-history": "Ajalugu",
+	"codemirror-keymap-undoselection": "Tühista valik",
+	"codemirror-keymap-blockquote": "Plokktsitaat",
+	"codemirror-keymap-search": "Otsimine",
+	"codemirror-keymap-find": "Otsi ja asenda",
 	"prefs-accessibility": "Hõlbustus",
 	"prefs-syntax-highlighting": "Süntaksi esiletõst",
 	"codemirror-beta-feature-title": "Täiustatud süntaksi esiletõst",
