@@ -1,3 +1,5 @@
+@import 'mediawiki.mixins.less';
+
 .ve-init-mw-desktopArticleTarget {
 	.cm-editor {
 		background: transparent;
@@ -38,18 +40,9 @@
 
 	.cm-gutters {
 		background-color: transparent;
-		/* @noflip */
-		padding-right: 8px;
+		.padding-inline( 0, 8px );
 		/* @noflip */
 		border-right: 0;
-	}
-
-	/* RTL rules need to apply to the content, not the interface language */
-	.cm-editor[ dir='rtl' ] .cm-gutters {
-		/* @noflip */
-		padding-left: 8px;
-		/* @noflip */
-		padding-right: initial;
 	}
 
 	.cm-focused {
