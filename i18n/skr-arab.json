@@ -27,6 +27,7 @@
 	"codemirror-keymap-history": "تاریخ",
 	"codemirror-keymap-undo": "واپس",
 	"codemirror-keymap-redo": "ولدا کرو",
+	"codemirror-keymap-indent": "حاشیہ ودھاؤ",
 	"codemirror-keymap-heading-n": "سرخی $1",
 	"codemirror-keymap-search": "ڳولݨ",
 	"codemirror-keymap-find": "لبھو تے تبدیل کرو",

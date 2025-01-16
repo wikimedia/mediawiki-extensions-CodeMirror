@@ -24,5 +24,6 @@
 	"codemirror-keymap-undo": "पूर्ववत करें",
 	"codemirror-keymap-redo": "फिर से करें",
 	"codemirror-keymap-insert": "जोड़ें",
+	"codemirror-keymap-comment": "टिप्पणी",
 	"codemirror-keymap-other": "अन्य"
 }
