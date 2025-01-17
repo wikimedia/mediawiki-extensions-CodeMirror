@@ -11,5 +11,6 @@
 	"codemirror-replace": "Փոխարինել",
 	"codemirror-replace-all": "Փոխարինել բոլորը",
 	"codemirror-done": "Արված է",
-	"codemirror-goto-line-go": "Անցնել"
+	"codemirror-goto-line-go": "Անցնել",
+	"codemirror-keymap-history": "Պատմություն"
 }

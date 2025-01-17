@@ -112,6 +112,7 @@
 	"codemirror-keymap-preferences": "Einstellungen zur Syntaxhervorhebung",
 	"codemirror-keymap-help": "Tastaturkürzel",
 	"codemirror-keymap-autocomplete": "Autovervollständigungsvorschlag auswählen",
+	"codemirror-keymap-startcompletion": "Vorschläge zur automatischen Vervollständigung anzeigen",
 	"codemirror-keymap-cursor-modifiers": "Cursormodifizierer",
 	"codemirror-keymap-multicursor": "Halte $1 gedrückt und klicke, um mehrere Cursor zu erstellen.",
 	"codemirror-keymap-crosshair": "Halte $1 gedrückt und klicke und ziehe, um eine rechteckige Auswahlen zu treffen.",
