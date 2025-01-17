@@ -116,6 +116,7 @@
 	"codemirror-keymap-preferences": "Label for the keyboard shortcut for opening the syntax highlighting preferences.",
 	"codemirror-keymap-help": "Label for the keyboard shortcut for viewing the help dialog of keyboard shortcuts.\n\n{{Identical|Keyboard shortcut}}",
 	"codemirror-keymap-autocomplete": "Label for the keyboard shortcut for selecting an autocomplete suggestion.",
+	"codemirror-keymap-startcompletion": "Label for the keyboard shortcut for showing autocomplete suggestions",
 	"codemirror-keymap-cursor-modifiers": "Heading for the section of the keyboard shortcuts help dialog that explains the use of cursor modifiers.",
 	"codemirror-keymap-multicursor": "Description of how to add multiple cursors.\n\n$1 is the HTML representation of a key, e.g. <kbd>Ctrl</kbd>.",
 	"codemirror-keymap-crosshair": "Description of how to use the crosshair cursor.\n\n$1 is the HTML representation of a key, e.g. <kbd>Alt</kbd>.",
