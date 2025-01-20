@@ -5,6 +5,10 @@
 			"Tofeiku"
 		]
 	},
+	"codemirror-toggle-label": "Penyerlahan sintaks",
+	"codemirror-prefs-summary": "Anda boleh mengetahui lebih lanjut tentang ciri ini dengan membaca [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror laman bantuan ini].",
+	"codemirror-prefs-enable": "Dayakan penyerlahan sintaks untuk teks wiki",
+	"codemirror-v6-prefs-colorblind": "Gunakan skema mesra buta warna",
 	"codemirror-prefs-colorblind": "Dayakan skema mesra buta warna untuk penyerlahan sintaks semasa menyunting wikiteks",
 	"codemirror-prefs-colorblind-help": "Jika anda menggunakan gajet untuk menyerlahkan sintaks, pilihan ini tidak akan berfungsi.",
 	"codemirror-next": "Cari seterusnya",
@@ -17,5 +21,6 @@
 	"codemirror-done": "Selesai",
 	"codemirror-goto-line": "Pergi ke baris",
 	"codemirror-goto-line-go": "Pergi",
-	"prefs-accessibility": "Kebolehcapaian"
+	"prefs-accessibility": "Kebolehcapaian",
+	"prefs-syntax-highlighting": "Penyerlahan sintaks"
 }

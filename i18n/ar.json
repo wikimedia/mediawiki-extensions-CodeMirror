@@ -5,6 +5,7 @@
 			"FShbib",
 			"Shbib Al-Subaie",
 			"ديفيد",
+			"علاء",
 			"محمد أحمد عبد الفتاح"
 		]
 	},
@@ -14,5 +15,6 @@
 	"codemirror-prefs-colorblind": "فعّل مخططًا متوافقًا مع عمى الألوان لتعليم الصيغة عند تعديل نص ويكي.",
 	"codemirror-prefs-colorblind-help": "لن يعمل هذا التفضيل إذا كنت تستخدم إضافةً لتعليم الصيغة.",
 	"prefs-accessibility": "إمكانية الوصول",
-	"codemirror-beta-feature-title": "إبراز نحو محسن"
+	"codemirror-beta-feature-title": "تحسين تمييز بناء الجملة",
+	"codemirror-beta-feature-description": "احصل على إمكانية الوصول المبكر إلى ميزاتٍ جديدة لتمييز بناء الجملة وتحريرها مثل طي التعليمات البرمجية والإكمال التلقائي."
 }

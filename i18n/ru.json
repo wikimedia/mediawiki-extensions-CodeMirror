@@ -113,6 +113,7 @@
 	"codemirror-keymap-preferences": "Настройки подсветки синтаксиса",
 	"codemirror-keymap-help": "Сочетания клавиш",
 	"codemirror-keymap-autocomplete": "Выбрать предложение автокомплита",
+	"codemirror-keymap-startcompletion": "Показать подсказки автокомплита",
 	"codemirror-keymap-cursor-modifiers": "Модификаторы курсора",
 	"codemirror-keymap-multicursor": "Кликните с зажатой клавишей $1, чтобы создать несколько курсоров.",
 	"codemirror-keymap-crosshair": "Кликните с зажатой клавишей $1 и двигайте курсор, чтобы создать прямоугольные выделения.",
