@@ -10,5 +10,7 @@
 	},
 	"codemirror-desc": "Lisää syntaksin korostuksen wikitekstin muokkaimeen",
 	"codemirror-toggle-label": "Syntaksin korostus",
+	"codemirror-prefs-colorblind": "Käytä värisokeille sopivaa väripalettia syntaksin korostuksessa wikitekstiä muokattaessa",
+	"codemirror-prefs-colorblind-help": "Jos käytät pienoisohjelmaa syntaksin korostamiseen, tämä asetus ei toimi.",
 	"prefs-accessibility": "Saavutettavuus"
 }
