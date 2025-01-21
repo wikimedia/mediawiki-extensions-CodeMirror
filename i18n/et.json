@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Pikne"
+			"Pikne",
+			"Rivoz"
 		]
 	},
 	"codemirror-desc": "Võimaldab vikiteksti toimetis süntaksi esiletõstu.",
