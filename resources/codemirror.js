@@ -46,6 +46,9 @@ class CodeMirror {
 	 * @constructor
 	 */
 	constructor( textarea ) {
+		if ( mw.config.get( 'cmDebug' ) ) {
+			window.cm = this;
+		}
 		if ( textarea.constructor.name === 'VeUiMWWikitextSurface' ) {
 			/**
 			 * The VisualEditor surface CodeMirror is bound to.

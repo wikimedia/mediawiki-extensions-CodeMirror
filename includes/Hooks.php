@@ -34,6 +34,7 @@ class Hooks implements
 	private bool $useV6;
 	private ?GadgetRepo $gadgetRepo;
 	private string $extensionAssetsPath;
+	private bool $debugMode;
 	private bool $readOnly = false;
 
 	/**
@@ -51,6 +52,7 @@ class Hooks implements
 		$this->conflictingGadgets = $config->get( 'CodeMirrorConflictingGadgets' );
 		$this->gadgetRepo = $gadgetRepo;
 		$this->extensionAssetsPath = $config->get( 'ExtensionAssetsPath' );
+		$this->debugMode = $config->get( 'ShowExceptionDetails' );
 	}
 
 	/**
@@ -194,6 +196,7 @@ class Hooks implements
 		$out->addJsConfigVars( [
 			'cmRLModules' => $modules,
 			'cmReadOnly' => $this->readOnly,
+			'cmDebug' => $this->debugMode
 		] );
 	}
 
