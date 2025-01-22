@@ -10,6 +10,7 @@
 			"Shirayuki",
 			"SkyDaisy9",
 			"Stjn",
+			"Wladek92",
 			"pastakhov"
 		]
 	},
@@ -112,7 +113,7 @@
 	"codemirror-keymap-foldall": "Label for the keyboard shortcut for folding all code. The opposite of {{msg-mw|Codemirror-keymap-unfoldall}}",
 	"codemirror-keymap-unfoldall": "Label for the keyboard shortcut for unfolding all code. The opposite of {{msg-mw|Codemirror-keymap-foldall}}",
 	"codemirror-keymap-other": "Section heading in the keyboard shortcuts help dialog.",
-	"codemirror-keymap-direction": "Label for the keyboard shortcut for changing the directionality of text.",
+	"codemirror-keymap-direction": "Label for the keyboard shortcut for changing the directionality of text. Left to Right or Right to Left.",
 	"codemirror-keymap-preferences": "Label for the keyboard shortcut for opening the syntax highlighting preferences.",
 	"codemirror-keymap-help": "Label for the keyboard shortcut for viewing the help dialog of keyboard shortcuts.\n\n{{Identical|Keyboard shortcut}}",
 	"codemirror-keymap-autocomplete": "Label for the keyboard shortcut for selecting an autocomplete suggestion.",
