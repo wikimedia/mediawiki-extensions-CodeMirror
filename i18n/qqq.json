@@ -83,7 +83,7 @@
 	"codemirror-keymap-bold": "Label for the keyboard shortcut for making text bold.\n\n{{Identical|Bold}}",
 	"codemirror-keymap-italic": "Label for the keyboard shortcut for making text italic.\n\n{{Identical|Italic}}",
 	"codemirror-keymap-link": "Label for the keyboard shortcut for inserting a link.\n\n{{Identical|Link}}",
-	"codemirror-keymap-computercode": "Label for the keyboard shortcut for inserting computer code.",
+	"codemirror-keymap-computercode": "Label for the keyboard shortcut for inserting computer code.\n\n{{Identical|Computer code}}",
 	"codemirror-keymap-strikethrough": "Label for the keyboard shortcut for striking through text.",
 	"codemirror-keymap-subscript": "Label for the keyboard shortcut for subscripting text.",
 	"codemirror-keymap-superscript": "Label for the keyboard shortcut for superscripting text.",
