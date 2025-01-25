@@ -416,6 +416,20 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 	/**
 	 * @inheritDoc
 	 */
+	getButton( label, icon = null, iconOnly = false ) {
+		const button = super.getButton( label, icon, iconOnly );
+		// The following CSS classes may be used here:
+		// * cm-mw-panel--search__all
+		// * cm-mw-panel--search__replace
+		// * cm-mw-panel--search__replace-all
+		// * cm-mw-panel--search__done
+		button.classList.add( `cm-mw-panel--search__${ label.replace( 'codemirror-', '' ) }` );
+		return button;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	getTextInput( name, value = '', placeholder = '' ) {
 		const [ container, input ] = super.getTextInput( name, value, placeholder );
 		input.autocomplete = 'off';

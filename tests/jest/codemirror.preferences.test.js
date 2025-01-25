@@ -14,13 +14,28 @@ describe( 'CodeMirrorPreferences', () => {
 		mockUserPreferences = ( preferences = {} ) => {
 			mw.user.options.get = jest.fn().mockReturnValue( preferences );
 		};
+		getCodeMirrorPreferences = ( extensionRegistry = {
+			fooExtension: EditorView.theme(),
+			barExtension: EditorView.theme()
 		/* eslint-disable-next-line arrow-body-style */
-		getCodeMirrorPreferences = () => {
-			return new CodeMirrorPreferences( {
-				fooExtension: EditorView.theme(),
-				barExtension: EditorView.theme()
-			} );
+		}, isVisualEditor = false ) => {
+			return new CodeMirrorPreferences( extensionRegistry, isVisualEditor );
 		};
+	} );
+
+	it( 'VisualEditor shouldn\'t use unsupported extensions', () => {
+		mockDefaultPreferences( {
+			fooExtension: true,
+			barExtension: true,
+			bracketMatching: true
+		} );
+		const preferences = getCodeMirrorPreferences( {
+			fooExtension: EditorView.theme(),
+			barExtension: EditorView.theme(),
+			bracketMatching: EditorView.theme()
+		}, true );
+		expect( Object.keys( preferences.extensionRegistry ) )
+			.toStrictEqual( [ 'bracketMatching' ] );
 	} );
 
 	it( 'defaultPreferences', () => {
@@ -64,14 +79,56 @@ describe( 'CodeMirrorPreferences', () => {
 	it( 'registerExtension', () => {
 		mockDefaultPreferences( { fooExtension: false, barExtension: false } );
 		mockUserPreferences( '{"fooExtension":0,"barExtension":1}' );
-		const fooExtension = EditorView.theme();
 		const barExtension = EditorView.theme();
-		const preferences = getCodeMirrorPreferences( { fooExtension, barExtension } );
+		const preferences = getCodeMirrorPreferences();
 		const view = new EditorView();
 		preferences.registerExtension( 'barExtension', barExtension, view );
 		expect( preferences.extensionRegistry.barExtension ).toStrictEqual( barExtension );
 		expect( preferences.compartmentRegistry.barExtension ).toBeInstanceOf( Compartment );
 		expect( preferences.compartmentRegistry.barExtension.get( view.state ).length )
 			.toStrictEqual( 2 );
+	} );
+
+	it( 'extension', () => {
+		const preferences = getCodeMirrorPreferences();
+		const ext = preferences.extension;
+		expect( ext[ 0 ].constructor.name ).toStrictEqual( 'FacetProvider' );
+	} );
+
+	it( 'panel', () => {
+		const preferences = getCodeMirrorPreferences();
+		const panel = preferences.panel;
+		expect( panel.dom.className ).toStrictEqual( 'cm-mw-preferences-panel cm-mw-panel' );
+		const checkboxes = panel.dom.querySelectorAll( '.cdx-checkbox__input' );
+		expect( checkboxes.length ).toStrictEqual( 2 );
+		expect( checkboxes[ 0 ].name ).toStrictEqual( 'fooExtension' );
+		expect( checkboxes[ 1 ].name ).toStrictEqual( 'barExtension' );
+	} );
+
+	it( 'logged out preferences', () => {
+		mw.user.isNamed = jest.fn().mockReturnValue( false );
+		let mockStorage = {
+			// Opposite of the values set in beforeEach
+			fooExtension: true,
+			barExtension: false
+		};
+		mw.storage = {
+			getObject: jest.fn( () => mockStorage ),
+			setObject: jest.fn( ( key, value ) => {
+				mockStorage = value;
+			} )
+		};
+
+		mockDefaultPreferences();
+		const preferences = getCodeMirrorPreferences();
+		expect( preferences.fetchPreferences() ).toStrictEqual( {
+			fooExtension: true,
+			barExtension: false
+		} );
+		preferences.setPreference( 'barExtension', true );
+		expect( preferences.fetchPreferences() ).toStrictEqual( {
+			fooExtension: true,
+			barExtension: true
+		} );
 	} );
 } );
