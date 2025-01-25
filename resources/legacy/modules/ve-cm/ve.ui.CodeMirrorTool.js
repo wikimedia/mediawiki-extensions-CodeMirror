@@ -44,14 +44,6 @@ ve.ui.CodeMirrorTool.prototype.onSelect = function () {
 
 	new mw.Api().saveOption( 'usecodemirror', useCodeMirror ? 1 : 0 );
 	mw.user.options.set( 'usecodemirror', useCodeMirror ? 1 : 0 );
-
-	this.extCodeMirror.logUsage( {
-		editor: 'wikitext-2017',
-		enabled: useCodeMirror,
-		toggled: true,
-		// eslint-disable-next-line camelcase
-		edit_start_ts_ms: ( this.toolbar.target.startTimeStamp * 1000 ) || 0
-	} );
 };
 
 /**
@@ -67,16 +59,6 @@ ve.ui.CodeMirrorTool.prototype.onSurfaceChange = function ( oldSurface, newSurfa
 		const useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
 		command.execute( surface, [ useCodeMirror ] );
 		this.setActive( useCodeMirror );
-
-		if ( this.toolbar.target.startTimeStamp ) {
-			this.extCodeMirror.logUsage( {
-				editor: 'wikitext-2017',
-				enabled: useCodeMirror,
-				toggled: false,
-				// eslint-disable-next-line camelcase
-				edit_start_ts_ms: ( this.toolbar.target.startTimeStamp * 1000 ) || 0
-			} );
-		}
 	}
 };
 

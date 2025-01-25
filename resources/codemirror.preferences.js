@@ -170,6 +170,24 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		} else {
 			mw.storage.setObject( this.optionName, storageObj );
 		}
+
+		this.firePreferencesApplyHook( key );
+	}
+
+	/**
+	 * @param {string} prefName
+	 * @fires CodeMirror~'ext.CodeMirror.preferences.apply'
+	 * @internal
+	 */
+	firePreferencesApplyHook( prefName ) {
+		/**
+		 * Called when a CodeMirror preference is changed or initially applied in a session.
+		 *
+		 * @event CodeMirror~'ext.CodeMirror.preferences.apply'
+		 * @param {string} prefName
+		 * @param {boolean} prefValue
+		 */
+		mw.hook( 'ext.CodeMirror.preferences.apply' ).fire( prefName, this.getPreference( prefName ) );
 	}
 
 	/**
@@ -220,6 +238,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 				)
 			)
 		} );
+		this.firePreferencesApplyHook( name );
 	}
 
 	/**
@@ -232,12 +251,14 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 				{ key: 'Mod-Shift-,', run: ( view ) => this.toggle( view, true ) }
 			] ),
 			// Compartmentalized extensions
-			Object.keys( this.extensionRegistry ).map(
-				( name ) => this.compartmentRegistry[ name ].of(
-					// Only apply the extension if the preference (or default pref) is enabled.
-					this.getPreference( name ) ? this.extensionRegistry[ name ] : []
-				)
-			)
+			Object.keys( this.extensionRegistry ).map( ( name ) => {
+				// Only apply the extension if the preference (or default pref) is enabled.
+				if ( this.getPreference( name ) ) {
+					this.firePreferencesApplyHook( name );
+					return this.compartmentRegistry[ name ].of( this.extensionRegistry[ name ] );
+				}
+				return [];
+			} )
 		];
 	}
 

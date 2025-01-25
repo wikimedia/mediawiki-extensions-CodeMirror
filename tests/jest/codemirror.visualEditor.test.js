@@ -33,8 +33,13 @@ beforeEach( () => {
 	cmVe = new CodeMirrorVisualEditor( surface );
 } );
 
+afterEach( () => {
+	cmVe.destroy();
+} );
+
 describe( 'constructor', () => {
 	it( 'should set the surface with the attached root node as a mimicked textarea', () => {
+		cmVe.initialize();
 		expect( cmVe.surface ).toStrictEqual( surface );
 		expect( cmVe.textarea ).toStrictEqual( surface.getView().$attachedRootNode[ 0 ] );
 	} );
@@ -84,5 +89,17 @@ describe( 'deactivate', () => {
 		cmVe.deactivate();
 		expect( cmVe.surfaceView.$documentNode[ 0 ].classList )
 			.not.toContain( 've-ce-documentNode-codeEditor-hide' );
+	} );
+} );
+
+describe( 'logEditFeature', () => {
+	it( 'should log as wikitext-2017', () => {
+		const spy = jest.spyOn( mw, 'track' );
+		cmVe.initialize();
+		expect( spy ).toHaveBeenCalledTimes( 1 );
+		expect( spy ).toHaveBeenNthCalledWith( 1, 'visualEditorFeatureUse', {
+			action: 'activated',
+			feature: 'codemirror'
+		} );
 	} );
 } );

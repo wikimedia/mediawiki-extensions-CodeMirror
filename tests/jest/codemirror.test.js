@@ -3,6 +3,7 @@ const { EditorView, Prec } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirror = require( '../../resources/codemirror.js' );
 
 let textarea, cm, form;
+
 beforeEach( () => {
 	mw.hook.mockHooks = {};
 	form = document.createElement( 'form' );
@@ -264,27 +265,6 @@ describe( 'multiple instances', () => {
 			// And the first instance should work as it did prior to initialization.
 			cm.$textarea.val( 'Soundgarden' );
 			expect( cm.textarea.value ).toStrictEqual( 'Soundgarden' );
-		} );
-	} );
-} );
-
-describe( 'logUsage', () => {
-	it( 'should track usage of CodeMirror with the correct data', () => {
-		CodeMirror.logUsage( {
-			editor: 'wikitext',
-			enabled: true,
-			toggled: false
-		} );
-		expect( mw.track ).toBeCalledWith( 'event.CodeMirrorUsage', {
-			editor: 'wikitext',
-			enabled: true,
-			// eslint-disable-next-line camelcase
-			session_token: 'abc',
-			toggled: false,
-			// eslint-disable-next-line camelcase
-			user_edit_count_bucket: undefined,
-			// eslint-disable-next-line camelcase
-			user_id: 123
 		} );
 	} );
 } );

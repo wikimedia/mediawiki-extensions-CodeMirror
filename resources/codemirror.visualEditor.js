@@ -184,6 +184,30 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	}
 
 	/**
+	 * Log usage of CodeMirror to the VisualEditorFeatureUse schema.
+	 *
+	 * @see https://phabricator.wikimedia.org/T373710
+	 * @see https://meta.wikimedia.org/wiki/Schema:VisualEditorFeatureUse
+	 * @see https://www.mediawiki.org/wiki/VisualEditor/FeatureUse_data_dictionary
+	 * @inheritDoc
+	 */
+	logEditFeature( action ) {
+		mw.track( 'visualEditorFeatureUse', { feature: 'codemirror', action } );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	setupFeatureLogging() {
+		this.addMwHook( 'ext.CodeMirror.preferences.apply', ( prefName, enabled ) => {
+			// Log only when in-use, not when it's toggled.
+			if ( enabled ) {
+				this.logEditFeature( `prefs-${ prefName }` );
+			}
+		} );
+	}
+
+	/**
 	 * Update margins to account for the CodeMirror gutter.
 	 *
 	 * @param {string} dir Document direction

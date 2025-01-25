@@ -276,6 +276,28 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	}
 
 	/**
+	 * Log usage of CodeMirror to the VisualEditorFeatureUse schema.
+	 * Reimplements ext.wikiEditor's logEditFeature method (GPL-2.0+), which isn't exported.
+	 *
+	 * @see https://phabricator.wikimedia.org/T373710
+	 * @see https://meta.wikimedia.org/wiki/Schema:VisualEditorFeatureUse
+	 * @see https://www.mediawiki.org/wiki/VisualEditor/FeatureUse_data_dictionary
+	 * @inheritDoc
+	 */
+	logEditFeature( action ) {
+		if ( mw.config.get( 'wgMFMode' ) !== null ) {
+			// Visiting a ?action=edit URL can, depending on user settings, result
+			// in the MobileFrontend overlay appearing on top of WikiEditor. In
+			// these cases, don't log anything.
+			return;
+		}
+		mw.track( 'visualEditorFeatureUse', {
+			feature: 'codemirror',
+			action
+		} );
+	}
+
+	/**
 	 * Adds the Realtime Preview handler. Realtime Preview reads from the textarea
 	 * via jQuery.textSelection, which will bubble up to CodeMirror automatically.
 	 *

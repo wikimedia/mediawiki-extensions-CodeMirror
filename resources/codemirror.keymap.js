@@ -216,10 +216,19 @@ class CodeMirrorKeymap {
 	 * @return {boolean}
 	 */
 	showHelpDialog() {
+		/**
+		 * Fired when the keymap help dialog is opened.
+		 *
+		 * @event CodeMirror~ext.CodeMirror.keymap
+		 * @internal
+		 */
+		mw.hook( 'ext.CodeMirror.keymap' ).fire();
+
 		if ( this.dialog ) {
 			this.animateDialog( true );
 			return true;
 		}
+
 		const backdrop = document.createElement( 'div' );
 		backdrop.classList.add(
 			'cdx-dialog-backdrop',

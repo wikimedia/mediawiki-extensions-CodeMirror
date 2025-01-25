@@ -301,14 +301,6 @@ function init() {
 			setCodeEditorPreference( true );
 		}
 		updateToolbarButton();
-
-		extCodeMirror.logUsage( {
-			editor: 'wikitext',
-			enabled: codeMirror !== null,
-			toggled: true,
-			// eslint-disable-next-line no-jquery/no-global-selector,camelcase
-			edit_start_ts_ms: parseInt( $( 'input[name="wpStarttime"]' ).val() ) * 1000 || 0
-		} );
 	}
 
 	/**
@@ -355,14 +347,6 @@ function init() {
 			enableCodeMirror();
 		}
 		updateToolbarButton();
-
-		extCodeMirror.logUsage( {
-			editor: 'wikitext',
-			enabled: useCodeMirror,
-			toggled: false,
-			// eslint-disable-next-line no-jquery/no-global-selector,camelcase
-			edit_start_ts_ms: parseInt( $( 'input[name="wpStarttime"]' ).val() ) * 1000 || 0
-		} );
 	}
 
 	// Add CodeMirror button to the enhanced editing toolbar.
