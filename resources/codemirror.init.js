@@ -44,8 +44,8 @@ function init( fromToggleButton = false ) {
 		} else {
 			const id = isSpecialUpload ? 'wpUploadDescription' : 'wpTextbox1';
 			const textarea = document.getElementById( id );
-			const cm = new CodeMirror( textarea );
-			cm.initialize( [ ...cm.defaultExtensions, langSupport ] );
+			const cm = new CodeMirror( textarea, langSupport );
+			cm.initialize();
 		}
 	} );
 }

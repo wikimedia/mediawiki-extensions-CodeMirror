@@ -43,8 +43,8 @@ const copyState = ( state ) => {
  * ] ).then( ( require ) => {
  *   const CodeMirror = require( 'ext.CodeMirror.v6' );
  *   const mediawikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
- *   const cm = new CodeMirror( myTextarea );
- *   cm.initialize( [ cm.defaultExtensions, mediawikiLang() ] );
+ *   const cm = new CodeMirror( myTextarea, mediawikiLang() );
+ *   cm.initialize();
  * } );
  */
 class CodeMirrorModeMediaWiki {

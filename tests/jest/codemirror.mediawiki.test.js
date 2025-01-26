@@ -183,7 +183,6 @@ const testCases = [
 // Setup CodeMirror instance.
 const textarea = document.createElement( 'textarea' );
 document.body.appendChild( textarea );
-const cm = new CodeMirror( textarea );
 // Stub the config normally provided by mw.config.get('extCodeMirrorConfig')
 const mwLang = mediaWikiLang( {}, {
 	urlProtocols: 'ftp://|https://|news:',
@@ -207,7 +206,8 @@ const mwLang = mediaWikiLang( {}, {
 		references: 'mediawiki'
 	}
 } );
-cm.initialize( [ ...cm.defaultExtensions, mwLang ] );
+const cm = new CodeMirror( textarea, mwLang );
+cm.initialize();
 
 describe( 'CodeMirrorModeMediaWiki', () => {
 	it.each( testCases )(

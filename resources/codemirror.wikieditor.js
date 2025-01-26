@@ -36,13 +36,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	 * @stable to call and override
 	 */
 	constructor( $textarea, langExtension = [] ) {
-		super( $textarea );
-		/**
-		 * Language support and its extension(s).
-		 *
-		 * @type {LanguageSupport|Extension}
-		 */
-		this.langExtension = langExtension;
+		super( $textarea, langExtension );
 		/**
 		 * Whether CodeMirror is currently enabled.
 		 *
@@ -113,7 +107,6 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		 */
 		const extensions = [
 			this.defaultExtensions,
-			this.langExtension,
 			EditorView.updateListener.of( ( update ) => {
 				if ( update.docChanged && typeof this.realtimePreviewHandler === 'function' ) {
 					this.realtimePreviewHandler();

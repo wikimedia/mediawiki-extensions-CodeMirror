@@ -33,8 +33,8 @@ require( './ext.CodeMirror.data.js' );
  * ] ).then( ( require ) => {
  *   const CodeMirror = require( 'ext.CodeMirror.v6' );
  *   const mediawikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
- *   const cm = new CodeMirror( myTextarea );
- *   cm.initialize( [ cm.defaultExtensions, mediawikiLang() ] );
+ *   const cm = new CodeMirror( myTextarea, mediawikiLang() );
+ *   cm.initialize();
  * } );
  */
 class CodeMirror {
@@ -43,9 +43,10 @@ class CodeMirror {
 	 *
 	 * @param {HTMLTextAreaElement|jQuery|string|ve.ui.Surface} textarea Textarea to
 	 *   add syntax highlighting to.
+	 * @param {LanguageSupport|Extension} [langExtension] Language support and its extension(s).
 	 * @constructor
 	 */
-	constructor( textarea ) {
+	constructor( textarea, langExtension = [] ) {
 		if ( mw.config.get( 'cmDebug' ) ) {
 			window.cm = this;
 		}
@@ -67,6 +68,12 @@ class CodeMirror {
 		 * @type {jQuery}
 		 */
 		this.$textarea = $( textarea );
+		/**
+		 * Language support and its extension(s).
+		 *
+		 * @type {LanguageSupport|Extension}
+		 */
+		this.langExtension = langExtension;
 		/**
 		 * The editor user interface.
 		 *
@@ -163,7 +170,8 @@ class CodeMirror {
 			drawSelection(),
 			rectangularSelection(),
 			crosshairCursor(),
-			dropCursor()
+			dropCursor(),
+			this.langExtension
 		];
 
 		// Add extensions relevant to editing (not read-only).

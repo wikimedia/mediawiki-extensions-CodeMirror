@@ -67,7 +67,11 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 				surfaceView.$element.addClass( 'cm-mw-colorblind-colors' );
 			}
 
-			surface.mirror = new CodeMirror( surface );
+			surface.mirror = new CodeMirror( surface, mediawikiLang( {
+				// These should never be enabled in VE
+				bidiIsolation: false,
+				codeFolding: false
+			} ) );
 			const lineHeightExtension = codeMirrorLib.EditorView.theme( {
 				'.cm-content': {
 					lineHeight: 1.5
@@ -85,11 +89,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 					've-ce-documentNode-codeEditor-hide'
 			);
 
-			surface.mirror.initialize( surface.mirror.defaultExtensions.concat( mediawikiLang( {
-				// These should never be enabled in VE
-				bidiIsolation: false,
-				codeFolding: false
-			} ), lineHeightExtension ) );
+			surface.mirror.initialize( [ surface.mirror.defaultExtensions, lineHeightExtension ] );
 
 			// Force infinite viewport in CodeMirror to prevent misalignment of
 			// the VE surface and the CodeMirror view. See T357482#10076432.
