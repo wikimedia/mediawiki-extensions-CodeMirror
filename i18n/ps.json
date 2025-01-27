@@ -1,0 +1,24 @@
+{
+	"@metadata": {
+		"authors": [
+			"Ahmed-Najib-Biabani-Ibrahimkhel"
+		]
+	},
+	"codemirror-keymap-help-title": "د ليکدړې لنډلارې",
+	"codemirror-keymap-help-close": "تړل",
+	"codemirror-keymap-italic": "رېوند",
+	"codemirror-keymap-link": "تړنه",
+	"codemirror-keymap-strikethrough": "کرښ باندې",
+	"codemirror-keymap-underline": "کرښ لاندې",
+	"codemirror-keymap-history": "پېښليک",
+	"codemirror-keymap-undo": "ناکړل",
+	"codemirror-keymap-redo": "بياکړل",
+	"codemirror-keymap-redoselection": "ټاکنه بیاکړل",
+	"codemirror-keymap-indent": "څنډه لويول",
+	"codemirror-keymap-outdent": "څنډه وړه‌کول",
+	"codemirror-keymap-heading": "سرليک (1-6)",
+	"codemirror-keymap-insert": "ورټومبل",
+	"codemirror-keymap-blankline": "تشه کرښه",
+	"codemirror-keymap-comment": "تبصره",
+	"codemirror-keymap-direction": "د لوري بدلون"
+}
