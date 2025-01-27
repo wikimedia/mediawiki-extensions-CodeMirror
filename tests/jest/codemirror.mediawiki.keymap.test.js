@@ -47,10 +47,45 @@ describe( 'CodeMirrorMediaWikiKeymap', () => {
 		expect( cm.textSelection.getContents() ).toStrictEqual( '<ref></ref>' );
 	} );
 
-	it( 'should italicize the selected text', () => {
+	const formattingTestCases = [
+		{
+			title: 'italics',
+			key: 'i',
+			expected: "''Foo''"
+		},
+		{
+			title: 'bold',
+			key: 'b',
+			expected: "'''Foo'''"
+		},
+		{
+			title: 'link',
+			key: 'k',
+			expected: '[[Foo]]'
+		},
+		{
+			title: 'subscript',
+			key: ',',
+			expected: '<sub>Foo</sub>'
+		},
+		{
+			title: 'superscript',
+			key: '.',
+			expected: '<sup>Foo</sup>'
+		},
+		{
+			title: 'underline',
+			key: 'u',
+			expected: '<u>Foo</u>'
+		}
+	];
+	it.each( formattingTestCases )( '$title', ( { key, expected } ) => {
 		cm.textSelection.setContents( 'Foo' );
 		cm.textSelection.setSelection( { start: 0, end: 3 } );
-		cm.view.contentDOM.dispatchEvent( new KeyboardEvent( 'keydown', { key: 'i', ctrlKey: true } ) );
-		expect( cm.textSelection.getContents() ).toStrictEqual( "''Foo''" );
+		cm.view.contentDOM.dispatchEvent( new KeyboardEvent( 'keydown', {
+			key,
+			ctrlKey: true
+		} ) );
+		expect( cm.textSelection.getContents() ).toStrictEqual( expected );
 	} );
 } );
