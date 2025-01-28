@@ -111,6 +111,7 @@
 	"codemirror-keymap-preferences": "Voorkeuren voor syntaxiskleuring",
 	"codemirror-keymap-help": "Sneltoetsen",
 	"codemirror-keymap-autocomplete": "Selecteer suggestie voor automatisch aanvullen",
+	"codemirror-keymap-startcompletion": "Suggesties voor automatisch aanvullen weergeven",
 	"codemirror-keymap-cursor-modifiers": "Cursor-aanpassers",
 	"codemirror-keymap-multicursor": "Houd $1 ingedrukt en klik om meerdere cursors aan te maken.",
 	"codemirror-keymap-crosshair": "Houd $1 ingedrukt en klik en sleep om rechthoekige selecties te maken.",
