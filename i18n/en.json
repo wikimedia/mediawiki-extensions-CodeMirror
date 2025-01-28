@@ -34,7 +34,7 @@
 	"codemirror-match-case": "Match case",
 	"codemirror-regexp": "Regular expression",
 	"codemirror-regexp-invalid": "Invalid regular expression",
-	"codemirror-by-word": "By word",
+	"codemirror-by-word": "Whole word",
 	"codemirror-replace": "Replace",
 	"codemirror-replace-placeholder": "Replace",
 	"codemirror-replace-all": "Replace all",

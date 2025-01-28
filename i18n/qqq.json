@@ -42,7 +42,7 @@
 	"codemirror-match-case": "Tooltip for the 'Match case' button in the CodeMirror search panel.\n\n{{Identical|Match case}}",
 	"codemirror-regexp": "Tooltip for the 'Regular expression' button in the CodeMirror search panel.",
 	"codemirror-regexp-invalid": "Error message shown when the regular expression entered in the CodeMirror search panel is invalid.",
-	"codemirror-by-word": "Tooltip for the 'By word' button in the CodeMirror search panel.",
+	"codemirror-by-word": "Tooltip for the 'Whole word' button in the CodeMirror search panel.",
 	"codemirror-replace": "Label for the 'Replace' button in the CodeMirror search panel.",
 	"codemirror-replace-placeholder": "Placeholder text for the 'Replace' input in the CodeMirror search panel.",
 	"codemirror-replace-all": "Label for the 'Replace all' button in the CodeMirror search panel.",
