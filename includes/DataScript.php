@@ -25,7 +25,6 @@ namespace MediaWiki\Extension\CodeMirror;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\ResourceLoader as RL;
-use MediaWiki\ResourceLoader\ResourceLoader;
 
 /**
  * ResourceLoader callback for ext.CodeMirror.data
@@ -36,9 +35,9 @@ class DataScript {
 	 * @return string
 	 */
 	public static function makeScript( RL\Context $context ) {
-		return ResourceLoader::makeConfigSetScript(
-				[ 'extCodeMirrorConfig' => self::getFrontendConfiguraton() ]
-			);
+		return 'mw.config.set('
+			. $context->encodeJson( [ 'extCodeMirrorConfig' => self::getFrontendConfiguraton() ] )
+			. ');';
 	}
 
 	/**

@@ -3,7 +3,9 @@
 namespace MediaWiki\Extension\CodeMirror\Tests;
 
 use MediaWiki\Extension\CodeMirror\DataScript;
+use MediaWiki\Request\FauxRequest;
 use MediaWiki\ResourceLoader\Context;
+use MediaWiki\ResourceLoader\ResourceLoader;
 
 /**
  * @covers \MediaWiki\Extension\CodeMirror\DataScript
@@ -11,8 +13,7 @@ use MediaWiki\ResourceLoader\Context;
 class DataScriptTest extends \MediaWikiIntegrationTestCase {
 
 	public function testMakeScript() {
-		$context = $this->createMock( Context::class );
-
+		$context = new Context( $this->createMock( ResourceLoader::class ), new FauxRequest() );
 		$script = DataScript::makeScript( $context );
 		$this->assertStringContainsString( '"extCodeMirrorConfig":', $script );
 		$this->assertStringContainsString( '"lineNumberingNamespaces":', $script );
