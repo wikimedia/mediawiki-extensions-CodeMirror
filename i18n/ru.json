@@ -38,7 +38,7 @@
 	"codemirror-match-case": "Учитывать регистр",
 	"codemirror-regexp": "Регулярное выражение",
 	"codemirror-regexp-invalid": "Ошибочное регулярное выражение",
-	"codemirror-by-word": "По словам",
+	"codemirror-by-word": "Слово целиком",
 	"codemirror-replace": "Заменить",
 	"codemirror-replace-placeholder": "Заменить",
 	"codemirror-replace-all": "Заменить все",

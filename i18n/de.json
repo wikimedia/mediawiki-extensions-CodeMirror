@@ -37,7 +37,7 @@
 	"codemirror-match-case": "Groß- und Kleinschreibung beachten",
 	"codemirror-regexp": "Regulärer Ausdruck",
 	"codemirror-regexp-invalid": "Ungültiger regulärer Ausdruck",
-	"codemirror-by-word": "Ganze Wörter",
+	"codemirror-by-word": "Ganzes Wort",
 	"codemirror-replace": "Ersetzen",
 	"codemirror-replace-placeholder": "Ersetzen",
 	"codemirror-replace-all": "Alle ersetzen",
