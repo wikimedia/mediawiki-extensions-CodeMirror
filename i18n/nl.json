@@ -36,7 +36,7 @@
 	"codemirror-match-case": "Hoofdlettergevoelig",
 	"codemirror-regexp": "Reguliere expressie",
 	"codemirror-regexp-invalid": "Ongeldige reguliere expressie",
-	"codemirror-by-word": "Op woord",
+	"codemirror-by-word": "Heel woord",
 	"codemirror-replace": "Vervangen",
 	"codemirror-replace-placeholder": "Vervangen",
 	"codemirror-replace-all": "Alles vervangen",

@@ -29,6 +29,7 @@
 	"codemirror-all": "모두",
 	"codemirror-regexp": "정규 표현식",
 	"codemirror-regexp-invalid": "잘못된 정규 표현식",
+	"codemirror-by-word": "전체 단어",
 	"codemirror-replace": "바꾸기",
 	"codemirror-replace-placeholder": "바꾸기",
 	"codemirror-replace-all": "모두 바꾸기",

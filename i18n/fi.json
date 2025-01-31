@@ -35,7 +35,7 @@
 	"codemirror-match-case": "Huomioi kirjainkoko",
 	"codemirror-regexp": "Säännöllinen lauseke",
 	"codemirror-regexp-invalid": "Virheellinen säännöllinen lauseke",
-	"codemirror-by-word": "Sanoittain",
+	"codemirror-by-word": "Koko sana",
 	"codemirror-replace": "Korvaa",
 	"codemirror-replace-placeholder": "Korvaa",
 	"codemirror-replace-all": "Korvaa kaikki",
