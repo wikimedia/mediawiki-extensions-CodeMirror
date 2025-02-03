@@ -32,7 +32,7 @@
 	"codemirror-match-case": "Distinguer majusculas/minusculas",
 	"codemirror-regexp": "Expression regular",
 	"codemirror-regexp-invalid": "Expression regular non valide",
-	"codemirror-by-word": "Per parola",
+	"codemirror-by-word": "Parola integre",
 	"codemirror-replace": "Reimplaciar",
 	"codemirror-replace-placeholder": "Reimplaciar",
 	"codemirror-replace-all": "Reimplaciar toto",
