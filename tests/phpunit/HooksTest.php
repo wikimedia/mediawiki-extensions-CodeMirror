@@ -29,6 +29,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 	 * @covers ::shouldLoadCodeMirror
 	 * @covers ::onEditPage__showEditForm_initial
 	 * @covers ::onEditPage__showReadOnlyForm_initial
+	 * @covers ::onUploadForm_initial
 	 * @param array $conds
 	 * @param string[] $expectedModules
 	 * @dataProvider provideOnEditPageShowEditFormInitial
@@ -44,6 +45,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			// WikiEditor
 			'usebetatoolbar' => false,
 			'method' => 'edit',
+			'reupload' => false,
 		], $conds );
 		$this->overrideConfigValues( [
 			'CodeMirrorV6' => $conds['useV6'],
@@ -85,6 +87,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		if ( $conds['method'] === 'upload' ) {
 			$uploadMock = $this->createMock( SpecialUpload::class );
 			$uploadMock->method( 'getOutput' )->willReturn( $out );
+			$uploadMock->mForReUpload = $conds['reupload'];
 			$hooks->onUploadForm_initial( $uploadMock );
 		} else {
 			$method = $conds['method'] === 'readOnly' ?
@@ -179,6 +182,10 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		yield 'CM6, Special:Upload' => [
 			[ 'method' => 'upload' ],
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
+		];
+		yield 'CM6, Special:Upload, reupload' => [
+			[ 'method' => 'upload', 'reupload' => true ],
+			[]
 		];
 		yield 'CM6 + WikiEditor, Special:Upload' => [
 			[ 'usebetatoolbar' => true, 'method' => 'upload' ],
