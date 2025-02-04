@@ -16,6 +16,7 @@
 	"codemirror-all": "সব",
 	"codemirror-regexp": "রেগুলার এক্সপ্রেশন",
 	"codemirror-regexp-invalid": "অবৈধ রেগুলার এক্সপ্রেশন",
+	"codemirror-by-word": "সম্পূর্ণ শব্দ",
 	"codemirror-replace": "প্রতিস্থাপন করুন",
 	"codemirror-replace-placeholder": "প্রতিস্থাপন করুন",
 	"codemirror-replace-all": "সব প্রতিস্থাপন করুন",

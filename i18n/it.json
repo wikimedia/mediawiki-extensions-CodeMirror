@@ -27,7 +27,7 @@
 	"codemirror-match-case": "Maiuscole/minuscole",
 	"codemirror-regexp": "Espressione regolare",
 	"codemirror-regexp-invalid": "Espressione regolare non valida",
-	"codemirror-by-word": "Per parola",
+	"codemirror-by-word": "Parola intera",
 	"codemirror-replace": "Sostituisci",
 	"codemirror-replace-all": "Sostituisci tutto",
 	"codemirror-done": "Fatto",
