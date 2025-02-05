@@ -18,6 +18,7 @@
 	"codemirror-all": "све",
 	"codemirror-match-case": "Пази на величину слова",
 	"codemirror-regexp": "Регекс",
+	"codemirror-by-word": "Цела реч",
 	"codemirror-replace": "Замени",
 	"codemirror-replace-placeholder": "Замени",
 	"codemirror-replace-all": "Замени све",
