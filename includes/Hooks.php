@@ -219,6 +219,9 @@ class Hooks implements
 	 * @param SpecialUpload $upload
 	 */
 	public function onUploadForm_initial( $upload ): void {
+		if ( $upload->mForReUpload ) {
+			return;
+		}
 		$out = $upload->getOutput();
 		if ( $this->shouldUseV6( $out ) && $this->shouldLoadCodeMirror( $out, null, false ) ) {
 			$this->loadCodeMirrorOnEditPage( $out, false );
