@@ -90,6 +90,7 @@
 	"codemirror-keymap-preformatted": "Praformat",
 	"codemirror-keymap-blockquote": "Petikan sekat",
 	"codemirror-keymap-heading": "Judul (1-6)",
+	"codemirror-keymap-heading-n": "Judul $1",
 	"codemirror-keymap-search": "Cari",
 	"codemirror-keymap-find": "Cari dan ganti",
 	"codemirror-keymap-selectnext": "Cari padanan seterusnya",
