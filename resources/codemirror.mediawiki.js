@@ -1250,7 +1250,11 @@ class CodeMirrorModeMediaWiki {
 					data.firstMultiLetterWord = null;
 					data.firstSpace = null;
 					if ( state.tokenize.name === 'eatExtTokens' ) {
-						state.tokenize = state.stack.pop();
+						state.stack.pop(); // dispose eatExtTokens
+						state.tokenize = state.stack.pop(); // dispose eatExtTagArea
+						state.extName = false;
+						state.extMode = false;
+						state.extState = false;
 					}
 				}
 				readyTokens.length = 0;
