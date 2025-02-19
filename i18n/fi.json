@@ -69,5 +69,6 @@
 	"codemirror-keymap-find": "Etsi ja korvaa",
 	"prefs-accessibility": "Saavutettavuus",
 	"prefs-syntax-highlighting": "Syntaksin korostus",
-	"codemirror-beta-feature-title": "Parannettu syntaksin korostus"
+	"codemirror-beta-feature-title": "Parannettu syntaksin korostus",
+	"codemirror-beta-feature-description": "Pääse käyttämään uutta syntaksin korostusta ja muokkaustoimintoja, kuten koodin piilotusta ja automaattista täydennystä."
 }
