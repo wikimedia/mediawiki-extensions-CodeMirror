@@ -4,6 +4,7 @@ const CodeMirror = require( '../../resources/codemirror.js' );
 
 let textarea, cm, form;
 beforeEach( () => {
+	mw.hook.mockHooks = {};
 	form = document.createElement( 'form' );
 	textarea = document.createElement( 'textarea' );
 	textarea.value = 'Metallica';
@@ -126,7 +127,6 @@ describe( 'toggle', () => {
 	} );
 
 	it( 'should not call initialize more than once', () => {
-		mw.hook.mockHooks = {};
 		cm.initialize();
 		expect( mw.hook.mockHooks[ 'editRecovery.loadEnd' ] ).toHaveLength( 1 );
 		const initializeSpy = jest.spyOn( cm, 'initialize' );
@@ -261,6 +261,28 @@ describe( 'logUsage', () => {
 			// eslint-disable-next-line camelcase
 			user_id: 123
 		} );
+	} );
+} );
+
+describe( 'addMwHook', () => {
+	it( 'should not add the same handler to a hook twice', () => {
+		const fn = () => {};
+		cm.addMwHook( 'ext.CodeMirror.ready', fn );
+		cm.addMwHook( 'ext.CodeMirror.ready', fn );
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.ready' ].length ).toBe( 1 );
+	} );
+
+	it( 'should remove handlers when deactivating', () => {
+		cm.initialize();
+		const fn1 = () => {};
+		const fn2 = () => {};
+		cm.addMwHook( 'ext.CodeMirror.ready', fn1 );
+		cm.addMwHook( 'ext.CodeMirror.preferences.ready', fn2 );
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.ready' ] ).toContain( fn1 );
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.preferences.ready' ] ).toContain( fn2 );
+		cm.deactivate();
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.ready' ] ).not.toContain( fn1 );
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.preferences.ready' ] ).not.toContain( fn2 );
 	} );
 } );
 
