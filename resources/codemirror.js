@@ -173,6 +173,14 @@ class CodeMirror {
 		 * @private
 		 */
 		this.initExtensions = [];
+		/**
+		 * Mapping of mw.hook handlers added by CodeMirror.
+		 * Handlers added here will be removed during deactivation.
+		 *
+		 * @type {Object<Set<Function>>}
+		 * @private
+		 */
+		this.hooks = {};
 	}
 
 	/**
@@ -580,6 +588,26 @@ class CodeMirror {
 	}
 
 	/**
+	 * Add a handler for the given {@link Hook}.
+	 * This method is used to ensure no hook handlers are duplicated across lifecycle methods,
+	 * All handlers will be removed during {@link CodeMirror#deactivate deactivation}.
+	 *
+	 * @param {string} hook
+	 * @param {Function} fn
+	 * @protected
+	 */
+	addMwHook( hook, fn ) {
+		if ( !this.hooks[ hook ] ) {
+			this.hooks[ hook ] = new Set();
+		}
+		if ( this.hooks[ hook ].has( fn ) ) {
+			return;
+		}
+		this.hooks[ hook ].add( fn );
+		mw.hook( hook ).add( fn );
+	}
+
+	/**
 	 * Define jQuery hook for .val() on the textarea.
 	 *
 	 * @see T384556
@@ -790,6 +818,12 @@ class CodeMirror {
 			this.$textarea.textSelection( 'unregister' );
 		}
 
+		// Remove hook handlers.
+		Object.keys( this.hooks ).forEach( ( hook ) => {
+			this.hooks[ hook ].forEach( ( fn ) => mw.hook( hook ).remove( fn ) );
+			delete this.hooks[ hook ];
+		} );
+
 		// Hide the editor, clear the state, and show the original textarea.
 		this.container.classList.add( 'ext-codemirror-wrapper--hidden' );
 		this.state = null;
@@ -819,7 +853,7 @@ class CodeMirror {
 		this.$textarea.unwrap( '.ext-codemirror-wrapper' );
 		this.container = null;
 		this.textSelection = null;
-		// Remove all hook handlers and event listeners.
+		// Remove form submission listener.
 		if ( this.formSubmitEventHandler && this.textarea.form ) {
 			this.textarea.form.removeEventListener( 'submit', this.formSubmitEventHandler );
 			this.formSubmitEventHandler = null;

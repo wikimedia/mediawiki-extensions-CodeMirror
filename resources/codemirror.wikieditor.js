@@ -180,8 +180,8 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	/**
 	 * @inheritDoc
 	 */
-	toggle( enabled ) {
-		super.toggle( enabled );
+	toggle( force ) {
+		super.toggle( force );
 		this.fireSwitchHook();
 	}
 
@@ -245,7 +245,6 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		super.deactivate();
 
 		CodeMirror.setCodeMirrorPreference( false );
-		this.removeRealtimePreviewHandler();
 
 		// Restore original search button.
 		this.$searchBtn.replaceWith( this.$oldSearchBtn );
@@ -282,24 +281,12 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	 * @private
 	 */
 	addRealtimePreviewHandler() {
-		this.realtimePreviewEnableHandler = ( realtimePreview ) => {
+		this.addMwHook( 'ext.WikiEditor.realtimepreview.enable', ( realtimePreview ) => {
 			this.realtimePreviewHandler = realtimePreview.getEventHandler().bind( realtimePreview );
-		};
-		this.realtimePreviewDisableHandler = () => {
+		} );
+		this.addMwHook( 'ext.WikiEditor.realtimepreview.disable', () => {
 			this.realtimePreviewHandler = null;
-		};
-		mw.hook( 'ext.WikiEditor.realtimepreview.enable' ).add( this.realtimePreviewEnableHandler );
-		mw.hook( 'ext.WikiEditor.realtimepreview.disable' ).add( this.realtimePreviewDisableHandler );
-	}
-
-	/**
-	 * Removes the Realtime Preview handler.
-	 *
-	 * @private
-	 */
-	removeRealtimePreviewHandler() {
-		mw.hook( 'ext.WikiEditor.realtimepreview.enable' ).remove( this.realtimePreviewEnableHandler );
-		mw.hook( 'ext.WikiEditor.realtimepreview.disable' ).remove( this.realtimePreviewDisableHandler );
+		} );
 	}
 }
 
