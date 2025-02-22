@@ -153,6 +153,31 @@
 
 // Find and replace
 
+.cm-editor .cm-panels .cm-mw-panel--search-panel {
+	container-type: inline-size;
+
+	.cm-mw-panel--text-input {
+		min-width: auto;
+	}
+
+	// Responsive design (T386777)
+	@container ( max-width: 400px ) {
+		// NOTE: We can't use & here yet, see https://github.com/wikimedia/less.php/issues/91
+		.cm-editor .cm-panels .cm-mw-panel--row {
+			flex-wrap: wrap;
+			row-gap: @spacing-50;
+
+			.cm-mw-panel--text-input {
+				flex-basis: 100%;
+			}
+
+			.cm-mw-panel--button {
+				flex-grow: 1;
+			}
+		}
+	}
+}
+
 .cm-mw-find-results {
 	color: @color-placeholder;
 	position: absolute;
