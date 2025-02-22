@@ -37,9 +37,9 @@ function init( fromToggleButton = false ) {
 			mw.hook( 'wikiEditor.toolbarReady' ).add( ( $textarea ) => {
 				const cmWE = new CodeMirror( $textarea, langSupport );
 				if ( fromToggleButton ) {
-					cmWE.setCodeMirrorPreference( true );
+					CodeMirror.setCodeMirrorPreference( true );
 				}
-				cmWE.addCodeMirrorToWikiEditor();
+				cmWE.initialize();
 			} );
 		} else {
 			const id = isSpecialUpload ? 'wpUploadDescription' : 'wpTextbox1';
@@ -55,7 +55,7 @@ if ( useWikiEditor && !useCodeMirror ) {
 	// We don't need to use `using()` since 'wikiEditor.toolbarReady'
 	// will only fire after ext.wikiEditor is loaded.
 	mw.loader.load( 'ext.wikiEditor' );
-	// NOTE: This code is duplicated in CodeMirrorWikiEditor#addCodeMirrorToWikiEditor().
+	// NOTE: This code is duplicated in CodeMirrorWikiEditor#initialize().
 	// This minor sacrifice is made to avoid loading all the modules when the user may have
 	// no intention of using CodeMirror.
 	mw.hook( 'wikiEditor.toolbarReady' ).add( ( $textarea ) => {

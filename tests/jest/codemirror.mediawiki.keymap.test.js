@@ -5,7 +5,10 @@ describe( 'CodeMirrorMediaWikiKeymap', () => {
 	let cm;
 
 	beforeEach( () => {
-		cm = new CodeMirror( document.createElement( 'textarea' ) );
+		const textarea = document.createElement( 'textarea' );
+		const form = document.createElement( 'form' );
+		form.appendChild( textarea );
+		cm = new CodeMirror( textarea );
 		cm.initialize();
 		// Mocks wgCiteResponsiveReferences
 		mw.config.get = jest.fn().mockReturnValue( true );

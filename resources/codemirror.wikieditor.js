@@ -1,5 +1,4 @@
 const {
-	EditorSelection,
 	EditorView,
 	Extension,
 	LanguageSupport,
@@ -24,27 +23,22 @@ const CodeMirror = require( 'ext.CodeMirror.v6' );
  *   const CodeMirrorWikiEditor = require( 'ext.CodeMirror.v6.WikiEditor' );
  *   const mediawikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
  *   const cmWe = new CodeMirrorWikiEditor( myTextarea, mediawikiLang() );
- *   cmWe.addCodeMirrorToWikiEditor();
+ *   cmWe.initialize();
  * } );
+ * @class
  * @extends CodeMirror
  */
 class CodeMirrorWikiEditor extends CodeMirror {
 	/**
 	 * @constructor
-	 * @param {jQuery} $textarea The textarea to replace with CodeMirror.
-	 * @param {LanguageSupport|Extension} langExtension Language support and its extension(s).
+	 * @param {HTMLTextAreaElement|jQuery|string} textarea The textarea to replace with CodeMirror.
+	 * @param {LanguageSupport|Extension} [langExtension] Language support and its extension(s).
 	 * @stable to call and override
 	 */
-	constructor( $textarea, langExtension = [] ) {
-		super( $textarea, langExtension );
+	constructor( textarea, langExtension = [] ) {
+		super( textarea, langExtension );
 		/**
-		 * Whether CodeMirror is currently enabled.
-		 *
-		 * @type {boolean}
-		 */
-		this.useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
-		/**
-		 * The [Realtime Preview](https://w.wiki/9XgX) handler.
+		 * The [Realtime Preview](https://w.wiki/Cgpp) handler.
 		 *
 		 * @type {Function|null}
 		 */
@@ -78,61 +72,127 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	/**
 	 * @inheritDoc
 	 */
-	setCodeMirrorPreference( prefValue ) {
-		// Save state for function updateToolbarButton()
-		this.useCodeMirror = prefValue;
-		CodeMirror.setCodeMirrorPreference( prefValue );
-	}
-
-	/**
-	 * Replaces the default textarea with CodeMirror.
-	 *
-	 * @fires CodeMirrorWikiEditor~'ext.CodeMirror.switch'
-	 * @stable to call
-	 */
-	enableCodeMirror() {
-		// If CodeMirror is already loaded, abort.
-		if ( this.view ) {
-			return;
-		}
-
-		const selectionStart = this.$textarea.prop( 'selectionStart' ),
-			selectionEnd = this.$textarea.prop( 'selectionEnd' ),
-			scrollTop = this.$textarea.scrollTop(),
-			hasFocus = this.$textarea.is( ':focus' );
-
-		/*
-		 * Default configuration, which we may conditionally add to later.
-		 * @see https://codemirror.net/docs/ref/#state.Extension
-		 */
-		const extensions = [
-			this.defaultExtensions,
+	get defaultExtensions() {
+		return [
+			...super.defaultExtensions,
 			EditorView.updateListener.of( ( update ) => {
 				if ( update.docChanged && typeof this.realtimePreviewHandler === 'function' ) {
 					this.realtimePreviewHandler();
 				}
 			} )
 		];
+	}
 
-		this.initialize( extensions );
-		this.addRealtimePreviewHandler();
+	/**
+	 * @inheritDoc
+	 */
+	initialize( extensions = this.defaultExtensions ) {
+		if ( this.view ) {
+			// Already initialized.
+			return;
+		}
 
-		// Sync scroll position, selections, and focus state.
-		requestAnimationFrame( () => {
-			this.view.scrollDOM.scrollTop = scrollTop;
+		const context = this.$textarea.data( 'wikiEditor-context' );
+		const toolbar = context && context.modules && context.modules.toolbar;
+
+		// Guard against something having removed WikiEditor (T271457)
+		if ( !toolbar ) {
+			return;
+		}
+
+		// Remove the initial toggle button that may have been added by the init script.
+		this.$textarea.wikiEditor( 'removeFromToolbar', {
+			section: 'main',
+			group: 'codemirror'
 		} );
-		if ( selectionStart !== 0 || selectionEnd !== 0 ) {
-			const range = EditorSelection.range( selectionStart, selectionEnd ),
-				scrollEffect = EditorView.scrollIntoView( range );
-			scrollEffect.value.isSnapshot = true;
-			this.view.dispatch( {
-				selection: EditorSelection.create( [ range ] ),
-				effects: scrollEffect
-			} );
+
+		// Add 'Syntax' button to main toolbar.
+		this.$textarea.wikiEditor(
+			'addToToolbar',
+			{
+				section: 'main',
+				groups: {
+					codemirror: {
+						tools: {
+							CodeMirror: {
+								type: 'element',
+								element: () => {
+									// OOUI has already been loaded by WikiEditor.
+									const button = new OO.ui.ToggleButtonWidget( {
+										label: mw.msg( 'codemirror-toggle-label-short' ),
+										title: mw.msg( 'codemirror-toggle-label' ),
+										icon: 'syntax-highlight',
+										value: !this.isActive,
+										framed: false,
+										classes: [ 'tool', 'cm-mw-toggle-wikieditor' ]
+									} );
+									button.on( 'change', () => this.toggle() );
+									return button.$element;
+								}
+							}
+						}
+					}
+				}
+			}
+		);
+
+		// Set the ID of the CodeMirror button for styling.
+		const codeMirrorButton = toolbar.$toolbar[ 0 ].querySelector( '.tool[rel=CodeMirror]' );
+		codeMirrorButton.id = 'mw-editbutton-codemirror';
+
+		// Hide non-applicable buttons until WikiEditor better supports a read-only mode (T188817).
+		if ( this.readOnly ) {
+			context.$ui.addClass( 'ext-codemirror-readonly' );
 		}
-		if ( hasFocus ) {
-			this.view.focus();
+
+		super.initialize( extensions );
+
+		this.fireSwitchHook();
+	}
+
+	/**
+	 * @private
+	 */
+	fireSwitchHook() {
+		if ( !this.switchHook ) {
+			/**
+			 * @type {Hook}
+			 * @private
+			 */
+			this.switchHook = mw.hook( 'ext.CodeMirror.switch' );
 		}
+		/**
+		 * Called after CodeMirror is enabled or disabled in WikiEditor.
+		 *
+		 * @event CodeMirrorWikiEditor~'ext.CodeMirror.switch'
+		 * @param {boolean} enabled Whether CodeMirror is enabled.
+		 * @param {jQuery} $textarea The current "editor", either the
+		 *   original textarea or the `.cm-editor` element.
+		 * @deprecated since MediaWiki 1.44, use
+		 *   {@link event:'ext.CodeMirror.toggle' ext.CodeMirror.toggle} instead.
+		 */
+		this.switchHook.fire(
+			this.isActive,
+			this.isActive ? $( this.view.dom ) : this.$textarea
+		);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	toggle( enabled ) {
+		super.toggle( enabled );
+		this.fireSwitchHook();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	activate() {
+		super.activate();
+
+		CodeMirror.setCodeMirrorPreference( true );
+		this.addRealtimePreviewHandler();
 
 		// Hijack the search button to open the CodeMirror search panel
 		// instead of the WikiEditor search dialog.
@@ -176,17 +236,43 @@ class CodeMirrorWikiEditor extends CodeMirror {
 				}
 			}
 		);
+	}
 
-		/**
-		 * Called after CodeMirror is enabled or disabled in WikiEditor.
-		 *
-		 * @event CodeMirrorWikiEditor~'ext.CodeMirror.switch'
-		 * @param {boolean} enabled Whether CodeMirror is enabled.
-		 * @param {jQuery} $textarea The current "editor", either the
-		 *   original textarea or the `.cm-editor` element.
-		 * @stable to use
-		 */
-		mw.hook( 'ext.CodeMirror.switch' ).fire( true, $( this.view.dom ) );
+	/**
+	 * @inheritDoc
+	 */
+	deactivate() {
+		super.deactivate();
+
+		CodeMirror.setCodeMirrorPreference( false );
+		this.removeRealtimePreviewHandler();
+
+		// Restore original search button.
+		this.$searchBtn.replaceWith( this.$oldSearchBtn );
+
+		// Remove the CodeMirror preferences button from the toolbar.
+		this.$textarea.wikiEditor( 'removeFromToolbar', {
+			section: 'advanced',
+			group: 'codemirror'
+		} );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	destroy() {
+		super.destroy();
+
+		this.$textarea.wikiEditor( 'removeFromToolbar', {
+			section: 'main',
+			group: 'codemirror'
+		} );
+
+		if ( this.readOnly ) {
+			this.$textarea.data( 'wikiEditor-context' ).$ui.removeClass( 'ext-codemirror-readonly' );
+		}
+
+		this.switchHook = null;
 	}
 
 	/**
@@ -214,127 +300,6 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	removeRealtimePreviewHandler() {
 		mw.hook( 'ext.WikiEditor.realtimepreview.enable' ).remove( this.realtimePreviewEnableHandler );
 		mw.hook( 'ext.WikiEditor.realtimepreview.disable' ).remove( this.realtimePreviewDisableHandler );
-	}
-
-	/**
-	 * Adds the CodeMirror button to WikiEditor.
-	 *
-	 * @stable to call
-	 */
-	addCodeMirrorToWikiEditor() {
-		const context = this.$textarea.data( 'wikiEditor-context' );
-		const toolbar = context && context.modules && context.modules.toolbar;
-
-		// Guard against something having removed WikiEditor (T271457)
-		if ( !toolbar ) {
-			return;
-		}
-
-		// Remove the initial toggle button that may have been added by the init script.
-		this.$textarea.wikiEditor( 'removeFromToolbar', {
-			section: 'main',
-			group: 'codemirror'
-		} );
-
-		// Add 'Syntax' button to main toolbar.
-		this.$textarea.wikiEditor(
-			'addToToolbar',
-			{
-				section: 'main',
-				groups: {
-					codemirror: {
-						tools: {
-							CodeMirror: {
-								type: 'element',
-								element: () => {
-									// OOUI has already been loaded by WikiEditor.
-									const button = new OO.ui.ToggleButtonWidget( {
-										label: mw.msg( 'codemirror-toggle-label-short' ),
-										title: mw.msg( 'codemirror-toggle-label' ),
-										icon: 'syntax-highlight',
-										value: this.useCodeMirror,
-										framed: false,
-										classes: [ 'tool', 'cm-mw-toggle-wikieditor' ]
-									} );
-									button.on( 'change', this.switchCodeMirror.bind( this ) );
-									return button.$element;
-								}
-							}
-						}
-					}
-				}
-			}
-		);
-
-		// Set the ID of the CodeMirror button.
-		const $codeMirrorButton = toolbar.$toolbar.find( '.tool[rel=CodeMirror]' );
-		$codeMirrorButton.attr( 'id', 'mw-editbutton-codemirror' );
-
-		// Hide non-applicable buttons until WikiEditor better supports a read-only mode (T188817).
-		if ( this.readOnly ) {
-			this.$textarea.data( 'wikiEditor-context' ).$ui.addClass( 'ext-codemirror-readonly' );
-		}
-
-		if ( this.useCodeMirror ) {
-			this.enableCodeMirror();
-		}
-		this.updateToolbarButton();
-
-		CodeMirror.logUsage( {
-			editor: 'wikitext',
-			enabled: this.useCodeMirror,
-			toggled: false,
-			// eslint-disable-next-line no-jquery/no-global-selector,camelcase
-			edit_start_ts_ms: parseInt( $( 'input[name="wpStarttime"]' ).val(), 10 ) * 1000 || 0
-		} );
-	}
-
-	/**
-	 * Updates CodeMirror button on the toolbar according to the current state (on/off).
-	 *
-	 * @private
-	 */
-	updateToolbarButton() {
-		// eslint-disable-next-line no-jquery/no-global-selector
-		const $button = $( '#mw-editbutton-codemirror' );
-		$button.toggleClass( 'mw-editbutton-codemirror-active', this.useCodeMirror );
-
-		// WikiEditor2010 OOUI ToggleButtonWidget
-		if ( $button.data( 'setActive' ) ) {
-			$button.data( 'setActive' )( this.useCodeMirror );
-		}
-	}
-
-	/**
-	 * Enables or disables CodeMirror.
-	 *
-	 * @fires CodeMirrorWikiEditor~'ext.CodeMirror.switch'
-	 * @stable to call
-	 */
-	switchCodeMirror() {
-		if ( this.view ) {
-			this.setCodeMirrorPreference( false );
-			this.destroy();
-			this.removeRealtimePreviewHandler();
-			this.$searchBtn.replaceWith( this.$oldSearchBtn );
-			this.$textarea.wikiEditor( 'removeFromToolbar', {
-				section: 'advanced',
-				group: 'codemirror'
-			} );
-			mw.hook( 'ext.CodeMirror.switch' ).fire( false, this.$textarea );
-		} else {
-			this.enableCodeMirror();
-			this.setCodeMirrorPreference( true );
-		}
-		this.updateToolbarButton();
-
-		CodeMirror.logUsage( {
-			editor: 'wikitext',
-			enabled: this.useCodeMirror,
-			toggled: true,
-			// eslint-disable-next-line no-jquery/no-global-selector,camelcase
-			edit_start_ts_ms: parseInt( $( 'input[name="wpStarttime"]' ).val(), 10 ) * 1000 || 0
-		} );
 	}
 }
 

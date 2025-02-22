@@ -125,8 +125,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 				.addClass( 'mw-editfont-' + mw.user.options.get( 'editfont' ) );
 
 			surfaceView.$documentNode.removeClass(
-				've-ce-documentNode-codeEditor-webkit-hide',
-				've-ce-documentNode-codeEditor-hide'
+				've-ce-documentNode-codeEditor-webkit-hide ve-ce-documentNode-codeEditor-hide'
 			);
 			// Reset gutter.
 			surfaceView.$documentNode.css( {
@@ -134,11 +133,11 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 				'margin-right': ''
 			} );
 
-			// Set focus on the surface view.
-			surface.getView().focus();
-
 			surface.mirror.destroy();
 			surface.mirror.view = null;
+
+			// Set focus on the surface view.
+			surface.getView().focus();
 		}
 
 		surface.mirror = null;

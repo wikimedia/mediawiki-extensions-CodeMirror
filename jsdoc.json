@@ -34,6 +34,7 @@
 				"EditorState": "https://codemirror.net/docs/ref/#state.EditorState",
 				"EditorView": "https://codemirror.net/docs/ref/#view.EditorView",
 				"Extension": "https://codemirror.net/docs/ref/#state.Extension",
+				"Hook": "https://doc.wikimedia.org/mediawiki-core/master/js/Hook.html",
 				"KeyBinding": "https://codemirror.net/docs/ref/#view.KeyBinding",
 				"LanguageSupport": "https://codemirror.net/docs/ref/#language.LanguageSupport",
 				"Panel": "https://codemirror.net/docs/ref/#view.Panel",

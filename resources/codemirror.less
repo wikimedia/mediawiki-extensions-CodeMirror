@@ -55,6 +55,23 @@
 
 .ext-codemirror-wrapper {
 	height: 100%;
+
+	textarea {
+		/* stylelint-disable-next-line declaration-no-important */
+		display: none !important;
+	}
+
+	&--hidden {
+		.cm-editor {
+			/* stylelint-disable-next-line declaration-no-important */
+			display: none !important;
+		}
+
+		textarea {
+			/* stylelint-disable-next-line declaration-no-important */
+			display: initial !important;
+		}
+	}
 }
 
 // The various .cm-editor prefixed styles are required to have higher
