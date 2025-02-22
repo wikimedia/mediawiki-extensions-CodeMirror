@@ -41,6 +41,12 @@ mw.hook = jest.fn( ( name ) => ( {
 		}
 	} )
 } ) );
+mw.storage = {
+	set: jest.fn(),
+	get: jest.fn(),
+	getObject: jest.fn(),
+	setObject: jest.fn()
+};
 mw.hook.mockHooks = {};
 global.$ = require( 'jquery' );
 $.fn.textSelection = () => {};

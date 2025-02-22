@@ -28,6 +28,16 @@ describe( 'CodeMirror textSelection for the wikitext 2010 editor', () => {
 		);
 	} );
 
+	it( 'has usage of .val() routed to CodeMirror', async () => {
+		await browser.execute( () => $( '#wpTextbox1' ).val( 'baz' ) );
+		assert.strictEqual(
+			await browser.execute( () => $( '.cm-editor' ).textSelection( 'getContents' ) ),
+			'baz'
+		);
+		// Change back to "foobar" for subsequent tests.
+		await browser.execute( () => $( '#wpTextbox1' ).val( 'foobar' ) );
+	} );
+
 	// Content is now "foobar"
 	it( 'sets and gets the correct selection when using setSelection and getSelection', async () => {
 		await browser.execute( () => {

@@ -7,7 +7,6 @@ beforeEach( () => {
 	form = document.createElement( 'form' );
 	textarea = document.createElement( 'textarea' );
 	textarea.value = 'Metallica';
-	textarea.selectionStart = textarea.selectionEnd = 0;
 	form.appendChild( textarea );
 	document.body.appendChild( form );
 	cm = new CodeMirror( textarea );
@@ -16,7 +15,6 @@ beforeEach( () => {
 describe( 'initialize', () => {
 	it( 'should create the EditorState with the value of the textarea', () => {
 		cm.textarea.value = 'foobar';
-		cm.$textarea.textSelection = jest.fn().mockReturnValue( 'foobar' );
 		cm.initialize();
 		expect( cm.view.state.doc.toString() ).toStrictEqual( 'foobar' );
 	} );
@@ -194,6 +192,54 @@ describe( 'destroy', () => {
 		cm.destroy();
 		expect( cm.formSubmitEventHandler ).toBeNull();
 		expect( events.submit ).toBeUndefined();
+	} );
+} );
+
+describe( 'multiple instances', () => {
+	describe( 'jQuery valHooks', () => {
+		it( 'should route to the correct CodeMirror instance', () => {
+			// cm already defined in beforeEach, let's add a second instance
+			const textarea2 = document.createElement( 'textarea' );
+			textarea2.value = 'Pantera';
+			form.appendChild( textarea2 );
+			const cm2 = new CodeMirror( textarea2 );
+
+			// Initialize both instances
+			cm.initialize();
+			cm2.initialize();
+
+			// Set values for using .val()
+			cm.$textarea.val( 'Soundgarden' );
+			cm2.$textarea.val( 'Alice in Chains' );
+
+			// Test the values
+			expect( cm.view.state.doc.toString() ).toStrictEqual( 'Soundgarden' );
+			expect( cm2.view.state.doc.toString() ).toStrictEqual( 'Alice in Chains' );
+		} );
+
+		it( 'should remain working even if other instances are destroyed', () => {
+			const textarea2 = document.createElement( 'textarea' );
+			textarea2.value = 'Pantera';
+			form.appendChild( textarea2 );
+			const cm2 = new CodeMirror( textarea2 );
+
+			// Initialize both instances
+			cm.initialize();
+			cm2.initialize();
+
+			expect( cm2.view.state.doc.toString() ).toStrictEqual( 'Pantera' );
+
+			// Destroy the first instance
+			cm.destroy();
+
+			// .val() on the second instance should still work.
+			cm2.$textarea.val( 'Alice in Chains' );
+			expect( cm2.view.state.doc.toString() ).toStrictEqual( 'Alice in Chains' );
+
+			// And the first instance should work as it did prior to initialization.
+			cm.$textarea.val( 'Soundgarden' );
+			expect( cm.textarea.value ).toStrictEqual( 'Soundgarden' );
+		} );
 	} );
 } );
 

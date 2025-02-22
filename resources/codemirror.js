@@ -552,6 +552,8 @@ class CodeMirror {
 
 		this.activate();
 
+		this.addTextAreaJQueryHook();
+
 		// Sync the CodeMirror editor with the original textarea on form submission.
 		if ( !this.surface && this.textarea.form ) {
 			this.formSubmitEventHandler = () => {
@@ -575,6 +577,34 @@ class CodeMirror {
 		 * @stable to use
 		 */
 		mw.hook( 'ext.CodeMirror.ready' ).fire( this );
+	}
+
+	/**
+	 * Define jQuery hook for .val() on the textarea.
+	 *
+	 * @see T384556
+	 * @private
+	 */
+	addTextAreaJQueryHook() {
+		const jQueryValHooks = $.valHooks.textarea;
+		$.valHooks.textarea = {
+			get: ( elem ) => {
+				if ( elem === this.textarea && this.state ) {
+					return this.cmTextSelection.getContents();
+				} else if ( jQueryValHooks ) {
+					return jQueryValHooks.get( elem );
+				}
+				return elem.value;
+			},
+			set: ( elem, value ) => {
+				if ( elem === this.textarea && this.state ) {
+					return this.cmTextSelection.setContents( value );
+				} else if ( jQueryValHooks ) {
+					return jQueryValHooks.set( elem, value );
+				}
+				elem.value = value;
+			}
+		};
 	}
 
 	/**
@@ -689,9 +719,7 @@ class CodeMirror {
 
 		// Set up the initial EditorState of CodeMirror with contents of the original textarea.
 		this.state = EditorState.create( {
-			doc: this.surface ?
-				this.surface.getDom() :
-				this.$textarea.textSelection( 'getContents' ),
+			doc: this.surface ? this.surface.getDom() : this.textarea.value,
 			extensions: this.initExtensions
 		} );
 
