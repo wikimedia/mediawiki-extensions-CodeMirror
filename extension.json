@@ -441,13 +441,14 @@
 			"dependencies": [
 				"ext.visualEditor.mwcore",
 				"ext.visualEditor.mwmeta",
-				"mediawiki.api",
 				"user.options",
+				"jquery.client",
 				"ext.CodeMirror.v6"
 			],
-			"scripts": [
+			"packageFiles": [
 				"ve-cm/ve.ui.CodeMirrorAction.v6.js",
-				"ve-cm/ve.ui.CodeMirrorTool.v6.js"
+				"ve-cm/ve.ui.CodeMirrorTool.v6.js",
+				"codemirror.visualEditor.js"
 			],
 			"styles": [
 				"ve-cm/ve.ui.CodeMirror.v6.less"

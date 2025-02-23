@@ -60,8 +60,7 @@ class CodeMirror {
 	/**
 	 * Instantiate a new CodeMirror instance.
 	 *
-	 * @param {HTMLTextAreaElement|jQuery|string|ve.ui.Surface} textarea Textarea to
-	 *   add syntax highlighting to.
+	 * @param {HTMLTextAreaElement|jQuery|string} textarea Textarea to add syntax highlighting to.
 	 * @param {LanguageSupport|Extension} [langExtension] Language support and its extension(s).
 	 * @constructor
 	 * @stable to call and extend
@@ -69,17 +68,6 @@ class CodeMirror {
 	constructor( textarea, langExtension = [] ) {
 		if ( mw.config.get( 'cmDebug' ) ) {
 			window.cm = this;
-		}
-		if ( textarea.constructor.name === 'VeUiMWWikitextSurface' ) {
-			/**
-			 * The VisualEditor surface CodeMirror is bound to.
-			 *
-			 * @type {ve.ui.Surface}
-			 */
-			this.surface = textarea;
-
-			// Let the content editable mimic the textarea.
-			textarea = this.surface.getView().$attachedRootNode[ 0 ];
 		}
 		/**
 		 * The textarea that CodeMirror is bound to.
@@ -93,6 +81,13 @@ class CodeMirror {
 		 * @type {jQuery}
 		 */
 		this.$textarea = $( this.textarea );
+		/**
+		 * The VisualEditor surface CodeMirror is bound to.
+		 *
+		 * @type {ve.ui.Surface|null}
+		 * @ignore
+		 */
+		this.surface = null;
 		/**
 		 * Language support and its extension(s).
 		 *
@@ -123,9 +118,7 @@ class CodeMirror {
 		 *
 		 * @type {boolean}
 		 */
-		this.readOnly = this.surface ?
-			this.surface.getModel().isReadOnly() :
-			this.textarea.readOnly;
+		this.readOnly = this.textarea.readOnly;
 		/**
 		 * The [edit recovery]{@link https://www.mediawiki.org/wiki/Manual:Edit_Recovery} handler.
 		 *
@@ -162,7 +155,7 @@ class CodeMirror {
 			lineWrapping: this.lineWrappingExtension,
 			activeLine: this.activeLineExtension,
 			specialChars: this.specialCharsExtension
-		}, !!this.surface );
+		}, this.constructor.name === 'CodeMirrorVisualEditor' );
 		/**
 		 * CodeMirror key mappings and help dialog.
 		 *
@@ -200,6 +193,7 @@ class CodeMirror {
 	get defaultExtensions() {
 		const extensions = [
 			this.contentAttributesExtension,
+			this.editorAttributesExtension,
 			this.phrasesExtension,
 			this.heightExtension,
 			this.updateExtension,
@@ -215,6 +209,15 @@ class CodeMirror {
 				},
 				focus: () => {
 					this.textarea.dispatchEvent( new Event( 'focus' ) );
+				}
+			} ),
+			EditorView.theme( {
+				'.cm-scroller': {
+					overflow: 'auto'
+				},
+				// Search panel should use the same direction as the interface language (T359611)
+				'.cm-panels': {
+					direction: document.dir
 				}
 			} ),
 			EditorState.allowMultipleSelections.of( true ),
@@ -353,65 +356,64 @@ class CodeMirror {
 	get heightExtension() {
 		return EditorView.theme( {
 			'&': {
-				height: this.surface ? '100%' : `${ this.$textarea.outerHeight() }px`
-			},
-			'.cm-scroller': {
-				overflow: 'auto'
+				height: `${ this.$textarea.outerHeight() }px`
 			}
 		} );
 	}
 
 	/**
-	 * This specifies which attributes get added to the `.cm-content` and `.cm-editor` elements.
+	 * This specifies which attributes get added to the CodeMirror contenteditable `.cm-content`.
 	 * Subclasses are safe to override this method, but attributes here are considered vital.
 	 *
 	 * @see https://codemirror.net/docs/ref/#view.EditorView^contentAttributes
 	 * @type {Extension}
-	 * @stable to call and override
+	 * @protected
+	 * @stable to call and override by subclasses
 	 */
 	get contentAttributesExtension() {
 		const classList = [];
-		// T245568: Sync text editor font preferences with CodeMirror,
-		// but don't do this for the 2017 wikitext editor.
-		if ( !this.surface ) {
-			const fontClass = Array.from( this.textarea.classList )
-				.find( ( style ) => style.startsWith( 'mw-editfont-' ) );
-			if ( fontClass ) {
-				classList.push( fontClass );
-			}
-			// Add colorblind mode if preference is set.
-			// This currently is only to be used for the MediaWiki markup language.
-			if (
-				mw.user.options.get( 'usecodemirror-colorblind' ) &&
-				mw.config.get( 'wgPageContentModel' ) === 'wikitext'
-			) {
-				classList.push( 'cm-mw-colorblind-colors' );
-			}
+
+		// T245568: Sync text editor font preferences with CodeMirror.
+		const fontClass = Array.from( this.textarea.classList )
+			.find( ( style ) => style.startsWith( 'mw-editfont-' ) );
+		if ( fontClass ) {
+			classList.push( fontClass );
 		}
 
-		return [
-			// .cm-content element (the contenteditable area)
-			EditorView.contentAttributes.of( {
-				// T259347: Use accesskey of the original textbox
-				accesskey: this.textarea.accessKey,
-				// Classes need to be on .cm-content to have precedence over .cm-scroller
-				class: classList.join( ' ' ),
-				spellcheck: 'true',
-				tabindex: this.textarea.tabIndex
-			} ),
-			// .cm-editor element (contains the whole CodeMirror UI)
-			EditorView.editorAttributes.of( {
-				// Use language of the original textbox.
-				// These should be attributes of .cm-editor, not the .cm-content (T359589)
-				lang: this.textarea.lang
-			} ),
-			// The search panel should use the same direction as the interface language (T359611)
-			EditorView.theme( {
-				'.cm-panels': {
-					direction: document.dir
-				}
-			} )
-		];
+		// Add colorblind mode if preference is set.
+		// This currently is only to be used for the MediaWiki markup language.
+		if (
+			mw.user.options.get( 'usecodemirror-colorblind' ) &&
+			mw.config.get( 'wgPageContentModel' ) === 'wikitext'
+		) {
+			classList.push( 'cm-mw-colorblind-colors' );
+		}
+
+		return EditorView.contentAttributes.of( {
+			// T259347: Use accesskey of the original textbox
+			accesskey: this.textarea.accessKey,
+			// Classes need to be on .cm-content to have precedence over .cm-scroller
+			class: classList.join( ' ' ),
+			spellcheck: 'true',
+			tabindex: this.textarea.tabIndex
+		} );
+	}
+
+	/**
+	 * This specifies which attributes get added to the `.cm-editor` element (the entire editor).
+	 * Subclasses are safe to override this method, but attributes here are considered vital.
+	 *
+	 * @see https://codemirror.net/docs/ref/#view.EditorView^editorAttributes
+	 * @type {Extension}
+	 * @protected
+	 * @stable to call and override by subclasses
+	 */
+	get editorAttributesExtension() {
+		return EditorView.editorAttributes.of( {
+			// Use language of the original textbox.
+			// These should be attributes of .cm-editor, not the .cm-content (T359589)
+			lang: this.textarea.lang
+		} );
 	}
 
 	/**
@@ -419,7 +421,8 @@ class CodeMirror {
 	 *
 	 * @see https://codemirror.net/examples/translate/
 	 * @type {Extension}
-	 * @stable to call.
+	 * @protected
+	 * @stable to call and override by subclasses.
 	 */
 	get phrasesExtension() {
 		return EditorState.phrases.of( {
@@ -435,6 +438,7 @@ class CodeMirror {
 	 *
 	 * @see https://codemirror.net/docs/ref/#view.highlightSpecialChars
 	 * @type {Extension}
+	 * @protected
 	 * @stable to call
 	 */
 	get specialCharsExtension() {
@@ -491,6 +495,7 @@ class CodeMirror {
 	 * This extension adds the ability to change the direction of the editor.
 	 *
 	 * @type {Extension}
+	 * @protected
 	 * @stable to call
 	 */
 	get dirExtension() {
@@ -543,28 +548,26 @@ class CodeMirror {
 		 * (i.e. if you manipulate WikiEditor's DOM, you may need this).
 		 *
 		 * @event CodeMirror~'ext.CodeMirror.initialize'
-		 * @param {HTMLTextAreaElement} textarea The textarea that CodeMirror is bound to.
-		 * @param {ve.ui.Surface|null} surface The VisualEditor surface CodeMirror is bound to.
+		 * @param {HTMLTextAreaElement|ve.ui.Surface} textarea The textarea or
+		 *   VisualEditor surface that CodeMirror is bound to.
 		 * @stable to use
 		 */
-		mw.hook( 'ext.CodeMirror.initialize' ).fire( this.textarea, this.surface );
+		mw.hook( 'ext.CodeMirror.initialize' ).fire( this.textarea );
 
 		// Keep track of the initial extensions for toggling.
 		this.initExtensions = extensions;
 
-		if ( !this.surface ) {
-			// Set a new edit recovery handler.
-			mw.hook( 'editRecovery.loadEnd' ).add( ( data ) => {
-				this.editRecoveryHandler = data.fieldChangeHandler;
-			} );
-		}
+		// Set a new edit recovery handler.
+		mw.hook( 'editRecovery.loadEnd' ).add( ( data ) => {
+			this.editRecoveryHandler = data.fieldChangeHandler;
+		} );
 
 		this.activate();
 
 		this.addTextAreaJQueryHook();
 
 		// Sync the CodeMirror editor with the original textarea on form submission.
-		if ( !this.surface && this.textarea.form ) {
+		if ( this.textarea.form ) {
 			this.formSubmitEventHandler = () => {
 				if ( !this.isActive ) {
 					return;
@@ -700,7 +703,7 @@ class CodeMirror {
 	 * @param {boolean} [force] `true` to enable CodeMirror, `false` to disable.
 	 *   Note that the {@link CodeMirror~'ext.CodeMirror.toggle' ext.CodeMirror.toggle}
 	 *   hook will not be fired if this parameter is set.
-	 * @stable to use and override
+	 * @stable to call and override
 	 * @fires CodeMirror~'ext.CodeMirror.toggle'
 	 */
 	toggle( force ) {

@@ -12,8 +12,6 @@ ve.ui.CodeMirrorTool = function VeUiCodeMirrorTool() {
 	// Parent constructor
 	ve.ui.CodeMirrorTool.super.apply( this, arguments );
 
-	this.extCodeMirror = require( 'ext.CodeMirror.v6' );
-
 	// Events
 	this.toolbar.connect( this, { surfaceChange: 'onSurfaceChange' } );
 };
@@ -39,17 +37,11 @@ ve.ui.CodeMirrorTool.prototype.onSelect = function () {
 	// Parent method
 	ve.ui.CodeMirrorTool.super.prototype.onSelect.apply( this, arguments );
 
-	const useCodeMirror = !!this.toolbar.surface.mirror;
-	this.setActive( useCodeMirror );
+	// This is the value of what CM will be toggled to.
+	// When CM has not been loaded yet (the mirror property is undefined), this should return true.
+	const useCodeMirror = !this.toolbar.surface.mirror || this.toolbar.surface.mirror.isActive;
 
-	this.extCodeMirror.setCodeMirrorPreference( useCodeMirror );
-	this.extCodeMirror.logUsage( {
-		editor: 'wikitext-2017',
-		enabled: useCodeMirror,
-		toggled: true,
-		// eslint-disable-next-line camelcase
-		edit_start_ts_ms: ( this.toolbar.target.startTimeStamp * 1000 ) || 0
-	} );
+	this.setActive( useCodeMirror );
 };
 
 /**
@@ -65,16 +57,6 @@ ve.ui.CodeMirrorTool.prototype.onSurfaceChange = function ( oldSurface, newSurfa
 		const useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
 		command.execute( surface, [ useCodeMirror ] );
 		this.setActive( useCodeMirror );
-
-		if ( this.toolbar.target.startTimeStamp ) {
-			this.extCodeMirror.logUsage( {
-				editor: 'wikitext-2017',
-				enabled: useCodeMirror,
-				toggled: false,
-				// eslint-disable-next-line camelcase
-				edit_start_ts_ms: ( this.toolbar.target.startTimeStamp * 1000 ) || 0
-			} );
-		}
 	}
 };
 

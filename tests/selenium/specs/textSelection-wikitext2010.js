@@ -16,7 +16,7 @@ describe( 'CodeMirror textSelection for the wikitext 2010 editor', () => {
 		await FixtureContent.createFixturePage( title );
 		await UserPreferences.enableWikitext2010EditorWithCodeMirror();
 		await EditPage.openForEditing( title );
-		await EditPage.legacyCodeMirrorButton.waitForDisplayed();
+		await EditPage.codeMirrorButton.waitForDisplayed();
 	} );
 
 	// Content is "[]{{template}}"
@@ -148,8 +148,8 @@ describe( 'CodeMirror textSelection for the wikitext 2010 editor', () => {
 
 	// Content is now "foobar\n" repeated 50 times.
 	it( 'retains the contents after turning CodeMirror off', async () => {
-		await EditPage.legacyCodeMirrorButton.click();
-		await EditPage.legacyTextInput.waitForDisplayed();
-		assert.match( await EditPage.legacyTextInput.getValue(), /foobar/ );
+		await EditPage.codeMirrorButton.click();
+		await EditPage.textInput.waitForDisplayed();
+		assert.match( await EditPage.textInput.getValue(), /foobar/ );
 	} );
 } );

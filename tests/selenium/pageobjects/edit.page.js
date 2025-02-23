@@ -4,13 +4,13 @@ const Page = require( 'wdio-mediawiki/Page' );
 
 // Copied from mediawiki-core edit.page.js
 class EditPage extends Page {
-	async openForEditing( title ) {
-		const queryParams = {
+	async openForEditing( title, queryParams = {} ) {
+		queryParams = Object.assign( {
 			action: 'edit',
 			vehidebetadialog: 1,
 			hidewelcomedialog: 1,
 			cm6enable: 1
-		};
+		}, queryParams );
 		await super.openTitle( title, queryParams );
 	}
 
@@ -18,26 +18,48 @@ class EditPage extends Page {
 		return $( '#wikiEditor-ui-toolbar' );
 	}
 
-	get legacyTextInput() {
+	get textInput() {
 		return $( '#wpTextbox1' );
 	}
 
-	get legacyCodeMirrorButton() {
+	get codeMirrorButton() {
 		return $( '#mw-editbutton-codemirror' );
 	}
 
+	get codeMirrorContentEditable() {
+		return $( '.cm-content' );
+	}
+
 	async clickText() {
-		const cm = $( '.cm-content' );
-		await cm.isDisplayed();
-		await cm.click();
+		await this.codeMirrorContentEditable.isDisplayed();
+		await this.codeMirrorContentEditable.click();
 	}
 
-	get visualEditorSave() {
-		return $( '.ve-ui-toolbar-saveButton' );
+	get visualEditorContentEditable() {
+		return $( '.ve-ce-attachedRootNode' );
 	}
 
-	get visualEditorSurface() {
-		return $( '.ve-ui-surface-source' );
+	get visualEditorPageMenu() {
+		return $( '.ve-ui-toolbar-group-pageMenu' );
+	}
+
+	get visualEditorCodeMirrorButton() {
+		return $( '.oo-ui-tool-name-codeMirror' );
+	}
+
+	get visualEditorMessageDialog() {
+		return $( '.oo-ui-messageDialog-actions' );
+	}
+
+	get visualEditorDestructiveButton() {
+		return $( '.oo-ui-flaggedElement-destructive' );
+	}
+
+	async visualEditorToggleCodeMirror() {
+		await this.visualEditorPageMenu.waitForDisplayed();
+		await this.visualEditorPageMenu.click();
+		await this.visualEditorCodeMirrorButton.waitForDisplayed();
+		await this.visualEditorCodeMirrorButton.click();
 	}
 
 	get codeMirrorCodeFoldingButton() {

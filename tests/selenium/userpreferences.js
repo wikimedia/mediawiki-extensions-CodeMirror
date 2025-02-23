@@ -29,6 +29,22 @@ class UserPreferences {
 			'visualeditor-newwikitext': '0'
 		} );
 	}
+
+	async enableWikitext2017EditorWithCodeMirror( preferences = {} ) {
+		await this.setPreferences( Object.assign( {
+			usebetatoolbar: '0',
+			usecodemirror: '1',
+			'codemirror-preferences': '{"bracketMatching":1,"lineWrapping":1,"activeLine":0,"specialChars":1,"bidiIsolation":0}',
+			'visualeditor-enable': '1',
+			'visualeditor-newwikitext': '1'
+		}, preferences ) );
+	}
+
+	async disableCodeMirror() {
+		await this.setPreferences( {
+			usecodemirror: '0'
+		} );
+	}
 }
 
 module.exports = new UserPreferences();
