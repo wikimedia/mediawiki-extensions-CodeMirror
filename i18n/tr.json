@@ -4,12 +4,23 @@
 			"BaRaN6161 TURK",
 			"Diyapazon",
 			"SaldırganSincap",
-			"Vito Genovese"
+			"Vito Genovese",
+			"LisafBia"
 		]
 	},
 	"codemirror-desc": "Vikimetin düzenleyicide sözdizim vurgulaması sağlar",
 	"codemirror-toggle-label": "Sözdizim vurgulama",
 	"codemirror-prefs-colorblind": "Vikimetni düzenlerken sözdizimi vurgulaması için renk körü dostu düzeni etkinleştir",
 	"codemirror-prefs-colorblind-help": "Sözdizimi vurgulaması için bir küçük aracı kullanıyorsanız, bu tercih çalışmayacaktır.",
+	"codemirror-find": "Bul",
+	"codemirror-next": "Sonrakini bul",
+	"codemirror-previous": "Öncekini bul",
+	"codemirror-all-tooltip": "Tüm eşleşmeleri bul",
+	"codemirror-match-case": "Büyük/küçük harf duyarlı",
+	"codemirror-regexp": "Düzenli ifade",
+	"codemirror-replace": "Değiştir",
+	"codemirror-replace-placeholder": "Değiştir",
+	"codemirror-replace-all": "Hepsini değiştir",
+	"codemirror-done": "Bitti",
 	"prefs-accessibility": "Erişilebilirlik"
 }
