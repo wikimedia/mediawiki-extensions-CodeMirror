@@ -106,11 +106,11 @@ class CodeMirror {
 		 */
 		this.view = null;
 		/**
-		 * The editor state.
+		 * Whether the CodeMirror instance is active.
 		 *
-		 * @type {EditorState}
+		 * @type {boolean}
 		 */
-		this.state = null;
+		this.isActive = false;
 		/**
 		 * The .ext-codemirror-wrapper container. This houses both
 		 * the original textarea and the CodeMirror editor.
@@ -136,6 +136,7 @@ class CodeMirror {
 		 * The form `submit` event handler.
 		 *
 		 * @type {Function|null}
+		 * @private
 		 */
 		this.formSubmitEventHandler = null;
 		/**
@@ -565,7 +566,7 @@ class CodeMirror {
 		// Sync the CodeMirror editor with the original textarea on form submission.
 		if ( !this.surface && this.textarea.form ) {
 			this.formSubmitEventHandler = () => {
-				if ( !this.state ) {
+				if ( !this.isActive ) {
 					return;
 				}
 				this.textarea.value = this.view.state.doc.toString();
@@ -617,7 +618,7 @@ class CodeMirror {
 		const jQueryValHooks = $.valHooks.textarea;
 		$.valHooks.textarea = {
 			get: ( elem ) => {
-				if ( elem === this.textarea && this.state ) {
+				if ( elem === this.textarea && this.isActive ) {
 					return this.cmTextSelection.getContents();
 				} else if ( jQueryValHooks ) {
 					return jQueryValHooks.get( elem );
@@ -625,7 +626,7 @@ class CodeMirror {
 				return elem.value;
 			},
 			set: ( elem, value ) => {
-				if ( elem === this.textarea && this.state ) {
+				if ( elem === this.textarea && this.isActive ) {
 					return this.cmTextSelection.setContents( value );
 				} else if ( jQueryValHooks ) {
 					return jQueryValHooks.set( elem, value );
@@ -640,9 +641,10 @@ class CodeMirror {
 	 * A dummy container is used to ensure that the editor will always be placed
 	 * where the textarea is.
 	 *
+	 * @param {EditorState} state
 	 * @private
 	 */
-	showEditorView() {
+	showEditorView( state ) {
 		if ( !this.container ) {
 			// Wrap the textarea with .ext-codemirror-wrapper
 			this.container = document.createElement( 'div' );
@@ -657,7 +659,7 @@ class CodeMirror {
 		} else {
 			// Instantiate the view, adding it to the DOM
 			this.view = new EditorView( {
-				state: this.state,
+				state,
 				parent: this.container
 			} );
 		}
@@ -745,8 +747,8 @@ class CodeMirror {
 			return;
 		}
 
-		// Set up the initial EditorState of CodeMirror with contents of the original textarea.
-		this.state = EditorState.create( {
+		// Create the EditorState of CodeMirror with contents of the original textarea.
+		const state = EditorState.create( {
 			doc: this.surface ? this.surface.getDom() : this.textarea.value,
 			extensions: this.initExtensions
 		} );
@@ -754,9 +756,10 @@ class CodeMirror {
 		// Add CodeMirror to the DOM.
 		if ( this.view ) {
 			// We're re-enabling, so we want to re-use the original state.
-			this.view.setState( this.state );
+			this.view.setState( state );
 		}
-		this.showEditorView();
+		this.showEditorView( state );
+		this.isActive = true;
 
 		// Register $.textSelection() on the .cm-editor element.
 		$( this.view.dom ).textSelection( 'register', this.cmTextSelection );
@@ -826,7 +829,8 @@ class CodeMirror {
 
 		// Hide the editor, clear the state, and show the original textarea.
 		this.container.classList.add( 'ext-codemirror-wrapper--hidden' );
-		this.state = null;
+
+		this.isActive = false;
 
 		if ( !this.surface ) {
 			// Sync focus state, selections and scroll position.
@@ -867,15 +871,6 @@ class CodeMirror {
 		 * @stable to use
 		 */
 		mw.hook( 'ext.CodeMirror.destroy' ).fire( this.textarea );
-	}
-
-	/**
-	 * Whether CodeMirror is currently active.
-	 *
-	 * @type {boolean}
-	 */
-	get isActive() {
-		return !!this.state;
 	}
 
 	/**

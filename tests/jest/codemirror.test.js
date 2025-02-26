@@ -1,5 +1,5 @@
 /* eslint-disable-next-line n/no-missing-require */
-const { EditorState, EditorView, Prec } = require( 'ext.CodeMirror.v6.lib' );
+const { EditorView, Prec } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirror = require( '../../resources/codemirror.js' );
 
 let textarea, cm, form;
@@ -30,7 +30,7 @@ describe( 'initialize', () => {
 	it( 'should instantiate an EditorView and add .cm-editor to the DOM', () => {
 		cm.initialize();
 		expect( cm.view ).toBeInstanceOf( EditorView );
-		expect( cm.state ).toBeInstanceOf( EditorState );
+		expect( cm.isActive ).toBe( true );
 		expect( cm.view.dom ).toBeInstanceOf( HTMLDivElement );
 		expect( cm.textarea.nextSibling ).toStrictEqual( cm.view.dom );
 	} );
@@ -61,7 +61,7 @@ describe( 'initialize', () => {
 		cm = new CodeMirror( textarea );
 		cm.initialize();
 		expect( cm.readOnly ).toEqual( true );
-		expect( cm.state.readOnly ).toEqual( true );
+		expect( cm.view.state.readOnly ).toEqual( true );
 	} );
 
 	it( 'should not allow initialization more than once', () => {
@@ -86,16 +86,16 @@ describe( 'applyExtension', () => {
 } );
 
 describe( 'toggle', () => {
-	it( 'should persist the view but not the state', () => {
+	it( 'should persist the view', () => {
 		cm.initialize();
 		expect( cm.view ).not.toBeNull();
-		expect( cm.state ).not.toBeNull();
+		expect( cm.isActive ).toBe( true );
 		cm.toggle();
 		expect( cm.view ).not.toBeNull();
-		expect( cm.state ).toBeNull();
+		expect( cm.isActive ).toBe( false );
 		cm.toggle();
 		expect( cm.view ).not.toBeNull();
-		expect( cm.state ).not.toBeNull();
+		expect( cm.isActive ).toBe( true );
 	} );
 
 	it( 'should hide the editor but maintain the EditorView when toggling', () => {
@@ -103,7 +103,7 @@ describe( 'toggle', () => {
 		const oldView = cm.view;
 		const oldState = cm.view.state;
 		cm.toggle();
-		expect( cm.state ).toBeNull();
+		expect( cm.isActive ).toBe( false );
 		expect( cm.container.classList ).toContain( 'ext-codemirror-wrapper--hidden' );
 		cm.toggle();
 		expect( cm.view ).toBe( oldView );
@@ -197,10 +197,26 @@ describe( 'destroy', () => {
 
 describe( 'form submission', () => {
 	it( 'should sync contents back to the textarea on submission', () => {
+		// From fixture in beforeEach
+		expect( cm.textarea.value ).toStrictEqual( 'Metallica' );
+		expect( cm.view ).toBeNull();
 		cm.initialize();
+		expect( cm.view ).toBeInstanceOf( EditorView );
 		cm.textSelection.setContents( 'This is a test' );
 		form.dispatchEvent( new Event( 'submit' ) );
 		expect( cm.textarea.value ).toStrictEqual( 'This is a test' );
+		expect( cm.view.state.doc.toString() ).toStrictEqual( 'This is a test' );
+	} );
+
+	it( 'should not intercept form submission when CodeMirror is deactivated', () => {
+		cm.initialize();
+		expect( textarea.value ).toStrictEqual( 'Metallica' );
+		expect( cm.view.state.doc.toString() ).toStrictEqual( 'Metallica' );
+		cm.deactivate();
+		textarea.value = 'Pantera';
+		form.dispatchEvent( new Event( 'submit' ) );
+		expect( cm.view.state.doc.toString() ).toStrictEqual( 'Metallica' );
+		expect( textarea.value ).toStrictEqual( 'Pantera' );
 	} );
 } );
 
