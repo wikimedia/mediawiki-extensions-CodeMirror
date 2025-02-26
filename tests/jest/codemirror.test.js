@@ -195,6 +195,15 @@ describe( 'destroy', () => {
 	} );
 } );
 
+describe( 'form submission', () => {
+	it( 'should sync contents back to the textarea on submission', () => {
+		cm.initialize();
+		cm.textSelection.setContents( 'This is a test' );
+		form.dispatchEvent( new Event( 'submit' ) );
+		expect( cm.textarea.value ).toStrictEqual( 'This is a test' );
+	} );
+} );
+
 describe( 'multiple instances', () => {
 	describe( 'jQuery valHooks', () => {
 		it( 'should route to the correct CodeMirror instance', () => {

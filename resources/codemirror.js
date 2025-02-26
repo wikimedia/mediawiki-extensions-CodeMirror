@@ -568,7 +568,7 @@ class CodeMirror {
 				if ( !this.state ) {
 					return;
 				}
-				this.textarea.value = this.state.doc.toString();
+				this.textarea.value = this.view.state.doc.toString();
 				const scrollTop = document.getElementById( 'wpScrolltop' );
 				if ( scrollTop ) {
 					scrollTop.value = this.view.scrollDOM.scrollTop;
