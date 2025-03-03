@@ -10,15 +10,23 @@
 			"PoLuX124"
 		]
 	},
-	"codemirror-desc": "Proporciona resalte de la sintaxis en el editor de código wiki",
+	"codemirror-desc": "Proporciona resaltado de sintaxis en el editor de código wiki",
 	"codemirror-toggle-label": "Resaltado de sintaxis",
+	"codemirror-toggle-label-short": "Sintaxis",
 	"codemirror-prefs-summary": "Puede obtener más información sobre esta función leyendo la [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror página de ayuda].",
-	"codemirror-prefs-enable": "Habilitar resaltado de sintaxis para wikitext",
+	"codemirror-prefs-enable": "Habilitar resaltado de sintaxis para edición de wikitexto",
+	"codemirror-prefs-title": "Preferencias de resaltado de sintaxis",
+	"codemirror-prefs-help": "ayuda",
+	"codemirror-prefs-codefolding": "Activar plegado de código",
+	"codemirror-prefs-autocomplete": "Activar autocompletado",
+	"codemirror-prefs-openlinks": "Abrir enlaces con tecla modificadora + clic",
 	"codemirror-v6-prefs-colorblind": "Utilice un esquema apto para daltónicos",
 	"codemirror-prefs-colorblind": "Usar un esquema de colores accesible para daltónicos en el resaltador de sintaxis al editar código wiki",
 	"codemirror-prefs-colorblind-help": "Si utilizas un accesorio para el resaltado de sintaxis esta preferencia no funcionará.",
 	"codemirror-unfold": "desplegar",
 	"codemirror-folded-code": "código plegado",
 	"prefs-accessibility": "Accesibilidad",
-	"prefs-syntax-highlighting": "Resaltado de sintaxis"
+	"prefs-syntax-highlighting": "Resaltado de sintaxis",
+	"codemirror-beta-feature-title": "Resaltado de sintaxis mejorado",
+	"codemirror-beta-feature-description": "Obtén acceso anticipado a nuevas funciones de resaltado y edición de sintaxis, como plegado de código y autocompletado."
 }
