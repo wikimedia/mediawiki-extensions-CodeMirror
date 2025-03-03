@@ -39,7 +39,8 @@ mw.hook = jest.fn( ( name ) => ( {
 			mw.hook.mockHooks[ name ] = mw.hook.mockHooks[ name ]
 				.filter( ( cb ) => cb !== callback );
 		}
-	} )
+	} ),
+	deprecate: jest.fn()
 } ) );
 mw.storage = {
 	set: jest.fn(),
