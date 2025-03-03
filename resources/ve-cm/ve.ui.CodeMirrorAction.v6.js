@@ -44,7 +44,12 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 			const mediawikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
 			this.surface.mirror = new CodeMirrorVisualEditor(
 				this.surface,
-				mediawikiLang( { bidiIsolation: false, codeFolding: false } )
+				mediawikiLang( {
+					bidiIsolation: false,
+					codeFolding: false,
+					autocomplete: false,
+					openLinks: false
+				} )
 			);
 			this.surface.mirror.initialize();
 		} );
