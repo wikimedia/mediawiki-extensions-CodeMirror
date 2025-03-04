@@ -756,6 +756,12 @@ class CodeMirror {
 			extensions: this.initExtensions
 		} );
 
+		// Backup scroll position, selections, and focus state before we hide the textarea.
+		const selectionStart = this.textarea.selectionStart,
+			selectionEnd = this.textarea.selectionEnd,
+			scrollTop = this.textarea.scrollTop,
+			hasFocus = document.activeElement === this.textarea;
+
 		// Add CodeMirror to the DOM.
 		if ( this.view ) {
 			// We're re-enabling, so we want to re-use the original state.
@@ -773,10 +779,6 @@ class CodeMirror {
 			this.$textarea.textSelection( 'register', this.cmTextSelection );
 
 			// Sync scroll position, selections, and focus state.
-			const selectionStart = this.textarea.selectionStart,
-				selectionEnd = this.textarea.selectionEnd,
-				scrollTop = this.textarea.scrollTop,
-				hasFocus = document.activeElement === this.textarea;
 			requestAnimationFrame( () => {
 				this.view.scrollDOM.scrollTop = scrollTop;
 			} );
