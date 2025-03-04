@@ -9,6 +9,27 @@ const { platform } = $.client.profile();
 const isMac = platform === 'mac' || platform === 'ipad' || platform === 'iphone',
 	modKey = isMac ? 'Meta' : 'Control';
 
+document.addEventListener( 'keydown', ( e ) => {
+	if ( e.key !== modKey ) {
+		return;
+	}
+
+	// Add .cm-mw-open-links from all CodeMirror instances.
+	for ( const dom of document.querySelectorAll( '.cm-content' ) ) {
+		dom.classList.add( 'cm-mw-open-links' );
+	}
+} );
+document.addEventListener( 'keyup', ( e ) => {
+	if ( e.key !== modKey ) {
+		return;
+	}
+
+	// Remove .cm-mw-open-links from all CodeMirror instances.
+	for ( const dom of document.querySelectorAll( '.cm-content' ) ) {
+		dom.classList.remove( 'cm-mw-open-links' );
+	}
+} );
+
 /**
  * CodeMirror extension that opens links by modifier-clicking for the MediaWiki mode.
  * This automatically applied when using {@link CodeMirrorModeMediaWiki}.
@@ -61,39 +82,10 @@ const openLinksExtension = [
 				return true;
 			}
 			return false;
-		},
-		/**
-		 * Add the `.cm-mw-open-links` CSS class to the editor when the mod key is pressed.
-		 *
-		 * @param {KeyboardEvent} e
-		 * @private
-		 */
-		keydown( e ) {
-			if ( e.key !== modKey ) {
-				return;
-			}
-
-			// Add .cm-mw-open-links from all CodeMirror instances.
-			for ( const dom of document.querySelectorAll( '.cm-content' ) ) {
-				dom.classList.add( 'cm-mw-open-links' );
-			}
-		},
-		/**
-		 * Remove `.cm-mw-open-link` when the modifier key is released.
-		 *
-		 * @param {KeyboardEvent} e
-		 * @private
-		 */
-		keyup( e ) {
-			if ( e.key !== modKey ) {
-				return;
-			}
-
-			// Remove .cm-mw-open-links from all CodeMirror instances.
-			for ( const dom of document.querySelectorAll( '.cm-content' ) ) {
-				dom.classList.remove( 'cm-mw-open-links' );
-			}
 		}
+	} ),
+	EditorView.contentAttributes.of( {
+		'data-open-links': ''
 	} )
 ];
 

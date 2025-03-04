@@ -18,9 +18,9 @@ describe( 'CodeMirrorOpenLinks', () => {
 	} );
 
 	it( 'should add .cm-mw-open-links to page titles', () => {
-		cm.view.contentDOM.dispatchEvent( new KeyboardEvent( 'keydown', { key: 'Control' } ) );
+		cm.view.contentDOM.dispatchEvent( new KeyboardEvent( 'keydown', { key: 'Control', bubbles: true } ) );
 		expect( cm.view.contentDOM.classList ).toContain( 'cm-mw-open-links' );
-		cm.view.contentDOM.dispatchEvent( new KeyboardEvent( 'keyup', { key: 'Control' } ) );
+		cm.view.contentDOM.dispatchEvent( new KeyboardEvent( 'keyup', { key: 'Control', bubbles: true } ) );
 		expect( cm.view.contentDOM.classList ).not.toContain( 'cm-mw-open-links' );
 	} );
 } );
