@@ -10,7 +10,7 @@
 			"PoLuX124"
 		]
 	},
-	"codemirror-desc": "Proporciona resalte de la sintaxis en el editor de código wiki",
+	"codemirror-desc": "Proporciona resaltado de sintaxis en el editor de código wiki",
 	"codemirror-toggle-label": "Resaltado de sintaxis",
 	"codemirror-prefs-colorblind": "Usar un esquema de colores accesible para daltónicos en el resaltador de sintaxis al editar código wiki",
 	"codemirror-prefs-colorblind-help": "Si utilizas un accesorio para el resaltado de sintaxis esta preferencia no funcionará.",
