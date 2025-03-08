@@ -100,16 +100,7 @@ describe( 'Hook handlers and event listeners', () => {
 	} );
 
 	it( 'only 1 ext.CodeMirror.ready hook handler', () => {
-		[ ...Array( 3 ) ].forEach( () => {
-			mediaWikiLang( {
-				bidiIsolation: false
-			}, {
-				tags: {},
-				functionSynonyms: [ {}, {} ],
-				doubleUnderscore: [ {}, {} ],
-				urlProtocols: 'http://'
-			} );
-		} );
+		[ ...Array( 3 ) ].forEach( () => mediaWikiLang() );
 		expect( mw.hook.mockHooks[ 'ext.CodeMirror.ready' ].length ).toBe( 1 );
 	} );
 } );

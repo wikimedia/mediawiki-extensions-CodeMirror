@@ -7,13 +7,8 @@ describe( 'CodeMirrorOpenLinks', () => {
 	beforeEach( () => {
 		const textarea = document.createElement( 'textarea' );
 		document.body.appendChild( textarea );
-		cm = new CodeMirror( textarea );
-		cm.initialize( [ ...cm.defaultExtensions, mediawikiLang( {}, {
-			tags: {},
-			functionSynonyms: [ {}, {} ],
-			doubleUnderscore: [ {}, {} ],
-			urlProtocols: 'https://'
-		} ) ] );
+		cm = new CodeMirror( textarea, mediawikiLang() );
+		cm.initialize();
 		cm.textSelection.setContents( '[[Foo]] {{bar}} https://example.org' );
 	} );
 
