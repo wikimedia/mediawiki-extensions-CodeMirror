@@ -160,6 +160,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 			 * @private
 			 */
 			this.switchHook = mw.hook( 'ext.CodeMirror.switch' );
+			this.switchHook.deprecate( 'Use "ext.CodeMirror.toggle" instead.' );
 		}
 		/**
 		 * Called after CodeMirror is enabled or disabled in WikiEditor.

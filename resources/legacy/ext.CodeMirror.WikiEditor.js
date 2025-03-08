@@ -250,6 +250,7 @@ function init() {
 			codeMirror.refresh();
 
 			mw.hook( 'ext.CodeMirror.switch' ).fire( true, $codeMirror );
+			mw.hook( 'ext.CodeMirror.toggle' ).fire( true, null, $textbox1[ 0 ] );
 		} );
 	}
 
@@ -294,6 +295,7 @@ function init() {
 			$textbox1.scrollTop( scrollTop );
 
 			mw.hook( 'ext.CodeMirror.switch' ).fire( false, $textbox1 );
+			mw.hook( 'ext.CodeMirror.toggle' ).fire( false, null, $textbox1[ 0 ] );
 		} else {
 			enableCodeMirror();
 			setCodeEditorPreference( true );
