@@ -7,22 +7,7 @@ const mwModeConfig = require( '../../resources/codemirror.mediawiki.config.js' )
 // Setup CodeMirror instance.
 const textarea = document.createElement( 'textarea' );
 document.body.appendChild( textarea );
-// Stub the config normally provided by mw.config.get('extCodeMirrorConfig')
-const mwLang = mediaWikiLang( {}, {
-	urlProtocols: 'ftp://|https://|news:',
-	doubleUnderscore: [ {
-		__notoc__: 'notoc'
-	}, {} ],
-	functionSynonyms: [ {
-		'#special': 'special'
-	}, {
-		'מיון רגיל': 'defaultsort'
-	} ],
-	tags: { nowiki: true, indicator: true, ref: true },
-	tagModes: { ref: 'text/mediawiki' },
-	variableIDs: []
-} );
-const cm = new CodeMirror( textarea, mwLang );
+const cm = new CodeMirror( textarea, mediaWikiLang() );
 cm.initialize();
 const [ source ] = cm.view.state.languageDataAt( 'autocomplete' );
 
@@ -51,6 +36,8 @@ describe( 'MediaWiki autocomplete', () => {
 			from: 3,
 			options: [
 				{ label: '#special', type: 'function' },
+				{ label: 'ns', type: 'function' },
+				{ label: '!', type: 'constant' },
 				{ label: 'מיון רגיל', type: 'constant' }
 			],
 			validFor: /^[^|{}<>[\]#]*$/
@@ -66,6 +53,8 @@ describe( 'MediaWiki autocomplete', () => {
 			from: 3,
 			options: [
 				{ label: '#special', type: 'function' },
+				{ label: 'ns', type: 'function' },
+				{ label: '!', type: 'constant' },
 				{ label: 'מיון רגיל', type: 'constant' }
 			],
 			validFor: /^[^|{}<>[\]#]*$/
@@ -146,7 +135,10 @@ describe( 'MediaWiki autocomplete', () => {
 				...Object.keys( mwModeConfig.permittedHtmlTags ).map( ( label ) => ( { label, type: 'type' } ) ),
 				{ label: 'nowiki', type: 'type' },
 				{ label: 'indicator', type: 'type' },
-				{ label: 'ref', type: 'type' }
+				{ label: 'ref', type: 'type' },
+				{ label: 'pre', type: 'type' },
+				{ label: 'references', type: 'type' },
+				{ label: 'myextension', type: 'type' }
 			],
 			validFor: /^[a-z\d]*$/i
 		} );

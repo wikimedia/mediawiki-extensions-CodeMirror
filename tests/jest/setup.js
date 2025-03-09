@@ -19,7 +19,49 @@ mw.user = Object.assign( mw.user, {
 	getId: jest.fn().mockReturnValue( 123 ),
 	isNamed: jest.fn().mockReturnValue( true )
 } );
-mw.config.get = jest.fn().mockReturnValue( '1000+ edits' );
+/**
+ * Mock mw.config.get() to return the provided config,
+ * merged into an abridged version of the actual config.
+ *
+ * @param {Object} config
+ */
+global.mockMwConfigGet = ( config = {} ) => {
+	const mockConfig = Object.assign( {
+		extCodeMirrorConfig: {
+			urlProtocols: 'ftp://|https://|news:',
+			defaultPreferences: {},
+			doubleUnderscore: [ {
+				__notoc__: 'notoc'
+			}, {} ],
+			functionSynonyms: [ {
+				'#special': 'special',
+				ns: 'ns'
+			}, {
+				'!': '!',
+				'מיון רגיל': 'defaultsort'
+			} ],
+			variableIDs: [
+				'!'
+			],
+			tags: {
+				nowiki: true,
+				indicator: true,
+				ref: true,
+				pre: true,
+				references: true,
+				// Made-up tag, for testing when a corresponding TagMode is not configured.
+				myextension: true
+			},
+			tagModes: {
+				ref: 'text/mediawiki',
+				references: 'mediawiki'
+			}
+		},
+		wgNamespaceIds: {}
+	}, config );
+	mw.config.get = jest.fn().mockImplementation( ( key ) => mockConfig[ key ] );
+};
+mockMwConfigGet();
 mw.track = jest.fn();
 mw.Api.prototype.saveOption = jest.fn();
 mw.hook = jest.fn( ( name ) => ( {

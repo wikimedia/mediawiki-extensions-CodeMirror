@@ -1328,13 +1328,11 @@ let handler;
  * @param {boolean} [config.codeFolding=true] Enable code folding.
  * @param {boolean} [config.autocomplete=true] Enable autocompletion.
  * @param {boolean} [config.openLinks=true] Enable opening of links.
- * @param {Object|null} [mwConfig] Ignore; used only by unit tests.
  * @return {LanguageSupport}
  * @stable to call
  */
-const mediaWikiLang = ( config = { bidiIsolation: false }, mwConfig = null ) => {
-	mwConfig = mwConfig || mw.config.get( 'extCodeMirrorConfig' );
-	const mode = new CodeMirrorModeMediaWiki( mwConfig );
+const mediaWikiLang = ( config = { bidiIsolation: false } ) => {
+	const mode = new CodeMirrorModeMediaWiki( mw.config.get( 'extCodeMirrorConfig' ) );
 	const parser = mode.mediawiki;
 	const lang = StreamLanguage.define( parser );
 	const langExtension = [ syntaxHighlighting(

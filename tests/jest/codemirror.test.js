@@ -282,7 +282,7 @@ describe( 'logUsage', () => {
 			session_token: 'abc',
 			toggled: false,
 			// eslint-disable-next-line camelcase
-			user_edit_count_bucket: '1000+ edits',
+			user_edit_count_bucket: undefined,
 			// eslint-disable-next-line camelcase
 			user_id: 123
 		} );

@@ -8,10 +8,9 @@ describe( 'CodeMirrorMediaWikiKeymap', () => {
 		const textarea = document.createElement( 'textarea' );
 		const form = document.createElement( 'form' );
 		form.appendChild( textarea );
+		mockMwConfigGet( { wgCiteResponsiveReferences: true } );
 		cm = new CodeMirror( textarea );
 		cm.initialize();
-		// Mocks wgCiteResponsiveReferences
-		mw.config.get = jest.fn().mockReturnValue( true );
 		mwKeymap( cm );
 	} );
 

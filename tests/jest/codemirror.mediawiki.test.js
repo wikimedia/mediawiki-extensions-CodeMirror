@@ -188,35 +188,7 @@ const testCases = [
 // Setup CodeMirror instance.
 const textarea = document.createElement( 'textarea' );
 document.body.appendChild( textarea );
-// Stub the config normally provided by mw.config.get('extCodeMirrorConfig')
-const mwLang = mediaWikiLang( {}, {
-	urlProtocols: 'ftp://|https://|news:',
-	doubleUnderscore: [ {
-		__notoc__: 'notoc'
-	}, {} ],
-	functionSynonyms: [ {
-		ns: 'ns'
-	}, {
-		'!': '!',
-		'מיון רגיל': 'defaultsort'
-	} ],
-	variableIDs: [
-		'!'
-	],
-	tags: {
-		nowiki: true,
-		pre: true,
-		ref: true,
-		references: true,
-		// Made-up tag, for testing when a corresponding TagMode is not configured.
-		myextension: true
-	},
-	tagModes: {
-		ref: 'mediawiki',
-		references: 'mediawiki'
-	}
-} );
-const cm = new CodeMirror( textarea, mwLang );
+const cm = new CodeMirror( textarea, mediaWikiLang() );
 cm.initialize();
 
 describe( 'CodeMirrorModeMediaWiki', () => {
@@ -409,7 +381,9 @@ describe( 'CodeMirrorModeMediaWiki', () => {
 			'cm-mw-template3-ext3-link-ground',
 			'cm-mw-template3-ground',
 			'cm-mw-template3-link-ground',
-			/** Added by the MW config stub above {@link mwLang} */
+			// Added by the MW config stub in setup.js
+			'cm-mw-tag-indicator',
+			'cm-mw-ext-indicator',
 			'cm-mw-tag-ref',
 			'cm-mw-ext-ref',
 			'cm-mw-tag-references',

@@ -6,6 +6,9 @@
 	"parserOptions": {
 		"sourceType": "module"
 	},
+	"globals": {
+		"mockMwConfigGet": true
+	},
 	"env": {
 		"browser": true,
 		"jest": true
