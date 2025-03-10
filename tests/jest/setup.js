@@ -1,3 +1,4 @@
+const extensionJson = require( '../../extension.json' );
 const mockBundle = require( '../../resources/lib/codemirror6.bundle.lib.js' );
 jest.mock( 'ext.CodeMirror.v6.lib', () => mockBundle, { virtual: true } );
 const mockCodeMirror = require( '../../resources/codemirror.js' );
@@ -29,7 +30,7 @@ global.mockMwConfigGet = ( config = {} ) => {
 	const mockConfig = Object.assign( {
 		extCodeMirrorConfig: {
 			urlProtocols: 'ftp://|https://|news:',
-			defaultPreferences: {},
+			defaultPreferences: extensionJson.config.CodeMirrorDefaultPreferences.value,
 			doubleUnderscore: [ {
 				__notoc__: 'notoc'
 			}, {} ],

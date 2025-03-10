@@ -34,25 +34,9 @@
 			"description": "An array of gadget names that, if enabled, will prevent CodeMirror from loading on action=edit and action=submit.",
 			"public": true
 		},
-		"CodeMirrorCodeFoldingNamespaces": {
-			"value": null,
-			"description": "List of namespace IDs where code folding should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere.",
-			"public": true
-		},
-		"CodeMirrorAutocompleteNamespaces": {
-			"value": null,
-			"description": "List of namespace IDs where autocompletion should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere.",
-			"public": true
-		},
-		"CodeMirrorOpenLinksNamespaces": {
-			"value": null,
-			"description": "List of namespace IDs where opening of links by modifier + click should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere.",
-			"public": true
-		},
 		"CodeMirrorLineNumberingNamespaces": {
 			"value": null,
-			"description": "List of namespace IDs where line numbering should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere.",
-			"public": true
+			"description": "List of namespace IDs where line numbering should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere."
 		},
 		"CodeMirrorTitleCompletion": {
 			"value": true,
@@ -494,8 +478,7 @@
 		"EditPage::showReadOnlyForm:initial": "main",
 		"UploadForm:initial": "main",
 		"GetPreferences": "main",
-		"GetBetaFeaturePreferences": "main",
-		"ResourceLoaderGetConfigVars": "main"
+		"GetBetaFeaturePreferences": "main"
 	},
 	"HookHandlers": {
 		"main": {

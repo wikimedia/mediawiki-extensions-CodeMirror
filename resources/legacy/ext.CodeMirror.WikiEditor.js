@@ -83,7 +83,7 @@ function init() {
 			return false;
 		}
 
-		const namespaces = mw.config.get( 'wgCodeMirrorLineNumberingNamespaces' );
+		const namespaces = mw.config.get( 'extCodeMirrorConfig' ).legacyLineNumberingNamespaces;
 		// Set to [] to disable everywhere, or null to enable everywhere
 		return !namespaces ||
 			namespaces.indexOf( mw.config.get( 'wgNamespaceNumber' ) ) !== -1;

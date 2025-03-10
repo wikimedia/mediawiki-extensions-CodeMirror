@@ -13,7 +13,6 @@ use MediaWiki\Hook\UploadForm_initialHook;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
 use MediaWiki\Registration\ExtensionRegistry;
-use MediaWiki\ResourceLoader\Hook\ResourceLoaderGetConfigVarsHook;
 use Mediawiki\Specials\SpecialUpload;
 use MediaWiki\User\Options\UserOptionsLookup;
 use MediaWiki\User\User;
@@ -25,7 +24,6 @@ class Hooks implements
 	EditPage__showEditForm_initialHook,
 	EditPage__showReadOnlyForm_initialHook,
 	UploadForm_initialHook,
-	ResourceLoaderGetConfigVarsHook,
 	GetPreferencesHook
 {
 
@@ -245,20 +243,6 @@ class Hooks implements
 	private function isBetaFeatureEnabled( User $user ): bool {
 		return ExtensionRegistry::getInstance()->isLoaded( 'BetaFeatures' ) &&
 			BetaFeatures::isFeatureEnabled( $user, 'codemirror-beta-feature-enable' );
-	}
-
-	/**
-	 * Hook handler for enabling bracket matching.
-	 *
-	 * TODO: Remove after migration to CodeMirror 6 is complete.
-	 *
-	 * @param array &$vars Array of variables to be added into the output of the startup module
-	 * @param string $skin
-	 * @param Config $config
-	 * @return void This hook must not abort, it must return no value
-	 */
-	public function onResourceLoaderGetConfigVars( array &$vars, $skin, Config $config ): void {
-		$vars['wgCodeMirrorLineNumberingNamespaces'] = $config->get( 'CodeMirrorLineNumberingNamespaces' );
 	}
 
 	/**

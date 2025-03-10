@@ -110,12 +110,85 @@ describe( 'CodeMirrorPreferences', () => {
 		expect( checkboxes[ 1 ].name ).toStrictEqual( 'barExtension' );
 	} );
 
+	it( 'overriding namespace and content model preferences', () => {
+		const extCodeMirrorConfig = {
+			defaultPreferences: { lineNumbering: true, autocomplete: [ 0 ] }
+		};
+		mockUserPreferences( {} );
+
+		// We're editing a Template where autocomplete is disabled.
+		mockMwConfigGet( {
+			wgNamespaceNumber: 10,
+			wgPageContentModel: 'wikitext',
+			extCodeMirrorConfig
+		} );
+
+		// Some preliminary assertions.
+		let preferences = getCodeMirrorPreferences( {
+			lineNumbering: EditorView.theme(),
+			autocomplete: EditorView.theme()
+		} );
+		expect( preferences.fetchPreferences() ).toStrictEqual( {
+			lineNumbering: true,
+			autocomplete: false
+		} );
+		expect( preferences.getDefaultPreferences() ).toStrictEqual( {
+			lineNumbering: true,
+			autocomplete: false
+		} );
+
+		// Enable autocomplete.
+		preferences.setPreference( 'autocomplete', true );
+		// Assert storage.
+		expect( mw.user.options.set )
+			.toHaveBeenCalledWith( 'codemirror-preferences', '{"autocomplete":1}' );
+
+		// Now simulate editing an article.
+		mockMwConfigGet( {
+			wgNamespaceNumber: 0,
+			wgPageContentModel: 'wikitext',
+			extCodeMirrorConfig
+		} );
+		// We need to re-mock mw.user.options.get to return the updated preferences.
+		mockUserPreferences( '{"autocomplete":1}' );
+		preferences = getCodeMirrorPreferences( {
+			lineNumbering: EditorView.theme(),
+			autocomplete: EditorView.theme()
+		} );
+
+		// More sanity checks.
+		expect( preferences.fetchPreferences() ).toStrictEqual( {
+			lineNumbering: true,
+			autocomplete: true
+		} );
+		expect( preferences.getDefaultPreferences() ).toStrictEqual( {
+			lineNumbering: true,
+			// Autocomplete is on by default in NS_MAIN.
+			autocomplete: true
+		} );
+
+		// Disable lineNumbering.
+		preferences.setPreference( 'lineNumbering', false );
+		// Assert storage, and that autocomplete is still enabled.
+		expect( mw.user.options.set ).toHaveBeenCalledWith(
+			'codemirror-preferences',
+			'{"lineNumbering":0,"autocomplete":1}'
+		);
+		// Mock user preferences to return the updated preferences.
+		mockUserPreferences( '{"lineNumbering":0,"autocomplete":1}' );
+		// Autocomplete should still be enabled.
+		expect( preferences.fetchPreferences() ).toStrictEqual( {
+			lineNumbering: false,
+			autocomplete: true
+		} );
+	} );
+
 	it( 'logged out preferences', () => {
 		mw.user.isNamed = jest.fn().mockReturnValue( false );
 		let mockStorage = {
 			// Opposite of the values set in beforeEach
-			fooExtension: true,
-			barExtension: false
+			fooExtension: 1,
+			barExtension: 0
 		};
 		mw.storage = {
 			getObject: jest.fn( () => mockStorage ),
@@ -136,4 +209,77 @@ describe( 'CodeMirrorPreferences', () => {
 			barExtension: true
 		} );
 	} );
+
+	it( 'should delete a user option if it matches the defaults', () => {
+		mockDefaultPreferences( { fooExtension: false, barExtension: true } );
+		mockUserPreferences( '{"fooExtension":1,"barExtension":1}' );
+		const preferences = getCodeMirrorPreferences();
+		preferences.setPreference( 'fooExtension', false );
+		expect( mw.user.options.set ).toHaveBeenCalledWith( 'codemirror-preferences', null );
+	} );
+
+	const defPrefsTestCases = [
+		{
+			title: 'no user prefs',
+			defaultPreferences: { lineNumbering: false, bracketMatching: true },
+			nsId: 0,
+			contentModel: 'wikitext',
+			expected: { lineNumbering: false, bracketMatching: true }
+		}, {
+			title: 'lineNumbering only for Templates, editing mainspace',
+			defaultPreferences: { lineNumbering: [ 10 ], bracketMatching: true },
+			nsId: 0,
+			contentModel: 'wikitext',
+			expected: { lineNumbering: false, bracketMatching: true }
+		}, {
+			title: 'lineNumbering only for Templates, editing Template',
+			defaultPreferences: { lineNumbering: [ 10 ], bracketMatching: true },
+			nsId: 10,
+			contentModel: 'wikitext',
+			expected: { lineNumbering: true, bracketMatching: true }
+		}, {
+			title: 'bracketMatching only for CSS, editing wikitext',
+			defaultPreferences: { lineNumbering: true, bracketMatching: [ 'css' ] },
+			nsId: 10,
+			contentModel: 'wikitext',
+			expected: { lineNumbering: true, bracketMatching: false }
+		}, {
+			title: 'bracketMatching only for CSS, editing css',
+			defaultPreferences: { lineNumbering: true, bracketMatching: [ 'css' ] },
+			nsId: 10,
+			contentModel: 'css',
+			expected: { lineNumbering: true, bracketMatching: true }
+		}, {
+			title: 'lineNumbering for Templates or CSS, editing main/wikitext',
+			defaultPreferences: { lineNumbering: [ 10, 'css' ], bracketMatching: true },
+			nsId: 0,
+			contentModel: 'wikitext',
+			expected: { lineNumbering: false, bracketMatching: true }
+		}, {
+			title: 'lineNumbering for Templates or CSS, editing Template/wikitext',
+			defaultPreferences: { lineNumbering: [ 10, 'css' ], bracketMatching: true },
+			nsId: 10,
+			contentModel: 'wikitext',
+			expected: { lineNumbering: true, bracketMatching: true }
+		}, {
+			title: 'lineNumbering for Templates or CSS, editing Template/css',
+			defaultPreferences: { lineNumbering: [ 10, 'css' ], bracketMatching: true },
+			nsId: 10,
+			contentModel: 'css',
+			expected: { lineNumbering: true, bracketMatching: true }
+		}
+	];
+	it.each( defPrefsTestCases )(
+		'default preferences ($title)',
+		( { defaultPreferences, nsId, contentModel, expected } ) => {
+			mockMwConfigGet( {
+				extCodeMirrorConfig: { defaultPreferences },
+				wgNamespaceNumber: nsId,
+				wgPageContentModel: contentModel
+			} );
+			mockUserPreferences( {} );
+			const preferences = getCodeMirrorPreferences();
+			expect( preferences.getDefaultPreferences() ).toStrictEqual( expected );
+		}
+	);
 } );

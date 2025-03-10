@@ -106,12 +106,50 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	}
 
 	/**
-	 * The default CodeMirror preferences, as defined by `$wgCodeMirrorPreferences`.
-	 *
 	 * @type {Object}
+	 * @private
 	 */
-	get defaultPreferences() {
+	get mwConfigDefaults() {
 		return mw.config.get( 'extCodeMirrorConfig' ).defaultPreferences;
+	}
+
+	/**
+	 * The default CodeMirror preferences, as defined by `$wgCodeMirrorPreferences`
+	 * and taking into account the page namespace and content model.
+	 *
+	 * @return {Object}
+	 */
+	getDefaultPreferences() {
+		if ( this.defaultPreferences ) {
+			return this.defaultPreferences;
+		}
+
+		const nsId = mw.config.get( 'wgNamespaceNumber' );
+		const contentModel = mw.config.get( 'wgPageContentModel' );
+		const newDefaults = {};
+
+		Object.keys( this.mwConfigDefaults ).forEach( ( prefName ) => {
+			const prefValue = this.mwConfigDefaults[ prefName ] || false;
+
+			if ( typeof prefValue === 'boolean' ) {
+				newDefaults[ prefName ] = prefValue;
+				return;
+			}
+
+			// Assume an array of namespace IDs (integers) and content models (strings).
+			const inNamespace = prefValue.includes( nsId );
+			const inContentModel = prefValue.includes( contentModel );
+
+			newDefaults[ prefName ] = inNamespace || inContentModel;
+		} );
+
+		/**
+		 * @type {Object}
+		 * @private
+		 */
+		this.defaultPreferences = newDefaults;
+
+		return this.defaultPreferences;
 	}
 
 	/**
@@ -121,19 +159,11 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * @return {Object}
 	 */
 	fetchPreferences() {
-		let storageObj = this.defaultPreferences;
-
-		if ( mw.user.isNamed() ) {
-			try {
-				storageObj = JSON.parse( mw.user.options.get( this.optionName ) );
-			} catch ( e ) {
-				// Invalid JSON, or no preferences set.
-			}
-		} else {
-			storageObj = mw.storage.getObject( this.optionName ) || this.defaultPreferences;
-		}
-
-		storageObj = Object.assign( {}, this.defaultPreferences, storageObj );
+		const storageObj = Object.assign(
+			{},
+			this.getDefaultPreferences(),
+			this.fetchPreferencesInternal()
+		);
 
 		// Convert binary representation to boolean.
 		const preferences = {};
@@ -141,6 +171,24 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 			preferences[ prefName ] = !!storageObj[ prefName ];
 		}
 		return preferences;
+	}
+
+	/**
+	 * @return {Object}
+	 * @internal
+	 * @private
+	 */
+	fetchPreferencesInternal() {
+		if ( mw.user.isNamed() ) {
+			try {
+				return JSON.parse( mw.user.options.get( this.optionName ) );
+			} catch ( e ) {
+				// Invalid JSON, or no preferences set.
+				return {};
+			}
+		} else {
+			return mw.storage.getObject( this.optionName ) || {};
+		}
 	}
 
 	/**
@@ -156,22 +204,40 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		// Only save the preferences that differ from the defaults,
 		// and use a binary representation for storage. This is to prevent
 		// bloat of the user_properties table (T54777).
-		const storageObj = {};
+		let storageObj = {};
 		for ( const prefName in this.preferences ) {
-			if ( !!this.preferences[ prefName ] !== !!this.defaultPreferences[ prefName ] ) {
+			if ( !!this.preferences[ prefName ] !== !!this.getDefaultPreferences()[ prefName ] || (
+				// Always store preferences that have namespace or content model restrictions and
+				// have been overridden by the user, even if they match the default for this page.
+				this.fetchPreferencesInternal()[ prefName ] !== undefined &&
+				Array.isArray( this.mwConfigDefaults[ prefName ] )
+			) ) {
 				storageObj[ prefName ] = this.preferences[ prefName ] ? 1 : 0;
 			}
 		}
-		mw.user.options.set( this.optionName, JSON.stringify( storageObj ) );
 
-		// Save the preferences to the database or clientside storage.
+		// If preferences match the defaults, delete the user option.
+		if ( Object.keys( storageObj ).length === 0 ) {
+			storageObj = null;
+		}
+
+		this.setPreferencesInternal( storageObj );
+		this.firePreferencesApplyHook( key );
+	}
+
+	/**
+	 * @param {Object} storageObj
+	 * @internal
+	 * @private
+	 */
+	setPreferencesInternal( storageObj ) {
+		const stringified = storageObj === null ? null : JSON.stringify( storageObj );
+		mw.user.options.set( this.optionName, stringified );
 		if ( mw.user.isNamed() ) {
-			this.api.saveOption( this.optionName, JSON.stringify( storageObj ) );
+			this.api.saveOption( this.optionName, stringified );
 		} else {
 			mw.storage.setObject( this.optionName, storageObj );
 		}
-
-		this.firePreferencesApplyHook( key );
 	}
 
 	/**
@@ -205,18 +271,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		}
 
 		// Otherwise, go by the defaults.
-
-		// Some preferences can be set per-namespace through wiki configuration.
-		// Values are an array of namespace IDs, [] to disable everywhere,
-		// or null to enable everywhere.
-		const namespacePrefs = [ 'lineNumbering', 'codeFolding', 'autocomplete', 'openLinks' ];
-		if ( namespacePrefs.includes( prefName ) ) {
-			const namespaces = mw.config.get( 'extCodeMirrorConfig' )[ prefName + 'Namespaces' ];
-			return !namespaces || namespaces.includes( mw.config.get( 'wgNamespaceNumber' ) );
-		}
-
-		// These preferences do not have configuration settings.
-		return this.defaultPreferences[ prefName ];
+		return this.getDefaultPreferences()[ prefName ];
 	}
 
 	/**

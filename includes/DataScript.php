@@ -60,10 +60,7 @@ class DataScript {
 		$config = [
 			'useV6' => $mwConfig->get( 'CodeMirrorV6' ),
 			'defaultPreferences' => $mwConfig->get( 'CodeMirrorDefaultPreferences' ),
-			'lineNumberingNamespaces' => $mwConfig->get( 'CodeMirrorLineNumberingNamespaces' ),
-			'codeFoldingNamespaces' => $mwConfig->get( 'CodeMirrorCodeFoldingNamespaces' ),
-			'autocompleteNamespaces' => $mwConfig->get( 'CodeMirrorAutocompleteNamespaces' ),
-			'openLinksNamespaces' => $mwConfig->get( 'CodeMirrorOpenLinksNamespaces' ),
+			'legacyLineNumberingNamespaces' => $mwConfig->get( 'CodeMirrorLineNumberingNamespaces' ),
 			'titleCompletion' => $mwConfig->get( 'CodeMirrorTitleCompletion' ),
 			'pluginModules' => $registry->getAttribute( 'CodeMirrorPluginModules' ),
 			'tagModes' => $tagModes,
