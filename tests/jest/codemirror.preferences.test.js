@@ -90,9 +90,14 @@ describe( 'CodeMirrorPreferences', () => {
 	} );
 
 	it( 'extension', () => {
-		const preferences = getCodeMirrorPreferences();
+		mockUserPreferences( '{"fooExtension":1,"barExtension":1}' );
+		const preferences = getCodeMirrorPreferences( { fooExtension: true, barExtension: true } );
+		const hookSpy = jest.spyOn( preferences, 'firePreferencesApplyHook' );
 		const ext = preferences.extension;
 		expect( ext[ 0 ].constructor.name ).toStrictEqual( 'FacetProvider' );
+		// fooExtension and barExtension
+		expect( ext[ 1 ].length ).toStrictEqual( 2 );
+		expect( hookSpy ).toHaveBeenCalledTimes( 2 );
 	} );
 
 	it( 'panel', () => {

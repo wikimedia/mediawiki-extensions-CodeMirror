@@ -94,6 +94,13 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 		return [
 			search( {
 				createPanel: ( view ) => {
+					/**
+					 * Fired when the CodeMirror search panel is opened.
+					 *
+					 * @event CodeMirror~ext.CodeMirror.search
+					 * @internal
+					 */
+					mw.hook( 'ext.CodeMirror.search' ).fire();
 					this.view = view;
 					return this.panel;
 				}

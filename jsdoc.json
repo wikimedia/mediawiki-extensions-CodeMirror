@@ -56,6 +56,7 @@
 				"jQuery.fn.textSelection": "https://doc.wikimedia.org/mediawiki-core/master/js/jQueryPlugins.html#.textSelection",
 				"mw.Api": "https://doc.wikimedia.org/mediawiki-core/master/js/mw.Api.html",
 				"mw.msg": "https://doc.wikimedia.org/mediawiki-core/master/js/mw.html#.msg",
+				"ve.ce.Surface": "https://doc.wikimedia.org/visualeditor-standalone/master/ve.ce.Surface.html",
 				"ve.dm.Selection": "https://doc.wikimedia.org/visualeditor-standalone/master/ve.dm.Selection.html",
 				"ve.dm.Transaction": "https://doc.wikimedia.org/visualeditor-standalone/master/ve.dm.Transaction.html",
 				"ve.ui.Action": "https://doc.wikimedia.org/visualeditor-standalone/master/ve.ui.Action.html",

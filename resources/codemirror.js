@@ -750,6 +750,8 @@ class CodeMirror {
 			return;
 		}
 
+		this.setupFeatureLogging();
+
 		// Create the EditorState of CodeMirror with contents of the original textarea.
 		const state = EditorState.create( {
 			doc: this.surface ? this.surface.getDom() : this.textarea.value,
@@ -769,6 +771,7 @@ class CodeMirror {
 		}
 		this.showEditorView( state );
 		this.isActive = true;
+		this.logEditFeature( 'activated' );
 
 		// Register $.textSelection() on the .cm-editor element.
 		$( this.view.dom ).textSelection( 'register', this.cmTextSelection );
@@ -836,6 +839,7 @@ class CodeMirror {
 		this.container.classList.add( 'ext-codemirror-wrapper--hidden' );
 
 		this.isActive = false;
+		this.logEditFeature( 'deactivated' );
 
 		if ( !this.surface ) {
 			// Sync focus state, selections and scroll position.
@@ -881,22 +885,36 @@ class CodeMirror {
 	/**
 	 * Log usage of CodeMirror.
 	 *
-	 * @param {Object} data
-	 * @internal
-	 * @ignore
+	 * @param {string} action
+	 * @see https://phabricator.wikimedia.org/T373710
+	 * @protected
+	 * @stable to call and override by subclasses
 	 */
-	static logUsage( data ) {
-		/* eslint-disable camelcase */
-		const event = Object.assign( {
-			session_token: mw.user.sessionId(),
-			user_id: mw.user.getId()
-		}, data );
-		const editCountBucket = mw.config.get( 'wgUserEditCountBucket' );
-		if ( editCountBucket !== null ) {
-			event.user_edit_count_bucket = editCountBucket;
-		}
-		/* eslint-enable camelcase */
-		mw.track( 'event.CodeMirrorUsage', event );
+	// eslint-disable-next-line no-unused-vars
+	logEditFeature( action ) {}
+
+	/**
+	 * Add hook handlers to log usage of CodeMirror features.
+	 *
+	 * @protected
+	 * @stable to call and override by subclasses
+	 */
+	setupFeatureLogging() {
+		this.addMwHook( 'ext.CodeMirror.preferences.apply', ( prefName, enabled ) => {
+			// Log only when in-use, not when it's toggled.
+			if ( enabled ) {
+				this.logEditFeature( `prefs-${ prefName }` );
+			}
+		} );
+		this.addMwHook( 'ext.CodeMirror.preferences.display',
+			() => this.logEditFeature( 'prefs-display' )
+		);
+		this.addMwHook( 'ext.CodeMirror.search',
+			() => this.logEditFeature( 'search' )
+		);
+		this.addMwHook( 'ext.CodeMirror.keymap',
+			() => this.logEditFeature( 'keymap' )
+		);
 	}
 
 	/**

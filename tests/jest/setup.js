@@ -57,6 +57,7 @@ global.mockMwConfigGet = ( config = {} ) => {
 				references: 'mediawiki'
 			}
 		},
+		wgMFMode: null,
 		wgNamespaceIds: {}
 	}, config );
 	mw.config.get = jest.fn().mockImplementation( ( key ) => mockConfig[ key ] );

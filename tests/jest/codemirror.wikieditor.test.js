@@ -104,3 +104,59 @@ describe( 'Hook handlers and event listeners', () => {
 		expect( mw.hook.mockHooks[ 'ext.CodeMirror.ready' ].length ).toBe( 1 );
 	} );
 } );
+
+describe( 'logEditFeature', () => {
+	afterEach( jest.restoreAllMocks );
+
+	it( 'should log when activating and deactivating', () => {
+		const spy = jest.spyOn( cmWe, 'logEditFeature' );
+		cmWe.activate();
+		expect( spy ).toHaveBeenCalledTimes( 1 );
+		expect( spy ).toHaveBeenCalledWith( 'activated' );
+		expect( mw.track ).toBeCalledWith( 'visualEditorFeatureUse', {
+			action: 'activated',
+			feature: 'codemirror'
+		} );
+		cmWe.deactivate();
+		expect( spy ).toHaveBeenCalledTimes( 2 );
+		expect( spy ).toHaveBeenCalledWith( 'deactivated' );
+		expect( mw.track ).toBeCalledWith( 'visualEditorFeatureUse', {
+			action: 'deactivated',
+			feature: 'codemirror'
+		} );
+	} );
+
+	it( 'should log when preferred extensions are enabled or disabled', () => {
+		cmWe.initialize();
+		const spy = jest.spyOn( cmWe, 'logEditFeature' );
+		cmWe.preferences.registerExtension( 'autocomplete', [], cmWe.view );
+		expect( spy ).toHaveBeenCalledWith( 'prefs-autocomplete' );
+		expect( mw.track ).toBeCalledWith( 'visualEditorFeatureUse', {
+			action: 'prefs-autocomplete',
+			feature: 'codemirror'
+		} );
+		cmWe.preferences.setPreference( 'bracketMatching', true );
+		expect( spy ).toHaveBeenCalledWith( 'prefs-bracketMatching' );
+		expect( spy ).toHaveBeenCalledTimes( 2 );
+		expect( mw.track ).toBeCalledWith( 'visualEditorFeatureUse', {
+			action: 'prefs-bracketMatching',
+			feature: 'codemirror'
+		} );
+		// Show preferences panel
+		cmWe.preferences.toggle( cmWe.view, true );
+		expect( spy ).toHaveBeenCalledWith( 'prefs-display' );
+	} );
+
+	it( 'should log when opening the search panel', () => {
+		cmWe.initialize();
+		const spy = jest.spyOn( cmWe, 'logEditFeature' );
+		cmWe.view.contentDOM.dispatchEvent(
+			new KeyboardEvent( 'keydown', { key: 'f', ctrlKey: true } )
+		);
+		expect( spy ).toHaveBeenCalledWith( 'search' );
+		expect( mw.track ).toBeCalledWith( 'visualEditorFeatureUse', {
+			action: 'search',
+			feature: 'codemirror'
+		} );
+	} );
+} );
