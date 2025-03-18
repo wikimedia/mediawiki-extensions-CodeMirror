@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Lhanars"
+		]
+	},
+	"codemirror-toggle-label": "Mesa en evidéncia de la sintaxi",
+	"codemirror-prefs-colorblind": "Activar l'apercebut accessible als daltonians per la coloracion de sintaxi pendent l'edicion del còdi wiki."
+}
