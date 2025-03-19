@@ -134,8 +134,6 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		}
 
 		super.initialize( extensions );
-
-		this.fireSwitchHook();
 	}
 
 	/**
