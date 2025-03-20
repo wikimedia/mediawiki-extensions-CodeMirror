@@ -6,12 +6,12 @@ const testCases = [
 	{
 		title: 'wraps HTML tags with span.cm-bidi-isolate',
 		input: 'שלום<span class="foobar">שלום</span>שלום',
-		output: '<div class="cm-line">שלום<span class="cm-bidi-isolate"><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">span </span><span class="cm-mw-htmltag-attribute">class="foobar"</span><span class="cm-mw-htmltag-bracket">&gt;</span></span>שלום<span class="cm-bidi-isolate"><span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">span</span><span class="cm-mw-htmltag-bracket">&gt;</span></span>שלום</div>'
+		output: '<div class="cm-line">שלום<span class="cm-bidi-isolate"><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">span </span><span class="cm-mw-htmltag-attribute">class=</span><span class="cm-mw-htmltag-attribute-value">"foobar"</span><span class="cm-mw-htmltag-bracket">&gt;</span></span>שלום<span class="cm-bidi-isolate"><span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">span</span><span class="cm-mw-htmltag-bracket">&gt;</span></span>שלום</div>'
 	},
 	{
 		title: 'wraps self-closing extension tags with span.cm-bidi-isolate',
 		input: '<ref name="foo" />',
-		output: '<div class="cm-line"><span class="cm-bidi-isolate"><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref </span><span class="cm-mw-exttag-attribute cm-mw-ext-ref">name="foo" </span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">/&gt;</span></span></div>'
+		output: '<div class="cm-line"><span class="cm-bidi-isolate"><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref </span><span class="cm-mw-exttag-attribute cm-mw-ext-ref">name=</span><span class="cm-mw-exttag-attribute-value">"foo"</span><span class="cm-mw-exttag-attribute cm-mw-ext-ref"> </span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">/&gt;</span></span></div>'
 	}
 ];
 

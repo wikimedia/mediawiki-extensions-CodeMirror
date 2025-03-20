@@ -7,7 +7,14 @@ const mwModeConfig = require( './codemirror.mediawiki.config.js' );
 
 const isTag = ( { name } ) => {
 	const names = name.split( '_' );
-	return [ 'htmlTagAttribute', 'htmlTagName', 'extTagAttribute', 'extTagName' ]
+	return [
+		'htmlTagAttribute',
+		'htmlTagAttributeValue',
+		'htmlTagName',
+		'extTagAttribute',
+		'extTagAttributeValue',
+		'extTagName'
+	]
 		.some( ( type ) => names.includes( mwModeConfig.tags[ type ] ) );
 };
 /**
@@ -94,7 +101,7 @@ class Tag {
  */
 const getTag = ( state, node ) => {
 	const names = node.name.split( '_' ),
-		type = [ 'extTagAttribute', 'extTagName', 'extTagBracket' ]
+		type = [ 'extTagAttribute', 'extTagAttributeValue', 'extTagName', 'extTagBracket' ]
 			.some( ( t ) => names.includes( mwModeConfig.tags[ t ] ) ) ? 'ext' : 'html';
 	let { nextSibling, prevSibling } = node,
 		nameNode = isName( node, type ) ? node : null;

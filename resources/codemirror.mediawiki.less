@@ -12,6 +12,7 @@
 @wikitext-formatting-color: @color-progressive--focus;
 @wikitext-formatting-color-dark: @color-progressive--hover;
 @xml-tag-color: @color-content-added;
+@xml-tag-attribute-color: @color-destructive--visited--active;
 @template-background-color: #a11;
 @ext-background-color: #eee;
 @link-background-color: #219;
@@ -154,6 +155,11 @@ pre.CodeMirror-line-like.cm-mw-exttag {
 .cm-mw-htmltag-bracket,
 .cm-mw-htmltag-attribute {
 	color: @xml-tag-color;
+	font-weight: normal;
+}
+.cm-mw-exttag-attribute-value,
+.cm-mw-htmltag-attribute-value {
+	color: @xml-tag-attribute-color;
 	font-weight: normal;
 }
 

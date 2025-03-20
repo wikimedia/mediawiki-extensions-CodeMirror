@@ -540,12 +540,10 @@ class CodeMirrorModeMediaWiki {
 		};
 	}
 
-	eatHtmlTagAttribute( name ) {
+	eatHtmlTagAttribute( name, quote ) {
+		const style = mwModeConfig.tags[ quote === undefined ? 'htmlTagAttribute' : 'htmlTagAttributeValue' ];
 		return ( stream, state ) => {
 
-			if ( stream.match( /^(?:"[^<">]*"|'[^<'>]*'|[^>/<{&~])+/ ) ) {
-				return this.makeLocalStyle( mwModeConfig.tags.htmlTagAttribute, state );
-			}
 			if ( stream.eat( '>' ) ) {
 				if ( !( name in mwModeConfig.implicitlyClosedHtmlTags ) ) {
 					state.inHtmlTag.push( name );
@@ -557,7 +555,50 @@ class CodeMirrorModeMediaWiki {
 				state.tokenize = state.stack.pop();
 				return this.makeLocalStyle( mwModeConfig.tags.htmlTagBracket, state );
 			}
-			return this.eatWikiText( mwModeConfig.tags.htmlTagAttribute )( stream, state );
+			const peek = stream.peek();
+			if ( peek === '<' ) {
+				const { pos } = stream,
+					{ length } = state.stack,
+					// eat comment or extension tag
+					result = this.eatWikiText( '' )( stream, state );
+				if (
+					typeof result !== 'string' ||
+					!result.includes( mwModeConfig.tags.comment ) &&
+					!result.includes( mwModeConfig.tags.extTagBracket )
+				) {
+					state.stack.length = length;
+					state.tokenize = state.stack.pop();
+					stream.pos = pos;
+					return '';
+				}
+				return result;
+			}
+			if ( peek === '&' || peek === '{' ) {
+				return this.eatWikiText( style )( stream, state );
+			}
+			if ( quote ) {
+				if ( stream.eat( quote[ 0 ] ) ) {
+					state.tokenize = this.eatHtmlTagAttribute( name, quote[ 1 ] );
+				} else {
+					stream.match( new RegExp( `^(?:[^<>&{/${ quote[ 0 ] }]|/(?!>))+` ) );
+				}
+				return this.makeLocalStyle( style, state );
+			}
+			if ( quote === '' ) {
+				if ( stream.sol() || /\s/.test( peek ) ) {
+					state.tokenize = this.eatHtmlTagAttribute( name );
+					return '';
+				}
+				stream.match( /^(?:[^\s<>&{/]|\/(?!>))+/ );
+				return this.makeLocalStyle( style, state );
+			}
+			if ( stream.match( /^=\s*/ ) ) {
+				const next = stream.peek();
+				state.tokenize = this.eatHtmlTagAttribute( name, next === '"' || next === "'" ? next.repeat( 2 ) : '' );
+				return this.makeLocalStyle( style, state );
+			}
+			stream.match( /^(?:[^<>&={/]|\/(?!>))+/ );
+			return this.makeLocalStyle( style, state );
 		};
 	}
 
@@ -572,12 +613,10 @@ class CodeMirrorModeMediaWiki {
 		};
 	}
 
-	eatExtTagAttribute( name ) {
+	eatExtTagAttribute( name, quote ) {
+		const style = `${ mwModeConfig.tags.extTagAttribute } mw-ext-${ name }`;
 		return ( stream, state ) => {
 
-			if ( stream.match( /^(?:"[^">]*"|'[^'>]*'|[^>/<{&~])+/ ) ) {
-				return this.makeLocalStyle( `${ mwModeConfig.tags.extTagAttribute } mw-ext-${ name }`, state );
-			}
 			if ( stream.eat( '>' ) ) {
 				state.extName = name;
 
@@ -606,7 +645,29 @@ class CodeMirrorModeMediaWiki {
 				state.tokenize = state.stack.pop();
 				return this.makeLocalStyle( `${ mwModeConfig.tags.extTagBracket } mw-ext-${ name }`, state );
 			}
-			return this.eatWikiText( `${ mwModeConfig.tags.extTagAttribute } mw-ext-${ name }` )( stream, state );
+			if ( quote ) {
+				if ( stream.eat( quote[ 0 ] ) ) {
+					state.tokenize = this.eatExtTagAttribute( name, quote[ 1 ] );
+				} else {
+					stream.match( new RegExp( `^(?:[^>/${ quote[ 0 ] }]|/(?!>))+` ) );
+				}
+				return this.makeLocalStyle( mwModeConfig.tags.extTagAttributeValue, state );
+			}
+			if ( quote === '' ) {
+				if ( stream.sol() || /\s/.test( stream.peek() ) ) {
+					state.tokenize = this.eatExtTagAttribute( name );
+					return '';
+				}
+				stream.match( /^(?:[^>/\s]|\/(?!>))+/ );
+				return this.makeLocalStyle( mwModeConfig.tags.extTagAttributeValue, state );
+			}
+			if ( stream.match( /^=\s*/ ) ) {
+				const next = stream.peek();
+				state.tokenize = this.eatExtTagAttribute( name, next === '"' || next === "'" ? next.repeat( 2 ) : '' );
+				return this.makeLocalStyle( style, state );
+			}
+			stream.match( /^(?:[^>/=]|\/(?!>))+/ );
+			return this.makeLocalStyle( style, state );
 		};
 	}
 

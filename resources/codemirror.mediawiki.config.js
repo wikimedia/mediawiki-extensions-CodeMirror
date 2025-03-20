@@ -183,8 +183,10 @@ class CodeMirrorModeMediaWikiConfig {
 			extPre: 'mw-ext-pre',
 			extTag: 'mw-exttag',
 			extTagAttribute: 'mw-exttag-attribute',
+			extTagAttributeValue: 'mw-exttag-attribute-value',
 			extTagBracket: 'mw-exttag-bracket',
 			extTagName: 'mw-exttag-name',
+			htmlTagAttributeValue: 'mw-htmltag-attribute-value',
 			freeExtLink: 'mw-free-extlink',
 			freeExtLinkProtocol: 'mw-free-extlink-protocol',
 			htmlEntity: 'mw-html-entity',
@@ -220,8 +222,10 @@ class CodeMirrorModeMediaWikiConfig {
 			[ this.tags.extPre ]: Tag.define(),
 			[ this.tags.extTag ]: Tag.define(),
 			[ this.tags.extTagAttribute ]: Tag.define(),
+			[ this.tags.extTagAttributeValue ]: Tag.define(),
 			[ this.tags.extTagBracket ]: Tag.define(),
 			[ this.tags.extTagName ]: Tag.define(),
+			[ this.tags.htmlTagAttributeValue ]: Tag.define(),
 			[ this.tags.freeExtLink ]: Tag.define(),
 			[ this.tags.freeExtLinkProtocol ]: Tag.define(),
 			[ this.tags.htmlEntity ]: Tag.define(),
@@ -444,8 +448,16 @@ class CodeMirrorModeMediaWikiConfig {
 				class: 'cm-mw-exttag-attribute'
 			},
 			{
+				tag: context.tokenTable[ this.tags.extTagAttributeValue ],
+				class: 'cm-mw-exttag-attribute-value'
+			},
+			{
 				tag: context.tokenTable[ this.tags.extTagName ],
 				class: 'cm-mw-exttag-name'
+			},
+			{
+				tag: context.tokenTable[ this.tags.htmlTagAttributeValue ],
+				class: 'cm-mw-htmltag-attribute-value'
 			},
 			{
 				tag: context.tokenTable[ this.tags.freeExtLink ],

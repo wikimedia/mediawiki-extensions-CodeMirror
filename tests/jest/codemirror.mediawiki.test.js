@@ -14,13 +14,13 @@ const testCases = [
 	},
 	{
 		title: 'HTML tag attributes',
-		input: '<span title="a<b"><b title="a>b"></b></span>',
-		output: '<div class="cm-line"><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">span </span><span class="cm-mw-htmltag-attribute">title="a&lt;b"</span><span class="cm-mw-htmltag-bracket">&gt;&lt;</span><span class="cm-mw-htmltag-name">b </span><span class="cm-mw-htmltag-attribute">title="a</span><span class="cm-mw-htmltag-bracket">&gt;</span>b"&gt;<span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">b</span><span class="cm-mw-htmltag-bracket">&gt;&lt;/</span><span class="cm-mw-htmltag-name">span</span><span class="cm-mw-htmltag-bracket">&gt;</span> </div>'
+		input: '<span title="a<b"><b title="a>b"></b></span><p title=<nowiki>{{a}}</nowiki>></p><s title=<b>></s>',
+		output: '<div class="cm-line"><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">span </span><span class="cm-mw-htmltag-attribute">title=</span><span class="cm-mw-htmltag-attribute-value">"a</span>&lt;b"&gt;<span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">b </span><span class="cm-mw-htmltag-attribute">title=</span><span class="cm-mw-htmltag-attribute-value">"a</span><span class="cm-mw-htmltag-bracket">&gt;</span>b"&gt;<span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">b</span><span class="cm-mw-htmltag-bracket">&gt;</span><span class="cm-mw-error">&lt;/span&gt;</span><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">p </span><span class="cm-mw-htmltag-attribute">title=</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-nowiki">nowiki</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&gt;</span><span class="cm-mw-tag-nowiki">{{a}}</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-nowiki">nowiki</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&gt;</span><span class="cm-mw-htmltag-bracket">&gt;&lt;/</span><span class="cm-mw-htmltag-name">p</span><span class="cm-mw-htmltag-bracket">&gt;&lt;</span><span class="cm-mw-htmltag-name">s </span><span class="cm-mw-htmltag-attribute">title=</span><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">b</span><span class="cm-mw-htmltag-bracket">&gt;</span>&gt;<span class="cm-mw-error">&lt;/s&gt;</span> </div>'
 	},
 	{
 		title: 'ref tag attributes',
 		input: '<ref name="a<b"/>',
-		output: '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref </span><span class="cm-mw-exttag-attribute cm-mw-ext-ref">name="a&lt;b"</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">/&gt;</span> </div>'
+		output: '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref </span><span class="cm-mw-exttag-attribute cm-mw-ext-ref">name=</span><span class="cm-mw-exttag-attribute-value">"a&lt;b"</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">/&gt;</span> </div>'
 	},
 	{
 		title: 'indented table with caption and inline headings',
@@ -55,7 +55,7 @@ const testCases = [
 	{
 		title: 'nowiki',
 		input: '<nowiki>{{foo}}<p> </div> {{{</nowiki>\n<nowiki/><pre class="foo">\n\n {{bar}}</pre>',
-		output: '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-nowiki">nowiki</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&gt;</span><span class="cm-mw-tag-nowiki">{{foo}}&lt;p&gt; &lt;/div&gt; {{{</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-nowiki">nowiki</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&gt;</span></div><div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-nowiki">nowiki</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">/&gt;</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-pre">pre </span><span class="cm-mw-exttag-attribute cm-mw-ext-pre">class="foo"</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&gt;</span></div><div class="cm-line"><br></div><div class="cm-line"><span class="cm-mw-tag-pre"> {{bar}}</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-pre">pre</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&gt;</span> </div>'
+		output: '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-nowiki">nowiki</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&gt;</span><span class="cm-mw-tag-nowiki">{{foo}}&lt;p&gt; &lt;/div&gt; {{{</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-nowiki">nowiki</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&gt;</span></div><div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-nowiki">nowiki</span><span class="cm-mw-exttag-bracket cm-mw-ext-nowiki">/&gt;</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-pre">pre </span><span class="cm-mw-exttag-attribute cm-mw-ext-pre">class=</span><span class="cm-mw-exttag-attribute-value">"foo"</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&gt;</span></div><div class="cm-line"><br></div><div class="cm-line"><span class="cm-mw-tag-pre"> {{bar}}</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&lt;/</span><span class="cm-mw-exttag-name cm-mw-ext-pre">pre</span><span class="cm-mw-exttag-bracket cm-mw-ext-pre">&gt;</span> </div>'
 	},
 	{
 		title: 'ref tag with cite web, extraneous curly braces',
@@ -145,7 +145,7 @@ const testCases = [
 	{
 		title: 'multi-line tag',
 		input: '<div\nid="foo"\n>bar</div>',
-		output: '<div class="cm-line"><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">div</span></div><div class="cm-line"><span class="cm-mw-htmltag-attribute">id="foo"</span></div><div class="cm-line"><span class="cm-mw-htmltag-bracket">&gt;</span>bar<span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">div</span><span class="cm-mw-htmltag-bracket">&gt;</span> </div>'
+		output: '<div class="cm-line"><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">div</span></div><div class="cm-line"><span class="cm-mw-htmltag-attribute">id=</span><span class="cm-mw-htmltag-attribute-value">"foo"</span></div><div class="cm-line"><span class="cm-mw-htmltag-bracket">&gt;</span>bar<span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">div</span><span class="cm-mw-htmltag-bracket">&gt;</span> </div>'
 	},
 	{
 		title: 'HTML entities',
@@ -261,8 +261,10 @@ describe( 'CodeMirrorModeMediaWiki', () => {
 			'extPre',
 			'extTag',
 			'extTagAttribute',
+			'extTagAttributeValue',
 			'extTagBracket',
 			'extTagName',
+			'htmlTagAttributeValue',
 			'freeExtLink',
 			'freeExtLinkProtocol',
 			'htmlEntity',
@@ -335,7 +337,9 @@ describe( 'CodeMirrorModeMediaWiki', () => {
 			'cm-mw-exttag-bracket',
 			'cm-mw-exttag',
 			'cm-mw-exttag-attribute',
+			'cm-mw-exttag-attribute-value',
 			'cm-mw-exttag-name',
+			'cm-mw-htmltag-attribute-value',
 			'cm-mw-free-extlink',
 			'cm-mw-free-extlink-protocol',
 			'cm-mw-html-entity',
