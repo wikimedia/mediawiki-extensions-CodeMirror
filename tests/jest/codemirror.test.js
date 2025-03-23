@@ -156,6 +156,14 @@ describe( 'activate', () => {
 		expect( spy ).toHaveBeenCalledTimes( 1 );
 		expect( spy ).toHaveBeenCalledWith( '[CodeMirror] CodeMirror instance already active.' );
 	} );
+
+	it( 'should sync contents from the original textarea', () => {
+		cm.initialize();
+		cm.deactivate();
+		cm.textarea.value = 'activate - sync contents';
+		cm.activate();
+		expect( cm.view.state.doc.toString() ).toStrictEqual( 'activate - sync contents' );
+	} );
 } );
 
 describe( 'deactivate', () => {

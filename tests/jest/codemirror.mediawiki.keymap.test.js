@@ -90,4 +90,23 @@ describe( 'CodeMirrorMediaWikiKeymap', () => {
 		} ) );
 		expect( cm.textSelection.getContents() ).toStrictEqual( expected );
 	} );
+
+	it( 'formatting after toggling CM off and on again (T389441)', () => {
+		cm.textSelection.setContents( 'Foo' );
+		cm.textSelection.setSelection( { start: 0, end: 3 } );
+		cm.view.contentDOM.dispatchEvent( new KeyboardEvent( 'keydown', {
+			key: 'i',
+			ctrlKey: true
+		} ) );
+		expect( cm.textSelection.getContents() ).toStrictEqual( "''Foo''" );
+		cm.toggle();
+		cm.textarea.value = 'Foo';
+		cm.toggle();
+		cm.textSelection.setSelection( { start: 0, end: 3 } );
+		cm.view.contentDOM.dispatchEvent( new KeyboardEvent( 'keydown', {
+			key: 'i',
+			ctrlKey: true
+		} ) );
+		expect( cm.textSelection.getContents() ).toStrictEqual( "''Foo''" );
+	} );
 } );

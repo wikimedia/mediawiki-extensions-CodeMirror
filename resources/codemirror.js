@@ -739,7 +739,7 @@ class CodeMirror {
 	 * This sets the {@link CodeMirror#state state} property and shows the editor view,
 	 * hiding the original textarea.
 	 *
-	 * {@link CodeMirror#initialize intialize} is expected to be called before this method.
+	 * {@link CodeMirror#initialize initialize} is expected to be called before this method.
 	 *
 	 * @protected
 	 * @stable to call and override by subclasses
@@ -753,7 +753,7 @@ class CodeMirror {
 		this.setupFeatureLogging();
 
 		// Create the EditorState of CodeMirror with contents of the original textarea.
-		const state = EditorState.create( {
+		const state = Boolean( this.view ) || EditorState.create( {
 			doc: this.surface ? this.surface.getDom() : this.textarea.value,
 			extensions: this.initExtensions
 		} );
@@ -766,8 +766,10 @@ class CodeMirror {
 
 		// Add CodeMirror to the DOM.
 		if ( this.view ) {
-			// We're re-enabling, so we want to re-use the original state.
-			this.view.setState( state );
+			// We're re-enabling, so we want to sync contents from the textarea.
+			this.cmTextSelection.setContents(
+				this.surface ? this.surface.getDom() : this.textarea.value
+			);
 		}
 		this.showEditorView( state );
 		this.isActive = true;
