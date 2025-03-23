@@ -115,14 +115,22 @@ describe( 'logEditFeature', () => {
 		expect( spy ).toHaveBeenCalledWith( 'activated' );
 		expect( mw.track ).toBeCalledWith( 'visualEditorFeatureUse', {
 			action: 'activated',
-			feature: 'codemirror'
+			feature: 'codemirror',
+			// eslint-disable-next-line camelcase
+			editor_interface: 'wikitext',
+			platform: 'desktop',
+			integration: 'page'
 		} );
 		cmWe.deactivate();
 		expect( spy ).toHaveBeenCalledTimes( 2 );
 		expect( spy ).toHaveBeenCalledWith( 'deactivated' );
 		expect( mw.track ).toBeCalledWith( 'visualEditorFeatureUse', {
 			action: 'deactivated',
-			feature: 'codemirror'
+			feature: 'codemirror',
+			// eslint-disable-next-line camelcase
+			editor_interface: 'wikitext',
+			platform: 'desktop',
+			integration: 'page'
 		} );
 	} );
 
@@ -133,14 +141,22 @@ describe( 'logEditFeature', () => {
 		expect( spy ).toHaveBeenCalledWith( 'prefs-autocomplete' );
 		expect( mw.track ).toBeCalledWith( 'visualEditorFeatureUse', {
 			action: 'prefs-autocomplete',
-			feature: 'codemirror'
+			feature: 'codemirror',
+			// eslint-disable-next-line camelcase
+			editor_interface: 'wikitext',
+			platform: 'desktop',
+			integration: 'page'
 		} );
 		cmWe.preferences.setPreference( 'bracketMatching', true );
 		expect( spy ).toHaveBeenCalledWith( 'prefs-bracketMatching' );
 		expect( spy ).toHaveBeenCalledTimes( 2 );
 		expect( mw.track ).toBeCalledWith( 'visualEditorFeatureUse', {
 			action: 'prefs-bracketMatching',
-			feature: 'codemirror'
+			feature: 'codemirror',
+			// eslint-disable-next-line camelcase
+			editor_interface: 'wikitext',
+			platform: 'desktop',
+			integration: 'page'
 		} );
 		// Show preferences panel
 		cmWe.preferences.toggle( cmWe.view, true );
@@ -156,7 +172,11 @@ describe( 'logEditFeature', () => {
 		expect( spy ).toHaveBeenCalledWith( 'search' );
 		expect( mw.track ).toBeCalledWith( 'visualEditorFeatureUse', {
 			action: 'search',
-			feature: 'codemirror'
+			feature: 'codemirror',
+			// eslint-disable-next-line camelcase
+			editor_interface: 'wikitext',
+			platform: 'desktop',
+			integration: 'page'
 		} );
 	} );
 } );
