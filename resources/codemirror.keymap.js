@@ -99,15 +99,15 @@ class CodeMirrorKeymap {
 		 * Registry of key bindings we want to advertise in the help dialog.
 		 * The outer keys are the section within the dialog. The objects therein are for
 		 * each mapping (command) we want to show, keyed by tool. The value for each is
-		 * a {@link CodeMirrorKeyBinding} object.
+		 * a {@link CodeMirrorKeyBinding} object, or an array of them.
 		 *
-		 * @type {Object<Object<CodeMirrorKeyBinding>>}
-		 * @property {Object<CodeMirrorKeyBinding>} textStyling
-		 * @property {Object<CodeMirrorKeyBinding>} history
-		 * @property {Object<CodeMirrorKeyBinding>} paragraph
-		 * @property {Object<CodeMirrorKeyBinding>} search
-		 * @property {Object<CodeMirrorKeyBinding>} insert
-		 * @property {Object<CodeMirrorKeyBinding>} other
+		 * @type {Object<Object<CodeMirrorKeyBinding>>|Object<Object<CodeMirrorKeyBinding[]>>}
+		 * @property {Object<CodeMirrorKeyBinding>|Object<CodeMirrorKeyBinding[]>} textStyling
+		 * @property {Object<CodeMirrorKeyBinding>|Object<CodeMirrorKeyBinding[]>} history
+		 * @property {Object<CodeMirrorKeyBinding>|Object<CodeMirrorKeyBinding[]>} paragraph
+		 * @property {Object<CodeMirrorKeyBinding>|Object<CodeMirrorKeyBinding[]>} search
+		 * @property {Object<CodeMirrorKeyBinding>|Object<CodeMirrorKeyBinding[]>} insert
+		 * @property {Object<CodeMirrorKeyBinding>|Object<CodeMirrorKeyBinding[]>} other
 		 */
 		this.keymapHelpRegistry = {
 			// Empty values are placeholders for MW-specific key bindings
@@ -120,15 +120,20 @@ class CodeMirrorKeymap {
 					run: undo,
 					preventDefault: true
 				},
-				redo: {
-					key: 'Mod-y',
-					mac: 'Cmd-Shift-z',
-					linux: 'Ctrl-Shift-z',
-					// Customized redo keymap (see T365072).
-					win: 'Ctrl-Shift-z',
-					run: redo,
-					preventDefault: true
-				},
+				redo: [
+					{
+						key: 'Mod-y',
+						mac: 'Mod-Shift-z',
+						run: redo,
+						preventDefault: true
+					}, {
+						linux: 'Ctrl-Shift-z',
+						// T365072
+						win: 'Ctrl-Shift-z',
+						run: redo,
+						preventDefault: true
+					}
+				],
 				// TODO: Find something that works for Mac.
 				undoSelection: {
 					win: 'Meta-u',
@@ -389,12 +394,12 @@ class CodeMirrorKeymap {
 			const dl = document.createElement( 'dl' );
 			dl.classList.add( 'cm-mw-keymap-list' );
 			for ( const command of commands ) {
-				/** @type {CodeMirrorKeyBinding} */
-				const keyBinding = this.keymapHelpRegistry[ section ][ command ];
+				const keyBinding = this.reduceKeyBindings(
+					this.keymapHelpRegistry[ section ][ command ]
+				);
 
-				// If the key binding is missing, has a `msg` of `null`,
-				// or if it doesn't seem to apply to the user's platform, skip it.
-				if ( !keyBinding || keyBinding.msg === null ||
+				// Skip if the binding has a null `msg` or if it doesn't apply to this platform.
+				if ( keyBinding.msg === null ||
 					( !keyBinding[ this.platform ] && !keyBinding.key )
 				) {
 					continue;
@@ -477,6 +482,28 @@ class CodeMirrorKeymap {
 
 		body.appendChild( keybindingsContainer );
 		body.appendChild( cursorSection );
+	}
+
+	/**
+	 * Reduce the given key bindings into a single CodeMirrorKeyBinding,
+	 * with additional applicable keys under the aliases property.
+	 *
+	 * @param {CodeMirrorKeyBinding|CodeMirrorKeyBinding[]} given
+	 * @return {CodeMirrorKeyBinding}
+	 * @private
+	 */
+	reduceKeyBindings( given ) {
+		/** @type {CodeMirrorKeyBinding[]} */
+		const keyBindings = [].concat.apply( [], new Array( given ) );
+		return keyBindings.reduce( ( acc, kb ) => {
+			const relevantKey = kb[ this.platform ] || kb.key;
+			if ( !acc ) {
+				acc = kb;
+			} else if ( relevantKey ) {
+				acc.aliases = [ ...acc.aliases || [], relevantKey ];
+			}
+			return acc;
+		} );
 	}
 
 	/**

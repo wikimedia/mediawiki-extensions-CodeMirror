@@ -34,7 +34,7 @@ describe( 'CodeMirrorKeymap', () => {
 			expected: '<kbd class="cm-mw-keymap-key"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>[</kbd></kbd>'
 		}
 	];
-	it.each( shortcutTestCases )( 'should return the correct HTML for $shortcut on $platform', ( { shortcut, platform, expected } ) => {
+	it.each( shortcutTestCases )( 'getShortcutHtml ($shortcut on $platform)', ( { shortcut, platform, expected } ) => {
 		// eslint-disable-next-line n/no-unsupported-features/node-builtins
 		Object.defineProperty( global.navigator, 'platform', {
 			value: platform,
@@ -42,6 +42,35 @@ describe( 'CodeMirrorKeymap', () => {
 		} );
 		const cmKeymap = new CodeMirrorKeymap();
 		expect( cmKeymap.getShortcutHtml( shortcut ).outerHTML ).toStrictEqual( expected );
+	} );
+
+	it( 'multiple CodeMirrorKeyBindings (redo on Windows)', () => {
+		// eslint-disable-next-line n/no-unsupported-features/node-builtins
+		Object.defineProperty( global.navigator, 'platform', {
+			value: 'Windows',
+			writable: true
+		} );
+		const cmKeymap = new CodeMirrorKeymap();
+		const redoKeyBinding = cmKeymap.reduceKeyBindings(
+			cmKeymap.keymapHelpRegistry.history.redo
+		);
+		expect( redoKeyBinding.key ).toStrictEqual( 'Mod-y' );
+		expect( redoKeyBinding.aliases ).toStrictEqual( [ 'Ctrl-Shift-z' ] );
+	} );
+
+	it( 'multiple CodeMirrorKeyBindings (redo on Mac)', () => {
+		// eslint-disable-next-line n/no-unsupported-features/node-builtins
+		Object.defineProperty( global.navigator, 'platform', {
+			value: 'Mac',
+			writable: true
+		} );
+		const cmKeymap = new CodeMirrorKeymap();
+		const redoKeyBinding = cmKeymap.reduceKeyBindings(
+			cmKeymap.keymapHelpRegistry.history.redo
+		);
+		expect( redoKeyBinding.key ).toStrictEqual( 'Mod-y' );
+		expect( redoKeyBinding.mac ).toStrictEqual( 'Mod-Shift-z' );
+		expect( redoKeyBinding.aliases ).toBeUndefined();
 	} );
 } );
 
@@ -74,6 +103,11 @@ describe( 'CodeMirrorKeymap (integration)', () => {
 	} );
 
 	it( 'should show a help dialog with the Mod-Shift-/ keystroke', () => {
+		// eslint-disable-next-line n/no-unsupported-features/node-builtins
+		Object.defineProperty( global.navigator, 'platform', {
+			value: 'Linux',
+			writable: true
+		} );
 		mw.loader.using = jest.fn().mockReturnValue( {
 			then: ( callback ) => callback()
 		} );
