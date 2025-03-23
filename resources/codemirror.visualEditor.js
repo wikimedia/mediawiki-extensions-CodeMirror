@@ -85,12 +85,17 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	/**
 	 * @inheritDoc
 	 */
-	initialize( extensions = this.defaultExtensions ) {
-		mw.hook( 'ext.CodeMirror.initialize' ).fire( this.surface );
-		this.initExtensions = extensions;
-		this.activate();
-		mw.hook( 'ext.CodeMirror.ready' ).fire( this );
-	}
+	addEditRecoveredHandler() {}
+
+	/**
+	 * @inheritDoc
+	 */
+	addTextAreaJQueryHook() {}
+
+	/**
+	 * @inheritDoc
+	 */
+	addFormSubmitHandler() {}
 
 	/**
 	 * @inheritDoc

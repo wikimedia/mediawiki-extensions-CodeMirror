@@ -44,18 +44,6 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		 */
 		this.realtimePreviewHandler = null;
 		/**
-		 * The `ext.WikiEditor.realtimepreview.enable` hook handler.
-		 *
-		 * @type {Function|null}
-		 */
-		this.realtimePreviewEnableHandler = null;
-		/**
-		 * The `ext.WikiEditor.realtimepreview.disable` hook handler.
-		 *
-		 * @type {Function|null}
-		 */
-		this.realtimePreviewDisableHandler = null;
-		/**
 		 * The WikiEditor search button, which is usurped to open the CodeMirror search panel.
 		 *
 		 * @type {jQuery|null}

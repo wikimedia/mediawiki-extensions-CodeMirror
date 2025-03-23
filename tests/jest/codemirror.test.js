@@ -135,16 +135,6 @@ describe( 'toggle', () => {
 		expect( initializeSpy ).toHaveBeenCalledTimes( 0 );
 		expect( mw.hook.mockHooks[ 'editRecovery.loadEnd' ] ).toHaveLength( 1 );
 	} );
-
-	it( 'should retain extensions when toggling', () => {
-		const numExtensions = cm.defaultExtensions.length;
-		cm.toggle( true );
-		expect( cm.initExtensions ).toHaveLength( numExtensions );
-		cm.toggle( false );
-		expect( cm.initExtensions ).toHaveLength( numExtensions );
-		cm.toggle( true );
-		expect( cm.initExtensions ).toHaveLength( numExtensions );
-	} );
 } );
 
 describe( 'activate', () => {

@@ -110,7 +110,7 @@ describe( 'logEditFeature', () => {
 
 	it( 'should log when activating and deactivating', () => {
 		const spy = jest.spyOn( cmWe, 'logEditFeature' );
-		cmWe.activate();
+		cmWe.initialize();
 		expect( spy ).toHaveBeenCalledTimes( 1 );
 		expect( spy ).toHaveBeenCalledWith( 'activated' );
 		expect( mw.track ).toBeCalledWith( 'visualEditorFeatureUse', {
