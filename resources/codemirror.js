@@ -120,12 +120,6 @@ class CodeMirror {
 		 */
 		this.readOnly = this.textarea.readOnly;
 		/**
-		 * The [edit recovery]{@link https://www.mediawiki.org/wiki/Manual:Edit_Recovery} handler.
-		 *
-		 * @type {Function|null}
-		 */
-		this.editRecoveryHandler = null;
-		/**
 		 * The form `submit` event handler.
 		 *
 		 * @type {Function|null}
@@ -162,11 +156,6 @@ class CodeMirror {
 		 * @type {CodeMirrorKeymap}
 		 */
 		this.keymap = new CodeMirrorKeymap();
-		/**
-		 * @type {Extension[]}
-		 * @private
-		 */
-		this.initExtensions = [];
 		/**
 		 * Mapping of mw.hook handlers added by CodeMirror.
 		 * Handlers added here will be removed during deactivation.
@@ -552,34 +541,28 @@ class CodeMirror {
 		 *   VisualEditor surface that CodeMirror is bound to.
 		 * @stable to use
 		 */
-		mw.hook( 'ext.CodeMirror.initialize' ).fire( this.textarea );
+		mw.hook( 'ext.CodeMirror.initialize' ).fire( this.surface || this.textarea );
 
-		// Keep track of the initial extensions for toggling.
-		this.initExtensions = extensions;
+		// Wrap the textarea with .ext-codemirror-wrapper
+		this.container = document.createElement( 'div' );
+		this.container.className = 'ext-codemirror-wrapper';
+		this.textarea.before( this.container );
+		this.container.appendChild( this.textarea );
 
-		// Set a new edit recovery handler.
-		mw.hook( 'editRecovery.loadEnd' ).add( ( data ) => {
-			this.editRecoveryHandler = data.fieldChangeHandler;
+		// Create the EditorState of CodeMirror with contents of the original textarea.
+		const state = EditorState.create( {
+			doc: this.surface ? this.surface.getDom() : this.textarea.value,
+			extensions
 		} );
+
+		// Instantiate the view, adding it to the DOM
+		this.view = new EditorView( { state, parent: this.container } );
 
 		this.activate();
 
+		this.addEditRecoveredHandler();
 		this.addTextAreaJQueryHook();
-
-		// Sync the CodeMirror editor with the original textarea on form submission.
-		if ( this.textarea.form ) {
-			this.formSubmitEventHandler = () => {
-				if ( !this.isActive ) {
-					return;
-				}
-				this.textarea.value = this.view.state.doc.toString();
-				const scrollTop = document.getElementById( 'wpScrolltop' );
-				if ( scrollTop ) {
-					scrollTop.value = this.view.scrollDOM.scrollTop;
-				}
-			};
-			this.textarea.form.addEventListener( 'submit', this.formSubmitEventHandler );
-		}
+		this.addFormSubmitHandler();
 
 		/**
 		 * Called just after CodeMirror is initialized.
@@ -612,10 +595,27 @@ class CodeMirror {
 	}
 
 	/**
+	 * Set a new edit recovery handler.
+	 *
+	 * @protected
+	 */
+	addEditRecoveredHandler() {
+		mw.hook( 'editRecovery.loadEnd' ).add( ( data ) => {
+			/**
+			 * The [edit recovery]{@link https://www.mediawiki.org/wiki/Manual:Edit_Recovery} handler.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			this.editRecoveryHandler = data.fieldChangeHandler;
+		} );
+	}
+
+	/**
 	 * Define jQuery hook for .val() on the textarea.
 	 *
 	 * @see T384556
-	 * @private
+	 * @protected
 	 */
 	addTextAreaJQueryHook() {
 		const jQueryValHooks = $.valHooks.textarea;
@@ -640,32 +640,25 @@ class CodeMirror {
 	}
 
 	/**
-	 * Instantiate the EditorView, adding the CodeMirror editor to the DOM.
-	 * A dummy container is used to ensure that the editor will always be placed
-	 * where the textarea is.
+	 * Sync the CodeMirror editor with the original textarea on form submission.
 	 *
-	 * @param {EditorState} state
-	 * @private
+	 * @protected
 	 */
-	showEditorView( state ) {
-		if ( !this.container ) {
-			// Wrap the textarea with .ext-codemirror-wrapper
-			this.container = document.createElement( 'div' );
-			this.container.className = 'ext-codemirror-wrapper';
-			this.textarea.before( this.container );
-			this.container.appendChild( this.textarea );
+	addFormSubmitHandler() {
+		if ( !this.textarea.form ) {
+			return;
 		}
-		if ( this.view ) {
-			// Re-show the view. We use a CSS class on the wrapper since CodeMirror
-			// adds high-specificity styles to .cm-editor that we can't easily override.
-			this.container.classList.remove( 'ext-codemirror-wrapper--hidden' );
-		} else {
-			// Instantiate the view, adding it to the DOM
-			this.view = new EditorView( {
-				state,
-				parent: this.container
-			} );
-		}
+		this.formSubmitEventHandler = () => {
+			if ( !this.isActive ) {
+				return;
+			}
+			this.textarea.value = this.view.state.doc.toString();
+			const scrollTop = document.getElementById( 'wpScrolltop' );
+			if ( scrollTop ) {
+				scrollTop.value = this.view.scrollDOM.scrollTop;
+			}
+		};
+		this.textarea.form.addEventListener( 'submit', this.formSubmitEventHandler );
 	}
 
 	/**
@@ -710,9 +703,7 @@ class CodeMirror {
 		const toEnable = force === undefined ? !this.isActive : force;
 		if ( toEnable ) {
 			if ( !this.view ) {
-				this.initialize(
-					this.initExtensions.length ? this.initExtensions : this.defaultExtensions
-				);
+				this.initialize();
 			} else {
 				this.activate();
 			}
@@ -752,26 +743,22 @@ class CodeMirror {
 
 		this.setupFeatureLogging();
 
-		// Create the EditorState of CodeMirror with contents of the original textarea.
-		const state = Boolean( this.view ) || EditorState.create( {
-			doc: this.surface ? this.surface.getDom() : this.textarea.value,
-			extensions: this.initExtensions
-		} );
-
 		// Backup scroll position, selections, and focus state before we hide the textarea.
 		const selectionStart = this.textarea.selectionStart,
 			selectionEnd = this.textarea.selectionEnd,
 			scrollTop = this.textarea.scrollTop,
 			hasFocus = document.activeElement === this.textarea;
 
-		// Add CodeMirror to the DOM.
 		if ( this.view ) {
 			// We're re-enabling, so we want to sync contents from the textarea.
 			this.cmTextSelection.setContents(
 				this.surface ? this.surface.getDom() : this.textarea.value
 			);
 		}
-		this.showEditorView( state );
+
+		// Re-show the view, should it be hidden.
+		this.container.classList.remove( 'ext-codemirror-wrapper--hidden' );
+
 		this.isActive = true;
 		this.logEditFeature( 'activated' );
 
@@ -837,7 +824,8 @@ class CodeMirror {
 			delete this.hooks[ hook ];
 		} );
 
-		// Hide the editor, clear the state, and show the original textarea.
+		// Hide the view. We use a CSS class on the wrapper since CodeMirror
+		// adds high-specificity styles to .cm-editor that we can't easily override.
 		this.container.classList.add( 'ext-codemirror-wrapper--hidden' );
 
 		this.isActive = false;
