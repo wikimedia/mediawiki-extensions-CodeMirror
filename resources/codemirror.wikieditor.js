@@ -281,7 +281,12 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		}
 		mw.track( 'visualEditorFeatureUse', {
 			feature: 'codemirror',
-			action
+			action,
+			// eslint-disable-next-line camelcase
+			editor_interface: 'wikitext',
+			// FIXME T249944
+			platform: 'desktop',
+			integration: 'page'
 		} );
 	}
 
