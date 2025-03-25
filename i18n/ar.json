@@ -6,13 +6,31 @@
 			"ديفيد",
 			"محمد أحمد عبد الفتاح",
 			"Cigaryno",
-			"علاء"
+			"علاء",
+			"Lolekek"
 		]
 	},
-	"codemirror-desc": "يوفر تسليط الضوء على بناء الجملة في محرر نص الويكي",
-	"codemirror-toggle-label": "تسليط الضوء على التركيب",
-	"codemirror-toggle-label-short": "صياغة",
-	"codemirror-prefs-colorblind": "فعّل مخططًا متوافقًا مع عمى الألوان لتعليم الصيغة عند تعديل نص ويكي.",
-	"codemirror-prefs-colorblind-help": "لن يعمل هذا التفضيل إذا كنت تستخدم إضافةً لتعليم الصيغة.",
-	"prefs-accessibility": "إمكانية الوصول"
+	"codemirror-desc": "يوفر إبراز التركيب في محرر نص الويكي",
+	"codemirror-toggle-label": "إبراز التركيب",
+	"codemirror-toggle-label-short": "تركيب",
+	"codemirror-prefs-summary": "يمكنك معرفة المزيد عن هذه الميزة عبر قراءة [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror صفحة المساعدة].",
+	"codemirror-prefs-enable": "فعّل إبراز التركيب لنص الويكي",
+	"codemirror-v6-prefs-colorblind": "استخدم مخططًا صديقًا لعمى الألوان",
+	"codemirror-prefs-colorblind": "فعّل مخططًا متوافقًا مع عمى الألوان لإبراز التركيب عند تعديل نص ويكي.",
+	"codemirror-prefs-colorblind-help": "لن يعمل هذا التفضيل إذا كنت تستخدم إضافةً لإبراز التركيب.",
+	"codemirror-find": "ابحث",
+	"codemirror-next": "ابحث عن التالي",
+	"codemirror-previous": "ابحث عن السابق",
+	"codemirror-all": "الكل",
+	"codemirror-all-tooltip": "اختر كل المطابقات",
+	"codemirror-match-case": "مطابقة حالة الأحرف",
+	"codemirror-regexp": "تعبير نمطي",
+	"codemirror-replace": "استبدل",
+	"codemirror-replace-placeholder": "استبدل",
+	"codemirror-replace-all": "استبدل الكل",
+	"codemirror-done": "تم",
+	"codemirror-goto-line": "اذهب إلى السطر",
+	"codemirror-goto-line-go": "اذهب",
+	"prefs-accessibility": "إمكانية الوصول",
+	"prefs-syntax-highlighting": "إبراز التركيب"
 }
