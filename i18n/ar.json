@@ -6,12 +6,15 @@
 			"ديفيد",
 			"محمد أحمد عبد الفتاح",
 			"Cigaryno",
-			"علاء"
+			"علاء",
+			"Lolekek"
 		]
 	},
-	"codemirror-desc": "يوفر تسليط الضوء على بناء الجملة في محرر نص الويكي",
-	"codemirror-toggle-label": "تسليط الضوء على التركيب",
-	"codemirror-prefs-colorblind": "فعّل مخططًا متوافقًا مع عمى الألوان لتعليم الصيغة عند تعديل نص ويكي.",
-	"codemirror-prefs-colorblind-help": "لن يعمل هذا التفضيل إذا كنت تستخدم إضافةً لتعليم الصيغة.",
+	"codemirror-desc": "يوفر إبراز التركيب في محرر نص الويكي",
+	"codemirror-toggle-label": "إبراز التركيب",
+	"codemirror-prefs-colorblind": "فعّل مخططًا متوافقًا مع عمى الألوان لإبراز التركيب عند تعديل نص ويكي.",
+	"codemirror-prefs-colorblind-help": "لن يعمل هذا التفضيل إذا كنت تستخدم إضافةً لإبراز التركيب.",
+	"codemirror-find": "ابحث",
+	"codemirror-replace-placeholder": "استبدل",
 	"prefs-accessibility": "إمكانية الوصول"
 }
