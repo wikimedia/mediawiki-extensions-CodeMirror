@@ -179,6 +179,14 @@ class CodeMirrorKeymap {
 				unfoldAll: { key: 'Ctrl-Alt-]' }
 			},
 			other: {
+				moveLine: {
+					key: 'Alt-↑/↓',
+					msg: mw.msg( 'codemirror-keymap-moveline' )
+				},
+				copyLine: {
+					key: 'Alt-Shift-↑/↓',
+					msg: mw.msg( 'codemirror-keymap-copyline' )
+				},
 				direction: { key: 'Mod-Shift-x' },
 				preferences: {
 					key: 'Mod-Shift-,',
@@ -559,6 +567,10 @@ class CodeMirrorKeymap {
 				key = '⌘ Cmd';
 			} else if ( key.toLowerCase() === 'alt' && this.platform === 'mac' ) {
 				key = '⌥ Option';
+			} else if ( key === 'ArrowUp' ) {
+				key = '↑';
+			} else if ( key === 'ArrowDown' ) {
+				key = '↓';
 			}
 			const kbd = document.createElement( 'kbd' );
 			kbd.textContent = key;

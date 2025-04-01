@@ -4,14 +4,14 @@ const CodeMirrorKeymap = require( '../../resources/codemirror.keymap.js' );
 describe( 'CodeMirrorKeymap', () => {
 	const shortcutTestCases = [
 		{
-			shortcut: 'Mod-y',
+			shortcut: 'Mod-ArrowUp',
 			platform: 'Mac',
-			expected: '<kbd class="cm-mw-keymap-key"><kbd>⌘ Cmd</kbd>+<kbd>y</kbd></kbd>'
+			expected: '<kbd class="cm-mw-keymap-key"><kbd>⌘ Cmd</kbd>+<kbd>↑</kbd></kbd>'
 		},
 		{
-			shortcut: 'Cmd-y',
+			shortcut: 'Cmd-ArrowDown',
 			platform: 'Mac',
-			expected: '<kbd class="cm-mw-keymap-key"><kbd>⌘ Cmd</kbd>+<kbd>y</kbd></kbd>'
+			expected: '<kbd class="cm-mw-keymap-key"><kbd>⌘ Cmd</kbd>+<kbd>↓</kbd></kbd>'
 		},
 		{
 			shortcut: 'Mod-y',
@@ -117,6 +117,6 @@ describe( 'CodeMirrorKeymap (integration)', () => {
 		cm.view.contentDOM.dispatchEvent( new KeyboardEvent( 'keydown', { key: '/', shiftKey: true, ctrlKey: true } ) );
 		expect( spy ).toHaveBeenCalledWith( 'keymap' );
 		expect( document.querySelector( '.cm-mw-keymap-dialog' ) ).not.toBeNull();
-		expect( document.querySelectorAll( 'dl.cm-mw-keymap-list dt' ).length ).toStrictEqual( 19 );
+		expect( document.querySelectorAll( 'dl.cm-mw-keymap-list dt' ).length ).toStrictEqual( 21 );
 	} );
 } );

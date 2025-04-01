@@ -79,6 +79,11 @@ describe( 'CodeMirrorMediaWikiKeymap', () => {
 			title: 'underline',
 			key: 'u',
 			expected: '<u>Foo</u>'
+		},
+		{
+			title: 'nowiki',
+			key: '\\',
+			expected: '<nowiki>Foo</nowiki>'
 		}
 	];
 	it.each( formattingTestCases )( '$title', ( { key, expected } ) => {

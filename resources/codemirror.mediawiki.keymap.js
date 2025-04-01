@@ -70,6 +70,10 @@ class CodeMirrorMediaWikiKeymap {
 				underline: {
 					key: 'Mod-u',
 					run: this.underline.bind( this )
+				},
+				nowiki: {
+					key: 'Mod-\\',
+					run: this.nowiki.bind( this )
 				}
 			},
 			paragraph: {
@@ -288,6 +292,20 @@ class CodeMirrorMediaWikiKeymap {
 			pre: '<u>',
 			peri: mw.msg( 'codemirror-keymap-underline' ),
 			post: '</u>'
+		} );
+		return true;
+	}
+
+	/**
+	 * Treat the selected text as unformatted wikitext.
+	 *
+	 * @return {boolean}
+	 */
+	nowiki() {
+		this.textSelection.encapsulateSelection( {
+			pre: '<nowiki>',
+			peri: mw.msg( 'codemirror-keymap-nowiki' ),
+			post: '</nowiki>'
 		} );
 		return true;
 	}
