@@ -23,11 +23,8 @@ function getLanguageSupport( require ) {
 
 /**
  * Initialize CodeMirror.
- *
- * @param {boolean} [fromToggleButton=false] Whether the initialization is triggered by the toolbar
- *   button added by the init script.
  */
-function init( fromToggleButton = false ) {
+function init() {
 	mw.loader.using( resourceLoaderModules ).then( ( require ) => {
 		// eslint-disable-next-line security/detect-non-literal-require
 		const CodeMirror = require( `ext.CodeMirror.v6${ useWikiEditor ? '.WikiEditor' : '' }` );
@@ -36,9 +33,6 @@ function init( fromToggleButton = false ) {
 		if ( useWikiEditor ) {
 			mw.hook( 'wikiEditor.toolbarReady' ).add( ( $textarea ) => {
 				const cmWE = new CodeMirror( $textarea, langSupport );
-				if ( fromToggleButton ) {
-					CodeMirror.setCodeMirrorPreference( true );
-				}
 				cmWE.initialize();
 			} );
 		} else {
@@ -78,7 +72,7 @@ if ( useWikiEditor && !useCodeMirror ) {
 										framed: false,
 										classes: [ 'tool', 'cm-mw-toggle-wikieditor' ]
 									} );
-									button.on( 'click', () => init( true ) );
+									button.on( 'click', init );
 									return button.$element;
 								}
 							}

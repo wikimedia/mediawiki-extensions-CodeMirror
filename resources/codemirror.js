@@ -188,18 +188,11 @@ class CodeMirror {
 			this.updateExtension,
 			this.dirExtension,
 			this.searchExtension,
+			this.domEventHandlersExtension,
 			this.preferences.extension,
 			this.keymap.extension,
 			indentUnit.of( '\t' ),
 			EditorState.readOnly.of( this.readOnly ),
-			EditorView.domEventHandlers( {
-				blur: () => {
-					this.textarea.dispatchEvent( new Event( 'blur' ) );
-				},
-				focus: () => {
-					this.textarea.dispatchEvent( new Event( 'focus' ) );
-				}
-			} ),
 			EditorView.theme( {
 				'.cm-scroller': {
 					overflow: 'auto'
@@ -228,6 +221,40 @@ class CodeMirror {
 		}
 
 		return extensions;
+	}
+
+	/**
+	 * Extension to bubble some DOM events to the original textarea.
+	 *
+	 * The CodeMirror events are natively fired on the {@link EditorView}'s
+	 * `.cm-content` element, which is accessible through
+	 * {@link CodeMirror#view `view.contentDOM`}. The `scroll` event is fired on
+	 * the `.cm-scroller` element, which is accessible through
+	 * {@link CodeMirror#view `view.scrollDOM`}.
+	 *
+	 * @type {Extension}
+	 * @protected
+	 */
+	get domEventHandlersExtension() {
+		return EditorView.domEventHandlers( {
+			blur: () => {
+				this.textarea.dispatchEvent( new FocusEvent( 'blur' ) );
+			},
+			focus: () => {
+				this.textarea.dispatchEvent( new FocusEvent( 'focus' ) );
+			},
+			keyup: ( event ) => {
+				this.textarea.dispatchEvent( new KeyboardEvent( 'keyup', event ) );
+			},
+			keydown: ( event ) => {
+				this.textarea.dispatchEvent( new KeyboardEvent( 'keydown', event ) );
+			},
+			scroll: ( event ) => {
+				if ( event.target === this.view.scrollDOM ) {
+					this.textarea.dispatchEvent( new Event( 'scroll' ) );
+				}
+			}
+		} );
 	}
 
 	/**
@@ -558,7 +585,8 @@ class CodeMirror {
 		// Instantiate the view, adding it to the DOM
 		this.view = new EditorView( { state, parent: this.container } );
 
-		this.activate();
+		// Use toggle() instead of activate() directly so that the toggle hook is fired.
+		this.toggle();
 
 		this.addEditRecoveredHandler();
 		this.addTextAreaJQueryHook();
@@ -701,6 +729,7 @@ class CodeMirror {
 	 */
 	toggle( force ) {
 		const toEnable = force === undefined ? !this.isActive : force;
+		const wasActive = this.isActive;
 		if ( toEnable ) {
 			if ( !this.view ) {
 				this.initialize();
@@ -710,8 +739,8 @@ class CodeMirror {
 		} else {
 			this.deactivate();
 		}
-		// Only fire the toggle hook when actually toggling.
-		if ( force === undefined ) {
+		// Only fire the toggle hook when the active state has changed.
+		if ( wasActive !== this.isActive ) {
 			/**
 			 * Called when CodeMirror is toggled on or off.
 			 *
@@ -721,7 +750,7 @@ class CodeMirror {
 			 * @param {HTMLTextAreaElement} textarea The original textarea.
 			 * @stable to use
 			 */
-			mw.hook( 'ext.CodeMirror.toggle' ).fire( toEnable, this, this.textarea );
+			mw.hook( 'ext.CodeMirror.toggle' ).fire( this.isActive, this, this.textarea );
 		}
 	}
 

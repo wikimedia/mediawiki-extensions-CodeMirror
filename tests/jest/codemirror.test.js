@@ -14,6 +14,10 @@ beforeEach( () => {
 	cm = new CodeMirror( textarea );
 } );
 
+afterEach( () => {
+	document.body.innerHTML = '';
+} );
+
 describe( 'initialize', () => {
 	it( 'should create the EditorState with the value of the textarea', () => {
 		cm.textarea.value = 'foobar';
@@ -113,7 +117,7 @@ describe( 'toggle', () => {
 	} );
 
 	it( 'should call activate() or deactivate() accordingly', () => {
-		cm.initialize( false );
+		cm.initialize();
 		const activateSpy = jest.spyOn( cm, 'activate' );
 		const deactivateSpy = jest.spyOn( cm, 'deactivate' );
 		cm.toggle( true );
@@ -134,6 +138,18 @@ describe( 'toggle', () => {
 		cm.toggle();
 		expect( initializeSpy ).toHaveBeenCalledTimes( 0 );
 		expect( mw.hook.mockHooks[ 'editRecovery.loadEnd' ] ).toHaveLength( 1 );
+	} );
+
+	it( 'should fire the toggle hook only when the active state changed', () => {
+		mw.hook( 'ext.CodeMirror.toggle' ).add( () => {
+			expect( true ).toBe( true );
+		} );
+		cm.initialize();
+		expect.assertions( 1 );
+		cm.toggle( true );
+		expect.assertions( 1 );
+		cm.toggle();
+		expect.assertions( 2 );
 	} );
 } );
 
@@ -302,4 +318,27 @@ describe( 'setCodeMirrorPreference', () => {
 		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledTimes( 0 );
 		expect( mw.user.options.set ).toHaveBeenCalledTimes( 0 );
 	} );
+} );
+
+describe( 'domEventHandlersExtension', () => {
+	const testCases = [
+		{ eventName: 'focus', eventConstructor: FocusEvent },
+		{ eventName: 'blur', eventConstructor: FocusEvent },
+		{ eventName: 'keyup', eventConstructor: KeyboardEvent },
+		{ eventName: 'keydown', eventConstructor: KeyboardEvent },
+		{ eventName: 'scroll', eventConstructor: Event, target: 'scrollDOM' }
+	];
+
+	it.each( testCases )( 'should bubble $eventName events to the original textarea',
+		( { eventName, eventConstructor, target = 'contentDOM' } ) => {
+			textarea.addEventListener( eventName, () => {
+				expect( true ).toBe( true );
+			} );
+			cm.initialize();
+			// eslint-disable-next-line new-cap
+			const dispatchedEvent = new eventConstructor( eventName );
+			cm.view[ target ].dispatchEvent( dispatchedEvent );
+			expect.assertions( 1 );
+		}
+	);
 } );
