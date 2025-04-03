@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Ezeone10",
 			"Ummabruka"
 		]
 	},
@@ -19,5 +20,7 @@
 	"codemirror-special-char-left-to-right-override": " Shafewa daga hagu zuwa dama",
 	"codemirror-special-char-left-to-right-isolate": "Kebe hagu zuwa dama",
 	"codemirror-special-char-right-to-left-isolate": "Kebe Daman xuwa hagu",
-	"codemirror-special-char-paragraph-separator": "Mai raba dakin layi"
+	"codemirror-special-char-paragraph-separator": "Mai raba dakin layi",
+	"codemirror-keymap-nowiki": "Babu tsarin wiki",
+	"codemirror-keymap-copyline": "Kwafin zaɓaɓɓun layin zuwa layin sama ko ƙasa"
 }
