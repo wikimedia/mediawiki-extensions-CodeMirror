@@ -76,6 +76,17 @@ describe( 'CodeMirrorPreferences', () => {
 		expect( preferences.getPreference( 'barExtension' ) ).toStrictEqual( false );
 	} );
 
+	it( 'hasNonDefaultPreferences', () => {
+		mockDefaultPreferences();
+		mockUserPreferences( null );
+		expect( getCodeMirrorPreferences().hasNonDefaultPreferences() ).toBeFalsy();
+		mockUserPreferences( '{"fooExtension":1}' );
+		const preferences = getCodeMirrorPreferences();
+		expect( preferences.hasNonDefaultPreferences() ).toBeTruthy();
+		preferences.setPreference( 'fooExtension', false );
+		expect( preferences.hasNonDefaultPreferences() ).toBeFalsy();
+	} );
+
 	it( 'registerExtension', () => {
 		mockDefaultPreferences( { fooExtension: false, barExtension: false } );
 		mockUserPreferences( '{"fooExtension":0,"barExtension":1}' );

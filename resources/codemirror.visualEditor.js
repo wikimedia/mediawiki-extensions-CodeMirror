@@ -203,14 +203,7 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	/**
 	 * @inheritDoc
 	 */
-	setupFeatureLogging() {
-		this.addMwHook( 'ext.CodeMirror.preferences.apply', ( prefName, enabled ) => {
-			// Log only when in-use, not when it's toggled.
-			if ( enabled ) {
-				this.logEditFeature( `prefs-${ prefName }` );
-			}
-		} );
-	}
+	setupFeatureLogging() {}
 
 	/**
 	 * Update margins to account for the CodeMirror gutter.

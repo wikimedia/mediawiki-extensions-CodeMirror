@@ -642,7 +642,7 @@ class CodeMirror {
 	/**
 	 * Define jQuery hook for .val() on the textarea.
 	 *
-	 * @see T384556
+	 * @see https://phabricator.wikimedia.org/T384556
 	 * @protected
 	 */
 	addTextAreaJQueryHook() {
@@ -920,8 +920,8 @@ class CodeMirror {
 	 */
 	setupFeatureLogging() {
 		this.addMwHook( 'ext.CodeMirror.preferences.apply', ( prefName, enabled ) => {
-			// Log only when in-use, not when it's toggled.
-			if ( enabled ) {
+			// Log only when in-use and when the user has preferences differing from defaults.
+			if ( enabled && this.preferences.hasNonDefaultPreferences() ) {
 				this.logEditFeature( `prefs-${ prefName }` );
 			}
 		} );

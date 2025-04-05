@@ -134,31 +134,42 @@ describe( 'logEditFeature', () => {
 		} );
 	} );
 
-	it( 'should log when preferred extensions are enabled or disabled', () => {
+	it( 'should only log when preferences are not the same as the default', () => {
+		cmWe.initialize();
+		mw.user.options.get = jest.fn().mockReturnValue( JSON.stringify(
+			mw.config.get( 'extCodeMirrorConfig' ).defaultPreferences
+		) );
+		// Force re-fetch of user preferences.
+		cmWe.preferences.preferences = cmWe.preferences.fetchPreferences();
+		const spy = jest.spyOn( cmWe, 'logEditFeature' );
+		cmWe.preferences.registerExtension( 'bracketMatching', [], cmWe.view );
+		// There should be no logging since we're using the default preferences.
+		expect( spy ).not.toHaveBeenCalledWith( 'prefs-bracketMatching' );
+		// Enable activeLine and assert that it was logged.
+		cmWe.preferences.setPreference( 'activeLine', true );
+		expect( spy ).toHaveBeenCalledWith( 'prefs-activeLine' );
+		expect( mw.track ).toBeCalledWith( 'visualEditorFeatureUse', {
+			action: 'prefs-activeLine',
+			feature: 'codemirror',
+			// eslint-disable-next-line camelcase
+			editor_interface: 'wikitext',
+			platform: 'desktop',
+			integration: 'page'
+		} );
+		// Re-call the extension getter to verify *all* enabled extensions are logged.
+		// eslint-disable-next-line no-unused-expressions
+		cmWe.preferences.extension;
+		expect( spy ).toHaveBeenNthCalledWith( 2, 'prefs-bracketMatching' );
+		expect( spy ).toHaveBeenNthCalledWith( 3, 'prefs-lineNumbering' );
+		expect( spy ).toHaveBeenNthCalledWith( 4, 'prefs-lineWrapping' );
+		expect( spy ).toHaveBeenNthCalledWith( 5, 'prefs-activeLine' );
+		expect( spy ).toHaveBeenNthCalledWith( 6, 'prefs-specialChars' );
+		// Other extensions are not used here because we aren't using the mediawiki language.
+	} );
+
+	it( 'should log when opening the preferences panel', () => {
 		cmWe.initialize();
 		const spy = jest.spyOn( cmWe, 'logEditFeature' );
-		cmWe.preferences.registerExtension( 'autocomplete', [], cmWe.view );
-		expect( spy ).toHaveBeenCalledWith( 'prefs-autocomplete' );
-		expect( mw.track ).toBeCalledWith( 'visualEditorFeatureUse', {
-			action: 'prefs-autocomplete',
-			feature: 'codemirror',
-			// eslint-disable-next-line camelcase
-			editor_interface: 'wikitext',
-			platform: 'desktop',
-			integration: 'page'
-		} );
-		cmWe.preferences.setPreference( 'bracketMatching', true );
-		expect( spy ).toHaveBeenCalledWith( 'prefs-bracketMatching' );
-		expect( spy ).toHaveBeenCalledTimes( 2 );
-		expect( mw.track ).toBeCalledWith( 'visualEditorFeatureUse', {
-			action: 'prefs-bracketMatching',
-			feature: 'codemirror',
-			// eslint-disable-next-line camelcase
-			editor_interface: 'wikitext',
-			platform: 'desktop',
-			integration: 'page'
-		} );
-		// Show preferences panel
 		cmWe.preferences.toggle( cmWe.view, true );
 		expect( spy ).toHaveBeenCalledWith( 'prefs-display' );
 	} );

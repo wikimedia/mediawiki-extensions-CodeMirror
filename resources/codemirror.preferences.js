@@ -196,7 +196,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * or clientside storage for unnamed users.
 	 *
 	 * @param {string} key
-	 * @param {Mixed} value
+	 * @param {boolean} value
 	 */
 	setPreference( key, value ) {
 		this.preferences[ key ] = value;
@@ -272,6 +272,22 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 
 		// Otherwise, go by the defaults.
 		return this.getDefaultPreferences()[ prefName ];
+	}
+
+	/**
+	 * Check if the user has any preferences that differ from the defaults.
+	 * This is used to determine whether EventLogging should happen.
+	 *
+	 * @return {boolean}
+	 * @internal
+	 */
+	hasNonDefaultPreferences() {
+		for ( const prefName in this.preferences ) {
+			if ( !!this.preferences[ prefName ] !== !!this.getDefaultPreferences()[ prefName ] ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

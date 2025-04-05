@@ -34,6 +34,7 @@ beforeEach( () => {
 } );
 
 afterEach( () => {
+	mw.hook.mockHooks = {};
 	cmVe.destroy();
 } );
 
@@ -93,7 +94,7 @@ describe( 'deactivate', () => {
 } );
 
 describe( 'logEditFeature', () => {
-	it( 'should log as wikitext-2017', () => {
+	it( 'should only log the \'activated\' action', () => {
 		const spy = jest.spyOn( mw, 'track' );
 		cmVe.initialize();
 		expect( spy ).toHaveBeenCalledTimes( 1 );
@@ -101,5 +102,7 @@ describe( 'logEditFeature', () => {
 			action: 'activated',
 			feature: 'codemirror'
 		} );
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.search' ] ).toBeUndefined();
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.keymap' ] ).toBeUndefined();
 	} );
 } );
