@@ -157,6 +157,12 @@ class CodeMirror {
 		 */
 		this.keymap = new CodeMirrorKeymap();
 		/**
+		 * The go-to line panel.
+		 *
+		 * @type {CodeMirrorGotoLine}
+		 */
+		this.gotoLine = new CodeMirrorGotoLine();
+		/**
 		 * Mapping of mw.hook handlers added by CodeMirror.
 		 * Handlers added here will be removed during deactivation.
 		 *
@@ -317,7 +323,7 @@ class CodeMirror {
 	get searchExtension() {
 		return [
 			new CodeMirrorSearch().extension,
-			new CodeMirrorGotoLine().extension
+			this.gotoLine.extension
 		];
 	}
 
