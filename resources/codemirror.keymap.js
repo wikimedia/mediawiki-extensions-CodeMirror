@@ -178,6 +178,7 @@ class CodeMirrorKeymap {
 				foldAll: { key: 'Ctrl-Alt-[' },
 				unfoldAll: { key: 'Ctrl-Alt-]' }
 			},
+			autocomplete: {},
 			other: {
 				moveLine: {
 					key: 'Alt-↑/↓',
@@ -380,18 +381,21 @@ class CodeMirrorKeymap {
 			sectionCount++;
 			const sectionEl = document.createElement( 'div' );
 			// CSS class names known to be used here include but are not limited to:
-			// * cm-mw-keymap-section--textstyling
+			// * cm-mw-keymap-section--autocomplete
+			// * cm-mw-keymap-section--codefolding
 			// * cm-mw-keymap-section--history
+			// * cm-mw-keymap-section--insert
+			// * cm-mw-keymap-section--other
 			// * cm-mw-keymap-section--paragraph
 			// * cm-mw-keymap-section--search
-			// * cm-mw-keymap-section--insert
-			// * cm-mw-keymap-section--codefolding
-			// * cm-mw-keymap-section--other
+			// * cm-mw-keymap-section--textstyling
 			sectionEl.className = `cm-mw-keymap-section cm-mw-keymap-section--${ section.toLowerCase() }`;
 			this.setDisplayFromPreference( section, sectionEl );
 
 			const heading = document.createElement( 'h4' );
 			// Messages known to be used here include but are not limited to:
+			// * codemirror-keymap-autocomplete
+			// * codemirror-keymap-codefolding
 			// * codemirror-keymap-history
 			// * codemirror-keymap-insert
 			// * codemirror-keymap-other
