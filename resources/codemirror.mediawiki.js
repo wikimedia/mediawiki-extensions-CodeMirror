@@ -616,8 +616,11 @@ class CodeMirrorModeMediaWiki {
 		};
 	}
 
-	eatExtTagAttribute( name, quote ) {
-		const style = `${ mwModeConfig.tags.extTagAttribute } mw-ext-${ name }`;
+	eatExtTagAttribute( name, quote, isPage ) {
+		const style = `${ mwModeConfig.tags.extTagAttribute } mw-ext-${ name }`,
+			valueStyle = `${ mwModeConfig.tags.extTagAttributeValue } ${ isPage ?
+				`${ mwModeConfig.tags.pageName } mw-ext-${ name }` :
+				'' }`;
 		return ( stream, state ) => {
 
 			if ( stream.eat( '>' ) ) {
@@ -650,11 +653,15 @@ class CodeMirrorModeMediaWiki {
 			}
 			if ( quote ) {
 				if ( stream.eat( quote[ 0 ] ) ) {
-					state.tokenize = this.eatExtTagAttribute( name, quote[ 1 ] );
-				} else {
-					stream.match( new RegExp( `^(?:[^>/${ quote[ 0 ] }]|/(?!>))+` ) );
+					state.tokenize = this.eatExtTagAttribute(
+						name,
+						quote[ 1 ],
+						quote[ 1 ] && isPage
+					);
+					return this.makeLocalStyle( mwModeConfig.tags.extTagAttributeValue, state );
 				}
-				return this.makeLocalStyle( mwModeConfig.tags.extTagAttributeValue, state );
+				stream.match( new RegExp( `^(?:[^>/${ quote[ 0 ] }]|/(?!>))+` ) );
+				return this.makeLocalStyle( valueStyle, state );
 			}
 			if ( quote === '' ) {
 				if ( stream.sol() || /\s/.test( stream.peek() ) ) {
@@ -662,14 +669,17 @@ class CodeMirrorModeMediaWiki {
 					return '';
 				}
 				stream.match( /^(?:[^>/\s]|\/(?!>))+/ );
-				return this.makeLocalStyle( mwModeConfig.tags.extTagAttributeValue, state );
+				return this.makeLocalStyle( valueStyle, state );
 			}
 			if ( stream.match( /^=\s*/ ) ) {
 				const next = stream.peek();
-				state.tokenize = this.eatExtTagAttribute( name, next === '"' || next === "'" ? next.repeat( 2 ) : '' );
+				state.tokenize = this.eatExtTagAttribute( name, next === '"' || next === "'" ? next.repeat( 2 ) : '', isPage );
 				return this.makeLocalStyle( style, state );
 			}
-			stream.match( /^(?:[^>/=]|\/(?!>))+/ );
+			const mt = stream.match( /^(?:[^>/=]|\/(?!>))+/ );
+			if ( stream.peek() === '=' && name === 'templatestyles' && /(?:^|\s)src\s*$/i.test( mt[ 0 ] ) ) {
+				state.tokenize = this.eatExtTagAttribute( name, undefined, true );
+			}
 			return this.makeLocalStyle( style, state );
 		};
 	}

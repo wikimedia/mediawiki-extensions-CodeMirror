@@ -138,6 +138,7 @@ describe( 'MediaWiki autocomplete', () => {
 				{ label: 'ref', type: 'type' },
 				{ label: 'pre', type: 'type' },
 				{ label: 'references', type: 'type' },
+				{ label: 'templatestyles', type: 'type' },
 				{ label: 'myextension', type: 'type' }
 			],
 			validFor: /^[a-z\d]*$/i

@@ -23,6 +23,11 @@ const testCases = [
 		output: '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-ref">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-ref">ref </span><span class="cm-mw-exttag-attribute cm-mw-ext-ref">name=</span><span class="cm-mw-exttag-attribute-value">"a&lt;b"</span><span class="cm-mw-exttag-bracket cm-mw-ext-ref">/&gt;</span> </div>'
 	},
 	{
+		title: 'templatestyles tag attributes',
+		input: '<templatestyles src="a/style.css"/>',
+		output: '<div class="cm-line"><span class="cm-mw-exttag-bracket cm-mw-ext-templatestyles">&lt;</span><span class="cm-mw-exttag-name cm-mw-ext-templatestyles">templatestyles </span><span class="cm-mw-exttag-attribute cm-mw-ext-templatestyles">src=</span><span class="cm-mw-exttag-attribute-value">"</span><span class="cm-mw-exttag-attribute-value cm-mw-pagename cm-mw-ext-templatestyles">a/style.css</span><span class="cm-mw-exttag-attribute-value">"</span><span class="cm-mw-exttag-bracket cm-mw-ext-templatestyles">/&gt;</span> </div>'
+	},
+	{
 		title: 'indented table with caption and inline headings',
 		input: ':{|\n|}\n: {|\n|}\n :: {| class="wikitable"\n |+ Caption\n |- title = &{< \n ! Uno !! Dos\n |-\n | Foo || Bar\n |}',
 		output: '<div class="cm-line"><span class="cm-mw-indenting">:</span><span class="cm-mw-table-bracket">{|</span></div><div class="cm-line"><span class="cm-mw-table-bracket">|}</span></div><div class="cm-line"><span class="cm-mw-indenting">: </span><span class="cm-mw-table-bracket">{|</span></div><div class="cm-line"><span class="cm-mw-table-bracket">|}</span></div><div class="cm-line"><span class="cm-mw-indenting"> :: </span><span class="cm-mw-table-bracket">{| </span><span class="cm-mw-table-definition">class=</span><span class="cm-mw-table-definition-value">"wikitable"</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> |+ </span><span class="cm-mw-table-caption">Caption</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> |- </span><span class="cm-mw-table-definition">title = </span><span class="cm-mw-table-definition-value">&amp;{&lt;</span><span class="cm-mw-table-definition"> </span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> ! </span><span class="cm-mw-strong">Uno </span><span class="cm-mw-table-delimiter">!!</span><span class="cm-mw-strong"> Dos</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> |-</span></div><div class="cm-line"><span class="cm-mw-table-delimiter"> | </span>Foo <span class="cm-mw-table-delimiter">||</span> Bar</div><div class="cm-line"><span class="cm-mw-table-bracket"> |}</span> </div>'
@@ -401,6 +406,8 @@ describe( 'CodeMirrorModeMediaWiki', () => {
 			'cm-mw-ext-ref',
 			'cm-mw-tag-references',
 			'cm-mw-ext-references',
+			'cm-mw-tag-templatestyles',
+			'cm-mw-ext-templatestyles',
 			'cm-mw-tag-myextension',
 			'cm-mw-ext-myextension'
 		] );

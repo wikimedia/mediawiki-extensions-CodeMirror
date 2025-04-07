@@ -53,6 +53,7 @@ global.mockMwConfigGet = ( config = {} ) => {
 				ref: true,
 				pre: true,
 				references: true,
+				templatestyles: true,
 				// Made-up tag, for testing when a corresponding TagMode is not configured.
 				myextension: true
 			},

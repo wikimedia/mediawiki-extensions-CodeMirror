@@ -69,9 +69,12 @@ const openLinksExtension = [
 				if ( page.startsWith( '/' ) ) {
 					page = `:${ mw.config.get( 'wgPageName' ) }${ page }`;
 				}
-				const ns = names.includes( mwModeConfig.tags.templateName ) ? 10 : 0;
-				open( new mw.Title( page, ns ).getUrl(), '_blank' );
-				return true;
+				const ns = names.includes( mwModeConfig.tags.templateName ) ? 10 : 0,
+					title = mw.Title.newFromText( page, ns );
+				if ( title ) {
+					open( title.getUrl(), '_blank' );
+					return true;
+				}
 			} else if ( names.includes( mwModeConfig.tags.extLinkProtocol ) ||
 				names.includes( mwModeConfig.tags.freeExtLinkProtocol ) ) {
 				open( state.sliceDoc( from, node.nextSibling.to ), '_blank' );
@@ -80,6 +83,13 @@ const openLinksExtension = [
 				names.includes( mwModeConfig.tags.freeExtLink ) ) {
 				open( state.sliceDoc( node.prevSibling.from, to ), '_blank' );
 				return true;
+			} else if ( names.includes( mwModeConfig.tags.pageName ) &&
+				names.includes( 'mw-ext-templatestyles' ) ) {
+				const title = mw.Title.newFromText( state.sliceDoc( from, to ).trim(), 10 );
+				if ( title ) {
+					open( title.getUrl(), '_blank' );
+					return true;
+				}
 			}
 			return false;
 		}
