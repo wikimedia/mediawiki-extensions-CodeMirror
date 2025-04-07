@@ -328,7 +328,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 					this.firePreferencesApplyHook( name );
 					return this.compartmentRegistry[ name ].of( this.extensionRegistry[ name ] );
 				}
-				return [];
+				return this.compartmentRegistry[ name ].of( [] );
 			} )
 		];
 	}
