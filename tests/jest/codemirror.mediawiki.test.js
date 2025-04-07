@@ -179,6 +179,11 @@ const testCases = [
 		output: '<div class="cm-line"><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">{{</span><span class="cm-mw-ext-ground cm-mw-parserfunction-name">מיון רגיל</span><span class="cm-mw-ext-ground cm-mw-parserfunction-delimiter">:</span><span class="cm-mw-ext-ground cm-mw-parserfunction">AAA</span><span class="cm-mw-ext-ground cm-mw-parserfunction-bracket">}}</span> </div>'
 	},
 	{
+		title: 'Redirection',
+		input: ' \n #redirect : [[foo]]\n#REDIRECT [[bar]]',
+		output: '<div class="cm-line"> </div><div class="cm-line"><span class="cm-mw-redirect"> #redirect : </span><span class="cm-mw-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-link-ground cm-mw-link-pagename cm-mw-pagename">foo</span><span class="cm-mw-link-ground cm-mw-link-bracket">]]</span></div><div class="cm-line"><span class="cm-mw-list">#</span>REDIRECT <span class="cm-mw-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-link-ground cm-mw-link-pagename cm-mw-pagename">bar</span><span class="cm-mw-link-ground cm-mw-link-bracket">]]</span> </div>'
+	},
+	{
 		title: 'Very long line (T366035)',
 		input: '__notoc__<p>'.repeat( 500 ) + '\n<p>',
 		output: '<div class="cm-line">' + '<span class="cm-mw-double-underscore">__notoc__</span><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">p</span><span class="cm-mw-htmltag-bracket">&gt;</span>'.repeat( 500 ) + '</div><div class="cm-line">&lt;p&gt; </div>'
@@ -273,6 +278,7 @@ describe( 'CodeMirrorModeMediaWiki', () => {
 			'nowiki',
 			'pageName',
 			'pre',
+			'redirect',
 			'section',
 			'skipFormatting',
 			'strong',
@@ -348,6 +354,7 @@ describe( 'CodeMirrorModeMediaWiki', () => {
 			'cm-mw-tag-nowiki',
 			'cm-mw-pagename',
 			'cm-mw-tag-pre',
+			'cm-mw-redirect',
 			'cm-mw-section',
 			'cm-mw-skipformatting',
 			'cm-mw-strong',
