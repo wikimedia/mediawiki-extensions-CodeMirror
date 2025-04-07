@@ -133,7 +133,8 @@ class CodeMirrorMediaWikiKeymap {
 					run: this.comment.bind( this )
 				}
 			},
-			codeFolding: {}
+			codeFolding: {},
+			autocomplete: {}
 		};
 
 		// Only add 'reference' if Extension:Cite is installed.
@@ -168,7 +169,7 @@ class CodeMirrorMediaWikiKeymap {
 
 		// Autocompletion
 		for ( const keyBinding of autocompleteKeymap ) {
-			this.keymap.registerKeyBindingHelp( 'other', keyBinding.tool, keyBinding );
+			this.keymap.registerKeyBindingHelp( 'autocomplete', keyBinding.tool, keyBinding );
 		}
 
 		// Open links

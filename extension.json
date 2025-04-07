@@ -373,6 +373,7 @@
 				"codemirror-keymap-openlinks",
 				"codemirror-keymap-preformatted",
 				"codemirror-keymap-reference",
+				"codemirror-keymap-selectcompletion",
 				"codemirror-keymap-startcompletion",
 				"codemirror-keymap-strikethrough",
 				"codemirror-keymap-subscript",
