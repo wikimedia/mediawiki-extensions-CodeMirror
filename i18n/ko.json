@@ -72,6 +72,7 @@
 	"codemirror-keymap-insert": "넣기",
 	"codemirror-keymap-blankline": "빈 줄",
 	"codemirror-keymap-comment": "의견",
+	"codemirror-keymap-autocomplete": "자동 완성",
 	"codemirror-keymap-other": "기타",
 	"codemirror-keymap-direction": "방향성을 변경",
 	"codemirror-keymap-help": "키보드 단축키",

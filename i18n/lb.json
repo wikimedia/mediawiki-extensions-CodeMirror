@@ -52,6 +52,7 @@
 	"codemirror-keymap-blankline": "Eidel Zeil",
 	"codemirror-keymap-reference": "Referenz",
 	"codemirror-keymap-comment": "Bemierkung",
+	"codemirror-keymap-autocomplete": "Automatesch Vervollstännegung",
 	"codemirror-keymap-other": "Anerer",
 	"prefs-accessibility": "Accessibilitéit",
 	"prefs-syntax-highlighting": "Ervirhiewe vun der Syntax"
