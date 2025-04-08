@@ -31,6 +31,7 @@
 	"codemirror-control-character": "$1 nəzarət simvolu",
 	"codemirror-special-char-null": "Boş simvol",
 	"codemirror-special-char-bell": "Zəng simvolu",
+	"codemirror-special-char-backspace": "Backspace",
 	"codemirror-special-char-newline": "Yeni sətir",
 	"codemirror-special-char-vertical-tab": "Şaquli vərəqə",
 	"codemirror-special-char-carriage-return": "Karetin dönüşü simvolu",
