@@ -520,7 +520,7 @@ class CodeMirrorKeymap {
 
 	/**
 	 * Set the display of an HTMLElement based on a preference. This uses the
-	 * `ext.CodeMirror.preferences.change` hook to update the display when the preference changes.
+	 * `ext.CodeMirror.preferences.apply` hook to update the display when the preference changes.
 	 *
 	 * @param {string} prefName
 	 * @param {HTMLElement} el
@@ -528,12 +528,17 @@ class CodeMirrorKeymap {
 	 * @private
 	 */
 	setDisplayFromPreference( prefName, el ) {
-		const isRegistered = this.preferences && !!this.preferences.extensionRegistry[ prefName ];
-		const currentlyEnabled = !isRegistered || this.preferences.getPreference( prefName );
-		el.style.display = currentlyEnabled ? '' : 'none';
+		if ( !this.preferences ) {
+			// Can happen in Jest tests.
+			return;
+		}
+		// We don't have an EditorView, so directly check against the extension registry.
+		const isRegistered = !!this.preferences.extensionRegistry.compartments[ prefName ];
+		const shouldDisplay = !isRegistered || this.preferences.getPreference( prefName );
+		el.style.display = shouldDisplay ? '' : 'none';
 
-		if ( isRegistered ) {
-			mw.hook( 'ext.CodeMirror.preferences.change' ).add( ( pref, enabled ) => {
+		if ( shouldDisplay ) {
+			mw.hook( 'ext.CodeMirror.preferences.apply' ).add( ( pref, enabled ) => {
 				if ( pref === prefName ) {
 					el.style.display = enabled ? '' : 'none';
 				}
@@ -647,7 +652,10 @@ class CodeMirrorKeymap {
 	}
 
 	/**
-	 * @return {Extension[]}
+	 * For use only during CodeMirror initialization.
+	 *
+	 * @type {Extension[]}
+	 * @internal
 	 */
 	get extension() {
 		const extensions = [

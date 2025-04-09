@@ -12,10 +12,13 @@ beforeEach( () => {
 	form.appendChild( textarea );
 	document.body.appendChild( form );
 	cm = new CodeMirror( textarea );
+	// Suppress console warning about re-initialization, etc.
+	jest.spyOn( console, 'warn' ).mockImplementation( () => {} );
 } );
 
 afterEach( () => {
 	document.body.innerHTML = '';
+	jest.restoreAllMocks();
 } );
 
 describe( 'initialize', () => {

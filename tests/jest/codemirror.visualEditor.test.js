@@ -35,7 +35,6 @@ beforeEach( () => {
 
 afterEach( () => {
 	mw.hook.mockHooks = {};
-	cmVe.destroy();
 } );
 
 describe( 'constructor', () => {
@@ -75,7 +74,10 @@ describe( 'activate', () => {
 		const spy = jest.spyOn( cmVe, 'onPosition' );
 		cmVe.initialize();
 		expect( spy ).toHaveBeenCalledTimes( 1 );
+		// Suppress warning about re-activating.
+		jest.spyOn( console, 'warn' ).mockImplementation( () => {} );
 		cmVe.activate();
+		jest.restoreAllMocks();
 		// Something with the automocking prevents us from testing against cmVe.view.textDirection,
 		// but asserting that onPosition is called is sufficient.
 		expect( spy ).toHaveBeenCalledTimes( 2 );
