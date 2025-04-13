@@ -735,16 +735,40 @@ class CodeMirrorModeMediaWiki {
 	eatStartTable( stream, state ) {
 		stream.match( '{|' );
 		stream.eatSpace();
-		state.tokenize = this.inTableDefinition.bind( this );
+		state.tokenize = this.inTableDefinition();
 		return mwModeConfig.tags.tableBracket;
 	}
 
-	inTableDefinition( stream, state ) {
-		if ( stream.sol() ) {
-			state.tokenize = this.inTable.bind( this );
-			return this.inTable( stream, state );
-		}
-		return this.eatWikiText( mwModeConfig.tags.tableDefinition )( stream, state );
+	inTableDefinition( quote ) {
+		const style = mwModeConfig.tags[ quote === undefined ? 'tableDefinition' : 'tableDefinitionValue' ];
+		return ( stream, state ) => {
+			if ( stream.sol() ) {
+				state.tokenize = this.inTable.bind( this );
+				return this.inTable( stream, state );
+			} else if ( stream.match( /^[&{<]/, false ) ) {
+				return this.eatWikiText( style )( stream, state );
+			} else if ( quote ) {
+				if ( stream.eat( quote[ 0 ] ) ) {
+					state.tokenize = this.inTableDefinition( quote[ 1 ] );
+				} else {
+					stream.match( new RegExp( `^[^&{<${ quote[ 0 ] }]+` ) );
+				}
+				return this.makeLocalStyle( style, state );
+			} else if ( quote === '' ) {
+				if ( /\s/.test( stream.peek() ) ) {
+					state.tokenize = this.inTableDefinition();
+					return '';
+				}
+				stream.match( /^[^\s&{<]+/ );
+				return this.makeLocalStyle( style, state );
+			} else if ( stream.match( /^=\s*/ ) ) {
+				const next = stream.peek();
+				state.tokenize = this.inTableDefinition( next === '"' || next === "'" ? next.repeat( 2 ) : '' );
+				return this.makeLocalStyle( style, state );
+			}
+			stream.match( /^[^&{<=]+/ );
+			return this.makeLocalStyle( style, state );
+		};
 	}
 
 	inTable( stream, state ) {
@@ -753,7 +777,7 @@ class CodeMirrorModeMediaWiki {
 			if ( stream.eat( '|' ) ) {
 				if ( stream.eat( '-' ) ) {
 					stream.eatSpace();
-					state.tokenize = this.inTableDefinition.bind( this );
+					state.tokenize = this.inTableDefinition();
 					return this.makeLocalStyle( mwModeConfig.tags.tableDelimiter, state );
 				}
 				if ( stream.eat( '+' ) ) {
@@ -940,7 +964,7 @@ class CodeMirrorModeMediaWiki {
 						if ( stream.eat( '|' ) ) {
 							stream.eatSpace();
 							state.stack.push( state.tokenize );
-							state.tokenize = this.inTableDefinition.bind( this );
+							state.tokenize = this.inTableDefinition();
 							return mwModeConfig.tags.tableBracket;
 						}
 				}

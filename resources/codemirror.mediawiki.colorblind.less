@@ -2,6 +2,11 @@
  * This style sheet overrides colors in mediawiki.less
  * with more colorblind-friendly colors.
  */
+@import './codemirror.mixins.less';
+
+/* copied from codemirror.mediawiki.less */
+@table-color: #d08;
+@table-color-dark: #ff5edd;
 
 .cm-mw-colorblind-colors {
 	/* misc */
@@ -25,6 +30,12 @@
 	.cm-mw-htmltag-attribute,
 	.cm-mw-htmltag-attribute-value {
 		color: #56b4e9;
+	}
+
+	/* table */
+	.cm-mw-table-definition-value {
+		color: @table-color;
+		.darkmode( color, @table-color-dark );
 	}
 
 	/* templates */

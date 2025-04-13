@@ -199,6 +199,7 @@ class CodeMirrorModeMediaWikiConfig {
 			skipFormatting: 'mw-skipformatting',
 			strong: 'mw-strong',
 			tableCaption: 'mw-table-caption',
+			tableDefinitionValue: 'mw-table-definition-value',
 			templateVariableDelimiter: 'mw-templatevariable-delimiter'
 		};
 	}
@@ -238,6 +239,7 @@ class CodeMirrorModeMediaWikiConfig {
 			[ this.tags.skipFormatting ]: Tag.define(),
 			[ this.tags.strong ]: Tag.define(),
 			[ this.tags.tableCaption ]: Tag.define(),
+			[ this.tags.tableDefinitionValue ]: Tag.define(),
 			[ this.tags.templateVariableDelimiter ]: Tag.define(),
 			'': Tag.define()
 		};
@@ -506,6 +508,10 @@ class CodeMirrorModeMediaWikiConfig {
 			{
 				tag: context.tokenTable[ this.tags.tableCaption ],
 				class: 'cm-mw-table-caption'
+			},
+			{
+				tag: context.tokenTable[ this.tags.tableDefinitionValue ],
+				class: 'cm-mw-table-definition-value'
 			},
 			{
 				tag: context.tokenTable[ this.tags.templateVariableDelimiter ],
