@@ -78,6 +78,9 @@ class CodeMirrorModeMediaWiki {
 			.map( ( label ) => ( { type: 'type', label } ) );
 		this.protocols = config.urlProtocols.split( '|' )
 			.map( ( label ) => ( { type: 'namespace', label: label.replace( /\\([:/])/g, '$1' ) } ) );
+		this.redirectRegex = new RegExp( `^\\s*(?:${
+			config.redirection.join( '|' )
+		})(\\s*:)?\\s*(?=\\[\\[)`, 'i' );
 		this.nsRegex = new RegExp( `^(${
 			Object.keys( mw.config.get( 'wgNamespaceIds' ) ).filter( Boolean ).join( '|' ).replace( /_/g, ' ' )
 		})\\s*:\\s*`, 'i' );
@@ -862,6 +865,9 @@ class CodeMirrorModeMediaWiki {
 	 */
 	eatWikiText( style ) {
 		return ( stream, state ) => {
+			if ( stream.eol() ) {
+				return '';
+			}
 			let ch, tmp, mt, name, isCloseTag, tagname;
 			const sol = stream.sol();
 
@@ -872,6 +878,16 @@ class CodeMirrorModeMediaWiki {
 			}
 
 			if ( sol ) {
+				if ( state.sof ) {
+					if ( stream.match( /^\s+$/ ) ) {
+						return '';
+					}
+					state.sof = false;
+					const mtRedirect = stream.match( this.redirectRegex );
+					if ( mtRedirect ) {
+						return mwModeConfig.tags.redirect;
+					}
+				}
 				// highlight free external links, see T108448
 				if ( !stream.match( '//', false ) && stream.match( this.urlProtocols ) ) {
 					state.stack.push( state.tokenize );
@@ -1221,6 +1237,7 @@ class CodeMirrorModeMediaWiki {
 				nDt: 0,
 				bold: false,
 				italic: false,
+				sof: true,
 				data: {
 					firstSingleLetterWord: null,
 					firstMultiLetterWord: null,

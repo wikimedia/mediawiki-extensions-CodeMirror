@@ -24,6 +24,7 @@ class DataScriptTest extends MediaWikiIntegrationTestCase {
 		$this->assertStringContainsString( '"doubleUnderscore":', $script );
 		$this->assertStringContainsString( '"functionSynonyms":', $script );
 		$this->assertStringContainsString( '"variableIDs"', $script );
+		$this->assertStringContainsString( '"redirection":', $script );
 		$this->assertStringContainsString( '"urlProtocols":', $script );
 		$this->assertStringContainsString( '"linkTrailCharacters":', $script );
 	}

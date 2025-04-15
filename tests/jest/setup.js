@@ -44,6 +44,9 @@ global.mockMwConfigGet = ( config = {} ) => {
 			variableIDs: [
 				'!'
 			],
+			redirection: [
+				'#REDIRECT'
+			],
 			tags: {
 				nowiki: true,
 				indicator: true,

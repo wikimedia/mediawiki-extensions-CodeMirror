@@ -68,6 +68,7 @@ class DataScript {
 			'doubleUnderscore' => [ [], [] ],
 			'functionSynonyms' => $parser->getFunctionSynonyms(),
 			'variableIDs' => $magicWordFactory->getVariableIDs(),
+			'redirection' => $magicWordFactory->get( 'redirect' )->mSynonyms,
 			'urlProtocols' => $parser->getUrlProtocols(),
 			'linkTrailCharacters' => $lang->linkTrail(),
 		];
