@@ -12,6 +12,7 @@ const {
 	dropCursor,
 	highlightActiveLine,
 	highlightSpecialChars,
+	highlightWhitespace,
 	history,
 	indentUnit,
 	keymap,
@@ -143,7 +144,8 @@ class CodeMirror {
 			lineNumbering: this.lineNumberingExtension,
 			lineWrapping: this.lineWrappingExtension,
 			activeLine: this.activeLineExtension,
-			specialChars: this.specialCharsExtension
+			specialChars: this.specialCharsExtension,
+			whitespace: this.whitespaceExtension
 		}, this.constructor.name === 'CodeMirrorVisualEditor' );
 		/**
 		 * Compartment to control the direction of the editor.
@@ -522,6 +524,15 @@ class CodeMirror {
 			// Highlight non-breaking spaces (T181677)
 			addSpecialChars: /[\u00a0\u202f]/g
 		} );
+	}
+
+	/**
+	 * This extension highlights whitespace characters.
+	 *
+	 * @return {Extension}
+	 */
+	get whitespaceExtension() {
+		return highlightWhitespace();
 	}
 
 	/**
