@@ -115,6 +115,7 @@ class CodeMirrorKeymap {
 			// Empty values are placeholders for MW-specific key bindings
 			// so that they appear in the correct order in the help dialog.
 			textStyling: {},
+			accessibility: {},
 			// Use our own history keymap since it differs greatly from stock CodeMirror.
 			history: {
 				undo: {

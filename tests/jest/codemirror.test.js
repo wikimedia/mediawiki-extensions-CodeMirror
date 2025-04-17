@@ -88,6 +88,14 @@ describe( 'initialize', () => {
 		expect( cm2.extensionRegistry.isEnabled( 'autocomplete', cm2.view ) ).toBeTruthy();
 		expect( cm2.extensionRegistry.isEnabled( 'codeFolding', cm2.view ) ).toBeTruthy();
 	} );
+
+	it( 'should document accessibility keyboard shortcuts for non-wikitext', () => {
+		mockMwConfigGet( { wgPageContentModel: 'javascript' } );
+		const cm2 = new CodeMirror( textarea );
+		cm2.initialize();
+		expect( Object.keys( cm2.keymap.keymapHelpRegistry.accessibility ) )
+			.toStrictEqual( [ 'tabEscape', 'tabMode' ] );
+	} );
 } );
 
 describe( 'addDarkModeMutationObserver', () => {
