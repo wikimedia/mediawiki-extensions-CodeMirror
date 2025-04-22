@@ -106,7 +106,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 				}
 			} ),
 			keymap.of( [
-				{ key: 'Mod-f', run: openSearchPanel, scope: 'editor search-panel' },
+				{ key: 'Mod-f', run: this.openPanel.bind( this ), scope: 'editor search-panel' },
 				{ key: 'F3', run: this.findNext.bind( this ), shift: this.findPrevious.bind( this ), scope: 'editor search-panel', preventDefault: true },
 				{ key: 'Mod-g', run: this.findNext.bind( this ), shift: this.findPrevious.bind( this ), scope: 'editor search-panel', preventDefault: true },
 				{ key: 'Escape', run: closeSearchPanel, scope: 'editor search-panel' },
@@ -170,6 +170,18 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 	}
 
 	/**
+	 * Open the search panel.
+	 *
+	 * @param {EditorView} view
+	 * @return {boolean}
+	 */
+	openPanel( view ) {
+		openSearchPanel( view );
+		this.commit();
+		return true;
+	}
+
+	/**
 	 * @param {HTMLDivElement} firstRow
 	 * @private
 	 */
@@ -215,14 +227,14 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 
 		// "Regexp" ToggleButton.
 		this.regexpButton = this.getToggleButton(
-			're',
+			'regexp',
 			'codemirror-regexp',
 			'regexp',
 			this.searchQuery.regexp
 		);
 		buttonGroup.appendChild( this.regexpButton );
 
-		// "Whole word" checkbox.
+		// "Whole word" ToggleButton.
 		this.wholeWordButton = this.getToggleButton(
 			'word',
 			'codemirror-by-word',
@@ -288,6 +300,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 	 * Respond to keydown events.
 	 *
 	 * @param {KeyboardEvent} event
+	 * @private
 	 */
 	onKeydown( event ) {
 		if ( runScopeHandlers( this.view, event, 'search-panel' ) ) {
@@ -337,6 +350,8 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 
 	/**
 	 * Create a new {@link SearchQuery} and dispatch it to the {@link EditorView}.
+	 *
+	 * @private
 	 */
 	commit() {
 		const query = new SearchQuery( {
@@ -348,7 +363,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 			// Makes i.e. "\n" match the literal string "\n" instead of a newline.
 			literal: true
 		} );
-		if ( !this.searchQuery || !query.eq( this.searchQuery ) ) {
+		if ( !query.eq( getSearchQuery( this.view.state ) ) || !query.eq( this.searchQuery ) ) {
 			this.searchQuery = query;
 			this.view.dispatch( {
 				effects: setSearchQuery.of( query )
@@ -361,6 +376,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 	 * Find the previous match.
 	 *
 	 * @return {boolean} Whether a match was found.
+	 * @private
 	 */
 	findPrevious() {
 		const ret = findPrevious( this.view );
@@ -372,6 +388,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 	 * Find the next match.
 	 *
 	 * @return {boolean} Whether a match was found.
+	 * @private
 	 */
 	findNext() {
 		const ret = findNext( this.view );
@@ -384,6 +401,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 	 * and the index of the current match in the find input.
 	 *
 	 * @param {SearchQuery} [query]
+	 * @private
 	 */
 	updateNumMatchesText( query ) {
 		if ( !!this.searchQuery.search && this.searchQuery.regexp && !this.searchQuery.valid ) {
