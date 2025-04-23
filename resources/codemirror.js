@@ -23,6 +23,7 @@ const CodeMirrorSearch = require( './codemirror.search.js' );
 const CodeMirrorGotoLine = require( './codemirror.gotoLine.js' );
 const CodeMirrorPreferences = require( './codemirror.preferences.js' );
 const CodeMirrorKeymap = require( './codemirror.keymap.js' );
+const CodeMirrorExtensionRegistry = require( './codemirror.extensionRegistry.js' );
 require( './ext.CodeMirror.data.js' );
 
 /**
@@ -133,6 +134,18 @@ class CodeMirror {
 		 */
 		this.textSelection = null;
 		/**
+		 * Registry of CodeMirror {@link Extension Extensions}.
+		 *
+		 * @type {CodeMirrorExtensionRegistry}
+		 */
+		this.extensionRegistry = new CodeMirrorExtensionRegistry( {
+			bracketMatching: this.bracketMatchingExtension,
+			lineNumbering: this.lineNumberingExtension,
+			lineWrapping: this.lineWrappingExtension,
+			activeLine: this.activeLineExtension,
+			specialChars: this.specialCharsExtension
+		}, this.constructor.name === 'CodeMirrorVisualEditor' );
+		/**
 		 * Compartment to control the direction of the editor.
 		 *
 		 * @type {Compartment}
@@ -143,13 +156,10 @@ class CodeMirror {
 		 *
 		 * @type {CodeMirrorPreferences}
 		 */
-		this.preferences = new CodeMirrorPreferences( {
-			bracketMatching: this.bracketMatchingExtension,
-			lineNumbering: this.lineNumberingExtension,
-			lineWrapping: this.lineWrappingExtension,
-			activeLine: this.activeLineExtension,
-			specialChars: this.specialCharsExtension
-		}, this.constructor.name === 'CodeMirrorVisualEditor' );
+		this.preferences = new CodeMirrorPreferences(
+			this.extensionRegistry,
+			this.constructor.name === 'CodeMirrorVisualEditor'
+		);
 		/**
 		 * CodeMirror key mappings and help dialog.
 		 *
@@ -177,9 +187,10 @@ class CodeMirror {
 	 * Extensions here should be applicable to all theoretical uses of CodeMirror in MediaWiki.
 	 * This getter can be overridden to apply additional extensions before
 	 * {@link CodeMirror#initialize initialization}. To apply a new extension after initialization,
-	 * use {@link CodeMirror#applyExtension applyExtension},
-	 * or through {@link CodeMirrorPreferences}
-	 * using {@link CodeMirrorPreferences#registerExtension registerExtension}.
+	 * use {@link CodeMirror#applyExtension applyExtension()}, or through
+	 * {@link CodeMirrorExtensionRegistry} using
+	 * {@link CodeMirrorExtensionRegistry#register register()} if it needs
+	 * to be reconfigured (such as toggling on and off).
 	 *
 	 * @see https://codemirror.net/docs/ref/#state.Extension
 	 * @type {Extension|Extension[]}
@@ -700,6 +711,9 @@ class CodeMirror {
 	 * This is accomplished through
 	 * {@link https://codemirror.net/examples/config/#top-level-reconfiguration top-level reconfiguration}
 	 * of the {@link CodeMirror#view EditorView}.
+	 *
+	 * If the extension needs to be reconfigured (such as toggling on and off), use the
+	 * {@link CodeMirror#extensionRegistry extensionRegistry} instead.
 	 *
 	 * @example
 	 * mw.loader.using( 'ext.CodeMirror.v6' ).then( ( require ) => {

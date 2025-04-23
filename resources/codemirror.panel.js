@@ -18,10 +18,12 @@ class CodeMirrorPanel {
 	}
 
 	/**
-	 * Get the panel and any associated keymaps as a CodeMirror Extension.
+	 * Get the panel and any associated keymaps as an Extension.
+	 * For use only during CodeMirror initialization.
 	 *
 	 * @abstract
 	 * @type {Extension}
+	 * @internal
 	 */
 	// eslint-disable-next-line getter-return
 	get extension() {}

@@ -1,6 +1,7 @@
 /* eslint-disable-next-line n/no-missing-require */
-const { Compartment, EditorView } = require( 'ext.CodeMirror.v6.lib' );
+const { EditorView } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirrorPreferences = require( '../../resources/codemirror.preferences.js' );
+const CodeMirrorExtensionRegistry = require( '../../resources/codemirror.extensionRegistry.js' );
 
 describe( 'CodeMirrorPreferences', () => {
 	let mockDefaultPreferences, mockUserPreferences, getCodeMirrorPreferences;
@@ -12,30 +13,18 @@ describe( 'CodeMirrorPreferences', () => {
 			} );
 		};
 		mockUserPreferences = ( preferences = {} ) => {
-			mw.user.options.get = jest.fn().mockReturnValue( preferences );
+			mw.user.options.get = jest.fn().mockReturnValue( JSON.stringify( preferences ) );
 		};
-		getCodeMirrorPreferences = ( extensionRegistry = {
+		getCodeMirrorPreferences = ( extConfig = {
 			fooExtension: EditorView.theme(),
 			barExtension: EditorView.theme()
 		/* eslint-disable-next-line arrow-body-style */
 		}, isVisualEditor = false ) => {
-			return new CodeMirrorPreferences( extensionRegistry, isVisualEditor );
+			return new CodeMirrorPreferences(
+				new CodeMirrorExtensionRegistry( extConfig, isVisualEditor ),
+				isVisualEditor
+			);
 		};
-	} );
-
-	it( 'VisualEditor shouldn\'t use unsupported extensions', () => {
-		mockDefaultPreferences( {
-			fooExtension: true,
-			barExtension: true,
-			bracketMatching: true
-		} );
-		const preferences = getCodeMirrorPreferences( {
-			fooExtension: EditorView.theme(),
-			barExtension: EditorView.theme(),
-			bracketMatching: EditorView.theme()
-		}, true );
-		expect( Object.keys( preferences.extensionRegistry ) )
-			.toStrictEqual( [ 'bracketMatching' ] );
 	} );
 
 	it( 'defaultPreferences', () => {
@@ -49,7 +38,7 @@ describe( 'CodeMirrorPreferences', () => {
 
 	it( 'fetchPreferences', () => {
 		mockDefaultPreferences();
-		mockUserPreferences( '{"fooExtension":1}' );
+		mockUserPreferences( { fooExtension: 1 } );
 		mw.user.isNamed = jest.fn().mockReturnValue( true );
 		const preferences = getCodeMirrorPreferences();
 		expect( preferences.fetchPreferences() ).toStrictEqual( {
@@ -70,17 +59,27 @@ describe( 'CodeMirrorPreferences', () => {
 
 	it( 'getPreference', () => {
 		mockDefaultPreferences();
-		mockUserPreferences( '{"barExtension":0}' );
+		mockUserPreferences( { barExtension: 0 } );
 		const preferences = getCodeMirrorPreferences();
 		expect( preferences.getPreference( 'fooExtension' ) ).toStrictEqual( false );
 		expect( preferences.getPreference( 'barExtension' ) ).toStrictEqual( false );
+	} );
+
+	it( 'getPreference (VisualEditor)', () => {
+		mockDefaultPreferences( { fooExtension: true, bracketMatching: false } );
+		mockUserPreferences( { bracketMatching: 1 } );
+		const preferences = getCodeMirrorPreferences( {
+			fooExtension: EditorView.theme(),
+			bracketMatching: EditorView.theme()
+		}, true );
+		expect( preferences.getPreference( 'bracketMatching' ) ).toBeFalsy();
 	} );
 
 	it( 'hasNonDefaultPreferences', () => {
 		mockDefaultPreferences();
 		mockUserPreferences( null );
 		expect( getCodeMirrorPreferences().hasNonDefaultPreferences() ).toBeFalsy();
-		mockUserPreferences( '{"fooExtension":1}' );
+		mockUserPreferences( { fooExtension: 1 } );
 		const preferences = getCodeMirrorPreferences();
 		expect( preferences.hasNonDefaultPreferences() ).toBeTruthy();
 		preferences.setPreference( 'fooExtension', false );
@@ -88,20 +87,19 @@ describe( 'CodeMirrorPreferences', () => {
 	} );
 
 	it( 'registerExtension', () => {
-		mockDefaultPreferences( { fooExtension: false, barExtension: false } );
-		mockUserPreferences( '{"fooExtension":0,"barExtension":1}' );
-		const barExtension = EditorView.theme();
+		mockDefaultPreferences();
+		mockUserPreferences( { bazExtension: 1 } );
+		const bazExtension = EditorView.theme();
 		const preferences = getCodeMirrorPreferences();
 		const view = new EditorView();
-		preferences.registerExtension( 'barExtension', barExtension, view );
-		expect( preferences.extensionRegistry.barExtension ).toStrictEqual( barExtension );
-		expect( preferences.compartmentRegistry.barExtension ).toBeInstanceOf( Compartment );
-		expect( preferences.compartmentRegistry.barExtension.get( view.state ).length )
-			.toStrictEqual( 2 );
+		preferences.registerExtension( 'bazExtension', bazExtension, view );
+		// HACK: Tests against CompartmentInstance `#inner` property to get the Extension instance.
+		expect( preferences.extensionRegistry.get( 'bazExtension' ).inner ).toBe( bazExtension );
+		expect( preferences.extensionRegistry.isEnabled( 'bazExtension', view ) ).toBeTruthy();
 	} );
 
 	it( 'extension', () => {
-		mockUserPreferences( '{"fooExtension":1,"barExtension":1}' );
+		mockUserPreferences( { fooExtension: 1, barExtension: 1 } );
 		const preferences = getCodeMirrorPreferences( { fooExtension: true, barExtension: true } );
 		const hookSpy = jest.spyOn( preferences, 'firePreferencesApplyHook' );
 		const ext = preferences.extension;
@@ -112,6 +110,8 @@ describe( 'CodeMirrorPreferences', () => {
 	} );
 
 	it( 'panel', () => {
+		mockDefaultPreferences();
+		mockUserPreferences( { fooExtension: 1, barExtension: 0, inapplicableExtension: 1 } );
 		const preferences = getCodeMirrorPreferences();
 		const panel = preferences.panel;
 		expect( panel.dom.className ).toStrictEqual( 'cm-mw-preferences-panel cm-mw-panel' );
@@ -161,7 +161,7 @@ describe( 'CodeMirrorPreferences', () => {
 			extCodeMirrorConfig
 		} );
 		// We need to re-mock mw.user.options.get to return the updated preferences.
-		mockUserPreferences( '{"autocomplete":1}' );
+		mockUserPreferences( { autocomplete: 1 } );
 		preferences = getCodeMirrorPreferences( {
 			lineNumbering: EditorView.theme(),
 			autocomplete: EditorView.theme()
@@ -186,7 +186,7 @@ describe( 'CodeMirrorPreferences', () => {
 			'{"lineNumbering":0,"autocomplete":1}'
 		);
 		// Mock user preferences to return the updated preferences.
-		mockUserPreferences( '{"lineNumbering":0,"autocomplete":1}' );
+		mockUserPreferences( { lineNumbering: 0, autocomplete: 1 } );
 		// Autocomplete should still be enabled.
 		expect( preferences.fetchPreferences() ).toStrictEqual( {
 			lineNumbering: false,
@@ -223,10 +223,26 @@ describe( 'CodeMirrorPreferences', () => {
 
 	it( 'should delete a user option if it matches the defaults', () => {
 		mockDefaultPreferences( { fooExtension: false, barExtension: true } );
-		mockUserPreferences( '{"fooExtension":1,"barExtension":1}' );
+		mockUserPreferences( { fooExtension: 1, barExtension: 1 } );
 		const preferences = getCodeMirrorPreferences();
 		preferences.setPreference( 'fooExtension', false );
 		expect( mw.user.options.set ).toHaveBeenCalledWith( 'codemirror-preferences', null );
+	} );
+
+	it( 'should toggle the preference checkbox when the preferences panel is open', () => {
+		mockDefaultPreferences( { fooExtension: false, barExtension: false } );
+		mockUserPreferences( { fooExtension: 0, barExtension: 1 } );
+		const preferences = getCodeMirrorPreferences();
+		const view = new EditorView();
+		preferences.toggle( view );
+		expect(
+			preferences.panel.dom.querySelector( 'input[name="fooExtension"]' ).checked
+		).toBe( false );
+		preferences.registerExtension( 'fooExtension', EditorView.theme(), view );
+		preferences.setPreference( 'fooExtension', true );
+		expect(
+			preferences.panel.dom.querySelector( 'input[name="fooExtension"]' ).checked
+		).toBe( true );
 	} );
 
 	const defPrefsTestCases = [

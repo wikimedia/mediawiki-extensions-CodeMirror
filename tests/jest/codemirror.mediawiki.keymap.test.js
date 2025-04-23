@@ -1,3 +1,5 @@
+/* eslint-disable-next-line n/no-missing-require */
+const { EditorView } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirror = require( '../../resources/codemirror.js' );
 const mwKeymap = require( '../../resources/codemirror.mediawiki.keymap.js' );
 
@@ -113,5 +115,18 @@ describe( 'CodeMirrorMediaWikiKeymap', () => {
 			ctrlKey: true
 		} ) );
 		expect( cm.textSelection.getContents() ).toStrictEqual( "''Foo''" );
+	} );
+
+	it( 'should hide the section of the help dialog when the preference is disabled', () => {
+		// Setup; Not relevant to the accuracy of the test.
+		cm.keymap.preferences = cm.preferences;
+		cm.keymap.preferences.registerExtension( 'codeFolding', EditorView.theme(), cm.view );
+		// Test
+		cm.keymap.showHelpDialog();
+		expect( document.querySelector( '.cm-mw-keymap-section--codefolding' ).style.display )
+			.toBe( '' );
+		cm.preferences.setPreference( 'codeFolding', false );
+		expect( document.querySelector( '.cm-mw-keymap-section--codefolding' ).style.display )
+			.toBe( 'none' );
 	} );
 } );

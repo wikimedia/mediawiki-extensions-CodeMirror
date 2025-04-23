@@ -1,5 +1,4 @@
 const {
-	Compartment,
 	EditorView,
 	Extension,
 	StateEffect,
@@ -9,6 +8,7 @@ const {
 	showPanel
 } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirrorPanel = require( './codemirror.panel.js' );
+const CodeMirrorExtensionRegistry = require( './codemirror.extensionRegistry.js' );
 require( './ext.CodeMirror.data.js' );
 
 /**
@@ -21,7 +21,7 @@ require( './ext.CodeMirror.data.js' );
  */
 class CodeMirrorPreferences extends CodeMirrorPanel {
 	/**
-	 * @param {Object} extensionRegistry Key-value pairs of CodeMirror Extensions.
+	 * @param {CodeMirrorExtensionRegistry} extensionRegistry
 	 * @param {boolean} [isVisualEditor=false] Whether the VE 2017 editor is being used.
 	 * @fires CodeMirror~'ext.CodeMirror.preferences.ready'
 	 */
@@ -31,40 +31,14 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		/** @type {string} */
 		this.optionName = 'codemirror-preferences';
 
+		/** @type {CodeMirrorExtensionRegistry} */
+		this.extensionRegistry = extensionRegistry;
+
 		/** @type {boolean} */
 		this.isVisualEditor = isVisualEditor;
 
-		// VisualEditor only supports a subset of Extensions.
-		const veSupportedExtensions = [
-			'bracketMatching',
-			'lineWrapping',
-			'lineNumbering'
-		];
-
-		/**
-		 * Registry of CodeMirror Extensions that are made available to CodeMirrorPreferences.
-		 *
-		 * @type {Object<Extension>}
-		 */
-		this.extensionRegistry = extensionRegistry;
-
 		/** @type {mw.Api} */
 		this.api = new mw.Api();
-
-		/**
-		 * Registry of CodeMirror Compartments that are made available for
-		 * reconfiguration in CodeMirrorPreferences.
-		 *
-		 * @type {Object<Compartment>}
-		 */
-		this.compartmentRegistry = {};
-		for ( const extName of Object.keys( extensionRegistry ) ) {
-			if ( isVisualEditor && !veSupportedExtensions.includes( extName ) ) {
-				delete this.extensionRegistry[ extName ];
-				continue;
-			}
-			this.compartmentRegistry[ extName ] = new Compartment();
-		}
 
 		/** @type {StateEffectType} */
 		this.prefsToggleEffect = StateEffect.define();
@@ -181,7 +155,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	fetchPreferencesInternal() {
 		if ( mw.user.isNamed() ) {
 			try {
-				return JSON.parse( mw.user.options.get( this.optionName ) );
+				return JSON.parse( mw.user.options.get( this.optionName ) ) || {};
 			} catch ( e ) {
 				// Invalid JSON, or no preferences set.
 				return {};
@@ -197,6 +171,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 *
 	 * @param {string} key
 	 * @param {boolean} value
+	 * @internal
 	 */
 	setPreference( key, value ) {
 		this.preferences[ key ] = value;
@@ -247,7 +222,8 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 */
 	firePreferencesApplyHook( prefName ) {
 		/**
-		 * Called when a CodeMirror preference is changed or initially applied in a session.
+		 * Fired when a CodeMirror preference is changed or initially applied in a session.
+		 * The preference may not have been saved to the database yet.
 		 *
 		 * @event CodeMirror~'ext.CodeMirror.preferences.apply'
 		 * @param {string} prefName
@@ -291,8 +267,8 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	}
 
 	/**
-	 * Register an {@link Extension} with CodeMirrorPreferences, along with a
-	 * corresponding {@link Compartment} so that the Extension can be reconfigured.
+	 * Register an {@link Extension} with {@link CodeMirrorExtensionRegistry}
+	 * and enable it if the corresponding preference is set.
 	 *
 	 * @param {string} name
 	 * @param {Extension} extension
@@ -300,15 +276,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * @internal
 	 */
 	registerExtension( name, extension, view ) {
-		this.extensionRegistry[ name ] = extension;
-		this.compartmentRegistry[ name ] = new Compartment();
-		view.dispatch( {
-			effects: StateEffect.appendConfig.of(
-				this.compartmentRegistry[ name ].of(
-					this.getPreference( name ) ? this.extensionRegistry[ name ] : []
-				)
-			)
-		} );
+		this.extensionRegistry.register( name, extension, view, this.getPreference( name ) );
 		this.firePreferencesApplyHook( name );
 	}
 
@@ -321,14 +289,14 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 			keymap.of( [
 				{ key: 'Mod-Shift-,', run: ( view ) => this.toggle( view, true ) }
 			] ),
-			// Compartmentalized extensions
-			Object.keys( this.extensionRegistry ).map( ( name ) => {
-				// Only apply the extension if the preference (or default pref) is enabled.
+			// At this point the registry contains only extensions managed by CodeMirrorPreferences.
+			this.extensionRegistry.names.map( ( name ) => {
+				// Only apply the Extension if the preference (or default pref) is set.
 				if ( this.getPreference( name ) ) {
 					this.firePreferencesApplyHook( name );
-					return this.compartmentRegistry[ name ].of( this.extensionRegistry[ name ] );
+					return this.extensionRegistry.get( name );
 				}
-				return this.compartmentRegistry[ name ].of( [] );
+				return this.extensionRegistry.getCompartment( name ).of( [] );
 			} )
 		];
 	}
@@ -341,8 +309,13 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		container.className = 'cm-mw-preferences-panel cm-mw-panel';
 		container.addEventListener( 'keydown', this.onKeydown.bind( this ) );
 
+		// Show checkboxes for registered extensions with preferences.
+		const prefNames = this.extensionRegistry.names.filter(
+			( name ) => this.preferences[ name ] !== undefined
+		);
+
 		const wrappers = [];
-		for ( const prefName in this.extensionRegistry ) {
+		for ( const prefName of prefNames ) {
 			const [ wrapper ] = this.getCheckbox(
 				prefName,
 				`codemirror-prefs-${ prefName.toLowerCase() }`,
@@ -430,27 +403,16 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * @inheritDoc
 	 */
 	getCheckbox( name, label, checked ) {
-		const compartment = this.compartmentRegistry[ name ];
-		const extension = this.extensionRegistry[ name ];
 		const [ wrapper, input ] = super.getCheckbox( name, label, checked );
 		input.addEventListener( 'change', () => {
-			this.view.dispatch( {
-				effects: compartment.reconfigure( input.checked ? extension : [] )
-			} );
+			this.extensionRegistry.toggle( name, this.view, input.checked );
 			this.setPreference( name, input.checked );
-
-			/**
-			 * Fired when a CodeMirror preference is changed.
-			 * The preference may not have been saved to the database yet.
-			 *
-			 * @event CodeMirror~'ext.CodeMirror.preferences.change'
-			 * @param {string} name The name of the preference, and the corresponding key
-			 *   in the {@link CodeMirrorPreferences#extensionRegistry extensionRegistry}
-			 *   and {@link CodeMirrorPreferences#compartmentRegistry compartmentRegistry}
-			 *   properties.
-			 * @param {boolean} value The new value of the preference.
-			 */
-			mw.hook( 'ext.CodeMirror.preferences.change' ).fire( name, input.checked );
+		} );
+		// Update the checked state when the preference is changed.
+		mw.hook( 'ext.CodeMirror.preferences.apply' ).add( ( pref, enabled ) => {
+			if ( pref === name ) {
+				input.checked = enabled;
+			}
 		} );
 		return [ wrapper, input ];
 	}
