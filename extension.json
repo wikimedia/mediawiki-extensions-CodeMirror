@@ -53,7 +53,8 @@
 				"specialChars": true,
 				"codeFolding": true,
 				"autocomplete": true,
-				"openLinks": true
+				"openLinks": true,
+				"whitespace": false
 			},
 			"description": "Defaults for CodeMirror user preferences. See https://w.wiki/BwzZ for more information.",
 			"public": true
@@ -284,6 +285,7 @@
 				"codemirror-prefs-linewrapping",
 				"codemirror-prefs-specialchars",
 				"codemirror-prefs-title",
+				"codemirror-prefs-whitespace",
 				"codemirror-previous",
 				"codemirror-regexp",
 				"codemirror-regexp-invalid",
