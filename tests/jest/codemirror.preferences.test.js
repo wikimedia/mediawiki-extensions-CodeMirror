@@ -98,6 +98,20 @@ describe( 'CodeMirrorPreferences', () => {
 		expect( preferences.extensionRegistry.isEnabled( 'bazExtension', view ) ).toBeTruthy();
 	} );
 
+	it( 'toggleExtension', () => {
+		mockDefaultPreferences();
+		mockUserPreferences( { fooExtension: 1, barExtension: 1 } );
+		const preferences = getCodeMirrorPreferences();
+		const view = new EditorView();
+		preferences.registerExtension( 'fooExtension', EditorView.theme(), view );
+		preferences.registerExtension( 'barExtension', EditorView.theme(), view );
+		preferences.toggleExtension( 'fooExtension', view );
+		expect( preferences.extensionRegistry.isEnabled( 'fooExtension', view ) ).toBeFalsy();
+		expect( preferences.extensionRegistry.isEnabled( 'barExtension', view ) ).toBeTruthy();
+		preferences.toggleExtension( 'barExtension', view );
+		expect( preferences.extensionRegistry.isEnabled( 'barExtension', view ) ).toBeFalsy();
+	} );
+
 	it( 'extension', () => {
 		mockUserPreferences( { fooExtension: 1, barExtension: 1 } );
 		const preferences = getCodeMirrorPreferences( { fooExtension: true, barExtension: true } );

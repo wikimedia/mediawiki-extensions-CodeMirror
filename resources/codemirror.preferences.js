@@ -281,6 +281,20 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	}
 
 	/**
+	 * Toggle an {@link Extension} on or off with {@link CodeMirrorExtensionRegistry}
+	 * and update the preference.
+	 *
+	 * @param {string} name
+	 * @param {EditorView} view
+	 * @internal
+	 */
+	toggleExtension( name, view ) {
+		const toEnable = !this.getPreference( name );
+		this.extensionRegistry.toggle( name, view, toEnable );
+		this.setPreference( name, toEnable );
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	get extension() {
