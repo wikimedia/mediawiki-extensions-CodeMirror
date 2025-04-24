@@ -23,6 +23,7 @@
 	"codemirror-prefs-activeline": "Resaltar a liña activa",
 	"codemirror-prefs-specialchars": "Amosar os caracteres especiais",
 	"codemirror-v6-prefs-colorblind": "Usar un esquema axeitado para as persoas daltónicas",
+	"codemirror-prefs-whitespace": "Resaltar os espazos en branco",
 	"codemirror-prefs-colorblind": "Activar o esquema para as persoas daltónicas que resalta a sintaxe ao editar o texto wiki",
 	"codemirror-prefs-colorblind-help": "Se usas un trebello para o resaltado de sintaxe, esta preferencia non funcionará.",
 	"codemirror-close": "Pechar",

@@ -26,6 +26,7 @@
 	"codemirror-prefs-activeline": "Aktive Zeile hervorheben",
 	"codemirror-prefs-specialchars": "Sonderzeichen anzeigen",
 	"codemirror-v6-prefs-colorblind": "Farbblindenfreundliches Schema verwenden",
+	"codemirror-prefs-whitespace": "Leerzeichen hervorheben",
 	"codemirror-prefs-colorblind": "Zum Bearbeiten von Wikitext ein für Farbenfehlsichtige freundliches Farbschema zur Syntaxhervorhebung verwenden",
 	"codemirror-prefs-colorblind-help": "Wenn du ein Helferlein zur Syntaxhervorhebung verwendest, wird diese Einstellung nicht funktionieren.",
 	"codemirror-close": "Schließen",
