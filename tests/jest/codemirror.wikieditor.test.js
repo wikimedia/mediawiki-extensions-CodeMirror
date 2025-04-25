@@ -1,16 +1,14 @@
 const CodeMirrorWikiEditor = require( '../../resources/codemirror.wikieditor.js' );
 const mediaWikiLang = require( '../../resources/codemirror.mediawiki.js' );
 
-let cmWe;
-
-beforeEach( () => {
-	mw.hook.mockHooks = {};
+function getCodeMirrorWikiEditor( readOnly = false ) {
 	const form = document.createElement( 'form' );
 	const textarea = document.createElement( 'textarea' );
+	textarea.readOnly = readOnly;
 	form.appendChild( textarea );
 	textarea.value = 'The Smashing Pumpkins';
 	textarea.selectionStart = textarea.selectionEnd = 0;
-	cmWe = new CodeMirrorWikiEditor( textarea );
+	const cmWe = new CodeMirrorWikiEditor( textarea );
 
 	// Simulate the button that enables/disables CodeMirror as WikiEditor doesn't exist here.
 	cmWe.$textarea.wikiEditor = jest.fn();
@@ -31,12 +29,22 @@ beforeEach( () => {
 			toolbar: {
 				$toolbar: $( toolbar )
 			}
-		}
+		},
+		$ui: $( '<div>' )
 	} );
+
+	return cmWe;
+}
+
+afterEach( () => {
+	mw.hook.mockHooks = {};
+	jest.restoreAllMocks();
+	document.body.innerHTML = '';
 } );
 
 describe( 'initialize', () => {
 	it( 'should add the button to the toolbar', () => {
+		const cmWe = getCodeMirrorWikiEditor();
 		cmWe.initialize();
 
 		expect( cmWe.$textarea.wikiEditor ).toHaveBeenCalledWith(
@@ -46,10 +54,17 @@ describe( 'initialize', () => {
 			} )
 		);
 	} );
+
+	it( 'should add .ext-codemirror-readonly for readonly pages', () => {
+		const cmWe = getCodeMirrorWikiEditor( true );
+		cmWe.initialize();
+		expect( cmWe.context.$ui[ 0 ].classList ).toContain( 'ext-codemirror-readonly' );
+	} );
 } );
 
 describe( 'destroy', () => {
 	it( 'should remove the button from the toolbar', () => {
+		const cmWe = getCodeMirrorWikiEditor();
 		cmWe.initialize();
 		cmWe.destroy();
 
@@ -61,10 +76,19 @@ describe( 'destroy', () => {
 			} )
 		);
 	} );
+
+	it( 'should remove .ext-codemirror-readonly on read-only pages', () => {
+		const cmWe = getCodeMirrorWikiEditor( true );
+		cmWe.initialize();
+		expect( cmWe.context.$ui[ 0 ].classList ).toContain( 'ext-codemirror-readonly' );
+		cmWe.destroy();
+		expect( cmWe.context.$ui[ 0 ].classList ).not.toContain( 'ext-codemirror-readonly' );
+	} );
 } );
 
 describe( 'Hook handlers and event listeners', () => {
 	it( 'should remove submit event listener when CodeMirror is off', () => {
+		const cmWe = getCodeMirrorWikiEditor();
 		cmWe.initialize();
 		expect( cmWe.view ).not.toBeNull();
 		expect( cmWe.state ).not.toBeNull();
@@ -76,6 +100,7 @@ describe( 'Hook handlers and event listeners', () => {
 	} );
 
 	it( 'should remove realtime preview hook handler when CodeMirror is off', () => {
+		const cmWe = getCodeMirrorWikiEditor();
 		cmWe.initialize();
 		expect( cmWe.view ).not.toBeNull();
 		expect( cmWe.state ).not.toBeNull();
@@ -91,6 +116,7 @@ describe( 'Hook handlers and event listeners', () => {
 		mw.hook( 'ext.CodeMirror.switch' ).add( () => {
 			count++;
 		} );
+		const cmWe = getCodeMirrorWikiEditor();
 		cmWe.initialize();
 		expect( mw.hook.mockHooks[ 'ext.CodeMirror.switch' ].length ).toBe( 1 );
 		expect( count ).toBe( 1 );
@@ -109,6 +135,7 @@ describe( 'logEditFeature', () => {
 	afterEach( jest.restoreAllMocks );
 
 	it( 'should log when activating and deactivating', () => {
+		const cmWe = getCodeMirrorWikiEditor();
 		const spy = jest.spyOn( cmWe, 'logEditFeature' );
 		cmWe.initialize();
 		expect( spy ).toHaveBeenCalledTimes( 1 );
@@ -134,7 +161,29 @@ describe( 'logEditFeature', () => {
 		} );
 	} );
 
+	it( 'should show a Preferences button in the advanced section of the toolbar', () => {
+		const cmWe = getCodeMirrorWikiEditor();
+		cmWe.initialize();
+
+		expect( cmWe.$textarea.wikiEditor ).toHaveBeenCalledWith(
+			'addToToolbar',
+			expect.objectContaining( {
+				section: 'advanced',
+				groups: { codemirror: { tools: { CodeMirrorPreferences: {
+					label: 'codemirror-keymap-preferences',
+					oouiIcon: 'settings',
+					type: 'button',
+					action: {
+						execute: expect.any( Function ),
+						type: 'callback'
+					}
+				} } } }
+			} )
+		);
+	} );
+
 	it( 'should only log when preferences are not the same as the default', () => {
+		const cmWe = getCodeMirrorWikiEditor();
 		cmWe.initialize();
 		mw.user.options.get = jest.fn().mockReturnValue( JSON.stringify(
 			mw.config.get( 'extCodeMirrorConfig' ).defaultPreferences
@@ -168,6 +217,7 @@ describe( 'logEditFeature', () => {
 	} );
 
 	it( 'should log when opening the preferences panel', () => {
+		const cmWe = getCodeMirrorWikiEditor();
 		cmWe.initialize();
 		const spy = jest.spyOn( cmWe, 'logEditFeature' );
 		cmWe.preferences.toggle( cmWe.view, true );
@@ -175,6 +225,7 @@ describe( 'logEditFeature', () => {
 	} );
 
 	it( 'should log when opening the search panel', () => {
+		const cmWe = getCodeMirrorWikiEditor();
 		cmWe.initialize();
 		const spy = jest.spyOn( cmWe, 'logEditFeature' );
 		cmWe.view.contentDOM.dispatchEvent(
@@ -188,6 +239,40 @@ describe( 'logEditFeature', () => {
 			editor_interface: 'wikitext',
 			platform: 'desktop',
 			integration: 'page'
+		} );
+	} );
+} );
+
+describe( 'getTool / getToggleTool', () => {
+	it( 'getTool', () => {
+		const command = jest.fn();
+		const cmWe = getCodeMirrorWikiEditor();
+		expect( cmWe.getTool( 'fooBar', command ) ).toStrictEqual( {
+			label: 'codemirror-keymap-foobar',
+			type: 'button',
+			oouiIcon: 'fooBar',
+			action: {
+				type: 'callback',
+				execute: command
+			}
+		} );
+		expect( cmWe.getTool( 'fooBar', command, 'FOOBAR', 'customIcon' ) ).toStrictEqual( {
+			label: 'FOOBAR',
+			type: 'button',
+			oouiIcon: 'customIcon',
+			action: {
+				type: 'callback',
+				execute: command
+			}
+		} );
+	} );
+
+	it( 'getToggleTool', () => {
+		const cmWe = getCodeMirrorWikiEditor();
+		expect( cmWe.getToggleTool( 'fooBar', 'fooBarIcon' ) ).toMatchObject( {
+			label: 'codemirror-prefs-foobar',
+			type: 'element',
+			element: expect.any( Function )
 		} );
 	} );
 } );

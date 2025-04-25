@@ -76,12 +76,11 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	 */
 	initialize( extensions = this.defaultExtensions ) {
 		if ( this.view ) {
-			// Already initialized.
-			return;
+			// Already initialized, let parent handle it.
+			return super.initialize( extensions );
 		}
 
-		const context = this.$textarea.data( 'wikiEditor-context' );
-		const toolbar = context && context.modules && context.modules.toolbar;
+		const toolbar = this.context && this.context.modules && this.context.modules.toolbar;
 
 		// Guard against something having removed WikiEditor (T271457)
 		if ( !toolbar ) {
@@ -130,7 +129,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 
 		// Hide non-applicable buttons until WikiEditor better supports a read-only mode (T188817).
 		if ( this.readOnly ) {
-			context.$ui.addClass( 'ext-codemirror-readonly' );
+			this.context.$ui.addClass( 'ext-codemirror-readonly' );
 		}
 
 		super.initialize( extensions );
@@ -203,21 +202,12 @@ class CodeMirrorWikiEditor extends CodeMirror {
 				groups: {
 					codemirror: {
 						tools: {
-							CodeMirrorPreferences: {
-								type: 'element',
-								element: () => {
-									const button = new OO.ui.ButtonWidget( {
-										title: mw.msg( 'codemirror-prefs-title' ),
-										icon: 'settings',
-										framed: false,
-										classes: [ 'tool' ]
-									} );
-									button.on( 'click',
-										() => this.preferences.toggle( this.view, true )
-									);
-									return button.$element;
-								}
-							}
+							CodeMirrorPreferences: this.getTool(
+								'CodeMirrorPreferences',
+								() => this.preferences.toggle( this.view, true ),
+								'codemirror-keymap-preferences',
+								'settings'
+							)
 						}
 					}
 				}
@@ -255,7 +245,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		} );
 
 		if ( this.readOnly ) {
-			this.$textarea.data( 'wikiEditor-context' ).$ui.removeClass( 'ext-codemirror-readonly' );
+			this.context.$ui.removeClass( 'ext-codemirror-readonly' );
 		}
 
 		this.switchHook = null;
@@ -301,6 +291,71 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		this.addMwHook( 'ext.WikiEditor.realtimepreview.disable', () => {
 			this.realtimePreviewHandler = null;
 		} );
+	}
+
+	/**
+	 * The WikiEditor context.
+	 *
+	 * @type {Object}
+	 */
+	get context() {
+		return this.$textarea.data( 'wikiEditor-context' );
+	}
+
+	/**
+	 * Get the WikiEditor configuration for a tool that runs a {@link Command}.
+	 *
+	 * @param {string} name
+	 * @param {Function|Command} command
+	 * @param {string} [label]
+	 * @param {string} [icon]
+	 * @return {Object}
+	 * @private
+	 */
+	getTool( name, command, label, icon ) {
+		return {
+			// Possible messages include but are not limited to:
+			// * codemirror-keymap-preferences
+			label: mw.msg( label || `codemirror-keymap-${ name.toLowerCase() }` ),
+			type: 'button',
+			oouiIcon: icon || name,
+			action: {
+				type: 'callback',
+				execute: command
+			}
+		};
+	}
+
+	/**
+	 * Get the WikiEditor configuration for a toggle button that controls a preference.
+	 * This will toggle the extension with the given `name`.
+	 *
+	 * @param {string} name
+	 * @param {string} icon
+	 * @return {Object}
+	 * @private
+	 */
+	getToggleTool( name, icon ) {
+		return {
+			label: mw.msg( `codemirror-prefs-${ name.toLowerCase() }` ),
+			type: 'element',
+			element: () => {
+				// OOUI has already been loaded by WikiEditor.
+				const button = new OO.ui.ToggleButtonWidget( {
+					icon,
+					value: this.preferences.getPreference( name ),
+					framed: false,
+					classes: [ 'tool' ],
+					// Possible messages include but are not limited to:
+					// * codemirror-prefs-whitespace
+					// * codemirror-prefs-lineWrapping
+					// * codemirror-prefs-autocomplete
+					title: mw.msg( `codemirror-prefs-${ name.toLowerCase() }` )
+				} );
+				button.on( 'click', () => this.preferences.toggleExtension( name, this.view ) );
+				return button.$element;
+			}
+		};
 	}
 }
 
