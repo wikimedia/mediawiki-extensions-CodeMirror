@@ -25,6 +25,7 @@
 	"codemirror-prefs-activeline": "De actieve regel markeren",
 	"codemirror-prefs-specialchars": "Speciale tekens weergeven",
 	"codemirror-v6-prefs-colorblind": "Kleurenblindvriendelijk schema gebruiken",
+	"codemirror-prefs-whitespace": "Witruimte markeren",
 	"codemirror-prefs-colorblind": "Schakel een kleurenblindvriendelijk schema in voor syntaxisaccentuering bij het bewerken van wikitekst",
 	"codemirror-prefs-colorblind-help": "Als u een gadget gebruikt voor syntaxis-accentuering, werkt deze voorkeur niet.",
 	"codemirror-close": "Sluiten",

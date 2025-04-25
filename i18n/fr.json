@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Alien333",
+			"Bananax47",
 			"Eihel",
 			"Gomoko",
 			"Goombiis",
@@ -32,6 +33,7 @@
 	"codemirror-prefs-activeline": "Mettre en surbrillance la ligne active",
 	"codemirror-prefs-specialchars": "Afficher les caractères spéciaux",
 	"codemirror-v6-prefs-colorblind": "Utiliser un thème de couleurs adapté aux déficients visuels",
+	"codemirror-prefs-whitespace": "Surligner les espaces blancs",
 	"codemirror-prefs-colorblind": "Activer le rendu accessible aux personnes distinguant difficilement certaines couleurs pour la mise en évidence de la syntaxe lors de la modification du wikicode",
 	"codemirror-prefs-colorblind-help": "Si vous utilisez un gadget pour la mise en évidence de la syntaxe, cette préférence ne fonctionnera pas.",
 	"codemirror-close": "Fermer",
