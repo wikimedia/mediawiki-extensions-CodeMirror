@@ -1,9 +1,4 @@
-const {
-	EditorView,
-	Extension,
-	LanguageSupport,
-	openSearchPanel
-} = require( 'ext.CodeMirror.v6.lib' );
+const { EditorView, Extension, LanguageSupport } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirror = require( 'ext.CodeMirror.v6' );
 
 /**
@@ -190,7 +185,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 			.off( 'click keydown keypress' )
 			.on( 'click keydown', ( e ) => {
 				if ( e.type === 'click' || ( e.type === 'keydown' && e.key === 'Enter' ) ) {
-					openSearchPanel( this.view );
+					this.search.openPanel( this.view );
 					e.preventDefault();
 				}
 			} );

@@ -169,6 +169,12 @@ class CodeMirror {
 		 */
 		this.keymap = new CodeMirrorKeymap();
 		/**
+		 * The CodeMirror search panel.
+		 *
+		 * @type {CodeMirrorSearch}
+		 */
+		this.search = new CodeMirrorSearch();
+		/**
 		 * The go-to line panel.
 		 *
 		 * @type {CodeMirrorGotoLine}
@@ -335,7 +341,7 @@ class CodeMirror {
 	 */
 	get searchExtension() {
 		return [
-			new CodeMirrorSearch().extension,
+			this.search.extension,
 			this.gotoLine.extension
 		];
 	}
