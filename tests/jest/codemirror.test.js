@@ -90,6 +90,25 @@ describe( 'initialize', () => {
 	} );
 } );
 
+describe( 'addDarkModeMutationObserver', () => {
+	it( 'should apply the oneDark theme when in dark mode for non-wikitext', async () => {
+		mockMwConfigGet( { wgPageContentModel: 'javascript' } );
+		document.documentElement.classList.add( 'skin-theme-clientpref-os' );
+		const cm2 = new CodeMirror( textarea );
+		const matchMedia = window.matchMedia;
+		window.matchMedia = jest.fn().mockImplementation( ( query ) => ( {
+			'(prefers-color-scheme: dark)': { matches: true, addEventListener: jest.fn() },
+			print: matchMedia( 'print' )
+		}[ query ] ) );
+		cm2.initialize();
+		expect( cm2.extensionRegistry.isEnabled( 'darkMode', cm2.view ) ).toBeTruthy();
+		document.documentElement.classList.remove( 'skin-theme-clientpref-os' );
+		document.documentElement.classList.add( 'skin-theme-clientpref-day' );
+		await new Promise( process.nextTick );
+		expect( cm2.extensionRegistry.isEnabled( 'darkMode', cm2.view ) ).toBeFalsy();
+	} );
+} );
+
 describe( 'applyExtension', () => {
 	it( 'should apply the given Extension', () => {
 		cm.initialize();
