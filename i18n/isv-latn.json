@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"IJzeren Jan"
+		]
+	},
+	"codemirror-prefs-colorblind": "Vključiti kolornu shemu, ktora jest ugodna daltonistam, za podsvětljenja sintaksy pri pravjenju vikiteksta",
+	"codemirror-prefs-colorblind-help": "Ako vy koristajete gadžet za podsvětljenje sintaksy, tuto nastavjenje ne bude rabotati.",
+	"prefs-accessibility": "Dostupnost"
+}
