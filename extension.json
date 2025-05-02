@@ -27,6 +27,12 @@
 			"value": false,
 			"description": "Temporary feature flag for the CodeMirror 6 upgrade."
 		},
+		"CodeMirrorContentModels": {
+			"value": [
+				"wikitext"
+			],
+			"description": "Temporary feature flag to control the rollout of CodeMirror to new content models."
+		},
 		"CodeMirrorConflictingGadgets": {
 			"value": [
 				"wikEd"
@@ -493,6 +499,7 @@
 			"class": "MediaWiki\\Extension\\CodeMirror\\Hooks",
 			"services": [
 				"UserOptionsLookup",
+				"HookContainer",
 				"MainConfig"
 			],
 			"optional_services": [
@@ -503,7 +510,10 @@
 	"attributes": {
 		"CodeMirror": {
 			"ContentModels": {
-				"wikitext": "mediawiki"
+				"wikitext": "mediawiki",
+				"javascript": "javascript",
+				"json": "json",
+				"css": "css"
 			},
 			"PluginModules": [
 				"ext.CodeMirror.addons"

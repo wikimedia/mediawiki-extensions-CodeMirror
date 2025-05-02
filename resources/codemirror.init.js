@@ -6,6 +6,7 @@ const isSpecialUpload = mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Uploa
 const useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
 const useWikiEditor = !isSpecialUpload && mw.user.options.get( 'usebetatoolbar' ) > 0;
 const resourceLoaderModules = mw.config.get( 'cmRLModules' );
+const mode = mw.config.get( 'cmMode' );
 
 /**
  * Get a LanguageSupport instance for the current mode.
@@ -14,9 +15,15 @@ const resourceLoaderModules = mw.config.get( 'cmRLModules' );
  * @return {LanguageSupport}
  */
 function getLanguageSupport( require ) {
-	const mediawikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
+	// eslint-disable-next-line security/detect-non-literal-require
+	const langSupport = require( `ext.CodeMirror.v6.mode.${ mode }` );
+
+	if ( mode !== 'mediawiki' ) {
+		return langSupport[ mode ]();
+	}
+
 	const urlParams = new URLSearchParams( window.location.search );
-	return mediawikiLang( {
+	return langSupport( {
 		bidiIsolation: urlParams.get( 'cm6bidi' )
 	} );
 }
@@ -87,6 +94,15 @@ if ( useWikiEditor && !useCodeMirror ) {
 		if ( mw.config.get( 'cmReadOnly' ) ) {
 			// eslint-disable-next-line no-jquery/no-global-selector
 			$( '#wpTextbox1' ).data( 'wikiEditor-context' ).$ui.addClass( 'ext-codemirror-readonly' );
+		}
+		// Similarly hide non-applicable buttons for non-wikitext.
+		if ( mode !== 'mediawiki' ) {
+			// CSS classes used here may include but are not limited to:
+			// * ext-codemirror-javascript
+			// * ext-codemirror-css
+			// * ext-codemirror-json
+			// eslint-disable-next-line no-jquery/no-global-selector
+			$( '#wpTextbox1' ).data( 'wikiEditor-context' ).$ui.addClass( `ext-codemirror-${ mode }` );
 		}
 	} );
 } else {

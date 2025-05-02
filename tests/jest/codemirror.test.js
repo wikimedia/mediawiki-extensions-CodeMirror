@@ -80,6 +80,14 @@ describe( 'initialize', () => {
 		expect( spy ).toHaveBeenCalledTimes( 1 );
 		expect( spy ).toHaveBeenCalledWith( '[CodeMirror] CodeMirror instance already initialized.' );
 	} );
+
+	it( 'should register the codeFolding and autocompletion extensions for non-wikitext', () => {
+		mockMwConfigGet( { wgPageContentModel: 'javascript' } );
+		const cm2 = new CodeMirror( textarea );
+		cm2.initialize();
+		expect( cm2.extensionRegistry.isEnabled( 'autocomplete', cm2.view ) ).toBeTruthy();
+		expect( cm2.extensionRegistry.isEnabled( 'codeFolding', cm2.view ) ).toBeTruthy();
+	} );
 } );
 
 describe( 'applyExtension', () => {

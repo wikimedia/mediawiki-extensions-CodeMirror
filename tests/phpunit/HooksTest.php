@@ -32,9 +32,14 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 	 * @covers ::onUploadForm_initial
 	 * @param array $conds
 	 * @param string[] $expectedModules
+	 * @param string $expectedMode
 	 * @dataProvider provideOnEditPageShowEditFormInitial
 	 */
-	public function testOnEditPageShowEditFormInitial( array $conds, array $expectedModules ) {
+	public function testOnEditPageShowEditFormInitial(
+		array $conds,
+		array $expectedModules,
+		string $expectedMode = 'mediawiki'
+	) {
 		$conds = array_merge( [
 			'module' => null,
 			'gadget' => null,
@@ -49,6 +54,9 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		], $conds );
 		$this->overrideConfigValues( [
 			'CodeMirrorV6' => $conds['useV6'],
+			'CodeMirrorContentModels' => $conds['allowedContentModels'] ?? [
+				CONTENT_MODEL_WIKITEXT => true
+			],
 		] );
 
 		$out = $this->getMockOutputPage( $conds['contentModel'], $conds['isRTL'] );
@@ -78,12 +86,22 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		}
 
 		$modulesLoaded = [];
+		$jsConfigVars = [];
 		$out->method( 'addModules' )
 			->willReturnCallback( static function ( $modules ) use ( &$modulesLoaded ) {
 				$modulesLoaded = array_merge( $modulesLoaded, is_array( $modules ) ? $modules : [ $modules ] );
 			} );
+		$out->method( 'addJsConfigVars' )
+			->willReturnCallback( static function ( $vars ) use ( &$jsConfigVars ) {
+				$jsConfigVars = array_merge( $jsConfigVars, $vars );
+			} );
 
-		$hooks = new Hooks( $userOptionsLookup, $this->getServiceContainer()->getMainConfig(), $gadgetRepoMock );
+		$hooks = new Hooks(
+			$userOptionsLookup,
+			$this->getServiceContainer()->getHookContainer(),
+			$this->getServiceContainer()->getMainConfig(),
+			$gadgetRepoMock
+		);
 		if ( $conds['method'] === 'upload' ) {
 			$uploadMock = $this->createMock( SpecialUpload::class );
 			$uploadMock->method( 'getOutput' )->willReturn( $out );
@@ -96,6 +114,9 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			$hooks->{$method}( $this->createMock( EditPage::class ), $out );
 		}
 		$this->assertArrayEquals( $expectedModules, $modulesLoaded );
+		if ( $conds['useV6'] ) {
+			$this->assertEquals( $expectedMode, $jsConfigVars['cmMode'] ?? 'mediawiki' );
+		}
 	}
 
 	/**
@@ -125,6 +146,15 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		];
 		yield 'CM5 + WikiEditor, contentModel CSS' => [
 			[ 'useV6' => false, 'usebetatoolbar' => true, 'contentModel' => CONTENT_MODEL_CSS ],
+			[]
+		];
+		yield 'CM5 + WikiEditor, contentModel CSS, CSS allowed' => [
+			[
+				'useV6' => false,
+				'usebetatoolbar' => true,
+				'contentModel' => CONTENT_MODEL_CSS,
+				'allowedContentModels' => [ CONTENT_MODEL_CSS => true ]
+			],
 			[]
 		];
 		yield 'CM5 + WikiEditor, preference false' => [
@@ -160,11 +190,25 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
 		];
 		yield 'CM6, contentModel CSS' => [
-			[ 'contentModel' => CONTENT_MODEL_CSS ],
-			[]
+			[ 'contentModel' => CONTENT_MODEL_CSS, 'allowedContentModels' => [ CONTENT_MODEL_CSS => false ] ],
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.css' ],
+			'css'
 		];
-		yield 'CM6, contentModel CSS, CodeEditor' => [
-			[ 'contentModel' => CONTENT_MODEL_CSS, 'module' => 'ext.codeEditor' ],
+		yield 'CM6, contentModel JAVASCRIPT' => [
+			[
+				'contentModel' => CONTENT_MODEL_JAVASCRIPT,
+				'allowedContentModels' => [ CONTENT_MODEL_JAVASCRIPT => false ]
+			],
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.javascript' ],
+			'javascript'
+		];
+		yield 'CM6, contentModel JSON' => [
+			[ 'contentModel' => CONTENT_MODEL_JSON, 'allowedContentModels' => [ CONTENT_MODEL_JSON => false ] ],
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.json' ],
+			'json'
+		];
+		yield 'CM6, contentModel CSS, CSS not allowed' => [
+			[ 'contentModel' => CONTENT_MODEL_CSS ],
 			[]
 		];
 		yield 'CM6, preference false' => [
@@ -211,11 +255,12 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 	public function testOnGetPreferencces(): void {
 		$user = self::getTestUser()->getUser();
 		$userOptionsLookup = $this->getServiceContainer()->getUserOptionsLookup();
+		$hookContainer = $this->getServiceContainer()->getHookContainer();
 		$config = $this->getServiceContainer()->getMainConfig();
 
 		// CodeMirror 5
 		$this->overrideConfigValues( [ 'CodeMirrorV6' => false ] );
-		$hook = new Hooks( $userOptionsLookup, $config, null );
+		$hook = new Hooks( $userOptionsLookup, $hookContainer, $config, null );
 		$preferences = [];
 		$hook->onGetPreferences( $user, $preferences );
 		self::assertArrayHasKey( 'usecodemirror', $preferences );
@@ -225,7 +270,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 
 		// CodeMirror 6
 		$this->overrideConfigValues( [ 'CodeMirrorV6' => true ] );
-		$hook = new Hooks( $userOptionsLookup, $config, null );
+		$hook = new Hooks( $userOptionsLookup, $hookContainer, $config, null );
 		$preferences = [];
 		$hook->onGetPreferences( $user, $preferences );
 		self::assertArrayHasKey( 'usecodemirror', $preferences );

@@ -1,0 +1,25 @@
+<?php
+
+namespace MediaWiki\Extension\CodeMirror\Hooks;
+
+use MediaWiki\HookContainer\HookContainer;
+use MediaWiki\Title\Title;
+
+/**
+ * This is a hook runner class, see docs/Hooks.md in core.
+ * @internal
+ */
+class HookRunner implements CodeMirrorGetModeHook {
+	private HookContainer $hookContainer;
+
+	public function __construct( HookContainer $hookContainer ) {
+		$this->hookContainer = $hookContainer;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function onCodeMirrorGetMode( Title $title, ?string &$mode, string $model ) {
+		return $this->hookContainer->run( 'CodeMirrorGetMode', [ $title, &$mode, $model ] );
+	}
+}

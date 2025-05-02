@@ -46,7 +46,6 @@ describe( 'initialize', () => {
 	it( 'should add the button to the toolbar', () => {
 		const cmWe = getCodeMirrorWikiEditor();
 		cmWe.initialize();
-
 		expect( cmWe.$textarea.wikiEditor ).toHaveBeenCalledWith(
 			'addToToolbar',
 			expect.objectContaining( {
@@ -59,6 +58,79 @@ describe( 'initialize', () => {
 		const cmWe = getCodeMirrorWikiEditor( true );
 		cmWe.initialize();
 		expect( cmWe.context.$ui[ 0 ].classList ).toContain( 'ext-codemirror-readonly' );
+	} );
+
+	it( 'should add a CSS class for the content model', () => {
+		mockMwConfigGet( { wgPageContentModel: 'javascript' } );
+		const cmWe = getCodeMirrorWikiEditor();
+		cmWe.initialize();
+		expect( cmWe.context.$ui[ 0 ].classList ).toContain( 'ext-codemirror-javascript' );
+		// Reset mock.
+		mockMwConfigGet();
+	} );
+
+	it( 'should use the cmMode if available instead of content model', () => {
+		mockMwConfigGet( { cmMode: 'css', wgPageContentModel: 'sanitized-css' } );
+		const cmWe = getCodeMirrorWikiEditor();
+		cmWe.initialize();
+		expect( cmWe.context.$ui[ 0 ].classList ).toContain( 'ext-codemirror-css' );
+		// Reset mw.config mock
+		mockMwConfigGet();
+	} );
+} );
+
+describe( 'deactivate', () => {
+	it( 'should remove the button from the toolbar', () => {
+		const cmWe = getCodeMirrorWikiEditor();
+		cmWe.initialize();
+		cmWe.deactivate();
+
+		expect( cmWe.$textarea.wikiEditor ).toHaveBeenCalledWith(
+			'removeFromToolbar',
+			expect.objectContaining( {
+				section: 'advanced',
+				group: 'codemirror'
+			} )
+		);
+	} );
+
+	it( 'should remove buttons from the toolbar for non-wikitext', () => {
+		mockMwConfigGet( { wgPageContentModel: 'javascript' } );
+		const cmWe = getCodeMirrorWikiEditor();
+		cmWe.initialize();
+		cmWe.deactivate();
+
+		expect( cmWe.$textarea.wikiEditor ).toHaveBeenCalledWith(
+			'removeFromToolbar',
+			expect.objectContaining( {
+				section: 'secondary',
+				group: 'codemirror'
+			} )
+		);
+		expect( cmWe.$textarea.wikiEditor ).toHaveBeenCalledWith(
+			'removeFromToolbar',
+			expect.objectContaining( {
+				section: 'main',
+				group: 'codemirror-format'
+			} )
+		);
+		expect( cmWe.$textarea.wikiEditor ).toHaveBeenCalledWith(
+			'removeFromToolbar',
+			expect.objectContaining( {
+				section: 'main',
+				group: 'codemirror-preferences'
+			} )
+		);
+		expect( cmWe.$textarea.wikiEditor ).toHaveBeenCalledWith(
+			'removeFromToolbar',
+			expect.objectContaining( {
+				section: 'main',
+				group: 'codemirror-search'
+			} )
+		);
+
+		// Reset mock.
+		mockMwConfigGet();
 	} );
 } );
 
@@ -132,8 +204,6 @@ describe( 'Hook handlers and event listeners', () => {
 } );
 
 describe( 'logEditFeature', () => {
-	afterEach( jest.restoreAllMocks );
-
 	it( 'should log when activating and deactivating', () => {
 		const cmWe = getCodeMirrorWikiEditor();
 		const spy = jest.spyOn( cmWe, 'logEditFeature' );
@@ -240,6 +310,41 @@ describe( 'logEditFeature', () => {
 			platform: 'desktop',
 			integration: 'page'
 		} );
+	} );
+} );
+
+describe( 'addCodeFormattingButtonsToToolbar', () => {
+	it( 'should add the expected tool groups and buttons for non-wikitext', () => {
+		mockMwConfigGet( { wgPageContentModel: 'javascript' } );
+		const cmWe = getCodeMirrorWikiEditor();
+		cmWe.initialize();
+		expect( cmWe.$textarea.wikiEditor ).toHaveBeenCalledWith(
+			'addToToolbar',
+			expect.objectContaining( {
+				groups: {
+					'codemirror-format': {
+						tools: {
+							indentMore: expect.any( Object ),
+							indentLess: expect.any( Object )
+						}
+					},
+					'codemirror-preferences': {
+						tools: {
+							whitespace: expect.any( Object ),
+							lineWrapping: expect.any( Object ),
+							autocomplete: expect.any( Object )
+						}
+					},
+					'codemirror-search': {
+						tools: {
+							gotoLine: expect.any( Object ),
+							search: expect.any( Object )
+						}
+					}
+				}
+			} )
+		);
+		mockMwConfigGet();
 	} );
 } );
 

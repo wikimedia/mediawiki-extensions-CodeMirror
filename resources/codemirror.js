@@ -5,19 +5,29 @@ const {
 	EditorView,
 	Extension,
 	StateEffect,
+	LanguageSupport,
 	ViewUpdate,
+	autocompletion,
 	bracketMatching,
+	closeBrackets,
 	crosshairCursor,
+	defaultHighlightStyle,
 	drawSelection,
 	dropCursor,
+	foldGutter,
+	foldKeymap,
 	highlightActiveLine,
+	highlightSelectionMatches,
 	highlightSpecialChars,
 	highlightWhitespace,
 	history,
+	indentOnInput,
 	indentUnit,
+	indentWithTab,
 	keymap,
 	lineNumbers,
-	rectangularSelection
+	rectangularSelection,
+	syntaxHighlighting
 } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirrorTextSelection = require( './codemirror.textSelection.js' );
 const CodeMirrorSearch = require( './codemirror.search.js' );
@@ -121,6 +131,12 @@ class CodeMirror {
 		 * @type {boolean}
 		 */
 		this.readOnly = this.textarea.readOnly;
+		/**
+		 * The content model of the page.
+		 *
+		 * @type {string}
+		 */
+		this.contentModel = mw.config.get( 'wgPageContentModel' );
 		/**
 		 * The form `submit` event handler.
 		 *
@@ -245,6 +261,18 @@ class CodeMirror {
 			extensions.push( history() );
 		}
 
+		if ( this.contentModel !== 'wikitext' ) {
+			extensions.push(
+				syntaxHighlighting( defaultHighlightStyle, { fallback: true } ),
+				closeBrackets(),
+				highlightSelectionMatches( { wholeWords: true } ),
+				// Make the [Tab] key indent for languages other than MediaWiki.
+				indentOnInput(),
+				keymap.of( indentWithTab ),
+				keymap.of( foldKeymap )
+			);
+		}
+
 		return extensions;
 	}
 
@@ -352,7 +380,7 @@ class CodeMirror {
 	 * @type {Extension}
 	 */
 	get bracketMatchingExtension() {
-		return bracketMatching( mw.config.get( 'wgPageContentModel' ) === 'wikitext' ?
+		return bracketMatching( this.contentModel === 'wikitext' ?
 			{
 				// Also match CJK full-width brackets (T362992)
 				// This is only for wikitext as it can be confusing in programming languages.
@@ -425,7 +453,7 @@ class CodeMirror {
 		// This currently is only to be used for the MediaWiki markup language.
 		if (
 			mw.user.options.get( 'usecodemirror-colorblind' ) &&
-			mw.config.get( 'wgPageContentModel' ) === 'wikitext'
+			this.contentModel === 'wikitext'
 		) {
 			classList.push( 'cm-mw-colorblind-colors' );
 		}
@@ -626,6 +654,12 @@ class CodeMirror {
 		this.addTextAreaJQueryHook();
 		this.addFormSubmitHandler();
 
+		if ( this.contentModel !== 'wikitext' ) {
+			// Register applicable extensions through CodeMirrorPreferences.
+			this.preferences.registerExtension( 'codeFolding', foldGutter(), this.view );
+			this.preferences.registerExtension( 'autocomplete', autocompletion(), this.view );
+		}
+
 		/**
 		 * Called just after CodeMirror is initialized.
 		 *
@@ -664,9 +698,10 @@ class CodeMirror {
 	addEditRecoveredHandler() {
 		mw.hook( 'editRecovery.loadEnd' ).add( ( data ) => {
 			/**
-			 * The [edit recovery]{@link https://www.mediawiki.org/wiki/Manual:Edit_Recovery} handler.
+			 * The edit recovery handler.
 			 *
 			 * @type {Function}
+			 * @see https://www.mediawiki.org/wiki/Manual:Edit_Recovery
 			 * @private
 			 */
 			this.editRecoveryHandler = data.fieldChangeHandler;

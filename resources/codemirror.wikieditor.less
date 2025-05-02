@@ -1,4 +1,5 @@
 @import 'mediawiki.skin.variables.less';
+@import './codemirror.mixins.less';
 
 // Overrides for WikiEditor.
 
@@ -21,16 +22,7 @@
 		background-color: @color-base-fixed;
 		// The SVG is just barely over 300 bytes, and is also only temporary
 		// until an official icon has been established in Codex/OOUI (T174145).
-		/* @embed */
-		@url: url( images/codemirror.icon.svg );
-		-webkit-mask-image: @url;
-		mask-image: @url;
-		-webkit-mask-size: @size-icon-medium;
-		mask-size: @size-icon-medium;
-		-webkit-mask-repeat: no-repeat;
-		mask-repeat: no-repeat;
-		-webkit-mask-position: center;
-		mask-position: center;
+		.embed-img( 'icon' );
 	}
 
 	&:hover {
@@ -52,12 +44,36 @@
 	}
 }
 
-// Hide all buttons except CodeMirror on read only pages (T301615)
+.oo-ui-icon-wrapping {
+	.embed-img( 'wrapping' );
+}
+
+.oo-ui-icon-gotoLine {
+	.embed-img( 'gotoLine' );
+}
+
+.oo-ui-icon-pilcrow {
+	.embed-img( 'pilcrow' );
+}
+
+.oo-ui-icon-check-all {
+	.embed-img( 'check-all' );
+}
+
+.oo-ui-icon-settings {
+	.embed-img( 'settings' );
+}
+
+// Hide all buttons except CodeMirror on read only pages (T301615),
+// and different content types.
 // This is the same hack that CodeEditor uses to customize the toolbar.
 // WikiEditor should be updated to better handle read only pages (T188817).
-.ext-codemirror-readonly {
+.ext-codemirror-readonly,
+.ext-codemirror-javascript,
+.ext-codemirror-css,
+.ext-codemirror-json {
 	.wikiEditor-section-secondary,
-	.group:not( .group-codemirror ),
+	.group:not( .group-codemirror, .group-codemirror-format, .group-codemirror-preferences, .group-codemirror-search ),
 	.tabs,
 	.sections {
 		display: none;

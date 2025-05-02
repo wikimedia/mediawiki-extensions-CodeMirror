@@ -1,0 +1,3 @@
+The codemirror/ directory is legacy CM5 and managed by foreign-resources.yaml
+
+The codemirror6.* files are CM6 managed by Rollup (see rollup.config.js)

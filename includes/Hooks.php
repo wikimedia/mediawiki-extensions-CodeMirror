@@ -6,14 +6,18 @@ use InvalidArgumentException;
 use MediaWiki\Config\Config;
 use MediaWiki\EditPage\EditPage;
 use MediaWiki\Extension\BetaFeatures\BetaFeatures;
+use MediaWiki\Extension\CodeMirror\Hooks\HookRunner;
 use MediaWiki\Extension\Gadgets\GadgetRepo;
 use MediaWiki\Hook\EditPage__showEditForm_initialHook;
 use MediaWiki\Hook\EditPage__showReadOnlyForm_initialHook;
 use MediaWiki\Hook\UploadForm_initialHook;
+use MediaWiki\HookContainer\HookContainer;
+use MediaWiki\MainConfigNames;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
 use MediaWiki\Registration\ExtensionRegistry;
-use Mediawiki\Specials\SpecialUpload;
+use MediaWiki\Specials\SpecialUpload;
+use MediaWiki\Title\Title;
 use MediaWiki\User\Options\UserOptionsLookup;
 use MediaWiki\User\User;
 
@@ -34,23 +38,53 @@ class Hooks implements
 	private string $extensionAssetsPath;
 	private bool $debugMode;
 	private bool $readOnly = false;
+	private array $contentModels;
+	private HookRunner $hookRunner;
 
 	/**
 	 * @param UserOptionsLookup $userOptionsLookup
+	 * @param HookContainer $hookContainer
 	 * @param Config $config
 	 * @param GadgetRepo|null $gadgetRepo
 	 */
 	public function __construct(
 		UserOptionsLookup $userOptionsLookup,
+		HookContainer $hookContainer,
 		Config $config,
 		?GadgetRepo $gadgetRepo
 	) {
 		$this->userOptionsLookup = $userOptionsLookup;
+		$this->hookRunner = new HookRunner( $hookContainer );
 		$this->useV6 = $config->get( 'CodeMirrorV6' );
 		$this->conflictingGadgets = $config->get( 'CodeMirrorConflictingGadgets' );
 		$this->gadgetRepo = $gadgetRepo;
-		$this->extensionAssetsPath = $config->get( 'ExtensionAssetsPath' );
-		$this->debugMode = $config->get( 'ShowExceptionDetails' );
+		$this->extensionAssetsPath = $config->get( MainConfigNames::ExtensionAssetsPath );
+		$this->debugMode = $config->get( MainConfigNames::ShowExceptionDetails );
+		$this->contentModels = $config->get( 'CodeMirrorContentModels' );
+	}
+
+	/**
+	 * Get the mode for the given title and content model.
+	 *
+	 * @param Title $title
+	 * @param string $model
+	 * @return string|null
+	 */
+	private function getMode( Title $title, string $model ): ?string {
+		if ( $model === CONTENT_MODEL_WIKITEXT ) {
+			return 'mediawiki';
+		} elseif ( $model === CONTENT_MODEL_JAVASCRIPT ) {
+			return 'javascript';
+		} elseif ( $model === CONTENT_MODEL_CSS ) {
+			return 'css';
+		} elseif ( $model === CONTENT_MODEL_JSON ) {
+			return 'json';
+		}
+
+		$mode = null;
+		$this->hookRunner->onCodeMirrorGetMode( $title, $mode, $model );
+
+		return $mode;
 	}
 
 	/**
@@ -67,12 +101,6 @@ class Hooks implements
 		?ExtensionRegistry $extensionRegistry = null,
 		bool $supportWikiEditor = true
 	): bool {
-		// Disable CodeMirror when CodeEditor is active on this page.
-		// Depends on ext.codeEditor being added by \MediaWiki\EditPage\EditPage::showEditForm:initial
-		if ( in_array( 'ext.codeEditor', $out->getModules(), true ) ) {
-			return false;
-		}
-
 		$shouldUseV6 = $this->shouldUseV6( $out );
 		$useCodeMirror = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usecodemirror' );
 		$useWikiEditor = $supportWikiEditor &&
@@ -87,13 +115,11 @@ class Hooks implements
 		}
 
 		$extensionRegistry ??= ExtensionRegistry::getInstance();
-		// Keys are content models, values are the corresponding CodeMirror modes.
-		$contentModels = $extensionRegistry->getAttribute( 'CodeMirrorContentModels' );
 		$contentModel = $out->getTitle()->getContentModel();
 		// b/c: CodeMirrorContentModels extension attribute used to be a flat string array.
 		$isSupportedContentModel = $contentModel && (
-			isset( $contentModels[ $contentModel ] ) ||
-			in_array( $contentModel, $contentModels, true )
+			isset( $this->contentModels[ $contentModel ] ) ||
+			in_array( $contentModel, $this->contentModels, true )
 		);
 		$isRTL = $out->getTitle()->getPageLanguage()->isRTL();
 		// Disable CodeMirror if we're on an edit page with a conflicting gadget (T178348)
@@ -179,11 +205,19 @@ class Hooks implements
 			...( $useWikiEditor ? [ 'ext.CodeMirror.v6.WikiEditor' ] : [] ),
 			'ext.CodeMirror.v6.lib',
 			'ext.CodeMirror.v6.init',
-			'ext.CodeMirror.v6.mode.mediawiki'
 		];
+		$contentModel = $out->getTitle()->getContentModel();
+		$mode = $this->getMode( $out->getTitle(), $contentModel ) ?? $contentModel;
+
+		if ( in_array( $mode, [ 'mediawiki', 'javascript', 'json', 'css' ] ) ) {
+			$modules[] = 'ext.CodeMirror.v6.mode.' . $mode;
+		} else {
+			wfLogWarning( '[CodeMirror] Unsupported content model ' . $contentModel );
+			$modules = [];
+		}
 
 		if ( $useCodeMirror ) {
-			// Pre-deliver modules if we know we're going to need them.
+			// Pre-load modules if we know we're going to need them.
 			$out->addModules( $modules );
 		} elseif ( $useWikiEditor ) {
 			// Load only the init module, which will add the toolbar button
@@ -194,7 +228,8 @@ class Hooks implements
 		$out->addJsConfigVars( [
 			'cmRLModules' => $modules,
 			'cmReadOnly' => $this->readOnly,
-			'cmDebug' => $this->debugMode
+			'cmDebug' => $this->debugMode,
+			'cmMode' => $mode
 		] );
 	}
 
@@ -291,7 +326,7 @@ class Hooks implements
 
 		$defaultPreferences['usecodemirror-colorblind'] = [
 			'type' => 'toggle',
-			'label-message' => 'codemirror-v6-prefs-colorblind',
+			'label-message' => 'codemirror-prefs-colorblind',
 			'section' => 'editing/syntax-highlighting',
 			'disable-if' => [ '!==', 'usecodemirror', '1' ]
 		];
