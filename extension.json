@@ -516,11 +516,6 @@
 			"PluginModules": [
 				"ext.CodeMirror.visualEditor.init"
 			]
-		},
-		"EventLogging": {
-			"Schemas": {
-				"CodeMirrorUsage": "/analytics/legacy/codemirrorusage/1.0.0"
-			}
 		}
 	},
 	"manifest_version": 2
