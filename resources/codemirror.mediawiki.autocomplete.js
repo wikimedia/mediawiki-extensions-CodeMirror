@@ -2,37 +2,12 @@ const {
 	CompletionSource,
 	EditorSelection,
 	Extension,
-	Prec,
-	acceptCompletion,
 	autocompletion,
 	insertCompletionText,
 	pickedCompletion,
-	startCompletion,
-	syntaxTree,
-	keymap
+	syntaxTree
 } = require( 'ext.CodeMirror.v6.lib' );
 const mwModeConfig = require( './codemirror.mediawiki.config.js' );
-
-/**
- * Keymap for autocompletion.
- *
- * @type {CodeMirrorKeyBinding[]}
- * @memberof module:CodeMirrorAutocomplete
- */
-const autocompleteKeymap = [
-	{
-		key: 'Shift-Enter',
-		aliases: [ 'Ctrl-Space' ],
-		run: startCompletion,
-		tool: 'startcompletion'
-	},
-	{
-		key: 'Tab',
-		aliases: [ 'Enter' ],
-		run: acceptCompletion,
-		tool: 'autocomplete'
-	}
-];
 
 /**
  * CodeMirror extension providing
@@ -43,8 +18,7 @@ const autocompleteKeymap = [
  * @type {Extension}
  */
 const autocompleteExtension = [
-	autocompletion( { defaultKeymap: true } ),
-	Prec.high( keymap.of( autocompleteKeymap ) )
+	autocompletion( { defaultKeymap: true } )
 ];
 
 /**
@@ -285,6 +259,5 @@ const completionSource = ( mode ) => ( context ) => {
 
 module.exports = {
 	autocompleteExtension,
-	autocompleteKeymap,
 	completionSource
 };
