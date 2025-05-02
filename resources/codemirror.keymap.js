@@ -11,6 +11,7 @@ const {
 	Prec,
 	StateEffect
 } = require( 'ext.CodeMirror.v6.lib' );
+const CodeMirrorCodex = require( './codemirror.codex.js' );
 
 /**
  * Key bindings for CodeMirror.
@@ -51,11 +52,10 @@ const {
  *   cm.registerKeyBindingHelp( 'other', 'myKeybinding', myKeybinding, cm.view );
  * } );
  */
-class CodeMirrorKeymap {
+class CodeMirrorKeymap extends CodeMirrorCodex {
 
 	constructor() {
-		/** @type {HTMLDivElement} */
-		this.dialog = null;
+		super();
 
 		/** @type {Function} */
 		this.keydownListener = null;
@@ -238,136 +238,14 @@ class CodeMirrorKeymap {
 		 */
 		mw.hook( 'ext.CodeMirror.keymap' ).fire();
 
-		if ( this.dialog ) {
-			this.animateDialog( true );
-			return true;
-		}
-
-		const backdrop = document.createElement( 'div' );
-		backdrop.classList.add(
-			'cdx-dialog-backdrop',
-			// These classes are used by the fade animation.
-			// We always want them enabled, since dialog content is not interactable
-			// and thus we don't need to worry about conflicting styles.
-			'cdx-dialog-fade-enter-active',
-			'cm-mw-dialog-backdrop',
-			'cm-mw-dialog--hidden'
-		);
-		const tabindex = document.createElement( 'div' );
-		tabindex.tabIndex = 0;
-		backdrop.appendChild( tabindex );
-
-		const dialog = document.createElement( 'div' );
-		dialog.classList.add( 'cdx-dialog', 'cm-mw-dialog', 'cm-mw-keymap-dialog' );
-		backdrop.appendChild( dialog );
-		backdrop.addEventListener( 'click', ( e ) => {
-			if ( e.target === backdrop ) {
-				this.animateDialog( false );
-			}
-		} );
-
-		const header = document.createElement( 'header' );
-		header.classList.add( 'cdx-dialog__header', 'cdx-dialog__header--default' );
-		const headerTitleGroup = document.createElement( 'div' );
-		headerTitleGroup.classList.add( 'cdx-dialog__header__title-group' );
-		const h2 = document.createElement( 'h2' );
-		h2.id = 'cdx-dialog__header__title-group';
-		h2.classList.add( 'cdx-dialog__header__title' );
-		h2.textContent = mw.msg( 'codemirror-keymap-help-title' );
-		headerTitleGroup.appendChild( h2 );
-		header.appendChild( headerTitleGroup );
-
-		const closeBtn = document.createElement( 'button' );
-		closeBtn.type = 'button';
-		closeBtn.classList.add(
-			'cdx-button',
-			'cdx-button',
-			'cdx-button--action-default',
-			'cdx-button--weight-quiet',
-			'cdx-button--size-medium',
-			'cdx-button--icon-only',
-			'cdx-dialog__header__close-button',
-			'cdx-dialog__header__close'
-		);
-		closeBtn.setAttribute( 'aria-label', mw.msg( 'codemirror-keymap-help-close' ) );
-		const cdxIcon = document.createElement( 'span' );
-		cdxIcon.classList.add( 'cdx-button__icon', 'cm-mw-icon--close' );
-		closeBtn.appendChild( cdxIcon );
-		closeBtn.addEventListener( 'click', this.animateDialog.bind( this, false ) );
-		header.appendChild( closeBtn );
-		dialog.appendChild( header );
-
-		const focusTrap = document.createElement( 'div' );
-		focusTrap.tabIndex = -1;
-		dialog.appendChild( focusTrap );
-
-		const body = document.createElement( 'div' );
-		body.classList.add( 'cdx-dialog__body' );
-		this.setHelpDialogBody( body );
-		dialog.appendChild( body );
-
-		backdrop.appendChild( tabindex.cloneNode() );
-
-		this.dialog = backdrop;
-
-		document.body.appendChild( backdrop );
-		this.animateDialog( true );
-
-		return true;
+		return this.showDialog( 'codemirror-keymap-help-title', this.setHelpDialogBody() );
 	}
 
 	/**
-	 * Fade the dialog in or out, adjusting for scrollbar widths to prevent shifting of content.
-	 * This almost fully mimics the way the Codex handles its Dialog component, with the exception
-	 * that we don't force a focus trap, nor do we set aria-hidden on other elements in the DOM.
-	 * This is to keep our implementation simple until something like T382532 is realized.
-	 *
-	 * @param {boolean} open
+	 * @return {HTMLElement[]}
 	 * @private
 	 */
-	animateDialog( open = false ) {
-		document.activeElement.blur();
-		// Must be unhidden in order to animate.
-		this.dialog.classList.remove( 'cm-mw-dialog--hidden' );
-		// When the transition ends, hide or show the dialog.
-		this.dialog.addEventListener( 'transitionend', () => {
-			this.dialog.classList.toggle( 'cm-mw-dialog--hidden', !open );
-			if ( open ) {
-				this.dialog.querySelector( '[tabindex="0"]' ).focus();
-				// Determine the width of the scrollbar and compensate for it if necessary
-				const scrollWidth = window.innerWidth - document.documentElement.clientWidth;
-				document.documentElement.style.setProperty( 'margin-right', `${ scrollWidth }px` );
-			} else {
-				document.documentElement.style.removeProperty( 'margin-right' );
-			}
-			// Toggle a class on <body> to prevent scrolling
-			document.body.classList.toggle( 'cdx-dialog-open', open );
-		}, { once: true } );
-		// Animates the dialog in or out.
-		// Use setTimeout() with slight delay to allow rendering threads to catch up.
-		setTimeout( () => {
-			this.dialog.classList.toggle( 'cm-mw-dialog-animate-show', open );
-		}, 50 );
-
-		// Add or remove the keydown listener.
-		if ( open && !this.keydownListener ) {
-			this.keydownListener = ( e ) => {
-				if ( e.key === 'Escape' && !this.dialog.classList.contains( 'cm-mw-dialog--hidden' ) ) {
-					this.animateDialog( false );
-				}
-			};
-			document.body.addEventListener( 'keydown', this.keydownListener );
-		} else if ( !open && this.keydownListener ) {
-			document.body.removeEventListener( 'keydown', this.keydownListener );
-			this.keydownListener = null;
-		}
-	}
-
-	/**
-	 * @param {HTMLDivElement} body
-	 * @private
-	 */
-	setHelpDialogBody( body ) {
+	setHelpDialogBody() {
 		const keybindingsContainer = document.createElement( 'section' );
 		keybindingsContainer.classList.add( 'cm-mw-keymap-dialog__keybindings' );
 		const sections = Object.keys( this.keymapHelpRegistry );
@@ -492,8 +370,7 @@ class CodeMirrorKeymap {
 		}
 		cursorSection.appendChild( ul );
 
-		body.appendChild( keybindingsContainer );
-		body.appendChild( cursorSection );
+		return [ keybindingsContainer, cursorSection ];
 	}
 
 	/**

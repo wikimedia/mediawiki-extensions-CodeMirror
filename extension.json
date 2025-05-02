@@ -213,6 +213,7 @@
 				"codemirror.preferences.js",
 				"codemirror.keymap.js",
 				"codemirror.extensionRegistry.js",
+				"codemirror.codex.js",
 				{
 					"name": "ext.CodeMirror.data.js",
 					"callback": "MediaWiki\\Extension\\CodeMirror\\DataScript::makeScript"
