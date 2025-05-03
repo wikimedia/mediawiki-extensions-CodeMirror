@@ -1,5 +1,4 @@
 const { EditorView, Prec } = require( 'ext.CodeMirror.v6.lib' );
-const { autocompleteKeymap } = require( './codemirror.mediawiki.autocomplete.js' );
 
 /**
  * MediaWiki-specific key bindings for CodeMirror.
@@ -132,9 +131,7 @@ class CodeMirrorMediaWikiKeymap {
 					key: 'Mod-/',
 					run: this.comment.bind( this )
 				}
-			},
-			codeFolding: {},
-			autocomplete: {}
+			}
 		};
 
 		// Only add 'reference' if Extension:Cite is installed.
@@ -165,11 +162,6 @@ class CodeMirrorMediaWikiKeymap {
 				const keyBinding = this.mwKeymapRegistry[ section ][ command ];
 				this.keymap.registerKeyBindingHelp( section, command, keyBinding, this.view );
 			}
-		}
-
-		// Autocompletion
-		for ( const keyBinding of autocompleteKeymap ) {
-			this.keymap.registerKeyBindingHelp( 'autocomplete', keyBinding.tool, keyBinding );
 		}
 
 		// Open links

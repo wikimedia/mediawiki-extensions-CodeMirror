@@ -1,8 +1,10 @@
 const {
+	acceptCompletion,
 	defaultKeymap,
 	keymap,
 	redo,
 	redoSelection,
+	startCompletion,
 	undo,
 	undoSelection,
 	EditorView,
@@ -178,7 +180,21 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 				foldAll: { key: 'Ctrl-Alt-[' },
 				unfoldAll: { key: 'Ctrl-Alt-]' }
 			},
-			autocomplete: {},
+			autocomplete: [
+				{
+					key: 'Shift-Enter',
+					aliases: [ 'Ctrl-Space' ],
+					run: startCompletion,
+					prec: Prec.high,
+					msg: mw.msg( 'codemirror-keymap-startcompletion' )
+				},
+				{
+					key: 'Tab',
+					aliases: [ 'Enter' ],
+					run: acceptCompletion,
+					msg: mw.msg( 'codemirror-keymap-selectcompletion' )
+				}
+			],
 			other: {
 				moveLine: {
 					key: 'Alt-↑/↓',
@@ -549,7 +565,8 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 				);
 				for ( const keyBinding of keyBindings ) {
 					if ( keyBinding.run ) {
-						extensions.push( keymap.of( keyBinding ) );
+						const precFn = keyBinding.prec || Prec.default;
+						extensions.push( precFn( keymap.of( keyBinding ) ) );
 					}
 				}
 			}
