@@ -20,6 +20,7 @@
 	"codemirror-prefs-bracketmatching": "Enable bracket matching",
 	"codemirror-prefs-linenumbering": "Show line numbers",
 	"codemirror-prefs-linewrapping": "Wrap lines",
+	"codemirror-prefs-lint": "Lint the code",
 	"codemirror-prefs-activeline": "Highlight the active line",
 	"codemirror-prefs-specialchars": "Show special characters",
 	"codemirror-prefs-whitespace": "Highlight whitespace",

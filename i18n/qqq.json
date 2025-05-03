@@ -28,6 +28,7 @@
 	"codemirror-prefs-bracketmatching": "Label for the option to enable bracket matching in the CodeMirror preferences panel.",
 	"codemirror-prefs-linenumbering": "Label for the option to show line numbers in the CodeMirror preferences panel.",
 	"codemirror-prefs-linewrapping": "Label for the option to wrap lines in the CodeMirror preferences panel.",
+	"codemirror-prefs-lint": "Label for the option to lint the code in the CodeMirror preferences panel.",
 	"codemirror-prefs-activeline": "Label for the option to highlight the active line in the CodeMirror preferences panel.",
 	"codemirror-prefs-specialchars": "Label for the option to show special characters in the CodeMirror preferences panel.",
 	"codemirror-prefs-whitespace": "Label for the option to highlight whitespace in the CodeMirror preferences panel.",
