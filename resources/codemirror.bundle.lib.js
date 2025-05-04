@@ -9,5 +9,6 @@ export * from '@codemirror/commands';
 export * from '@codemirror/language';
 export * from '@codemirror/search';
 export * from '@codemirror/state';
+export * from '@codemirror/theme-one-dark';
 export * from '@codemirror/view';
 export * from '@lezer/highlight';

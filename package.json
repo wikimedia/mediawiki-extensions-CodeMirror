@@ -23,6 +23,7 @@
 		"@codemirror/language": "^6.11.0",
 		"@codemirror/search": "^6.5.10",
 		"@codemirror/state": "^6.5.2",
+		"@codemirror/theme-one-dark": "^6.1.2",
 		"@codemirror/view": "^6.36.5",
 		"@lezer/common": "1.2.3",
 		"@lezer/highlight": "1.2.1",

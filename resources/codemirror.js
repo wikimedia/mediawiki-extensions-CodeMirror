@@ -26,6 +26,7 @@ const {
 	indentWithTab,
 	keymap,
 	lineNumbers,
+	oneDark,
 	rectangularSelection,
 	syntaxHighlighting
 } = require( 'ext.CodeMirror.v6.lib' );
@@ -658,6 +659,8 @@ class CodeMirror {
 			// Register applicable extensions through CodeMirrorPreferences.
 			this.preferences.registerExtension( 'codeFolding', foldGutter(), this.view );
 			this.preferences.registerExtension( 'autocomplete', autocompletion(), this.view );
+
+			this.addDarkModeMutationObserver();
 		}
 
 		/**
@@ -668,6 +671,36 @@ class CodeMirror {
 		 * @stable to use
 		 */
 		mw.hook( 'ext.CodeMirror.ready' ).fire( this );
+	}
+
+	/**
+	 * Use a MutationObserver to watch for CSS class changes to the <html> element,
+	 * and update the CodeMirror editor's theme accordingly. This is ony necessary
+	 * for non-wikitext, where we don't use our own CSS classes during tokenization.
+	 */
+	addDarkModeMutationObserver() {
+		const doc = document.documentElement;
+		const matchMediaQuery = window.matchMedia( '(prefers-color-scheme: dark)' );
+		const setDarkTheme = () => {
+			const isDark = doc.classList.contains( 'skin-theme-clientpref-night' ) || (
+				doc.classList.contains( 'skin-theme-clientpref-os' ) && matchMediaQuery.matches
+			);
+			this.extensionRegistry.register( 'darkMode', oneDark, this.view, isDark );
+		};
+		const observer = new MutationObserver( ( mutations ) => {
+			for ( const mutation of mutations ) {
+				if ( mutation.type === 'attributes' && mutation.attributeName === 'class' ) {
+					setDarkTheme();
+				}
+			}
+		} );
+		observer.observe( doc, {
+			attributes: true,
+			childList: false,
+			subtree: false
+		} );
+		matchMediaQuery.addEventListener( 'change', setDarkTheme );
+		setDarkTheme();
 	}
 
 	/**
