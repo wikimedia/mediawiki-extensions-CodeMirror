@@ -39,6 +39,7 @@ class CodeMirrorLint extends CodeMirrorPanel {
 		worker.className = 'cm-mw-panel--status-worker';
 		worker.addEventListener( 'click', () => {
 			nextDiagnostic( this.view );
+			this.view.focus();
 		} );
 		const [ error, errorText ] = this.getLintMarker( 'error' );
 		const [ warning, warningText ] = this.getLintMarker( 'warning' );
@@ -106,10 +107,25 @@ class CodeMirrorLint extends CodeMirrorPanel {
 	}
 
 	updateDiagnosticMessage( head, message ) {
-		if ( this.diagnostics && this.diagnostics.length ) {
-			const diagnostic = this.diagnostics
-				.find( ( d ) => d.from <= head && d.to >= head );
-			message.textContent = diagnostic ? diagnostic.message : '';
+		const diagnostic = this.diagnostics && this.diagnostics
+			.find( ( d ) => d.from <= head && d.to >= head );
+		if ( diagnostic ) {
+			message.textContent = diagnostic.message;
+			if ( diagnostic.actions ) {
+				message.append( ...diagnostic.actions.map( ( { name, apply } ) => {
+					const a = document.createElement( 'button' );
+					a.type = 'button';
+					a.className = 'cm-diagnosticAction';
+					a.textContent = name;
+					a.addEventListener( 'click', ( e ) => {
+						e.preventDefault();
+						apply( this.view, diagnostic.from, diagnostic.to );
+					} );
+					return a;
+				} ) );
+			}
+		} else {
+			message.textContent = '';
 		}
 	}
 }

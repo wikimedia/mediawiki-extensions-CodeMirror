@@ -5,16 +5,30 @@ const CodeMirrorWorker = require( './codemirror.worker.js' );
 const worker = new CodeMirrorWorker( 'css' );
 const lintSource = ( view ) => worker.lint( view )
 	.then( ( data ) => data
-		.map( ( { text, severity, line, column, endLine, endColumn, rule } ) => ( {
-			rule,
-			source: 'Stylelint',
-			message: text,
-			severity: severity === 'error' ? 'error' : 'info',
-			from: CodeMirrorWorker.pos( view, line, column ),
-			to: endLine === undefined ?
-				view.state.doc.line( line ).to :
-				CodeMirrorWorker.pos( view, endLine, endColumn )
-		} ) )
+		.map( ( { text, severity, line, column, endLine, endColumn, rule, fix } ) => {
+			const diagnostic = {
+				rule,
+				source: 'Stylelint',
+				message: text,
+				severity: severity === 'error' ? 'error' : 'info',
+				from: CodeMirrorWorker.pos( view, line, column ),
+				to: endLine === undefined ?
+					view.state.doc.line( line ).to :
+					CodeMirrorWorker.pos( view, endLine, endColumn )
+			};
+			if ( fix ) {
+				const { range: [ from, to ], text: insert } = fix;
+				diagnostic.actions = [
+					{
+						name: 'fix',
+						apply( v ) {
+							v.dispatch( { changes: { from, to, insert } } );
+						}
+					}
+				];
+			}
+			return diagnostic;
+		} )
 	);
 lintSource.worker = worker;
 

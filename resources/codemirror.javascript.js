@@ -15,10 +15,12 @@ const lintSource = ( view ) => worker.lint( view )
 			line,
 			column,
 			endLine,
-			endColumn
+			endColumn,
+			fix,
+			suggestions = []
 		} ) => {
 			const start = CodeMirrorWorker.pos( view, line, column );
-			return {
+			const diagnostic = {
 				rule: ruleId,
 				source: 'ESLint',
 				message: message + ( ruleId ? ` (${ ruleId })` : '' ),
@@ -28,6 +30,18 @@ const lintSource = ( view ) => worker.lint( view )
 					start + 1 :
 					CodeMirrorWorker.pos( view, endLine, endColumn )
 			};
+			if ( fix || suggestions.length ) {
+				diagnostic.actions = [
+					...fix ? [ { name: 'fix', fix } ] : [],
+					...suggestions.map( ( suggestion ) => ( { name: 'suggestion', fix: suggestion.fix } ) )
+				].map( ( { name, fix: { range: [ from, to ], text } } ) => ( {
+					name,
+					apply( v ) {
+						v.dispatch( { changes: { from, to, insert: text } } );
+					}
+				} ) );
+			}
+			return diagnostic;
 		} )
 	);
 lintSource.worker = worker;

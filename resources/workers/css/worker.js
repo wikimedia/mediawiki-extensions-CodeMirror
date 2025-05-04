@@ -13,7 +13,8 @@ const lint = ( code ) => stylelint.lint( {
 	code,
 	config: {
 		defaultSeverity: 'warning',
-		rules: customRules
+		rules: customRules,
+		computeEditInfo: true
 	}
 } ).then( ( { results } ) => results.map( ( { warnings } ) => warnings )
 	.reduce( ( acc, cur ) => acc.concat( cur ), [] )
