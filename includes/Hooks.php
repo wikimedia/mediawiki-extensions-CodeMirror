@@ -12,6 +12,7 @@ use MediaWiki\Hook\EditPage__showEditForm_initialHook;
 use MediaWiki\Hook\EditPage__showReadOnlyForm_initialHook;
 use MediaWiki\Hook\UploadForm_initialHook;
 use MediaWiki\HookContainer\HookContainer;
+use MediaWiki\Languages\LanguageConverterFactory;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
@@ -40,16 +41,19 @@ class Hooks implements
 	private bool $readOnly = false;
 	private array $contentModels;
 	private HookRunner $hookRunner;
+	private LanguageConverterFactory $languageConverterFactory;
 
 	/**
 	 * @param UserOptionsLookup $userOptionsLookup
 	 * @param HookContainer $hookContainer
+	 * @param LanguageConverterFactory $languageConverterFactory
 	 * @param Config $config
 	 * @param GadgetRepo|null $gadgetRepo
 	 */
 	public function __construct(
 		UserOptionsLookup $userOptionsLookup,
 		HookContainer $hookContainer,
+		LanguageConverterFactory $languageConverterFactory,
 		Config $config,
 		?GadgetRepo $gadgetRepo
 	) {
@@ -61,6 +65,7 @@ class Hooks implements
 		$this->extensionAssetsPath = $config->get( MainConfigNames::ExtensionAssetsPath );
 		$this->debugMode = $config->get( MainConfigNames::ShowExceptionDetails );
 		$this->contentModels = $config->get( 'CodeMirrorContentModels' );
+		$this->languageConverterFactory = $languageConverterFactory;
 	}
 
 	/**
@@ -229,7 +234,10 @@ class Hooks implements
 			'cmRLModules' => $modules,
 			'cmReadOnly' => $this->readOnly,
 			'cmDebug' => $this->debugMode,
-			'cmMode' => $mode
+			'cmLanguageVariants' => $this->languageConverterFactory->getLanguageConverter(
+				$out->getTitle()->getPageLanguage()
+			)->getVariants(),
+			'cmMode' => $mode,
 		] );
 	}
 

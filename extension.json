@@ -500,6 +500,7 @@
 			"services": [
 				"UserOptionsLookup",
 				"HookContainer",
+				"LanguageConverterFactory",
 				"MainConfig"
 			],
 			"optional_services": [

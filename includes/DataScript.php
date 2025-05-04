@@ -36,7 +36,7 @@ class DataScript {
 	 */
 	public static function makeScript( RL\Context $context ) {
 		return 'mw.config.set('
-			. $context->encodeJson( [ 'extCodeMirrorConfig' => self::getFrontendConfiguraton() ] )
+			. $context->encodeJson( [ 'extCodeMirrorConfig' => self::getFrontendConfiguration() ] )
 			. ');';
 	}
 
@@ -45,14 +45,13 @@ class DataScript {
 	 *
 	 * @return array
 	 */
-	private static function getFrontendConfiguraton() {
+	private static function getFrontendConfiguration(): array {
 		// Use the content language, not the user language. (See T170130.)
 		$lang = MediaWikiServices::getInstance()->getContentLanguage();
 		$registry = ExtensionRegistry::getInstance();
 		$parser = MediaWikiServices::getInstance()->getParser();
 		$mwConfig = MediaWikiServices::getInstance()->getMainConfig();
 		$magicWordFactory = $parser->getMagicWordFactory();
-
 		$tagModes = $registry->getAttribute( 'CodeMirrorTagModes' );
 		$tagNames = array_merge( $parser->getTags(), array_keys( $tagModes ) );
 
@@ -67,11 +66,45 @@ class DataScript {
 			'tags' => array_fill_keys( $tagNames, true ),
 			'doubleUnderscore' => [ [], [] ],
 			'functionSynonyms' => $parser->getFunctionSynonyms(),
+			'functionHooks' => $parser->getFunctionHooks(),
 			'variableIDs' => $magicWordFactory->getVariableIDs(),
 			'redirection' => $magicWordFactory->get( 'redirect' )->mSynonyms,
 			'urlProtocols' => $parser->getUrlProtocols(),
 			'linkTrailCharacters' => $lang->linkTrail(),
 		];
+
+		$imageKeywords = [
+			'img_alt',
+			'img_baseline',
+			'img_border',
+			'img_bottom',
+			'img_center',
+			'img_class',
+			'img_framed',
+			'img_frameless',
+			'img_lang',
+			'img_left',
+			'img_link',
+			'img_manualthumb',
+			'img_middle',
+			'img_none',
+			'img_page',
+			'img_right',
+			'img_sub',
+			'img_super',
+			'img_text_bottom',
+			'img_text_top',
+			'img_thumbnail',
+			'img_top',
+			'img_upright',
+			'img_width',
+		];
+		foreach ( $imageKeywords as $keyword ) {
+			$synonyms = $magicWordFactory->get( $keyword )->getSynonyms();
+			foreach ( $synonyms as $synonym ) {
+				$config['imageKeywords'][$synonym] = substr( $keyword, 4 );
+			}
+		}
 
 		$mw = $lang->getMagicWords();
 		foreach ( $magicWordFactory->getDoubleUnderscoreArray()->getNames() as $name ) {

@@ -45,12 +45,13 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			'gadget' => null,
 			'contentModel' => CONTENT_MODEL_WIKITEXT,
 			'useV6' => true,
-			'isRTL' => false,
 			'usecodemirror' => true,
+			'isRTL' => false,
 			// WikiEditor
 			'usebetatoolbar' => false,
 			'method' => 'edit',
 			'reupload' => false,
+			'pageLang' => 'en',
 		], $conds );
 		$this->overrideConfigValues( [
 			'CodeMirrorV6' => $conds['useV6'],
@@ -59,7 +60,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			],
 		] );
 
-		$out = $this->getMockOutputPage( $conds['contentModel'], $conds['isRTL'] );
+		$out = $this->getMockOutputPage( $conds['contentModel'], $conds['isRTL'], $conds['pageLang'] );
 		$out->method( 'getModules' )->willReturn( $conds['module'] ? [ $conds['module'] ] : [] );
 		$userOptionsLookup = $this->createMock( UserOptionsLookup::class );
 		$userOptionsLookup->method( 'getBoolOption' )
@@ -67,6 +68,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 				[ $out->getUser(), 'usecodemirror', 0, $conds['usecodemirror'] ],
 				[ $out->getUser(), 'usebetatoolbar', 0, $conds['usebetatoolbar'] ]
 			] );
+		$langFactory = $this->getServiceContainer()->getLanguageFactory();
 
 		$gadgetRepoMock = null;
 		if ( $conds['gadget'] ) {
@@ -99,6 +101,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		$hooks = new Hooks(
 			$userOptionsLookup,
 			$this->getServiceContainer()->getHookContainer(),
+			$this->getServiceContainer()->getLanguageConverterFactory(),
 			$this->getServiceContainer()->getMainConfig(),
 			$gadgetRepoMock
 		);
@@ -116,6 +119,12 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		$this->assertArrayEquals( $expectedModules, $modulesLoaded );
 		if ( $conds['useV6'] ) {
 			$this->assertEquals( $expectedMode, $jsConfigVars['cmMode'] ?? 'mediawiki' );
+		}
+		if ( $conds['useV6'] && $conds['pageLang'] !== 'en' ) {
+			$langConverterFactory = $this->getServiceContainer()->getLanguageConverterFactory();
+			$pageLang = $langFactory->getLanguage( $conds['pageLang'] );
+			$variants = $langConverterFactory->getLanguageConverter( $pageLang )->getVariants();
+			$this->assertArrayEquals( $variants, $jsConfigVars['cmLanguageVariants'] );
 		}
 	}
 
@@ -141,7 +150,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			[]
 		];
 		yield 'CM5 + WikiEditor, RTL' => [
-			[ 'useV6' => false, 'usebetatoolbar' => true, 'isRTL' => true ],
+			[ 'useV6' => false, 'usebetatoolbar' => true, 'isRTL' => true, 'pageLang' => 'ar' ],
 			[]
 		];
 		yield 'CM5 + WikiEditor, contentModel CSS' => [
@@ -186,7 +195,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki', 'ext.CodeMirror.v6.WikiEditor' ]
 		];
 		yield 'CM6, RTL' => [
-			[ 'isRTL' => true ],
+			[ 'isRTL' => true, 'lang' => 'ar' ],
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
 		];
 		yield 'CM6, contentModel CSS' => [
@@ -235,6 +244,10 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			[ 'usebetatoolbar' => true, 'method' => 'upload' ],
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
 		];
+		yield 'CM6, page language zh' => [
+			[ 'pageLang' => 'zh' ],
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
+		];
 	}
 
 	/**
@@ -256,11 +269,12 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		$user = self::getTestUser()->getUser();
 		$userOptionsLookup = $this->getServiceContainer()->getUserOptionsLookup();
 		$hookContainer = $this->getServiceContainer()->getHookContainer();
+		$langConverterFactory = $this->getServiceContainer()->getLanguageConverterFactory();
 		$config = $this->getServiceContainer()->getMainConfig();
 
 		// CodeMirror 5
 		$this->overrideConfigValues( [ 'CodeMirrorV6' => false ] );
-		$hook = new Hooks( $userOptionsLookup, $hookContainer, $config, null );
+		$hook = new Hooks( $userOptionsLookup, $hookContainer, $langConverterFactory, $config, null );
 		$preferences = [];
 		$hook->onGetPreferences( $user, $preferences );
 		self::assertArrayHasKey( 'usecodemirror', $preferences );
@@ -270,7 +284,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 
 		// CodeMirror 6
 		$this->overrideConfigValues( [ 'CodeMirrorV6' => true ] );
-		$hook = new Hooks( $userOptionsLookup, $hookContainer, $config, null );
+		$hook = new Hooks( $userOptionsLookup, $hookContainer, $langConverterFactory, $config, null );
 		$preferences = [];
 		$hook->onGetPreferences( $user, $preferences );
 		self::assertArrayHasKey( 'usecodemirror', $preferences );
@@ -282,17 +296,23 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 	/**
 	 * @param string $contentModel
 	 * @param bool $isRTL
+	 * @param string $lang
 	 * @return OutputPage&MockObject
 	 */
-	private function getMockOutputPage( string $contentModel = CONTENT_MODEL_WIKITEXT, bool $isRTL = false ) {
+	private function getMockOutputPage(
+		string $contentModel = CONTENT_MODEL_WIKITEXT,
+		bool $isRTL = false,
+		string $lang = 'en'
+	) {
 		$out = $this->createMock( OutputPage::class );
 		$out->method( 'getUser' )->willReturn( $this->getTestUser()->getUser() );
 		$out->method( 'getActionName' )->willReturn( 'edit' );
-		$title = $this->createMock( Title::class );
-		$title->method( 'getContentModel' )->willReturn( $contentModel );
 		$language = $this->createMock( Language::class );
 		$language->method( 'isRTL' )->willReturn( $isRTL );
-		$title->method( 'getPageLanguage' )->willReturn( $language );
+		$langFactory = $this->getServiceContainer()->getLanguageFactory();
+		$title = $this->createMock( Title::class );
+		$title->method( 'getContentModel' )->willReturn( $contentModel );
+		$title->method( 'getPageLanguage' )->willReturn( $langFactory->getLanguage( $lang ) );
 		$out->method( 'getTitle' )->willReturn( $title );
 		$request = $this->createMock( WebRequest::class );
 		$request->method( 'getRawVal' )->willReturn( null );
