@@ -687,6 +687,10 @@ class CodeMirror {
 			// Register applicable extensions through CodeMirrorPreferences.
 			this.preferences.registerExtension( 'codeFolding', foldGutter(), this.view );
 			this.preferences.registerExtension( 'autocomplete', autocompletion(), this.view );
+			// Document accessibility key bindings in help dialog since
+			// the Tab key does not move focus by default in non-wikitext.
+			this.keymap.registerKeyBindingHelp( 'accessibility', 'tabEscape', { key: 'Escape' } );
+			this.keymap.registerKeyBindingHelp( 'accessibility', 'tabMode', { key: 'Ctrl-m', mac: 'Shift-Alt-m' } );
 
 			this.addDarkModeMutationObserver();
 		}
