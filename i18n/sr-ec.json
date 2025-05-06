@@ -3,13 +3,14 @@
 		"authors": [
 			"Acamicamacaraca",
 			"BadDog",
+			"Kizule",
 			"Milicevic01",
 			"Obsuser"
 		]
 	},
 	"codemirror-desc": "Омогућава истицање синтаксе у уређивачу викитекста",
 	"codemirror-toggle-label": "Истицање синтаксе",
-	"codemirror-prefs-enable": "Омогући истицање синтаксе за викитекст",
+	"codemirror-prefs-enable": "Омогући истицање синтаксе",
 	"codemirror-prefs-help": "помоћ",
 	"codemirror-prefs-whitespace": "Истакни беле просторе",
 	"codemirror-close": "Затвори",
@@ -27,6 +28,7 @@
 	"codemirror-find-results": "$1 од $2",
 	"codemirror-keymap-help-title": "Тастерске пречице",
 	"codemirror-keymap-help-close": "Затвори",
+	"codemirror-keymap-accessibility": "Приступачност",
 	"codemirror-keymap-textstyling": "Стил текста",
 	"codemirror-keymap-bold": "Подебљано",
 	"codemirror-keymap-italic": "Искошено",

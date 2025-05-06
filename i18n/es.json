@@ -21,7 +21,6 @@
 	"codemirror-prefs-codefolding": "Activar plegado de código",
 	"codemirror-prefs-autocomplete": "Activar autocompletado",
 	"codemirror-prefs-openlinks": "Abrir enlaces con tecla modificadora + clic",
-	"codemirror-v6-prefs-colorblind": "Utilice un esquema apto para daltónicos",
 	"codemirror-prefs-colorblind": "Usar un esquema de colores accesible para daltónicos en el resaltador de sintaxis al editar código wiki",
 	"codemirror-prefs-colorblind-help": "Si utilizas un accesorio para el resaltado de sintaxis esta preferencia no funcionará.",
 	"codemirror-unfold": "desplegar",

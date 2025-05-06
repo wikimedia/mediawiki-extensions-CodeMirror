@@ -19,7 +19,6 @@
 	"codemirror-prefs-linewrapping": "Пренасяне на редовете",
 	"codemirror-prefs-activeline": "Оцветяване на активния ред",
 	"codemirror-prefs-specialchars": "Показване на специалните знаци",
-	"codemirror-v6-prefs-colorblind": "Използване на благоприятна за далтонисти схема",
 	"codemirror-prefs-colorblind": "Активиране на удобна за далтонисти схема за оцветяване на синтаксиса при редактиране на уикитекст",
 	"codemirror-prefs-colorblind-help": "Ако използвате джаджа за оцветяване на синтаксиса, тази настройка няма да работи.",
 	"codemirror-close": "Затваряне",

@@ -3,6 +3,7 @@
 		"authors": [
 			"Alirezaaa",
 			"Beginneruser",
+			"Darafsh",
 			"Iriman",
 			"Jeeputer",
 			"Ladsgroup"
@@ -24,7 +25,6 @@
 	"codemirror-prefs-linewrapping": "بسته‌بندی سطرها",
 	"codemirror-prefs-activeline": "برجسته‌سازی سطر فعال",
 	"codemirror-prefs-specialchars": "نمایش نویسه‌های ویژه",
-	"codemirror-v6-prefs-colorblind": "نمایش طرح سازگار با کوررنگی",
 	"codemirror-prefs-colorblind": "فعال‌سازی طرح سازگار با کوررنگی برای برجسته‌سازی نحوی در زمان ویرایش ویکی‌متن",
 	"codemirror-prefs-colorblind-help": "اگر از یک ابزار برای برجسته‌سازی نحوی استفاده می‌کنید، این گزینه کاری انجام نخواهد داد.",
 	"codemirror-close": "بستن",
@@ -73,6 +73,7 @@
 	"codemirror-folded-code": "کد تاشده",
 	"codemirror-keymap-help-title": "میانبرهای صفحه‌کلید",
 	"codemirror-keymap-help-close": "بستن",
+	"codemirror-keymap-accessibility": "دسترسی‌پذیری",
 	"codemirror-keymap-textstyling": "سبک‌بندی متن",
 	"codemirror-keymap-bold": "ضخیم",
 	"codemirror-keymap-italic": "کج",

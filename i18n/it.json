@@ -9,7 +9,7 @@
 	"codemirror-desc": "Fornisce l'evidenziazione della sintassi nell'editor wikitesto",
 	"codemirror-toggle-label": "Evidenziazione della sintassi",
 	"codemirror-toggle-label-short": "Sintassi",
-	"codemirror-prefs-enable": "Attiva l'evidenziazione della sintassi per il wikitesto",
+	"codemirror-prefs-enable": "Attiva l'evidenziazione della sintassi",
 	"codemirror-prefs-title": "Preferenze di evidenziazione della sintassi",
 	"codemirror-prefs-help": "aiuto",
 	"codemirror-prefs-bidiisolation": "Isola il testo bidirezionale",

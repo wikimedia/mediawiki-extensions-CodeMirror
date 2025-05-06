@@ -25,7 +25,6 @@
 	"codemirror-prefs-linenumbering": "اعرض أرقام الأسطر",
 	"codemirror-prefs-activeline": "أبرز السطر النشط",
 	"codemirror-prefs-specialchars": "اعرض الأحرف الخاصة",
-	"codemirror-v6-prefs-colorblind": "استخدم مخططًا صديقًا لعمى الألوان",
 	"codemirror-prefs-colorblind": "فعّل مخططًا متوافقًا مع عمى الألوان لإبراز التركيب عند تعديل نص ويكي.",
 	"codemirror-prefs-colorblind-help": "لن يعمل هذا التفضيل إذا كنت تستخدم إضافةً لإبراز التركيب.",
 	"codemirror-close": "أغلق",

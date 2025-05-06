@@ -19,7 +19,6 @@
 	"codemirror-prefs-linewrapping": "Prelamanje redova",
 	"codemirror-prefs-activeline": "Označi aktivni red",
 	"codemirror-prefs-specialchars": "Prikaži posebne znakove",
-	"codemirror-v6-prefs-colorblind": "Koristi shemu boja prilagođenu daltonistima",
 	"codemirror-prefs-colorblind": "Omogući shemu s istaknutom sintaksom prilikom uređivanja wikiteksta (prilagođeno osobama s poremećajem prepoznavanja boja)",
 	"codemirror-prefs-colorblind-help": "Ako rabite dodatak za isticanje sintakse, ova postavka neće funkcionirati.",
 	"codemirror-close": "Zatvori",

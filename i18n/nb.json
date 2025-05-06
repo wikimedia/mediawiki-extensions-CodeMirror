@@ -24,7 +24,6 @@
 	"codemirror-prefs-linewrapping": "Tekstbryting",
 	"codemirror-prefs-activeline": "Marker den aktive linja",
 	"codemirror-prefs-specialchars": "Vis spesialtegn",
-	"codemirror-v6-prefs-colorblind": "Bruk fargeblindvennlig fargeskala",
 	"codemirror-prefs-colorblind": "Aktiver modus for fargeblinde ved syntaksfremheving av wikitekst",
 	"codemirror-prefs-colorblind-help": "Hvis du bruker en tilleggsfunksjon for syntaksfremheving vil ikke dette alternativet ha noen effekt.",
 	"codemirror-close": "Lukk",

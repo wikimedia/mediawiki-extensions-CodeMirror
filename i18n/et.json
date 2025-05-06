@@ -20,7 +20,6 @@
 	"codemirror-prefs-linewrapping": "Murra ridu",
 	"codemirror-prefs-activeline": "Tõsta aktiivne rida esile",
 	"codemirror-prefs-specialchars": "Näita erimärke",
-	"codemirror-v6-prefs-colorblind": "Kasuta värvipimedasõbralikku skeemi",
 	"codemirror-prefs-whitespace": "Tõsta tühemikud esile",
 	"codemirror-prefs-colorblind": "Kasuta vikiteksti redigeerimisel värvipimedale sobiva värviskeemiga süntaksi esiletõstu",
 	"codemirror-prefs-colorblind-help": "Kui kasutad süntaksi esiletõstu tööriista, siis see eelistus ei tööta.",

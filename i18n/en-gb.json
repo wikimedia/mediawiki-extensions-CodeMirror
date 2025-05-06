@@ -5,6 +5,5 @@
 			"Reedy"
 		]
 	},
-	"codemirror-v6-prefs-colorblind": "Use colourblind-friendly scheme",
 	"codemirror-prefs-colorblind": "Enable colour blind-friendly scheme for syntax highlighting when editing wikitext"
 }

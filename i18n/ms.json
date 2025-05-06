@@ -21,7 +21,6 @@
 	"codemirror-prefs-linewrapping": "Balut garisan",
 	"codemirror-prefs-activeline": "Serlahkan baris aktif",
 	"codemirror-prefs-specialchars": "Tunjukkan aksara khas",
-	"codemirror-v6-prefs-colorblind": "Gunakan skema mesra buta warna",
 	"codemirror-prefs-colorblind": "Dayakan skema mesra buta warna untuk penyerlahan sintaks semasa menyunting wikiteks",
 	"codemirror-prefs-colorblind-help": "Jika anda menggunakan gajet untuk menyerlahkan sintaks, pilihan ini tidak akan berfungsi.",
 	"codemirror-close": "Tutup",
