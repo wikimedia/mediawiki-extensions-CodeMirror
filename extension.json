@@ -60,8 +60,7 @@
 				"codeFolding": true,
 				"autocomplete": true,
 				"openLinks": true,
-				"whitespace": false,
-				"lint": true
+				"whitespace": false
 			},
 			"description": "Defaults for CodeMirror user preferences. See https://w.wiki/BwzZ for more information.",
 			"public": true
@@ -297,7 +296,6 @@
 				"codemirror-prefs-help",
 				"codemirror-prefs-linenumbering",
 				"codemirror-prefs-linewrapping",
-				"codemirror-prefs-lint",
 				"codemirror-prefs-specialchars",
 				"codemirror-prefs-title",
 				"codemirror-prefs-whitespace",
@@ -402,8 +400,6 @@
 		},
 		"ext.CodeMirror.v6.mode.javascript": {
 			"packageFiles": [
-				"codemirror.javascript.js",
-				"lib/eslint-linter-browserify/linter.min.js",
 				"lib/codemirror6.bundle.javascript.js"
 			],
 			"dependencies": [

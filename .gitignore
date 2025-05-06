@@ -10,6 +10,3 @@
 .eslintcache
 .env
 docs/
-/resources/eslint-linter-browserify.js
-/resources/lib/eslint-linter-browserify/linter.js
-/resources/lib/stylelint-bundle/linter.js
