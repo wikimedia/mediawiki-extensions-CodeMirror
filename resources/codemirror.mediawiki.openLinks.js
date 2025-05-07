@@ -9,24 +9,33 @@ const { platform } = $.client.profile();
 const isMac = platform === 'mac' || platform === 'ipad' || platform === 'iphone',
 	modKey = isMac ? 'Meta' : 'Control';
 
-document.addEventListener( 'keydown', ( e ) => {
-	if ( e.key !== modKey ) {
-		return;
-	}
-
-	// Add .cm-mw-open-links from all CodeMirror instances.
+/**
+ * Toggle .cm-mw-open-links from all CodeMirror instances.
+ *
+ * @param {boolean} toggle
+ * @private
+ */
+function toggleOpenLinks( toggle ) {
 	for ( const dom of document.querySelectorAll( '.cm-content' ) ) {
-		dom.classList.add( 'cm-mw-open-links' );
+		// Use .add() and .remove() instead of .toggle() for safe measure.
+		dom.classList[ toggle ? 'add' : 'remove' ]( 'cm-mw-open-links' );
+	}
+}
+
+document.addEventListener( 'keydown', ( e ) => {
+	if ( e.key === modKey ) {
+		toggleOpenLinks( true );
 	}
 } );
 document.addEventListener( 'keyup', ( e ) => {
-	if ( e.key !== modKey ) {
-		return;
+	if ( e.key === modKey ) {
+		toggleOpenLinks( false );
 	}
-
-	// Remove .cm-mw-open-links from all CodeMirror instances.
-	for ( const dom of document.querySelectorAll( '.cm-content' ) ) {
-		dom.classList.remove( 'cm-mw-open-links' );
+} );
+// Ensure openLinks classes are removed when switching tabs.
+document.addEventListener( 'visibilitychange', () => {
+	if ( document.hidden ) {
+		toggleOpenLinks( false );
 	}
 } );
 
