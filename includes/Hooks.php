@@ -17,6 +17,8 @@ use MediaWiki\MainConfigNames;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
 use MediaWiki\Registration\ExtensionRegistry;
+use MediaWiki\SpecialPage\Hook\SpecialPageBeforeExecuteHook;
+use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Specials\SpecialUpload;
 use MediaWiki\Title\Title;
 use MediaWiki\User\Options\UserOptionsLookup;
@@ -29,6 +31,7 @@ class Hooks implements
 	EditPage__showEditForm_initialHook,
 	EditPage__showReadOnlyForm_initialHook,
 	UploadForm_initialHook,
+	SpecialPageBeforeExecuteHook,
 	GetPreferencesHook
 {
 
@@ -102,7 +105,7 @@ class Hooks implements
 
 	/**
 	 * Checks if any CodeMirror modules should be loaded on this page or not.
-	 * Ultimately ::loadCodeMirrorOnEditPage() decides which module(s) get loaded.
+	 * Ultimately ::loadInitModules() decides which module(s) get loaded.
 	 *
 	 * @param OutputPage $out
 	 * @param ExtensionRegistry|null $extensionRegistry Overridden in tests.
@@ -182,7 +185,7 @@ class Hooks implements
 
 		if ( $this->shouldUseV6( $out ) ) {
 			// Pre-deliver modules for faster loading.
-			$this->loadCodeMirrorOnEditPage( $out );
+			$this->loadInitModules( $out );
 		} elseif ( $useWikiEditor ) {
 			// Legacy CM5
 
@@ -204,8 +207,13 @@ class Hooks implements
 	 *
 	 * @param OutputPage $out
 	 * @param bool $supportWikiEditor
+	 * @param string[] $textareas The first will be treated as the main textarea.
 	 */
-	private function loadCodeMirrorOnEditPage( OutputPage $out, bool $supportWikiEditor = true ): void {
+	private function loadInitModules(
+		OutputPage $out,
+		bool $supportWikiEditor = true,
+		array $textareas = [ '#wpTextbox1' ]
+	): void {
 		$useCodeMirror = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usecodemirror' );
 		$useWikiEditor = $supportWikiEditor &&
 			$this->userOptionsLookup->getBoolOption( $out->getUser(), 'usebetatoolbar' );
@@ -233,14 +241,19 @@ class Hooks implements
 			$out->addModules( 'ext.CodeMirror.v6.init' );
 		}
 
+		$mainTextarea = $textareas[0];
+		$childTextareas = array_slice( $textareas, 1 );
+
 		$out->addJsConfigVars( [
 			'cmRLModules' => $modules,
 			'cmReadOnly' => $this->readOnly,
-			'cmDebug' => $this->debugMode,
 			'cmLanguageVariants' => $this->languageConverterFactory->getLanguageConverter(
 				$out->getTitle()->getPageLanguage()
 			)->getVariants(),
 			'cmMode' => $mode,
+			'cmTextarea' => $mainTextarea,
+			'cmChildTextareas' => $childTextareas,
+			'cmDebug' => $this->debugMode
 		] );
 	}
 
@@ -253,7 +266,7 @@ class Hooks implements
 	public function onEditPage__showReadOnlyForm_initial( $editor, $out ): void {
 		if ( $this->shouldUseV6( $out ) && $this->shouldLoadCodeMirror( $out ) ) {
 			$this->readOnly = true;
-			$this->loadCodeMirrorOnEditPage( $out );
+			$this->loadInitModules( $out );
 		}
 	}
 
@@ -268,7 +281,24 @@ class Hooks implements
 		}
 		$out = $upload->getOutput();
 		if ( $this->shouldUseV6( $out ) && $this->shouldLoadCodeMirror( $out, null, false ) ) {
-			$this->loadCodeMirrorOnEditPage( $out, false );
+			$this->loadInitModules( $out, false, [ '#wpUploadDescription' ] );
+		}
+	}
+
+	/**
+	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/SpecialPageBeforeExecute
+	 *
+	 * @param SpecialPage $special
+	 * @param string $subPage
+	 */
+	public function onSpecialPageBeforeExecute( $special, $subPage ): void {
+		$output = $special->getOutput();
+		if (
+			$special->getName() === 'ExpandTemplates' &&
+			$this->shouldUseV6( $output ) &&
+			$this->shouldLoadCodeMirror( $output, null, false )
+		) {
+			$this->loadInitModules( $output, false, [ '[name=wpInput]', '#output' ] );
 		}
 	}
 

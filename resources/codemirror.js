@@ -648,7 +648,15 @@ class CodeMirror {
 		 */
 		mw.hook( 'ext.CodeMirror.initialize' ).fire( this.surface || this.textarea );
 
-		// Wrap the textarea with .ext-codemirror-wrapper
+		// Make note of the focus state before we hide the textarea.
+		const hasFocus = document.activeElement === this.textarea;
+		// Remove required attribute, which can otherwise cause the valueMissing constraint
+		// to fail ("invalid form control … is not focusable") on submission.
+		// For now, CodeMirror clients are expected to handle validation by other means.
+		// TODO: Listen to validate event and use a panel to display errors.
+		this.textarea.removeAttribute( 'required' );
+
+		// Wrap the textarea with .ext-codemirror-wrapper, hiding the original textarea.
 		this.container = document.createElement( 'div' );
 		this.container.className = 'ext-codemirror-wrapper';
 		this.textarea.before( this.container );
@@ -662,6 +670,11 @@ class CodeMirror {
 
 		// Instantiate the view, adding it to the DOM
 		this.view = new EditorView( { state, parent: this.container } );
+
+		// Restore focus state.
+		if ( hasFocus ) {
+			this.view.focus();
+		}
 
 		// Use toggle() instead of activate() directly so that the toggle hook is fired.
 		this.toggle();
@@ -801,6 +814,7 @@ class CodeMirror {
 		if ( !this.textarea.form ) {
 			return;
 		}
+
 		this.formSubmitEventHandler = () => {
 			if ( !this.isActive ) {
 				return;
@@ -1099,6 +1113,16 @@ class CodeMirror {
 			replaceSelection: ( value ) => this.textSelection.replaceSelection( value ),
 			encapsulateSelection: ( options ) => this.textSelection.encapsulateSelection( options )
 		};
+	}
+
+	/**
+	 * Get a {@link CodeMirrorChild} object for use on other textareas that
+	 * should have preferences synced with this CodeMirror instance.
+	 *
+	 * @type {CodeMirrorChild}
+	 */
+	get child() {
+		return require( './codemirror.child.js' );
 	}
 }
 

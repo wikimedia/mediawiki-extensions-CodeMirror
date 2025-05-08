@@ -227,6 +227,7 @@
 				"codemirror.keymap.js",
 				"codemirror.extensionRegistry.js",
 				"codemirror.codex.js",
+				"codemirror.child.js",
 				{
 					"name": "ext.CodeMirror.data.js",
 					"callback": "MediaWiki\\Extension\\CodeMirror\\DataScript::makeScript"
@@ -509,6 +510,7 @@
 		"EditPage::showEditForm:initial": "main",
 		"EditPage::showReadOnlyForm:initial": "main",
 		"UploadForm:initial": "main",
+		"SpecialPageBeforeExecute": "main",
 		"GetPreferences": "main",
 		"GetBetaFeaturePreferences": "main"
 	},

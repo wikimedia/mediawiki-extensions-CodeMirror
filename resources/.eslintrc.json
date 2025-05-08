@@ -23,6 +23,7 @@
 			{
 				"definedTypes": [
 					"CodeMirror",
+					"CodeMirrorChild",
 					"CodeMirrorKeyBinding",
 					"CodeMirrorKeymap",
 					"CodeMirrorModeMediaWiki",
