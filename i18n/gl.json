@@ -20,7 +20,6 @@
 	"codemirror-prefs-bracketmatching": "Activar a coincidencia de corchetes",
 	"codemirror-prefs-linenumbering": "Amosar os números de liña",
 	"codemirror-prefs-linewrapping": "Romper as liñas",
-	"codemirror-prefs-lint": "Usar o comprobador de código",
 	"codemirror-prefs-activeline": "Resaltar a liña activa",
 	"codemirror-prefs-specialchars": "Amosar os caracteres especiais",
 	"codemirror-prefs-whitespace": "Resaltar os espazos en branco",

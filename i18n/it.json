@@ -35,6 +35,7 @@
 	"codemirror-goto-line-go": "Vai",
 	"codemirror-keymap-help-title": "Scorciatoie da tastiera",
 	"codemirror-keymap-help-close": "Chiudi",
+	"codemirror-keymap-accessibility": "Accessibilità",
 	"codemirror-keymap-textstyling": "Stile testo",
 	"codemirror-keymap-bold": "Grassetto",
 	"codemirror-keymap-italic": "Corsivo",
