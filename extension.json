@@ -28,9 +28,10 @@
 			"description": "Temporary feature flag for the CodeMirror 6 upgrade."
 		},
 		"CodeMirrorContentModels": {
-			"value": [
-				"wikitext"
-			],
+			"value": {
+				"wikitext": true,
+				"proofread-page": true
+			},
 			"description": "Temporary feature flag to control the rollout of CodeMirror to new content models."
 		},
 		"CodeMirrorConflictingGadgets": {
@@ -513,12 +514,6 @@
 	},
 	"attributes": {
 		"CodeMirror": {
-			"ContentModels": {
-				"wikitext": "mediawiki",
-				"javascript": "javascript",
-				"json": "json",
-				"css": "css"
-			},
 			"PluginModules": [
 				"ext.CodeMirror.addons"
 			],
