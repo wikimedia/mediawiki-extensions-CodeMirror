@@ -10,7 +10,21 @@
 	},
 	"codemirror-desc": "Fornece um realce de sintaxe no editor de wikitexto",
 	"codemirror-toggle-label": "Realce de sintaxe",
+	"codemirror-toggle-label-short": "Sintaxe",
+	"codemirror-prefs-summary": "Você pode saber mais sobre esse recurso lendo a página de ajuda [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror].",
 	"codemirror-prefs-colorblind": "Ativar esquema compatível com daltônicos para realce de sintaxe ao editar o wikitexto",
 	"codemirror-prefs-colorblind-help": "Se você usar um gadget para realce de sintaxe, essa preferência não funcionará.",
-	"prefs-accessibility": "Acessibilidade"
+	"codemirror-find": "Procurar",
+	"codemirror-next": "Buscar o próximo",
+	"codemirror-previous": "Buscar o anterior",
+	"codemirror-all": "Todos",
+	"codemirror-match-case": "Coincidir maiúsculas e minúsculas",
+	"codemirror-regexp": "Expressão regular",
+	"codemirror-replace": "Substituir",
+	"codemirror-replace-placeholder": "Substituir",
+	"codemirror-replace-all": "Substituir todos",
+	"codemirror-done": "Feito",
+	"codemirror-goto-line-go": "Ir",
+	"prefs-accessibility": "Acessibilidade",
+	"prefs-syntax-highlighting": "Realce de sintaxe"
 }
