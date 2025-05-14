@@ -16,6 +16,8 @@
 	"codemirror-previous": "Vireg fannen",
 	"codemirror-all": "All",
 	"codemirror-match-case": "Op Grouss- a Klengschreiwung oppassen",
+	"codemirror-regexp": "Regulären Ausdrock",
+	"codemirror-regexp-invalid": "Ongültege regulären Ausdrock",
 	"codemirror-by-word": "Ganzt Wuert",
 	"codemirror-replace": "Ersetzen",
 	"codemirror-replace-placeholder": "Ersetzen",
