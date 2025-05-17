@@ -33,15 +33,21 @@ class Hooks implements
 {
 
 	private UserOptionsLookup $userOptionsLookup;
-	private array $conflictingGadgets;
+	private HookRunner $hookRunner;
+	private LanguageConverterFactory $languageConverterFactory;
 	private bool $useV6;
+	private array $conflictingGadgets;
 	private ?GadgetRepo $gadgetRepo;
 	private string $extensionAssetsPath;
 	private bool $debugMode;
-	private bool $readOnly = false;
 	private array $contentModels;
-	private HookRunner $hookRunner;
-	private LanguageConverterFactory $languageConverterFactory;
+	private bool $readOnly = false;
+	public const SUPPORTED_MODES = [
+		'mediawiki',
+		'javascript',
+		'css',
+		'json',
+	];
 
 	/**
 	 * @param UserOptionsLookup $userOptionsLookup
@@ -59,35 +65,37 @@ class Hooks implements
 	) {
 		$this->userOptionsLookup = $userOptionsLookup;
 		$this->hookRunner = new HookRunner( $hookContainer );
+		$this->languageConverterFactory = $languageConverterFactory;
 		$this->useV6 = $config->get( 'CodeMirrorV6' );
 		$this->conflictingGadgets = $config->get( 'CodeMirrorConflictingGadgets' );
 		$this->gadgetRepo = $gadgetRepo;
 		$this->extensionAssetsPath = $config->get( MainConfigNames::ExtensionAssetsPath );
 		$this->debugMode = $config->get( MainConfigNames::ShowExceptionDetails );
 		$this->contentModels = $config->get( 'CodeMirrorContentModels' );
-		$this->languageConverterFactory = $languageConverterFactory;
 	}
 
 	/**
-	 * Get the mode for the given title and content model.
+	 * Get the mode based on the content model of the given Title.
 	 *
 	 * @param Title $title
-	 * @param string $model
 	 * @return string|null
 	 */
-	private function getMode( Title $title, string $model ): ?string {
-		if ( $model === CONTENT_MODEL_WIKITEXT ) {
-			return 'mediawiki';
-		} elseif ( $model === CONTENT_MODEL_JAVASCRIPT ) {
-			return 'javascript';
-		} elseif ( $model === CONTENT_MODEL_CSS ) {
-			return 'css';
-		} elseif ( $model === CONTENT_MODEL_JSON ) {
-			return 'json';
+	private function getMode( Title $title ): ?string {
+		switch ( $title->getContentModel() ) {
+			// Natively supported content models.
+			case CONTENT_MODEL_WIKITEXT:
+				return 'mediawiki';
+			case CONTENT_MODEL_JSON:
+				return 'json';
+			case CONTENT_MODEL_CSS:
+				return 'css';
+			case CONTENT_MODEL_JAVASCRIPT:
+				return 'javascript';
 		}
 
+		// Allow extensions to override the mode via hook.
 		$mode = null;
-		$this->hookRunner->onCodeMirrorGetMode( $title, $mode, $model );
+		$this->hookRunner->onCodeMirrorGetMode( $title, $mode, $title->getContentModel() );
 
 		return $mode;
 	}
@@ -121,11 +129,7 @@ class Hooks implements
 
 		$extensionRegistry ??= ExtensionRegistry::getInstance();
 		$contentModel = $out->getTitle()->getContentModel();
-		// b/c: CodeMirrorContentModels extension attribute used to be a flat string array.
-		$isSupportedContentModel = $contentModel && (
-			isset( $this->contentModels[ $contentModel ] ) ||
-			in_array( $contentModel, $this->contentModels, true )
-		);
+		$isEnabledContentModel = $this->contentModels[ $contentModel ] ?? false;
 		$isRTL = $out->getTitle()->getPageLanguage()->isRTL();
 		// Disable CodeMirror if we're on an edit page with a conflicting gadget (T178348)
 		return !$this->conflictingGadgetsEnabled( $extensionRegistry, $out->getUser() ) &&
@@ -134,7 +138,7 @@ class Hooks implements
 			// Limit to supported content models. CM5 only supports wikitext.
 			// See https://www.mediawiki.org/wiki/Content_handlers#Extension_content_handlers
 			(
-				( $shouldUseV6 && $isSupportedContentModel ) ||
+				( $shouldUseV6 && $isEnabledContentModel ) ||
 				( !$shouldUseV6 && $contentModel === CONTENT_MODEL_WIKITEXT )
 			);
 	}
@@ -211,13 +215,12 @@ class Hooks implements
 			'ext.CodeMirror.v6.lib',
 			'ext.CodeMirror.v6.init',
 		];
-		$contentModel = $out->getTitle()->getContentModel();
-		$mode = $this->getMode( $out->getTitle(), $contentModel ) ?? $contentModel;
+		$mode = $this->getMode( $out->getTitle() );
 
-		if ( in_array( $mode, [ 'mediawiki', 'javascript', 'json', 'css' ] ) ) {
+		if ( in_array( $mode, self::SUPPORTED_MODES, true ) ) {
 			$modules[] = 'ext.CodeMirror.v6.mode.' . $mode;
 		} else {
-			wfLogWarning( '[CodeMirror] Unsupported content model ' . $contentModel );
+			wfLogWarning( "[CodeMirror] Unsupported CodeMirror mode '$mode'" );
 			$modules = [];
 		}
 

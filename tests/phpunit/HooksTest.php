@@ -199,20 +199,20 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
 		];
 		yield 'CM6, contentModel CSS' => [
-			[ 'contentModel' => CONTENT_MODEL_CSS, 'allowedContentModels' => [ CONTENT_MODEL_CSS => false ] ],
+			[ 'contentModel' => CONTENT_MODEL_CSS, 'allowedContentModels' => [ CONTENT_MODEL_CSS => true ] ],
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.css' ],
 			'css'
 		];
 		yield 'CM6, contentModel JAVASCRIPT' => [
 			[
 				'contentModel' => CONTENT_MODEL_JAVASCRIPT,
-				'allowedContentModels' => [ CONTENT_MODEL_JAVASCRIPT => false ]
+				'allowedContentModels' => [ CONTENT_MODEL_JAVASCRIPT => true ]
 			],
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.javascript' ],
 			'javascript'
 		];
 		yield 'CM6, contentModel JSON' => [
-			[ 'contentModel' => CONTENT_MODEL_JSON, 'allowedContentModels' => [ CONTENT_MODEL_JSON => false ] ],
+			[ 'contentModel' => CONTENT_MODEL_JSON, 'allowedContentModels' => [ CONTENT_MODEL_JSON => true ] ],
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.json' ],
 			'json'
 		];
