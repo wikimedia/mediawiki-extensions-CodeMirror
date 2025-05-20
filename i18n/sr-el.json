@@ -6,5 +6,16 @@
 	},
 	"codemirror-desc": "Omogućava isticanje sintakse u uređivaču vikiteksta",
 	"codemirror-toggle-label": "Isticanje sintakse",
-	"prefs-accessibility": "Pristupačnost"
+	"codemirror-find": "Pronađi",
+	"codemirror-next": "Pronađi sledeće",
+	"codemirror-previous": "Pronađi prethodno",
+	"codemirror-all": "sve",
+	"codemirror-match-case": "Pazi na veličinu slova",
+	"codemirror-regexp": "Regeks",
+	"codemirror-replace": "Zameni",
+	"codemirror-replace-placeholder": "Zameni",
+	"codemirror-replace-all": "Zameni sve",
+	"codemirror-done": "Gotovo",
+	"prefs-accessibility": "Pristupačnost",
+	"prefs-syntax-highlighting": "Isticanje sintakse"
 }
