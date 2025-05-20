@@ -27,6 +27,9 @@ const {
 	keymap,
 	lineNumbers,
 	oneDark,
+	linter,
+	lintGutter,
+	lintKeymap,
 	rectangularSelection,
 	syntaxHighlighting
 } = require( 'ext.CodeMirror.v6.lib' );
@@ -101,6 +104,13 @@ class CodeMirror {
 		 * @ignore
 		 */
 		this.surface = null;
+		/**
+		 * The function to lint the code in the editor.
+		 *
+		 * @type {Function|null}
+		 */
+		this.lintSource = langExtension.lintSource;
+		delete langExtension.lintSource;
 		/**
 		 * Language support and its extension(s).
 		 *
@@ -602,6 +612,23 @@ class CodeMirror {
 	}
 
 	/**
+	 * This extension adds the ability to lint the code in the editor.
+	 *
+	 * @type {Extension}
+	 * @protected
+	 * @stable to call
+	 */
+	get lintExtension() {
+		return this.lintSource ?
+			[
+				linter( this.lintSource ),
+				lintGutter(),
+				keymap.of( lintKeymap )
+			] :
+			[];
+	}
+
+	/**
 	 * Setup CodeMirror and add it to the DOM. This will hide the original textarea.
 	 *
 	 * This method should only be called once per instance. Use {@link CodeMirror#toggle toggle},
@@ -665,6 +692,10 @@ class CodeMirror {
 			this.keymap.registerKeyBindingHelp( 'accessibility', 'tabMode', { key: 'Ctrl-m', mac: 'Shift-Alt-m' } );
 
 			this.addDarkModeMutationObserver();
+		}
+
+		if ( this.lintSource ) {
+			this.preferences.registerExtension( 'lint', this.lintExtension, this.view );
 		}
 
 		/**

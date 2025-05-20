@@ -255,9 +255,10 @@ describe( 'logEditFeature', () => {
 	it( 'should only log when preferences are not the same as the default', () => {
 		const cmWe = getCodeMirrorWikiEditor();
 		cmWe.initialize();
-		mw.user.options.get = jest.fn().mockReturnValue( JSON.stringify(
-			mw.config.get( 'extCodeMirrorConfig' ).defaultPreferences
-		) );
+		const defaultPrefs = mw.config.get( 'extCodeMirrorConfig' ).defaultPreferences;
+		// FIXME: remove after linting is stable
+		delete defaultPrefs.lint;
+		mw.user.options.get = jest.fn().mockReturnValue( JSON.stringify( defaultPrefs ) );
 		// Force re-fetch of user preferences.
 		cmWe.preferences.preferences = cmWe.preferences.fetchPreferences();
 		const spy = jest.spyOn( cmWe, 'logEditFeature' );

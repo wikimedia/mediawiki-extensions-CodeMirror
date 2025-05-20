@@ -7,6 +7,7 @@
 export * from '@codemirror/autocomplete';
 export * from '@codemirror/commands';
 export * from '@codemirror/language';
+export * from '@codemirror/lint';
 export * from '@codemirror/search';
 export * from '@codemirror/state';
 export * from '@codemirror/theme-one-dark';
