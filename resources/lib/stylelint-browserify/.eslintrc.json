@@ -1,0 +1,40 @@
+{
+	"root": true,
+	"extends": [
+		"plugin:es-x/restrict-to-es2016"
+	],
+	"env": {
+		"worker": true,
+		"es2016": true
+	},
+	"parserOptions": {
+		"ecmaVersion": 7
+	},
+	"rules": {
+		"es-x/no-array-prototype-findlast-findlastindex": 0,
+		"es-x/no-array-string-prototype-at": 0,
+		"es-x/no-object-entries": 0,
+		"es-x/no-object-getownpropertydescriptors": 0,
+		"es-x/no-object-values": 0,
+		"es-x/no-string-prototype-padstart-padend": 0,
+		"es-x/no-symbol-prototype-description": 0
+	},
+	"settings": {
+		"es-x": {
+			"aggressive": true
+		}
+	},
+	"overrides": [
+		{
+			"files": [
+				"rollup.config.js",
+				"worker.js"
+			],
+			"extends": [
+				"wikimedia/client",
+				"wikimedia/jquery",
+				"wikimedia/mediawiki"
+			]
+		}
+	]
+}

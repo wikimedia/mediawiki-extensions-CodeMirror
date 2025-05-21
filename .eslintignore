@@ -1,4 +1,5 @@
-/resources/lib/
+/resources/lib/*
+!resources/lib/stylelint-browserify/
 /vendor
 /docs
 /coverage

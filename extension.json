@@ -63,7 +63,8 @@
 				"openLinks": true,
 				"whitespace": false,
 				"lint": [
-					"json"
+					"json",
+					"css"
 				]
 			},
 			"description": "Defaults for CodeMirror user preferences. See https://w.wiki/BwzZ for more information.",
@@ -422,6 +423,7 @@
 		},
 		"ext.CodeMirror.v6.mode.css": {
 			"packageFiles": [
+				"codemirror.css.js",
 				"lib/codemirror6.bundle.css.js"
 			],
 			"dependencies": [

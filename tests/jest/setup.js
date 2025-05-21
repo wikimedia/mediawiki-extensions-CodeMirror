@@ -114,3 +114,11 @@ mw.language.getDigitTransformTable = jest.fn().mockReturnValue( [] );
 mw.log.warn = jest.fn().mockImplementation( ( ...args ) => {
 	console.warn( ...args );
 } );
+global.workerMsg = undefined;
+global.self = {};
+global.postMessage = ( msg ) => {
+	global.workerMsg = msg;
+};
+global.CSS = {
+	supports: ( css ) => /^\s*top\s*:\s*(?:inherit|initial)\s*$/i.test( css )
+};
