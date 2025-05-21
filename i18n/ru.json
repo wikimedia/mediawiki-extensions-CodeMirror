@@ -24,7 +24,6 @@
 	"codemirror-prefs-bracketmatching": "Включить согласование скобок",
 	"codemirror-prefs-linenumbering": "Показывать номера строк",
 	"codemirror-prefs-linewrapping": "Переносить строки",
-	"codemirror-prefs-lint": "Проверять код на ошибки",
 	"codemirror-prefs-activeline": "Выделять активную строку",
 	"codemirror-prefs-specialchars": "Показывать специальные символы",
 	"codemirror-prefs-whitespace": "Выделять пробелы",
