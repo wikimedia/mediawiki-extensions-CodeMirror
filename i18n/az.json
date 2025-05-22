@@ -20,6 +20,7 @@
 	"codemirror-prefs-bracketmatching": "Mötərizə uyğunluğunu aktivləşdir",
 	"codemirror-prefs-linenumbering": "Sətir nömrələrini göstər",
 	"codemirror-prefs-linewrapping": "Xətləri bük",
+	"codemirror-prefs-lint": "Kodu formatlaşdır",
 	"codemirror-prefs-activeline": "Aktiv sətri vurğula",
 	"codemirror-prefs-specialchars": "Xüsusi simvolları göstər",
 	"codemirror-prefs-whitespace": "Boşluğu vurğula",

@@ -18,6 +18,7 @@
 	"codemirror-prefs-bracketmatching": "Mitter in evidentia le parentheses correspondente",
 	"codemirror-prefs-linenumbering": "Monstrar numeros de linea",
 	"codemirror-prefs-linewrapping": "Ruptura de lineas",
+	"codemirror-prefs-lint": "Applicar Lint al codice",
 	"codemirror-prefs-activeline": "Mitter in evidentia le linea active",
 	"codemirror-prefs-specialchars": "Monstrar characteres special",
 	"codemirror-prefs-whitespace": "Evidentiar spatios blanc",

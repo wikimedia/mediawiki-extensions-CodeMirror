@@ -19,6 +19,7 @@
 	"codemirror-prefs-bracketmatching": "הפעלת התאמת סוגריים",
 	"codemirror-prefs-linenumbering": "הצגת מספרי שורות",
 	"codemirror-prefs-linewrapping": "גלישת שורות",
+	"codemirror-prefs-lint": "ניקוי קוד",
 	"codemirror-prefs-activeline": "צביעת השורה הפעילה",
 	"codemirror-prefs-specialchars": "הצגת תווים מיוחדים",
 	"codemirror-prefs-whitespace": "צביעת רווחים",

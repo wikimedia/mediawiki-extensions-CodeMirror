@@ -23,6 +23,7 @@
 	"codemirror-prefs-bracketmatching": "Klammernübereinstimmung aktivieren",
 	"codemirror-prefs-linenumbering": "Zeilennummern anzeigen",
 	"codemirror-prefs-linewrapping": "Zeilen umbrechen",
+	"codemirror-prefs-lint": "Lint auf den Code anwenden",
 	"codemirror-prefs-activeline": "Aktive Zeile hervorheben",
 	"codemirror-prefs-specialchars": "Sonderzeichen anzeigen",
 	"codemirror-prefs-whitespace": "Leerzeichen hervorheben",
