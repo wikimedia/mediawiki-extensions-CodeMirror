@@ -38,5 +38,9 @@ _NOTE: Consider using [Fresh](https://gerrit.wikimedia.org/g/fresh/) to run thes
 * `npm run build` to rebundle the CodeMirror library. If changes are made to the `@codemirror`
   or `@lezer` dependencies in [package.json](package.json), this command *must* be run before
   sending the patch or CI will fail.
+* `npm run build:stylelint` to rebundle the Stylelint library. If changes are made to the
+  `@bhsd/stylelint-browserify` dependency in [package.json](package.json) or the
+  [CSS worker](resources/workers/css/worker.js), this command *must* be run before sending the
+  patch.
 * Older QUnit tests are in `resources/mode/mediawiki/tests/qunit/`. These have been
   replaced and will be removed after the CodeMirror 6 upgrade is complete.

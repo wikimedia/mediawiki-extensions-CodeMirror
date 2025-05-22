@@ -3,26 +3,29 @@ const { cssLanguage, cssCompletionSource } = require( './lib/codemirror6.bundle.
 
 let worker;
 
-const pos = ( doc, line, column ) => doc.line( line ).from + column - 1;
+const pos = ( doc, line, column ) => {
+	const cmLine = doc.line( line );
+	return Math.min( cmLine.from + column - 1, cmLine.to );
+};
 
-const getFeedback = ( doc ) => new Promise( ( resolve ) => {
+const getFeedback = ( command, doc ) => new Promise( ( resolve ) => {
 	if ( !worker ) {
 		worker = new Worker( `${
 			mw.config.get( 'wgExtensionAssetsPath' )
-		}/CodeMirror/resources/lib/stylelint-browserify/linter.min.js` );
+		}/CodeMirror/resources/workers/css/worker.min.js` );
 	}
-	const raw = doc.toString();
-	const listener = ( { data: [ diagnostics, resRaw ] } ) => {
-		if ( raw === resRaw ) {
+	const raw = doc && doc.toString();
+	const listener = ( { data: [ cmd, diagnostics, resRaw ] } ) => {
+		if ( command === cmd && raw === resRaw ) {
 			worker.removeEventListener( 'message', listener );
 			resolve( diagnostics );
 		}
 	};
 	worker.addEventListener( 'message', listener );
-	worker.postMessage( raw );
+	worker.postMessage( [ command, raw ] );
 } );
 
-const lintSource = ( { state: { doc } } ) => getFeedback( doc )
+const lintSource = ( { state: { doc } } ) => getFeedback( 'lint', doc )
 	.then( ( data ) => data
 		.map( ( { text, severity, line, column, endLine, endColumn } ) => ( {
 			source: 'Stylelint',
@@ -34,6 +37,8 @@ const lintSource = ( { state: { doc } } ) => getFeedback( doc )
 				pos( doc, endLine, endColumn )
 		} ) )
 	);
+lintSource.setConfig = ( config ) => worker.postMessage( [ 'setConfig', config ] );
+lintSource.getConfig = () => getFeedback( 'getConfig' );
 
 module.exports = {
 	css() {
@@ -69,5 +74,5 @@ module.exports = {
 };
 
 if ( mw.config.get( 'cmDebug' ) ) {
-	window.stylelint = getFeedback;
+	window.cssWorker = getFeedback;
 }
