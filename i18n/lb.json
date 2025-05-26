@@ -8,10 +8,14 @@
 	"codemirror-desc": "Erméiglecht et am Wikitext-Editeur d'Syntax ervirzehiewen",
 	"codemirror-toggle-label": "Ervirhiewe vun der Syntax",
 	"codemirror-toggle-label-short": "Syntax",
+	"codemirror-prefs-summary": "Dir kënnt méi iwwer dës Funktioun gewuer ginn, andeems Dir d'[https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror Hëllefssäit] liest.",
+	"codemirror-prefs-enable": "Ervirhiewe vun der Syntax aktivéieren",
+	"codemirror-prefs-title": "Astellunge fir d'Ervirhiewe vun der Syntax",
 	"codemirror-prefs-help": "Hëllef",
 	"codemirror-prefs-linenumbering": "Zeilennummere weisen",
 	"codemirror-prefs-specialchars": "Spezialzeeche weisen",
 	"codemirror-close": "Zoumaachen",
+	"codemirror-find": "Sichen",
 	"codemirror-next": "Nächste fannen",
 	"codemirror-previous": "Vireg fannen",
 	"codemirror-all": "All",
@@ -56,6 +60,8 @@
 	"codemirror-keymap-comment": "Bemierkung",
 	"codemirror-keymap-autocomplete": "Automatesch Vervollstännegung",
 	"codemirror-keymap-other": "Anerer",
+	"codemirror-keymap-preferences": "Astellunge fir d'Ervirhiewe vun der Syntax",
 	"prefs-accessibility": "Accessibilitéit",
-	"prefs-syntax-highlighting": "Ervirhiewe vun der Syntax"
+	"prefs-syntax-highlighting": "Ervirhiewe vun der Syntax",
+	"codemirror-beta-feature-title": "Verbessert Ervirhiewe vun der Syntax"
 }
