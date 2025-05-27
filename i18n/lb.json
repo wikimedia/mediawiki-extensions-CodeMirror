@@ -8,6 +8,8 @@
 	"codemirror-desc": "Erméiglecht et am Wikitext-Editeur d'Syntax ervirzehiewen",
 	"codemirror-toggle-label": "Ervirhiewe vun der Syntax",
 	"codemirror-toggle-label-short": "Syntax",
+	"codemirror-prefs-summary": "Dir kënnt méi iwwer dës Funktioun gewuer ginn, andeems Dir d'[https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror Hëllefssäit] liest.",
+	"codemirror-find": "Sichen",
 	"codemirror-next": "Nächste fannen",
 	"codemirror-previous": "Vireg fannen",
 	"codemirror-all": "All",
