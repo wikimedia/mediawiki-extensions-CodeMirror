@@ -25,6 +25,7 @@
 	"codemirror-prefs-bracketmatching": "فعّل مطابقة الأقواس",
 	"codemirror-prefs-linenumbering": "اعرض أرقام الأسطر",
 	"codemirror-prefs-linewrapping": "خطوط الالتفاف",
+	"codemirror-prefs-lint": "لينت الكود",
 	"codemirror-prefs-activeline": "أبرز السطر النشط",
 	"codemirror-prefs-specialchars": "اعرض الأحرف الخاصة",
 	"codemirror-prefs-whitespace": "تمييز المسافات البيضاء",
