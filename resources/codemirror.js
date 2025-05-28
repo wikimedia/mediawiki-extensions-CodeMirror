@@ -107,7 +107,7 @@ class CodeMirror {
 		/**
 		 * The function to lint the code in the editor.
 		 *
-		 * @type {Function|null}
+		 * @type {Function|undefined}
 		 */
 		this.lintSource = langExtension.lintSource;
 		delete langExtension.lintSource;

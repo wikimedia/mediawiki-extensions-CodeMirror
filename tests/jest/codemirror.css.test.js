@@ -1,4 +1,4 @@
-require( '../../resources/lib/stylelint-browserify/linter.min.js' );
+require( '../../resources/workers/css/worker.min.js' );
 
 const testCases = [
 	{
@@ -155,16 +155,25 @@ a { color: --foo; }`
 	}
 ];
 
-const lint = async ( data ) => {
-	await self.onmessage( { data } );
+const lint = async ( code ) => {
+	await self.onmessage( { data: [ 'lint', code ] } );
 	return global.workerMsg;
 };
 
 describe( 'CodeMirrorLint: Stylelint', () => {
 	for ( const { title, input } of testCases ) {
 		it( title, async () => {
-			expect( ( await lint( input ) )[ 0 ].some( ( { rule } ) => rule === title ) )
+			expect( ( await lint( input ) )[ 1 ].some( ( { rule } ) => rule === title ) )
 				.toBeTruthy();
 		} );
 	}
+	it( 'rule customization', async () => {
+		self.onmessage( { data: [ 'setConfig', { 'no-empty-source': null } ] } );
+		expect( ( await lint( '' ) )[ 1 ].length ).toEqual( 0 );
+		self.onmessage( { data: [ 'setConfig', { 'length-zero-no-unit': true } ] } );
+		expect(
+			( await lint( 'a { width: 0px; }' ) )[ 1 ]
+				.some( ( { rule } ) => rule === 'length-zero-no-unit' )
+		).toBeTruthy();
+	} );
 } );

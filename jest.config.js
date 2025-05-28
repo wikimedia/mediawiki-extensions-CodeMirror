@@ -21,7 +21,8 @@ module.exports = {
 		'/node_modules/',
 		'/resources/legacy/',
 		'/resources/lib/',
-		'/resources/ve-cm/'
+		'/resources/ve-cm/',
+		'/resources/workers/'
 	],
 
 	// An object that configures minimum threshold enforcement for coverage results
