@@ -3,6 +3,7 @@
 		"authors": [
 			"Alien333",
 			"Bananax47",
+			"Derugon",
 			"Eihel",
 			"Gomoko",
 			"Goombiis",
@@ -84,6 +85,7 @@
 	"codemirror-keymap-help-close": "Fermer",
 	"codemirror-keymap-accessibility": "Accessibilité",
 	"codemirror-keymap-tabescape": "Autorisez brièvement la touche Tab à déplacer le focus hors de l'éditeur",
+	"codemirror-keymap-tabmode": "Activer ou désactiver le mode de focus via Tab",
 	"codemirror-keymap-textstyling": "Style de texte",
 	"codemirror-keymap-bold": "Gras",
 	"codemirror-keymap-italic": "Italique",

@@ -9,7 +9,7 @@
 	"codemirror-toggle-label": "Süntaksi esiletõst",
 	"codemirror-toggle-label-short": "Süntaks",
 	"codemirror-prefs-summary": "Selle funktsiooni kohta saad rohkem lugeda [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror abileheküljelt].",
-	"codemirror-prefs-enable": "Luba vikiteksti süntaksi esiletõst",
+	"codemirror-prefs-enable": "Luba süntaksi esiletõst",
 	"codemirror-prefs-title": "Süntaksi esiletõstu eelistused",
 	"codemirror-prefs-help": "abi",
 	"codemirror-prefs-codefolding": "Luba koodi voltimine",
