@@ -174,6 +174,10 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * @internal
 	 */
 	setPreference( key, value ) {
+		if ( this.preferences[ key ] === value ) {
+			// No change, so do nothing.
+			return;
+		}
 		this.preferences[ key ] = value;
 
 		// Only save the preferences that differ from the defaults,
