@@ -27,12 +27,10 @@ const {
 	keymap,
 	lineNumbers,
 	oneDark,
-	linter,
-	lintGutter,
-	lintKeymap,
 	rectangularSelection,
 	syntaxHighlighting
 } = require( 'ext.CodeMirror.v6.lib' );
+const CodeMirrorLint = require( './codemirror.lint.js' );
 const CodeMirrorTextSelection = require( './codemirror.textSelection.js' );
 const CodeMirrorSearch = require( './codemirror.search.js' );
 const CodeMirrorGotoLine = require( './codemirror.gotoLine.js' );
@@ -162,6 +160,12 @@ class CodeMirror {
 		 */
 		this.textSelection = null;
 		/**
+		 * CodeMirror key mappings and help dialog.
+		 *
+		 * @type {CodeMirrorKeymap}
+		 */
+		this.keymap = new CodeMirrorKeymap();
+		/**
 		 * Registry of CodeMirror {@link Extension Extensions}.
 		 *
 		 * @type {CodeMirrorExtensionRegistry}
@@ -189,12 +193,6 @@ class CodeMirror {
 			this.extensionRegistry,
 			this.constructor.name === 'CodeMirrorVisualEditor'
 		);
-		/**
-		 * CodeMirror key mappings and help dialog.
-		 *
-		 * @type {CodeMirrorKeymap}
-		 */
-		this.keymap = new CodeMirrorKeymap();
 		/**
 		 * The CodeMirror search panel.
 		 *
@@ -619,13 +617,7 @@ class CodeMirror {
 	 * @stable to call
 	 */
 	get lintExtension() {
-		return this.lintSource ?
-			[
-				linter( this.lintSource ),
-				lintGutter(),
-				keymap.of( lintKeymap )
-			] :
-			[];
+		return new CodeMirrorLint( this.lintSource, this.keymap );
 	}
 
 	/**

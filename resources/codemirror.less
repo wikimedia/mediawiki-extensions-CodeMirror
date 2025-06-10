@@ -238,3 +238,42 @@
 	background-color: @color-base;
 	.cdx-mixin-css-icon( @cdx-icon-close, @color-base, @size-icon-medium, true );
 }
+
+.cm-mw-panel--status-worker,
+.cm-mw-panel--status-message,
+.cm-mw-panel--status-line {
+	padding: 0 0.3em;
+	display: table-cell;
+}
+
+.cm-mw-panel--status-worker {
+	user-select: none;
+	cursor: pointer;
+}
+
+.cm-mw-panel--status-worker > * {
+	display: table-cell;
+	white-space: nowrap;
+	padding-right: 8px;
+}
+
+.cm-mw-panel--status-worker > * > div {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.cm-mw-panel--status-worker > * > div:first-child {
+	margin-right: 4px;
+	height: 1em;
+}
+
+.cm-mw-panel--status-message {
+	border-left: @border-subtle;
+	border-right: @border-subtle;
+	width: 100%;
+}
+
+.cm-mw-panel--status-line {
+	text-align: right;
+	white-space: nowrap;
+}

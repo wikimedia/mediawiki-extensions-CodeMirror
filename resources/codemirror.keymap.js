@@ -196,6 +196,7 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 					msg: mw.msg( 'codemirror-keymap-selectcompletion' )
 				}
 			],
+			lint: {},
 			other: {
 				moveLine: {
 					key: 'Alt-↑/↓',

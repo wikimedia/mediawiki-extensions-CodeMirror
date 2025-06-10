@@ -122,6 +122,8 @@
 	"codemirror-keymap-multicursor": "Hold $1 and click to create multiple cursors.",
 	"codemirror-keymap-crosshair": "Hold $1 then click and drag to make rectangular selections.",
 	"codemirror-keymap-openlinks": "Hold $1 and click on page titles and URLs to open them in a new tab.",
+	"codemirror-keymap-lint": "Linter",
+	"codemirror-keymap-next-diagnostic": "Select next diagnostic",
 	"prefs-accessibility": "Accessibility",
 	"prefs-syntax-highlighting": "Syntax highlighting",
 	"codemirror-beta-feature-title": "Improved Syntax Highlighting",
