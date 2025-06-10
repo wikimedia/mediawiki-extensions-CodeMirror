@@ -38,6 +38,10 @@ _NOTE: Consider using [Fresh](https://gerrit.wikimedia.org/g/fresh/) to run thes
 * `npm run build` to rebundle the CodeMirror library. If changes are made to the `@codemirror`
   or `@lezer` dependencies in [package.json](package.json), this command *must* be run before
   sending the patch or CI will fail.
+* `npm run build:eslint` to rebundle the ESLint library. If changes are made to the
+  `@bhsd/eslint-browserify` dependency in [package.json](package.json) or the
+  [JavaScript worker](resources/workers/javascript/worker.js), this command *must* be run
+  before sending the patch.
 * `npm run build:stylelint` to rebundle the Stylelint library. If changes are made to the
   `@bhsd/stylelint-browserify` dependency in [package.json](package.json) or the
   [CSS worker](resources/workers/css/worker.js), this command *must* be run before sending the

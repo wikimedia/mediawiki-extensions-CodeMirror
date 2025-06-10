@@ -91,12 +91,12 @@ mw.hook = jest.fn( ( name ) => ( {
 	} ),
 	deprecate: jest.fn()
 } ) );
-mw.storage = {
-	set: jest.fn(),
-	get: jest.fn(),
-	getObject: jest.fn(),
-	setObject: jest.fn()
-};
+mw.storage = Object.create( null, {
+	set: { value: jest.fn() },
+	get: { value: jest.fn() },
+	getObject: { value: jest.fn() },
+	setObject: { value: jest.fn() }
+} );
 mw.hook.mockHooks = {};
 global.$ = require( 'jquery' );
 $.fn.textSelection = () => {};
@@ -114,11 +114,25 @@ mw.language.getDigitTransformTable = jest.fn().mockReturnValue( [] );
 mw.log.warn = jest.fn().mockImplementation( ( ...args ) => {
 	console.warn( ...args );
 } );
-global.workerMsg = undefined;
-global.self = {};
-global.postMessage = ( msg ) => {
-	global.workerMsg = msg;
-};
 global.CSS = {
 	supports: ( css ) => /^\s*top\s*:\s*(?:inherit|initial)\s*$/i.test( css )
+};
+
+const listeners = [];
+global.Worker = jest.fn().mockReturnValue( {
+	postMessage( msg ) {
+		self.onmessage( { data: msg } );
+	},
+	addEventListener( _, listener ) {
+		listeners.push( listener );
+	},
+	removeEventListener( _, listener ) {
+		listeners.splice( listeners.indexOf( listener ), 1 );
+	}
+} );
+global.self = {};
+global.postMessage = ( msg ) => {
+	for ( const listener of listeners ) {
+		listener( { data: msg } );
+	}
 };

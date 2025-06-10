@@ -1,44 +1,22 @@
 const { LanguageSupport, syntaxTree } = require( 'ext.CodeMirror.v6.lib' );
 const { cssLanguage, cssCompletionSource } = require( './lib/codemirror6.bundle.css.js' );
+const CodeMirrorWorker = require( './codemirror.worker.js' );
 
-let worker;
-
-const pos = ( doc, line, column ) => {
-	const cmLine = doc.line( line );
-	return Math.min( cmLine.from + column - 1, cmLine.to );
-};
-
-const getFeedback = ( command, doc ) => new Promise( ( resolve ) => {
-	if ( !worker ) {
-		worker = new Worker( `${
-			mw.config.get( 'wgExtensionAssetsPath' )
-		}/CodeMirror/resources/workers/css/worker.min.js` );
-	}
-	const raw = doc && doc.toString();
-	const listener = ( { data: [ cmd, diagnostics, resRaw ] } ) => {
-		if ( command === cmd && raw === resRaw ) {
-			worker.removeEventListener( 'message', listener );
-			resolve( diagnostics );
-		}
-	};
-	worker.addEventListener( 'message', listener );
-	worker.postMessage( [ command, raw ] );
-} );
-
-const lintSource = ( { state: { doc } } ) => getFeedback( 'lint', doc )
+const worker = new CodeMirrorWorker( 'css' );
+const lintSource = ( view ) => worker.lint( view )
 	.then( ( data ) => data
-		.map( ( { text, severity, line, column, endLine, endColumn } ) => ( {
+		.map( ( { text, severity, line, column, endLine, endColumn, rule } ) => ( {
+			rule,
 			source: 'Stylelint',
 			message: text,
 			severity: severity === 'error' ? 'error' : 'info',
-			from: pos( doc, line, column ),
+			from: CodeMirrorWorker.pos( view, line, column ),
 			to: endLine === undefined ?
-				doc.line( line ).to :
-				pos( doc, endLine, endColumn )
+				view.state.doc.line( line ).to :
+				CodeMirrorWorker.pos( view, endLine, endColumn )
 		} ) )
 	);
-lintSource.setConfig = ( config ) => worker.postMessage( [ 'setConfig', config ] );
-lintSource.getConfig = () => getFeedback( 'getConfig' );
+lintSource.worker = worker;
 
 module.exports = {
 	css() {
@@ -74,5 +52,5 @@ module.exports = {
 };
 
 if ( mw.config.get( 'cmDebug' ) ) {
-	window.cssWorker = getFeedback;
+	window.cssWorker = worker;
 }
