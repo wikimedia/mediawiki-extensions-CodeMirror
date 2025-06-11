@@ -31,24 +31,23 @@ function getLanguageSupport( require ) {
 /**
  * Initialize CodeMirror.
  */
-function init() {
-	mw.loader.using( resourceLoaderModules ).then( ( require ) => {
-		// eslint-disable-next-line security/detect-non-literal-require
-		const CodeMirror = require( `ext.CodeMirror.v6${ useWikiEditor ? '.WikiEditor' : '' }` );
-		const langSupport = getLanguageSupport( require );
+async function init() {
+	const require = await mw.loader.using( resourceLoaderModules );
+	// eslint-disable-next-line security/detect-non-literal-require
+	const CodeMirror = require( `ext.CodeMirror.v6${ useWikiEditor ? '.WikiEditor' : '' }` );
+	const langSupport = getLanguageSupport( require );
 
-		if ( useWikiEditor ) {
-			mw.hook( 'wikiEditor.toolbarReady' ).add( ( $textarea ) => {
-				const cmWE = new CodeMirror( $textarea, langSupport );
-				cmWE.initialize();
-			} );
-		} else {
-			const id = isSpecialUpload ? 'wpUploadDescription' : 'wpTextbox1';
-			const textarea = document.getElementById( id );
-			const cm = new CodeMirror( textarea, langSupport );
-			cm.initialize();
-		}
-	} );
+	if ( useWikiEditor ) {
+		mw.hook( 'wikiEditor.toolbarReady' ).add( ( $textarea ) => {
+			const cmWE = new CodeMirror( $textarea, langSupport );
+			cmWE.initialize();
+		} );
+	} else {
+		const id = isSpecialUpload ? 'wpUploadDescription' : 'wpTextbox1';
+		const textarea = document.getElementById( id );
+		const cm = new CodeMirror( textarea, langSupport );
+		cm.initialize();
+	}
 }
 
 // Only add the 'Syntax' toolbar button to WikiEditor if CodeMirror is disabled.

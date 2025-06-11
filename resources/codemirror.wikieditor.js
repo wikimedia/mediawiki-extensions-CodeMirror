@@ -17,17 +17,14 @@ const CodeMirror = require( 'ext.CodeMirror.v6' );
  * using {@link CodeMirror} directly will be considerably more efficient.
  *
  * @example
- * mw.loader.using( [
- *   'ext.wikiEditor',
- *   'ext.CodeMirror.v6.WikiEditor',
- *   'ext.CodeMirror.v6.mode.mediawiki'
- * ] ).then( ( require ) => {
- *   mw.addWikiEditor( myTextarea );
- *   const CodeMirrorWikiEditor = require( 'ext.CodeMirror.v6.WikiEditor' );
- *   const mediawikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
- *   const cmWe = new CodeMirrorWikiEditor( myTextarea, mediawikiLang() );
- *   cmWe.initialize();
- * } );
+ * const require = await mw.loader.using( [
+ *   'ext.wikiEditor', 'ext.CodeMirror.v6.WikiEditor', 'ext.CodeMirror.v6.mode.mediawiki'
+ * ] );
+ * mw.addWikiEditor( myTextarea );
+ * const CodeMirrorWikiEditor = require( 'ext.CodeMirror.v6.WikiEditor' );
+ * const mediawikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
+ * const cmWe = new CodeMirrorWikiEditor( myTextarea, mediawikiLang() );
+ * cmWe.initialize();
  * @class
  * @extends CodeMirror
  */

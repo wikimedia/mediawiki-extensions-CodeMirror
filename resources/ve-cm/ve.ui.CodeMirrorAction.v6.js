@@ -35,29 +35,26 @@ ve.ui.CodeMirrorAction.static.methods = [ 'toggle' ];
 /**
  * @method
  * @param {boolean} [enable] State to force toggle to, inverts current state if undefined
- * @return {boolean} Action was executed
+ * @return {Promise} Action was executed
  */
-ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
+ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 	if ( !this.surface.mirror && ( enable || enable === undefined ) ) {
-		mw.loader.using( [ 'jquery.client', 'ext.CodeMirror.v6.mode.mediawiki' ] ).then( () => {
-			const CodeMirrorVisualEditor = require( '../codemirror.visualEditor.js' );
-			const mediawikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
-			this.surface.mirror = new CodeMirrorVisualEditor(
-				this.surface,
-				mediawikiLang( {
-					bidiIsolation: false,
-					codeFolding: false,
-					autocomplete: false,
-					openLinks: false
-				} )
-			);
-			this.surface.mirror.initialize();
-		} );
+		await mw.loader.using( [ 'jquery.client', 'ext.CodeMirror.v6.mode.mediawiki' ] );
+		const CodeMirrorVisualEditor = require( '../codemirror.visualEditor.js' );
+		const mediawikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
+		this.surface.mirror = new CodeMirrorVisualEditor(
+			this.surface,
+			mediawikiLang( {
+				bidiIsolation: false,
+				codeFolding: false,
+				autocomplete: false,
+				openLinks: false
+			} )
+		);
+		this.surface.mirror.initialize();
 	} else if ( this.surface.mirror ) {
 		this.surface.mirror.toggle( enable );
 	}
-
-	return true;
 };
 
 /* Registration */
