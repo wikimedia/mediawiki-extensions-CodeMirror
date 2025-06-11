@@ -125,6 +125,8 @@
 	"codemirror-keymap-multicursor": "Halte $1 gedrückt und klicke, um mehrere Cursor zu erstellen.",
 	"codemirror-keymap-crosshair": "Halte $1 gedrückt und klicke und ziehe, um eine rechteckige Auswahlen zu treffen.",
 	"codemirror-keymap-openlinks": "Halte $1 gedrückt und klicke auf Seitentitel und URLs, um sie in einer neuen Registerkarte zu öffnen.",
+	"codemirror-keymap-lint": "Linter",
+	"codemirror-keymap-next-diagnostic": "Nächste Diagnose auswählen",
 	"prefs-accessibility": "Barrierefreiheit",
 	"prefs-syntax-highlighting": "Syntaxhervorhebung",
 	"codemirror-beta-feature-title": "Verbesserte Syntaxhervorhebung",
