@@ -8,5 +8,7 @@
 	"codemirror-desc": "Poskytuje zvýraznenie syntaxe v textovom editore",
 	"codemirror-toggle-label": "Zvýraznenie syntaxe",
 	"codemirror-prefs-colorblind": "Povoliť schému pre farboslepých na zvýraznenie syntaxe pri úprave wikitextu",
-	"prefs-accessibility": "Dostupnosť"
+	"prefs-accessibility": "Dostupnosť",
+	"codemirror-beta-feature-title": "Vylepšené zvýrazňovanie syntaxe",
+	"codemirror-beta-feature-description": "Získajte predbežný prístup k novým funkciám zvýrazňovania syntaxe a úprav. Medzi nimi je napríklad tzv. code folding alebo automatické dopĺňanie."
 }
