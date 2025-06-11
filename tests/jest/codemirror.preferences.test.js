@@ -49,12 +49,16 @@ describe( 'CodeMirrorPreferences', () => {
 
 	it( 'setPreference', () => {
 		mockDefaultPreferences();
+		mockUserPreferences( { fooExtension: 0 } );
 		mw.user.isNamed = jest.fn().mockReturnValue( true );
 		const preferences = getCodeMirrorPreferences();
 		preferences.setPreference( 'fooExtension', true );
 		expect( preferences.preferences.fooExtension ).toStrictEqual( true );
 		expect( mw.user.options.set ).toHaveBeenCalledWith( 'codemirror-preferences', '{"fooExtension":1}' );
 		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledWith( 'codemirror-preferences', '{"fooExtension":1}' );
+		// Set again, and verify we do not call saveOption again.
+		preferences.setPreference( 'fooExtension', true );
+		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledTimes( 1 );
 	} );
 
 	it( 'getPreference', () => {
