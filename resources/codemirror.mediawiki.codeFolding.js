@@ -18,7 +18,7 @@ const {
 	unfoldEffect
 } = require( 'ext.CodeMirror.v6.lib' );
 const mwModeConfig = require( './codemirror.mediawiki.config.js' );
-const { matchTag } = require( './codemirror.mediawiki.matchTag.js' );
+const { getTag, matchTag } = require( './codemirror.mediawiki.matchTag.js' );
 
 const updateSelection = ( pos, { to } ) => Math.max( pos, to ),
 	updateAll = ( pos, { from, to } ) => from <= pos && to > pos ? to : pos;
@@ -78,10 +78,13 @@ const isTemplate = ( node ) => /-(?:template|ext)[a-z\d-]+ground/.test( node.nam
 	 * Check if a SyntaxNode is part of an extension tag
 	 *
 	 * @param {SyntaxNode} node The SyntaxNode to check
+	 * @param {boolean} [refOnly=false] If true, only check for `<ref>` tags
 	 * @return {boolean}
 	 * @private
 	 */
-	isExt = ( node ) => node.name.includes( 'mw-tag-' ) ||
+	isExt = ( node, refOnly ) => refOnly ?
+		node.name.includes( 'mw-tag-ref' ) :
+		node.name.includes( 'mw-tag-' ) ||
 		node.name.split( '_' ).includes( mwModeConfig.tags.extTag );
 
 /**
@@ -104,10 +107,11 @@ const braceStackUpdate = ( state, node ) => {
  * @param {EditorState} state EditorState instance
  * @param {number|SyntaxNode} posOrNode Position or node
  * @param {Tree|null} [tree] Syntax tree
+ * @param {boolean} [refOnly=false] If true, only return the range if it is a `<ref>` tag
  * @return {{from: number, to: number}|false}
  * @private
  */
-const foldable = ( state, posOrNode, tree ) => {
+const foldable = ( state, posOrNode, tree, refOnly ) => {
 	if ( typeof posOrNode === 'number' ) {
 		tree = ensureSyntaxTree( state, posOrNode );
 	}
@@ -119,22 +123,25 @@ const foldable = ( state, posOrNode, tree ) => {
 	if ( typeof posOrNode === 'number' ) {
 		// Find the initial template node on both sides of the position
 		node = tree.resolve( posOrNode, -1 );
-		if ( !isTemplate( node ) && !isExt( node ) ) {
+		if ( ( refOnly || !isTemplate( node ) ) && !isExt( node, refOnly ) ) {
 			node = tree.resolve( posOrNode, 1 );
 		}
 	} else {
 		node = posOrNode;
 	}
-	if ( !isTemplate( node ) ) {
+	if ( refOnly || !isTemplate( node ) ) {
 		// Not a template
-		if ( isExt( node ) ) {
+		if ( isExt( node, refOnly ) ) {
 			( { nextSibling } = node );
-			while ( nextSibling && !( isExtBracket( nextSibling ) &&
-				state.sliceDoc( nextSibling.from, nextSibling.from + 2 ) === '</' ) ) {
-				( { nextSibling } = nextSibling );
-			}
-			if ( nextSibling ) { // The closing bracket of the extension tag
-				return { from: matchTag( state, nextSibling.to ).end.to, to: nextSibling.from };
+			while ( nextSibling ) {
+				while ( nextSibling && !( isExtBracket( nextSibling ) &&
+					state.sliceDoc( nextSibling.from, nextSibling.from + 2 ) === '</' ) ) {
+					( { nextSibling } = nextSibling );
+				}
+				// The closing bracket of the extension tag
+				if ( nextSibling || ( !refOnly || getTag( state, nextSibling ).name === 'ref' ) ) {
+					return { from: matchTag( state, nextSibling.to ).end.to, to: nextSibling.from };
+				}
 			}
 		}
 		return false;
@@ -276,12 +283,13 @@ const getAnchor = ( state ) => Math.max( ...state.selection.ranges.map( ( { to }
  * @param {number} end
  * @param {number} anchor
  * @param {Function} update
+ * @param {boolean} [refOnly=false] If true, only fold `<ref>` tags
  * @return {number}
  * @private
  */
-const traverse = ( state, tree, effects, node, end, anchor, update ) => {
+const traverse = ( state, tree, effects, node, end, anchor, update, refOnly ) => {
 	while ( node && node.from <= end ) {
-		const range = foldable( state, node, tree );
+		const range = foldable( state, node, tree, refOnly );
 		if ( range ) {
 			effects.push( foldEffect.of( range ) );
 			node = tree.resolve( range.to, 1 );
@@ -366,7 +374,27 @@ const foldKeymap = [
 			return execute( view, effects, anchor );
 		}
 	},
-	{ key: 'Ctrl-Alt-]', run: unfoldAll }
+	{ key: 'Ctrl-Alt-]', run: unfoldAll },
+	{
+		// Fold all `<ref>` tags in the document
+		key: 'Mod-Alt-,',
+		run( view ) {
+			const { state } = view,
+				tree = syntaxTree( state ),
+				effects = [],
+				anchor = traverse(
+					state,
+					tree,
+					effects,
+					tree.topNode.firstChild,
+					Infinity,
+					getAnchor( state ),
+					updateAll,
+					true
+				);
+			return execute( view, effects, anchor );
+		}
+	}
 ];
 
 /**

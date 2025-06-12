@@ -179,7 +179,8 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 					mac: 'Cmd-Alt-]'
 				},
 				foldAll: { key: 'Ctrl-Alt-[' },
-				unfoldAll: { key: 'Ctrl-Alt-]' }
+				unfoldAll: { key: 'Ctrl-Alt-]' },
+				foldRef: { key: 'Mod-Alt-,' }
 			},
 			autocomplete: [
 				{
