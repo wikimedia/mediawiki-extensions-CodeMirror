@@ -18,23 +18,22 @@ const {
  * The constructor is internal. The class can be accessed via {@link CodeMirror#extensionRegistry}.
  *
  * @example
- * mw.loader.using( 'ext.CodeMirror.v6' ).then( ( require ) => {
- *   mw.hook( 'ext.CodeMirror.ready' ).add( ( cm ) => {
- *     const { EditorView, Prec } = require( 'ext.CodeMirror.v6.lib' );
- *     // Disable spellchecking. Use Prec.high() to override the
- *     // contentAttributesExtension which adds spellcheck="true".
- *     cm.extensionRegistry.register(
- *       'spellcheck',
- *       Prec.high( EditorView.contentAttributes.of( {
- *         spellcheck: 'false'
- *       } ) ),
- *       cm.view
- *     );
+ * const require = await mw.loader.using( 'ext.CodeMirror.v6' );
+ * mw.hook( 'ext.CodeMirror.ready' ).add( ( cm ) => {
+ *   const { EditorView, Prec } = require( 'ext.CodeMirror.v6.lib' );
+ *   // Disable spellchecking. Use Prec.high() to override the
+ *   // contentAttributesExtension which adds spellcheck="true".
+ *   cm.extensionRegistry.register(
+ *     'spellcheck',
+ *     Prec.high( EditorView.contentAttributes.of( {
+ *       spellcheck: 'false'
+ *     } ) ),
+ *     cm.view
+ *   );
  *
- *     const toggleButton = document.querySelector( '#toggle-spellcheck' );
- *     toggleButton.addEventListener( 'click', () => {
- *       cm.extensionRegistry.toggle( 'spellcheck', cm.view );
- *     } );
+ *   const toggleButton = document.querySelector( '#toggle-spellcheck' );
+ *   toggleButton.addEventListener( 'click', () => {
+ *     cm.extensionRegistry.toggle( 'spellcheck', cm.view );
  *   } );
  * } );
  */

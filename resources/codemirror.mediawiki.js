@@ -37,15 +37,11 @@ const copyState = ( state ) => {
  * @module CodeMirrorModeMediaWiki
  *
  * @example
- * mw.loader.using( [
- *   'ext.CodeMirror.v6',
- *   'ext.CodeMirror.v6.mode.mediawiki'
- * ] ).then( ( require ) => {
- *   const CodeMirror = require( 'ext.CodeMirror.v6' );
- *   const mediawikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
- *   const cm = new CodeMirror( myTextarea, mediawikiLang() );
- *   cm.initialize();
- * } );
+ * const require = await mw.loader.using( [ 'ext.CodeMirror.v6', 'ext.CodeMirror.v6.mode.mediawiki' ] );
+ * const CodeMirror = require( 'ext.CodeMirror.v6' );
+ * const mediawikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
+ * const cm = new CodeMirror( myTextarea, mediawikiLang() );
+ * cm.initialize();
  */
 class CodeMirrorModeMediaWiki {
 	/**

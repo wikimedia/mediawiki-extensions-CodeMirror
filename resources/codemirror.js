@@ -55,15 +55,11 @@ require( './ext.CodeMirror.data.js' );
  *
  * @example
  * // Creating a new CodeMirror instance.
- * mw.loader.using( [
- *   'ext.CodeMirror.v6',
- *   'ext.CodeMirror.v6.mode.mediawiki'
- * ] ).then( ( require ) => {
- *   const CodeMirror = require( 'ext.CodeMirror.v6' );
- *   const mediawikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
- *   const cm = new CodeMirror( myTextarea, mediawikiLang() );
- *   cm.initialize();
- * } );
+ * const require = await mw.loader.using( [ 'ext.CodeMirror.v6', 'ext.CodeMirror.v6.mode.mediawiki' ] );
+ * const CodeMirror = require( 'ext.CodeMirror.v6' );
+ * const mediawikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
+ * const cm = new CodeMirror( myTextarea, mediawikiLang() );
+ * cm.initialize();
  *
  * // Integrating with an existing CodeMirror instance.
  * mw.hook( 'ext.CodeMirror.ready', ( cm ) => {
@@ -828,15 +824,14 @@ class CodeMirror {
 	 * {@link CodeMirror#extensionRegistry extensionRegistry} instead.
 	 *
 	 * @example
-	 * mw.loader.using( 'ext.CodeMirror.v6' ).then( ( require ) => {
-	 *   mw.hook( 'ext.CodeMirror.ready' ).add( ( cm ) => {
-	 *     const { EditorView, Prec } = require( 'ext.CodeMirror.v6.lib' );
-	 *     // Disable spellchecking. Use Prec.high() to override the
-	 *     // contentAttributesExtension which adds spellcheck="true".
-	 *     cm.applyExtension( Prec.high( EditorView.contentAttributes.of( {
-	 *       spellcheck: 'false'
-	 *     } ) ) );
-	 *   } );
+	 * const require = await mw.loader.using( 'ext.CodeMirror.v6' );
+	 * mw.hook( 'ext.CodeMirror.ready' ).add( ( cm ) => {
+	 *   const { EditorView, Prec } = require( 'ext.CodeMirror.v6.lib' );
+	 *   // Disable spellchecking. Use Prec.high() to override the
+	 *   // contentAttributesExtension which adds spellcheck="true".
+	 *   cm.applyExtension( Prec.high( EditorView.contentAttributes.of( {
+	 *     spellcheck: 'false'
+	 *   } ) ) );
 	 * } );
 	 * @see https://codemirror.net/examples/config/
 	 * @param {Extension} extension
