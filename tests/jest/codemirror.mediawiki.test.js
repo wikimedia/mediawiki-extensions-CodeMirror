@@ -204,6 +204,11 @@ const testCases = [
 		output: '<div class="cm-line"> </div><div class="cm-line"><span class="cm-mw-redirect"> #redirect : </span><span class="cm-mw-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-link-ground cm-mw-link-pagename cm-mw-pagename">foo</span><span class="cm-mw-link-ground cm-mw-link-bracket">]]</span></div><div class="cm-line"><span class="cm-mw-list">#</span>REDIRECT <span class="cm-mw-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-link-ground cm-mw-link-pagename cm-mw-pagename">bar</span><span class="cm-mw-link-ground cm-mw-link-bracket">]]</span> </div>'
 	},
 	{
+		title: 'Language conversion',
+		input: '  -{ nocc }-\n-{ * | en : foo ; en-x-piglatin : bar }-\n-{ * | foo => en-x-piglatin : bar ; bar => en : foo }-\n-{ en ; en-x-piglatin | foobar }-\n-{{template}}-',
+		output: '<div class="cm-line"><span class="cm-mw-skipformatting"> </span> <span class="cm-mw-conversion-bracket">-{ </span>nocc <span class="cm-mw-conversion-bracket">}-</span></div><div class="cm-line"><span class="cm-mw-conversion-bracket">-{ </span><span class="cm-mw-conversion-flag">* </span><span class="cm-mw-conversion-delimiter">|</span><span class="cm-mw-conversion-lang"> en :</span> foo <span class="cm-mw-conversion-delimiter">; </span><span class="cm-mw-conversion-lang">en-x-piglatin :</span> bar <span class="cm-mw-conversion-bracket">}-</span></div><div class="cm-line"><span class="cm-mw-conversion-bracket">-{ </span><span class="cm-mw-conversion-flag">* </span><span class="cm-mw-conversion-delimiter">|</span> foo <span class="cm-mw-conversion-lang">=&gt; en-x-piglatin :</span> bar <span class="cm-mw-conversion-delimiter">; </span>bar <span class="cm-mw-conversion-lang">=&gt; en :</span> foo <span class="cm-mw-conversion-bracket">}-</span></div><div class="cm-line"><span class="cm-mw-conversion-bracket">-{ </span><span class="cm-mw-conversion-flag">en ; en-x-piglatin </span><span class="cm-mw-conversion-delimiter">|</span> foobar <span class="cm-mw-conversion-bracket">}-</span></div><div class="cm-line">-<span class="cm-mw-template-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template-ground cm-mw-pagename cm-mw-template-name">template</span><span class="cm-mw-template-ground cm-mw-template-bracket">}}</span>- </div>'
+	},
+	{
 		title: 'Very long line (T366035)',
 		input: '__notoc__<p>'.repeat( 500 ) + '\n<p>',
 		output: '<div class="cm-line">' + '<span class="cm-mw-double-underscore">__notoc__</span><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">p</span><span class="cm-mw-htmltag-bracket">&gt;</span>'.repeat( 500 ) + '</div><div class="cm-line">&lt;p&gt; </div>'
@@ -280,6 +285,10 @@ describe( 'CodeMirrorModeMediaWiki', () => {
 			'templateVariableBracket',
 			'templateVariableName',
 			// Custom tags
+			'conversionBracket',
+			'conversionDelimiter',
+			'conversionFlag',
+			'conversionLang',
 			'em',
 			'error',
 			'extNowiki',
@@ -358,6 +367,10 @@ describe( 'CodeMirrorModeMediaWiki', () => {
 			'cm-mw-templatevariable-bracket',
 			'cm-mw-templatevariable-name',
 			// Custom tags
+			'cm-mw-conversion-bracket',
+			'cm-mw-conversion-delimiter',
+			'cm-mw-conversion-flag',
+			'cm-mw-conversion-lang',
 			'cm-mw-em',
 			'cm-mw-error',
 			'cm-mw-ext-nowiki',

@@ -947,6 +947,34 @@ class CodeMirrorModeMediaWiki {
 		return this.makeLocalStyle( mwModeConfig.tags.list, state );
 	}
 
+	inConversion( style, needFlag, needLang ) {
+		const variants = mw.config.get( 'cmLanguageVariants' ).join( '|' ),
+			semicolon = new RegExp( `^;\\s*(?=(?:[^;]*?=>\\s*)?(?:${ variants })\\s*:|(?:$|\\}-))`, 'i' ),
+			lang = new RegExp( `^(?:=>\\s*)?(?:${ variants })\\s*:`, 'i' );
+		return ( stream, state ) => {
+			const space = stream.eatSpace();
+			if ( stream.match( '}-' ) ) {
+				state.tokenize = state.stack.pop();
+				return this.makeLocalStyle( mwModeConfig.tags.conversionBracket, state );
+			} else if ( needFlag && stream.match( /^(?:[^}|={[<_])*(?=\|)/ ) ) {
+				state.stack.push( this.inConversion( style, false, true ) );
+				state.tokenize = this.eatChar( '|', mwModeConfig.tags.conversionDelimiter );
+				return this.makeLocalStyle( mwModeConfig.tags.conversionFlag, state );
+			} else if ( stream.match( semicolon ) ) {
+				if ( needLang || !needFlag ) {
+					state.tokenize = this.inConversion( style, false, true );
+				}
+				return this.makeLocalStyle( mwModeConfig.tags.conversionDelimiter, state );
+			} else if ( needLang && stream.match( lang ) ) {
+				state.tokenize = this.inConversion( style );
+				return this.makeLocalStyle( mwModeConfig.tags.conversionLang, state );
+			} else if ( stream.match( /^(?:[^}|;&='{[<~_-])+/ ) || space ) {
+				return this.makeStyle( style, state );
+			}
+			return this.eatWikiText( style )( stream, state );
+		};
+	}
+
 	/**
 	 * @param {string} style
 	 * @return {string|Function}
@@ -1244,6 +1272,13 @@ class CodeMirrorModeMediaWiki {
 						return mwModeConfig.tags.indenting;
 					}
 					break;
+				case '-':
+					if ( mw.config.get( 'cmLanguageVariants', [] ).length && stream.match( /^\{(?!\{)\s*/ ) ) {
+						state.stack.push( state.tokenize );
+						state.tokenize = this.inConversion( style, true, true );
+						return this.makeLocalStyle( mwModeConfig.tags.conversionBracket, state );
+					}
+					break;
 				default:
 					if ( /[\s\u00a0]/.test( ch ) ) {
 						stream.eatSpace();
@@ -1256,7 +1291,7 @@ class CodeMirrorModeMediaWiki {
 					}
 					break;
 			}
-			stream.match( /^[^\s\u00a0_>}[\]<{'|&:~=]+/ );
+			stream.match( /^[^\s\u00a0_>}[\]<{'|&:~=-]+/ );
 			return this.makeStyle( style, state );
 		};
 	}

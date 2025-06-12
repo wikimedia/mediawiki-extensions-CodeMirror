@@ -191,6 +191,10 @@ class CodeMirrorModeMediaWikiConfig {
 	 */
 	get customTags() {
 		return {
+			conversionBracket: 'mw-conversion-bracket',
+			conversionDelimiter: 'mw-conversion-delimiter',
+			conversionFlag: 'mw-conversion-flag',
+			conversionLang: 'mw-conversion-lang',
 			em: 'mw-em',
 			error: 'mw-error',
 			extNowiki: 'mw-ext-nowiki',
@@ -233,6 +237,10 @@ class CodeMirrorModeMediaWikiConfig {
 	 */
 	get defaultTokenTable() {
 		return {
+			[ this.tags.conversionBracket ]: Tag.define(),
+			[ this.tags.conversionDelimiter ]: Tag.define(),
+			[ this.tags.conversionFlag ]: Tag.define(),
+			[ this.tags.conversionLang ]: Tag.define(),
 			[ this.tags.em ]: Tag.define(),
 			[ this.tags.error ]: Tag.define(),
 			[ this.tags.extNowiki ]: Tag.define(),
@@ -439,6 +447,22 @@ class CodeMirrorModeMediaWikiConfig {
 			 * Custom tags.
 			 * IMPORTANT: These need to reference the CodeMirrorModeMediaWiki context.
 			 */
+			{
+				tag: context.tokenTable[ this.tags.conversionBracket ],
+				class: 'cm-mw-conversion-bracket'
+			},
+			{
+				tag: context.tokenTable[ this.tags.conversionDelimiter ],
+				class: 'cm-mw-conversion-delimiter'
+			},
+			{
+				tag: context.tokenTable[ this.tags.conversionFlag ],
+				class: 'cm-mw-conversion-flag'
+			},
+			{
+				tag: context.tokenTable[ this.tags.conversionLang ],
+				class: 'cm-mw-conversion-lang'
+			},
 			{
 				tag: context.tokenTable[ this.tags.em ],
 				class: 'cm-mw-em'

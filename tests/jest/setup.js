@@ -80,7 +80,8 @@ global.mockMwConfigGet = ( config = {} ) => {
 		wgNamespaceIds: {
 			file: 6
 		},
-		cmMode: 'mediawiki'
+		cmMode: 'mediawiki',
+		cmLanguageVariants: [ 'en', 'en-x-piglatin' ]
 	}, config );
 	mw.config.get = jest.fn().mockImplementation( ( key ) => mockConfig[ key ] );
 };
