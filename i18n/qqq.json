@@ -131,7 +131,7 @@
 	"codemirror-keymap-multicursor": "Description of how to add multiple cursors.\n\n$1 is the HTML representation of a key, e.g. <kbd>Ctrl</kbd>.",
 	"codemirror-keymap-crosshair": "Description of how to use the crosshair cursor.\n\n$1 is the HTML representation of a key, e.g. <kbd>Alt</kbd>.",
 	"codemirror-keymap-openlinks": "Description of how to open links within the wikitext in a new tab.\n\n$1 is the HTML representation of a key, e.g. <kbd>Ctrl</kbd>.",
-	"codemirror-keymap-lint": "Section heading in the keyboard shortcuts help dialog.",
+	"codemirror-keymap-lint": "Section heading in the keyboard shortcuts help dialog.\nSee [[:w:Lint (software)|Lint on Wikipedia]].",
 	"codemirror-keymap-next-diagnostic": "Label for the keyboard shortcut for selecting the next lint diagnostic.",
 	"prefs-accessibility": "Section heading in the user preferences for accessibility topics.",
 	"prefs-syntax-highlighting": "Used in [[Special:Preferences]], tab \"Editing\" ({{int:prefs-editing}}).",

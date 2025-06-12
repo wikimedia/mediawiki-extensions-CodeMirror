@@ -133,6 +133,8 @@
 	"codemirror-keymap-multicursor": "Maintenez $1 et cliquez pour créer plusieurs curseurs.",
 	"codemirror-keymap-crosshair": "Maintenez $1 enfoncée, puis cliquez et faites glisser pour effectuer des sélections rectangulaires.",
 	"codemirror-keymap-openlinks": "Maintenez $1 et cliquez sur le titre des pages et les URL pour les ouvrir dans un nouvel onglet.",
+	"codemirror-keymap-lint": "Analyseur statique",
+	"codemirror-keymap-next-diagnostic": "Sélectionner le diagnostic suivant",
 	"prefs-accessibility": "Accessibilité",
 	"prefs-syntax-highlighting": "Coloration syntaxique",
 	"codemirror-beta-feature-title": "Mise en évidence améliorée de la syntaxe",

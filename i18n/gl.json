@@ -122,6 +122,8 @@
 	"codemirror-keymap-multicursor": "Mantén premido $1 e fai clic para creares varios cursores.",
 	"codemirror-keymap-crosshair": "Mantén premido $1 e fai clic e arrastra para faceres seleccións rectangulares.",
 	"codemirror-keymap-openlinks": "Mantén premido $1 e fai clic nos títulos das páxinas e nos enderezo URL para abrilos nunha lapela nova.",
+	"codemirror-keymap-lint": "Analizador",
+	"codemirror-keymap-next-diagnostic": "Seleccionar o seguinte diagnóstico",
 	"prefs-accessibility": "Accesibilidade",
 	"prefs-syntax-highlighting": "Resaltado de sintaxe",
 	"codemirror-beta-feature-title": "Resaltado de sintaxe mellorado",

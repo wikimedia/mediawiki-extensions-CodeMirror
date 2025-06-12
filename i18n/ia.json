@@ -120,6 +120,8 @@
 	"codemirror-keymap-multicursor": "Tene premite $1 e clicca pro crear plure cursores.",
 	"codemirror-keymap-crosshair": "Tene premite $1 e clicca e trahe pro facer selectiones rectangular.",
 	"codemirror-keymap-openlinks": "Tene premite $1 e clicca sur titulos de paginas e adresses URL pro aperir los in un nove scheda.",
+	"codemirror-keymap-lint": "Lint",
+	"codemirror-keymap-next-diagnostic": "Seliger le proxime message diagnostic",
 	"prefs-accessibility": "Accessibilitate",
 	"prefs-syntax-highlighting": "Coloration syntactic",
 	"codemirror-beta-feature-title": "Coloration syntactic meliorate",

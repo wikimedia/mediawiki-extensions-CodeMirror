@@ -61,6 +61,7 @@
 	"codemirror-keymap-autocomplete": "Automatesch Vervollstännegung",
 	"codemirror-keymap-other": "Anerer",
 	"codemirror-keymap-preferences": "Astellunge fir d'Ervirhiewe vun der Syntax",
+	"codemirror-keymap-lint": "Linter",
 	"prefs-accessibility": "Accessibilitéit",
 	"prefs-syntax-highlighting": "Ervirhiewe vun der Syntax",
 	"codemirror-beta-feature-title": "Verbessert Ervirhiewe vun der Syntax"
