@@ -190,6 +190,7 @@ class CodeMirrorModeMediaWikiConfig {
 			freeExtLink: 'mw-free-extlink',
 			freeExtLinkProtocol: 'mw-free-extlink-protocol',
 			htmlEntity: 'mw-html-entity',
+			imageParameter: 'mw-image-parameter',
 			link: 'mw-link',
 			linkPageName: 'mw-link-pagename',
 			nowiki: 'mw-tag-nowiki',
@@ -231,6 +232,7 @@ class CodeMirrorModeMediaWikiConfig {
 			[ this.tags.freeExtLink ]: Tag.define(),
 			[ this.tags.freeExtLinkProtocol ]: Tag.define(),
 			[ this.tags.htmlEntity ]: Tag.define(),
+			[ this.tags.imageParameter ]: Tag.define(),
 			[ this.tags.link ]: Tag.define(),
 			[ this.tags.linkPageName ]: Tag.define(),
 			[ this.tags.nowiki ]: Tag.define(),
@@ -474,6 +476,10 @@ class CodeMirrorModeMediaWikiConfig {
 			{
 				tag: context.tokenTable[ this.tags.htmlEntity ],
 				class: 'cm-mw-html-entity'
+			},
+			{
+				tag: context.tokenTable[ this.tags.imageParameter ],
+				class: 'cm-mw-image-parameter'
 			},
 			{
 				tag: context.tokenTable[ this.tags.link ],

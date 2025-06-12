@@ -128,6 +128,11 @@ const testCases = [
 		output: '<div class="cm-line"><span class="cm-mw-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-link-ground cm-mw-link-pagename cm-mw-pagename">Link title</span><span class="cm-mw-link-ground cm-mw-link-delimiter">|</span><span class="cm-mw-link-ground cm-mw-link-text cm-mw-apostrophes">\'\'\'</span><span class="cm-mw-link-ground cm-mw-link-text cm-mw-strong">bold link</span><span class="cm-mw-link-ground cm-mw-link-text cm-mw-apostrophes">\'\'\'</span><span class="cm-mw-link-ground cm-mw-link-bracket">]]</span> </div>'
 	},
 	{
+		title: 'file link',
+		input: '[[File:Example.jpg|x20px|link=http://www.wikipedia.org|thumb|left|sub|Caption with [[link]] inside|alt=Alt text|class=class-name]]',
+		output: '<div class="cm-line"><span class="cm-mw-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-link-ground cm-mw-link-pagename cm-mw-pagename">File:Example.jpg</span><span class="cm-mw-link-ground cm-mw-link-delimiter">|</span><span class="cm-mw-link-ground cm-mw-image-parameter">x20px</span><span class="cm-mw-link-ground cm-mw-link-delimiter">|</span><span class="cm-mw-link-ground cm-mw-image-parameter">link=</span><span class="cm-mw-link-ground cm-mw-link-text">http://www.wikipedia.org</span><span class="cm-mw-link-ground cm-mw-link-delimiter">|</span><span class="cm-mw-link-ground cm-mw-image-parameter">thumb</span><span class="cm-mw-link-ground cm-mw-link-delimiter">|</span><span class="cm-mw-link-ground cm-mw-image-parameter">left</span><span class="cm-mw-link-ground cm-mw-link-delimiter">|</span><span class="cm-mw-link-ground cm-mw-image-parameter">sub</span><span class="cm-mw-link-ground cm-mw-link-delimiter">|</span><span class="cm-mw-link-ground cm-mw-link-text">Caption with </span><span class="cm-mw-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-link-ground cm-mw-link-pagename cm-mw-pagename">link</span><span class="cm-mw-link-ground cm-mw-link-bracket">]]</span><span class="cm-mw-link-ground cm-mw-link-text"> inside</span><span class="cm-mw-link-ground cm-mw-link-delimiter">|</span><span class="cm-mw-link-ground cm-mw-image-parameter">alt=</span><span class="cm-mw-link-ground cm-mw-link-text">Alt text</span><span class="cm-mw-link-ground cm-mw-link-delimiter">|</span><span class="cm-mw-link-ground cm-mw-image-parameter">class=</span><span class="cm-mw-link-ground cm-mw-link-text">class-name</span><span class="cm-mw-link-ground cm-mw-link-bracket">]]</span> </div>'
+	},
+	{
 		title: 'horizontal rule',
 		input: 'One\n----\nTwo',
 		output: '<div class="cm-line">One</div><div class="cm-line"><span class="cm-mw-hr">----</span></div><div class="cm-line">Two </div>'
@@ -278,6 +283,7 @@ describe( 'CodeMirrorModeMediaWiki', () => {
 			'freeExtLink',
 			'freeExtLinkProtocol',
 			'htmlEntity',
+			'imageParameter',
 			'link',
 			'linkPageName',
 			'nowiki',
@@ -355,6 +361,7 @@ describe( 'CodeMirrorModeMediaWiki', () => {
 			'cm-mw-free-extlink',
 			'cm-mw-free-extlink-protocol',
 			'cm-mw-html-entity',
+			'cm-mw-image-parameter',
 			'cm-mw-link',
 			'cm-mw-link-pagename',
 			'cm-mw-tag-nowiki',

@@ -60,10 +60,21 @@ global.mockMwConfigGet = ( config = {} ) => {
 			tagModes: {
 				ref: 'text/mediawiki',
 				references: 'mediawiki'
+			},
+			imageKeywords: {
+				$1px: 'width',
+				'alt=$1': 'alt',
+				'class=$1': 'class',
+				left: 'left',
+				'link=$1': 'link',
+				sub: 'sub',
+				thumb: 'thumbnail'
 			}
 		},
 		wgMFMode: null,
-		wgNamespaceIds: {},
+		wgNamespaceIds: {
+			file: 6
+		},
 		wgPageContentModel: 'wikitext'
 	}, config );
 	mw.config.get = jest.fn().mockImplementation( ( key ) => mockConfig[ key ] );

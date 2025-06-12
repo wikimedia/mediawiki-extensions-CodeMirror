@@ -14,6 +14,11 @@ const { autocompleteExtension, completionSource } = require( './codemirror.media
 const openLinksExtension = require( './codemirror.mediawiki.openLinks.js' );
 const mwKeymap = require( './codemirror.mediawiki.keymap.js' );
 
+const nsIds = mw.config.get( 'wgNamespaceIds' ),
+	fileNsRegex = new RegExp( `^(?:${
+		Object.entries( nsIds ).filter( ( [ , id ] ) => id === 6 ).map( ( [ ns ] ) => ns ).join( '|' )
+	})\\s*:`, 'i' );
+
 const copyState = ( state ) => {
 	const newState = {};
 	for ( const key in state ) {
@@ -78,8 +83,14 @@ class CodeMirrorModeMediaWiki {
 			config.redirection.join( '|' )
 		})(\\s*:)?\\s*(?=\\[\\[)`, 'i' );
 		this.nsRegex = new RegExp( `^(${
-			Object.keys( mw.config.get( 'wgNamespaceIds' ) ).filter( Boolean ).join( '|' ).replace( /_/g, ' ' )
+			Object.keys( nsIds ).filter( Boolean ).join( '|' ).replace( /_/g, ' ' )
 		})\\s*:\\s*`, 'i' );
+		const img = Object.keys( config.imageKeywords ).filter( ( word ) => !/\$1./.test( word ) );
+		this.imgRegex = new RegExp( `^(?:${
+			img.filter( ( word ) => word.endsWith( '$1' ) ).map( ( word ) => word.slice( 0, -2 ) ).join( '|' )
+		}|(?:${
+			img.filter( ( word ) => !word.endsWith( '$1' ) ).join( '|' )
+		}|(?:\\d+x?|\\d*x\\d+)\\s*(?:px)?px)\\s*(?=\\||\\]\\]|$))` );
 	}
 
 	/**
@@ -420,34 +431,39 @@ class CodeMirrorModeMediaWiki {
 		return this.eatWikiText( mwModeConfig.tags.extLinkText )( stream, state );
 	}
 
-	inLink( stream, state ) {
-		if ( stream.sol() ) {
-			state.nLink--;
-			// @todo error message
-			state.tokenize = state.stack.pop();
-			return '';
-		}
-		if ( stream.match( /^[\s\u00a0]*#[\s\u00a0]*/ ) ) {
-			state.tokenize = this.inLinkToSection.bind( this );
-			return this.makeLocalStyle( mwModeConfig.tags.link, state );
-		}
-		if ( stream.match( /^[\s\u00a0]*\|[\s\u00a0]*/ ) ) {
-			state.tokenize = this.eatLinkText();
-			return this.makeLocalStyle( mwModeConfig.tags.linkDelimiter, state );
-		}
-		if ( stream.match( /^[\s\u00a0]*\]\]/ ) ) {
-			state.tokenize = state.stack.pop();
-			return this.makeLocalStyle( mwModeConfig.tags.linkBracket, state, 'nLink' );
-		}
-		if ( stream.match( /^[\s\u00a0]*[^\s\u00a0#|\]&~{]+/ ) || stream.eatSpace() ) {
-			return this.makeStyle(
-				`${ mwModeConfig.tags.linkPageName } ${ mwModeConfig.tags.pageName }`,
-				state
-			);
-		}
-		return this.eatWikiText(
-			`${ mwModeConfig.tags.linkPageName } ${ mwModeConfig.tags.pageName }`
-		)( stream, state );
+	inLink( file ) {
+		return ( stream, state ) => {
+			if ( stream.sol() ) {
+				state.nLink--;
+				// @todo error message
+				state.tokenize = state.stack.pop();
+				return '';
+			}
+			if ( stream.match( /^[\s\u00a0]*#[\s\u00a0]*/ ) ) {
+				state.tokenize = this.inLinkToSection.bind( this );
+				return this.makeLocalStyle( mwModeConfig.tags.link, state );
+			}
+			if ( stream.match( /^[\s\u00a0]*\|[\s\u00a0]*/ ) ) {
+				state.tokenize = this.eatLinkText( file );
+				if ( file ) {
+					this.toEatImageParameters( stream, state );
+				}
+				return this.makeLocalStyle( mwModeConfig.tags.linkDelimiter, state );
+			}
+			if ( stream.match( /^[\s\u00a0]*\]\]/ ) ) {
+				state.tokenize = state.stack.pop();
+				return this.makeLocalStyle( mwModeConfig.tags.linkBracket, state, 'nLink' );
+			}
+			if ( stream.match( /^[\s\u00a0]*[^\s\u00a0#|\]&~{]+/ ) || stream.eatSpace() ) {
+				return this.makeStyle(
+					`${ mwModeConfig.tags.linkPageName } ${ mwModeConfig.tags.pageName }`,
+					state
+				);
+			}
+			return this.eatWikiText(
+				`${ mwModeConfig.tags.linkPageName } ${ mwModeConfig.tags.pageName }`
+			)( stream, state );
+		};
 	}
 
 	inLinkToSection( stream, state ) {
@@ -472,13 +488,17 @@ class CodeMirrorModeMediaWiki {
 		return this.eatWikiText( mwModeConfig.tags.linkToSection )( stream, state );
 	}
 
-	eatLinkText() {
+	eatLinkText( file ) {
 		let linkIsBold, linkIsItalic;
 		return ( stream, state ) => {
 			let tmpstyle;
 			if ( stream.match( ']]' ) ) {
 				state.tokenize = state.stack.pop();
 				return this.makeLocalStyle( mwModeConfig.tags.linkBracket, state, 'nLink' );
+			}
+			if ( file && stream.match( /^\|\s*/ ) ) {
+				this.toEatImageParameters( stream, state );
+				return this.makeLocalStyle( mwModeConfig.tags.linkDelimiter, state );
 			}
 			if ( stream.match( '\'\'\'' ) ) {
 				linkIsBold = !linkIsBold;
@@ -501,11 +521,23 @@ class CodeMirrorModeMediaWiki {
 			if ( linkIsItalic ) {
 				tmpstyle += ' ' + mwModeConfig.tags.em;
 			}
-			if ( stream.match( /^[^'\]{&~<]+/ ) ) {
+			if ( stream.match( file ? /^[^'\]{&~<[|]+/ : /^[^'\]{&~<]+/ ) ) {
 				return this.makeStyle( tmpstyle, state );
 			}
 			return this.eatWikiText( tmpstyle )( stream, state );
 		};
+	}
+
+	toEatImageParameters( stream, state ) {
+		const mt = stream.match( this.imgRegex, false );
+		if ( mt ) {
+			state.stack.push( state.tokenize );
+			state.tokenize = ( stream2, state2 ) => {
+				stream2.pos += mt[ 0 ].length;
+				state2.tokenize = state2.stack.pop();
+				return this.makeLocalStyle( mwModeConfig.tags.imageParameter, state2 );
+			};
+		}
 	}
 
 	eatTagName( chars, isCloseTag, isHtmlTag ) {
@@ -1022,7 +1054,7 @@ class CodeMirrorModeMediaWiki {
 						if ( /[^\]|[]/.test( stream.peek() ) ) {
 							state.nLink++;
 							state.stack.push( state.tokenize );
-							state.tokenize = this.inLink.bind( this );
+							state.tokenize = this.inLink( stream.match( fileNsRegex, false ) );
 							return this.makeLocalStyle( mwModeConfig.tags.linkBracket, state );
 						}
 					} else {
