@@ -492,7 +492,7 @@ class CodeMirrorModeMediaWiki {
 		let linkIsBold, linkIsItalic;
 		return ( stream, state ) => {
 			let tmpstyle;
-			if ( stream.match( ']]' ) ) {
+			if ( stream.match( ']]' ) || !file && stream.match( '[[', false ) ) {
 				state.tokenize = state.stack.pop();
 				return this.makeLocalStyle( mwModeConfig.tags.linkBracket, state, 'nLink' );
 			}
@@ -521,7 +521,7 @@ class CodeMirrorModeMediaWiki {
 			if ( linkIsItalic ) {
 				tmpstyle += ' ' + mwModeConfig.tags.em;
 			}
-			if ( stream.match( file ? /^[^'\]{&~<[|]+/ : /^[^'\]{&~<]+/ ) ) {
+			if ( stream.match( file ? /^[^'\]{&~<[|]+/ : /^(?:[^'[\]{&~<]|\[(?!\[))+/ ) ) {
 				return this.makeStyle( tmpstyle, state );
 			}
 			return this.eatWikiText( tmpstyle )( stream, state );

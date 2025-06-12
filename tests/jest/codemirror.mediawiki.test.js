@@ -123,6 +123,11 @@ const testCases = [
 		output: '<div class="cm-line"><span class="cm-mw-list">;</span><span class="cm-mw-strong">term</span><span class="cm-mw-indenting">:</span>definition</div><div class="cm-line"><span class="cm-mw-list">;</span><span class="cm-mw-strong">term</span></div><div class="cm-line"><span class="cm-mw-list">:</span>definition </div>'
 	},
 	{
+		title: 'broken link',
+		input: '[[broken link|text [[link]] ]]',
+		output: '<div class="cm-line"><span class="cm-mw-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-link-ground cm-mw-link-pagename cm-mw-pagename">broken link</span><span class="cm-mw-link-ground cm-mw-link-delimiter">|</span><span class="cm-mw-link-ground cm-mw-link-text">text </span><span class="cm-mw-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-link-ground cm-mw-link-pagename cm-mw-pagename">link</span><span class="cm-mw-link-ground cm-mw-link-bracket">]]</span> ]] </div>'
+	},
+	{
 		title: 'link with bold text',
 		input: '[[Link title|\'\'\'bold link\'\'\']]',
 		output: '<div class="cm-line"><span class="cm-mw-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-link-ground cm-mw-link-pagename cm-mw-pagename">Link title</span><span class="cm-mw-link-ground cm-mw-link-delimiter">|</span><span class="cm-mw-link-ground cm-mw-link-text cm-mw-apostrophes">\'\'\'</span><span class="cm-mw-link-ground cm-mw-link-text cm-mw-strong">bold link</span><span class="cm-mw-link-ground cm-mw-link-text cm-mw-apostrophes">\'\'\'</span><span class="cm-mw-link-ground cm-mw-link-bracket">]]</span> </div>'
