@@ -16,5 +16,8 @@
 	"codemirror-replace-placeholder": "Korvaa",
 	"codemirror-control-character": "Ohjausmerkki $1",
 	"codemirror-special-char-null": "Tyhjä merkki",
+	"codemirror-special-char-backspace": "Askelpalautin",
+	"codemirror-special-char-newline": "Rivinvaihto",
+	"codemirror-special-char-nbsp": "Sitova välilyönti",
 	"prefs-accessibility": "Saavutettavuus"
 }
