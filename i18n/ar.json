@@ -128,6 +128,8 @@
 	"codemirror-keymap-multicursor": "اضغط على $1 وانقر لإنشاء مؤشرات متعددة.",
 	"codemirror-keymap-crosshair": "اضغط باستمرار على $1 ثم انقر واسحب لإنشاء تحديدات مستطيلة.",
 	"codemirror-keymap-openlinks": "اضغط على $1 وانقر على عناوين الصفحات وعناوين URL لفتحها في علامة تبويب جديدة.",
+	"codemirror-keymap-lint": "لينتر",
+	"codemirror-keymap-next-diagnostic": "حدد التشخيص التالي",
 	"prefs-accessibility": "إمكانية الوصول",
 	"prefs-syntax-highlighting": "إبراز التركيب",
 	"codemirror-beta-feature-title": "تحسين إبراز التركيب",
