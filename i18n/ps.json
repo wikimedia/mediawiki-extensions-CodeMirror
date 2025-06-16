@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Ahmed-Najib-Biabani-Ibrahimkhel"
+			"Ahmed-Najib-Biabani-Ibrahimkhel",
+			"شاه زمان پټان"
 		]
 	},
 	"codemirror-keymap-help-title": "د ليکدړې لنډلارې",
@@ -20,5 +21,6 @@
 	"codemirror-keymap-insert": "ورټومبل",
 	"codemirror-keymap-blankline": "تشه کرښه",
 	"codemirror-keymap-comment": "تبصره",
-	"codemirror-keymap-direction": "د لوري بدلون"
+	"codemirror-keymap-direction": "د لوري بدلون",
+	"codemirror-beta-feature-title": "سمې‌شوې غونډلپوهې روښانه‌کول"
 }
