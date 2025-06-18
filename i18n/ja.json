@@ -8,7 +8,8 @@
 			"Shirayuki",
 			"SkyDaisy9",
 			"Suzukaze-c",
-			"Waki285"
+			"Waki285",
+			"Shulmj"
 		]
 	},
 	"codemirror-desc": "ウィキテキストエディターに構文強調の機能を追加する",
@@ -50,5 +51,7 @@
 	"codemirror-special-char-left-to-right-override": "LTR オーバーライド",
 	"codemirror-special-char-right-to-left-override": "RTL オーバーライド",
 	"prefs-accessibility": "アクセシビリティ",
-	"prefs-syntax-highlighting": "構文の強調"
+	"prefs-syntax-highlighting": "構文の強調",
+	"codemirror-beta-feature-title": "改善された構文ハイライト",
+	"codemirror-beta-feature-description": "コードの折りたたみやオートコンプリートなど、新たな構文ハイライトや編集機能にいち早くアクセスできます。"
 }
