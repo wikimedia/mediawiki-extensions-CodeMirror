@@ -35,7 +35,12 @@ global.mockMwConfigGet = ( config = {} ) => {
 				__notoc__: 'notoc'
 			}, {} ],
 			functionSynonyms: [ {
+				'#ifexist': 'ifexist',
+				'#invoke': 'invoke',
+				'#lst': 'lst',
 				'#special': 'special',
+				filepath: 'filepath',
+				int: 'int',
 				ns: 'ns'
 			}, {
 				'!': '!',

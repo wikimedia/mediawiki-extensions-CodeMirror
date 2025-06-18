@@ -14,7 +14,16 @@ const { autocompleteExtension, completionSource } = require( './codemirror.media
 const openLinksExtension = require( './codemirror.mediawiki.openLinks.js' );
 const mwKeymap = require( './codemirror.mediawiki.keymap.js' );
 
-const nsIds = mw.config.get( 'wgNamespaceIds' ),
+const specialParserFunctions = {
+		ifexist: 0,
+		lst: 0,
+		lstx: 0,
+		lsth: 0,
+		filepath: 6,
+		int: 8,
+		invoke: 828
+	},
+	nsIds = mw.config.get( 'wgNamespaceIds' ),
 	fileNsRegex = new RegExp( `^(?:${
 		Object.entries( nsIds ).filter( ( [ , id ] ) => id === 6 ).map( ( [ ns ] ) => ns ).join( '|' )
 	})\\s*:`, 'i' );
@@ -59,6 +68,9 @@ class CodeMirrorModeMediaWiki {
 		this.tokenTable = mwModeConfig.tokenTable;
 		this.registerGroundTokens();
 
+		for ( const k in specialParserFunctions ) {
+			mwModeConfig.addFunction( specialParserFunctions[ k ] );
+		}
 		// Dynamically register any tags that aren't already in CodeMirrorModeMediaWikiConfig
 		Object.keys( config.tags ).forEach( ( tag ) => mwModeConfig.addTag( tag ) );
 
@@ -288,32 +300,47 @@ class CodeMirrorModeMediaWiki {
 		return this.eatWikiText( mwModeConfig.tags.templateVariable )( stream, state );
 	}
 
-	inParserFunctionName( stream, state ) {
-		// FIXME: {{#name}} and {{uc}} are wrong, must have ':'
-		if ( stream.match( /^#?[^:}{~]+/ ) ) {
-			return this.makeLocalStyle( mwModeConfig.tags.parserFunctionName, state );
-		}
-		if ( stream.eat( ':' ) ) {
-			state.tokenize = this.inParserFunctionArguments.bind( this );
-			return this.makeLocalStyle( mwModeConfig.tags.parserFunctionDelimiter, state );
-		}
-		if ( stream.match( '}}' ) ) {
-			state.tokenize = state.stack.pop();
-			return this.makeLocalStyle( mwModeConfig.tags.parserFunctionBracket, state, 'nExt' );
-		}
-		return this.eatWikiText( mwModeConfig.tags.parserFunction )( stream, state );
+	inParserFunctionName( ns ) {
+		return ( stream, state ) => {
+			// FIXME: {{#name}} and {{uc}} are wrong, must have ':'
+			const mt = stream.match( /^#?[^:}{~]+/ );
+			if ( mt ) {
+				const name = this.config.functionSynonyms[ 0 ][ mt[ 0 ].trim().toLowerCase() ];
+				if ( name in specialParserFunctions ) {
+					state.tokenize = this.inParserFunctionName( specialParserFunctions[ name ] );
+				}
+				return this.makeLocalStyle( mwModeConfig.tags.parserFunctionName, state );
+			}
+			if ( stream.eat( ':' ) ) {
+				state.tokenize = this.inParserFunctionArguments( ns );
+				return this.makeLocalStyle( mwModeConfig.tags.parserFunctionDelimiter, state );
+			}
+			if ( stream.match( '}}' ) ) {
+				state.tokenize = state.stack.pop();
+				return this.makeLocalStyle( mwModeConfig.tags.parserFunctionBracket, state, 'nExt' );
+			}
+			return this.eatWikiText( mwModeConfig.tags.parserFunction )( stream, state );
+		};
 	}
 
-	inParserFunctionArguments( stream, state ) {
-		if ( stream.match( /^[^|}{[<&~]+/ ) ) {
-			return this.makeLocalStyle( mwModeConfig.tags.parserFunction, state );
-		} else if ( stream.eat( '|' ) ) {
-			return this.makeLocalStyle( mwModeConfig.tags.parserFunctionDelimiter, state );
-		} else if ( stream.match( '}}' ) ) {
-			state.tokenize = state.stack.pop();
-			return this.makeLocalStyle( mwModeConfig.tags.parserFunctionBracket, state, 'nExt' );
-		}
-		return this.eatWikiText( mwModeConfig.tags.parserFunction )( stream, state );
+	inParserFunctionArguments( ns ) {
+		const style = ns === undefined ?
+			mwModeConfig.tags.parserFunction :
+			`${ mwModeConfig.tags.parserFunction } ${ mwModeConfig.tags.pageName } mw-function-${ ns }`;
+		return ( stream, state ) => {
+			if ( stream.match( /^[^|}{[<&~]+/ ) ) {
+				return this.makeLocalStyle( style, state );
+			} else if ( stream.eat( '|' ) ) {
+				if ( ns !== undefined ) {
+					state.tokenize = this.inParserFunctionArguments();
+				}
+				return this.makeLocalStyle( mwModeConfig.tags.parserFunctionDelimiter, state );
+			} else if ( stream.match( '}}' ) ) {
+				state.tokenize = state.stack.pop();
+				return this.makeLocalStyle( mwModeConfig.tags.parserFunctionBracket, state, 'nExt' );
+			}
+			return this.eatWikiText( style )( stream, state );
+		};
 	}
 
 	eatTemplatePageName( haveAte ) {
@@ -1084,7 +1111,7 @@ class CodeMirrorModeMediaWiki {
 						if ( stream.peek() === '#' ) {
 							state.nExt++;
 							state.stack.push( state.tokenize );
-							state.tokenize = this.inParserFunctionName.bind( this );
+							state.tokenize = this.inParserFunctionName();
 							return this.makeLocalStyle(
 								mwModeConfig.tags.parserFunctionBracket,
 								state
@@ -1111,7 +1138,7 @@ class CodeMirrorModeMediaWiki {
 							) {
 								state.nExt++;
 								state.stack.push( state.tokenize );
-								state.tokenize = this.inParserFunctionName.bind( this );
+								state.tokenize = this.inParserFunctionName();
 								return this.makeLocalStyle(
 									mwModeConfig.tags.parserFunctionBracket,
 									state

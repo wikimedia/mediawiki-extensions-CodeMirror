@@ -31,6 +31,20 @@ class CodeMirrorModeMediaWikiConfig {
 	}
 
 	/**
+	 * Register a parser function the argument of which is a page title in CodeMirror.
+	 *
+	 * @param {number} ns
+	 * @private
+	 * @internal
+	 */
+	addFunction( ns ) {
+		if ( this.tokenTable[ `mw-function-${ ns }` ] ) {
+			return;
+		}
+		this.tokenTable[ `mw-function-${ ns }` ] = Tag.define();
+	}
+
+	/**
 	 * Register a token for the given tag in CodeMirror. The generated CSS class will be of
 	 * the form 'cm-mw-ext-tagname'. This is for internal use to dynamically register tags
 	 * from other MediaWiki extensions.

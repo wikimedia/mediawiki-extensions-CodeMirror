@@ -35,7 +35,12 @@ describe( 'MediaWiki autocomplete', () => {
 		expect( await source( createCompletionContext( true ) ) ).toEqual( {
 			from: 3,
 			options: [
+				{ label: '#ifexist', type: 'function' },
+				{ label: '#invoke', type: 'function' },
+				{ label: '#lst', type: 'function' },
 				{ label: '#special', type: 'function' },
+				{ label: 'filepath', type: 'function' },
+				{ label: 'int', type: 'function' },
 				{ label: 'ns', type: 'function' },
 				{ label: '!', type: 'constant' },
 				{ label: 'מיון רגיל', type: 'constant' }
@@ -52,7 +57,12 @@ describe( 'MediaWiki autocomplete', () => {
 		expect( await source( createCompletionContext( false ) ) ).toEqual( {
 			from: 3,
 			options: [
+				{ label: '#ifexist', type: 'function' },
+				{ label: '#invoke', type: 'function' },
+				{ label: '#lst', type: 'function' },
 				{ label: '#special', type: 'function' },
+				{ label: 'filepath', type: 'function' },
+				{ label: 'int', type: 'function' },
 				{ label: 'ns', type: 'function' },
 				{ label: '!', type: 'constant' },
 				{ label: 'מיון רגיל', type: 'constant' }
