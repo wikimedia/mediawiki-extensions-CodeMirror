@@ -32,5 +32,6 @@
 	"codemirror-special-char-right-to-left-mark": "ডান-থেকে-বাম চিহ্ন",
 	"codemirror-special-char-line-separator": "লাইন বিভাজক",
 	"codemirror-special-char-object-replacement": "বস্তু প্রতিস্থাপন অক্ষর",
+	"codemirror-keymap-lint": "লিন্টার",
 	"prefs-accessibility": "অভিগম্যতা"
 }
