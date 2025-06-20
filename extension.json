@@ -438,6 +438,15 @@
 				"ext.CodeMirror.v6.lib"
 			]
 		},
+		"ext.CodeMirror.v6.mode.lua": {
+			"packageFiles": [
+				"codemirror.lua.js",
+				"lib/codemirror6.bundle.lua.js"
+			],
+			"dependencies": [
+				"ext.CodeMirror.v6.lib"
+			]
+		},
 		"ext.CodeMirror.v6.WikiEditor": {
 			"dependencies": [
 				"ext.wikiEditor",

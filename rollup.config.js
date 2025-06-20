@@ -14,10 +14,15 @@ module.exports = [
 			nodeResolve()
 		]
 	},
-	// ext.CodeMirror.v6.mode.javascript, ext.CodeMirror.v6.mode.json, ext.CodeMirror.v6.mode.css
-	...[ 'javascript', 'json', 'css' ].map(
+	// ext.CodeMirror.v6.mode.javascript
+	// ext.CodeMirror.v6.mode.json
+	// ext.CodeMirror.v6.mode.css
+	// ext.CodeMirror.v6.mode.lua
+	...[ 'javascript', 'json', 'css', 'lua' ].map(
 		( mode ) => ( {
-			input: `node_modules/@codemirror/lang-${ mode }/dist/index.js`,
+			input: mode === 'lua' ?
+				'node_modules/@codemirror/legacy-modes/mode/lua.js' :
+				`node_modules/@codemirror/lang-${ mode }/dist/index.js`,
 			output: {
 				file: `resources/lib/codemirror6.bundle.${ mode }.js`,
 				format: 'cjs'
@@ -36,15 +41,18 @@ module.exports = [
 					]
 				} ),
 				nodeResolve( {
-					resolveOnly: [
-						`@codemirror/lang-${ mode }`,
-						`@lezer/${ mode }`,
-						// Most HTTP requests are for action=edit on wikitext, which doesn't need
-						// the full Lezer parser. At scale, it's more efficient to duplicate these
-						// for each language module than to include them in ext.CodeMirror.v6.lib.
-						'@lezer/common',
-						'@lezer/lr'
-					]
+					resolveOnly: mode === 'lua' ?
+						[ '@codemirror/legacy-modes' ] :
+						[
+							`@codemirror/lang-${ mode }`,
+							`@lezer/${ mode }`,
+							// Most HTTP requests are for action=edit on wikitext, which doesn't
+							// need the full Lezer parser. At scale, it's more efficient to
+							// duplicate these for each language module than to include them in
+							// ext.CodeMirror.v6.lib.
+							'@lezer/common',
+							'@lezer/lr'
+						]
 				} )
 			]
 		} )

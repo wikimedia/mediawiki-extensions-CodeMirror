@@ -50,6 +50,7 @@ class Hooks implements
 		'javascript',
 		'css',
 		'json',
+		'lua',
 	];
 
 	/**

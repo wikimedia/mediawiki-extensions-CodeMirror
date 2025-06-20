@@ -68,14 +68,14 @@
 // and different content types.
 // This is the same hack that CodeEditor uses to customize the toolbar.
 // WikiEditor should be updated to better handle read only pages (T188817).
-.ext-codemirror-readonly,
-.ext-codemirror-javascript,
-.ext-codemirror-css,
-.ext-codemirror-json {
-	.wikiEditor-section-secondary,
-	.group:not( .group-codemirror ):not( .group-codemirror-format ):not( .group-codemirror-preferences ):not( .group-codemirror-search ),
-	.tabs,
-	.sections {
-		display: none;
+.wikiEditor-ui {
+	&.ext-codemirror-readonly,
+	&:not( .ext-codemirror-mediawiki ) {
+		.wikiEditor-section-secondary,
+		.group:not( .group-codemirror ):not( .group-codemirror-format ):not( .group-codemirror-preferences ):not( .group-codemirror-search ),
+		.tabs,
+		.sections {
+			display: none;
+		}
 	}
 }
