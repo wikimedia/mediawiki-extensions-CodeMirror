@@ -44,7 +44,7 @@ class CodeMirrorTextSelection {
 	 * @stable to call
 	 */
 	setContents( content ) {
-		this.view.dispatch( {
+		this.dispatch( {
 			changes: {
 				from: 0,
 				to: this.view.state.doc.length,
@@ -82,7 +82,7 @@ class CodeMirrorTextSelection {
 	scrollToCaretPosition() {
 		const scrollEffect = EditorView.scrollIntoView( this.view.state.selection.main.head );
 		scrollEffect.value.isSnapshot = true;
-		this.view.dispatch( {
+		this.dispatch( {
 			effects: scrollEffect
 		} );
 		return this.$cmDom;
@@ -111,7 +111,7 @@ class CodeMirrorTextSelection {
 	 * @stable to call
 	 */
 	setSelection( options ) {
-		this.view.dispatch( {
+		this.dispatch( {
 			selection: { anchor: options.start, head: ( options.end || options.start ) }
 		} );
 		this.view.focus();
@@ -126,9 +126,7 @@ class CodeMirrorTextSelection {
 	 * @stable to call
 	 */
 	replaceSelection( value ) {
-		this.view.dispatch(
-			this.view.state.replaceSelection( value )
-		);
+		this.dispatch( this.view.state.replaceSelection( value ) );
 		return this.$cmDom;
 	}
 
@@ -222,7 +220,7 @@ class CodeMirrorTextSelection {
 		 * @see https://codemirror.net/examples/change/
 		 */
 		if ( this.view.state.selection.ranges.length > 1 ) {
-			this.view.dispatch( this.view.state.changeByRange( ( range ) => ( {
+			this.dispatch( this.view.state.changeByRange( ( range ) => ( {
 				changes: [
 					{ from: range.from, insert: options.pre },
 					{ from: range.to, insert: options.post }
@@ -255,6 +253,17 @@ class CodeMirrorTextSelection {
 		}
 
 		return this.$cmDom;
+	}
+
+	/**
+	 * Dispatch an event to the EditorView, but not if the state is read-only.
+	 *
+	 * @param {*} args
+	 */
+	dispatch( ...args ) {
+		if ( !this.view.state.readOnly ) {
+			this.view.dispatch( ...args );
+		}
 	}
 }
 
