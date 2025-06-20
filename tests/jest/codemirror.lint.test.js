@@ -5,6 +5,7 @@ const CodeMirrorLint = require( '../../resources/codemirror.lint.js' );
 const cmLint = new CodeMirrorLint();
 const { dom, update } = cmLint.panel;
 const doc = Text.of( [ 'foo', 'bar' ] );
+const apply = jest.fn();
 
 const updateSelection = ( anchor, head ) => {
 	update( {
@@ -24,7 +25,17 @@ describe( 'CodeMirrorLint', () => {
 				from: 0,
 				to: 1,
 				severity: 'error',
-				message: 'Error message'
+				message: 'Error message',
+				actions: [
+					{
+						name: 'Fix',
+						apply
+					},
+					{
+						name: 'Suggestion',
+						apply
+					}
+				]
 			},
 			{
 				from: 0,
@@ -70,11 +81,15 @@ describe( 'CodeMirrorLint', () => {
 	it( 'should update the diagnostic message', () => {
 		const message = dom.querySelector( '.cm-mw-panel--status-message' );
 		cmLint.updateDiagnosticMessage( 0, message );
-		expect( message.textContent ).toEqual( 'Error message' );
+		expect( message.textContent ).toEqual( 'Error messageFixSuggestion' );
 		cmLint.updateDiagnosticMessage( 2, message );
 		expect( message.textContent ).toEqual( '' );
 		cmLint.updateDiagnosticMessage( 1, message );
-		expect( message.textContent ).toEqual( 'Error message' );
+		expect( message.textContent ).toEqual( 'Error messageFixSuggestion' );
+		for ( const button of message.querySelectorAll( 'button' ) ) {
+			button.click();
+		}
+		expect( apply ).toHaveBeenCalledTimes( 2 );
 	} );
 
 	it( 'should update the position/selection', () => {
