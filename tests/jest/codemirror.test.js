@@ -63,15 +63,6 @@ describe( 'initialize', () => {
 		expect( cm.view.dom.getAttribute( 'lang' ) ).toStrictEqual( 'ar' );
 	} );
 
-	it( 'should be readonly when the textarea is also readonly', () => {
-		textarea.readOnly = true;
-		// This test requires a fresh instantiation.
-		cm = new CodeMirror( textarea );
-		cm.initialize();
-		expect( cm.readOnly ).toEqual( true );
-		expect( cm.view.state.readOnly ).toEqual( true );
-	} );
-
 	it( 'should not allow initialization more than once', () => {
 		const spy = jest.spyOn( mw.log, 'warn' );
 		cm.initialize();
@@ -355,6 +346,29 @@ describe( 'setCodeMirrorPreference', () => {
 		CodeMirror.setCodeMirrorPreference( true );
 		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledTimes( 0 );
 		expect( mw.user.options.set ).toHaveBeenCalledTimes( 0 );
+	} );
+} );
+
+describe( 'readonly', () => {
+	beforeEach( () => {
+		textarea.readOnly = true;
+		// These test require a fresh instantiation.
+		cm = new CodeMirror( textarea );
+		cm.initialize();
+	} );
+
+	it( 'should be readonly when the textarea is also readonly', () => {
+		expect( cm.readOnly ).toEqual( true );
+		expect( cm.view.state.readOnly ).toEqual( true );
+	} );
+
+	it( 'should prevent transactions that make document changes from being dispatched', () => {
+		expect( cm.view.state.doc.toString() ).toEqual( 'Metallica' );
+		const transaction = cm.view.state.update( {
+			changes: { from: 0, to: 0, insert: 'foo' }
+		} );
+		cm.view.dispatch( transaction );
+		expect( cm.view.state.doc.toString() ).toEqual( 'Metallica' );
 	} );
 } );
 

@@ -264,6 +264,14 @@ class CodeMirror {
 				}
 			} ) );
 			extensions.push( history() );
+		} else {
+			// Prevent transactions that make changes to the document.
+			extensions.push( EditorState.transactionFilter.of( ( tr ) => {
+				if ( tr.docChanged ) {
+					return [];
+				}
+				return tr;
+			} ) );
 		}
 
 		if ( this.contentModel !== 'wikitext' ) {

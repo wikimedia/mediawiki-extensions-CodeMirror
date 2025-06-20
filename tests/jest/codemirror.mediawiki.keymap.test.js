@@ -4,10 +4,10 @@ const CodeMirror = require( '../../resources/codemirror.js' );
 const mwKeymap = require( '../../resources/codemirror.mediawiki.keymap.js' );
 
 describe( 'CodeMirrorMediaWikiKeymap', () => {
-	let cm;
+	let cm, textarea;
 
 	beforeEach( () => {
-		const textarea = document.createElement( 'textarea' );
+		textarea = document.createElement( 'textarea' );
 		const form = document.createElement( 'form' );
 		form.appendChild( textarea );
 		mockMwConfigGet( { wgCiteResponsiveReferences: true } );
@@ -128,5 +128,21 @@ describe( 'CodeMirrorMediaWikiKeymap', () => {
 		cm.preferences.setPreference( 'codeFolding', false );
 		expect( document.querySelector( '.cm-mw-keymap-section--codefolding' ).style.display )
 			.toBe( 'none' );
+	} );
+
+	it( 'should prevent shortcuts from changing content in readonly mode', () => {
+		textarea.readOnly = true;
+		textarea.value = 'Metallica Rules!';
+		cm = new CodeMirror( textarea );
+		cm.initialize();
+		mwKeymap( cm );
+		expect( cm.view.state.readOnly ).toBe( true );
+		cm.textSelection.setSelection( { start: 0, end: 5 } );
+		cm.view.contentDOM.dispatchEvent( new KeyboardEvent( 'keydown', {
+			key: 'b',
+			ctrlKey: true
+		} ) );
+		expect( cm.textSelection.getContents() ).toBe( 'Metallica Rules!' );
+		expect( cm.textSelection.getSelection() ).toBe( 'Metal' );
 	} );
 } );
