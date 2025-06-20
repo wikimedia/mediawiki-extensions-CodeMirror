@@ -2,10 +2,9 @@
  * Main entry point for CodeMirror initialization on action=edit.
  */
 
-const isSpecialUpload = mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Upload';
 const useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
-const useWikiEditor = !isSpecialUpload && mw.user.options.get( 'usebetatoolbar' ) > 0;
 const resourceLoaderModules = mw.config.get( 'cmRLModules' );
+const useWikiEditor = resourceLoaderModules.includes( 'ext.CodeMirror.v6.WikiEditor' );
 const mode = mw.config.get( 'cmMode' );
 
 /**
@@ -41,13 +40,32 @@ async function init() {
 		mw.hook( 'wikiEditor.toolbarReady' ).add( ( $textarea ) => {
 			const cmWE = new CodeMirror( $textarea, langSupport );
 			cmWE.initialize();
+			initChildren( cmWE );
 		} );
 	} else {
-		const id = isSpecialUpload ? 'wpUploadDescription' : 'wpTextbox1';
-		const textarea = document.getElementById( id );
+		const textarea = document.querySelector( mw.config.get( 'cmTextarea' ) );
 		const cm = new CodeMirror( textarea, langSupport );
 		cm.initialize();
+		initChildren( cm );
 	}
+}
+
+/**
+ * Initialize child CodeMirror instances, if any.
+ *
+ * @param {CodeMirror} primaryInstance
+ */
+function initChildren( primaryInstance ) {
+	const childTextareas = mw.config.get( 'cmChildTextareas', [] );
+
+	childTextareas.forEach( ( textarea ) => {
+		const childTextarea = document.querySelector( textarea );
+		if ( childTextarea ) {
+			// eslint-disable-next-line new-cap
+			const cmChild = new primaryInstance.child( textarea, primaryInstance );
+			cmChild.initialize();
+		}
+	} );
 }
 
 // Only add the 'Syntax' toolbar button to WikiEditor if CodeMirror is disabled.
@@ -59,34 +77,28 @@ if ( useWikiEditor && !useCodeMirror ) {
 	// This minor sacrifice is made to avoid loading all the modules when the user may have
 	// no intention of using CodeMirror.
 	mw.hook( 'wikiEditor.toolbarReady' ).add( ( $textarea ) => {
-		$textarea.wikiEditor(
-			'addToToolbar',
-			{
-				section: 'main',
-				groups: {
-					codemirror: {
-						tools: {
-							CodeMirror: {
-								type: 'element',
-								element: () => {
-									// OOUI has already been loaded by WikiEditor.
-									const button = new OO.ui.ToggleButtonWidget( {
-										label: mw.msg( 'codemirror-toggle-label-short' ),
-										title: mw.msg( 'codemirror-toggle-label' ),
-										icon: 'syntax-highlight',
-										value: false,
-										framed: false,
-										classes: [ 'tool', 'cm-mw-toggle-wikieditor' ]
-									} );
-									button.on( 'click', init );
-									return button.$element;
-								}
-							}
+		$textarea.wikiEditor( 'addToToolbar', { section: 'main', groups: {
+			codemirror: {
+				tools: {
+					CodeMirror: {
+						type: 'element',
+						element: () => {
+							// OOUI has already been loaded by WikiEditor.
+							const button = new OO.ui.ToggleButtonWidget( {
+								label: mw.msg( 'codemirror-toggle-label-short' ),
+								title: mw.msg( 'codemirror-toggle-label' ),
+								icon: 'syntax-highlight',
+								value: false,
+								framed: false,
+								classes: [ 'tool', 'cm-mw-toggle-wikieditor' ]
+							} );
+							button.on( 'click', init );
+							return button.$element;
 						}
 					}
 				}
 			}
-		);
+		} } );
 		document.querySelector( '.tool[rel=CodeMirror]' ).id = 'mw-editbutton-codemirror';
 
 		// Hide non-applicable buttons until WikiEditor better supports a read-only mode (T188817).

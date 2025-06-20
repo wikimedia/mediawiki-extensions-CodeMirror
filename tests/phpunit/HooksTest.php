@@ -12,6 +12,7 @@ use MediaWiki\Language\Language;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\Request\WebRequest;
+use MediaWiki\Specials\SpecialExpandTemplates;
 use MediaWiki\Specials\SpecialUpload;
 use MediaWiki\Title\Title;
 use MediaWiki\User\Options\UserOptionsLookup;
@@ -110,6 +111,13 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			$uploadMock->method( 'getOutput' )->willReturn( $out );
 			$uploadMock->mForReUpload = $conds['reupload'];
 			$hooks->onUploadForm_initial( $uploadMock );
+		} elseif ( $conds['method'] === 'expandTemplates' ) {
+			$expandTemplatesMock = $this->createMock( SpecialExpandTemplates::class );
+			$expandTemplatesMock->method( 'getName' )->willReturn( 'ExpandTemplates' );
+			$expandTemplatesMock->method( 'getOutput' )->willReturn( $out );
+			$hooks->onSpecialPageBeforeExecute( $expandTemplatesMock, '' );
+			$this->assertEquals( '[name=wpInput]', $jsConfigVars['cmTextarea'] );
+			$this->assertArrayEquals( [ '#output' ], $jsConfigVars['cmChildTextareas'] );
 		} else {
 			$method = $conds['method'] === 'readOnly' ?
 				'onEditPage__showReadOnlyForm_initial' :
@@ -125,6 +133,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			$pageLang = $langFactory->getLanguage( $conds['pageLang'] );
 			$variants = $langConverterFactory->getLanguageConverter( $pageLang )->getVariants();
 			$this->assertArrayEquals( $variants, $jsConfigVars['cmLanguageVariants'] );
+			$this->assertEquals( '#wpTextbox1', $jsConfigVars['cmTextarea'] );
 		}
 	}
 
@@ -246,6 +255,10 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		];
 		yield 'CM6, page language zh' => [
 			[ 'pageLang' => 'zh' ],
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
+		];
+		yield 'CM6, Special:ExpandTemplates' => [
+			[ 'method' => 'expandTemplates' ],
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
 		];
 	}
