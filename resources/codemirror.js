@@ -621,7 +621,7 @@ class CodeMirror {
 	 * @stable to call
 	 */
 	get lintExtension() {
-		return new CodeMirrorLint( this.lintSource, this.keymap );
+		return new CodeMirrorLint( this.lintSource, this.keymap ).extension;
 	}
 
 	/**

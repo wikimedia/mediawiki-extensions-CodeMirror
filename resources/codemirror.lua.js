@@ -1,4 +1,3 @@
-const { lua } = require( './lib/codemirror6.bundle.lua.js' );
 const {
 	syntaxTree,
 	LanguageSupport,
@@ -6,6 +5,21 @@ const {
 	foldService,
 	snippetCompletion
 } = require( 'ext.CodeMirror.v6.lib' );
+const { lua } = require( './lib/codemirror6.bundle.lua.js' );
+const CodeMirrorWorker = require( './codemirror.worker.js' );
+
+const worker = new CodeMirrorWorker( 'lua' );
+const lintSource = async ( view ) => {
+	const data = await worker.lint( view );
+	return data.map( ( { line, column, end_column: endColumn, msg, code } ) => ( {
+		source: 'Luacheck',
+		message: msg,
+		severity: code.startsWith( '0' ) ? 'error' : 'info',
+		from: CodeMirrorWorker.pos( view, line, column ),
+		to: CodeMirrorWorker.pos( view, line, endColumn + 1 )
+	} ) );
+};
+lintSource.worker = worker;
 
 const map = {
 		1: 'constant',
@@ -444,6 +458,12 @@ const support = foldService.of( ( { doc, tabSize }, start, from ) => {
 
 module.exports = {
 	lua() {
-		return new LanguageSupport( StreamLanguage.define( lua ), support );
+		const extension = new LanguageSupport( StreamLanguage.define( lua ), support );
+		extension.lintSource = lintSource;
+		return extension;
 	}
 };
+
+if ( mw.config.get( 'cmDebug' ) ) {
+	window.luaWorker = worker;
+}

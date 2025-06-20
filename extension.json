@@ -444,6 +444,7 @@
 		"ext.CodeMirror.v6.mode.lua": {
 			"packageFiles": [
 				"codemirror.lua.js",
+				"codemirror.worker.js",
 				"lib/codemirror6.bundle.lua.js"
 			],
 			"dependencies": [

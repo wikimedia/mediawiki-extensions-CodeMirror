@@ -5,6 +5,7 @@
 		"build": "rollup -c",
 		"build:stylelint": "esbuild resources/workers/css/worker.js --charset=utf8 --bundle --minify --target=es2017 --format=iife --outfile=resources/workers/css/worker.min.js",
 		"build:eslint": "esbuild resources/workers/javascript/worker.js --charset=utf8 --bundle --minify --target=es2017 --format=iife --outfile=resources/workers/javascript/worker.min.js",
+		"build:luacheck": "esbuild resources/workers/lua/worker.js --charset=utf8 --bundle --minify --target=es2017 --format=iife --outfile=resources/workers/lua/worker.min.js",
 		"test": "npm run test:lint && npm run test:unit && npm run check-built-assets",
 		"test:lint": "npm run test:lint:styles && npm run test:lint:js && npm run test:lint:i18n",
 		"test:lint:js": "eslint --cache .",
@@ -52,6 +53,7 @@
 		"jquery": "3.7.1",
 		"jsdoc": "4.0.4",
 		"jsdoc-wmf-theme": "1.1.0",
+		"luacheck-browserify": "^0.7.1",
 		"rollup": "4.22.4",
 		"stylelint-config-wikimedia": "0.18.0",
 		"wdio-mediawiki": "2.7.1"

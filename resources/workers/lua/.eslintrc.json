@@ -1,0 +1,33 @@
+{
+	"root": true,
+	"extends": [
+		"plugin:es-x/restrict-to-es2017"
+	],
+	"env": {
+		"worker": true,
+		"es2017": true
+	},
+	"parserOptions": {
+		"ecmaVersion": 8
+	},
+	"rules": {
+		"es-x/no-promise-prototype-finally": 0
+	},
+	"settings": {
+		"es-x": {
+			"aggressive": true
+		}
+	},
+	"overrides": [
+		{
+			"files": [
+				"worker.js"
+			],
+			"extends": [
+				"wikimedia/client",
+				"wikimedia/jquery",
+				"wikimedia/mediawiki"
+			]
+		}
+	]
+}

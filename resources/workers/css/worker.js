@@ -16,8 +16,7 @@ const lint = ( code ) => stylelint.lint( {
 		rules: customRules,
 		computeEditInfo: true
 	}
-} ).then( ( { results } ) => results.map( ( { warnings } ) => warnings )
-	.reduce( ( acc, cur ) => acc.concat( cur ), [] )
+} ).then( ( { results } ) => results[ 0 ].warnings
 	.filter( ( { text } ) => !text.startsWith( 'Unknown rule ' ) ) );
 
 onmessage( setConfig, getConfig, lint );
