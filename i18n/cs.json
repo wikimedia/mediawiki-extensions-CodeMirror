@@ -7,7 +7,14 @@
 	},
 	"codemirror-desc": "Poskytuje zvýrazňování syntaxe v editoru wikitextu",
 	"codemirror-toggle-label": "Zvýraznění syntaxe",
+	"codemirror-toggle-label-short": "Syntaxe",
+	"codemirror-prefs-summary": "Více informací o této funkci najdete na [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror stránce nápovědy].",
+	"codemirror-prefs-enable": "Zapnout zvýrazňování syntaxe",
+	"codemirror-prefs-title": "Nastavení zvýrazňování syntaxe",
+	"codemirror-prefs-help": "nápověda",
 	"codemirror-prefs-colorblind": "Zapnout schéma pro barvoslepé u zvýrazňování syntaxe při editaci wikitextu",
 	"codemirror-prefs-colorblind-help": "Pokud používáte pro zvýrazňování syntaxe udělátko, nebude toto nastavení fungovat.",
-	"prefs-accessibility": "Přístupnost"
+	"prefs-accessibility": "Přístupnost",
+	"codemirror-beta-feature-title": "Vylepšené zvýrazňování syntaxe",
+	"codemirror-beta-feature-description": "Získejte předběžný přístup k novému zvýrazňování syntaxe a editačním funkcím jako sbalování a automatické dokončování kódu."
 }
