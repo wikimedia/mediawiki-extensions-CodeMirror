@@ -228,6 +228,7 @@
 				"codemirror.extensionRegistry.js",
 				"codemirror.codex.js",
 				"codemirror.child.js",
+				"codemirror.matchbrackets.js",
 				{
 					"name": "ext.CodeMirror.data.js",
 					"callback": "MediaWiki\\Extension\\CodeMirror\\DataScript::makeScript"

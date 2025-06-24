@@ -8,7 +8,6 @@ const {
 	LanguageSupport,
 	ViewUpdate,
 	autocompletion,
-	bracketMatching,
 	closeBrackets,
 	crosshairCursor,
 	defaultHighlightStyle,
@@ -37,6 +36,7 @@ const CodeMirrorGotoLine = require( './codemirror.gotoLine.js' );
 const CodeMirrorPreferences = require( './codemirror.preferences.js' );
 const CodeMirrorKeymap = require( './codemirror.keymap.js' );
 const CodeMirrorExtensionRegistry = require( './codemirror.extensionRegistry.js' );
+const bracketMatching = require( './codemirror.matchbrackets.js' );
 require( './ext.CodeMirror.data.js' );
 
 /**
