@@ -5,6 +5,7 @@
 			"Facenapalm",
 			"Kaganer",
 			"Kareyac",
+			"MidnightLG",
 			"Okras",
 			"Stjn",
 			"WindEwriX"
@@ -126,6 +127,8 @@
 	"codemirror-keymap-multicursor": "Кликните с зажатой клавишей $1, чтобы создать несколько курсоров.",
 	"codemirror-keymap-crosshair": "Кликните с зажатой клавишей $1 и двигайте курсор, чтобы создать прямоугольные выделения.",
 	"codemirror-keymap-openlinks": "Кликните с зажатой клавишей $1 по заголовкам вики-страниц или ссылкам, чтобы открыть их в новой вкладке.",
+	"codemirror-keymap-lint": "Анализатор",
+	"codemirror-keymap-next-diagnostic": "Выбор следующей проверки",
 	"prefs-accessibility": "Доступность",
 	"prefs-syntax-highlighting": "Подсвечивать синтаксис",
 	"codemirror-beta-feature-title": "Улучшенная подсветка синтаксиса",
