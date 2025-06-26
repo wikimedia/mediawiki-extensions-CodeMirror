@@ -9,5 +9,7 @@
 	"codemirror-toggle-label": "Livañ ereadurezh",
 	"codemirror-prefs-colorblind": "Gweredekaat livioù dereat d’ar re na wel ket an holl anezho evit livañ an ereadurezh en ur aozañ wikitestenn",
 	"codemirror-prefs-colorblind-help": "Marteze ne yelo ket en-dro an ereadur-mañ ma rit gant ur bitrak livañ ereadurezh.",
+	"codemirror-find": "Klask",
+	"codemirror-replace-placeholder": "Erlec'hiañ",
 	"prefs-accessibility": "Diraezañ"
 }
