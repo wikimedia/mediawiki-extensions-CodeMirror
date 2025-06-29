@@ -118,6 +118,7 @@
 	"codemirror-keymap-unfold": "Label for the keyboard shortcut for unfolding code. The opposite of {{msg-mw|Codemirror-keymap-fold}}",
 	"codemirror-keymap-foldall": "Label for the keyboard shortcut for folding all code. The opposite of {{msg-mw|Codemirror-keymap-unfoldall}}",
 	"codemirror-keymap-unfoldall": "Label for the keyboard shortcut for unfolding all code. The opposite of {{msg-mw|Codemirror-keymap-foldall}}",
+	"codemirror-keymap-foldref": "Label for the keyboard shortcut for folding all <ref> tags.",
 	"codemirror-keymap-autocomplete": "Section heading in the keyboard shortcuts help dialog.",
 	"codemirror-keymap-startcompletion": "Label for the keyboard shortcut for showing autocomplete suggestions",
 	"codemirror-keymap-selectcompletion": "Label for the keyboard shortcut for selecting an autocomplete suggestion.",

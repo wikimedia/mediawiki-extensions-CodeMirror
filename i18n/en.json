@@ -109,6 +109,7 @@
 	"codemirror-keymap-unfold": "Unfold selected code",
 	"codemirror-keymap-foldall": "Fold all code",
 	"codemirror-keymap-unfoldall": "Unfold all code",
+	"codemirror-keymap-foldref": "Fold all <ref> tags",
 	"codemirror-keymap-autocomplete": "Autocompletion",
 	"codemirror-keymap-startcompletion": "Show autocomplete suggestions",
 	"codemirror-keymap-selectcompletion": "Select autocomplete suggestion",

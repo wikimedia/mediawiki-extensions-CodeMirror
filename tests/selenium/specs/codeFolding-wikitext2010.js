@@ -1,4 +1,4 @@
-/* global KeyboardEvent */
+/* global KeyboardEvent, navigator */
 'use strict';
 
 const assert = require( 'assert' ),
@@ -9,7 +9,7 @@ const assert = require( 'assert' ),
 	Util = require( 'wdio-mediawiki/Util' );
 
 describe( 'CodeMirror code folding for the wikitext 2010 editor', () => {
-	let title, htmlNode, linkNode, nowikiNode, entityNode;
+	let title, htmlNode, linkNode, nowikiNode, entityNode, refNode;
 
 	before( async () => {
 		title = Util.getTestString( 'CodeMirror-fixture1-' );
@@ -21,13 +21,14 @@ describe( 'CodeMirror code folding for the wikitext 2010 editor', () => {
 		await browser.execute( () => {
 			$( '.cm-editor' ).textSelection(
 				'setContents',
-				'{{foo|1={{bar|<p>{{baz|[[link]]}}}}}}<nowiki>plain text</nowiki><nowiki>&lt;</nowiki>'
+				'{{foo|1={{bar|<p>{{baz|[[link]]}}}}}}<nowiki>plain text</nowiki><ref><nowiki>&lt;</nowiki></ref>'
 			);
 		} );
 		htmlNode = $( '.cm-mw-htmltag-name' );
 		linkNode = $( '.cm-mw-link-pagename' );
 		nowikiNode = $( '.cm-mw-tag-nowiki:not(.cm-mw-html-entity)' );
 		entityNode = $( '.cm-mw-html-entity' );
+		refNode = $( '.cm-mw-tag-ref' );
 	} );
 
 	it( 'folds the template parameters via the button', async () => {
@@ -76,6 +77,8 @@ describe( 'CodeMirror code folding for the wikitext 2010 editor', () => {
 		assert( await nowikiNode.waitForDisplayed( { reverse: true } ) );
 		// The entity node should not be hidden.
 		assert( await entityNode.waitForDisplayed() );
+		// The <ref> node should not be hidden.
+		assert( await refNode.waitForDisplayed() );
 		assert( await EditPage.codeMirrorCodeFoldingPlaceholder.isDisplayedInViewport() );
 	} );
 
@@ -98,6 +101,7 @@ describe( 'CodeMirror code folding for the wikitext 2010 editor', () => {
 		assert( await linkNode.waitForDisplayed() );
 		assert( await nowikiNode.waitForDisplayed() );
 		assert( await entityNode.waitForDisplayed() );
+		assert( await refNode.waitForDisplayed() );
 		// Fold all.
 		await browser.execute( () => {
 			$( '.cm-content' )[ 0 ].dispatchEvent( new KeyboardEvent( 'keydown', { key: '[', ctrlKey: true, altKey: true } ) );
@@ -107,6 +111,7 @@ describe( 'CodeMirror code folding for the wikitext 2010 editor', () => {
 		assert( await linkNode.waitForDisplayed( { reverse: true } ) );
 		assert( await nowikiNode.waitForDisplayed( { reverse: true } ) );
 		assert( await entityNode.waitForDisplayed( { reverse: true } ) );
+		assert( await refNode.waitForDisplayed( { reverse: true } ) );
 		assert( await EditPage.codeMirrorCodeFoldingPlaceholder.isDisplayedInViewport() );
 	} );
 
@@ -116,6 +121,7 @@ describe( 'CodeMirror code folding for the wikitext 2010 editor', () => {
 		assert( await linkNode.waitForDisplayed( { reverse: true } ) );
 		assert( await nowikiNode.waitForDisplayed( { reverse: true } ) );
 		assert( await entityNode.waitForDisplayed( { reverse: true } ) );
+		assert( await refNode.waitForDisplayed( { reverse: true } ) );
 		// Expand all.
 		await browser.execute( () => {
 			$( '.cm-content' )[ 0 ].dispatchEvent( new KeyboardEvent( 'keydown', { key: ']', ctrlKey: true, altKey: true } ) );
@@ -125,9 +131,30 @@ describe( 'CodeMirror code folding for the wikitext 2010 editor', () => {
 		assert( await linkNode.waitForDisplayed() );
 		assert( await nowikiNode.waitForDisplayed() );
 		assert( await entityNode.waitForDisplayed() );
+		assert( await refNode.waitForDisplayed() );
 		assert(
 			await EditPage.codeMirrorCodeFoldingPlaceholder
 				.waitForDisplayed( { reverse: true } )
 		);
+	} );
+
+	it( 'folds all <ref> tags via keyboard shortcut', async () => {
+		// First make sure <ref> nodes are visible.
+		assert( await refNode.waitForDisplayed() );
+		// Fold all.
+		await browser.execute( () => {
+			// eslint-disable-next-line n/no-unsupported-features/node-builtins
+			const modKey = /Mac/.test( navigator.platform ) ? 'metaKey' : 'ctrlKey';
+			$( '.cm-content' )[ 0 ].dispatchEvent( new KeyboardEvent( 'keydown', { key: ',', [ modKey ]: true, altKey: true } ) );
+		} );
+		// The <ref> node should be hidden, while the placeholder should be visible.
+		assert( await refNode.waitForDisplayed( { reverse: true } ) );
+		// The html node should not be hidden.
+		assert( await htmlNode.waitForDisplayed() );
+		// The link node should not be hidden.
+		assert( await linkNode.waitForDisplayed() );
+		// The nowiki node should not be hidden.
+		assert( await nowikiNode.waitForDisplayed() );
+		assert( await EditPage.codeMirrorCodeFoldingPlaceholder.isDisplayedInViewport() );
 	} );
 } );

@@ -271,6 +271,7 @@
 				"codemirror-keymap-find",
 				"codemirror-keymap-fold",
 				"codemirror-keymap-foldall",
+				"codemirror-keymap-foldref",
 				"codemirror-keymap-help",
 				"codemirror-keymap-help-close",
 				"codemirror-keymap-help-title",

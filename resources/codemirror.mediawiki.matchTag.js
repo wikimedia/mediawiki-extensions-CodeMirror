@@ -182,4 +182,4 @@ const matchTag = ( state, pos ) => {
 	return end ? { matched: true, start, end } : { matched: false, start };
 };
 
-module.exports = { matchTag };
+module.exports = { getTag, matchTag };
