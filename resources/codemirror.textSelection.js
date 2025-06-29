@@ -44,7 +44,7 @@ class CodeMirrorTextSelection {
 	 * @stable to call
 	 */
 	setContents( content ) {
-		this.dispatch( {
+		this.view.dispatch( {
 			changes: {
 				from: 0,
 				to: this.view.state.doc.length,
@@ -82,7 +82,7 @@ class CodeMirrorTextSelection {
 	scrollToCaretPosition() {
 		const scrollEffect = EditorView.scrollIntoView( this.view.state.selection.main.head );
 		scrollEffect.value.isSnapshot = true;
-		this.dispatch( {
+		this.view.dispatch( {
 			effects: scrollEffect
 		} );
 		return this.$cmDom;
@@ -111,7 +111,7 @@ class CodeMirrorTextSelection {
 	 * @stable to call
 	 */
 	setSelection( options ) {
-		this.dispatch( {
+		this.view.dispatch( {
 			selection: { anchor: options.start, head: ( options.end || options.start ) }
 		} );
 		this.view.focus();
@@ -126,7 +126,7 @@ class CodeMirrorTextSelection {
 	 * @stable to call
 	 */
 	replaceSelection( value ) {
-		this.dispatch( this.view.state.replaceSelection( value ) );
+		this.view.dispatch( this.view.state.replaceSelection( value ) );
 		return this.$cmDom;
 	}
 
@@ -155,6 +155,12 @@ class CodeMirrorTextSelection {
 	 * @stable to call
 	 */
 	encapsulateSelection( options ) {
+		// The transactionFilter in CodeMirror already prevents document changes.
+		// Prevent selection changes that assume document changes that don't happen.
+		if ( this.view.state.readOnly ) {
+			return this.$cmDom;
+		}
+
 		let selectedText,
 			isSample = false;
 		options = Object.assign( {
@@ -220,7 +226,7 @@ class CodeMirrorTextSelection {
 		 * @see https://codemirror.net/examples/change/
 		 */
 		if ( this.view.state.selection.ranges.length > 1 ) {
-			this.dispatch( this.view.state.changeByRange( ( range ) => ( {
+			this.view.dispatch( this.view.state.changeByRange( ( range ) => ( {
 				changes: [
 					{ from: range.from, insert: options.pre },
 					{ from: range.to, insert: options.post }
@@ -253,17 +259,6 @@ class CodeMirrorTextSelection {
 		}
 
 		return this.$cmDom;
-	}
-
-	/**
-	 * Dispatch an event to the EditorView, but not if the state is read-only.
-	 *
-	 * @param {*} args
-	 */
-	dispatch( ...args ) {
-		if ( !this.view.state.readOnly ) {
-			this.view.dispatch( ...args );
-		}
 	}
 }
 
