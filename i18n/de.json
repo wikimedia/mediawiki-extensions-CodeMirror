@@ -112,6 +112,7 @@
 	"codemirror-keymap-unfold": "Ausgewählten Code entfalten",
 	"codemirror-keymap-foldall": "Den gesamten Code falten",
 	"codemirror-keymap-unfoldall": "Den gesamten Code entfalten",
+	"codemirror-keymap-foldref": "Alle <ref>-Tags einklappen",
 	"codemirror-keymap-autocomplete": "Autovervollständigung",
 	"codemirror-keymap-startcompletion": "Vorschläge zur automatischen Vervollständigung anzeigen",
 	"codemirror-keymap-selectcompletion": "Autovervollständigungsvorschlag auswählen",
