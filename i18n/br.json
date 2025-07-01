@@ -7,8 +7,21 @@
 	},
 	"codemirror-desc": "Pourchas a ra livañ ereadurezh en aozer wikitestenn",
 	"codemirror-toggle-label": "Livañ ereadurezh",
+	"codemirror-toggle-label-short": "Ereadurezh",
 	"codemirror-v6-prefs-colorblind": "Ober gant livioù azasaet d'ar re zaltonek",
 	"codemirror-prefs-colorblind": "Gweredekaat livioù dereat d’ar re na wel ket an holl anezho evit livañ an ereadurezh en ur aozañ wikitestenn",
 	"codemirror-prefs-colorblind-help": "Marteze ne yelo ket en-dro an ereadur-mañ ma rit gant ur bitrak livañ ereadurezh.",
-	"prefs-accessibility": "Diraezañ"
+	"codemirror-find": "Klask",
+	"codemirror-all": "An holl",
+	"codemirror-all-tooltip": "Diuzañ an holl glotadurioù",
+	"codemirror-match-case": "Diforc'hañ Pennlizherennoù/Lizherennoù bihan",
+	"codemirror-regexp": "Jedad reoliek",
+	"codemirror-replace": "Erlec'hiañ",
+	"codemirror-replace-placeholder": "Erlec'hiañ",
+	"codemirror-replace-all": "Erlec'hiañ pep tra",
+	"codemirror-done": "Echu",
+	"codemirror-goto-line": "Mont d'al linenn",
+	"codemirror-goto-line-go": "Mont",
+	"prefs-accessibility": "Diraezañ",
+	"prefs-syntax-highlighting": "Livañ ereadurezh"
 }
