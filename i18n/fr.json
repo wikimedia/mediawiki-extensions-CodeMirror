@@ -120,6 +120,7 @@
 	"codemirror-keymap-unfold": "Déplier le code sélectionné",
 	"codemirror-keymap-foldall": "Replier tout le code",
 	"codemirror-keymap-unfoldall": "Déplier tout le code",
+	"codemirror-keymap-foldref": "Replier toutes les balises <ref>",
 	"codemirror-keymap-autocomplete": "Auto-complétion",
 	"codemirror-keymap-startcompletion": "Afficher les suggestions d'auto-complétion",
 	"codemirror-keymap-selectcompletion": "Sélectionner la suggestion d'auto-complétion",

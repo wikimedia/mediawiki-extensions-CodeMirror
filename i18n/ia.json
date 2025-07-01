@@ -107,6 +107,7 @@
 	"codemirror-keymap-unfold": "Expander le codice seligite",
 	"codemirror-keymap-foldall": "Contraher tote le codice",
 	"codemirror-keymap-unfoldall": "Expander tote le codice",
+	"codemirror-keymap-foldref": "Plicar tote le etiquettas <ref>",
 	"codemirror-keymap-autocomplete": "Autocompletamento",
 	"codemirror-keymap-startcompletion": "Monstrar suggestiones de autocompletamento",
 	"codemirror-keymap-selectcompletion": "Seliger suggestion de autocompletamento",

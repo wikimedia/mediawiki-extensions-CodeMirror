@@ -109,6 +109,7 @@
 	"codemirror-keymap-unfold": "Despregar o código seleccionado",
 	"codemirror-keymap-foldall": "Encartar todo o código",
 	"codemirror-keymap-unfoldall": "Despregar todo o código",
+	"codemirror-keymap-foldref": "Encartar todas as etiquetas <ref>",
 	"codemirror-keymap-autocomplete": "Autocompletado",
 	"codemirror-keymap-startcompletion": "Amosar as suxestións de autocompletado",
 	"codemirror-keymap-selectcompletion": "Seleccionar a suxestión de autocompletado",
