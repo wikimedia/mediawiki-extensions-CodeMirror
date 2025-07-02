@@ -133,15 +133,15 @@ const foldable = ( state, posOrNode, tree, refOnly ) => {
 		// Not a template
 		if ( isExt( node, refOnly ) ) {
 			( { nextSibling } = node );
-			while ( nextSibling ) {
-				while ( nextSibling && !( isExtBracket( nextSibling ) &&
-					state.sliceDoc( nextSibling.from, nextSibling.from + 2 ) === '</' ) ) {
-					( { nextSibling } = nextSibling );
-				}
-				// The closing bracket of the extension tag
-				if ( nextSibling || ( !refOnly || getTag( state, nextSibling ).name === 'ref' ) ) {
-					return { from: matchTag( state, nextSibling.to ).end.to, to: nextSibling.from };
-				}
+			while ( nextSibling && !( isExtBracket( nextSibling ) &&
+				state.sliceDoc( nextSibling.from, nextSibling.from + 2 ) === '</' ) ) {
+				( { nextSibling } = nextSibling );
+			}
+			// The closing bracket of the extension tag
+			if ( nextSibling &&
+				( !refOnly || nextSibling.nextSibling && getTag( state, nextSibling.nextSibling ).name === 'ref' )
+			) {
+				return { from: matchTag( state, nextSibling.to ).end.to, to: nextSibling.from };
 			}
 		}
 		return false;
