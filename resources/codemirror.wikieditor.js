@@ -434,6 +434,12 @@ class CodeMirrorWikiEditor extends CodeMirror {
 					title: mw.msg( `codemirror-prefs-${ name.toLowerCase() }` )
 				} );
 				button.on( 'click', () => this.preferences.toggleExtension( name, this.view ) );
+				// Sync preferences.
+				mw.hook( 'ext.CodeMirror.preferences.apply' ).add( ( prefName, enabled ) => {
+					if ( prefName === name ) {
+						button.setValue( enabled );
+					}
+				} );
 				return button.$element;
 			}
 		};
