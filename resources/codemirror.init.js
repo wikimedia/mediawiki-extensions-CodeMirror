@@ -107,14 +107,13 @@ if ( useWikiEditor && !useCodeMirror ) {
 			$( '#wpTextbox1' ).data( 'wikiEditor-context' ).$ui.addClass( 'ext-codemirror-readonly' );
 		}
 		// Similarly hide non-applicable buttons for non-wikitext.
-		if ( mode !== 'mediawiki' ) {
-			// CSS classes used here may include but are not limited to:
-			// * ext-codemirror-javascript
-			// * ext-codemirror-css
-			// * ext-codemirror-json
-			// eslint-disable-next-line no-jquery/no-global-selector
-			$( '#wpTextbox1' ).data( 'wikiEditor-context' ).$ui.addClass( `ext-codemirror-${ mode }` );
-		}
+		// CSS classes used here may include but are not limited to:
+		// * ext-codemirror-mediawiki
+		// * ext-codemirror-javascript
+		// * ext-codemirror-css
+		// * ext-codemirror-json
+		// eslint-disable-next-line no-jquery/no-global-selector
+		$( '#wpTextbox1' ).data( 'wikiEditor-context' ).$ui.addClass( `ext-codemirror-${ mode }` );
 	} );
 } else {
 	// Otherwise load all the modules and initialize CodeMirror.
