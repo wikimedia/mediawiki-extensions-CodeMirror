@@ -115,6 +115,7 @@
 	"codemirror-keymap-unfold": "كشف الكود المحدد",
 	"codemirror-keymap-foldall": "اطوِ كل الكود",
 	"codemirror-keymap-unfoldall": "اكشف كل الكود",
+	"codemirror-keymap-foldref": "اطوِ الكل<ref> العلامات",
 	"codemirror-keymap-autocomplete": "الإكمال التلقائي",
 	"codemirror-keymap-startcompletion": "إظهار اقتراحات الإكمال التلقائي",
 	"codemirror-keymap-selectcompletion": "حدد اقتراح الإكمال التلقائي",
