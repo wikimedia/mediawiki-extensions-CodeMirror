@@ -530,10 +530,10 @@
 		"main": {
 			"class": "MediaWiki\\Extension\\CodeMirror\\Hooks",
 			"services": [
-				"UserOptionsLookup",
+				"MainConfig",
 				"HookContainer",
 				"LanguageConverterFactory",
-				"MainConfig"
+				"UserOptionsLookup"
 			],
 			"optional_services": [
 				"GadgetsRepo"

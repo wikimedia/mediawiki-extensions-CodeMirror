@@ -35,15 +35,12 @@ class Hooks implements
 	GetPreferencesHook
 {
 
-	private UserOptionsLookup $userOptionsLookup;
-	private HookRunner $hookRunner;
-	private LanguageConverterFactory $languageConverterFactory;
-	private bool $useV6;
-	private array $conflictingGadgets;
-	private ?GadgetRepo $gadgetRepo;
-	private string $extensionAssetsPath;
-	private bool $debugMode;
-	private array $contentModels;
+	private readonly HookRunner $hookRunner;
+	private readonly bool $useV6;
+	private readonly array $conflictingGadgets;
+	private readonly string $extensionAssetsPath;
+	private readonly bool $debugMode;
+	private readonly array $contentModels;
 	private bool $readOnly = false;
 	public const SUPPORTED_MODES = [
 		'mediawiki',
@@ -53,26 +50,16 @@ class Hooks implements
 		'lua',
 	];
 
-	/**
-	 * @param UserOptionsLookup $userOptionsLookup
-	 * @param HookContainer $hookContainer
-	 * @param LanguageConverterFactory $languageConverterFactory
-	 * @param Config $config
-	 * @param GadgetRepo|null $gadgetRepo
-	 */
 	public function __construct(
-		UserOptionsLookup $userOptionsLookup,
-		HookContainer $hookContainer,
-		LanguageConverterFactory $languageConverterFactory,
 		Config $config,
-		?GadgetRepo $gadgetRepo
+		HookContainer $hookContainer,
+		private readonly LanguageConverterFactory $languageConverterFactory,
+		private readonly UserOptionsLookup $userOptionsLookup,
+		private readonly ?GadgetRepo $gadgetRepo,
 	) {
-		$this->userOptionsLookup = $userOptionsLookup;
 		$this->hookRunner = new HookRunner( $hookContainer );
-		$this->languageConverterFactory = $languageConverterFactory;
 		$this->useV6 = $config->get( 'CodeMirrorV6' );
 		$this->conflictingGadgets = $config->get( 'CodeMirrorConflictingGadgets' );
-		$this->gadgetRepo = $gadgetRepo;
 		$this->extensionAssetsPath = $config->get( MainConfigNames::ExtensionAssetsPath );
 		$this->debugMode = $config->get( MainConfigNames::ShowExceptionDetails );
 		$this->contentModels = $config->get( 'CodeMirrorContentModels' );

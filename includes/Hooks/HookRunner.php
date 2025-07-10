@@ -10,10 +10,9 @@ use MediaWiki\Title\Title;
  * @internal
  */
 class HookRunner implements CodeMirrorGetModeHook {
-	private HookContainer $hookContainer;
-
-	public function __construct( HookContainer $hookContainer ) {
-		$this->hookContainer = $hookContainer;
+	public function __construct(
+		private readonly HookContainer $hookContainer,
+	) {
 	}
 
 	/**

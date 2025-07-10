@@ -100,10 +100,10 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			} );
 
 		$hooks = new Hooks(
-			$userOptionsLookup,
+			$this->getServiceContainer()->getMainConfig(),
 			$this->getServiceContainer()->getHookContainer(),
 			$this->getServiceContainer()->getLanguageConverterFactory(),
-			$this->getServiceContainer()->getMainConfig(),
+			$userOptionsLookup,
 			$gadgetRepoMock
 		);
 		if ( $conds['method'] === 'upload' ) {
@@ -287,7 +287,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 
 		// CodeMirror 5
 		$this->overrideConfigValues( [ 'CodeMirrorV6' => false ] );
-		$hook = new Hooks( $userOptionsLookup, $hookContainer, $langConverterFactory, $config, null );
+		$hook = new Hooks( $config, $hookContainer, $langConverterFactory, $userOptionsLookup, null );
 		$preferences = [];
 		$hook->onGetPreferences( $user, $preferences );
 		self::assertArrayHasKey( 'usecodemirror', $preferences );
@@ -297,7 +297,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 
 		// CodeMirror 6
 		$this->overrideConfigValues( [ 'CodeMirrorV6' => true ] );
-		$hook = new Hooks( $userOptionsLookup, $hookContainer, $langConverterFactory, $config, null );
+		$hook = new Hooks( $config, $hookContainer, $langConverterFactory, $userOptionsLookup, null );
 		$preferences = [];
 		$hook->onGetPreferences( $user, $preferences );
 		self::assertArrayHasKey( 'usecodemirror', $preferences );
