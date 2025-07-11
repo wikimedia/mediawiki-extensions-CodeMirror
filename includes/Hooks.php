@@ -162,7 +162,7 @@ class Hooks implements
 				if ( $this->gadgetRepo->getGadget( $conflictingGadget )->isEnabled( $user ) ) {
 					return true;
 				}
-			} catch ( InvalidArgumentException $e ) {
+			} catch ( InvalidArgumentException ) {
 				// Safeguard for an invalid gadget ID; treat as gadget not enabled.
 				continue;
 			}
