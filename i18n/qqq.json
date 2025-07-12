@@ -32,6 +32,7 @@
 	"codemirror-prefs-openlinks": "Label for the option to open links by modifier + click in the CodeMirror preferences panel.",
 	"codemirror-prefs-bidiisolation": "Label for the option to enable bidirectional text isolation in the CodeMirror preferences panel.",
 	"codemirror-prefs-bracketmatching": "Label for the option to enable bracket matching in the CodeMirror preferences panel.",
+	"codemirror-prefs-closebrackets": "Label for the option to enable auto-closing brackets in the CodeMirror preferences panel.",
 	"codemirror-prefs-linenumbering": "Label for the option to show line numbers in the CodeMirror preferences panel.",
 	"codemirror-prefs-linewrapping": "Label for the option to wrap lines in the CodeMirror preferences panel.",
 	"codemirror-prefs-lint": "Label for the option to process the code with [[:w:Lint (software)|Lint]] in the CodeMirror preferences panel.",

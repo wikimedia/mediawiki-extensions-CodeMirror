@@ -119,6 +119,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 				'autocomplete',
 				'codeFolding',
 				'bracketMatching',
+				'closeBrackets',
 				'lint'
 			]
 		};

@@ -170,6 +170,7 @@ class CodeMirror {
 		 */
 		this.extensionRegistry = new CodeMirrorExtensionRegistry( {
 			bracketMatching: this.bracketMatchingExtension,
+			closeBrackets: this.closeBracketsExtension,
 			lineNumbering: this.lineNumberingExtension,
 			lineWrapping: this.lineWrappingExtension,
 			activeLine: this.activeLineExtension,
@@ -279,7 +280,6 @@ class CodeMirror {
 		if ( this.mode !== 'mediawiki' ) {
 			extensions.push(
 				syntaxHighlighting( defaultHighlightStyle, { fallback: true } ),
-				closeBrackets(),
 				highlightSelectionMatches( { wholeWords: true } ),
 				// Make the [Tab] key indent for languages other than MediaWiki.
 				indentOnInput(),
@@ -402,6 +402,15 @@ class CodeMirror {
 				brackets: '()[]{}（）【】［］｛｝'
 			} : {}
 		);
+	}
+
+	/**
+	 * This extension adds automatic closing of brackets to the CodeMirror editor.
+	 *
+	 * @type {Extension}
+	 */
+	get closeBracketsExtension() {
+		return closeBrackets();
 	}
 
 	/**
