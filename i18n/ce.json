@@ -121,6 +121,7 @@
 	"codemirror-keymap-crosshair": "$1 пиллиг тӀе а таӀийна, нийса агӀонан талламаш кхолла.",
 	"codemirror-keymap-openlinks": "Вики агӀонийн цӀерашца йа хьажоргашца $1 пиллиг тӀе а таӀийна, уьш керлачу вкладкехь схьайелла.",
 	"codemirror-keymap-lint": "Анализатор",
+	"codemirror-keymap-next-diagnostic": "РогӀера чекхдаккхар хьажа",
 	"prefs-accessibility": "ТӀекхачар",
 	"prefs-syntax-highlighting": "Синтаксис беснашца къастор",
 	"codemirror-beta-feature-title": "Тодина синтаксис билгалйаккхар",
