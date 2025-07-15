@@ -140,53 +140,6 @@
 				"ext.CodeMirror.lib"
 			]
 		},
-		"ext.CodeMirror.lib.mode.css": {
-			"deprecated": "Deprecated in MW 1.44. Use ext.CodeMirror.v6.mode.css instead. More info: https://w.wiki/CqvF",
-			"scripts": "lib/codemirror/mode/css/css.js",
-			"dependencies": [
-				"ext.CodeMirror.lib"
-			]
-		},
-		"ext.CodeMirror.lib.mode.javascript": {
-			"deprecated": "Deprecated in MW 1.44. Use ext.CodeMirror.v6.mode.javascript instead. More info: https://w.wiki/CqvF",
-			"scripts": "lib/codemirror/mode/javascript/javascript.js",
-			"dependencies": [
-				"ext.CodeMirror.lib"
-			]
-		},
-		"ext.CodeMirror.lib.mode.xml": {
-			"deprecated": "Deprecated in MW 1.44 with no replacement. See https://w.wiki/CqvF",
-			"scripts": "lib/codemirror/mode/xml/xml.js",
-			"dependencies": [
-				"ext.CodeMirror.lib"
-			]
-		},
-		"ext.CodeMirror.lib.mode.htmlmixed": {
-			"deprecated": "Deprecated in MW 1.44 with no replacement. See https://w.wiki/CqvF",
-			"scripts": "lib/codemirror/mode/htmlmixed/htmlmixed.js",
-			"dependencies": [
-				"ext.CodeMirror.lib.mode.xml",
-				"ext.CodeMirror.lib.mode.javascript",
-				"ext.CodeMirror.lib.mode.css",
-				"ext.CodeMirror.lib"
-			]
-		},
-		"ext.CodeMirror.lib.mode.clike": {
-			"deprecated": "Deprecated in MW 1.44 with no replacement. See https://w.wiki/CqvF",
-			"scripts": "lib/codemirror/mode/clike/clike.js",
-			"dependencies": [
-				"ext.CodeMirror.lib"
-			]
-		},
-		"ext.CodeMirror.lib.mode.php": {
-			"deprecated": "Deprecated in MW 1.44 with no replacement. See https://w.wiki/CqvF",
-			"scripts": "lib/codemirror/mode/php/php.js",
-			"dependencies": [
-				"ext.CodeMirror.lib.mode.htmlmixed",
-				"ext.CodeMirror.lib.mode.clike",
-				"ext.CodeMirror.lib"
-			]
-		},
 		"ext.CodeMirror.visualEditor": {
 			"dependencies": [
 				"ext.visualEditor.mwcore",
