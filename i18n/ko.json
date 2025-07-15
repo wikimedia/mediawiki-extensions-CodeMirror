@@ -73,6 +73,7 @@
 	"codemirror-keymap-insert": "넣기",
 	"codemirror-keymap-blankline": "빈 줄",
 	"codemirror-keymap-comment": "의견",
+	"codemirror-keymap-foldref": "모든 <ref> 태그 접기",
 	"codemirror-keymap-autocomplete": "자동 완성",
 	"codemirror-keymap-other": "기타",
 	"codemirror-keymap-direction": "방향성을 변경",
