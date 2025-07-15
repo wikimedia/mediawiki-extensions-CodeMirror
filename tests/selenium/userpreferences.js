@@ -14,13 +14,13 @@ class UserPreferences {
 	}
 
 	async setPreferences( preferences ) {
-		await BlankPage.open();
 		Util.waitForModuleState( 'mediawiki.base' );
 
 		return await browser.execute( ( prefs ) => mw.loader.using( 'mediawiki.api' ).then( () => new mw.Api().saveOptions( prefs ) ), preferences );
 	}
 
 	async enableWikitext2010EditorWithCodeMirror() {
+		await BlankPage.open();
 		await this.setPreferences( {
 			usebetatoolbar: '1',
 			usecodemirror: '1',
@@ -31,6 +31,7 @@ class UserPreferences {
 	}
 
 	async enableWikitext2017EditorWithCodeMirror( preferences = {} ) {
+		await BlankPage.open();
 		await this.setPreferences( Object.assign( {
 			usebetatoolbar: '0',
 			usecodemirror: '1',
@@ -38,12 +39,6 @@ class UserPreferences {
 			'visualeditor-enable': '1',
 			'visualeditor-newwikitext': '1'
 		}, preferences ) );
-	}
-
-	async disableCodeMirror() {
-		await this.setPreferences( {
-			usecodemirror: '0'
-		} );
 	}
 }
 

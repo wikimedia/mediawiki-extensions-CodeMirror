@@ -95,7 +95,9 @@ describe( 'CodeMirror (enabled) - VisualEditor 2017 wikitext editor', () => {
 			false
 		);
 		// Refresh.
-		await UserPreferences.disableCodeMirror();
+		await UserPreferences.setPreferences( {
+			usecodemirror: '0'
+		} );
 		await EditPage.openForEditing( title );
 		// Assertions.
 		await EditPage.codeMirrorContentEditable.waitForDisplayed( { reverse: true } );
@@ -105,7 +107,7 @@ describe( 'CodeMirror (enabled) - VisualEditor 2017 wikitext editor', () => {
 			'registered'
 		);
 		// FIXME: This should be 'registered' and not 'ready'. Fix after CM5 is sunset by making
-		//   'ext.CodeMirror.visualEditor.init' RL module load only the VE Tool andAction code,
+		//   'ext.CodeMirror.visualEditor.init' RL module load only the VE Tool and Action code,
 		//   and lazy-load ext.CodeMirror.v6.visualEditor when the user toggles on CodeMirror.
 		assert.strictEqual(
 			await browser.execute( () => mw.loader.getState( 'ext.CodeMirror.v6' ) ),
