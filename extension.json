@@ -65,7 +65,8 @@
 				"lint": [
 					"json",
 					"css",
-					"javascript"
+					"javascript",
+					"Scribunto"
 				]
 			},
 			"description": "Defaults for CodeMirror user preferences. See https://w.wiki/BwzZ for more information.",
