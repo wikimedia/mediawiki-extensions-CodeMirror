@@ -89,7 +89,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 
 	/**
 	 * The default CodeMirror preferences, as defined by `$wgCodeMirrorPreferences`
-	 * and taking into account the page namespace and content model.
+	 * and taking into account the page namespace and the CodeMirror mode.
 	 *
 	 * @return {Object}
 	 */
@@ -99,7 +99,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		}
 
 		const nsId = mw.config.get( 'wgNamespaceNumber' );
-		const contentModel = mw.config.get( 'wgPageContentModel' );
+		const mode = mw.config.get( 'cmMode' );
 		const newDefaults = {};
 
 		Object.keys( this.mwConfigDefaults ).forEach( ( prefName ) => {
@@ -110,11 +110,11 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 				return;
 			}
 
-			// Assume an array of namespace IDs (integers) and content models (strings).
-			const inNamespace = prefValue.includes( nsId );
-			const inContentModel = prefValue.includes( contentModel );
+			// Assume an array of namespace IDs (integers) and CM modes (strings).
+			const supportedNamespace = prefValue.includes( nsId );
+			const supportedMode = prefValue.includes( mode );
 
-			newDefaults[ prefName ] = inNamespace || inContentModel;
+			newDefaults[ prefName ] = supportedNamespace || supportedMode;
 		} );
 
 		/**
@@ -186,7 +186,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		let storageObj = {};
 		for ( const prefName in this.preferences ) {
 			if ( !!this.preferences[ prefName ] !== !!this.getDefaultPreferences()[ prefName ] || (
-				// Always store preferences that have namespace or content model restrictions and
+				// Always store preferences that have namespace or CM mode restrictions and
 				// have been overridden by the user, even if they match the default for this page.
 				this.fetchPreferencesInternal()[ prefName ] !== undefined &&
 				Array.isArray( this.mwConfigDefaults[ prefName ] )

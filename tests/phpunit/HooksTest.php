@@ -56,8 +56,8 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		], $conds );
 		$this->overrideConfigValues( [
 			'CodeMirrorV6' => $conds['useV6'],
-			'CodeMirrorContentModels' => $conds['allowedContentModels'] ?? [
-				CONTENT_MODEL_WIKITEXT => true
+			'CodeMirrorEnabledModes' => $conds['allowedModes'] ?? [
+				Hooks::MODE_MEDIAWIKI => true,
 			],
 		] );
 
@@ -171,7 +171,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 				'useV6' => false,
 				'usebetatoolbar' => true,
 				'contentModel' => CONTENT_MODEL_CSS,
-				'allowedContentModels' => [ CONTENT_MODEL_CSS => true ]
+				'allowedModes' => [ Hooks::MODE_CSS => true ]
 			],
 			[]
 		];
@@ -208,25 +208,25 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
 		];
 		yield 'CM6, contentModel CSS' => [
-			[ 'contentModel' => CONTENT_MODEL_CSS, 'allowedContentModels' => [ CONTENT_MODEL_CSS => true ] ],
+			[ 'contentModel' => CONTENT_MODEL_CSS, 'allowedModes' => [ Hooks::MODE_CSS => true ] ],
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.css' ],
 			'css'
 		];
-		yield 'CM6, contentModel JAVASCRIPT' => [
+		yield 'CM6, contentModel JavaScript' => [
 			[
 				'contentModel' => CONTENT_MODEL_JAVASCRIPT,
-				'allowedContentModels' => [ CONTENT_MODEL_JAVASCRIPT => true ]
+				'allowedModes' => [ CONTENT_MODEL_JAVASCRIPT => true ]
 			],
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.javascript' ],
 			'javascript'
 		];
 		yield 'CM6, contentModel JSON' => [
-			[ 'contentModel' => CONTENT_MODEL_JSON, 'allowedContentModels' => [ CONTENT_MODEL_JSON => true ] ],
+			[ 'contentModel' => CONTENT_MODEL_JSON, 'allowedModes' => [ Hooks::MODE_JSON => true ] ],
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.json' ],
 			'json'
 		];
 		yield 'CM6, contentModel CSS, CSS not allowed' => [
-			[ 'contentModel' => CONTENT_MODEL_CSS ],
+			[ 'contentModel' => CONTENT_MODEL_CSS, 'allowedModes' => [ Hooks::MODE_CSS => false ] ],
 			[]
 		];
 		yield 'CM6, preference false' => [

@@ -74,7 +74,7 @@ class CodeMirrorVisualEditor extends CodeMirror {
 		// Add colorblind mode if preference is set.
 		// This currently is only to be used for the MediaWiki markup language.
 		const useColorBlind = mw.user.options.get( 'usecodemirror-colorblind' ) &&
-			mw.config.get( 'wgPageContentModel' ) === 'wikitext';
+			mw.config.get( 'cmMode' ) === 'mediawiki';
 
 		return EditorView.contentAttributes.of( {
 			class: useColorBlind ? 'cm-mw-colorblind-colors' : '',

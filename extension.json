@@ -27,10 +27,9 @@
 			"value": false,
 			"description": "Temporary feature flag for the CodeMirror 6 upgrade."
 		},
-		"CodeMirrorContentModels": {
+		"CodeMirrorEnabledModes": {
 			"value": {
-				"wikitext": true,
-				"proofread-page": true
+				"mediawiki": true
 			},
 			"description": "Temporary feature flag to control the rollout of CodeMirror to new content models."
 		},
@@ -43,7 +42,7 @@
 		},
 		"CodeMirrorLineNumberingNamespaces": {
 			"value": null,
-			"description": "List of namespace IDs where line numbering should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere."
+			"description": "Legacy CM5 setting. List of namespace IDs where line numbering should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere."
 		},
 		"CodeMirrorTitleCompletion": {
 			"value": true,
@@ -66,7 +65,7 @@
 					"json",
 					"css",
 					"javascript",
-					"Scribunto"
+					"lua"
 				]
 			},
 			"description": "Defaults for CodeMirror user preferences. See https://w.wiki/BwzZ for more information.",

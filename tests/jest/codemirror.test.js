@@ -73,7 +73,7 @@ describe( 'initialize', () => {
 	} );
 
 	it( 'should register the codeFolding and autocompletion extensions for non-wikitext', () => {
-		mockMwConfigGet( { wgPageContentModel: 'javascript' } );
+		mockMwConfigGet( { cmMode: 'javascript' } );
 		const cm2 = new CodeMirror( textarea );
 		cm2.initialize();
 		expect( cm2.extensionRegistry.isEnabled( 'autocomplete', cm2.view ) ).toBeTruthy();
@@ -81,7 +81,7 @@ describe( 'initialize', () => {
 	} );
 
 	it( 'should document accessibility keyboard shortcuts for non-wikitext', () => {
-		mockMwConfigGet( { wgPageContentModel: 'javascript' } );
+		mockMwConfigGet( { cmMode: 'javascript' } );
 		const cm2 = new CodeMirror( textarea );
 		cm2.initialize();
 		expect( Object.keys( cm2.keymap.keymapHelpRegistry.accessibility ) )
@@ -91,7 +91,7 @@ describe( 'initialize', () => {
 
 describe( 'addDarkModeMutationObserver', () => {
 	it( 'should apply the oneDark theme when in dark mode for non-wikitext', async () => {
-		mockMwConfigGet( { wgPageContentModel: 'javascript' } );
+		mockMwConfigGet( { cmMode: 'javascript' } );
 		document.documentElement.classList.add( 'skin-theme-clientpref-os' );
 		const cm2 = new CodeMirror( textarea );
 		const matchMedia = window.matchMedia;

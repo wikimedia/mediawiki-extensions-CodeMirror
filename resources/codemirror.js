@@ -137,11 +137,11 @@ class CodeMirror {
 		 */
 		this.readOnly = this.textarea.readOnly;
 		/**
-		 * The content model of the page.
+		 * The CodeMirror "mode" (language).
 		 *
 		 * @type {string}
 		 */
-		this.contentModel = mw.config.get( 'wgPageContentModel' );
+		this.mode = mw.config.get( 'cmMode' );
 		/**
 		 * The form `submit` event handler.
 		 *
@@ -274,7 +274,7 @@ class CodeMirror {
 			} ) );
 		}
 
-		if ( this.contentModel !== 'wikitext' ) {
+		if ( this.mode !== 'mediawiki' ) {
 			extensions.push(
 				syntaxHighlighting( defaultHighlightStyle, { fallback: true } ),
 				closeBrackets(),
@@ -393,7 +393,7 @@ class CodeMirror {
 	 * @type {Extension}
 	 */
 	get bracketMatchingExtension() {
-		return bracketMatching( this.contentModel === 'wikitext' ?
+		return bracketMatching( this.mode === 'mediawiki' ?
 			{
 				// Also match CJK full-width brackets (T362992)
 				// This is only for wikitext as it can be confusing in programming languages.
@@ -466,7 +466,7 @@ class CodeMirror {
 		// This currently is only to be used for the MediaWiki markup language.
 		if (
 			mw.user.options.get( 'usecodemirror-colorblind' ) &&
-			this.contentModel === 'wikitext'
+			this.mode === 'mediawiki'
 		) {
 			classList.push( 'cm-mw-colorblind-colors' );
 		}
@@ -691,7 +691,7 @@ class CodeMirror {
 		this.addTextAreaJQueryHook();
 		this.addFormSubmitHandler();
 
-		if ( this.contentModel !== 'wikitext' ) {
+		if ( this.mode !== 'mediawiki' ) {
 			// Register applicable extensions through CodeMirrorPreferences.
 			this.preferences.registerExtension( 'codeFolding', foldGutter(), this.view );
 			this.preferences.registerExtension( 'autocomplete', autocompletion(), this.view );

@@ -129,14 +129,14 @@ class CodeMirrorWikiEditor extends CodeMirror {
 			this.context.$ui.addClass( 'ext-codemirror-readonly' );
 		}
 
-		// Similarly, add a unique CSS for the content model.
+		// Similarly, add a unique CSS for the CodeMirror language mode.
 		// CSS classes used here may include but are not limited to:
 		// * ext-codemirror-mediawiki
 		// * ext-codemirror-javascript
 		// * ext-codemirror-css
 		// * ext-codemirror-json
 		this.context.$ui.addClass(
-			`ext-codemirror-${ ( mw.config.get( 'cmMode' ) || this.contentModel ).toLowerCase() }`
+			`ext-codemirror-${ this.mode.toLowerCase() }`
 		);
 
 		super.initialize( extensions );
@@ -201,7 +201,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 				}
 			} );
 
-		if ( this.contentModel === 'wikitext' ) {
+		if ( this.mode === 'mediawiki' ) {
 			// Add a 'Settings' button to the search group, in the 'Advanced' section.
 			this.$textarea.wikiEditor( 'addToToolbar', {
 				section: 'advanced',
@@ -226,7 +226,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 
 		CodeMirror.setCodeMirrorPreference( false );
 
-		if ( this.contentModel === 'wikitext' ) {
+		if ( this.mode === 'mediawiki' ) {
 			// Restore original search button.
 			this.$searchBtn.replaceWith( this.$oldSearchBtn );
 
@@ -312,7 +312,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	}
 
 	/**
-	 * For use in non-wikitext content models.
+	 * For use in non-wikitext modes.
 	 *
 	 * @private
 	 */

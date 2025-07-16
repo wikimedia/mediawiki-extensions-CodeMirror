@@ -139,7 +139,7 @@ describe( 'CodeMirrorPreferences', () => {
 		expect( checkboxes[ 1 ].name ).toStrictEqual( 'barExtension' );
 	} );
 
-	it( 'overriding namespace and content model preferences', () => {
+	it( 'overriding namespace and mode preferences', () => {
 		const extCodeMirrorConfig = {
 			defaultPreferences: { lineNumbering: true, autocomplete: [ 0 ] }
 		};
@@ -148,7 +148,7 @@ describe( 'CodeMirrorPreferences', () => {
 		// We're editing a Template where autocomplete is disabled.
 		mockMwConfigGet( {
 			wgNamespaceNumber: 10,
-			wgPageContentModel: 'wikitext',
+			cmMode: 'mediawiki',
 			extCodeMirrorConfig
 		} );
 
@@ -175,7 +175,7 @@ describe( 'CodeMirrorPreferences', () => {
 		// Now simulate editing an article.
 		mockMwConfigGet( {
 			wgNamespaceNumber: 0,
-			wgPageContentModel: 'wikitext',
+			cmMode: 'mediawiki',
 			extCodeMirrorConfig
 		} );
 		// We need to re-mock mw.user.options.get to return the updated preferences.
@@ -268,59 +268,59 @@ describe( 'CodeMirrorPreferences', () => {
 			title: 'no user prefs',
 			defaultPreferences: { lineNumbering: false, bracketMatching: true },
 			nsId: 0,
-			contentModel: 'wikitext',
+			mode: 'wikitext',
 			expected: { lineNumbering: false, bracketMatching: true }
 		}, {
 			title: 'lineNumbering only for Templates, editing mainspace',
 			defaultPreferences: { lineNumbering: [ 10 ], bracketMatching: true },
 			nsId: 0,
-			contentModel: 'wikitext',
+			mode: 'wikitext',
 			expected: { lineNumbering: false, bracketMatching: true }
 		}, {
 			title: 'lineNumbering only for Templates, editing Template',
 			defaultPreferences: { lineNumbering: [ 10 ], bracketMatching: true },
 			nsId: 10,
-			contentModel: 'wikitext',
+			mode: 'wikitext',
 			expected: { lineNumbering: true, bracketMatching: true }
 		}, {
 			title: 'bracketMatching only for CSS, editing wikitext',
 			defaultPreferences: { lineNumbering: true, bracketMatching: [ 'css' ] },
 			nsId: 10,
-			contentModel: 'wikitext',
+			mode: 'wikitext',
 			expected: { lineNumbering: true, bracketMatching: false }
 		}, {
 			title: 'bracketMatching only for CSS, editing css',
 			defaultPreferences: { lineNumbering: true, bracketMatching: [ 'css' ] },
 			nsId: 10,
-			contentModel: 'css',
+			mode: 'css',
 			expected: { lineNumbering: true, bracketMatching: true }
 		}, {
 			title: 'lineNumbering for Templates or CSS, editing main/wikitext',
 			defaultPreferences: { lineNumbering: [ 10, 'css' ], bracketMatching: true },
 			nsId: 0,
-			contentModel: 'wikitext',
+			mode: 'wikitext',
 			expected: { lineNumbering: false, bracketMatching: true }
 		}, {
 			title: 'lineNumbering for Templates or CSS, editing Template/wikitext',
 			defaultPreferences: { lineNumbering: [ 10, 'css' ], bracketMatching: true },
 			nsId: 10,
-			contentModel: 'wikitext',
+			mode: 'wikitext',
 			expected: { lineNumbering: true, bracketMatching: true }
 		}, {
 			title: 'lineNumbering for Templates or CSS, editing Template/css',
 			defaultPreferences: { lineNumbering: [ 10, 'css' ], bracketMatching: true },
 			nsId: 10,
-			contentModel: 'css',
+			mode: 'css',
 			expected: { lineNumbering: true, bracketMatching: true }
 		}
 	];
 	it.each( defPrefsTestCases )(
 		'default preferences ($title)',
-		( { defaultPreferences, nsId, contentModel, expected } ) => {
+		( { defaultPreferences, nsId, mode, expected } ) => {
 			mockMwConfigGet( {
 				extCodeMirrorConfig: { defaultPreferences },
 				wgNamespaceNumber: nsId,
-				wgPageContentModel: contentModel
+				cmMode: mode
 			} );
 			mockUserPreferences( {} );
 			const preferences = getCodeMirrorPreferences();

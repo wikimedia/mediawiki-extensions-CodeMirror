@@ -18,7 +18,7 @@ class HookRunner implements CodeMirrorGetModeHook {
 	/**
 	 * @inheritDoc
 	 */
-	public function onCodeMirrorGetMode( Title $title, ?string &$mode, string $model ) {
+	public function onCodeMirrorGetMode( Title $title, ?string &$mode, string $model ): bool {
 		return $this->hookContainer->run( 'CodeMirrorGetMode', [ $title, &$mode, $model ] );
 	}
 }

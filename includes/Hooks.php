@@ -1,4 +1,5 @@
 <?php
+declare( strict_types = 1 );
 
 namespace MediaWiki\Extension\CodeMirror;
 
@@ -40,14 +41,20 @@ class Hooks implements
 	private readonly array $conflictingGadgets;
 	private readonly string $extensionAssetsPath;
 	private readonly bool $debugMode;
-	private readonly array $contentModels;
+	private readonly array $enabledModes;
 	private bool $readOnly = false;
+
+	public const MODE_MEDIAWIKI = 'mediawiki';
+	public const MODE_JAVASCRIPT = 'javascript';
+	public const MODE_CSS = 'css';
+	public const MODE_JSON = 'json';
+	public const MODE_LUA = 'lua';
 	public const SUPPORTED_MODES = [
-		'mediawiki',
-		'javascript',
-		'css',
-		'json',
-		'lua',
+		self::MODE_MEDIAWIKI,
+		self::MODE_JAVASCRIPT,
+		self::MODE_CSS,
+		self::MODE_JSON,
+		self::MODE_LUA,
 	];
 
 	public function __construct(
@@ -62,7 +69,7 @@ class Hooks implements
 		$this->conflictingGadgets = $config->get( 'CodeMirrorConflictingGadgets' );
 		$this->extensionAssetsPath = $config->get( MainConfigNames::ExtensionAssetsPath );
 		$this->debugMode = $config->get( MainConfigNames::ShowExceptionDetails );
-		$this->contentModels = $config->get( 'CodeMirrorContentModels' );
+		$this->enabledModes = array_keys( array_filter( $config->get( 'CodeMirrorEnabledModes' ) ) );
 	}
 
 	/**
@@ -72,21 +79,22 @@ class Hooks implements
 	 * @return string|null
 	 */
 	private function getMode( Title $title ): ?string {
-		switch ( $title->getContentModel() ) {
-			// Natively supported content models.
-			case CONTENT_MODEL_WIKITEXT:
-				return 'mediawiki';
-			case CONTENT_MODEL_JSON:
-				return 'json';
-			case CONTENT_MODEL_CSS:
-				return 'css';
-			case CONTENT_MODEL_JAVASCRIPT:
-				return 'javascript';
-		}
+		$mode = match ( $title->getContentModel() ) {
+			// Natively supported content models and their canonical modes.
+			CONTENT_MODEL_WIKITEXT => self::MODE_MEDIAWIKI,
+			CONTENT_MODEL_JSON => self::MODE_JSON,
+			CONTENT_MODEL_CSS => self::MODE_CSS,
+			CONTENT_MODEL_JAVASCRIPT => self::MODE_JAVASCRIPT,
+			default => null,
+		};
 
 		// Allow extensions to override the mode via hook.
-		$mode = null;
 		$this->hookRunner->onCodeMirrorGetMode( $title, $mode, $title->getContentModel() );
+
+		// Verify this mode is enabled.
+		if ( !in_array( $mode, $this->enabledModes ) ) {
+			return null;
+		}
 
 		return $mode;
 	}
@@ -120,7 +128,7 @@ class Hooks implements
 
 		$extensionRegistry ??= ExtensionRegistry::getInstance();
 		$contentModel = $out->getTitle()->getContentModel();
-		$isEnabledContentModel = $this->contentModels[ $contentModel ] ?? false;
+		$isEnabledMode = $this->getMode( $out->getTitle() ) !== null;
 		$isRTL = $out->getTitle()->getPageLanguage()->isRTL();
 		// Disable CodeMirror if we're on an edit page with a conflicting gadget (T178348)
 		return !$this->conflictingGadgetsEnabled( $extensionRegistry, $out->getUser() ) &&
@@ -129,7 +137,7 @@ class Hooks implements
 			// Limit to supported content models. CM5 only supports wikitext.
 			// See https://www.mediawiki.org/wiki/Content_handlers#Extension_content_handlers
 			(
-				( $shouldUseV6 && $isEnabledContentModel ) ||
+				( $shouldUseV6 && $isEnabledMode ) ||
 				( !$shouldUseV6 && $contentModel === CONTENT_MODEL_WIKITEXT )
 			);
 	}

@@ -60,21 +60,12 @@ describe( 'initialize', () => {
 		expect( cmWe.context.$ui[ 0 ].classList ).toContain( 'ext-codemirror-readonly' );
 	} );
 
-	it( 'should add a CSS class for the content model', () => {
-		mockMwConfigGet( { wgPageContentModel: 'javascript' } );
+	it( 'should add a CSS class for the CodeMirror mode', () => {
+		mockMwConfigGet( { cmMode: 'javascript' } );
 		const cmWe = getCodeMirrorWikiEditor();
 		cmWe.initialize();
 		expect( cmWe.context.$ui[ 0 ].classList ).toContain( 'ext-codemirror-javascript' );
 		// Reset mock.
-		mockMwConfigGet();
-	} );
-
-	it( 'should use the cmMode if available instead of content model', () => {
-		mockMwConfigGet( { cmMode: 'css', wgPageContentModel: 'sanitized-css' } );
-		const cmWe = getCodeMirrorWikiEditor();
-		cmWe.initialize();
-		expect( cmWe.context.$ui[ 0 ].classList ).toContain( 'ext-codemirror-css' );
-		// Reset mw.config mock
 		mockMwConfigGet();
 	} );
 } );
@@ -95,7 +86,7 @@ describe( 'deactivate', () => {
 	} );
 
 	it( 'should remove buttons from the toolbar for non-wikitext', () => {
-		mockMwConfigGet( { wgPageContentModel: 'javascript' } );
+		mockMwConfigGet( { cmMode: 'javascript' } );
 		const cmWe = getCodeMirrorWikiEditor();
 		cmWe.initialize();
 		cmWe.deactivate();
@@ -316,7 +307,7 @@ describe( 'logEditFeature', () => {
 
 describe( 'addCodeFormattingButtonsToToolbar', () => {
 	it( 'should add the expected tool groups and buttons for non-wikitext', () => {
-		mockMwConfigGet( { wgPageContentModel: 'javascript' } );
+		mockMwConfigGet( { cmMode: 'javascript' } );
 		const cmWe = getCodeMirrorWikiEditor();
 		cmWe.initialize();
 		expect( cmWe.$textarea.wikiEditor ).toHaveBeenCalledWith(
