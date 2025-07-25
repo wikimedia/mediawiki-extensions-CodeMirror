@@ -259,7 +259,7 @@ class CodeMirrorMediaWiki {
 
 	eatSectionHeader( count ) {
 		return ( stream, state ) => {
-			if ( stream.match( /^[^&<[{~]+/ ) ) {
+			if ( stream.match( /^[^&<[{~-]+/ ) ) {
 				if ( stream.eol() ) {
 					stream.backUp( count );
 					state.tokenize = this.eatEnd( mwModeConfig.tags.sectionHeader );
@@ -295,7 +295,7 @@ class CodeMirrorMediaWiki {
 	}
 
 	inVariableDefault( stream, state ) {
-		if ( stream.match( /^[^{}[<&~]+/ ) ) {
+		if ( stream.match( /^[^{}[<&~-]+/ ) ) {
 			return this.makeLocalStyle( mwModeConfig.tags.templateVariable, state );
 		}
 		if ( stream.match( '}}}' ) ) {
@@ -333,7 +333,7 @@ class CodeMirrorMediaWiki {
 			mwModeConfig.tags.parserFunction :
 			`${ mwModeConfig.tags.parserFunction } ${ mwModeConfig.tags.pageName } mw-function-${ ns }`;
 		return ( stream, state ) => {
-			if ( stream.match( /^[^|}{[<&~]+/ ) ) {
+			if ( stream.match( /^[^|}{[<&~-]+/ ) ) {
 				return this.makeLocalStyle( style, state );
 			} else if ( stream.eat( '|' ) ) {
 				if ( ns !== undefined ) {
@@ -382,13 +382,13 @@ class CodeMirrorMediaWiki {
 
 	eatTemplateArgument( expectArgName ) {
 		return ( stream, state ) => {
-			if ( expectArgName && stream.eatWhile( /[^=|}{[<&~]/ ) ) {
+			if ( expectArgName && stream.eatWhile( /[^=|}{[<&~-]/ ) ) {
 				if ( stream.eat( '=' ) ) {
 					state.tokenize = this.eatTemplateArgument( false );
 					return this.makeLocalStyle( mwModeConfig.tags.templateArgumentName, state );
 				}
 				return this.makeLocalStyle( mwModeConfig.tags.template, state );
-			} else if ( stream.eatWhile( /[^|}{[<&~]/ ) ) {
+			} else if ( stream.eatWhile( /[^|}{[<&~-]/ ) ) {
 				return this.makeLocalStyle( mwModeConfig.tags.template, state );
 			} else if ( stream.eat( '|' ) ) {
 				state.tokenize = this.eatTemplateArgument( true );
@@ -457,7 +457,7 @@ class CodeMirrorMediaWiki {
 			state.tokenize = state.stack.pop();
 			return this.makeLocalStyle( mwModeConfig.tags.extLinkBracket, state, 'nExtLink' );
 		}
-		if ( stream.match( /^[^'\]{&~<]+/ ) ) {
+		if ( stream.match( /^[^'\]{&~<-]+/ ) ) {
 			return this.makeStyle( mwModeConfig.tags.extLinkText, state );
 		}
 		return this.eatWikiText( mwModeConfig.tags.extLinkText )( stream, state );
@@ -553,7 +553,7 @@ class CodeMirrorMediaWiki {
 			if ( linkIsItalic ) {
 				tmpstyle += ' ' + mwModeConfig.tags.em;
 			}
-			if ( stream.match( file ? /^[^'\]{&~<[|]+/ : /^(?:[^'[\]{&~<]|\[(?!\[))+/ ) ) {
+			if ( stream.match( file ? /^[^'\]{&~<[|-]+/ : /^(?:[^'[\]{&~<-]|\[(?!\[))+/ ) ) {
 				return this.makeStyle( tmpstyle, state );
 			}
 			return this.eatWikiText( tmpstyle )( stream, state );
@@ -890,7 +890,7 @@ class CodeMirrorMediaWiki {
 					return this.inTable( stream, state );
 				}
 			} else {
-				if ( stream.match( /^[^'|{[<&~!]+/ ) ) {
+				if ( stream.match( /^[^'|{[<&~!-]+/ ) ) {
 					return this.makeStyle( tag, state );
 				}
 				if ( stream.match( '||' ) || ( isHead && stream.match( '!!' ) ) ) {
