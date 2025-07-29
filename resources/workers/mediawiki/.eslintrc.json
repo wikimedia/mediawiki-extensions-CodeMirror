@@ -1,0 +1,39 @@
+{
+	"root": true,
+	"extends": [
+		"plugin:es-x/restrict-to-es2017"
+	],
+	"env": {
+		"worker": true,
+		"es2017": true
+	},
+	"parserOptions": {
+		"ecmaVersion": 8
+	},
+	"rules": {},
+	"settings": {
+		"es-x": {
+			"aggressive": true
+		}
+	},
+	"overrides": [
+		{
+			"files": [
+				"worker.js"
+			],
+			"extends": [
+				"wikimedia/client",
+				"wikimedia/jquery",
+				"wikimedia/mediawiki"
+			]
+		},
+		{
+			"files": [
+				"worker.min.js"
+			],
+			"rules": {
+				"es-x/no-regexp-unicode-property-escapes": 0
+			}
+		}
+	]
+}

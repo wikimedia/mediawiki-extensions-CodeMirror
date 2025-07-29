@@ -103,7 +103,7 @@ class DataScript {
 		foreach ( $imageKeywords as $keyword ) {
 			$synonyms = $magicWordFactory->get( $keyword )->getSynonyms();
 			foreach ( $synonyms as $synonym ) {
-				$config['imageKeywords'][$synonym] = substr( $keyword, 4 );
+				$config['imageKeywords'][$synonym] = str_replace( '_', '-', substr( $keyword, 4 ) );
 			}
 		}
 

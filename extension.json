@@ -353,7 +353,9 @@
 				"modes/mediawiki/codemirror.mediawiki.matchTag.js",
 				"modes/mediawiki/codemirror.mediawiki.autocomplete.js",
 				"modes/mediawiki/codemirror.mediawiki.openLinks.js",
-				"modes/mediawiki/codemirror.mediawiki.keymap.js"
+				"modes/mediawiki/codemirror.mediawiki.keymap.js",
+				"codemirror.worker.js",
+				"modes/mediawiki/codemirror.mediawiki.lint.js"
 			],
 			"styles": [
 				"modes/mediawiki/codemirror.mediawiki.less",

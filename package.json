@@ -2,10 +2,11 @@
 	"name": "codemirror",
 	"private": true,
 	"scripts": {
-		"build": "rollup -c && npm run build:stylelint && npm run build:eslint && npm run build:luacheck",
+		"build": "rollup -c && npm run build:stylelint && npm run build:eslint && npm run build:luacheck && npm run build:wikilint",
 		"build:stylelint": "esbuild resources/workers/css/worker.js --charset=utf8 --bundle --minify --target=es2017 --format=iife --outfile=resources/workers/css/worker.min.js",
 		"build:eslint": "esbuild resources/workers/javascript/worker.js --charset=utf8 --bundle --minify --target=es2017 --format=iife --outfile=resources/workers/javascript/worker.min.js",
 		"build:luacheck": "esbuild resources/workers/lua/worker.js --charset=utf8 --bundle --minify --target=es2017 --format=iife --outfile=resources/workers/lua/worker.min.js",
+		"build:wikilint": "esbuild resources/workers/mediawiki/worker.js --charset=utf8 --bundle --minify --target=es2017 --format=iife --outfile=resources/workers/mediawiki/worker.min.js",
 		"test": "npm run test:lint && npm run test:unit && npm run check-built-assets",
 		"test:lint": "npm run test:lint:styles && npm run test:lint:js && npm run test:lint:i18n",
 		"test:lint:js": "eslint --cache .",
@@ -37,6 +38,7 @@
 		"@lezer/lr": "1.4.2",
 		"@rollup/plugin-alias": "5.1.1",
 		"@rollup/plugin-node-resolve": "15.2.3",
+		"@typescript-eslint/eslint-plugin": "^7.18.0",
 		"@wdio/cli": "7.40.0",
 		"@wdio/junit-reporter": "7.40.0",
 		"@wdio/local-runner": "7.40.0",
@@ -56,6 +58,7 @@
 		"luacheck-browserify": "^0.7.1",
 		"rollup": "4.22.4",
 		"stylelint-config-wikimedia": "0.18.0",
-		"wdio-mediawiki": "2.7.1"
+		"wdio-mediawiki": "2.7.1",
+		"wikiparser-node": "^1.25.0"
 	}
 }

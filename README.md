@@ -51,5 +51,9 @@ _NOTE: Consider using [Fresh](https://gerrit.wikimedia.org/g/fresh/) to run thes
   `luacheck-browserify` dependency in [package.json](package.json) or the
   [Lua worker](resources/workers/lua/worker.js), this command *must* be run before
   sending the patch.
+* `npm run build:wikilint` to rebundle the WikiParser-Node library. If changes are made to the
+  `wikiparser-node` dependency in [package.json](package.json) or the
+  [MediaWiki worker](resources/workers/mediawiki/worker.js), this command *must* be run before
+  sending the patch.
 * Older QUnit tests are in `resources/mode/mediawiki/tests/qunit/`. These have been
   replaced and will be removed after the CodeMirror 6 upgrade is complete.

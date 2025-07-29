@@ -13,6 +13,7 @@ const { codeFoldingExtension } = require( './codemirror.mediawiki.codeFolding.js
 const { autocompleteExtension, completionSource } = require( './codemirror.mediawiki.autocomplete.js' );
 const openLinksExtension = require( './codemirror.mediawiki.openLinks.js' );
 const mwKeymap = require( './codemirror.mediawiki.keymap.js' );
+const lintSource = require( './codemirror.mediawiki.lint.js' );
 
 const specialParserFunctions = {
 		ifexist: 0,
@@ -1540,7 +1541,8 @@ let handler;
  * @stable to call
  */
 const mediaWikiLang = ( config = { bidiIsolation: false } ) => {
-	const mode = new CodeMirrorMediaWiki( mw.config.get( 'extCodeMirrorConfig' ) );
+	const mwConfig = mw.config.get( 'extCodeMirrorConfig' );
+	const mode = new CodeMirrorMediaWiki( mwConfig );
 	const parser = mode.mediawiki;
 	const lang = StreamLanguage.define( parser );
 	const langExtension = [ syntaxHighlighting(
@@ -1579,7 +1581,9 @@ const mediaWikiLang = ( config = { bidiIsolation: false } ) => {
 	};
 	mw.hook( 'ext.CodeMirror.ready' ).add( handler );
 
-	return new LanguageSupport( lang, langExtension );
+	const langSupport = new LanguageSupport( lang, langExtension );
+	langSupport.lintSource = lintSource;
+	return langSupport;
 };
 
 module.exports = mediaWikiLang;

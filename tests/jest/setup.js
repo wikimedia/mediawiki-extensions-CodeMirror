@@ -89,6 +89,9 @@ global.mockMwConfigGet = ( config = {} ) => {
 mockMwConfigGet();
 mw.track = jest.fn();
 mw.Api.prototype.saveOption = jest.fn();
+mw.Api.prototype.loadMessagesIfMissing = jest.fn( () => {
+	mw.messages = { values: require( '../../i18n/en.json' ) };
+} );
 mw.hook = jest.fn( ( name ) => ( {
 	fire: jest.fn( ( ...args ) => {
 		if ( mw.hook.mockHooks[ name ] ) {
@@ -139,7 +142,7 @@ global.CSS = {
 const listeners = [];
 global.Worker = jest.fn().mockReturnValue( {
 	postMessage( msg ) {
-		self.onmessage( { data: msg } );
+		self.onmessage?.( { data: msg } );
 	},
 	addEventListener( _, listener ) {
 		listeners.push( listener );

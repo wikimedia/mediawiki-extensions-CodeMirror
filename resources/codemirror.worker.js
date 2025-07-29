@@ -16,17 +16,29 @@ class CodeMirrorWorker {
 		 */
 		this.lang = lang;
 		/**
-		 * The web worker for the language.
+		 * Queue of callbacks to be called when the worker is loaded.
 		 *
-		 * @type {Worker}
+		 * @internal
 		 */
-		this.worker = workers.get( lang );
-		if ( !this.worker ) {
-			this.worker = new Worker( `${
+		this.queue = [];
+	}
+
+	/**
+	 * The web worker for the language.
+	 *
+	 * @type {Worker}
+	 */
+	get worker() {
+		if ( !workers.has( this.lang ) ) {
+			const worker = new Worker( `${
 				mw.config.get( 'wgExtensionAssetsPath' )
-			}/CodeMirror/resources/workers/${ lang }/worker.min.js` );
-			workers.set( lang, this.worker );
+			}/CodeMirror/resources/workers/${ this.lang }/worker.min.js` );
+			workers.set( this.lang, worker );
+			for ( const callback of this.queue ) {
+				callback( this );
+			}
 		}
+		return workers.get( this.lang );
 	}
 
 	/**
@@ -77,6 +89,33 @@ class CodeMirrorWorker {
 	 */
 	getConfig() {
 		return this.getFeedback( 'getConfig' );
+	}
+
+	/**
+	 * Set the localized messages for the worker.
+	 *
+	 * @param {Object} i18n
+	 */
+	setI18N( i18n ) {
+		this.worker.postMessage( [ 'setI18N', i18n ] );
+	}
+
+	/**
+	 * Get the localized messages for the worker.
+	 *
+	 * @return {Promise}
+	 */
+	getI18N() {
+		return this.getFeedback( 'getI18N' );
+	}
+
+	/**
+	 * Add a callback to be called when the worker is loaded.
+	 *
+	 * @param {Function} callback
+	 */
+	onload( callback ) {
+		this.queue.push( callback );
 	}
 
 	/**
