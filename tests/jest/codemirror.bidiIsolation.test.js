@@ -1,6 +1,6 @@
 const CodeMirror = require( '../../resources/codemirror.js' );
-const mediaWikiLang = require( '../../resources/codemirror.mediawiki.js' );
-const bidiIsolationExtension = require( '../../resources/codemirror.mediawiki.bidiIsolation.js' );
+const mediaWikiLang = require( '../../resources/mediawiki/codemirror.mediawiki.js' );
+const bidiIsolationExtension = require( '../../resources/mediawiki/codemirror.mediawiki.bidiIsolation.js' );
 
 const testCases = [
 	{

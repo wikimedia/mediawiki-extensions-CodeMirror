@@ -1,6 +1,6 @@
 const CodeMirror = require( '../../resources/codemirror.js' );
 const CodeMirrorChild = require( '../../resources/codemirror.child.js' );
-const mediaWikiLang = require( '../../resources/codemirror.mediawiki.js' );
+const mediaWikiLang = require( '../../resources/mediawiki/codemirror.mediawiki.js' );
 
 let textarea, otherTextarea, cm, cmLogEditFeatureSpy;
 

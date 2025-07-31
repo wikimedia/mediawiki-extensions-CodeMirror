@@ -1,5 +1,5 @@
 const CodeMirror = require( '../../resources/codemirror.js' );
-const mediawikiLang = require( '../../resources/codemirror.mediawiki.js' );
+const mediawikiLang = require( '../../resources/mediawiki/codemirror.mediawiki.js' );
 const { javascript } = require( '../../resources/codemirror.javascript.js' );
 
 const selector = '.cm-matchingBracket, .cm-nonmatchingBracket';

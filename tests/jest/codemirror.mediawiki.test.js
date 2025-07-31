@@ -1,8 +1,8 @@
 const { StreamParser } = require( '@codemirror/language' );
 const { Tag } = require( '@lezer/highlight' );
 const CodeMirror = require( '../../resources/codemirror.js' );
-const mediaWikiLang = require( '../../resources/codemirror.mediawiki.js' );
-const mwModeConfig = require( '../../resources/codemirror.mediawiki.config.js' );
+const mediaWikiLang = require( '../../resources/mediawiki/codemirror.mediawiki.js' );
+const mwModeConfig = require( '../../resources/mediawiki/codemirror.mediawiki.config.js' );
 
 // NOTE: each test case should have a space before the closing </div>
 // This is to avoid interactive UI components from showing up in the test output.

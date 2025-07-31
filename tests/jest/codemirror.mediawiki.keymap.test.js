@@ -1,7 +1,7 @@
 /* eslint-disable-next-line n/no-missing-require */
 const { EditorView } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirror = require( '../../resources/codemirror.js' );
-const mwKeymap = require( '../../resources/codemirror.mediawiki.keymap.js' );
+const mwKeymap = require( '../../resources/mediawiki/codemirror.mediawiki.keymap.js' );
 
 describe( 'CodeMirrorMediaWikiKeymap', () => {
 	let cm, textarea;

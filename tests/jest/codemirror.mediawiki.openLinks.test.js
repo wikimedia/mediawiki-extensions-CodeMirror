@@ -1,5 +1,5 @@
 const CodeMirror = require( '../../resources/codemirror.js' );
-const mediawikiLang = require( '../../resources/codemirror.mediawiki.js' );
+const mediawikiLang = require( '../../resources/mediawiki/codemirror.mediawiki.js' );
 
 describe( 'CodeMirrorOpenLinks', () => {
 	let cm;

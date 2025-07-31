@@ -133,8 +133,8 @@
 		"ext.CodeMirror.mode.mediawiki": {
 			"packageFiles": "legacy/mode/mediawiki/mediawiki.js",
 			"styles": [
-				"codemirror.mediawiki.less",
-				"codemirror.mediawiki.colorblind.less"
+				"mediawiki/codemirror.mediawiki.less",
+				"mediawiki/codemirror.mediawiki.colorblind.less"
 			],
 			"dependencies": [
 				"ext.CodeMirror.lib"
@@ -323,18 +323,18 @@
 		},
 		"ext.CodeMirror.v6.mode.mediawiki": {
 			"packageFiles": [
-				"codemirror.mediawiki.js",
-				"codemirror.mediawiki.config.js",
-				"codemirror.mediawiki.bidiIsolation.js",
-				"codemirror.mediawiki.codeFolding.js",
-				"codemirror.mediawiki.matchTag.js",
-				"codemirror.mediawiki.autocomplete.js",
-				"codemirror.mediawiki.openLinks.js",
-				"codemirror.mediawiki.keymap.js"
+				"mediawiki/codemirror.mediawiki.js",
+				"mediawiki/codemirror.mediawiki.config.js",
+				"mediawiki/codemirror.mediawiki.bidiIsolation.js",
+				"mediawiki/codemirror.mediawiki.codeFolding.js",
+				"mediawiki/codemirror.mediawiki.matchTag.js",
+				"mediawiki/codemirror.mediawiki.autocomplete.js",
+				"mediawiki/codemirror.mediawiki.openLinks.js",
+				"mediawiki/codemirror.mediawiki.keymap.js"
 			],
 			"styles": [
-				"codemirror.mediawiki.less",
-				"codemirror.mediawiki.colorblind.less"
+				"mediawiki/codemirror.mediawiki.less",
+				"mediawiki/codemirror.mediawiki.colorblind.less"
 			],
 			"dependencies": [
 				"mediawiki.Title",
