@@ -1,12 +1,12 @@
-const CodeMirrorPanel = require( '../../resources/codemirror.panel.js' );
+const CodeMirrorCodex = require( '../../resources/codemirror.codex.js' );
 
 // CodeMirrorPanel is tagged as abstract, but being JavaScript it isn't a
 // "real" abstract class, so we can instantiate it directly for testing purposes.
-const cmPanel = new CodeMirrorPanel();
+const cmCodex = new CodeMirrorCodex();
 
-describe( 'CodeMirrorPanel', () => {
+describe( 'CodeMirrorCodex', () => {
 	it( 'should create a Codex TextInput', () => {
-		const [ inputWrapper, input ] = cmPanel.getTextInput( 'foo', 'bar', 'codemirror-find' );
+		const [ inputWrapper, input ] = cmCodex.getTextInput( 'foo', 'bar', 'codemirror-find' );
 		expect( inputWrapper.className ).toBe( 'cdx-text-input cm-mw-panel--text-input' );
 		expect( input.className ).toBe( 'cdx-text-input__input' );
 		expect( input.type ).toBe( 'text' );
@@ -17,30 +17,37 @@ describe( 'CodeMirrorPanel', () => {
 	} );
 
 	it( 'should create a Codex Button with no icon', () => {
-		const buttonNoIcon = cmPanel.getButton( 'foo' );
+		const buttonNoIcon = cmCodex.getButton( 'foo' );
 		expect( buttonNoIcon.tagName ).toBe( 'BUTTON' );
-		expect( buttonNoIcon.className ).toBe( 'cdx-button cm-mw-panel--button' );
+		expect( buttonNoIcon.className ).toBe(
+			'cdx-button cm-mw-panel--button cdx-button--action-default cdx-button--weight-normal'
+		);
 		expect( buttonNoIcon.type ).toBe( 'button' );
 		expect( buttonNoIcon.children.length ).toBe( 0 );
 	} );
 
 	it( 'should create a Codex button with an icon and a label', () => {
-		const buttonWithIcon = cmPanel.getButton( 'foo', 'bar' );
+		const buttonWithIcon = cmCodex.getButton( 'foo', { icon: 'bar' } );
 		expect( buttonWithIcon.tagName ).toBe( 'BUTTON' );
-		expect( buttonWithIcon.className ).toBe( 'cdx-button cm-mw-panel--button' );
+		expect( buttonWithIcon.className ).toBe(
+			'cdx-button cm-mw-panel--button cdx-button--action-default cdx-button--weight-normal'
+		);
 		expect( buttonWithIcon.type ).toBe( 'button' );
 		expect( buttonWithIcon.children.length ).toBe( 1 );
 		const iconSpan = buttonWithIcon.children[ 0 ];
 		expect( iconSpan.tagName ).toBe( 'SPAN' );
-		expect( iconSpan.className ).toBe( 'cdx-button__icon cm-mw-icon--bar' );
+		expect( iconSpan.className ).toBe(
+			'cdx-button__icon cm-mw-icon--bar'
+		);
 		expect( iconSpan.getAttribute( 'aria-hidden' ) ).toBe( 'true' );
 	} );
 
 	it( 'should create an icon-only Codex button', () => {
-		const buttonIconOnly = cmPanel.getButton( 'foo', 'bar', true );
+		const buttonIconOnly = cmCodex.getButton( 'foo', { icon: 'bar', iconOnly: true } );
 		expect( buttonIconOnly.tagName ).toBe( 'BUTTON' );
 		expect( buttonIconOnly.className ).toBe(
-			'cdx-button cm-mw-panel--button cdx-button--icon-only'
+			'cdx-button cm-mw-panel--button cdx-button--action-default ' +
+			'cdx-button--weight-normal cdx-button--icon-only'
 		);
 		expect( buttonIconOnly.type ).toBe( 'button' );
 		expect( buttonIconOnly.children.length ).toBe( 1 );
@@ -52,8 +59,17 @@ describe( 'CodeMirrorPanel', () => {
 		expect( iconSpan.getAttribute( 'aria-hidden' ) ).toBeNull();
 	} );
 
+	it( 'should create a destructive quiet button', () => {
+		const buttonDestructive = cmCodex.getButton( 'foo', { action: 'destructive', weight: 'quiet' } );
+		expect( buttonDestructive.tagName ).toBe( 'BUTTON' );
+		expect( buttonDestructive.className ).toBe(
+			'cdx-button cm-mw-panel--button cdx-button--action-destructive cdx-button--weight-quiet'
+		);
+		expect( buttonDestructive.type ).toBe( 'button' );
+	} );
+
 	it( 'should create a Codex Checkbox', () => {
-		const [ checkboxWrapper, checkbox ] = cmPanel.getCheckbox( 'foo', 'bar', true );
+		const [ checkboxWrapper, checkbox ] = cmCodex.getCheckbox( 'foo', 'bar', true );
 		expect( checkboxWrapper.className ).toBe( 'cdx-checkbox cdx-checkbox--inline cm-mw-panel--checkbox' );
 		expect( checkboxWrapper.children.length ).toBe( 3 );
 		const labelWrapper = checkboxWrapper.children[ 2 ];
@@ -70,7 +86,7 @@ describe( 'CodeMirrorPanel', () => {
 	} );
 
 	it( 'should create a Codex ToggleButton', () => {
-		const toggleButtonOn = cmPanel.getToggleButton( 'foo', 'bar', 'baz', true );
+		const toggleButtonOn = cmCodex.getToggleButton( 'foo', 'bar', 'baz', true );
 		expect( toggleButtonOn.tagName ).toBe( 'BUTTON' );
 		expect( toggleButtonOn.className ).toBe(
 			'cdx-toggle-button cdx-toggle-button--framed cdx-toggle-button--toggled-on cm-mw-panel--toggle-button'
@@ -85,12 +101,49 @@ describe( 'CodeMirrorPanel', () => {
 		expect( iconSpan.tagName ).toBe( 'SPAN' );
 		expect( iconSpan.className ).toBe( 'cdx-icon cdx-icon--medium cm-mw-icon--baz' );
 
-		const toggleButtonOff = cmPanel.getToggleButton( 'foo', 'bar', 'baz', false );
+		const toggleButtonOff = cmCodex.getToggleButton( 'foo', 'bar', 'baz', false );
 		expect( toggleButtonOff.className ).toBe(
 			'cdx-toggle-button cdx-toggle-button--framed cdx-toggle-button--toggled-off cm-mw-panel--toggle-button'
 		);
 		expect( toggleButtonOff.type ).toBe( 'button' );
 		expect( toggleButtonOff.dataset.checked ).toBe( 'false' );
 		expect( toggleButtonOff.getAttribute( 'aria-pressed' ) ).toBe( 'false' );
+	} );
+
+	it( 'should create a Codex fieldset with a legend', () => {
+		const field1 = document.createElement( 'p' );
+		const field2 = document.createElement( 'p' );
+		const fieldset = cmCodex.getFieldset( 'legend text', field1, field2 );
+		expect( fieldset.tagName ).toBe( 'FIELDSET' );
+		expect( fieldset.className ).toBe( 'cm-mw-panel--fieldset cdx-field' );
+		expect( fieldset.children.length ).toBe( 3 );
+		const legend = fieldset.children[ 0 ];
+		expect( legend.tagName ).toBe( 'LEGEND' );
+		expect( legend.className ).toBe( 'cdx-label' );
+		expect( legend.textContent ).toBe( 'legend text' );
+		expect( fieldset.children[ 1 ] ).toBe( field1 );
+		expect( fieldset.children[ 2 ] ).toBe( field2 );
+	} );
+
+	it( 'should show a Codex Dialog with actions', () => {
+		const contents = document.createElement( 'p' );
+		contents.textContent = 'Dialog content';
+		const actionBtn = cmCodex.getButton( 'Action' );
+		const backdrop = cmCodex.showDialog( 'Dialog Title', 'example', contents, actionBtn );
+		expect( backdrop.className ).toBe( 'cdx-dialog-backdrop cdx-dialog-fade-enter-active cm-mw-dialog-backdrop' );
+		const dialog = backdrop.children[ 1 ];
+		expect( dialog.className ).toBe( 'cdx-dialog cm-mw-dialog cm-mw-example-dialog cdx-dialog--horizontal-actions' );
+		expect( dialog.children.length ).toBe( 4 );
+		expect( dialog.children[ 0 ].tagName ).toBe( 'HEADER' );
+		expect( dialog.children[ 0 ].className ).toBe( 'cdx-dialog__header cdx-dialog__header--default' );
+		expect( dialog.children[ 0 ].textContent ).toBe( 'Dialog Title' );
+		expect( dialog.children[ 2 ].className ).toBe( 'cdx-dialog__body' );
+		expect( dialog.children[ 2 ].textContent ).toBe( 'Dialog content' );
+		const footer = dialog.children[ 3 ];
+		expect( footer.tagName ).toBe( 'FOOTER' );
+		expect( footer.className ).toBe( 'cdx-dialog__footer cdx-dialog__footer--default' );
+		const actions = footer.children[ 0 ];
+		expect( actions.className ).toBe( 'cdx-dialog__footer__actions' );
+		expect( actions.children[ 0 ] ).toBe( actionBtn );
 	} );
 } );

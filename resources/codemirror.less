@@ -175,6 +175,37 @@
 	}
 }
 
+// Dialogs
+
+.cdx-dialog-backdrop {
+	opacity: @opacity-transparent;
+
+	&.cm-mw-dialog--hidden {
+		display: none;
+	}
+
+	&.cm-mw-dialog-animate-show {
+		opacity: @opacity-base;
+	}
+}
+
+.cdx-dialog.cm-mw-dialog {
+	.cm-mw-dialog--columns {
+		columns: 3 19.5em;
+		font-size: @font-size-small;
+
+		&--two-col {
+			column-count: 2;
+		}
+
+		.cdx-checkbox,
+		legend {
+			display: inline-block;
+			width: 100%;
+		}
+	}
+}
+
 // Find and replace
 
 .cm-editor .cm-panels .cm-mw-panel--search-panel {

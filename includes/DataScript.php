@@ -59,6 +59,7 @@ class DataScript {
 		$config = [
 			'useV6' => $mwConfig->get( 'CodeMirrorV6' ),
 			'defaultPreferences' => $mwConfig->get( 'CodeMirrorDefaultPreferences' ),
+			'primaryPreferences' => $mwConfig->get( 'CodeMirrorPrimaryPreferences' ),
 			'legacyLineNumberingNamespaces' => $mwConfig->get( 'CodeMirrorLineNumberingNamespaces' ),
 			'titleCompletion' => $mwConfig->get( 'CodeMirrorTitleCompletion' ),
 			'pluginModules' => $registry->getAttribute( 'CodeMirrorPluginModules' ),

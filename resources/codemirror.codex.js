@@ -40,17 +40,34 @@ class CodeMirrorCodex {
 	 * Get a CSS-only Codex Button.
 	 *
 	 * @param {string} label
-	 * @param {string|null} [icon=null]
-	 * @param {boolean} [iconOnly=false]
+	 * @param {Object} [opts]
+	 * @param {string|null} [opts.icon=null]
+	 * @param {boolean} [opts.iconOnly=false]
+	 * @param {string} [opts.action='default']
+	 * @param {string} [opts.weight='normal']
 	 * @return {HTMLButtonElement}
 	 * @internal
 	 */
-	getButton( label, icon = null, iconOnly = false ) {
+	getButton( label, opts = {} ) {
+		opts = Object.assign(
+			{ icon: null, iconOnly: false, action: 'default', weight: 'normal' },
+			opts
+		);
 		const button = document.createElement( 'button' );
 		button.className = 'cdx-button cm-mw-panel--button';
+		// The following CSS classes may be used here:
+		// * cdx-button--action-default
+		// * cdx-button--action-progressive
+		// * cdx-button--action-destructive
+		button.classList.add( `cdx-button--action-${ opts.action }` );
+		// The following CSS classes may be used here:
+		// * cdx-button--size-normal
+		// * cdx-button--size-primary
+		// * cdx-button--size-quiet
+		button.classList.add( `cdx-button--weight-${ opts.weight }` );
 		button.type = 'button';
 
-		if ( icon ) {
+		if ( opts.icon ) {
 			const iconSpan = document.createElement( 'span' );
 			// The following CSS classes may be used here:
 			// * cm-mw-icon--previous
@@ -60,9 +77,9 @@ class CodeMirrorCodex {
 			// * cm-mw-icon--replace-all
 			// * cm-mw-icon--done
 			// * cm-mw-icon--goto-line-go
-			iconSpan.className = 'cdx-button__icon cm-mw-icon--' + icon;
+			iconSpan.className = 'cdx-button__icon cm-mw-icon--' + opts.icon;
 
-			if ( !iconOnly ) {
+			if ( !opts.iconOnly ) {
 				iconSpan.setAttribute( 'aria-hidden', 'true' );
 			}
 
@@ -76,7 +93,7 @@ class CodeMirrorCodex {
 		// * codemirror-replace
 		// * codemirror-replace-all
 		const message = mw.msg( label );
-		if ( iconOnly ) {
+		if ( opts.iconOnly ) {
 			button.classList.add( 'cdx-button--icon-only' );
 			button.title = message;
 			button.setAttribute( 'aria-label', message );
@@ -178,43 +195,28 @@ class CodeMirrorCodex {
 	}
 
 	/**
-	 * Get a CSS-only Codex Fieldset.
+	 * Get a CSS-only Codex fieldset with a legend.
 	 *
-	 * @param {string} legendText
+	 * @param {string|HTMLElement} legendText
 	 * @param {...HTMLElement[]} fields
-	 * @return {Element}
+	 * @return {HTMLFieldSetElement}
 	 * @internal
 	 */
 	getFieldset( legendText, ...fields ) {
 		const fieldset = document.createElement( 'fieldset' );
 		fieldset.className = 'cm-mw-panel--fieldset cdx-field';
+
 		const legend = document.createElement( 'legend' );
 		legend.className = 'cdx-label';
 		const innerSpan = document.createElement( 'span' );
 		innerSpan.className = 'cdx-label__label__text';
-		innerSpan.textContent = legendText;
-		const helpSpan = document.createElement( 'span' );
-		helpSpan.className = 'cm-mw-panel--help';
-		const helpLink = document.createElement( 'a' );
-		helpLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror';
-		helpLink.target = '_blank';
-		helpLink.textContent = mw.msg( 'codemirror-prefs-help' ).toLowerCase();
-		// Click listener added in CodeMirrorKeymap since we don't have a CodeMirror instance here.
-		const shortcutLink = document.createElement( 'a' );
-		shortcutLink.className = 'cm-mw-panel--kbd-help';
-		shortcutLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror#Keyboard_shortcuts';
-		shortcutLink.textContent = mw.msg( 'codemirror-keymap-help-title' ).toLowerCase();
-		shortcutLink.onclick = ( e ) => e.preventDefault();
-		helpSpan.append(
-			' ',
-			mw.msg( 'parentheses-start' ),
-			helpLink,
-			mw.msg( 'pipe-separator' ),
-			shortcutLink,
-			mw.msg( 'parentheses-end' )
-		);
-		innerSpan.appendChild( helpSpan );
+		if ( legendText instanceof HTMLElement ) {
+			innerSpan.appendChild( legendText );
+		} else {
+			innerSpan.textContent = legendText;
+		}
 		legend.appendChild( innerSpan );
+
 		fieldset.appendChild( legend );
 		fieldset.append( ...fields );
 		return fieldset;
@@ -223,18 +225,23 @@ class CodeMirrorCodex {
 	/**
 	 * Show a Codex Dialog.
 	 *
+	 * This implements a vanilla JS port of the Codex Dialog component. See https://w.wiki/CcWY
+	 *
 	 * @param {string} title
+	 * @param {string} name Constructed into the CSS class `cm-mw-${name}-dialog`
 	 * @param {HTMLElement|HTMLElement[]} contents
-	 * @return {boolean}
+	 * @param {HTMLElement|HTMLElement[]} [actions] Buttons or other actions to show in the footer.
+	 * @return {HTMLDivElement}
 	 * @internal
 	 */
-	showDialog( title, contents ) {
+	showDialog( title, name, contents, actions = [] ) {
 		if ( this.dialog ) {
 			this.animateDialog( true );
-			return true;
+			return this.dialog;
 		}
 
 		contents = Array.isArray( contents ) ? contents : [ contents ];
+		actions = Array.isArray( actions ) ? actions : [ actions ];
 		const backdrop = document.createElement( 'div' );
 		backdrop.classList.add(
 			'cdx-dialog-backdrop',
@@ -250,7 +257,10 @@ class CodeMirrorCodex {
 		backdrop.appendChild( tabindex );
 
 		const dialog = document.createElement( 'div' );
-		dialog.classList.add( 'cdx-dialog', 'cm-mw-dialog', 'cm-mw-keymap-dialog' );
+		// The following CSS classes may be used here:
+		// * cm-mw-preferences-dialog
+		// * cm-mw-keymap-dialog
+		dialog.classList.add( 'cdx-dialog', 'cm-mw-dialog', `cm-mw-${ name }-dialog` );
 		backdrop.appendChild( dialog );
 		backdrop.addEventListener( 'click', ( e ) => {
 			if ( e.target === backdrop ) {
@@ -301,6 +311,17 @@ class CodeMirrorCodex {
 		body.append( ...contents );
 		dialog.appendChild( body );
 
+		if ( actions.length ) {
+			dialog.classList.add( 'cdx-dialog--horizontal-actions' );
+			const footer = document.createElement( 'footer' );
+			footer.className = 'cdx-dialog__footer cdx-dialog__footer--default';
+			const footerActions = document.createElement( 'div' );
+			footerActions.classList.add( 'cdx-dialog__footer__actions' );
+			footerActions.append( ...actions );
+			footer.appendChild( footerActions );
+			dialog.appendChild( footer );
+		}
+
 		backdrop.appendChild( tabindex.cloneNode() );
 
 		this.dialog = backdrop;
@@ -308,7 +329,7 @@ class CodeMirrorCodex {
 		document.body.appendChild( backdrop );
 		this.animateDialog( true );
 
-		return true;
+		return this.dialog;
 	}
 
 	/**

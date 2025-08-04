@@ -1,40 +1,15 @@
 @import 'mediawiki.skin.variables.less';
 
 /*!
- * Styles for CodeMirror CSS-only Codex Dialog.
+ * Styles for keyboard shortcuts dialog in CodeMirror.
  *
- * The width is intentionally increased for desktop screens compared to Codex defaults.
- *
- * CSS adapted from VisualEditor's ve.ui.CommandHelpDialog.less
+ * Some CSS adapted from VisualEditor's ve.ui.CommandHelpDialog.less
  * Courtesy of VisualEditor team (MIT license)
  */
 
-.cdx-dialog-backdrop {
-	opacity: @opacity-transparent;
-
-	&.cm-mw-dialog--hidden {
-		display: none;
-	}
-
-	&.cm-mw-dialog-animate-show {
-		opacity: @opacity-base;
-	}
-}
-
 .cdx-dialog.cm-mw-keymap-dialog {
+	// The width is intentionally increased for desktop screens compared to Codex defaults.
 	max-width: @min-width-breakpoint-desktop;
-
-	.cdx-dialog__body {
-		font-size: @font-size-small;
-	}
-
-	.cm-mw-keymap-dialog__keybindings {
-		columns: 3 19.5em;
-
-		&.cm-mw-keymap-dialog__keybindings--two-col {
-			column-count: 2;
-		}
-	}
 
 	.cm-mw-keymap-section {
 		/*

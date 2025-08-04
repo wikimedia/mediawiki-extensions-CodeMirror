@@ -212,6 +212,10 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 					key: 'Mod-Shift-,',
 					msg: mw.msg( 'codemirror-keymap-preferences' )
 				},
+				advancedPreferences: {
+					key: 'Alt-Shift-,',
+					msg: mw.msg( 'codemirror-keymap-advanced-preferences' )
+				},
 				help: {
 					key: 'Ctrl-Shift-/',
 					run: this.showHelpDialog.bind( this ),
@@ -244,8 +248,6 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 	/**
 	 * Show the keymap help dialog.
 	 *
-	 * This implements the Codex Dialog component. See https://w.wiki/CcWY
-	 *
 	 * @return {boolean}
 	 */
 	showHelpDialog() {
@@ -257,16 +259,17 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 		 */
 		mw.hook( 'ext.CodeMirror.keymap' ).fire();
 
-		return this.showDialog( 'codemirror-keymap-help-title', this.setHelpDialogBody() );
+		this.showDialog( 'codemirror-keymap-help-title', 'keymap', this.getHelpDialogBody() );
+		return true;
 	}
 
 	/**
 	 * @return {HTMLElement[]}
 	 * @private
 	 */
-	setHelpDialogBody() {
+	getHelpDialogBody() {
 		const keybindingsContainer = document.createElement( 'section' );
-		keybindingsContainer.classList.add( 'cm-mw-keymap-dialog__keybindings' );
+		keybindingsContainer.classList.add( 'cm-mw-keymap-dialog__keybindings', 'cm-mw-dialog--columns' );
 		const sections = Object.keys( this.keymapHelpRegistry );
 		// Count of non-empty sections.
 		let sectionCount = 0;
@@ -370,7 +373,7 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 		// This happens if the LanguageSupport extension did not
 		// register any additional key bindings, throwing off the styling.
 		if ( sectionCount <= 4 ) {
-			keybindingsContainer.classList.add( 'cm-mw-keymap-dialog__keybindings--two-col' );
+			keybindingsContainer.classList.add( 'cm-mw-dialog__columns--two-col' );
 		}
 
 		// Cursor modifiers.

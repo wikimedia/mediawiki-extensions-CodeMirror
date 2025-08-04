@@ -28,7 +28,7 @@ const getMockSurface = ( readOnly = false ) => ( {
 let cmVe, surface;
 
 beforeEach( () => {
-	mw.config.get = jest.fn().mockReturnValue( { defaultPreferences: {} } );
+	mw.config.get = jest.fn().mockReturnValue( { defaultPreferences: {}, primaryPreferences: {} } );
 	surface = getMockSurface();
 	cmVe = new CodeMirrorVisualEditor( surface );
 } );

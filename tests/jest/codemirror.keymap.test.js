@@ -117,6 +117,6 @@ describe( 'CodeMirrorKeymap (integration)', () => {
 		cm.view.contentDOM.dispatchEvent( new KeyboardEvent( 'keydown', { key: '/', shiftKey: true, ctrlKey: true } ) );
 		expect( spy ).toHaveBeenCalledWith( 'keymap' );
 		expect( document.querySelector( '.cm-mw-keymap-dialog' ) ).not.toBeNull();
-		expect( document.querySelectorAll( 'dl.cm-mw-keymap-list dt' ).length ).toStrictEqual( 24 );
+		expect( document.querySelectorAll( 'dl.cm-mw-keymap-list dt' ).length ).toStrictEqual( 25 );
 	} );
 } );

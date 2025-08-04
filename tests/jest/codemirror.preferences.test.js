@@ -7,10 +7,11 @@ describe( 'CodeMirrorPreferences', () => {
 	let mockDefaultPreferences, mockUserPreferences, getCodeMirrorPreferences;
 
 	beforeEach( () => {
-		mockDefaultPreferences = ( config = { fooExtension: false, barExtension: true } ) => {
-			mw.config.get = jest.fn().mockReturnValue( {
-				defaultPreferences: config
-			} );
+		mockDefaultPreferences = (
+			defaultPreferences = { fooExtension: false, barExtension: true },
+			primaryPreferences = { fooExtension: true, barExtension: true }
+		) => {
+			mw.config.get = jest.fn().mockReturnValue( { defaultPreferences, primaryPreferences } );
 		};
 		mockUserPreferences = ( preferences = {} ) => {
 			mw.user.options.get = jest.fn().mockReturnValue( JSON.stringify( preferences ) );
@@ -141,7 +142,8 @@ describe( 'CodeMirrorPreferences', () => {
 
 	it( 'overriding namespace and mode preferences', () => {
 		const extCodeMirrorConfig = {
-			defaultPreferences: { lineNumbering: true, autocomplete: [ 0 ] }
+			defaultPreferences: { lineNumbering: true, autocomplete: [ 0 ] },
+			primaryPreferences: { lineNumbering: true, autocomplete: true }
 		};
 		mockUserPreferences( {} );
 
@@ -318,7 +320,7 @@ describe( 'CodeMirrorPreferences', () => {
 		'default preferences ($title)',
 		( { defaultPreferences, nsId, mode, expected } ) => {
 			mockMwConfigGet( {
-				extCodeMirrorConfig: { defaultPreferences },
+				extCodeMirrorConfig: { defaultPreferences, primaryPreferences: defaultPreferences },
 				wgNamespaceNumber: nsId,
 				cmMode: mode
 			} );
@@ -327,4 +329,61 @@ describe( 'CodeMirrorPreferences', () => {
 			expect( preferences.getDefaultPreferences() ).toStrictEqual( expected );
 		}
 	);
+
+	it( 'getCheckboxesFieldset', () => {
+		mockDefaultPreferences();
+		mockUserPreferences( { fooExtension: 1, barExtension: 1 } );
+		const preferences = getCodeMirrorPreferences();
+		const fieldset = preferences.getCheckboxesFieldset(
+			[ 'fooExtension', 'barExtension', 'doesNotExistExtension' ]
+		);
+		const checkboxes = fieldset.querySelectorAll( '.cdx-checkbox__label' );
+		expect( checkboxes.length ).toBe( 2 );
+		expect( checkboxes[ 0 ].textContent ).toBe( 'codemirror-prefs-fooextension' );
+		expect( checkboxes[ 1 ].textContent ).toBe( 'codemirror-prefs-barextension' );
+	} );
+
+	it.only( 'primary preferences - panel / showAdvancedDialog', () => {
+		const realPreferences = {
+			lineNumbering: true, bracketMatching: true, autocomplete: true, openLinks: true
+		};
+		mockDefaultPreferences( realPreferences, { lineNumbering: true, bracketMatching: true } );
+		mockUserPreferences(
+			{ lineNumbering: true, bracketMatching: true, autocomplete: true, openLinks: true }
+		);
+		const view = new EditorView();
+		const openLinks = EditorView.theme();
+		const preferences = getCodeMirrorPreferences( {
+			lineNumbering: EditorView.theme(),
+			bracketMatching: EditorView.theme(),
+			autocomplete: EditorView.theme(),
+			openLinks
+		} );
+		// openLinks is MW-specific, so we'll need to register it separately here in the test.
+		preferences.registerExtension( 'openLinks', openLinks, view );
+		// Panel should only show lineNumbering and bracketMatching.
+		const panelCheckboxes = preferences.panel.dom.querySelectorAll( '.cdx-checkbox__label' );
+		expect( panelCheckboxes.length ).toBe( 2 );
+		expect( panelCheckboxes[ 0 ].textContent ).toBe( 'codemirror-prefs-linenumbering' );
+		expect( panelCheckboxes[ 1 ].textContent ).toBe( 'codemirror-prefs-bracketmatching' );
+		// Show advanced dialog.
+		preferences.showPreferencesDialog( view );
+		const dialog = preferences.dialog.querySelector( '.cm-mw-preferences-dialog' );
+		const fieldsets = dialog.querySelectorAll( '.cm-mw-panel--fieldset' );
+		expect( fieldsets.length ).toBe( 3 );
+		expect( fieldsets[ 0 ].querySelector( 'legend' ).textContent )
+			.toBe( 'codemirror-prefs-section-lines' );
+		expect( fieldsets[ 0 ].querySelector( '.cdx-checkbox__label' ).textContent )
+			.toBe( 'codemirror-prefs-linenumbering' );
+		expect( fieldsets[ 1 ].querySelector( 'legend' ).textContent )
+			.toBe( 'codemirror-prefs-section-code-assistance' );
+		expect( fieldsets[ 1 ].querySelectorAll( '.cdx-checkbox__label' )[ 0 ].textContent )
+			.toBe( 'codemirror-prefs-autocomplete' );
+		expect( fieldsets[ 1 ].querySelectorAll( '.cdx-checkbox__label' )[ 1 ].textContent )
+			.toBe( 'codemirror-prefs-bracketmatching' );
+		expect( fieldsets[ 2 ].querySelector( 'legend' ).textContent )
+			.toBe( 'codemirror-prefs-section-other' );
+		expect( fieldsets[ 2 ].querySelector( '.cdx-checkbox__label' ).textContent )
+			.toBe( 'codemirror-prefs-openlinks' );
+	} );
 } );

@@ -190,7 +190,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 		buttonGroup.className = 'cdx-button-group';
 
 		// "Previous" button.
-		this.prevButton = this.getButton( 'codemirror-previous', 'previous', true );
+		this.prevButton = this.getButton( 'codemirror-previous', { icon: 'previous', iconOnly: true } );
 		buttonGroup.appendChild( this.prevButton );
 		this.prevButton.addEventListener( 'click', ( e ) => {
 			e.preventDefault();
@@ -198,7 +198,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 		} );
 
 		// "Next" button.
-		this.nextButton = this.getButton( 'codemirror-next', 'next', true );
+		this.nextButton = this.getButton( 'codemirror-next', { icon: 'next', iconOnly: true } );
 		buttonGroup.appendChild( this.nextButton );
 		this.nextButton.addEventListener( 'click', ( e ) => {
 			e.preventDefault();

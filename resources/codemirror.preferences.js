@@ -14,6 +14,9 @@ require( './ext.CodeMirror.data.js' );
 /**
  * CodeMirrorPreferences is a panel that allows users to configure CodeMirror preferences.
  * It is toggled by pressing `Ctrl`-`Shift`-`,` (or `Command`-`Shift`-`,` on macOS).
+ * Only the commonly used "primary" preferences with a visual effect are shown in the panel,
+ * in order to reduce in-editor clutter. An "advanced" link is provided to open a dialog
+ * with all available preferences. This can also be opened by pressing `Alt`-`Shift`-`,`.
  *
  * Note that this code, like MediaWiki Core, refers to the user's preferences as "options".
  * In this class, "preferences" refer to the user's preferences for CodeMirror, which
@@ -77,6 +80,48 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		 * @param {CodeMirrorPreferences} preferences
 		 */
 		mw.hook( 'ext.CodeMirror.preferences.ready' ).fire( this );
+
+		/**
+		 * Preferences that are shown in the preferences panel, as defined by
+		 * `$wgCodeMirrorPrimaryPreferences`. These "primary" preferences should:
+		 * - Be commonly used,
+		 * - Be easy to understand,
+		 * - Have an immediate visual effect, and
+		 * - Limited to a small subset to avoid consuming too much in-editor space.
+		 *
+		 * @type {string[]}
+		 */
+		this.primaryPreferences = Object.keys( this.mwConfigPrimary )
+			.filter( ( prefName ) => !!this.mwConfigPrimary[ prefName ] );
+
+		/**
+		 * Configuration for the full preferences dialog.
+		 *
+		 * Each key is a section name having an i18n message key
+		 * of the form `codemirror-prefs-section-<section>`.
+		 *
+		 * Values are arrays of preference names that belong to that section.
+		 * Any preference not listed here will be shown in the "Other" section.
+		 *
+		 * @type {Object}
+		 */
+		this.dialogConfig = {
+			lines: [
+				'lineNumbering',
+				'lineWrapping',
+				'activeLine'
+			],
+			characters: [
+				'specialChars',
+				'whitespace'
+			],
+			'code-assistance': [
+				'autocomplete',
+				'codeFolding',
+				'bracketMatching',
+				'lint'
+			]
+		};
 	}
 
 	/**
@@ -85,6 +130,10 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 */
 	get mwConfigDefaults() {
 		return mw.config.get( 'extCodeMirrorConfig' ).defaultPreferences;
+	}
+
+	get mwConfigPrimary() {
+		return mw.config.get( 'extCodeMirrorConfig' ).primaryPreferences;
 	}
 
 	/**
@@ -303,9 +352,11 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 */
 	get extension() {
 		return [
-			// Keymap for toggling the preferences panel.
 			keymap.of( [
-				{ key: 'Mod-Shift-,', run: ( view ) => this.toggle( view, true ) }
+				// Toggling the preferences panel.
+				{ key: 'Mod-Shift-,', run: ( view ) => this.toggle( view, true ) },
+				// Toggling the full preferences dialog.
+				{ key: 'Alt-Shift-,', run: ( view ) => this.showPreferencesDialog( view ) }
 			] ),
 			// At this point the registry contains only extensions managed by CodeMirrorPreferences.
 			this.extensionRegistry.names.map( ( name ) => {
@@ -325,26 +376,19 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	get panel() {
 		const container = document.createElement( 'div' );
 		container.className = 'cm-mw-preferences-panel cm-mw-panel';
-		container.addEventListener( 'keydown', this.onKeydown.bind( this ) );
+		container.addEventListener( 'keydown', this.onKeydownPanel.bind( this ) );
 
-		// Show checkboxes for registered extensions with preferences.
-		const prefNames = this.extensionRegistry.names.filter(
-			( name ) => this.preferences[ name ] !== undefined
+		const heading = document.createElement( 'div' );
+		heading.textContent = mw.msg( 'codemirror-prefs-title' );
+		heading.appendChild( this.getHelpLinks() );
+		container.appendChild(
+			this.getCheckboxesFieldset(
+				this.primaryPreferences,
+				heading
+			)
 		);
 
-		const wrappers = [];
-		for ( const prefName of prefNames ) {
-			const [ wrapper ] = this.getCheckbox(
-				prefName,
-				`codemirror-prefs-${ prefName.toLowerCase() }`,
-				this.getPreference( prefName )
-			);
-			wrappers.push( wrapper );
-		}
-		const fieldset = this.getFieldset( mw.msg( 'codemirror-prefs-title' ), ...wrappers );
-		container.appendChild( fieldset );
-
-		const closeBtn = this.getButton( 'codemirror-close', 'close', true );
+		const closeBtn = this.getButton( 'codemirror-close', { icon: 'close', iconOnly: true } );
 		closeBtn.classList.add( 'cdx-button--weight-quiet', 'cm-mw-panel-close' );
 		container.appendChild( closeBtn );
 		closeBtn.addEventListener( 'click', () => {
@@ -365,6 +409,72 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 			dom: container,
 			top: true
 		};
+	}
+
+	/**
+	 * @return {HTMLSpanElement}
+	 * @private
+	 */
+	getHelpLinks() {
+		const helpSpan = document.createElement( 'span' );
+		helpSpan.className = 'cm-mw-panel--help';
+		const helpLink = document.createElement( 'a' );
+		helpLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror';
+		helpLink.target = '_blank';
+		helpLink.textContent = mw.msg( 'codemirror-prefs-help' ).toLowerCase();
+		// Click listener added in CodeMirrorKeymap since we don't have a CodeMirror instance here.
+		const shortcutLink = document.createElement( 'a' );
+		shortcutLink.className = 'cm-mw-panel--kbd-help';
+		shortcutLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror#Keyboard_shortcuts';
+		shortcutLink.textContent = mw.msg( 'codemirror-keymap-help-title' ).toLowerCase();
+		shortcutLink.onclick = ( e ) => e.preventDefault();
+		const advancedLink = document.createElement( 'a' );
+		advancedLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror#Features';
+		advancedLink.textContent = mw.msg( 'codemirror-prefs-panel-advanced' ).toLowerCase();
+		advancedLink.onclick = ( e ) => {
+			e.preventDefault();
+			this.showPreferencesDialog( this.view );
+		};
+		helpSpan.append(
+			' ',
+			mw.msg( 'parentheses-start' ),
+			helpLink,
+			mw.msg( 'pipe-separator' ),
+			shortcutLink,
+			mw.msg( 'pipe-separator' ),
+			advancedLink,
+			mw.msg( 'parentheses-end' )
+		);
+		return helpSpan;
+	}
+
+	/**
+	 * Get a fieldset containing checkboxes for the given preferences.
+	 *
+	 * @param {string[]} prefNames Names of preferences to include.
+	 * @param {string|HTMLElement} [title] Title of the fieldset.
+	 * @return {HTMLFieldSetElement}
+	 * @private
+	 */
+	getCheckboxesFieldset(
+		prefNames,
+		title = mw.msg( 'codemirror-prefs-title' )
+	) {
+		// Only include registered extensions.
+		prefNames = prefNames.filter(
+			( name ) => this.extensionRegistry.names.includes( name ) &&
+				this.preferences[ name ] !== undefined
+		);
+		const wrappers = [];
+		for ( const prefName of prefNames ) {
+			const [ wrapper ] = this.getCheckbox(
+				prefName,
+				`codemirror-prefs-${ prefName.toLowerCase() }`,
+				this.getPreference( prefName )
+			);
+			wrappers.push( wrapper );
+		}
+		return this.getFieldset( title, ...wrappers );
 	}
 
 	/**
@@ -407,7 +517,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 *
 	 * @param {KeyboardEvent} event
 	 */
-	onKeydown( event ) {
+	onKeydownPanel( event ) {
 		if ( event.key === 'Escape' ) {
 			event.preventDefault();
 			this.toggle( this.view, false );
@@ -415,6 +525,77 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		} else if ( event.key === 'Enter' ) {
 			event.preventDefault();
 		}
+	}
+
+	/**
+	 * Show the dialog with all available preferences.
+	 *
+	 * @param {EditorView} view
+	 * @return {boolean}
+	 */
+	showPreferencesDialog( view ) {
+		if ( this.dialog ) {
+			this.animateDialog( true );
+			return true;
+		}
+
+		this.view = view;
+
+		const fieldsets = [];
+		const sectionPrefs = [];
+		for ( const [ section, prefs ] of Object.entries( this.dialogConfig ) ) {
+			sectionPrefs.push( ...prefs );
+			const fieldset = this.getCheckboxesFieldset(
+				prefs,
+				// Message here may include but are not limited to:
+				// * codemirror-prefs-section-lines
+				// * codemirror-prefs-section-characters
+				// * codemirror-prefs-section-code-assistance
+				// * codemirror-prefs-section-other
+				mw.msg( `codemirror-prefs-section-${ section }` )
+			);
+			if ( fieldset.children.length > 1 ) {
+				fieldsets.push( fieldset );
+			}
+		}
+
+		// Add a fieldset for the remaining preferences.
+		const otherPrefs = Object.keys( this.preferences ).filter(
+			( name ) => !sectionPrefs.includes( name ) &&
+				this.extensionRegistry.isRegistered( name, view )
+		);
+		if ( otherPrefs.length > 0 ) {
+			fieldsets.push(
+				this.getCheckboxesFieldset(
+					otherPrefs,
+					mw.msg( 'codemirror-prefs-section-other' )
+				)
+			);
+		}
+
+		const resetButton = this.getButton(
+			'codemirror-prefs-reset',
+			{ action: 'destructive', weight: 'quiet' }
+		);
+		resetButton.addEventListener( 'click', () => {
+			for ( const prefName of Object.keys( this.getDefaultPreferences() ) ) {
+				if ( !this.extensionRegistry.isRegistered( prefName, view ) ) {
+					continue;
+				}
+				const defaultPref = this.getDefaultPreferences()[ prefName ];
+				this.setPreference( prefName, defaultPref );
+				this.extensionRegistry.toggle( prefName, view, defaultPref );
+			}
+		} );
+
+		this.dialog = this.showDialog(
+			'codemirror-prefs-title',
+			'preferences',
+			fieldsets,
+			resetButton
+		);
+
+		return true;
 	}
 
 	/**
