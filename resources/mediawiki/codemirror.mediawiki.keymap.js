@@ -57,7 +57,7 @@ class CodeMirrorMediaWikiKeymap {
 					preventDefault: true
 				},
 				subscript: {
-					key: 'Mod-,',
+					key: `${ $.client.profile().name === 'safari' ? 'Ctrl' : 'Mod' }-,`,
 					run: this.subscript.bind( this )
 				},
 				superscript: {
