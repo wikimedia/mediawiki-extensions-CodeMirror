@@ -6,10 +6,17 @@
 	},
 	"codemirror-desc": "Omogoča označevanje skladnje v urejevalniku vikibesedila",
 	"codemirror-toggle-label": "Označevanje skladnje",
+	"codemirror-prefs-enable": "Omogoči označevanje skladnje",
+	"codemirror-prefs-title": "Nastavitve označevanja skladnje",
 	"codemirror-prefs-colorblind": "Omogoči barvno slepim prijazno shemo za označevanje skladnje pri urejanju vikibesedila",
 	"codemirror-prefs-colorblind-help": "Če uporabljate pripomoček za označevanje skladnje, ta nastavitev ne bo delovala.",
 	"codemirror-unfold": "razširjenje",
 	"codemirror-folded-code": "strnjena koda",
+	"codemirror-keymap-computercode": "Računalniška koda",
 	"codemirror-keymap-blockquote": "Citatni blok",
-	"prefs-accessibility": "Dostopnost"
+	"codemirror-keymap-preferences": "Nastavitve označevanja skladnje",
+	"prefs-accessibility": "Dostopnost",
+	"prefs-syntax-highlighting": "Označevanje skladnje",
+	"codemirror-beta-feature-title": "Izboljšano označevanje skladnje",
+	"codemirror-beta-feature-description": "Pridobite zgodnji dostop do novih funkcij označevanja in urejanja skladnje, kot sta zlaganje kode in samodejno dokončanje."
 }
