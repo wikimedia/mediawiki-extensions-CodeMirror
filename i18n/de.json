@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Inkowik",
 			"Kghbln",
 			"McDutchie",
 			"Metalhead64",
@@ -27,7 +28,7 @@
 	"codemirror-prefs-activeline": "Aktive Zeile hervorheben",
 	"codemirror-prefs-specialchars": "Sonderzeichen anzeigen",
 	"codemirror-prefs-whitespace": "Leerzeichen hervorheben",
-	"codemirror-prefs-colorblind": "Zum Bearbeiten von Wikitext ein für Farbenfehlsichtige freundliches Farbschema zur Syntaxhervorhebung verwenden",
+	"codemirror-prefs-colorblind": "Ein für Farbenfehlsichtige angepasstes Farbschema der Syntaxhervorhebung zum Bearbeiten von Wikitext verwenden",
 	"codemirror-prefs-colorblind-help": "Wenn du ein Helferlein zur Syntaxhervorhebung verwendest, wird diese Einstellung nicht funktionieren.",
 	"codemirror-close": "Schließen",
 	"codemirror-find": "Suchen",
