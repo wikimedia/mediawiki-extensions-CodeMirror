@@ -2,7 +2,7 @@
 	"name": "codemirror",
 	"private": true,
 	"scripts": {
-		"build": "rollup -c",
+		"build": "rollup -c && npm run build:stylelint && npm run build:eslint && npm run build:luacheck",
 		"build:stylelint": "esbuild resources/workers/css/worker.js --charset=utf8 --bundle --minify --target=es2017 --format=iife --outfile=resources/workers/css/worker.min.js",
 		"build:eslint": "esbuild resources/workers/javascript/worker.js --charset=utf8 --bundle --minify --target=es2017 --format=iife --outfile=resources/workers/javascript/worker.min.js",
 		"build:luacheck": "esbuild resources/workers/lua/worker.js --charset=utf8 --bundle --minify --target=es2017 --format=iife --outfile=resources/workers/lua/worker.min.js",
@@ -31,7 +31,7 @@
 		"@codemirror/search": "^6.5.10",
 		"@codemirror/state": "^6.5.2",
 		"@codemirror/theme-one-dark": "^6.1.2",
-		"@codemirror/view": "^6.36.5",
+		"@codemirror/view": "^6.36.8",
 		"@lezer/common": "1.2.3",
 		"@lezer/highlight": "1.2.1",
 		"@lezer/lr": "1.4.2",

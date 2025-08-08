@@ -37,7 +37,8 @@ _NOTE: Consider using [Fresh](https://gerrit.wikimedia.org/g/fresh/) to run thes
 * `npm run selenium-test` for the Selenium tests.
 * `npm run build` to rebundle the CodeMirror library. If changes are made to the `@codemirror`
   or `@lezer` dependencies in [package.json](package.json), this command *must* be run before
-  sending the patch or CI will fail.
+  sending the patch or CI will fail. This also calls the `build:eslint`,
+  `build:stylelint`, and `build:luacheck` commands.
 * `npm run build:eslint` to rebundle the ESLint library. If changes are made to the
   `@bhsd/eslint-browserify` dependency in [package.json](package.json) or the
   [JavaScript worker](resources/workers/javascript/worker.js), this command *must* be run
@@ -46,5 +47,9 @@ _NOTE: Consider using [Fresh](https://gerrit.wikimedia.org/g/fresh/) to run thes
   `@bhsd/stylelint-browserify` dependency in [package.json](package.json) or the
   [CSS worker](resources/workers/css/worker.js), this command *must* be run before sending the
   patch.
+* `npm run build:luacheck` to rebundle the LuaCheck library. If changes are made to the
+  `luacheck-browserify` dependency in [package.json](package.json) or the
+  [Lua worker](resources/workers/lua/worker.js), this command *must* be run before
+  sending the patch.
 * Older QUnit tests are in `resources/mode/mediawiki/tests/qunit/`. These have been
   replaced and will be removed after the CodeMirror 6 upgrade is complete.
