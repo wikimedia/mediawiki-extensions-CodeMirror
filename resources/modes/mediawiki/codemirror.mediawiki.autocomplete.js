@@ -12,7 +12,7 @@ const mwModeConfig = require( './codemirror.mediawiki.config.js' );
 /**
  * CodeMirror extension providing
  * autocompletion
- * for the MediaWiki mode. This automatically applied when using {@link CodeMirrorModeMediaWiki}.
+ * for the MediaWiki mode. This automatically applied when using {@link CodeMirrorMediaWiki}.
  *
  * @module CodeMirrorAutocomplete
  * @type {Extension}
@@ -61,7 +61,7 @@ const linkSuggestFactory = ( search, namespace = 0, subpage = false ) => {
 /**
  * Autocompletion for page names.
  *
- * @param {CodeMirrorModeMediaWiki} mode
+ * @param {CodeMirrorMediaWiki} mode
  * @param {string} str
  * @param {number} ns
  * @return {Promise}
@@ -150,7 +150,7 @@ const applyTemplateCompletion = ( closed ) => ( view, completion, from, to ) => 
 /**
  * Autocompletion for magic words, tag names, etc.
  *
- * @param {CodeMirrorModeMediaWiki} mode
+ * @param {CodeMirrorMediaWiki} mode
  * @return {CompletionSource}
  */
 const completionSource = ( mode ) => ( context ) => {

@@ -2,7 +2,7 @@ const { EditorView, Prec } = require( 'ext.CodeMirror.v6.lib' );
 
 /**
  * MediaWiki-specific key bindings for CodeMirror.
- * This is automatically applied when using {@link CodeMirrorModeMediaWiki}.
+ * This is automatically applied when using {@link CodeMirrorMediaWiki}.
  *
  * @module CodeMirrorMediaWikiKeymap
  */
@@ -391,7 +391,7 @@ class CodeMirrorMediaWikiKeymap {
 
 /**
  * Register MediaWiki-specific key bindings with CodeMirror.
- * This is automatically called when using {@link CodeMirrorModeMediaWiki}.
+ * This is automatically called when using {@link CodeMirrorMediaWiki}.
  *
  * @member CodeMirrorMediaWikiKeymap
  * @method

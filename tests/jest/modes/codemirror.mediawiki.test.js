@@ -221,7 +221,7 @@ document.body.appendChild( textarea );
 const cm = new CodeMirror( textarea, mediaWikiLang() );
 cm.initialize();
 
-describe( 'CodeMirrorModeMediaWiki', () => {
+describe( 'CodeMirrorMediaWiki', () => {
 	it.each( testCases )(
 		'syntax highlighting ($title)',
 		( { input, output } ) => {

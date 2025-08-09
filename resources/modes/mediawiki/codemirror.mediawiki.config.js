@@ -8,9 +8,9 @@ const {
 /**
  * Configuration for the MediaWiki highlighting mode for CodeMirror.
  * This is a separate class mainly to keep static configuration out of
- * the logic in {@link CodeMirrorModeMediaWiki}.
+ * the logic in {@link CodeMirrorMediaWiki}.
  *
- * @module CodeMirrorModeMediaWikiConfig
+ * @module CodeMirrorMediaWikiConfig
  *
  * @example
  * // within MediaWiki:
@@ -20,7 +20,7 @@ const {
  *   // …
  * }
  */
-class CodeMirrorModeMediaWikiConfig {
+class CodeMirrorMediaWikiConfig {
 
 	/**
 	 * @internal
@@ -65,7 +65,7 @@ class CodeMirrorModeMediaWikiConfig {
 
 	/**
 	 * Dynamically register a token in CodeMirror.
-	 * This is solely for use by this.addTag() and CodeMirrorModeMediaWiki.makeLocalStyle().
+	 * This is solely for use by this.addTag() and CodeMirrorMediaWiki.makeLocalStyle().
 	 *
 	 * @param {string} token
 	 * @param {Tag} [parent]
@@ -131,7 +131,7 @@ class CodeMirrorModeMediaWikiConfig {
 	 * in highlightStyle().
 	 *
 	 * @see https://lezer.codemirror.net/docs/ref/#highlight.tags
-	 * @member CodeMirrorModeMediaWikiConfig
+	 * @member CodeMirrorMediaWikiConfig
 	 * @type {Object<string>}
 	 */
 	get tags() {
@@ -182,7 +182,7 @@ class CodeMirrorModeMediaWikiConfig {
 	/**
 	 * Custom tags. These are not mapped to any standard highlighting tag.
 	 * These are here so that they, like tags(), serve as constants that we can
-	 * reference in CodeMirrorModeMediaWiki.
+	 * reference in CodeMirrorMediaWiki.
 	 *
 	 * IMPORTANT: There should be a row in defaultTokenTable() for each of these.
 	 *
@@ -445,7 +445,7 @@ class CodeMirrorModeMediaWikiConfig {
 
 			/**
 			 * Custom tags.
-			 * IMPORTANT: These need to reference the CodeMirrorModeMediaWiki context.
+			 * IMPORTANT: These need to reference the CodeMirrorMediaWiki context.
 			 */
 			{
 				tag: context.tokenTable[ this.tags.conversionBracket ],
@@ -574,9 +574,9 @@ class CodeMirrorModeMediaWikiConfig {
 }
 
 /**
- * @member CodeMirrorModeMediaWikiConfig
- * @type {CodeMirrorModeMediaWikiConfig}
+ * @member CodeMirrorMediaWikiConfig
+ * @type {CodeMirrorMediaWikiConfig}
  */
-const mwModeConfig = new CodeMirrorModeMediaWikiConfig();
+const mwModeConfig = new CodeMirrorMediaWikiConfig();
 
 module.exports = mwModeConfig;

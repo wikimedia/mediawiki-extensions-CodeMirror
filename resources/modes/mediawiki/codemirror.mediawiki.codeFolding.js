@@ -400,7 +400,7 @@ const foldKeymap = [
 /**
  * CodeMirror extension providing
  * [code folding](https://www.mediawiki.org/wiki/Help:Extension:CodeMirror#Code_folding)
- * for the MediaWiki mode. This automatically applied when using {@link CodeMirrorModeMediaWiki}.
+ * for the MediaWiki mode. This automatically applied when using {@link CodeMirrorMediaWiki}.
  *
  * @module CodeMirrorCodeFolding
  * @type {Extension}

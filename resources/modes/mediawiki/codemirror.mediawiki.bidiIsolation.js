@@ -119,7 +119,7 @@ const bidiIsolationSpec = {
  * This ensures HTML and MediaWiki tags are always displayed left-to-right.
  *
  * Use this plugin by passing in `bidiIsolation: true` when instantiating
- * a [CodeMirrorModeMediaWiki]{@link CodeMirrorModeMediaWiki} object.
+ * a [CodeMirrorMediaWiki]{@link CodeMirrorMediaWiki} object.
  *
  * @module CodeMirrorBidiIsolation
  * @see https://codemirror.net/examples/bidi/

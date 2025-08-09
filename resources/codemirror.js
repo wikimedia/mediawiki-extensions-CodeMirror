@@ -39,6 +39,7 @@ const CodeMirrorExtensionRegistry = require( './codemirror.extensionRegistry.js'
 const bracketMatching = require( './codemirror.matchbrackets.js' );
 require( './ext.CodeMirror.data.js' );
 
+/* eslint-disable max-len */
 /**
  * Interface for the CodeMirror editor.
  *
@@ -67,6 +68,7 @@ require( './ext.CodeMirror.data.js' );
  * } );
  */
 class CodeMirror {
+	/* eslint-enable max-len */
 	/**
 	 * Instantiate a new CodeMirror instance.
 	 *
@@ -624,6 +626,7 @@ class CodeMirror {
 		return new CodeMirrorLint( this.lintSource, this.keymap ).extension;
 	}
 
+	/* eslint-disable max-len */
 	/**
 	 * Setup CodeMirror and add it to the DOM. This will hide the original textarea.
 	 *
@@ -639,6 +642,7 @@ class CodeMirror {
 	 * @stable to call and override
 	 */
 	initialize( extensions = this.defaultExtensions ) {
+		/* eslint-enable max-len */
 		if ( this.view ) {
 			mw.log.warn( '[CodeMirror] CodeMirror instance already initialized.' );
 			return;
