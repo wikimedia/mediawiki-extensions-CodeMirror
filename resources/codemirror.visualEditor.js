@@ -2,7 +2,6 @@ const {
 	Direction,
 	EditorState,
 	EditorView,
-	Extension,
 	LanguageSupport
 } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirror = require( 'ext.CodeMirror.v6' );
@@ -10,11 +9,11 @@ const CodeMirror = require( 'ext.CodeMirror.v6' );
 class CodeMirrorVisualEditor extends CodeMirror {
 	/**
 	 * @param {ve.ui.Surface} surface
-	 * @param {LanguageSupport|Extension} langExtension
+	 * @param {LanguageSupport} langSupport
 	 */
-	constructor( surface, langExtension = [] ) {
+	constructor( surface, langSupport = [] ) {
 		// Let the content editable mimic the textarea.
-		super( surface.getView().$attachedRootNode[ 0 ], langExtension );
+		super( surface.getView().$attachedRootNode[ 0 ], langSupport );
 
 		/**
 		 * The VisualEditor surface CodeMirror is bound to.

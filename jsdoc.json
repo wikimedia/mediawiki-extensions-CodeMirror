@@ -38,6 +38,7 @@
 				"Hook": "https://doc.wikimedia.org/mediawiki-core/master/js/Hook.html",
 				"KeyBinding": "https://codemirror.net/docs/ref/#view.KeyBinding",
 				"LanguageSupport": "https://codemirror.net/docs/ref/#language.LanguageSupport",
+				"LintSource": "https://codemirror.net/docs/ref/#lint.LintSource",
 				"MatchResult": "https://codemirror.net/docs/ref/#language.MatchResult",
 				"Panel": "https://codemirror.net/docs/ref/#view.Panel",
 				"PluginSpec": "https://codemirror.net/docs/ref/#view.PluginSpec",

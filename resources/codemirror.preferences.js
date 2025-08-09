@@ -25,10 +25,11 @@ require( './ext.CodeMirror.data.js' );
 class CodeMirrorPreferences extends CodeMirrorPanel {
 	/**
 	 * @param {CodeMirrorExtensionRegistry} extensionRegistry
+	 * @param {string} mode The CodeMirror mode being used, e.g. 'mediawiki', 'javascript', etc.
 	 * @param {boolean} [isVisualEditor=false] Whether the VE 2017 editor is being used.
 	 * @fires CodeMirror~'ext.CodeMirror.preferences.ready'
 	 */
-	constructor( extensionRegistry, isVisualEditor = false ) {
+	constructor( extensionRegistry, mode, isVisualEditor = false ) {
 		super();
 
 		/** @type {string} */
@@ -36,6 +37,9 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 
 		/** @type {CodeMirrorExtensionRegistry} */
 		this.extensionRegistry = extensionRegistry;
+
+		/** @type {string} */
+		this.mode = mode;
 
 		/** @type {boolean} */
 		this.isVisualEditor = isVisualEditor;
@@ -149,7 +153,6 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		}
 
 		const nsId = mw.config.get( 'wgNamespaceNumber' );
-		const mode = mw.config.get( 'cmMode' );
 		const newDefaults = {};
 
 		Object.keys( this.mwConfigDefaults ).forEach( ( prefName ) => {
@@ -162,7 +165,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 
 			// Assume an array of namespace IDs (integers) and CM modes (strings).
 			const supportedNamespace = prefValue.includes( nsId );
-			const supportedMode = prefValue.includes( mode );
+			const supportedMode = prefValue.includes( this.mode );
 
 			newDefaults[ prefName ] = supportedNamespace || supportedMode;
 		} );

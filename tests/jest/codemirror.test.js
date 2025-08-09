@@ -1,6 +1,7 @@
 /* eslint-disable-next-line n/no-missing-require */
 const { EditorView, Prec } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirror = require( '../../resources/codemirror.js' );
+const { javascript } = require( '../../resources/modes/codemirror.javascript.js' );
 
 let textarea, cm, form;
 
@@ -73,16 +74,14 @@ describe( 'initialize', () => {
 	} );
 
 	it( 'should register the codeFolding and autocompletion extensions for non-wikitext', () => {
-		mockMwConfigGet( { cmMode: 'javascript' } );
-		const cm2 = new CodeMirror( textarea );
+		const cm2 = new CodeMirror( textarea, javascript() );
 		cm2.initialize();
 		expect( cm2.extensionRegistry.isEnabled( 'autocomplete', cm2.view ) ).toBeTruthy();
 		expect( cm2.extensionRegistry.isEnabled( 'codeFolding', cm2.view ) ).toBeTruthy();
 	} );
 
 	it( 'should document accessibility keyboard shortcuts for non-wikitext', () => {
-		mockMwConfigGet( { cmMode: 'javascript' } );
-		const cm2 = new CodeMirror( textarea );
+		const cm2 = new CodeMirror( textarea, javascript() );
 		cm2.initialize();
 		expect( Object.keys( cm2.keymap.keymapHelpRegistry.accessibility ) )
 			.toStrictEqual( [ 'tabEscape', 'tabMode' ] );
@@ -91,9 +90,8 @@ describe( 'initialize', () => {
 
 describe( 'addDarkModeMutationObserver', () => {
 	it( 'should apply the oneDark theme when in dark mode for non-wikitext', async () => {
-		mockMwConfigGet( { cmMode: 'javascript' } );
 		document.documentElement.classList.add( 'skin-theme-clientpref-os' );
-		const cm2 = new CodeMirror( textarea );
+		const cm2 = new CodeMirror( textarea, javascript() );
 		const matchMedia = window.matchMedia;
 		window.matchMedia = jest.fn().mockImplementation( ( query ) => ( {
 			'(prefers-color-scheme: dark)': { matches: true, addEventListener: jest.fn() },

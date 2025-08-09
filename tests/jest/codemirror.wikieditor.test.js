@@ -1,14 +1,15 @@
 const CodeMirrorWikiEditor = require( '../../resources/codemirror.wikieditor.js' );
 const mediaWikiLang = require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
+const { javascript } = require( '../../resources/lib/codemirror6.bundle.javascript.js' );
 
-function getCodeMirrorWikiEditor( readOnly = false ) {
+function getCodeMirrorWikiEditor( readOnly = false, langSupport = [] ) {
 	const form = document.createElement( 'form' );
 	const textarea = document.createElement( 'textarea' );
 	textarea.readOnly = readOnly;
 	form.appendChild( textarea );
 	textarea.value = 'The Smashing Pumpkins';
 	textarea.selectionStart = textarea.selectionEnd = 0;
-	const cmWe = new CodeMirrorWikiEditor( textarea );
+	const cmWe = new CodeMirrorWikiEditor( textarea, langSupport );
 
 	// Simulate the button that enables/disables CodeMirror as WikiEditor doesn't exist here.
 	cmWe.$textarea.wikiEditor = jest.fn();
@@ -61,8 +62,7 @@ describe( 'initialize', () => {
 	} );
 
 	it( 'should add a CSS class for the CodeMirror mode', () => {
-		mockMwConfigGet( { cmMode: 'javascript' } );
-		const cmWe = getCodeMirrorWikiEditor();
+		const cmWe = getCodeMirrorWikiEditor( false, javascript() );
 		cmWe.initialize();
 		expect( cmWe.context.$ui[ 0 ].classList ).toContain( 'ext-codemirror-javascript' );
 		// Reset mock.
@@ -86,8 +86,7 @@ describe( 'deactivate', () => {
 	} );
 
 	it( 'should remove buttons from the toolbar for non-wikitext', () => {
-		mockMwConfigGet( { cmMode: 'javascript' } );
-		const cmWe = getCodeMirrorWikiEditor();
+		const cmWe = getCodeMirrorWikiEditor( false, javascript() );
 		cmWe.initialize();
 		cmWe.deactivate();
 
@@ -308,8 +307,7 @@ describe( 'logEditFeature', () => {
 
 describe( 'addCodeFormattingButtonsToToolbar', () => {
 	it( 'should add the expected tool groups and buttons for non-wikitext', () => {
-		mockMwConfigGet( { cmMode: 'javascript' } );
-		const cmWe = getCodeMirrorWikiEditor();
+		const cmWe = getCodeMirrorWikiEditor( false, javascript() );
 		cmWe.initialize();
 		expect( cmWe.$textarea.wikiEditor ).toHaveBeenCalledWith(
 			'addToToolbar',

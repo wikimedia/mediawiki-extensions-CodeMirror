@@ -16,16 +16,18 @@ describe( 'CodeMirrorPreferences', () => {
 		mockUserPreferences = ( preferences = {} ) => {
 			mw.user.options.get = jest.fn().mockReturnValue( JSON.stringify( preferences ) );
 		};
-		getCodeMirrorPreferences = ( extConfig = {
-			fooExtension: EditorView.theme(),
-			barExtension: EditorView.theme()
-		/* eslint-disable-next-line arrow-body-style */
-		}, isVisualEditor = false ) => {
-			return new CodeMirrorPreferences(
-				new CodeMirrorExtensionRegistry( extConfig, isVisualEditor ),
-				isVisualEditor
-			);
-		};
+		getCodeMirrorPreferences = (
+			extConfig = {
+				fooExtension: EditorView.theme(),
+				barExtension: EditorView.theme()
+			},
+			mode = 'mediawiki',
+			isVisualEditor = false
+		) => new CodeMirrorPreferences(
+			new CodeMirrorExtensionRegistry( extConfig, isVisualEditor ),
+			mode,
+			isVisualEditor
+		);
 	} );
 
 	it( 'defaultPreferences', () => {
@@ -76,7 +78,7 @@ describe( 'CodeMirrorPreferences', () => {
 		const preferences = getCodeMirrorPreferences( {
 			fooExtension: EditorView.theme(),
 			bracketMatching: EditorView.theme()
-		}, true );
+		}, 'mediawiki', true );
 		expect( preferences.getPreference( 'bracketMatching' ) ).toBeFalsy();
 	} );
 
@@ -150,7 +152,6 @@ describe( 'CodeMirrorPreferences', () => {
 		// We're editing a Template where autocomplete is disabled.
 		mockMwConfigGet( {
 			wgNamespaceNumber: 10,
-			cmMode: 'mediawiki',
 			extCodeMirrorConfig
 		} );
 
@@ -177,7 +178,6 @@ describe( 'CodeMirrorPreferences', () => {
 		// Now simulate editing an article.
 		mockMwConfigGet( {
 			wgNamespaceNumber: 0,
-			cmMode: 'mediawiki',
 			extCodeMirrorConfig
 		} );
 		// We need to re-mock mw.user.options.get to return the updated preferences.
@@ -270,25 +270,21 @@ describe( 'CodeMirrorPreferences', () => {
 			title: 'no user prefs',
 			defaultPreferences: { lineNumbering: false, bracketMatching: true },
 			nsId: 0,
-			mode: 'wikitext',
 			expected: { lineNumbering: false, bracketMatching: true }
 		}, {
 			title: 'lineNumbering only for Templates, editing mainspace',
 			defaultPreferences: { lineNumbering: [ 10 ], bracketMatching: true },
 			nsId: 0,
-			mode: 'wikitext',
 			expected: { lineNumbering: false, bracketMatching: true }
 		}, {
 			title: 'lineNumbering only for Templates, editing Template',
 			defaultPreferences: { lineNumbering: [ 10 ], bracketMatching: true },
 			nsId: 10,
-			mode: 'wikitext',
 			expected: { lineNumbering: true, bracketMatching: true }
 		}, {
 			title: 'bracketMatching only for CSS, editing wikitext',
 			defaultPreferences: { lineNumbering: true, bracketMatching: [ 'css' ] },
 			nsId: 10,
-			mode: 'wikitext',
 			expected: { lineNumbering: true, bracketMatching: false }
 		}, {
 			title: 'bracketMatching only for CSS, editing css',
@@ -300,13 +296,11 @@ describe( 'CodeMirrorPreferences', () => {
 			title: 'lineNumbering for Templates or CSS, editing main/wikitext',
 			defaultPreferences: { lineNumbering: [ 10, 'css' ], bracketMatching: true },
 			nsId: 0,
-			mode: 'wikitext',
 			expected: { lineNumbering: false, bracketMatching: true }
 		}, {
 			title: 'lineNumbering for Templates or CSS, editing Template/wikitext',
 			defaultPreferences: { lineNumbering: [ 10, 'css' ], bracketMatching: true },
 			nsId: 10,
-			mode: 'wikitext',
 			expected: { lineNumbering: true, bracketMatching: true }
 		}, {
 			title: 'lineNumbering for Templates or CSS, editing Template/css',
@@ -325,7 +319,13 @@ describe( 'CodeMirrorPreferences', () => {
 				cmMode: mode
 			} );
 			mockUserPreferences( {} );
-			const preferences = getCodeMirrorPreferences();
+			const preferences = getCodeMirrorPreferences(
+				{
+					lineNumbering: EditorView.theme(),
+					bracketMatching: EditorView.theme()
+				},
+				mode
+			);
 			expect( preferences.getDefaultPreferences() ).toStrictEqual( expected );
 		}
 	);

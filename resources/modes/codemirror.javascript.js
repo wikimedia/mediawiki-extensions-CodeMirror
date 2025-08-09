@@ -1,3 +1,4 @@
+const { LanguageSupport } = require( 'ext.CodeMirror.v6.lib' );
 const {
 	javascript,
 	javascriptLanguage,
@@ -48,12 +49,13 @@ lintSource.worker = worker;
 
 module.exports = {
 	javascript() {
-		const extension = [
-			javascript(),
+		const support = [
+			javascript().support,
 			javascriptLanguage.data.of( { autocomplete: scopeCompletionSource( window ) } )
 		];
-		extension.lintSource = lintSource;
-		return extension;
+		const langSupport = new LanguageSupport( javascriptLanguage, support );
+		langSupport.lintSource = lintSource;
+		return langSupport;
 	}
 };
 

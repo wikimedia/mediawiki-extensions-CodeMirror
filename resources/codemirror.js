@@ -6,6 +6,7 @@ const {
 	Extension,
 	StateEffect,
 	LanguageSupport,
+	LintSource,
 	ViewUpdate,
 	autocompletion,
 	closeBrackets,
@@ -73,14 +74,11 @@ class CodeMirror {
 	 * Instantiate a new CodeMirror instance.
 	 *
 	 * @param {HTMLTextAreaElement|jQuery|string} textarea Textarea to add syntax highlighting to.
-	 * @param {LanguageSupport|Extension} [langExtension] Language support and its extension(s).
+	 * @param {LanguageSupport} [langSupport] Language support and its extension(s).
 	 * @constructor
 	 * @stable to call and extend
 	 */
-	constructor( textarea, langExtension = [] ) {
-		if ( mw.config.get( 'cmDebug' ) ) {
-			window.cm = this;
-		}
+	constructor( textarea, langSupport = [] ) {
 		/**
 		 * The textarea that CodeMirror is bound to.
 		 *
@@ -103,16 +101,16 @@ class CodeMirror {
 		/**
 		 * The function to lint the code in the editor.
 		 *
-		 * @type {Function|undefined}
+		 * @type {LintSource|undefined}
 		 */
-		this.lintSource = langExtension.lintSource;
-		delete langExtension.lintSource;
+		this.lintSource = langSupport.lintSource;
+		delete langSupport.lintSource;
 		/**
 		 * Language support and its extension(s).
 		 *
-		 * @type {LanguageSupport|Extension}
+		 * @type {LanguageSupport}
 		 */
-		this.langExtension = langExtension;
+		this.langExtension = langSupport;
 		/**
 		 * The editor user interface.
 		 *
@@ -143,7 +141,9 @@ class CodeMirror {
 		 *
 		 * @type {string}
 		 */
-		this.mode = mw.config.get( 'cmMode' );
+		this.mode = langSupport && langSupport.language ?
+			langSupport.language.name :
+			'mediawiki';
 		/**
 		 * The form `submit` event handler.
 		 *
@@ -190,6 +190,7 @@ class CodeMirror {
 		 */
 		this.preferences = new CodeMirrorPreferences(
 			this.extensionRegistry,
+			this.mode,
 			this.constructor.name === 'CodeMirrorVisualEditor'
 		);
 		/**

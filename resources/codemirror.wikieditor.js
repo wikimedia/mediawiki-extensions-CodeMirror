@@ -1,7 +1,5 @@
 const {
 	EditorView,
-	Extension,
-	LanguageSupport,
 	StateCommand,
 	indentLess,
 	indentMore,
@@ -30,13 +28,10 @@ const CodeMirror = require( 'ext.CodeMirror.v6' );
  */
 class CodeMirrorWikiEditor extends CodeMirror {
 	/**
-	 * @constructor
-	 * @param {HTMLTextAreaElement|jQuery|string} textarea The textarea to replace with CodeMirror.
-	 * @param {LanguageSupport|Extension} [langExtension] Language support and its extension(s).
-	 * @stable to call and override
+	 * @inheritDoc
 	 */
-	constructor( textarea, langExtension = [] ) {
-		super( textarea, langExtension );
+	constructor( textarea, langSupport = [] ) {
+		super( textarea, langSupport );
 		/**
 		 * The [Realtime Preview](https://w.wiki/Cgpp) handler.
 		 *

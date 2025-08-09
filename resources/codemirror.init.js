@@ -1,5 +1,7 @@
 /**
- * Main entry point for CodeMirror initialization on action=edit.
+ * Main entry point for CodeMirror initialization on action=edit, Special:Upload, etc.
+ *
+ * The init module is loaded by Hooks.php and is not designed for direct use.
  */
 
 const useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
@@ -23,7 +25,8 @@ function getLanguageSupport( require ) {
 
 	const urlParams = new URLSearchParams( window.location.search );
 	return langSupport( {
-		bidiIsolation: urlParams.get( 'cm6bidi' )
+		bidiIsolation: urlParams.get( 'cm6bidi' ),
+		languageVariants: mw.config.get( 'cmLanguageVariants' )
 	} );
 }
 
@@ -35,18 +38,23 @@ async function init() {
 	// eslint-disable-next-line security/detect-non-literal-require
 	const CodeMirror = require( `ext.CodeMirror.v6${ useWikiEditor ? '.WikiEditor' : '' }` );
 	const langSupport = getLanguageSupport( require );
+	let cm;
 
 	if ( useWikiEditor ) {
 		mw.hook( 'wikiEditor.toolbarReady' ).add( ( $textarea ) => {
-			const cmWE = new CodeMirror( $textarea, langSupport );
-			cmWE.initialize();
-			initChildren( cmWE );
+			cm = new CodeMirror( $textarea, langSupport );
+			cm.initialize();
+			initChildren( cm );
 		} );
 	} else {
 		const textarea = document.querySelector( mw.config.get( 'cmTextarea' ) );
-		const cm = new CodeMirror( textarea, langSupport );
+		cm = new CodeMirror( textarea, langSupport );
 		cm.initialize();
 		initChildren( cm );
+	}
+
+	if ( mw.config.get( 'cmDebug' ) ) {
+		window.cm = cm;
 	}
 }
 

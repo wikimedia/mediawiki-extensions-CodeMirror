@@ -39,7 +39,7 @@ ve.ui.CodeMirrorAction.static.methods = [ 'toggle' ];
  */
 ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 	if ( !this.surface.mirror && ( enable || enable === undefined ) ) {
-		await mw.loader.using( [ 'jquery.client', 'ext.CodeMirror.v6.mode.mediawiki' ] );
+		await mw.loader.using( [ 'ext.CodeMirror.v6.mode.mediawiki' ] );
 		const CodeMirrorVisualEditor = require( '../codemirror.visualEditor.js' );
 		const mediawikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
 		this.surface.mirror = new CodeMirrorVisualEditor(
