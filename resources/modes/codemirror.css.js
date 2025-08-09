@@ -1,6 +1,6 @@
 const { LanguageSupport, syntaxTree } = require( 'ext.CodeMirror.v6.lib' );
-const { cssLanguage, cssCompletionSource } = require( './lib/codemirror6.bundle.css.js' );
-const CodeMirrorWorker = require( './codemirror.worker.js' );
+const { cssLanguage, cssCompletionSource } = require( '../lib/codemirror6.bundle.css.js' );
+const CodeMirrorWorker = require( '../codemirror.worker.js' );
 
 const worker = new CodeMirrorWorker( 'css' );
 const lintSource = ( view ) => worker.lint( view )

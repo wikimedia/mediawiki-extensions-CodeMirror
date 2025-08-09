@@ -1,4 +1,4 @@
-const { json, jsonParseLinter } = require( './lib/codemirror6.bundle.json.js' );
+const { json, jsonParseLinter } = require( '../lib/codemirror6.bundle.json.js' );
 
 const lintSource = jsonParseLinter();
 

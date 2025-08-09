@@ -133,8 +133,8 @@
 		"ext.CodeMirror.mode.mediawiki": {
 			"packageFiles": "legacy/mode/mediawiki/mediawiki.js",
 			"styles": [
-				"mediawiki/codemirror.mediawiki.less",
-				"mediawiki/codemirror.mediawiki.colorblind.less"
+				"modes/mediawiki/codemirror.mediawiki.less",
+				"modes/mediawiki/codemirror.mediawiki.colorblind.less"
 			],
 			"dependencies": [
 				"ext.CodeMirror.lib"
@@ -323,18 +323,18 @@
 		},
 		"ext.CodeMirror.v6.mode.mediawiki": {
 			"packageFiles": [
-				"mediawiki/codemirror.mediawiki.js",
-				"mediawiki/codemirror.mediawiki.config.js",
-				"mediawiki/codemirror.mediawiki.bidiIsolation.js",
-				"mediawiki/codemirror.mediawiki.codeFolding.js",
-				"mediawiki/codemirror.mediawiki.matchTag.js",
-				"mediawiki/codemirror.mediawiki.autocomplete.js",
-				"mediawiki/codemirror.mediawiki.openLinks.js",
-				"mediawiki/codemirror.mediawiki.keymap.js"
+				"modes/mediawiki/codemirror.mediawiki.js",
+				"modes/mediawiki/codemirror.mediawiki.config.js",
+				"modes/mediawiki/codemirror.mediawiki.bidiIsolation.js",
+				"modes/mediawiki/codemirror.mediawiki.codeFolding.js",
+				"modes/mediawiki/codemirror.mediawiki.matchTag.js",
+				"modes/mediawiki/codemirror.mediawiki.autocomplete.js",
+				"modes/mediawiki/codemirror.mediawiki.openLinks.js",
+				"modes/mediawiki/codemirror.mediawiki.keymap.js"
 			],
 			"styles": [
-				"mediawiki/codemirror.mediawiki.less",
-				"mediawiki/codemirror.mediawiki.colorblind.less"
+				"modes/mediawiki/codemirror.mediawiki.less",
+				"modes/mediawiki/codemirror.mediawiki.colorblind.less"
 			],
 			"dependencies": [
 				"mediawiki.Title",
@@ -368,7 +368,7 @@
 		},
 		"ext.CodeMirror.v6.mode.javascript": {
 			"packageFiles": [
-				"codemirror.javascript.js",
+				"modes/codemirror.javascript.js",
 				"codemirror.worker.js",
 				"lib/codemirror6.bundle.javascript.js"
 			],
@@ -378,7 +378,7 @@
 		},
 		"ext.CodeMirror.v6.mode.json": {
 			"packageFiles": [
-				"codemirror.json.js",
+				"modes/codemirror.json.js",
 				"lib/codemirror6.bundle.json.js"
 			],
 			"dependencies": [
@@ -387,7 +387,7 @@
 		},
 		"ext.CodeMirror.v6.mode.css": {
 			"packageFiles": [
-				"codemirror.css.js",
+				"modes/codemirror.css.js",
 				"codemirror.worker.js",
 				"lib/codemirror6.bundle.css.js"
 			],
@@ -397,7 +397,7 @@
 		},
 		"ext.CodeMirror.v6.mode.lua": {
 			"packageFiles": [
-				"codemirror.lua.js",
+				"modes/codemirror.lua.js",
 				"codemirror.worker.js",
 				"lib/codemirror6.bundle.lua.js"
 			],

@@ -5,8 +5,8 @@ const {
 	foldService,
 	snippetCompletion
 } = require( 'ext.CodeMirror.v6.lib' );
-const { lua } = require( './lib/codemirror6.bundle.lua.js' );
-const CodeMirrorWorker = require( './codemirror.worker.js' );
+const { lua } = require( '../lib/codemirror6.bundle.lua.js' );
+const CodeMirrorWorker = require( '../codemirror.worker.js' );
 
 const worker = new CodeMirrorWorker( 'lua' );
 const lintSource = async ( view ) => {

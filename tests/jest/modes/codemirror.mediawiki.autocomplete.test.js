@@ -1,8 +1,8 @@
 /* eslint-disable-next-line n/no-missing-require */
 const { CompletionContext } = require( 'ext.CodeMirror.v6.lib' );
-const CodeMirror = require( '../../resources/codemirror.js' );
-const mediaWikiLang = require( '../../resources/mediawiki/codemirror.mediawiki.js' );
-const mwModeConfig = require( '../../resources/mediawiki/codemirror.mediawiki.config.js' );
+const CodeMirror = require( '../../../resources/codemirror.js' );
+const mediaWikiLang = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.js' );
+const mwModeConfig = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.config.js' );
 
 // Setup CodeMirror instance.
 const textarea = document.createElement( 'textarea' );

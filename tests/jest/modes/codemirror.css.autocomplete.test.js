@@ -1,7 +1,7 @@
 /* eslint-disable-next-line n/no-missing-require */
 const { CompletionContext } = require( 'ext.CodeMirror.v6.lib' );
-const CodeMirror = require( '../../resources/codemirror.js' );
-const { css } = require( '../../resources/codemirror.css.js' );
+const CodeMirror = require( '../../../resources/codemirror.js' );
+const { css } = require( '../../../resources/modes/codemirror.css.js' );
 
 // Setup CodeMirror instance.
 const textarea = document.createElement( 'textarea' );

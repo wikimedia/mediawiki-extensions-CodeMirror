@@ -2,8 +2,8 @@ const {
 	javascript,
 	javascriptLanguage,
 	scopeCompletionSource
-} = require( './lib/codemirror6.bundle.javascript.js' );
-const CodeMirrorWorker = require( './codemirror.worker.js' );
+} = require( '../lib/codemirror6.bundle.javascript.js' );
+const CodeMirrorWorker = require( '../codemirror.worker.js' );
 
 const worker = new CodeMirrorWorker( 'javascript' );
 const lintSource = ( view ) => worker.lint( view )

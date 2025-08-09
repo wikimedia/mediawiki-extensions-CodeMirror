@@ -1,7 +1,7 @@
 /* eslint-disable-next-line n/no-missing-require */
 const { Text } = require( 'ext.CodeMirror.v6.lib' );
-const { css } = require( '../../resources/codemirror.css.js' );
-require( '../../resources/workers/css/worker.min.js' );
+const { css } = require( '../../../resources/modes/codemirror.css.js' );
+require( '../../../resources/workers/css/worker.min.js' );
 
 const { lintSource } = css();
 const testCases = [
