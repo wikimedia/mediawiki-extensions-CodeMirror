@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"GianAntonucci"
+		]
+	},
+	"codemirror-prefs-panel-advanced": "avanzati",
+	"codemirror-prefs-section-lines": "Lini",
+	"codemirror-prefs-section-characters": "Caràttari",
+	"codemirror-prefs-section-other": "Autru"
+}

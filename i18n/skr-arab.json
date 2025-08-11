@@ -6,6 +6,9 @@
 	},
 	"codemirror-toggle-label-short": "نحو",
 	"codemirror-prefs-help": "مدد",
+	"codemirror-prefs-panel-advanced": "ودھائے",
+	"codemirror-prefs-section-lines": "سطراں",
+	"codemirror-prefs-section-other": "ٻیا",
 	"codemirror-close": "بند کرو",
 	"codemirror-next": "اڳلا لبھو",
 	"codemirror-previous": "پچھلا لبھو",
@@ -35,6 +38,7 @@
 	"codemirror-keymap-reference": "حوالہ",
 	"codemirror-keymap-comment": "تبصرہ",
 	"codemirror-keymap-other": "ٻیا",
+	"codemirror-keymap-advanced-preferences": "وِدھیک ترجیحات",
 	"codemirror-keymap-help": "کی بورڈ  شارٹ کٹ",
 	"prefs-accessibility": "رسائیت"
 }
