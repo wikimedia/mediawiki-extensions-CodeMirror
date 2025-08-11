@@ -6,12 +6,13 @@
 			"PerfektesChaos",
 			"McDutchie",
 			"TMg",
-			"TomatoCake"
+			"TomatoCake",
+			"Inkowik"
 		]
 	},
 	"codemirror-desc": "Ermöglicht Syntaxhervorhebungen im Wikitext-Editor",
 	"codemirror-toggle-label": "Syntaxhervorhebung",
-	"codemirror-prefs-colorblind": "Zum Bearbeiten von Wikitext ein für Farbenfehlsichtige freundliches Farbschema zur Syntaxhervorhebung verwenden",
+	"codemirror-prefs-colorblind": "Ein für Farbenfehlsichtige angepasstes Farbschema der Syntaxhervorhebung zum Bearbeiten von Wikitext verwenden",
 	"codemirror-prefs-colorblind-help": "Wenn du ein Helferlein zur Syntaxhervorhebung verwendest, wird diese Einstellung nicht funktionieren.",
 	"prefs-accessibility": "Barrierefreiheit"
 }
