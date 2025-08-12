@@ -6,7 +6,8 @@
 			"Metalhead64",
 			"PerfektesChaos",
 			"TMg",
-			"TomatoCake"
+			"TomatoCake",
+			"Inkowik"
 		]
 	},
 	"codemirror-desc": "Ermöglicht Syntaxhervorhebungen im Wikitext-Editor",
@@ -15,7 +16,7 @@
 	"codemirror-prefs-summary": "Weitere Informationen zu dieser Funktion findest du auf der [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror Hilfeseite].",
 	"codemirror-prefs-enable": "Syntaxhervorhebung für Wikitext aktivieren",
 	"codemirror-v6-prefs-colorblind": "Farbblindenfreundliches Schema verwenden",
-	"codemirror-prefs-colorblind": "Zum Bearbeiten von Wikitext ein für Farbenfehlsichtige freundliches Farbschema zur Syntaxhervorhebung verwenden",
+	"codemirror-prefs-colorblind": "Ein für Farbenfehlsichtige angepasstes Farbschema der Syntaxhervorhebung zum Bearbeiten von Wikitext verwenden",
 	"codemirror-prefs-colorblind-help": "Wenn du ein Helferlein zur Syntaxhervorhebung verwendest, wird diese Einstellung nicht funktionieren.",
 	"codemirror-find": "Suchen",
 	"codemirror-next": "Nächste finden",
