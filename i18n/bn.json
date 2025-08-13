@@ -8,6 +8,12 @@
 	"codemirror-desc": "উইকিপাঠ্য সম্পাদকে সিনট্যাক্স আলোকপাতকরণ প্রদান করে",
 	"codemirror-toggle-label": "সিনট্যাক্স আলোকপাতকরণ",
 	"codemirror-toggle-label-short": "সিনট্যাক্স",
+	"codemirror-prefs-panel-advanced": "উচ্চতর",
+	"codemirror-prefs-section-lines": "লাইন",
+	"codemirror-prefs-section-characters": "অক্ষর",
+	"codemirror-prefs-section-code-assistance": "কোড সহায়তা",
+	"codemirror-prefs-section-other": "অন্যান্য",
+	"codemirror-prefs-reset": "পূর্বনির্ধারিত অবস্থায় যান",
 	"codemirror-prefs-colorblind": "উইকিপাঠ্য সম্পাদনার সময় সিনট্যাক্স আলোকপাতকরণের জন্য বর্ণান্ধ-বন্ধুত্বপূর্ণ স্কিম সক্রিয় করুন",
 	"codemirror-prefs-colorblind-help": "আপনি যদি সিনট্যাক্স আলোকপাতের জন্য কোনও গ্যাজেট ব্যবহার করেন, তবে এই পছন্দটি কাজ করবে না।",
 	"codemirror-find": "খুঁজুন",
@@ -32,6 +38,7 @@
 	"codemirror-special-char-right-to-left-mark": "ডান-থেকে-বাম চিহ্ন",
 	"codemirror-special-char-line-separator": "লাইন বিভাজক",
 	"codemirror-special-char-object-replacement": "বস্তু প্রতিস্থাপন অক্ষর",
+	"codemirror-keymap-advanced-preferences": "উচ্চতর পছন্দ",
 	"codemirror-keymap-lint": "লিন্টার",
 	"prefs-accessibility": "অভিগম্যতা"
 }
