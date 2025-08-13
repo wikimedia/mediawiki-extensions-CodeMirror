@@ -316,7 +316,11 @@ class CodeMirror {
 				this.textarea.dispatchEvent( new KeyboardEvent( 'keyup', event ) );
 			},
 			keydown: ( event ) => {
-				this.textarea.dispatchEvent( new KeyboardEvent( 'keydown', event ) );
+				// Temporarily restrict keydown event bubbling to wikitext (T401271).
+				// TODO: Fix the core issue in WikiEditor, or remove WikiEditor integration entirely.
+				if ( this.mode === 'mediawiki' ) {
+					this.textarea.dispatchEvent( new KeyboardEvent( 'keydown', event ) );
+				}
 			},
 			scroll: ( event ) => {
 				if ( event.target === this.view.scrollDOM ) {
