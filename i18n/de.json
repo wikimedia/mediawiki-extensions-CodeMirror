@@ -27,6 +27,7 @@
 	"codemirror-prefs-openlinks": "Öffnen von Links per Hilfstaste + Klick",
 	"codemirror-prefs-bidiisolation": "Bidirektionalen Text isolieren",
 	"codemirror-prefs-bracketmatching": "Klammernübereinstimmung aktivieren",
+	"codemirror-prefs-closebrackets": "Automatisch schließende Klammern aktivieren",
 	"codemirror-prefs-linenumbering": "Zeilennummern anzeigen",
 	"codemirror-prefs-linewrapping": "Zeilen umbrechen",
 	"codemirror-prefs-lint": "Lint auf den Code anwenden",

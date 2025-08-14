@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Amire80",
-			"Guycn2"
+			"Guycn2",
+			"YaronSh"
 		]
 	},
 	"codemirror-desc": "צביעת תחביר בעורך קוד ויקי",
@@ -12,6 +13,10 @@
 	"codemirror-prefs-enable": "הפעלת צביעת תחביר",
 	"codemirror-prefs-title": "העדפות צביעת תחביר",
 	"codemirror-prefs-help": "עזרה",
+	"codemirror-prefs-section-lines": "שורות",
+	"codemirror-prefs-section-characters": "תווים",
+	"codemirror-prefs-section-code-assistance": "סיוע בקוד",
+	"codemirror-prefs-section-other": "אחר",
 	"codemirror-prefs-codefolding": "הפעלת קיפול קוד",
 	"codemirror-prefs-autocomplete": "הפעלת השלמה אוטומטית",
 	"codemirror-prefs-openlinks": "פתיחת קישורים בלחיצה על מקש שינוי ולחיצת עכבר",
@@ -23,6 +28,7 @@
 	"codemirror-prefs-activeline": "צביעת השורה הפעילה",
 	"codemirror-prefs-specialchars": "הצגת תווים מיוחדים",
 	"codemirror-prefs-whitespace": "צביעת רווחים",
+	"codemirror-prefs-reset": "איפוס לברירות מחדל",
 	"codemirror-prefs-colorblind": "להפעיל ערכת צבעים ידידותית לעיוורי־צבעים בצביעת קוד בעריכת קוד ויקי",
 	"codemirror-prefs-colorblind-help": "אם מופעל אצלך גאדג'ט לצביעת קוד, ההעדפה הזאת לא תעבוד",
 	"codemirror-close": "סגירה",
@@ -117,6 +123,7 @@
 	"codemirror-keymap-copyline": "העתקת השורות הנבחרות שורה אחת למעלה או למטה",
 	"codemirror-keymap-direction": "שינוי כיוון",
 	"codemirror-keymap-preferences": "העדפות צביעת תחביר",
+	"codemirror-keymap-advanced-preferences": "העדפות מתקדמות",
 	"codemirror-keymap-help": "קיצורי מקשים",
 	"codemirror-keymap-cursor-modifiers": "משני סמן",
 	"codemirror-keymap-multicursor": "יש להחזיק $1 וללחוץ כדי ליצור כמה סמנים.",
