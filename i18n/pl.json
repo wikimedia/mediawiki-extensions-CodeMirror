@@ -25,6 +25,7 @@
 	"codemirror-prefs-openlinks": "Otwieranie linków za pomocą klawisza i kliknięcia",
 	"codemirror-prefs-bidiisolation": "Izoluj tekst dwukierunkowy",
 	"codemirror-prefs-bracketmatching": "Włącz domykanie nawiasów",
+	"codemirror-prefs-closebrackets": "Włącz automatyczne domykanie nawiasów",
 	"codemirror-prefs-linenumbering": "Pokaż numery linii",
 	"codemirror-prefs-linewrapping": "Zawijanie linii",
 	"codemirror-prefs-activeline": "Podświetlanie aktywnej linii",

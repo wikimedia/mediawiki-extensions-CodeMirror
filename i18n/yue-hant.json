@@ -13,6 +13,7 @@
 	"codemirror-prefs-section-characters": "角色",
 	"codemirror-prefs-section-code-assistance": "程式碼協助",
 	"codemirror-prefs-section-other": "其他",
+	"codemirror-prefs-closebrackets": "啟用自動閂括號",
 	"codemirror-prefs-reset": "重設做預設",
 	"codemirror-prefs-colorblind": "用色盲都分到嘅顏色顯示源碼編輯入面唔同嘅句法",
 	"codemirror-prefs-colorblind-help": "如果你用緊嘅架撐仔已經有顏色標示源碼功能，呢個設置就冇任何作用。",

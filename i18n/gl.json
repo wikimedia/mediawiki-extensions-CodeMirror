@@ -23,6 +23,7 @@
 	"codemirror-prefs-openlinks": "Abrir as ligazóns coa tecla modificadora + clic",
 	"codemirror-prefs-bidiisolation": "Illar o texto bidireccional",
 	"codemirror-prefs-bracketmatching": "Activar a coincidencia de corchetes",
+	"codemirror-prefs-closebrackets": "Activar o peche automático de corchetes",
 	"codemirror-prefs-linenumbering": "Amosar os números de liña",
 	"codemirror-prefs-linewrapping": "Romper as liñas",
 	"codemirror-prefs-lint": "Usar o comprobador de código",

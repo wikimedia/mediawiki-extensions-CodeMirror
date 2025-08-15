@@ -25,6 +25,7 @@
 	"codemirror-prefs-openlinks": "Koppelingen openen met hulptoets + klikken",
 	"codemirror-prefs-bidiisolation": "Tweerichtingstekst afzonderen",
 	"codemirror-prefs-bracketmatching": "Overeenkomstige haakjes uitlichten",
+	"codemirror-prefs-closebrackets": "Haakjes automatisch sluiten",
 	"codemirror-prefs-linenumbering": "Regelnummers weergeven",
 	"codemirror-prefs-linewrapping": "Regelomloop",
 	"codemirror-prefs-lint": "De code door Lint halen",

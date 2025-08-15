@@ -7,7 +7,7 @@
 			"Vinhtantran"
 		]
 	},
-	"codemirror-desc": "Nổi bật cú pháp trong trình sửa đổi mã wiki",
+	"codemirror-desc": "Nổi bật cú pháp trong trình soạn thảo mã nguồn",
 	"codemirror-toggle-label": "Nổi bật cú pháp",
 	"codemirror-toggle-label-short": "Cú pháp",
 	"codemirror-prefs-summary": "Bạn có thể tìm hiểu thêm về tính năng này bằng cách đọc [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror trang trợ giúp].",
@@ -24,6 +24,7 @@
 	"codemirror-prefs-openlinks": "Mở liên kết bằng phím sửa đổi + nhấp chuột",
 	"codemirror-prefs-bidiisolation": "Tách văn bản hai chiều",
 	"codemirror-prefs-bracketmatching": "Bật khớp dấu ngoặc",
+	"codemirror-prefs-closebrackets": "Bật chế độ đóng ngoặc tự động",
 	"codemirror-prefs-linenumbering": "Hiển thị số dòng",
 	"codemirror-prefs-linewrapping": "Ngắt dòng tự động",
 	"codemirror-prefs-lint": "Kiểm tra lỗi code",

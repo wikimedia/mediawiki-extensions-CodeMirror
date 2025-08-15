@@ -12,6 +12,7 @@
 	"codemirror-prefs-enable": "Ervirhiewe vun der Syntax aktivéieren",
 	"codemirror-prefs-title": "Astellunge fir d'Ervirhiewe vun der Syntax",
 	"codemirror-prefs-help": "Hëllef",
+	"codemirror-prefs-panel-advanced": "erweidert",
 	"codemirror-prefs-section-lines": "Zeilen",
 	"codemirror-prefs-section-characters": "Zeechen",
 	"codemirror-prefs-section-code-assistance": "Code-Ënnerstëzung",
