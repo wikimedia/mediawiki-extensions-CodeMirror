@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Winston Sung",
-			"Ktchankt"
+			"Ktchankt",
+			"JeffreyKim"
 		]
 	},
 	"codemirror-toggle-label": "顏色標示源碼",

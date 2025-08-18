@@ -7,7 +7,7 @@
 			"Nvdtn19"
 		]
 	},
-	"codemirror-desc": "Nổi bật cú pháp trong trình sửa đổi mã wiki",
+	"codemirror-desc": "Nổi bật cú pháp trong trình soạn thảo mã nguồn",
 	"codemirror-toggle-label": "Nổi bật cú pháp",
 	"codemirror-prefs-colorblind": "Bật bộ màu thân thiện với người mù màu để làm nổi bật cú pháp khi soạn thảo mã wiki",
 	"codemirror-prefs-colorblind-help": "Nếu bạn dùng một tiện ích khác cũng có chức năng làm nổi bật cú pháp, tùy chọn này sẽ không có tác dụng.",
