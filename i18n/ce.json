@@ -21,6 +21,7 @@
 	"codemirror-prefs-openlinks": "Хьажоргаш схьайелла хийцаран пиллиган тӀе а таӀийна (Ctrl/Cmd)",
 	"codemirror-prefs-bidiisolation": "Шина агӀор текст дӀакъасто",
 	"codemirror-prefs-bracketmatching": "Къовларш нийсайаздар дӀахӀоттаде",
+	"codemirror-prefs-closebrackets": "Къовларш авто дӀакъовлар дӀахӀиттаде",
 	"codemirror-prefs-linenumbering": "МогӀанийн лоьмарш гайта",
 	"codemirror-prefs-linewrapping": "МогӀанаш дехьадаха",
 	"codemirror-prefs-lint": "Код тӀехь гӀалаташ дуй хьажа",

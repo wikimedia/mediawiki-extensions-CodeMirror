@@ -35,6 +35,7 @@
 	"codemirror-prefs-openlinks": "Activer les liens avec la clé du modificateur + clic",
 	"codemirror-prefs-bidiisolation": "Isoler le texte bidirectionnel",
 	"codemirror-prefs-bracketmatching": "Activer la correspondance des parenthèses",
+	"codemirror-prefs-closebrackets": "Activer la fermeture automatique des crochets",
 	"codemirror-prefs-linenumbering": "Afficher les numéros de ligne",
 	"codemirror-prefs-linewrapping": "Retours à la ligne automatisés",
 	"codemirror-prefs-lint": "Traiter le code avec Lint",

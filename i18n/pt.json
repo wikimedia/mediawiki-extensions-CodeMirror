@@ -4,13 +4,23 @@
 			"Athena in Wonderland",
 			"Fúlvio",
 			"Hamilton Abreu",
+			"ItsaMeSandy",
+			"Mansil alfalb",
 			"Nemo bis",
 			"Vitorvicentevalente"
 		]
 	},
 	"codemirror-desc": "Fornece realce sintático no editor de texto wiki",
 	"codemirror-toggle-label": "Realce sintático",
+	"codemirror-prefs-panel-advanced": "avançado",
+	"codemirror-prefs-section-lines": "Linhas",
+	"codemirror-prefs-section-characters": "Caracteres",
+	"codemirror-prefs-section-code-assistance": "Assistência de código",
+	"codemirror-prefs-section-other": "Outro",
+	"codemirror-prefs-closebrackets": "Ativar fechar automático dos colchetes",
+	"codemirror-prefs-reset": "Reiniciar para predefinições",
 	"codemirror-prefs-colorblind": "Ativar esquema concebido para pessoas daltónicas, de realce sintático durante a edição de texto wiki",
 	"codemirror-prefs-colorblind-help": "Se utiliza um ''gadget'' para realce sintático, esta preferência não funcionará.",
+	"codemirror-keymap-advanced-preferences": "Preferências Avançadas",
 	"prefs-accessibility": "Acessibilidade"
 }
