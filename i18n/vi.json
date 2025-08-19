@@ -7,7 +7,7 @@
 			"Nvdtn19"
 		]
 	},
-	"codemirror-desc": "Nổi bật cú pháp trong trình sửa đổi mã wiki",
+	"codemirror-desc": "Nổi bật cú pháp trong trình soạn thảo mã nguồn",
 	"codemirror-toggle-label": "Nổi bật cú pháp",
 	"codemirror-toggle-label-short": "Cú pháp",
 	"codemirror-prefs-summary": "Bạn có thể tìm hiểu thêm về tính năng này bằng cách đọc [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror trang trợ giúp].",

@@ -5,7 +5,7 @@
 			"Tofeiku"
 		]
 	},
-	"codemirror-desc": "Menyediakan penyerlahan sintaks dalam editor teks wiki",
+	"codemirror-desc": "Menyediakan penyerlahan sintaks dalam alat sunting teks wiki",
 	"codemirror-toggle-label": "Penyerlahan sintaks",
 	"codemirror-toggle-label-short": "Sintaks",
 	"codemirror-prefs-summary": "Anda boleh mengetahui lebih lanjut tentang ciri ini dengan membaca [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror laman bantuan ini].",
