@@ -29,6 +29,7 @@
 	"codemirror-prefs-openlinks": "افتح الروابط باستخدام مفتاح تغيير الوظيفة + النقر",
 	"codemirror-prefs-bidiisolation": "اعزل النص ثنائي الاتجاه",
 	"codemirror-prefs-bracketmatching": "فعّل مطابقة الأقواس",
+	"codemirror-prefs-closebrackets": "تمكين إغلاق الأقواس تلقائيًا",
 	"codemirror-prefs-linenumbering": "اعرض أرقام الأسطر",
 	"codemirror-prefs-linewrapping": "خطوط الالتفاف",
 	"codemirror-prefs-lint": "وصلة الرمز",

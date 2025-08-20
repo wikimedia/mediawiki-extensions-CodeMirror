@@ -21,6 +21,7 @@
 	"codemirror-prefs-openlinks": "Aperir ligamines con clave modificator + clic",
 	"codemirror-prefs-bidiisolation": "Isolar texto bidirectional",
 	"codemirror-prefs-bracketmatching": "Mitter in evidentia le parentheses correspondente",
+	"codemirror-prefs-closebrackets": "Clauder automaticamente le parentheses",
 	"codemirror-prefs-linenumbering": "Monstrar numeros de linea",
 	"codemirror-prefs-linewrapping": "Ruptura de lineas",
 	"codemirror-prefs-lint": "Applicar Lint al codice",
