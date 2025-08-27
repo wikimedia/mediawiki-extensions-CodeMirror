@@ -23,6 +23,7 @@
 	"codemirror-prefs-openlinks": "Dəyişdirici düymə + klik ilə keçidləri aç",
 	"codemirror-prefs-bidiisolation": "İki istiqamətli mətni təcrid et",
 	"codemirror-prefs-bracketmatching": "Mötərizə uyğunluğunu aktivləşdir",
+	"codemirror-prefs-closebrackets": "Avtomatik bağlanan mötərizələri aktivləşdir",
 	"codemirror-prefs-linenumbering": "Sətir nömrələrini göstər",
 	"codemirror-prefs-linewrapping": "Xətləri bük",
 	"codemirror-prefs-lint": "Kodu formatlaşdır",
