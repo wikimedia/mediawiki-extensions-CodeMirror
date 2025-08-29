@@ -1,0 +1,15 @@
+{
+	"@metadata": {
+		"authors": [
+			"Xhulianoo"
+		]
+	},
+	"codemirror-desc": "Ofron theksim të sintaksës në redaktuesin e wikiteksit",
+	"codemirror-toggle-label": "Theksimi i sintaksës",
+	"codemirror-toggle-label-short": "Sintaksa",
+	"codemirror-prefs-enable": "Aktivizo theksimin e sintaksës",
+	"codemirror-prefs-title": "Parapëlqimet e theksimit të sintaksës",
+	"codemirror-prefs-help": "ndihma",
+	"codemirror-beta-feature-title": "Theksim i përmirësuar i sintaksës",
+	"codemirror-beta-feature-description": "Merr qasje të hershme te cilësitë e reja të nxjerrjes në pah dhe redaktimit të sintaksës, të tilla si palosja e kodit dhe plotësimi automatik."
+}
