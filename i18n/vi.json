@@ -48,7 +48,7 @@
 	"codemirror-replace-placeholder": "Thay thế",
 	"codemirror-replace-all": "Thay tất cả",
 	"codemirror-done": "Xong",
-	"codemirror-find-results": "$1 trong số $2",
+	"codemirror-find-results": "$1/$2",
 	"codemirror-goto-line": "Đi đến dòng",
 	"codemirror-goto-line-go": "Đi đến",
 	"codemirror-control-character": "Ký tự điều khiển $1",
