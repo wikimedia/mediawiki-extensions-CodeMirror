@@ -68,7 +68,8 @@
 					"json",
 					"css",
 					"javascript",
-					"lua"
+					"lua",
+					"vue"
 				]
 			},
 			"description": "Defaults for CodeMirror user preferences. See https://w.wiki/BwzZ for more information.",
@@ -404,6 +405,7 @@
 				"modes/codemirror.json.js",
 				"modes/codemirror.css.js",
 				"modes/codemirror.lua.js",
+				"modes/codemirror.vue.js",
 				"workers/codemirror.worker.js",
 				"lib/codemirror6.bundle.modes.js"
 			],

@@ -49,11 +49,13 @@ class Hooks implements
 	public const MODE_CSS = 'css';
 	public const MODE_JSON = 'json';
 	public const MODE_LUA = 'lua';
+	public const MODE_VUE = 'vue';
 	public const SUPPORTED_MODES = [
 		self::MODE_MEDIAWIKI,
 		self::MODE_JAVASCRIPT,
 		self::MODE_CSS,
 		self::MODE_JSON,
+		self::MODE_VUE,
 		self::MODE_LUA,
 	];
 
@@ -90,6 +92,7 @@ class Hooks implements
 			CONTENT_MODEL_JSON => self::MODE_JSON,
 			CONTENT_MODEL_CSS => self::MODE_CSS,
 			CONTENT_MODEL_JAVASCRIPT => self::MODE_JAVASCRIPT,
+			CONTENT_MODEL_VUE => self::MODE_VUE,
 			default => null,
 		};
 
