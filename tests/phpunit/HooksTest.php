@@ -10,7 +10,6 @@ use MediaWiki\Extension\Gadgets\Gadget;
 use MediaWiki\Extension\Gadgets\GadgetRepo;
 use MediaWiki\Language\Language;
 use MediaWiki\Output\OutputPage;
-use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\Request\WebRequest;
 use MediaWiki\Specials\SpecialExpandTemplates;
 use MediaWiki\Specials\SpecialUpload;
@@ -22,15 +21,11 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * @group CodeMirror
  * @group Database
- * @coversDefaultClass \MediaWiki\Extension\CodeMirror\Hooks
+ * @covers \MediaWiki\Extension\CodeMirror\Hooks
  */
 class HooksTest extends MediaWikiIntegrationTestCase {
 
 	/**
-	 * @covers ::shouldLoadCodeMirror
-	 * @covers ::onEditPage__showEditForm_initial
-	 * @covers ::onEditPage__showReadOnlyForm_initial
-	 * @covers ::onUploadForm_initial
 	 * @param array $conds
 	 * @param string[] $expectedModules
 	 * @param string $expectedMode
@@ -263,9 +258,6 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		];
 	}
 
-	/**
-	 * @covers ::onGetPreferences
-	 */
 	public function testPreferenceRegistered() {
 		$user = self::getTestUser()->getUser();
 		$context = RequestContext::getMain();
@@ -275,9 +267,6 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		self::assertEquals( 'registered', $kinds['usecodemirror'] );
 	}
 
-	/**
-	 * @covers ::onGetPreferences
-	 */
 	public function testOnGetPreferencces(): void {
 		$user = self::getTestUser()->getUser();
 		$userOptionsLookup = $this->getServiceContainer()->getUserOptionsLookup();
@@ -331,17 +320,5 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		$request->method( 'getRawVal' )->willReturn( null );
 		$out->method( 'getRequest' )->willReturn( $request );
 		return $out;
-	}
-
-	/**
-	 * @param bool $gadgetsEnabled
-	 * @return ExtensionRegistry&MockObject
-	 */
-	private function getMockExtensionRegistry( bool $gadgetsEnabled ) {
-		$mock = $this->createMock( ExtensionRegistry::class );
-		$mock->method( 'isLoaded' )
-			->with( 'Gadgets' )
-			->willReturn( $gadgetsEnabled );
-		return $mock;
 	}
 }
