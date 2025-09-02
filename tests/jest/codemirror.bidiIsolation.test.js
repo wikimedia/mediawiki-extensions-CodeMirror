@@ -1,5 +1,5 @@
 const CodeMirror = require( '../../resources/codemirror.js' );
-const mediaWikiLang = require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
+const { mediawiki } = require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
 const bidiIsolationExtension = require( '../../resources/modes/mediawiki/codemirror.mediawiki.bidiIsolation.js' );
 
 const testCases = [
@@ -19,7 +19,7 @@ const testCases = [
 const textarea = document.createElement( 'textarea' );
 textarea.dir = 'rtl';
 document.body.appendChild( textarea );
-const cm = new CodeMirror( textarea, mediaWikiLang() );
+const cm = new CodeMirror( textarea, mediawiki() );
 cm.initialize();
 // Normally ran by mw.hook, but we don't mock the hook system in the Jest tests.
 cm.preferences.registerExtension( 'bidiIsolation', bidiIsolationExtension, cm.view );

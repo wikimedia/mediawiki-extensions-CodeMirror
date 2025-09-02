@@ -1,12 +1,12 @@
 const CodeMirror = require( '../../resources/codemirror.js' );
 const CodeMirrorChild = require( '../../resources/codemirror.child.js' );
-const mediaWikiLang = require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
+const { mediawiki } = require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
 
 let textarea, otherTextarea, cm, cmLogEditFeatureSpy;
 
 beforeEach( () => {
 	textarea = document.createElement( 'textarea' );
-	cm = new CodeMirror( textarea, mediaWikiLang() );
+	cm = new CodeMirror( textarea, mediawiki() );
 	cmLogEditFeatureSpy = jest.spyOn( cm, 'logEditFeature' );
 	cm.initialize();
 	otherTextarea = document.createElement( 'textarea' );

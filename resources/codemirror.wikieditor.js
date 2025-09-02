@@ -20,8 +20,8 @@ const CodeMirror = require( 'ext.CodeMirror.v6' );
  * ] );
  * mw.addWikiEditor( myTextarea );
  * const CodeMirrorWikiEditor = require( 'ext.CodeMirror.v6.WikiEditor' );
- * const mediawikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
- * const cmWe = new CodeMirrorWikiEditor( myTextarea, mediawikiLang() );
+ * const { mediawiki } = require( 'ext.CodeMirror.v6.mode.mediawiki' );
+ * const cmWe = new CodeMirrorWikiEditor( myTextarea, mediawiki() );
  * cmWe.initialize();
  * @class
  * @extends CodeMirror

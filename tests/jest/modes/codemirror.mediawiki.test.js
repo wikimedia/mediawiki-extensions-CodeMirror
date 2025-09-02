@@ -1,7 +1,7 @@
 const { StreamParser } = require( '@codemirror/language' );
 const { Tag } = require( '@lezer/highlight' );
 const CodeMirror = require( '../../../resources/codemirror.js' );
-const mediaWikiLang = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.js' );
+const { mediawiki } = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.js' );
 const mwModeConfig = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.config.js' );
 
 // NOTE: each test case should have a space before the closing </div>
@@ -218,7 +218,7 @@ const testCases = [
 // Setup CodeMirror instance.
 const textarea = document.createElement( 'textarea' );
 document.body.appendChild( textarea );
-const cm = new CodeMirror( textarea, mediaWikiLang() );
+const cm = new CodeMirror( textarea, mediawiki() );
 cm.initialize();
 
 describe( 'CodeMirrorMediaWiki', () => {

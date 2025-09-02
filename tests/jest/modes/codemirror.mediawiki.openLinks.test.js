@@ -1,5 +1,5 @@
 const CodeMirror = require( '../../../resources/codemirror.js' );
-const mediawikiLang = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.js' );
+const { mediawiki } = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.js' );
 
 describe( 'CodeMirrorOpenLinks', () => {
 	let cm;
@@ -7,7 +7,7 @@ describe( 'CodeMirrorOpenLinks', () => {
 	beforeEach( () => {
 		const textarea = document.createElement( 'textarea' );
 		document.body.appendChild( textarea );
-		cm = new CodeMirror( textarea, mediawikiLang() );
+		cm = new CodeMirror( textarea, mediawiki() );
 		cm.initialize();
 		cm.textSelection.setContents( '[[Foo]] {{bar}} https://example.org' );
 	} );

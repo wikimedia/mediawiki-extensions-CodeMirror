@@ -59,8 +59,8 @@ require( './ext.CodeMirror.data.js' );
  * // Creating a new CodeMirror instance.
  * const require = await mw.loader.using( [ 'ext.CodeMirror.v6', 'ext.CodeMirror.v6.mode.mediawiki' ] );
  * const CodeMirror = require( 'ext.CodeMirror.v6' );
- * const mediawikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
- * const cm = new CodeMirror( myTextarea, mediawikiLang() );
+ * const { mediawiki } = require( 'ext.CodeMirror.v6.mode.mediawiki' );
+ * const cm = new CodeMirror( myTextarea, mediawiki() );
  * cm.initialize();
  *
  * // Integrating with an existing CodeMirror instance.
@@ -317,7 +317,7 @@ class CodeMirror {
 			},
 			keydown: ( event ) => {
 				// Temporarily restrict keydown event bubbling to wikitext (T401271).
-				// TODO: Fix the core issue in WikiEditor, or remove WikiEditor integration entirely.
+				// TODO: Fix the core issue in WikiEditor or remove WikiEditor integration entirely.
 				if ( this.mode === 'mediawiki' ) {
 					this.textarea.dispatchEvent( new KeyboardEvent( 'keydown', event ) );
 				}

@@ -1,5 +1,5 @@
 const CodeMirrorWikiEditor = require( '../../resources/codemirror.wikieditor.js' );
-const mediaWikiLang = require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
+const { mediawiki } = require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
 const { javascript } = require( '../../resources/lib/codemirror6.bundle.javascript.js' );
 
 function getCodeMirrorWikiEditor( readOnly = false, langSupport = [] ) {
@@ -188,7 +188,7 @@ describe( 'Hook handlers and event listeners', () => {
 	} );
 
 	it( 'only 1 ext.CodeMirror.ready hook handler', () => {
-		[ ...Array( 3 ) ].forEach( () => mediaWikiLang() );
+		[ ...Array( 3 ) ].forEach( () => mediawiki() );
 		expect( mw.hook.mockHooks[ 'ext.CodeMirror.ready' ].length ).toBe( 1 );
 	} );
 } );

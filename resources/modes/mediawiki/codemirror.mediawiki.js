@@ -55,8 +55,8 @@ const copyState = ( state ) => {
  * @example
  * const require = await mw.loader.using( [ 'ext.CodeMirror.v6', 'ext.CodeMirror.v6.mode.mediawiki' ] );
  * const CodeMirror = require( 'ext.CodeMirror.v6' );
- * const mediawikiLang = require( 'ext.CodeMirror.v6.mode.mediawiki' );
- * const cm = new CodeMirror( myTextarea, mediawikiLang() );
+ * const { mediawiki } = require( 'ext.CodeMirror.v6.mode.mediawiki' );
+ * const cm = new CodeMirror( myTextarea, mediawiki() );
  * cm.initialize();
  */
 class CodeMirrorMediaWiki {
@@ -1587,3 +1587,4 @@ const mediaWikiLang = ( config = { bidiIsolation: false } ) => {
 };
 
 module.exports = mediaWikiLang;
+module.exports.mediawiki = mediaWikiLang;

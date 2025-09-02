@@ -1,5 +1,5 @@
 const CodeMirror = require( '../../resources/codemirror.js' );
-const mediawikiLang = require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
+const { mediawiki } = require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
 const { javascript } = require( '../../resources/modes/codemirror.javascript.js' );
 
 const selector = '.cm-matchingBracket, .cm-nonmatchingBracket';
@@ -10,7 +10,7 @@ describe( 'CodeMirrorBracketMatching for StreamLanguage', () => {
 	beforeEach( () => {
 		const textarea = document.createElement( 'textarea' );
 		document.body.appendChild( textarea );
-		cm = new CodeMirror( textarea, mediawikiLang() );
+		cm = new CodeMirror( textarea, mediawiki() );
 		cm.initialize();
 		cm.textSelection.setContents( ' {{ Foo | 1 = {{ Bar }} }} Baz [' );
 	} );
