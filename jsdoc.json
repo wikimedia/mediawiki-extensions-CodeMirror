@@ -37,6 +37,7 @@
 				"Extension": "https://codemirror.net/docs/ref/#state.Extension",
 				"Hook": "https://doc.wikimedia.org/mediawiki-core/master/js/Hook.html",
 				"KeyBinding": "https://codemirror.net/docs/ref/#view.KeyBinding",
+				"Language": "https://codemirror.net/docs/ref/#language.Language",
 				"LanguageSupport": "https://codemirror.net/docs/ref/#language.LanguageSupport",
 				"LintSource": "https://codemirror.net/docs/ref/#lint.LintSource",
 				"MatchResult": "https://codemirror.net/docs/ref/#language.MatchResult",

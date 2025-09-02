@@ -1,64 +1,63 @@
-const { LanguageSupport } = require( 'ext.CodeMirror.v6.lib' );
-const {
-	javascript,
-	javascriptLanguage,
-	scopeCompletionSource
-} = require( '../lib/codemirror6.bundle.javascript.js' );
-const CodeMirrorWorker = require( '../codemirror.worker.js' );
+const { javascript, javascriptLanguage, scopeCompletionSource } = require( '../lib/codemirror6.bundle.modes.js' );
+const CodeMirrorMode = require( './codemirror.mode.js' );
+const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
 
-const worker = new CodeMirrorWorker( 'javascript' );
-const lintSource = ( view ) => worker.lint( view )
-	.then( ( data ) => data
-		.map( ( {
-			ruleId,
-			message,
-			severity,
-			line,
-			column,
-			endLine,
-			endColumn,
-			fix,
-			suggestions = []
-		} ) => {
-			const start = CodeMirrorWorker.pos( view, line, column );
-			const diagnostic = {
-				rule: ruleId,
-				source: 'ESLint',
-				message: message + ( ruleId ? ` (${ ruleId })` : '' ),
-				severity: severity === 1 ? 'info' : 'error',
-				from: start,
-				to: endLine === undefined ?
-					start + 1 :
-					CodeMirrorWorker.pos( view, endLine, endColumn )
-			};
-			if ( fix || suggestions.length ) {
-				diagnostic.actions = [
-					...fix ? [ { name: 'fix', fix } ] : [],
-					...suggestions.map( ( suggestion ) => ( { name: 'suggestion', fix: suggestion.fix } ) )
-				].map( ( { name, fix: { range: [ from, to ], text } } ) => ( {
-					name,
-					apply( v ) {
-						v.dispatch( { changes: { from, to, insert: text } } );
-					}
-				} ) );
-			}
-			return diagnostic;
-		} )
-	);
-lintSource.worker = worker;
+class CodeMirrorJavaScript extends CodeMirrorMode {
 
-module.exports = {
-	javascript() {
-		const support = [
+	/** @inheritDoc */
+	get language() {
+		return javascriptLanguage;
+	}
+
+	/** @inheritDoc */
+	get lintSource() {
+		return async ( view ) => {
+			const data = await this.worker.lint( view );
+			return data.map( ( {
+				ruleId,
+				message,
+				severity,
+				line,
+				column,
+				endLine,
+				endColumn,
+				fix,
+				suggestions = []
+			} ) => {
+				const start = CodeMirrorWorker.pos( view, line, column );
+				const diagnostic = {
+					rule: ruleId,
+					source: 'ESLint',
+					message: message + ( ruleId ? ` (${ ruleId })` : '' ),
+					severity: severity === 1 ? 'info' : 'error',
+					from: start,
+					to: endLine === undefined ?
+						start + 1 :
+						CodeMirrorWorker.pos( view, endLine, endColumn )
+				};
+				if ( fix || suggestions.length ) {
+					diagnostic.actions = [
+						...fix ? [ { name: 'fix', fix } ] : [],
+						...suggestions.map( ( suggestion ) => ( { name: 'suggestion', fix: suggestion.fix } ) )
+					].map( ( { name, fix: { range: [ from, to ], text } } ) => ( {
+						name,
+						apply( v ) {
+							v.dispatch( { changes: { from, to, insert: text } } );
+						}
+					} ) );
+				}
+				return diagnostic;
+			} );
+		};
+	}
+
+	/** @inheritDoc */
+	get support() {
+		return [
 			javascript().support,
 			javascriptLanguage.data.of( { autocomplete: scopeCompletionSource( window ) } )
 		];
-		const langSupport = new LanguageSupport( javascriptLanguage, support );
-		langSupport.lintSource = lintSource;
-		return langSupport;
 	}
-};
-
-if ( mw.config.get( 'cmDebug' ) ) {
-	window.javascriptWorker = worker;
 }
+
+module.exports = CodeMirrorJavaScript;

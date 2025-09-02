@@ -1,9 +1,9 @@
 /* eslint-disable-next-line n/no-missing-require */
 const { Text } = require( 'ext.CodeMirror.v6.lib' );
-const { css } = require( '../../../resources/modes/codemirror.css.js' );
+const { css } = require( '../../../resources/modes/codemirror.mode.exporter.js' );
 require( '../../../resources/workers/css/worker.min.js' );
 
-const { lintSource } = css();
+const { lintSource, worker } = css();
 const testCases = [
 	{
 		title: 'CssSyntaxError',
@@ -168,14 +168,14 @@ describe( 'CodeMirrorLint: Stylelint', () => {
 		} );
 	}
 	it( 'rule customization', async () => {
-		lintSource.worker.setConfig( { 'no-empty-source': null } );
+		worker.setConfig( { 'no-empty-source': null } );
 		expect( ( await lint( '' ) ).length ).toEqual( 0 );
-		expect( ( await lintSource.worker.getConfig() )[ 'no-empty-source' ] ).toEqual( null );
-		lintSource.worker.setConfig( { 'length-zero-no-unit': true } );
+		expect( ( await worker.getConfig() )[ 'no-empty-source' ] ).toEqual( null );
+		worker.setConfig( { 'length-zero-no-unit': true } );
 		expect(
 			( await lint( 'a { width: 0px; }' ) )
 				.some( ( { rule } ) => rule === 'length-zero-no-unit' )
 		).toBeTruthy();
-		expect( ( await lintSource.worker.getConfig() )[ 'length-zero-no-unit' ] ).toEqual( true );
+		expect( ( await worker.getConfig() )[ 'length-zero-no-unit' ] ).toEqual( true );
 	} );
 } );

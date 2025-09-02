@@ -1,6 +1,6 @@
 const CodeMirrorWikiEditor = require( '../../resources/codemirror.wikieditor.js' );
 const { mediawiki } = require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
-const { javascript } = require( '../../resources/lib/codemirror6.bundle.javascript.js' );
+const { javascript } = require( '../../resources/modes/codemirror.mode.exporter.js' );
 
 function getCodeMirrorWikiEditor( readOnly = false, langSupport = [] ) {
 	const form = document.createElement( 'form' );

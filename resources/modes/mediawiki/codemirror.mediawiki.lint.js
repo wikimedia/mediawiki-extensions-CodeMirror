@@ -1,4 +1,4 @@
-const CodeMirrorWorker = require( '../../codemirror.worker.js' );
+const CodeMirrorWorker = require( '../../workers/codemirror.worker.js' );
 
 const worker = new CodeMirrorWorker( 'mediawiki' );
 

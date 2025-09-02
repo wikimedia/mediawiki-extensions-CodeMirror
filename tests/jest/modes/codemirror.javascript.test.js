@@ -1,9 +1,9 @@
 /* eslint-disable-next-line n/no-missing-require */
 const { Text } = require( 'ext.CodeMirror.v6.lib' );
-const { javascript } = require( '../../../resources/modes/codemirror.javascript.js' );
+const { javascript } = require( '../../../resources/modes/codemirror.mode.exporter.js' );
 require( '../../../resources/workers/javascript/worker.min.js' );
 
-const { lintSource } = javascript();
+const { lintSource, worker } = javascript();
 const testCases = [
 	{
 		title: 'constructor-super',
@@ -348,11 +348,11 @@ describe( 'CodeMirrorLint: ESLint', () => {
 		} );
 	}
 	it( 'rule customization', async () => {
-		lintSource.worker.setConfig( { rules: { 'no-empty': 0 } } );
+		worker.setConfig( { rules: { 'no-empty': 0 } } );
 		expect( ( await lint( '{}' ) ).length ).toEqual( 0 );
-		expect( ( await lintSource.worker.getConfig() ).rules[ 'no-empty' ] ).toEqual( 0 );
-		lintSource.worker.setConfig( { rules: { semi: 2 } } );
+		expect( ( await worker.getConfig() ).rules[ 'no-empty' ] ).toEqual( 0 );
+		worker.setConfig( { rules: { semi: 2 } } );
 		expect( ( await lint( 'let a' ) ).some( ( { rule } ) => rule === 'semi' ) ).toBeTruthy();
-		expect( ( await lintSource.worker.getConfig() ).rules.semi ).toEqual( 2 );
+		expect( ( await worker.getConfig() ).rules.semi ).toEqual( 2 );
 	} );
 } );

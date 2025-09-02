@@ -1,25 +1,7 @@
-const {
-	syntaxTree,
-	LanguageSupport,
-	StreamLanguage,
-	foldService,
-	snippetCompletion
-} = require( 'ext.CodeMirror.v6.lib' );
-const { lua } = require( '../lib/codemirror6.bundle.lua.js' );
-const CodeMirrorWorker = require( '../codemirror.worker.js' );
-
-const worker = new CodeMirrorWorker( 'lua' );
-const lintSource = async ( view ) => {
-	const data = await worker.lint( view );
-	return data.map( ( { line, column, end_column: endColumn, msg, code } ) => ( {
-		source: 'Luacheck',
-		message: msg,
-		severity: code.startsWith( '0' ) ? 'error' : 'info',
-		from: CodeMirrorWorker.pos( view, line, column ),
-		to: CodeMirrorWorker.pos( view, line, endColumn + 1 )
-	} ) );
-};
-lintSource.worker = worker;
+const { syntaxTree, StreamLanguage, foldService, snippetCompletion } = require( 'ext.CodeMirror.v6.lib' );
+const { lua } = require( '../lib/codemirror6.bundle.modes.js' );
+const CodeMirrorMode = require( './codemirror.mode.js' );
+const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
 
 const map = {
 		1: 'constant',
@@ -324,146 +306,165 @@ const map = {
 	],
 	types = new Set( [ 'variableName', 'variableName.standard', 'keyword' ] );
 
-lua.languageData.autocomplete = ( ( context ) => {
-	const { state, pos } = context,
-		node = syntaxTree( state ).resolveInner( pos, -1 );
-	if ( !types.has( node.name ) ) {
-		return null;
-	}
-	const { from: f, text } = context.matchBefore( /(?:(?:^|\S|\.\.)\s+|^|[^\w\s]|\.\.)\w*$/ ),
-		pre = /^(.*?)(?:\b\w*)?$/.exec( text )[ 1 ],
-		char = pre.trim();
-	if ( char !== '.' && !/\w$/.test( text ) ) {
-		return null;
-	}
-	const from = f + pre.length,
-		validFor = /^\w*$/;
-	switch ( char ) {
-		case '.': {
-			const mt = context.matchBefore( /(?:^|[^\w.]|\.\.)\w(?:\w|\.(?!\.))+$/ );
-			if ( mt ) {
-				let cur = globals,
-					s = mt.text;
-				if ( s.startsWith( '.' ) ) {
-					s = s.slice( 2 );
-				} else if ( /^\W/.test( s ) ) {
-					s = s.slice( 1 );
-				}
-				for ( const part of s.split( '.' ).slice( 0, -1 ) ) {
-					cur = cur[ part ];
-					if ( typeof cur !== 'object' ) {
-						return null;
+class CodeMirrorLua extends CodeMirrorMode {
+
+	/** @inheritDoc */
+	get language() {
+		lua.languageData.autocomplete = ( ( context ) => {
+			const { state, pos } = context,
+				node = syntaxTree( state ).resolveInner( pos, -1 );
+			if ( !types.has( node.name ) ) {
+				return null;
+			}
+			const { from: f, text } = context.matchBefore( /(?:(?:^|\S|\.\.)\s+|^|[^\w\s]|\.\.)\w*$/ ),
+				pre = /^(.*?)(?:\b\w*)?$/.exec( text )[ 1 ],
+				char = pre.trim();
+			if ( char !== '.' && !/\w$/.test( text ) ) {
+				return null;
+			}
+			const from = f + pre.length,
+				validFor = /^\w*$/;
+			switch ( char ) {
+				case '.': {
+					const mt = context.matchBefore( /(?:^|[^\w.]|\.\.)\w(?:\w|\.(?!\.))+$/ );
+					if ( mt ) {
+						let cur = globals,
+							s = mt.text;
+						if ( s.startsWith( '.' ) ) {
+							s = s.slice( 2 );
+						} else if ( /^\W/.test( s ) ) {
+							s = s.slice( 1 );
+						}
+						for ( const part of s.split( '.' ).slice( 0, -1 ) ) {
+							cur = cur[ part ];
+							if ( typeof cur !== 'object' ) {
+								return null;
+							}
+						}
+						return {
+							from,
+							options: Object.keys( cur ).map( ( label ) => ( {
+								label,
+								type: typeof cur[ label ] === 'object' ? 'namespace' : map[ cur[ label ] ]
+							} ) ),
+							validFor
+						};
 					}
+					break;
 				}
-				return {
-					from,
-					options: Object.keys( cur ).map( ( label ) => ( {
-						label,
-						type: typeof cur[ label ] === 'object' ? 'namespace' : map[ cur[ label ] ]
-					} ) ),
-					validFor
-				};
+				case '#':
+					if ( pre === char ) {
+						return {
+							from,
+							options: tables,
+							validFor
+						};
+					}
+					break;
+				case '..':
+				case '+':
+				case '-':
+				case '*':
+				case '/':
+				case '%':
+				case '^':
+				case '&':
+				case '|':
+				case '~':
+				case '<':
+				case '>':
+				case '[':
+					return {
+						from,
+						options: [ ...constants, ...tables ],
+						validFor
+					};
+				case '=':
+				case '{':
+				case '(':
+				case ',':
+					return {
+						from,
+						options: [ ...builtins, ...constants, ...tables, ...unary ],
+						validFor
+					};
+				case '}':
+				case ']':
+				case ')':
+					return {
+						from,
+						options: [ ...binary, ...blocks ],
+						validFor
+					};
+				case ';':
+				case '':
+					return {
+						from,
+						options: [
+							...keywords, ...blocks, ...unary, ...constants, ...tables, ...builtins
+						],
+						validFor
+					};
+				default:
+					if ( pre !== char ) {
+						const { prevSibling } = node;
+						return {
+							from,
+							options: prevSibling && prevSibling.name === 'keyword' &&
+								!builtin.includes(
+									state.sliceDoc( prevSibling.from, prevSibling.to )
+								) ?
+								[ ...builtins, ...constants, ...tables, ...unary, ...blocks ] :
+								[ ...binary, ...blocks ],
+							validFor
+						};
+					}
 			}
-			break;
-		}
-		case '#':
-			if ( pre === char ) {
-				return {
-					from,
-					options: tables,
-					validFor
-				};
-			}
-			break;
-		case '..':
-		case '+':
-		case '-':
-		case '*':
-		case '/':
-		case '%':
-		case '^':
-		case '&':
-		case '|':
-		case '~':
-		case '<':
-		case '>':
-		case '[':
-			return {
-				from,
-				options: [ ...constants, ...tables ],
-				validFor
-			};
-		case '=':
-		case '{':
-		case '(':
-		case ',':
-			return {
-				from,
-				options: [ ...builtins, ...constants, ...tables, ...unary ],
-				validFor
-			};
-		case '}':
-		case ']':
-		case ')':
-			return {
-				from,
-				options: [ ...binary, ...blocks ],
-				validFor
-			};
-		case ';':
-		case '':
-			return {
-				from,
-				options: [ ...keywords, ...blocks, ...unary, ...constants, ...tables, ...builtins ],
-				validFor
-			};
-		default:
-			if ( pre !== char ) {
-				const { prevSibling } = node;
-				return {
-					from,
-					options: prevSibling && prevSibling.name === 'keyword' &&
-						!builtin.includes( state.sliceDoc( prevSibling.from, prevSibling.to ) ) ?
-						[ ...builtins, ...constants, ...tables, ...unary, ...blocks ] :
-						[ ...binary, ...blocks ],
-					validFor
-				};
-			}
-	}
-	return null;
-} );
+			return null;
+		} );
 
-const support = foldService.of( ( { doc, tabSize }, start, from ) => {
-	const { text, number } = doc.lineAt( start );
-	if ( !text.trim() ) {
-		return null;
+		return StreamLanguage.define( lua );
 	}
-	const getIndent = ( line ) => /^\s*/.exec( line )[ 0 ]
-		.replace( /\t/g, ' '.repeat( tabSize ) ).length;
-	const indent = getIndent( text );
-	let j = number,
-		empty = true;
-	for ( ; j < doc.lines; j++ ) {
-		const { text: next } = doc.line( j + 1 );
-		if ( next.trim() ) {
-			const nextIndent = getIndent( next );
-			if ( indent >= nextIndent ) {
-				break;
+
+	/** @inheritDoc */
+	get lintSource() {
+		return async ( view ) => {
+			const data = await this.worker.lint( view );
+			return data.map( ( { line, column, end_column: endColumn, msg, code } ) => ( {
+				source: 'Luacheck',
+				message: msg,
+				severity: code.startsWith( '0' ) ? 'error' : 'info',
+				from: CodeMirrorWorker.pos( view, line, column ),
+				to: CodeMirrorWorker.pos( view, line, endColumn + 1 )
+			} ) );
+		};
+	}
+
+	/** @inheritDoc */
+	get support() {
+		return foldService.of( ( { doc, tabSize }, start, from ) => {
+			const { text, number } = doc.lineAt( start );
+			if ( !text.trim() ) {
+				return null;
 			}
-			empty = false;
-		}
+			const getIndent = ( line ) => /^\s*/.exec( line )[ 0 ]
+				.replace( /\t/g, ' '.repeat( tabSize ) ).length;
+			const indent = getIndent( text );
+			let j = number,
+				empty = true;
+			for ( ; j < doc.lines; j++ ) {
+				const { text: next } = doc.line( j + 1 );
+				if ( next.trim() ) {
+					const nextIndent = getIndent( next );
+					if ( indent >= nextIndent ) {
+						break;
+					}
+					empty = false;
+				}
+			}
+			return empty || j === number ? null : { from, to: doc.line( j ).to };
+		} );
 	}
-	return empty || j === number ? null : { from, to: doc.line( j ).to };
-} );
-
-module.exports = {
-	lua() {
-		const extension = new LanguageSupport( StreamLanguage.define( lua ), support );
-		extension.lintSource = lintSource;
-		return extension;
-	}
-};
-
-if ( mw.config.get( 'cmDebug' ) ) {
-	window.luaWorker = worker;
 }
+
+module.exports = CodeMirrorLua;

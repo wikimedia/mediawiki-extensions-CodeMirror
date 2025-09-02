@@ -1,7 +1,7 @@
 /* eslint-disable-next-line n/no-missing-require */
 const { EditorView, Prec } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirror = require( '../../resources/codemirror.js' );
-const { javascript } = require( '../../resources/modes/codemirror.javascript.js' );
+const { javascript } = require( '../../resources/modes/codemirror.mode.exporter.js' );
 
 let textarea, cm, form;
 

@@ -1,7 +1,7 @@
 /* eslint-disable-next-line n/no-missing-require */
 const { foldable } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirror = require( '../../../resources/codemirror.js' );
-const { lua } = require( '../../../resources/modes/codemirror.lua.js' );
+const { lua } = require( '../../../resources/modes/codemirror.mode.exporter.js' );
 
 // Setup CodeMirror instance.
 const textarea = document.createElement( 'textarea' );

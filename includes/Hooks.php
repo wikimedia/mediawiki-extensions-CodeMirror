@@ -227,7 +227,7 @@ class Hooks implements
 		$mode = $this->getMode( $out->getTitle() );
 
 		if ( in_array( $mode, self::SUPPORTED_MODES, true ) ) {
-			$modules[] = 'ext.CodeMirror.v6.mode.' . $mode;
+			$modules[] = 'ext.CodeMirror.v6.' . ( $mode === self::MODE_MEDIAWIKI ? 'mode.mediawiki' : 'modes' );
 		} else {
 			wfLogWarning( "[CodeMirror] Unsupported CodeMirror mode '$mode'" );
 			$modules = [];

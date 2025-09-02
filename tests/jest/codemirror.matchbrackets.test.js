@@ -1,6 +1,6 @@
 const CodeMirror = require( '../../resources/codemirror.js' );
 const { mediawiki } = require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
-const { javascript } = require( '../../resources/modes/codemirror.javascript.js' );
+const { javascript } = require( '../../resources/modes/codemirror.mode.exporter.js' );
 
 const selector = '.cm-matchingBracket, .cm-nonmatchingBracket';
 

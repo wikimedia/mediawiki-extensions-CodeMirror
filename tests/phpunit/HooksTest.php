@@ -204,7 +204,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		];
 		yield 'CM6, contentModel CSS' => [
 			[ 'contentModel' => CONTENT_MODEL_CSS, 'allowedModes' => [ Hooks::MODE_CSS => true ] ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.css' ],
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.modes' ],
 			'css'
 		];
 		yield 'CM6, contentModel JavaScript' => [
@@ -212,12 +212,12 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 				'contentModel' => CONTENT_MODEL_JAVASCRIPT,
 				'allowedModes' => [ CONTENT_MODEL_JAVASCRIPT => true ]
 			],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.javascript' ],
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.modes' ],
 			'javascript'
 		];
 		yield 'CM6, contentModel JSON' => [
 			[ 'contentModel' => CONTENT_MODEL_JSON, 'allowedModes' => [ Hooks::MODE_JSON => true ] ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.json' ],
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.modes' ],
 			'json'
 		];
 		yield 'CM6, contentModel CSS, CSS not allowed' => [
@@ -330,7 +330,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		string $contentModel = CONTENT_MODEL_WIKITEXT,
 		bool $isRTL = false,
 		string $lang = 'en'
-	) {
+	): OutputPage&MockObject {
 		$out = $this->createMock( OutputPage::class );
 		$out->method( 'getUser' )->willReturn( $this->getTestUser()->getUser() );
 		$out->method( 'getActionName' )->willReturn( 'edit' );

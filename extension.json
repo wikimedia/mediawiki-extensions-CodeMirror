@@ -358,8 +358,9 @@
 				"modes/mediawiki/codemirror.mediawiki.autocomplete.js",
 				"modes/mediawiki/codemirror.mediawiki.openLinks.js",
 				"modes/mediawiki/codemirror.mediawiki.keymap.js",
-				"codemirror.worker.js",
-				"modes/mediawiki/codemirror.mediawiki.lint.js"
+				"modes/mediawiki/codemirror.mediawiki.lint.js",
+				"modes/codemirror.mode.js",
+				"workers/codemirror.worker.js"
 			],
 			"styles": [
 				"modes/mediawiki/codemirror.mediawiki.less",
@@ -395,40 +396,16 @@
 				"codemirror-prefs-openlinks"
 			]
 		},
-		"ext.CodeMirror.v6.mode.javascript": {
+		"ext.CodeMirror.v6.modes": {
 			"packageFiles": [
+				"modes/codemirror.mode.exporter.js",
+				"modes/codemirror.mode.js",
 				"modes/codemirror.javascript.js",
-				"codemirror.worker.js",
-				"lib/codemirror6.bundle.javascript.js"
-			],
-			"dependencies": [
-				"ext.CodeMirror.v6.lib"
-			]
-		},
-		"ext.CodeMirror.v6.mode.json": {
-			"packageFiles": [
 				"modes/codemirror.json.js",
-				"lib/codemirror6.bundle.json.js"
-			],
-			"dependencies": [
-				"ext.CodeMirror.v6.lib"
-			]
-		},
-		"ext.CodeMirror.v6.mode.css": {
-			"packageFiles": [
 				"modes/codemirror.css.js",
-				"codemirror.worker.js",
-				"lib/codemirror6.bundle.css.js"
-			],
-			"dependencies": [
-				"ext.CodeMirror.v6.lib"
-			]
-		},
-		"ext.CodeMirror.v6.mode.lua": {
-			"packageFiles": [
 				"modes/codemirror.lua.js",
-				"codemirror.worker.js",
-				"lib/codemirror6.bundle.lua.js"
+				"workers/codemirror.worker.js",
+				"lib/codemirror6.bundle.modes.js"
 			],
 			"dependencies": [
 				"ext.CodeMirror.v6.lib"

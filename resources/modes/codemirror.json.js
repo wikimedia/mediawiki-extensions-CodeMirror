@@ -1,11 +1,23 @@
-const { json, jsonParseLinter } = require( '../lib/codemirror6.bundle.json.js' );
+const { jsonLanguage, jsonParseLinter } = require( '../lib/codemirror6.bundle.modes.js' );
+const CodeMirrorMode = require( './codemirror.mode.js' );
 
-const lintSource = jsonParseLinter();
+class CodeMirrorJson extends CodeMirrorMode {
 
-module.exports = {
-	json() {
-		const extension = json();
-		extension.lintSource = lintSource;
-		return extension;
+	/** @inheritDoc */
+	get language() {
+		return jsonLanguage;
 	}
-};
+
+	/** @inheritDoc */
+	get lintSource() {
+		return jsonParseLinter();
+	}
+
+	/** @inheritDoc */
+	get hasWorker() {
+		// JSON linting is done in the main thread.
+		return false;
+	}
+}
+
+module.exports = CodeMirrorJson;

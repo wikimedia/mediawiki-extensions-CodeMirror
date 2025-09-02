@@ -16,13 +16,11 @@ const mode = mw.config.get( 'cmMode' );
  * @return {LanguageSupport}
  */
 function getLanguageSupport( require ) {
-	// eslint-disable-next-line security/detect-non-literal-require
-	const langSupport = require( `ext.CodeMirror.v6.mode.${ mode }` );
-
 	if ( mode !== 'mediawiki' ) {
-		return langSupport[ mode ]();
+		return require( 'ext.CodeMirror.v6.modes' )[ mode ]();
 	}
 
+	const langSupport = require( 'ext.CodeMirror.v6.mode.mediawiki' ).mediawiki;
 	const urlParams = new URLSearchParams( window.location.search );
 	return langSupport( {
 		bidiIsolation: urlParams.get( 'cm6bidi' ),

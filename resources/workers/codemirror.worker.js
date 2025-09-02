@@ -6,15 +6,15 @@ const workers = new Map();
 class CodeMirrorWorker {
 	/**
 	 * @constructor
-	 * @param {string} lang
+	 * @param {string} mode
 	 */
-	constructor( lang ) {
+	constructor( mode ) {
 		/**
-		 * The language for which the worker is created.
+		 * The mode for which the worker is created.
 		 *
 		 * @type {string}
 		 */
-		this.lang = lang;
+		this.mode = mode;
 		/**
 		 * Queue of callbacks to be called when the worker is loaded.
 		 *
@@ -24,28 +24,33 @@ class CodeMirrorWorker {
 	}
 
 	/**
-	 * The web worker for the language.
+	 * The web worker for the mode.
 	 *
 	 * @type {Worker}
 	 */
 	get worker() {
-		if ( !workers.has( this.lang ) ) {
+		if ( !workers.has( this.mode ) ) {
 			const worker = new Worker( `${
 				mw.config.get( 'wgExtensionAssetsPath' )
-			}/CodeMirror/resources/workers/${ this.lang }/worker.min.js` );
-			workers.set( this.lang, worker );
+			}/CodeMirror/resources/workers/${ this.mode }/worker.min.js` );
+			workers.set( this.mode, worker );
 			for ( const callback of this.queue ) {
 				callback( this );
 			}
+
+			if ( mw.config.get( 'cmDebug' ) ) {
+				window[ `${ this.mode }Worker` ] = worker;
+			}
 		}
-		return workers.get( this.lang );
+
+		return workers.get( this.mode );
 	}
 
 	/**
 	 * Get the response from the worker for a given command.
 	 *
 	 * @param {string} command
-	 * @param {Text|undefined} doc
+	 * @param {Text|undefined} [doc]
 	 * @return {Promise}
 	 * @private
 	 */
