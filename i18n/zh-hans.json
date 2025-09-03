@@ -8,7 +8,8 @@
 			"Sean0115",
 			"Stang",
 			"Tranve",
-			"沈澄心"
+			"沈澄心",
+			"Peterxy12"
 		]
 	},
 	"codemirror-desc": "在wikitext编辑器中提供语法高亮显示",
@@ -16,7 +17,7 @@
 	"codemirror-toggle-label-short": "语法",
 	"codemirror-prefs-summary": "您可阅读[https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror 帮助页面]了解有关此功能的更多信息。",
 	"codemirror-prefs-enable": "启用语法高亮",
-	"codemirror-prefs-title": "语法高亮首选项",
+	"codemirror-prefs-title": "语法高亮设置",
 	"codemirror-prefs-help": "帮助",
 	"codemirror-prefs-codefolding": "启用代码折叠",
 	"codemirror-prefs-autocomplete": "启用自动填充",
@@ -121,7 +122,7 @@
 	"codemirror-keymap-moveline": "将选中行向上或向下移动一行",
 	"codemirror-keymap-copyline": "将选中行复制到上面或下面一行",
 	"codemirror-keymap-direction": "更改书写方向",
-	"codemirror-keymap-preferences": "语法高亮首选项",
+	"codemirror-keymap-preferences": "语法高亮设置",
 	"codemirror-keymap-help": "键盘快捷键",
 	"codemirror-keymap-cursor-modifiers": "光标修饰符",
 	"codemirror-keymap-multicursor": "按住$1并单击即可创建多个光标。",
