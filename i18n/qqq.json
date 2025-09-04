@@ -183,7 +183,7 @@
 	"codemirror-wikilint-unbalanced-in-section-header": "Diagnostic message for unbalanced syntax in a section header",
 	"codemirror-wikilint-unescaped-query": "Diagnostic message for unescaped query string in an anonymous parameter",
 	"codemirror-wikilint-uppercase": "Short label for a quick-fix action that converts the text to uppercase",
-	"codemirror-wikilint-useless-attribute": "Diagnostic message for useless attribute of <includeonly> or <noinclude>",
+	"codemirror-wikilint-useless-attribute": "Diagnostic message for useless attribute of <code><nowiki><includeonly></nowiki></code> or <code><nowiki><noinclude></nowiki></code>",
 	"codemirror-wikilint-vertical-alignment": "Diagnostic message for image vertical-alignment parameter",
 	"codemirror-beta-feature-title": "Title of the BetaFeature for the new version of CodeMirror.",
 	"codemirror-beta-feature-description": "Description of the BetaFeature for the new version of CodeMirror."

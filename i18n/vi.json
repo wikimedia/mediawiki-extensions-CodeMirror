@@ -136,6 +136,18 @@
 	"codemirror-keymap-next-diagnostic": "Chọn chẩn đoán tiếp theo",
 	"prefs-accessibility": "Tăng cường khả năng tiếp cận",
 	"prefs-syntax-highlighting": "Nổi bật cú pháp",
+	"codemirror-wikilint-comment": "bình luận",
+	"codemirror-wikilint-delink": "bỏ liên kết",
+	"codemirror-wikilint-duplicate-parameter": "tham số trùng lặp",
+	"codemirror-wikilint-ext-in-html": "thẻ mở rộng trong thuộc tính thẻ HTML",
+	"codemirror-wikilint-frame": "khung",
+	"codemirror-wikilint-html-in-table": "Thẻ HTML trong thuộc tính bảng",
+	"codemirror-wikilint-imagemap-without-image": "<imagemap> không có hình ảnh",
+	"codemirror-wikilint-illegal-attribute-name": "tên thuộc tính không hợp lệ",
+	"codemirror-wikilint-illegal-attribute-value": "giá trị thuộc tính không hợp lệ",
+	"codemirror-wikilint-illegal-module": "tên mô đun không hợp lệ",
+	"codemirror-wikilint-invalid-attribute": "chứa thuộc tính không hợp lệ",
+	"codemirror-wikilint-invalid-content": "nội dung không hợp lệ trong <$1>",
 	"codemirror-beta-feature-title": "Nổi bật cú pháp mới",
 	"codemirror-beta-feature-description": "Nhận được quyền truy cập sớm vào tính năng nổi bật cú pháp và các tính năng hỗ trợ sửa đổi mới như thu gọn mã và tự động hoàn thành."
 }

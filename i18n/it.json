@@ -64,5 +64,6 @@
 	"codemirror-keymap-multicursor": "Tieni premuto $1 e fai clic per creare più cursori.",
 	"codemirror-keymap-openlinks": "Tieni premuto $1 e clicca sui titoli delle pagine e sugli URL per aprirli in una nuova scheda.",
 	"prefs-accessibility": "Accessibilità",
-	"prefs-syntax-highlighting": "Evidenziazione della sintassi"
+	"prefs-syntax-highlighting": "Evidenziazione della sintassi",
+	"codemirror-wikilint-remove": "rimuovi"
 }

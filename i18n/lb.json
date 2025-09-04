@@ -72,6 +72,7 @@
 	"prefs-accessibility": "Accessibilitéit",
 	"prefs-syntax-highlighting": "Ervirhiewe vun der Syntax",
 	"codemirror-wikilint-invalid-isbn": "ongülteg ISBN",
+	"codemirror-wikilint-missing-function": "feelend Modulfunktioun",
 	"codemirror-wikilint-remove": "ewechhuelen",
 	"codemirror-beta-feature-title": "Verbessert Ervirhiewe vun der Syntax"
 }

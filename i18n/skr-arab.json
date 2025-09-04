@@ -40,5 +40,7 @@
 	"codemirror-keymap-other": "ٻیا",
 	"codemirror-keymap-advanced-preferences": "وِدھیک ترجیحات",
 	"codemirror-keymap-help": "کی بورڈ  شارٹ کٹ",
-	"prefs-accessibility": "رسائیت"
+	"prefs-accessibility": "رسائیت",
+	"codemirror-wikilint-escape": "ایسکیپ",
+	"codemirror-wikilint-open": "کھولو"
 }
