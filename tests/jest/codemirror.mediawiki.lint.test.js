@@ -10,37 +10,37 @@ const testCases = [
 		actions: [ 'remove', '0 tabindex' ]
 	},
 	{
-		title: 'illegal attribute name (illegal-attr)',
+		title: 'invalid attribute name (illegal-attr)',
 		input: '<br hidden>',
 		actions: [ 'remove' ]
 	},
 	{
-		title: 'illegal attribute value (illegal-attr)',
+		title: 'invalid attribute value (illegal-attr)',
 		input: '<ol type="x"></ol>'
 	},
 	{
 		title: 'invalid gallery image (invalid-gallery)',
 		input: '<gallery>Template:Foo</gallery>',
-		actions: [ 'prefix' ]
+		actions: [ 'insert a namespace prefix' ]
 	},
 	{
-		title: '<imagemap> without an image (invalid-imagemap)',
+		title: 'imagemap without an image (invalid-imagemap)',
 		input: '<imagemap>foo</imagemap>'
 	},
 	{
-		title: 'invalid link in <imagemap> (invalid-imagemap)',
+		title: 'invalid link in imagemap (invalid-imagemap)',
 		input: `<imagemap>
 File:foo.jpg
 bar
 </imagemap>`,
-		actions: [ 'remove', 'comment' ]
+		actions: [ 'remove', 'comment out' ]
 	},
 	{
-		title: 'missing module function (invalid-invoke)',
+		title: 'missing Scribunto module function name (invalid-invoke)',
 		input: '{{#invoke:foo}}'
 	},
 	{
-		title: 'illegal module name (invalid-invoke)',
+		title: 'invalid Scribunto module name (invalid-invoke)',
 		input: '{{#invoke:..|foo}}'
 	},
 	{
@@ -50,7 +50,7 @@ bar
 	{
 		title: 'lonely "]" (lonely-bracket)',
 		input: 'https://example.com]',
-		actions: [ 'left bracket' ]
+		actions: [ 'insert an opening bracket' ]
 	},
 	{
 		title: 'internal link in an external link (nested-link)',
@@ -73,7 +73,7 @@ bar
 		actions: [ 'remove' ]
 	},
 	{
-		title: 'duplicate parameter (no-duplicate)',
+		title: 'duplicate template parameter (no-duplicate)',
 		input: '{{foo|bar|1=baz}}',
 		actions: [ 'remove' ]
 	},
@@ -85,29 +85,29 @@ bar
 	{
 		title: 'attributes of a closing tag (no-ignored)',
 		input: '<p></p id="foo">',
-		actions: [ 'remove', 'open' ]
+		actions: [ 'remove', 'convert to an opening tag' ]
 	},
 	{
 		title: 'invalid conversion flag (no-ignored)',
 		input: '-{r|foo}-',
-		actions: [ 'uppercase' ]
+		actions: [ 'convert to uppercase' ]
 	},
 	{
-		title: 'containing invalid attribute (no-ignored)',
+		title: 'element containing an invalid attribute name (no-ignored)',
 		input: `{|
 !!id="foo"|
 |}`,
 		actions: [ 'remove' ]
 	},
 	{
-		title: 'invalid parameter of <inputbox> (no-ignored)',
+		title: 'invalid parameter of inputbox (no-ignored)',
 		input: '<inputbox>[</inputbox>',
 		actions: [ 'remove' ]
 	},
 	{
-		title: 'invalid content in <references> (no-ignored)',
+		title: 'invalid content in references (no-ignored)',
 		input: '<references>foo</references>',
-		actions: [ 'remove', 'comment' ]
+		actions: [ 'remove', 'comment out' ]
 	},
 	{
 		title: 'extension tag in HTML tag attributes (parsing-order)',
@@ -131,7 +131,7 @@ bar
 |
 a || b
 |}`,
-		actions: [ 'newline' ]
+		actions: [ 'insert a newline' ]
 	},
 	{
 		title: 'lonely "<" (tag-like)',
@@ -149,7 +149,7 @@ a || b
 		actions: [ 'escape' ]
 	},
 	{
-		title: 'nothing should be in <templatestyles> (void-ext)',
+		title: 'nothing should be in templatestyles (void-ext)',
 		input: '<templatestyles>foo</templatestyles>',
 		actions: [ 'remove' ]
 	}
