@@ -133,6 +133,16 @@
 	"codemirror-keymap-next-diagnostic": "РогӀера чекхдаккхар хьажа",
 	"prefs-accessibility": "ТӀекхачар",
 	"prefs-syntax-highlighting": "Синтаксис беснашца къастор",
+	"codemirror-wikilint-attributes-of-closing-tag": "дӀакъовларан теган атрибуташ",
+	"codemirror-wikilint-comment": "коммент",
+	"codemirror-wikilint-delink": "зӀе хадор",
+	"codemirror-wikilint-duplicate-attribute": "$ атрибутан дубликат",
+	"codemirror-wikilint-open": "схьайелла",
+	"codemirror-wikilint-prefix": "префикс",
+	"codemirror-wikilint-remove": "дӀайаккха",
+	"codemirror-wikilint-uppercase": "доккха элп",
+	"codemirror-wikilint-useless-attribute": "пайда боцу атрибут",
+	"codemirror-wikilint-vertical-alignment": "вертикалан нисдар",
 	"codemirror-beta-feature-title": "Тодина синтаксис билгалйаккхар",
 	"codemirror-beta-feature-description": "Хьалхе кхача синтаксисан билгалдаккхаран а, редакторан а тоьллачу агӀонашна тӀекхача, масала, код дӀасатохар а, автотӀейузар а."
 }
