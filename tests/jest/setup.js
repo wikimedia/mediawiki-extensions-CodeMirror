@@ -91,6 +91,7 @@ mw.track = jest.fn();
 mw.Api.prototype.saveOption = jest.fn();
 mw.Api.prototype.loadMessagesIfMissing = jest.fn( () => {
 	mw.messages = { values: require( '../../i18n/en.json' ) };
+	mw.messages.get = jest.fn().mockReturnValue( mw.messages.values );
 } );
 mw.hook = jest.fn( ( name ) => ( {
 	fire: jest.fn( ( ...args ) => {

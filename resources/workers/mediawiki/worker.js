@@ -2,39 +2,54 @@
 const onmessage = require( '../common.js' );
 require( 'wikiparser-node/bundle/bundle-es8.min.js' );
 
+// Rules to be treated as "info" severity in CodeMirrorLint.
+const infoRules = [
+	'bold-header',
+	'format-leakage',
+	'table-layout',
+	'unknown-page',
+	'unclosed-table',
+	'unterminated-url',
+	'var-anchor'
+];
+
 Parser.lintConfig = {
-	'bold-header': 0,
-	'format-leakage': 0,
-	'fostered-content': 0,
-	h1: 0,
-	'insecure-style': 0,
-	'lonely-apos': 0,
-	'lonely-bracket': [
-		0,
+	'fostered-content': [
+		1,
+		{ transclusion: 0 }
+	],
+	h1: 1,
+	'illegal-attr': [
+		2,
 		{
-			extLink: 2
+			tabindex: 1,
+			unknown: 2,
+			value: 2
+		}
+	],
+	'insecure-style': 0,
+	'lonely-apos': [
+		1,
+		{
+			word: 0
+		}
+	],
+	'lonely-bracket': [
+		1,
+		{
+			extLink: 2,
+			single: 0
 		}
 	],
 	'lonely-http': 0,
 	'no-arg': 0,
-	'obsolete-attr': 0,
-	'obsolete-tag': 0,
-	'pipe-like': [
-		0,
-		{
-			double: 2
-		}
-	],
-	'table-layout': 0,
-	'unclosed-comment': 0,
-	'unclosed-quote': 0,
-	'unclosed-table': 0,
-	'unknown-page': 0,
-	'unmatched-tag': 0,
-	'unterminated-url': 0,
-	'url-encoding': 0,
-	'var-anchor': 0
+	'unmatched-tag': 0
 };
+
+// HACK: Customize severity of some rules to "info" which is not supported by wikiparser-node.
+for ( const rule of infoRules ) {
+	Parser.lintConfig[ rule ] = 1;
+}
 
 const last = {};
 
@@ -54,13 +69,18 @@ const setI18N = ( i18n ) => {
 const getI18N = () => Parser.i18n;
 const lint = ( wikitext ) => {
 	if ( last.wikitext === wikitext ) {
-		return last.errors;
+		return last.diagnostics;
 	}
-	const errors = Parser.parse( wikitext ).lint()
-		.filter( ( { severity } ) => severity === 'error' );
+	const diagnostics = Parser.parse( wikitext ).lint()
+		.map( ( diag ) => {
+			if ( infoRules.includes( diag.rule ) ) {
+				diag.severity = 'info';
+			}
+			return diag;
+		} );
 	last.wikitext = wikitext;
-	last.errors = errors;
-	return errors;
+	last.diagnostics = diagnostics;
+	return diagnostics;
 };
 
 onmessage( setConfig, getConfig, lint, setI18N, getI18N );

@@ -51,7 +51,7 @@ worker.onload( async () => {
 		variants: mw.config.get( 'cmLanguageVariants' ) || []
 	};
 	worker.setConfig( config );
-	await new mw.Api().loadMessagesIfMissing( [
+	const messages = [
 		'attributes-of-closing-tag',
 		'comment',
 		'conflicting-image-parameter',
@@ -92,16 +92,17 @@ worker.onload( async () => {
 		'uppercase',
 		'useless-attribute',
 		'vertical-alignment'
-	].map( ( key ) => `codemirror-wikilint-${ key }` ) );
-	worker.setI18N( mw.messages.values );
+	].map( ( key ) => `codemirror-wikilint-${ key }` );
+	await new mw.Api().loadMessagesIfMissing( messages );
+	worker.setI18N( mw.messages.get( messages ) );
 } );
 
 const lintSource = ( view ) => worker.lint( view ).then( ( data ) => data
-	.map( ( { startIndex, endIndex, rule, message, fix, suggestions } ) => ( {
+	.map( ( { startIndex, endIndex, rule, message, severity, fix, suggestions } ) => ( {
 		rule,
 		source: 'WikiLint',
 		message: `${ message } (${ rule })`,
-		severity: 'info',
+		severity,
 		from: startIndex,
 		to: endIndex,
 		actions: [
