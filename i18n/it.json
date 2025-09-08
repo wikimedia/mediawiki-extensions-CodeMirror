@@ -65,5 +65,15 @@
 	"codemirror-keymap-openlinks": "Tieni premuto $1 e clicca sui titoli delle pagine e sugli URL per aprirli in una nuova scheda.",
 	"prefs-accessibility": "Accessibilità",
 	"prefs-syntax-highlighting": "Evidenziazione della sintassi",
-	"codemirror-wikilint-remove": "rimuovi"
+	"codemirror-wikilint-duplicate-parameter": "parametro template duplicato",
+	"codemirror-wikilint-imagemap-without-image": "mappa immagine senza immagine",
+	"codemirror-wikilint-illegal-attribute-name": "nome attributo non valido",
+	"codemirror-wikilint-illegal-attribute-value": "valore attributo non valido",
+	"codemirror-wikilint-invalid-content": "contenuto non valido in $1",
+	"codemirror-wikilint-invalid-imagemap-link": "collegamento non valido nella mappa immagine",
+	"codemirror-wikilint-invalid-parameter": "parametro non valido di $1",
+	"codemirror-wikilint-newline": "inserisci una nuova riga",
+	"codemirror-wikilint-nothing-in": "non dovrebbe esserci nulla in $1",
+	"codemirror-wikilint-remove": "rimuovi",
+	"codemirror-wikilint-uppercase": "converti in maiuscolo"
 }

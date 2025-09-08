@@ -71,8 +71,14 @@
 	"codemirror-keymap-lint": "Linter",
 	"prefs-accessibility": "Accessibilitéit",
 	"prefs-syntax-highlighting": "Ervirhiewe vun der Syntax",
+	"codemirror-wikilint-illegal-attribute-name": "ongültegen Attributnumm",
+	"codemirror-wikilint-illegal-attribute-value": "ongültegen Attributwäert",
+	"codemirror-wikilint-illegal-module": "ongültege Scribunto-Modulnumm",
 	"codemirror-wikilint-invalid-isbn": "ongülteg ISBN",
-	"codemirror-wikilint-missing-function": "feelend Modulfunktioun",
+	"codemirror-wikilint-missing-function": "feelende Funktiounsnumm vum Scribunto-Modul",
+	"codemirror-wikilint-newline": "eng nei Zeil asetzen",
+	"codemirror-wikilint-prefix": "en Nummraum-Prefix asetzen",
 	"codemirror-wikilint-remove": "ewechhuelen",
+	"codemirror-wikilint-uppercase": "a Groussbuschtawen ëmwandelen",
 	"codemirror-beta-feature-title": "Verbessert Ervirhiewe vun der Syntax"
 }
