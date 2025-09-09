@@ -51,4 +51,12 @@ describe( 'CodeMirrorChild', () => {
 		expect( cmLogEditFeatureSpy ).toHaveBeenCalledWith( 'prefs-lineNumbering' );
 		expect( childSpy ).not.toHaveBeenCalledWith( 'prefs-lineNumbering' );
 	} );
+
+	it( 'should not make API requests to update preferences', () => {
+		const childCm = new CodeMirrorChild( otherTextarea, cm );
+		const childSpy = jest.spyOn( childCm.preferences, 'setPreferencesInternal' );
+		childCm.initialize();
+		cm.preferences.setPreference( 'lineNumbering', false );
+		expect( childSpy ).not.toHaveBeenCalled();
+	} );
 } );

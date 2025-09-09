@@ -67,7 +67,9 @@ class CodeMirrorChild extends CodeMirror {
 		mw.hook( 'ext.CodeMirror.preferences.apply' ).add( ( prefName, enabled ) => {
 			if ( enabled !== this.preferences.getPreference( prefName ) ) {
 				this.extensionRegistry.toggle( prefName, this.view, enabled );
-				this.preferences.setPreference( prefName, enabled );
+				// Only update the preferences property directly to avoid
+				// making API calls already made by the primary instance.
+				this.preferences.preferences[ prefName ] = enabled;
 			}
 		} );
 	}

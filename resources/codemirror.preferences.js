@@ -78,6 +78,14 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		this.preferences = this.fetchPreferences();
 
 		/**
+		 * Preferences that are disabled from being changed in the panel or dialog
+		 * when {@link CodeMirrorPreferences#lockPreference lockPreference()} is called.
+		 *
+		 * @type {string[]}
+		 */
+		this.disabledPreferences = [];
+
+		/**
 		 * Fired just before {@link CodeMirrorPreferences} has been instantiated.
 		 *
 		 * @event CodeMirror~'ext.CodeMirror.preferences.ready'
@@ -273,11 +281,32 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	}
 
 	/**
+	 * Lock a preference to the given value, disabling the option in
+	 * the preferences panel and dialog. The user option in the database
+	 * is **not** changed.
+	 *
+	 * This is useful for integrations that need to disable incompatible extensions.
+	 *
 	 * @param {string} prefName
+	 * @param {EditorView} view
+	 * @param {boolean} [force=false] Force the extension to be enabled or disabled.
+	 * @stable to call
+	 */
+	lockPreference( prefName, view, force = false ) {
+		this.extensionRegistry.toggle( prefName, view, force );
+		this.preferences[ prefName ] = force;
+		this.disabledPreferences.push( prefName );
+		// Ensure any child instances also have the preference disabled.
+		this.firePreferencesApplyHook( prefName, force );
+	}
+
+	/**
+	 * @param {string} prefName
+	 * @param {boolean} [value]
 	 * @fires CodeMirror~'ext.CodeMirror.preferences.apply'
 	 * @internal
 	 */
-	firePreferencesApplyHook( prefName ) {
+	firePreferencesApplyHook( prefName, value ) {
 		/**
 		 * Fired when a CodeMirror preference is changed or initially applied in a session.
 		 * The preference may not have been saved to the database yet.
@@ -286,7 +315,10 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		 * @param {string} prefName
 		 * @param {boolean} prefValue
 		 */
-		mw.hook( 'ext.CodeMirror.preferences.apply' ).fire( prefName, this.getPreference( prefName ) );
+		mw.hook( 'ext.CodeMirror.preferences.apply' ).fire(
+			prefName,
+			value === undefined ? this.getPreference( prefName ) : value
+		);
 	}
 
 	/**
@@ -471,11 +503,14 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		);
 		const wrappers = [];
 		for ( const prefName of prefNames ) {
-			const [ wrapper ] = this.getCheckbox(
+			const [ wrapper, input ] = this.getCheckbox(
 				prefName,
 				`codemirror-prefs-${ prefName.toLowerCase() }`,
 				this.getPreference( prefName )
 			);
+			if ( this.disabledPreferences.includes( prefName ) ) {
+				input.disabled = true;
+			}
 			wrappers.push( wrapper );
 		}
 		return this.getFieldset( title, ...wrappers );

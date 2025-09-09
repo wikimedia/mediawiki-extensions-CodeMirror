@@ -343,7 +343,7 @@ describe( 'CodeMirrorPreferences', () => {
 		expect( checkboxes[ 1 ].textContent ).toBe( 'codemirror-prefs-barextension' );
 	} );
 
-	it.only( 'primary preferences - panel / showAdvancedDialog', () => {
+	it( 'primary preferences - panel / showAdvancedDialog', () => {
 		const realPreferences = {
 			lineNumbering: true, bracketMatching: true, autocomplete: true, openLinks: true
 		};
@@ -385,5 +385,21 @@ describe( 'CodeMirrorPreferences', () => {
 			.toBe( 'codemirror-prefs-section-other' );
 		expect( fieldsets[ 2 ].querySelector( '.cdx-checkbox__label' ).textContent )
 			.toBe( 'codemirror-prefs-openlinks' );
+	} );
+
+	it( 'lockPreference', () => {
+		mockDefaultPreferences();
+		mockUserPreferences( { fooExtension: 1 } );
+		const view = new EditorView();
+		const preferences = getCodeMirrorPreferences();
+		preferences.registerExtension( 'fooExtension', EditorView.theme(), view );
+		expect( preferences.getPreference( 'fooExtension' ) ).toBe( true );
+		const hookSpy = jest.spyOn( preferences, 'firePreferencesApplyHook' );
+		preferences.lockPreference( 'fooExtension', view, false );
+		expect( preferences.getPreference( 'fooExtension' ) ).toBe( false );
+		const panel = preferences.panel;
+		expect( panel.dom.querySelector( 'input[name="fooExtension"]' ).disabled ).toBe( true );
+		expect( panel.dom.querySelector( 'input[name="fooExtension"]' ).checked ).toBe( false );
+		expect( hookSpy ).toHaveBeenCalledWith( 'fooExtension', false );
 	} );
 } );
