@@ -184,8 +184,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 
 		// Hijack the search button to open the CodeMirror search panel
 		// instead of the WikiEditor search dialog.
-		// eslint-disable-next-line no-jquery/no-global-selector
-		this.$searchBtn = $( '.wikiEditor-ui .group-search .tool' );
+		this.$searchBtn = this.context.modules.toolbar.$toolbar.find( '.group-search .tool' );
 		this.$oldSearchBtn = this.$searchBtn.clone( true );
 		this.$searchBtn.find( 'a' )
 			.off( 'click keydown keypress' )
