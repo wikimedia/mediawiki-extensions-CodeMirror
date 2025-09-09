@@ -10,7 +10,13 @@
 			"Trizek (WMF)",
 			"Verdy p",
 			"Wladek92",
-			"Mahabarata"
+			"Mahabarata",
+			"Bananax47",
+			"Derugon",
+			"Eihel",
+			"Escargot bleu",
+			"JLTRY",
+			"McDutchie"
 		]
 	},
 	"codemirror-desc": "Fournit une mise en évidence de la syntaxe dans l’éditeur de wikicode",
@@ -32,7 +38,7 @@
 	"codemirror-replace": "Remplacer",
 	"codemirror-replace-placeholder": "Remplacer",
 	"codemirror-replace-all": "Remplacer tout",
-	"codemirror-done": "Fait",
+	"codemirror-done": "Terminer",
 	"codemirror-goto-line": "Aller à la ligne",
 	"codemirror-goto-line-go": "Lancer",
 	"codemirror-control-character": "Caractère de contrôle $1",
