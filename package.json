@@ -20,7 +20,7 @@
 	},
 	"devDependencies": {
 		"@bhsd/eslint-browserify": "^8.57.1",
-		"@bhsd/stylelint-browserify": "^16.20.0",
+		"@bhsd/stylelint-browserify": "^16.24.0",
 		"@codemirror/autocomplete": "^6.18.6",
 		"@codemirror/commands": "^6.8.1",
 		"@codemirror/lang-css": "6.3.1",
