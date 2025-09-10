@@ -5,7 +5,7 @@ require( '../../resources/workers/mediawiki/worker.min.js' );
 
 const testCases = [
 	{
-		title: 'bold in section header (bold-header)',
+		title: 'bold text in a section header (bold-header)',
 		input: '==\'\'\'foo\'\'\'==',
 		severity: 'info',
 		actions: [ 'remove' ]
@@ -86,6 +86,11 @@ bar
 		actions: [ 'insert an opening bracket' ]
 	},
 	{
+		title: 'lonely "[" (lonely-bracket)',
+		input: '[[foo',
+		severity: 'warning'
+	},
+	{
 		title: 'internal link in an external link (nested-link)',
 		input: '[https://example.com [[foo]]]',
 		severity: 'error',
@@ -96,6 +101,17 @@ bar
 		input: '<br id="foo" id="bar">',
 		severity: 'error',
 		actions: [ 'remove' ]
+	},
+	{
+		title: 'duplicate category (no-duplicate)',
+		input: '[[Category:Foo]] [[Category:Foo]]',
+		severity: 'warning',
+		actions: [ 'remove' ]
+	},
+	{
+		title: 'duplicate HTML id (no-duplicate)',
+		input: '<br id="foo"> <br id="foo">',
+		severity: 'warning'
 	},
 	{
 		title: 'conflicting image horizontal-alignment parameter (no-duplicate)',
@@ -134,11 +150,41 @@ bar
 		actions: [ 'convert to uppercase' ]
 	},
 	{
+		title: 'useless fragment (no-ignored)',
+		input: '{{foo#bar}}',
+		severity: 'warning',
+		actions: [ 'remove' ]
+	},
+	{
+		title: 'invalid content in gallery (no-ignored)',
+		input: '<gallery>|caption</gallery>',
+		severity: 'warning',
+		actions: [ 'remove', 'comment out' ]
+	},
+	{
+		title: 'useless attribute (no-ignored)',
+		input: '<includeonly foo/>',
+		severity: 'warning',
+		actions: [ 'remove' ]
+	},
+	{
 		title: 'element containing an invalid attribute name (no-ignored)',
 		input: `{|
 !!id="foo"|
 |}`,
 		severity: 'error',
+		actions: [ 'remove' ]
+	},
+	{
+		title: 'element containing an invalid attribute name (no-ignored)',
+		input: '<br / >',
+		severity: 'warning',
+		actions: [ 'remove' ]
+	},
+	{
+		title: 'useless link text (no-ignored)',
+		input: '#redirect [[foo|bar]]',
+		severity: 'warning',
 		actions: [ 'remove' ]
 	},
 	{
@@ -152,6 +198,16 @@ bar
 		input: '<references>foo</references>',
 		severity: 'error',
 		actions: [ 'remove', 'comment out' ]
+	},
+	{
+		title: 'obsolete attribute (obsolete-attr)',
+		input: '<br clear=left>',
+		severity: 'warning'
+	},
+	{
+		title: 'obsolete HTML tag (obsolete-tag)',
+		input: '<center>foo</center>',
+		severity: 'warning'
 	},
 	{
 		title: 'extension tag in HTML tag attributes (parsing-order)',
@@ -182,9 +238,39 @@ a || b
 		severity: 'error'
 	},
 	{
+		title: 'additional "|" in a table cell (pipe-like)',
+		input: `{|
+|
+id=a | b
+|}`,
+		actions: [ 'escape' ],
+		severity: 'warning'
+	},
+	{
+		title: 'additional "|" in the link text (pipe-like)',
+		input: '[[foo|bar|baz]]',
+		actions: [ 'escape' ],
+		severity: 'warning'
+	},
+	{
+		title: 'inconsistent table layout (table-layout)',
+		input: `{|
+| a || b
+|-
+| c
+|}`,
+		severity: 'info'
+	},
+	{
 		title: 'lonely "<" (tag-like)',
 		input: '<ref>',
 		severity: 'error',
+		actions: [ 'escape' ]
+	},
+	{
+		title: 'lonely "<" (tag-like)',
+		input: '<a>',
+		severity: 'warning',
 		actions: [ 'escape' ]
 	},
 	{
@@ -194,10 +280,55 @@ a || b
 		severity: 'error'
 	},
 	{
+		title: 'unclosed HTML comment (unclosed-comment)',
+		input: '<!-- foo',
+		actions: [ 'close' ],
+		severity: 'warning'
+	},
+	{
+		title: 'unclosed quotes (unclosed-quote)',
+		input: '<br id="foo>',
+		actions: [ 'close' ],
+		severity: 'warning'
+	},
+	{
+		title: 'unclosed table (unclosed-table)',
+		input: '{|',
+		severity: 'info'
+	},
+	{
 		title: 'unescaped query string in an anonymous parameter (unescaped)',
 		input: '{{foo|https://example.com/?bar=1}}',
 		severity: 'error',
 		actions: [ 'escape' ]
+	},
+	{
+		title: 'template in an internal link target (unknown-page)',
+		input: '[[{{foo}}]]',
+		severity: 'info'
+	},
+	{
+		title: '"|" in URL (unterminated-url)',
+		input: '[http://foo|bar]',
+		severity: 'info',
+		actions: [ 'insert a space' ]
+	},
+	{
+		title: 'full-width punctuation in URL (unterminated-url)',
+		input: 'http://foo。',
+		severity: 'info',
+		actions: [ 'insert a space', 'encode' ]
+	},
+	{
+		title: 'unnecessary percent-encoding in an internal link (url-encoding)',
+		input: '[[foo%20bar]]',
+		severity: 'warning',
+		actions: [ 'decode' ]
+	},
+	{
+		title: 'variable anchor in a section header (var-anchor)',
+		input: '==[http://example.com]==',
+		severity: 'info'
 	},
 	{
 		title: 'nothing should be in templatestyles (void-ext)',

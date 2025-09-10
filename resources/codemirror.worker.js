@@ -110,6 +110,15 @@ class CodeMirrorWorker {
 	}
 
 	/**
+	 * Set the linting configuration for the worker.
+	 *
+	 * @param {Object} config
+	 */
+	setLintConfig( config ) {
+		this.worker.postMessage( [ 'setLintConfig', config ] );
+	}
+
+	/**
 	 * Add a callback to be called when the worker is loaded.
 	 *
 	 * @param {Function} callback

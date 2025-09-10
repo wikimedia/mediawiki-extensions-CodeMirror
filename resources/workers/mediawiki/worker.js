@@ -43,6 +43,14 @@ Parser.lintConfig = {
 	],
 	'lonely-http': 0,
 	'no-arg': 0,
+	'no-duplicate': [
+		2,
+		{
+			category: 1,
+			id: 1,
+			unknownImageParameter: 0
+		}
+	],
 	'unmatched-tag': 0
 };
 
@@ -67,6 +75,9 @@ const setI18N = ( i18n ) => {
 	Parser.i18n = obj;
 };
 const getI18N = () => Parser.i18n;
+const setLintConfig = ( config ) => {
+	Parser.lintConfig = config;
+};
 const lint = ( wikitext ) => {
 	if ( last.wikitext === wikitext ) {
 		return last.diagnostics;
@@ -83,4 +94,4 @@ const lint = ( wikitext ) => {
 	return diagnostics;
 };
 
-onmessage( setConfig, getConfig, lint, setI18N, getI18N );
+onmessage( setConfig, getConfig, lint, setI18N, getI18N, setLintConfig );
