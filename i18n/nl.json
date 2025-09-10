@@ -5,7 +5,8 @@
 			"Mainframe98",
 			"McDutchie",
 			"Romaine",
-			"Siebrand"
+			"Siebrand",
+			"Sjoerddebruin"
 		]
 	},
 	"codemirror-desc": "Biedt accentuering van tekst in de wikitekst tekstverwerker",
@@ -22,7 +23,7 @@
 	"codemirror-prefs-bracketmatching": "Overeenkomstige haakjes uitlichten",
 	"codemirror-prefs-linenumbering": "Regelnummers weergeven",
 	"codemirror-prefs-linewrapping": "Regelomloop",
-	"codemirror-prefs-lint": "De code door Lint halen",
+	"codemirror-prefs-lint": "Code controleren op lint-fouten",
 	"codemirror-prefs-activeline": "De actieve regel markeren",
 	"codemirror-prefs-specialchars": "Speciale tekens weergeven",
 	"codemirror-prefs-whitespace": "Witruimte markeren",

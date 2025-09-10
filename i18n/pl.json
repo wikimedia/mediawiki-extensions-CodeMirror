@@ -22,6 +22,7 @@
 	"codemirror-prefs-bracketmatching": "Włącz domykanie nawiasów",
 	"codemirror-prefs-linenumbering": "Pokaż numery linii",
 	"codemirror-prefs-linewrapping": "Zawijanie linii",
+	"codemirror-prefs-lint": "Linter kodu",
 	"codemirror-prefs-activeline": "Podświetlanie aktywnej linii",
 	"codemirror-prefs-specialchars": "Pokaż znaki specjalne",
 	"codemirror-prefs-whitespace": "Zaznacz odstępy",

@@ -15,7 +15,8 @@
 			"Verdy p",
 			"Wladek92",
 			"Derugon",
-			"McDutchie"
+			"McDutchie",
+			"Escargot bleu"
 		]
 	},
 	"codemirror-desc": "Fournit une mise en évidence de la syntaxe dans l’éditeur de wikicode",
@@ -51,7 +52,7 @@
 	"codemirror-replace": "Remplacer",
 	"codemirror-replace-placeholder": "Remplacer",
 	"codemirror-replace-all": "Remplacer tout",
-	"codemirror-done": "Fait",
+	"codemirror-done": "Terminer",
 	"codemirror-find-results": "$1 sur $2",
 	"codemirror-goto-line": "Aller à la ligne",
 	"codemirror-goto-line-go": "Lancer",
