@@ -2,9 +2,11 @@
 	"@metadata": {
 		"authors": [
 			"Abella",
+			"Paucabot",
 			"Vriullop"
 		]
 	},
 	"codemirror-desc": "Proporciona ressaltat de la sintaxi a l'editor de text al wiki",
-	"codemirror-toggle-label": "Ressaltat de la sintaxi"
+	"codemirror-toggle-label": "Ressaltat de la sintaxi",
+	"codemirror-beta-feature-title": "Ressaltat de sintaxi millorat"
 }
