@@ -36,7 +36,7 @@
 	"codemirror-prefs-whitespace": "Leerzeichen hervorheben",
 	"codemirror-prefs-reset": "Auf Standardwerte zurücksetzen",
 	"codemirror-prefs-colorblind": "Ein für Farbenfehlsichtige angepasstes Farbschema der Syntaxhervorhebung zum Bearbeiten von Wikitext verwenden",
-	"codemirror-prefs-colorblind-help": "Wenn du ein Helferlein zur Syntaxhervorhebung verwendest, wird diese Einstellung nicht funktionieren.",
+	"codemirror-prefs-colorblind-help": "Wenn {{#FORMAL:du|Sie}} ein Helferlein zur Syntaxhervorhebung {{#FORMAL:verwendest|verwenden}}, wird diese Einstellung nicht funktionieren.",
 	"codemirror-close": "Schließen",
 	"codemirror-find": "Suchen",
 	"codemirror-next": "Nächste finden",
