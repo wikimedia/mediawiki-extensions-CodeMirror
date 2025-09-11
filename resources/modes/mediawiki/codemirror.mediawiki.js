@@ -1517,7 +1517,11 @@ class CodeMirrorMediaWiki {
 			 * @private
 			 */
 			languageData: {
-				autocomplete: completionSource( this )
+				autocomplete: completionSource( this ),
+				closeBrackets: {
+					brackets: [ '(', '[', '{', '"' ],
+					before: ')]}>'
+				}
 			}
 		};
 	}
