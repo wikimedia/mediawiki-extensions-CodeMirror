@@ -18,6 +18,12 @@
 @link-background-color: #219;
 @skip-formatting-color: #adf;
 
+/* Add scoped CSS variable for use by the highlightRefs extension (T384908) */
+.cm-editor {
+	--background-color-refs: fade( #dff2eb, 50% );
+	.darkmode( --background-color-refs, fade( #29493e, 50% ) );
+}
+
 .ground( @template: 0, @ext: 0, @link: 0 ) {
 	@template-shade: fade( @template-background-color, 4% * @template );
 	@ext-shade: fade( @ext-background-color, 4% * @ext );

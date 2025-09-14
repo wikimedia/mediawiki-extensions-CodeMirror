@@ -1,4 +1,5 @@
 const {
+	EditorView,
 	HighlightStyle,
 	LanguageSupport,
 	StreamLanguage,
@@ -1540,6 +1541,7 @@ let handler;
  * @param {boolean} [config.codeFolding=true] Enable code folding.
  * @param {boolean} [config.autocomplete=true] Enable autocompletion.
  * @param {boolean} [config.openLinks=true] Enable opening of links.
+ * @param {boolean} [config.highlightRefs=true] Highlight references.
  * @param {string[]} [config.languageVariants] Language variants that should be supported.
  * @return {LanguageSupport}
  * @stable to call
@@ -1581,6 +1583,16 @@ const mediaWikiLang = ( config = { bidiIsolation: false } ) => {
 		}
 		if ( config.bidiIsolation ) {
 			cm.preferences.registerExtension( 'bidiIsolation', bidiIsolationExtension, cm.view );
+		}
+		if ( config.highlightRefs !== false ) {
+			const highlightRefsExtension = [
+				EditorView.theme( {
+					'.cm-mw-tag-ref': {
+						backgroundColor: 'var( --background-color-refs )'
+					}
+				} )
+			];
+			cm.preferences.registerExtension( 'highlightRefs', highlightRefsExtension, cm.view );
 		}
 	};
 	mw.hook( 'ext.CodeMirror.ready' ).add( handler );
