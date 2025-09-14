@@ -73,6 +73,7 @@ worker.onload( async () => {
 		'full-width-punctuation',
 		'header-in-html',
 		'horizontal-alignment',
+		'html-comment',
 		'html-in-table',
 		'illegal-attribute-name',
 		'illegal-attribute-value',

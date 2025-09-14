@@ -165,6 +165,7 @@
 	"codemirror-wikilint-full-width-punctuation": "Diagnostic message for full-width punctuation.",
 	"codemirror-wikilint-header-in-html": "Diagnostic message for section header in HTML tag attributes.",
 	"codemirror-wikilint-horizontal-alignment": "Diagnostic message for image horizontal-alignment parameter.",
+	"codemirror-wikilint-html-comment": "Diagnostic message for HTML comment.",
 	"codemirror-wikilint-html-in-table": "Diagnostic message for HTML tag in table attributes.",
 	"codemirror-wikilint-illegal-attribute-name": "Diagnostic message for invalid attribute name.",
 	"codemirror-wikilint-illegal-attribute-value": "Diagnostic message for invalid attribute value.",

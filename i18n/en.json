@@ -156,6 +156,7 @@
 	"codemirror-wikilint-full-width-punctuation": "full-width punctuation",
 	"codemirror-wikilint-header-in-html": "section header in HTML tag attributes",
 	"codemirror-wikilint-horizontal-alignment": "horizontal-alignment",
+	"codemirror-wikilint-html-comment": "HTML comment",
 	"codemirror-wikilint-html-in-table": "HTML tag in table attributes",
 	"codemirror-wikilint-illegal-attribute-name": "invalid attribute name",
 	"codemirror-wikilint-illegal-attribute-value": "invalid attribute value",
