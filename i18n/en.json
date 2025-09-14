@@ -30,6 +30,7 @@
 	"codemirror-prefs-activeline": "Highlight the active line",
 	"codemirror-prefs-specialchars": "Show special characters",
 	"codemirror-prefs-whitespace": "Highlight whitespace",
+	"codemirror-prefs-autofocus": "Put initial focus the editor",
 	"codemirror-prefs-highlightrefs": "Highlight the contents of <ref> tags",
 	"codemirror-prefs-reset": "Reset to defaults",
 	"codemirror-prefs-colorblind": "Enable colorblind-friendly scheme for syntax highlighting when editing wikitext",

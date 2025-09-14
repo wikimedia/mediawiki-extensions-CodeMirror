@@ -146,4 +146,17 @@ describe( 'CodeMirrorCodex', () => {
 		expect( actions.className ).toBe( 'cdx-dialog__footer__actions' );
 		expect( actions.children[ 0 ] ).toBe( actionBtn );
 	} );
+
+	it( 'should restore focus to what it was before the dialog was opened', () => {
+		const input = document.createElement( 'input' );
+		document.body.appendChild( input );
+		input.focus();
+		expect( document.activeElement ).toBe( input );
+		cmCodex.showDialog( 'Dialog Title', 'example', document.createElement( 'p' ) );
+		expect( document.activeElement ).not.toBe( input );
+		cmCodex.animateDialog( false );
+		cmCodex.dialog.dispatchEvent( new Event( 'transitionend' ) );
+		expect( document.activeElement ).toBe( input );
+		document.body.removeChild( input );
+	} );
 } );

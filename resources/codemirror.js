@@ -169,6 +169,8 @@ class CodeMirror {
 		 * @type {CodeMirrorExtensionRegistry}
 		 */
 		this.extensionRegistry = new CodeMirrorExtensionRegistry( {
+			// Empty extension; We just want the toggleable preference.
+			autofocus: [],
 			bracketMatching: this.bracketMatchingExtension,
 			closeBrackets: this.closeBracketsExtension,
 			lineNumbering: this.lineNumberingExtension,
@@ -943,7 +945,8 @@ class CodeMirror {
 		const selectionStart = this.textarea.selectionStart,
 			selectionEnd = this.textarea.selectionEnd,
 			scrollTop = this.textarea.scrollTop,
-			hasFocus = document.activeElement === this.textarea;
+			hasFocus = document.activeElement === this.textarea ||
+				this.preferences.getPreference( 'autofocus' );
 
 		if ( this.view ) {
 			// We're re-enabling, so we want to sync contents from the textarea.

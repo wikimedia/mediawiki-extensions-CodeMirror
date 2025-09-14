@@ -5,10 +5,11 @@
  */
 class CodeMirrorCodex {
 	constructor() {
-		/**
-		 * @type {HTMLDivElement|null}
-		 */
+		/** @type {HTMLDivElement|null} */
 		this.dialog = null;
+
+		/** @type {HTMLElement|null} */
+		this.focusedElement = null;
 	}
 
 	/**
@@ -342,6 +343,9 @@ class CodeMirrorCodex {
 	 * @protected
 	 */
 	animateDialog( open = false ) {
+		if ( open ) {
+			this.focusedElement = document.activeElement;
+		}
 		document.activeElement.blur();
 		// Must be unhidden in order to animate.
 		this.dialog.classList.remove( 'cm-mw-dialog--hidden' );
@@ -355,6 +359,11 @@ class CodeMirrorCodex {
 				document.documentElement.style.setProperty( 'margin-right', `${ scrollWidth }px` );
 			} else {
 				document.documentElement.style.removeProperty( 'margin-right' );
+				// Put focus back to wherever it was before opening the dialog.
+				if ( this.focusedElement ) {
+					this.focusedElement.focus();
+					this.focusedElement = null;
+				}
 			}
 			// Toggle a class on <body> to prevent scrolling
 			document.body.classList.toggle( 'cdx-dialog-open', open );
