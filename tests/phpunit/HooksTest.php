@@ -8,13 +8,14 @@ use MediaWiki\EditPage\EditPage;
 use MediaWiki\Extension\CodeMirror\Hooks;
 use MediaWiki\Extension\Gadgets\Gadget;
 use MediaWiki\Extension\Gadgets\GadgetRepo;
+use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Language\Language;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Request\WebRequest;
 use MediaWiki\Specials\SpecialExpandTemplates;
 use MediaWiki\Specials\SpecialUpload;
 use MediaWiki\Title\Title;
-use MediaWiki\User\Options\UserOptionsLookup;
+use MediaWiki\User\Options\UserOptionsManager;
 use MediaWikiIntegrationTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -41,10 +42,9 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			'gadget' => null,
 			'contentModel' => CONTENT_MODEL_WIKITEXT,
 			'useV6' => true,
-			'usecodemirror' => true,
+			Hooks::OPTION_USE_CODEMIRROR => true,
 			'isRTL' => false,
-			// WikiEditor
-			'usebetatoolbar' => false,
+			Hooks::OPTION_USE_WIKIEDITOR => false,
 			'method' => 'edit',
 			'reupload' => false,
 			'pageLang' => 'en',
@@ -58,11 +58,11 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 
 		$out = $this->getMockOutputPage( $conds['contentModel'], $conds['isRTL'], $conds['pageLang'] );
 		$out->method( 'getModules' )->willReturn( $conds['module'] ? [ $conds['module'] ] : [] );
-		$userOptionsLookup = $this->createMock( UserOptionsLookup::class );
-		$userOptionsLookup->method( 'getBoolOption' )
+		$userOptionsManager = $this->createMock( UserOptionsManager::class );
+		$userOptionsManager->method( 'getBoolOption' )
 			->willReturnMap( [
-				[ $out->getUser(), 'usecodemirror', 0, $conds['usecodemirror'] ],
-				[ $out->getUser(), 'usebetatoolbar', 0, $conds['usebetatoolbar'] ]
+				[ $out->getUser(), Hooks::OPTION_USE_CODEMIRROR, 0, $conds[Hooks::OPTION_USE_CODEMIRROR] ],
+				[ $out->getUser(), Hooks::OPTION_USE_WIKIEDITOR, 0, $conds[Hooks::OPTION_USE_WIKIEDITOR] ]
 			] );
 		$langFactory = $this->getServiceContainer()->getLanguageFactory();
 
@@ -98,7 +98,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			$this->getServiceContainer()->getMainConfig(),
 			$this->getServiceContainer()->getHookContainer(),
 			$this->getServiceContainer()->getLanguageConverterFactory(),
-			$userOptionsLookup,
+			$userOptionsManager,
 			$gadgetRepoMock
 		);
 		if ( $conds['method'] === 'upload' ) {
@@ -142,11 +142,11 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			[]
 		];
 		yield 'CM5 + WikiEditor' => [
-			[ 'useV6' => false, 'usebetatoolbar' => true ],
+			[ 'useV6' => false, Hooks::OPTION_USE_WIKIEDITOR => true ],
 			[ 'ext.CodeMirror.WikiEditor', 'ext.CodeMirror.lib', 'ext.CodeMirror.mode.mediawiki' ]
 		];
 		yield 'CM5 + WikiEditor, read-only' => [
-			[ 'useV6' => false, 'usebetatoolbar' => true, 'method' => 'readOnly' ],
+			[ 'useV6' => false, Hooks::OPTION_USE_WIKIEDITOR => true, 'method' => 'readOnly' ],
 			[]
 		];
 		yield 'CM5, read-only' => [
@@ -154,28 +154,28 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			[]
 		];
 		yield 'CM5 + WikiEditor, RTL' => [
-			[ 'useV6' => false, 'usebetatoolbar' => true, 'isRTL' => true, 'pageLang' => 'ar' ],
+			[ 'useV6' => false, Hooks::OPTION_USE_WIKIEDITOR => true, 'isRTL' => true, 'pageLang' => 'ar' ],
 			[]
 		];
 		yield 'CM5 + WikiEditor, contentModel CSS' => [
-			[ 'useV6' => false, 'usebetatoolbar' => true, 'contentModel' => CONTENT_MODEL_CSS ],
+			[ 'useV6' => false, Hooks::OPTION_USE_WIKIEDITOR => true, 'contentModel' => CONTENT_MODEL_CSS ],
 			[]
 		];
 		yield 'CM5 + WikiEditor, contentModel CSS, CSS allowed' => [
 			[
 				'useV6' => false,
-				'usebetatoolbar' => true,
+				Hooks::OPTION_USE_WIKIEDITOR => true,
 				'contentModel' => CONTENT_MODEL_CSS,
 				'allowedModes' => [ Hooks::MODE_CSS => true ]
 			],
 			[]
 		];
 		yield 'CM5 + WikiEditor, preference false' => [
-			[ 'useV6' => false, 'usebetatoolbar' => true, 'usecodemirror' => false ],
+			[ 'useV6' => false, Hooks::OPTION_USE_WIKIEDITOR => true, Hooks::OPTION_USE_CODEMIRROR => false ],
 			[ 'ext.CodeMirror.WikiEditor' ]
 		];
 		yield 'CM5 + WikiEditor, wikEd enabled' => [
-			[ 'useV6' => false, 'usebetatoolbar' => true, 'gadget' => 'wikEd' ],
+			[ 'useV6' => false, Hooks::OPTION_USE_WIKIEDITOR => true, 'gadget' => 'wikEd' ],
 			[]
 		];
 		yield 'CM5, Special:Upload' => [
@@ -191,11 +191,11 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
 		];
 		yield 'CM6 + WikiEditor' => [
-			[ 'usebetatoolbar' => true ],
+			[ Hooks::OPTION_USE_WIKIEDITOR => true ],
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki', 'ext.CodeMirror.v6.WikiEditor' ]
 		];
 		yield 'CM6 + WikiEditor, read-only' => [
-			[ 'usebetatoolbar' => true, 'method' => 'readOnly' ],
+			[ Hooks::OPTION_USE_WIKIEDITOR => true, 'method' => 'readOnly' ],
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki', 'ext.CodeMirror.v6.WikiEditor' ]
 		];
 		yield 'CM6, RTL' => [
@@ -225,15 +225,15 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			[]
 		];
 		yield 'CM6, preference false' => [
-			[ 'usecodemirror' => false ],
+			[ Hooks::OPTION_USE_CODEMIRROR => false ],
 			[]
 		];
 		yield 'CM6 + WikiEditor, WikEd enabled' => [
-			[ 'usebetatoolbar' => true, 'gadget' => 'wikEd' ],
+			[ Hooks::OPTION_USE_WIKIEDITOR => true, 'gadget' => 'wikEd' ],
 			[]
 		];
 		yield 'CM6, preference false, WikiEditor' => [
-			[ 'usebetatoolbar' => true, 'usecodemirror' => false ],
+			[ Hooks::OPTION_USE_WIKIEDITOR => true, Hooks::OPTION_USE_CODEMIRROR => false ],
 			[ 'ext.CodeMirror.v6.init' ]
 		];
 		yield 'CM6, Special:Upload' => [
@@ -245,7 +245,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			[]
 		];
 		yield 'CM6 + WikiEditor, Special:Upload' => [
-			[ 'usebetatoolbar' => true, 'method' => 'upload' ],
+			[ Hooks::OPTION_USE_WIKIEDITOR => true, 'method' => 'upload' ],
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
 		];
 		yield 'CM6, page language zh' => [
@@ -263,36 +263,61 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		$context = RequestContext::getMain();
 		$context->setTitle( Title::newFromText( __METHOD__ ) );
 		$kinds = $this->getServiceContainer()->getPreferencesFactory()
-			->getResetKinds( $user, $context, [ 'usecodemirror' => 1 ] );
-		self::assertEquals( 'registered', $kinds['usecodemirror'] );
+			->getResetKinds( $user, $context, [ Hooks::OPTION_USE_CODEMIRROR => 1 ] );
+		self::assertEquals( 'registered', $kinds[Hooks::OPTION_USE_CODEMIRROR] );
 	}
 
-	public function testOnGetPreferencces(): void {
+	public function testOnGetPreferences(): void {
 		$user = self::getTestUser()->getUser();
-		$userOptionsLookup = $this->getServiceContainer()->getUserOptionsLookup();
+		$config = $this->getServiceContainer()->getMainConfig();
 		$hookContainer = $this->getServiceContainer()->getHookContainer();
 		$langConverterFactory = $this->getServiceContainer()->getLanguageConverterFactory();
-		$config = $this->getServiceContainer()->getMainConfig();
+		$userOptionsManager = $this->getServiceContainer()->getUserOptionsManager();
 
 		// CodeMirror 5
 		$this->overrideConfigValues( [ 'CodeMirrorV6' => false ] );
-		$hook = new Hooks( $config, $hookContainer, $langConverterFactory, $userOptionsLookup, null );
+		$hooks = new Hooks( $config, $hookContainer, $langConverterFactory, $userOptionsManager, null );
 		$preferences = [];
-		$hook->onGetPreferences( $user, $preferences );
-		self::assertArrayHasKey( 'usecodemirror', $preferences );
-		self::assertArrayHasKey( 'usecodemirror-colorblind', $preferences );
+		$hooks->onGetPreferences( $user, $preferences );
+		self::assertArrayHasKey( Hooks::OPTION_USE_CODEMIRROR, $preferences );
+		self::assertArrayHasKey( Hooks::OPTION_COLORBLIND, $preferences );
 		self::assertArrayNotHasKey( 'usecodemirror-summary', $preferences );
-		self::assertSame( 'api', $preferences['usecodemirror']['type'] );
+		self::assertSame( 'api', $preferences[Hooks::OPTION_USE_CODEMIRROR]['type'] );
 
 		// CodeMirror 6
 		$this->overrideConfigValues( [ 'CodeMirrorV6' => true ] );
-		$hook = new Hooks( $config, $hookContainer, $langConverterFactory, $userOptionsLookup, null );
+		$hooks = new Hooks( $config, $hookContainer, $langConverterFactory, $userOptionsManager, null );
 		$preferences = [];
-		$hook->onGetPreferences( $user, $preferences );
-		self::assertArrayHasKey( 'usecodemirror', $preferences );
-		self::assertArrayHasKey( 'usecodemirror-colorblind', $preferences );
+		$hooks->onGetPreferences( $user, $preferences );
+		self::assertArrayHasKey( Hooks::OPTION_USE_CODEMIRROR, $preferences );
+		self::assertArrayHasKey( Hooks::OPTION_COLORBLIND, $preferences );
 		self::assertArrayHasKey( 'usecodemirror-summary', $preferences );
-		self::assertSame( 'toggle', $preferences['usecodemirror']['type'] );
+		self::assertSame( 'toggle', $preferences[Hooks::OPTION_USE_CODEMIRROR]['type'] );
+	}
+
+	public function testOnPreferencesFormPreSave(): void {
+		$user = self::getTestUser()->getUser();
+		$config = $this->getServiceContainer()->getMainConfig();
+		$hookContainer = $this->getServiceContainer()->getHookContainer();
+		$langConverterFactory = $this->getServiceContainer()->getLanguageConverterFactory();
+		$userOptionsManager = $this->getMockBuilder( UserOptionsManager::class )
+			->disableOriginalConstructor()
+			->onlyMethods( [ 'setOption' ] )
+			->getMock();
+		$userOptionsManager->expects( $this->once() )
+			->method( 'setOption' )
+			->with( $user, Hooks::OPTION_USE_CODEMIRROR, 1 );
+		$hooks = new Hooks( $config, $hookContainer, $langConverterFactory, $userOptionsManager, null );
+		$result = true;
+		$hooks->onPreferencesFormPreSave(
+			[ Hooks::OPTION_BETA_FEATURE => '1' ],
+			$this->getMockBuilder( HTMLForm::class )
+				->disableOriginalConstructor()
+				->getMock(),
+			$user,
+			$result,
+			[ Hooks::OPTION_USE_CODEMIRROR => '' ]
+		);
 	}
 
 	/**

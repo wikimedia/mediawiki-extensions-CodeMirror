@@ -13,17 +13,19 @@ use MediaWiki\Hook\EditPage__showEditForm_initialHook;
 use MediaWiki\Hook\EditPage__showReadOnlyForm_initialHook;
 use MediaWiki\Hook\UploadForm_initialHook;
 use MediaWiki\HookContainer\HookContainer;
+use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Languages\LanguageConverterFactory;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
+use MediaWiki\Preferences\Hook\PreferencesFormPreSaveHook;
 use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\SpecialPage\Hook\SpecialPageBeforeExecuteHook;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Specials\SpecialUpload;
 use MediaWiki\Title\Title;
-use MediaWiki\User\Options\UserOptionsLookup;
 use MediaWiki\User\User;
+use MediaWiki\User\UserOptionsManager;
 
 /**
  * @phpcs:disable MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName
@@ -33,7 +35,8 @@ class Hooks implements
 	EditPage__showReadOnlyForm_initialHook,
 	UploadForm_initialHook,
 	SpecialPageBeforeExecuteHook,
-	GetPreferencesHook
+	GetPreferencesHook,
+	PreferencesFormPreSaveHook
 {
 
 	private readonly HookRunner $hookRunner;
@@ -57,11 +60,16 @@ class Hooks implements
 		self::MODE_LUA,
 	];
 
+	public const OPTION_USE_CODEMIRROR = 'usecodemirror';
+	public const OPTION_COLORBLIND = 'usecodemirror-colorblind';
+	public const OPTION_BETA_FEATURE = 'codemirror-beta-feature-enable';
+	public const OPTION_USE_WIKIEDITOR = 'usebetatoolbar';
+
 	public function __construct(
 		Config $config,
 		HookContainer $hookContainer,
 		private readonly LanguageConverterFactory $languageConverterFactory,
-		private readonly UserOptionsLookup $userOptionsLookup,
+		private readonly UserOptionsManager $userOptionsManager,
 		private readonly ?GadgetRepo $gadgetRepo,
 	) {
 		$this->hookRunner = new HookRunner( $hookContainer );
@@ -114,9 +122,9 @@ class Hooks implements
 		bool $supportWikiEditor = true
 	): bool {
 		$shouldUseV6 = $this->shouldUseV6( $out );
-		$useCodeMirror = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usecodemirror' );
+		$useCodeMirror = $this->userOptionsManager->getBoolOption( $out->getUser(), self::OPTION_USE_CODEMIRROR );
 		$useWikiEditor = $supportWikiEditor &&
-			$this->userOptionsLookup->getBoolOption( $out->getUser(), 'usebetatoolbar' );
+			$this->userOptionsManager->getBoolOption( $out->getUser(), self::OPTION_USE_WIKIEDITOR );
 		// Disable CodeMirror 5 when the WikiEditor toolbar is not enabled in preferences.
 		if ( !$shouldUseV6 && !$useWikiEditor ) {
 			return false;
@@ -176,8 +184,8 @@ class Hooks implements
 			return;
 		}
 
-		$useCodeMirror = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usecodemirror' );
-		$useWikiEditor = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usebetatoolbar' );
+		$useCodeMirror = $this->userOptionsManager->getBoolOption( $out->getUser(), self::OPTION_USE_CODEMIRROR );
+		$useWikiEditor = $this->userOptionsManager->getBoolOption( $out->getUser(), self::OPTION_USE_WIKIEDITOR );
 
 		if ( $this->shouldUseV6( $out ) ) {
 			// Pre-deliver modules for faster loading.
@@ -210,9 +218,9 @@ class Hooks implements
 		bool $supportWikiEditor = true,
 		array $textareas = [ '#wpTextbox1' ]
 	): void {
-		$useCodeMirror = $this->userOptionsLookup->getBoolOption( $out->getUser(), 'usecodemirror' );
+		$useCodeMirror = $this->userOptionsManager->getBoolOption( $out->getUser(), self::OPTION_USE_CODEMIRROR );
 		$useWikiEditor = $supportWikiEditor &&
-			$this->userOptionsLookup->getBoolOption( $out->getUser(), 'usebetatoolbar' );
+			$this->userOptionsManager->getBoolOption( $out->getUser(), self::OPTION_USE_WIKIEDITOR );
 		$modules = [
 			'ext.CodeMirror.v6',
 			...( $useWikiEditor ? [ 'ext.CodeMirror.v6.WikiEditor' ] : [] ),
@@ -314,7 +322,7 @@ class Hooks implements
 	 */
 	private function isBetaFeatureEnabled( User $user ): bool {
 		return ExtensionRegistry::getInstance()->isLoaded( 'BetaFeatures' ) &&
-			BetaFeatures::isFeatureEnabled( $user, 'codemirror-beta-feature-enable' );
+			BetaFeatures::isFeatureEnabled( $user, self::OPTION_BETA_FEATURE );
 	}
 
 	/**
@@ -328,13 +336,13 @@ class Hooks implements
 	 */
 	public function onGetPreferences( $user, &$defaultPreferences ) {
 		if ( !$this->useV6 && !$this->isBetaFeatureEnabled( $user ) ) {
-			$defaultPreferences['usecodemirror'] = [
+			$defaultPreferences[self::OPTION_USE_CODEMIRROR] = [
 				'type' => 'api',
 			];
 
 			// The following messages are generated upstream by the 'section' value
 			// * prefs-accessibility
-			$defaultPreferences['usecodemirror-colorblind'] = [
+			$defaultPreferences[self::OPTION_COLORBLIND] = [
 				'type' => 'toggle',
 				'label-message' => 'codemirror-prefs-colorblind',
 				'help-message' => 'codemirror-prefs-colorblind-help',
@@ -355,17 +363,17 @@ class Hooks implements
 
 		// CodeMirror is disabled by default for all users. It can enabled for everyone
 		// by default by adding '$wgDefaultUserOptions['usecodemirror'] = 1;' into LocalSettings.php
-		$defaultPreferences['usecodemirror'] = [
+		$defaultPreferences[self::OPTION_USE_CODEMIRROR] = [
 			'type' => 'toggle',
 			'label-message' => 'codemirror-prefs-enable',
 			'section' => 'editing/syntax-highlighting',
 		];
 
-		$defaultPreferences['usecodemirror-colorblind'] = [
+		$defaultPreferences[self::OPTION_COLORBLIND] = [
 			'type' => 'toggle',
 			'label-message' => 'codemirror-prefs-colorblind',
 			'section' => 'editing/syntax-highlighting',
-			'disable-if' => [ '!==', 'usecodemirror', '1' ]
+			'disable-if' => [ '!==', self::OPTION_USE_CODEMIRROR, '1' ]
 		];
 
 		$defaultPreferences['codemirror-preferences'] = [
@@ -383,7 +391,7 @@ class Hooks implements
 		if ( $this->useV6 ) {
 			return;
 		}
-		$betaPrefs[ 'codemirror-beta-feature-enable' ] = [
+		$betaPrefs[ self::OPTION_BETA_FEATURE ] = [
 			'label-message' => 'codemirror-beta-feature-title',
 			'desc-message' => 'codemirror-beta-feature-description',
 			'screenshot' => [
@@ -393,5 +401,22 @@ class Hooks implements
 			'info-link' => 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror',
 			'discussion-link' => 'https://www.mediawiki.org/wiki/Help_talk:Extension:CodeMirror'
 		];
+	}
+
+	/**
+	 * When a user enables the CodeMirror beta feature, automatically enable the 'usecodemirror' preference.
+	 *
+	 * @param array $formData
+	 * @param HTMLForm $form
+	 * @param User $user
+	 * @param bool &$result
+	 * @param array $oldUserOptions
+	 */
+	public function onPreferencesFormPreSave( $formData, $form, $user, &$result, $oldUserOptions ) {
+		if ( ( $formData[self::OPTION_BETA_FEATURE] ?? false ) &&
+			!( $oldUserOptions[self::OPTION_BETA_FEATURE] ?? false )
+		) {
+			$this->userOptionsManager->setOption( $user, self::OPTION_USE_CODEMIRROR, 1 );
+		}
 	}
 }

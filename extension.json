@@ -504,7 +504,8 @@
 		"UploadForm:initial": "main",
 		"SpecialPageBeforeExecute": "main",
 		"GetPreferences": "main",
-		"GetBetaFeaturePreferences": "main"
+		"GetBetaFeaturePreferences": "main",
+		"PreferencesFormPreSave": "main"
 	},
 	"HookHandlers": {
 		"main": {
@@ -513,7 +514,7 @@
 				"MainConfig",
 				"HookContainer",
 				"LanguageConverterFactory",
-				"UserOptionsLookup"
+				"UserOptionsManager"
 			],
 			"optional_services": [
 				"GadgetsRepo"
