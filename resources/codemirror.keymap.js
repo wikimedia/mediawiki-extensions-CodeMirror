@@ -179,8 +179,7 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 					mac: 'Cmd-Alt-]'
 				},
 				foldAll: { key: 'Ctrl-Alt-[' },
-				unfoldAll: { key: 'Ctrl-Alt-]' },
-				foldRef: { key: 'Mod-Alt-,' }
+				unfoldAll: { key: 'Ctrl-Alt-]' }
 			},
 			autocomplete: [
 				{
@@ -359,6 +358,13 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 					// * codemirror-keymap-undo
 					// * codemirror-keymap-undoselection
 					mw.msg( `codemirror-keymap-${ command.toLowerCase() }` );
+				if ( keyBinding.slow ) {
+					const slowSpan = document.createElement( 'span' );
+					slowSpan.classList.add( 'cm-mw-slow-feature' );
+					slowSpan.textContent = mw.msg( 'parentheses', mw.msg( 'codemirror-potentially-slow' ) );
+					dd.append( ' ' );
+					dd.appendChild( slowSpan );
+				}
 				dl.appendChild( dd );
 
 				this.setDisplayFromPreference( command, dt );
@@ -507,6 +513,8 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 	 * @property {string|null} [msg] Override the auto-generated message in the help dialog.
 	 *   If not provided, a message key will be generated of the form `codemirror-keymap-<command>`
 	 *   and rendered with {@link mw.msg}. Use `null` to exclude the command from the help dialog.
+	 * @property {boolean} [slow=false] Whether the command is potentially slow and should be
+	 *   indicated as such in the help dialog.
 	 * @property {Function} [prec={@link Prec.default}] The precedence function to use for the key
 	 *   binding. See {@link Prec} for details.
 	 */

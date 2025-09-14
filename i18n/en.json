@@ -17,6 +17,7 @@
 	"codemirror-prefs-section-lines": "Lines",
 	"codemirror-prefs-section-characters": "Characters",
 	"codemirror-prefs-section-code-assistance": "Code assistance",
+	"codemirror-prefs-section-references": "References",
 	"codemirror-prefs-section-other": "Other",
 	"codemirror-prefs-codefolding": "Enable code folding",
 	"codemirror-prefs-autocomplete": "Enable autocompletion",
@@ -32,6 +33,7 @@
 	"codemirror-prefs-whitespace": "Highlight whitespace",
 	"codemirror-prefs-autofocus": "Put initial focus on the editor",
 	"codemirror-prefs-highlightrefs": "Highlight the contents of <ref> tags",
+	"codemirror-prefs-foldallrefs": "Fold all <ref> tags by default",
 	"codemirror-prefs-reset": "Reset to defaults",
 	"codemirror-prefs-colorblind": "Enable colorblind-friendly scheme for syntax highlighting when editing wikitext",
 	"codemirror-prefs-colorblind-help": "If you use a gadget for syntax highlighting, this preference will not work.",
@@ -206,5 +208,6 @@
 	"codemirror-wikilint-vertical-alignment": "vertical-alignment",
 	"codemirror-wikilint-whitespace": "insert a space",
 	"codemirror-beta-feature-title": "Improved Syntax Highlighting",
-	"codemirror-beta-feature-description": "Get early access to new syntax highlighting and editing features such as code folding and autocompletion."
+	"codemirror-beta-feature-description": "Get early access to new syntax highlighting and editing features such as code folding and autocompletion.",
+	"codemirror-potentially-slow": "potentially slow"
 }

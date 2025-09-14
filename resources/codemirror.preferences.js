@@ -96,6 +96,13 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		this.callbackPreferences = new Map();
 
 		/**
+		 * Preferences that are considered "slow" and indicated as such in the preferences dialog.
+		 *
+		 * @type {Set<string>}
+		 */
+		this.slowPreferences = new Set();
+
+		/**
 		 * Fired just before {@link CodeMirrorPreferences} has been instantiated.
 		 *
 		 * @event CodeMirror~'ext.CodeMirror.preferences.ready'
@@ -376,10 +383,15 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * @param {string} name
 	 * @param {Extension} extension
 	 * @param {EditorView} view
+	 * @param {boolean} [slow=false] Setting to true will indicate that
+	 *   the feature is slow in the preferences dialog.
 	 * @internal
 	 */
-	registerExtension( name, extension, view ) {
+	registerExtension( name, extension, view, slow = false ) {
 		this.extensionRegistry.register( name, extension, view, this.getPreference( name ) );
+		if ( slow ) {
+			this.slowPreferences.add( name );
+		}
 		this.firePreferencesApplyHook( name );
 	}
 
@@ -391,14 +403,19 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * @param {string} name
 	 * @param {Function} callback Function that takes the new preference value.
 	 * @param {EditorView} view
+	 * @param {boolean} [slow=false] Setting to true will indicate that
+	 *   the feature is slow in the preferences dialog.
 	 * @internal
 	 */
-	registerCallback( name, callback, view ) {
+	registerCallback( name, callback, view, slow = false ) {
 		// Register a dummy extension.
 		this.extensionRegistry.register( name, [], view, this.getPreference( name ) );
 		this.callbackPreferences.set( name, callback );
 		if ( this.getPreference( name ) ) {
 			callback( true );
+		}
+		if ( slow ) {
+			this.slowPreferences.add( name );
 		}
 	}
 
@@ -543,6 +560,14 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 			);
 			if ( this.disabledPreferences.has( prefName ) ) {
 				input.disabled = true;
+			}
+			if ( this.slowPreferences.has( prefName ) ) {
+				const slowSpan = document.createElement( 'span' );
+				slowSpan.className = 'cm-mw-slow-feature';
+				slowSpan.textContent = mw.msg( 'parentheses', mw.msg( 'codemirror-potentially-slow' ) );
+				const label = wrapper.querySelector( 'label' );
+				label.append( ' ' );
+				label.appendChild( slowSpan );
 			}
 			wrappers.push( wrapper );
 		}

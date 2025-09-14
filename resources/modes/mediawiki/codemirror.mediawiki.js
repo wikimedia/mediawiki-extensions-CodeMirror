@@ -11,7 +11,7 @@ const {
 const CodeMirrorMode = require( '../codemirror.mode.js' );
 const mwModeConfig = require( './codemirror.mediawiki.config.js' );
 const bidiIsolationExtension = require( './codemirror.mediawiki.bidiIsolation.js' );
-const { codeFoldingExtension } = require( './codemirror.mediawiki.codeFolding.js' );
+const { codeFoldingExtension, foldAllRefs } = require( './codemirror.mediawiki.codeFolding.js' );
 const { autocompleteExtension, completionSource } = require( './codemirror.mediawiki.autocomplete.js' );
 const openLinksExtension = require( './codemirror.mediawiki.openLinks.js' );
 const mwKeymap = require( './codemirror.mediawiki.keymap.js' );
@@ -1642,6 +1642,7 @@ let handler;
  * @param {boolean} [config.bidiIsolation=false] Enable bidi isolation around HTML tags.
  *   This should generally always be enabled on RTL pages, but it comes with a performance cost.
  * @param {boolean} [config.codeFolding=true] Enable code folding.
+ * @param {boolean} [config.foldAllRefs=false] Fold all references on initial load.
  * @param {boolean} [config.autocomplete=true] Enable autocompletion.
  * @param {boolean} [config.openLinks=true] Enable opening of links.
  * @param {boolean} [config.highlightRefs=true] Highlight references.
@@ -1650,6 +1651,7 @@ let handler;
  * @stable to call
  */
 const mediawiki = ( config = { bidiIsolation: false } ) => {
+	const mwConfig = mw.config.get( 'extCodeMirrorConfig' );
 	// Register MW-specific Extensions into CodeMirror preferences. Whether they are enabled
 	// or not is determined by the user's preferences and wiki configuration.
 	if ( handler ) {
@@ -1665,8 +1667,42 @@ const mediawiki = ( config = { bidiIsolation: false } ) => {
 		// Register MW-specific keymaps.
 		mwKeymap( cm );
 
+		// Add reference-related preferences to a dedicated section.
+		if ( mwConfig.tags.ref ) {
+			cm.preferences.dialogConfig.references = [ 'highlightRefs', 'foldAllRefs' ];
+
+			if ( config.highlightRefs !== false ) {
+				const highlightRefsExtension = EditorView.theme( {
+					'.cm-mw-tag-ref': {
+						backgroundColor: 'var( --background-color-refs )'
+					}
+				} );
+				cm.preferences.registerExtension( 'highlightRefs', highlightRefsExtension, cm.view );
+			}
+		}
+
 		if ( config.codeFolding !== false ) {
 			cm.preferences.registerExtension( 'codeFolding', codeFoldingExtension, cm.view );
+			if ( mwConfig.tags.ref ) {
+				cm.keymap.registerKeyBindingHelp(
+					'codeFolding',
+					'foldRef',
+					{
+						key: 'Mod-Alt-,',
+						run: () => foldAllRefs( cm.view ),
+						slow: true
+					},
+					cm.view
+				);
+
+				if ( config.foldAllRefs !== false ) {
+					cm.preferences.registerCallback( 'foldAllRefs', ( enabled ) => {
+						if ( enabled ) {
+							foldAllRefs( cm.view );
+						}
+					}, cm.view, true );
+				}
+			}
 		}
 		if ( config.autocomplete !== false ) {
 			cm.preferences.registerExtension( 'autocomplete', autocompleteExtension, cm.view );
@@ -1677,20 +1713,10 @@ const mediawiki = ( config = { bidiIsolation: false } ) => {
 		if ( config.bidiIsolation ) {
 			cm.preferences.registerExtension( 'bidiIsolation', bidiIsolationExtension, cm.view );
 		}
-		if ( config.highlightRefs !== false ) {
-			const highlightRefsExtension = [
-				EditorView.theme( {
-					'.cm-mw-tag-ref': {
-						backgroundColor: 'var( --background-color-refs )'
-					}
-				} )
-			];
-			cm.preferences.registerExtension( 'highlightRefs', highlightRefsExtension, cm.view );
-		}
 	};
 	mw.hook( 'ext.CodeMirror.ready' ).add( handler );
 
-	return new CodeMirrorMediaWiki( mw.config.get( 'extCodeMirrorConfig' ) );
+	return new CodeMirrorMediaWiki( mwConfig );
 };
 
 module.exports = mediawiki;

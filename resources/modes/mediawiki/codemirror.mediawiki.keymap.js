@@ -135,7 +135,7 @@ class CodeMirrorMediaWikiKeymap {
 		};
 
 		// Only add 'reference' if Extension:Cite is installed.
-		if ( mw.config.get( 'wgCiteResponsiveReferences' ) ) {
+		if ( mw.config.get( 'extCodeMirrorConfig' ).tags.ref ) {
 			this.mwKeymapRegistry.insert.reference = {
 				key: 'Mod-K',
 				run: this.reference.bind( this )

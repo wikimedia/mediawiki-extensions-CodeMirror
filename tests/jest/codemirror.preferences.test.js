@@ -343,7 +343,7 @@ describe( 'CodeMirrorPreferences', () => {
 		expect( checkboxes[ 1 ].textContent ).toBe( 'codemirror-prefs-barextension' );
 	} );
 
-	it( 'primary preferences - panel / showAdvancedDialog', () => {
+	it( 'primary preferences - panel / showPreferencesDialog', () => {
 		const realPreferences = {
 			lineNumbering: true, bracketMatching: true, autocomplete: true, openLinks: true
 		};
@@ -414,5 +414,17 @@ describe( 'CodeMirrorPreferences', () => {
 		expect( preferences.extensionRegistry.extensions.foobar ).toBeDefined();
 		preferences.setPreference( 'foobar', false );
 		expect( callback ).toHaveBeenCalledWith( false );
+	} );
+
+	it( 'slow preferences', () => {
+		mockDefaultPreferences( { slowExtension: false, slowCallback: false } );
+		const preferences = getCodeMirrorPreferences();
+		const view = new EditorView();
+		preferences.registerExtension( 'slowExtension', EditorView.theme(), view, true );
+		expect( preferences.slowPreferences.has( 'slowExtension' ) ).toBe( true );
+		preferences.registerCallback( 'slowCallback', jest.fn(), view, true );
+		expect( preferences.slowPreferences.has( 'slowCallback' ) ).toBe( true );
+		preferences.showPreferencesDialog( view );
+		expect( preferences.dialog.querySelectorAll( '.cm-mw-slow-feature' ).length ).toBe( 2 );
 	} );
 } );

@@ -26,6 +26,7 @@
 	"codemirror-prefs-section-lines": "Section heading in the CodeMirror preferences dialog for options related to lines.",
 	"codemirror-prefs-section-characters": "Section heading in the CodeMirror preferences dialog for options related to characters.",
 	"codemirror-prefs-section-code-assistance": "Section heading in the CodeMirror preferences dialog for options related to code assistance.",
+	"codemirror-prefs-section-references": "Section heading in the CodeMirror preferences dialog for options related to <ref> tags.",
 	"codemirror-prefs-section-other": "Section heading in the CodeMirror preferences dialog for miscellaneous options.",
 	"codemirror-prefs-codefolding": "Label for the option to enable code folding in the CodeMirror preferences panel.",
 	"codemirror-prefs-autocomplete": "Label for the option to enable autocompletion in the CodeMirror preferences panel.",
@@ -41,6 +42,7 @@
 	"codemirror-prefs-whitespace": "Label for the option to highlight whitespace in the CodeMirror preferences panel.",
 	"codemirror-prefs-autofocus": "Label for the option to focus the editor automatically when CodeMirror first loads.",
 	"codemirror-prefs-highlightrefs": "Label for the option to highlight reference content in the CodeMirror preferences dialog.",
+	"codemirror-prefs-foldallrefs": "Label for the option to fold all <ref> tags by default in the CodeMirror preferences dialog.",
 	"codemirror-prefs-reset": "Label for the button to reset all CodeMirror preferences to their default values. This message is used in the preferences dialog.",
 	"codemirror-prefs-colorblind": "Used in user preferences as label for enabling the colorblind-friendly option.",
 	"codemirror-prefs-colorblind-help": "Used in user preferences as remark on the colorblind-friendly option.",
@@ -215,5 +217,6 @@
 	"codemirror-wikilint-vertical-alignment": "Diagnostic message for image vertical-alignment parameter.",
 	"codemirror-wikilint-whitespace": "Short label for a quick-fix button that inserts a space.",
 	"codemirror-beta-feature-title": "Title of the BetaFeature for the new version of CodeMirror.",
-	"codemirror-beta-feature-description": "Description of the BetaFeature for the new version of CodeMirror."
+	"codemirror-beta-feature-description": "Description of the BetaFeature for the new version of CodeMirror.",
+	"codemirror-potentially-slow": "Text shown next to a description of a keyboard shortcut, preference, or other feature that may cause performance issues on large pages."
 }

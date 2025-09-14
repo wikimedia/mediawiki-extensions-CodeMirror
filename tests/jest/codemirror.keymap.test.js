@@ -1,3 +1,5 @@
+/* eslint-disable-next-line n/no-missing-require */
+const { EditorView } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirror = require( '../../resources/codemirror.js' );
 const CodeMirrorKeymap = require( '../../resources/codemirror.keymap.js' );
 
@@ -72,12 +74,25 @@ describe( 'CodeMirrorKeymap', () => {
 		expect( redoKeyBinding.mac ).toStrictEqual( 'Mod-Shift-z' );
 		expect( redoKeyBinding.aliases ).toBeUndefined();
 	} );
+
+	it( 'should show a slow indicator in the help dialog for slow features', () => {
+		const cmKeymap = new CodeMirrorKeymap();
+		const view = new EditorView();
+		cmKeymap.registerKeyBindingHelp( 'codeFolding', 'slowFeature', {
+			key: 'Mod-Alt-,',
+			run: jest.fn(),
+			slow: true
+		}, view );
+		cmKeymap.showHelpDialog();
+		expect( document.querySelector( '.cm-mw-slow-feature' ) ).toBeDefined();
+	} );
 } );
 
 describe( 'CodeMirrorKeymap (integration)', () => {
 	let textarea;
 
 	beforeEach( () => {
+		document.body.innerHTML = '';
 		textarea = document.createElement( 'textarea' );
 		const form = document.createElement( 'form' );
 		form.appendChild( textarea );
@@ -117,6 +132,6 @@ describe( 'CodeMirrorKeymap (integration)', () => {
 		cm.view.contentDOM.dispatchEvent( new KeyboardEvent( 'keydown', { key: '/', shiftKey: true, ctrlKey: true } ) );
 		expect( spy ).toHaveBeenCalledWith( 'keymap' );
 		expect( document.querySelector( '.cm-mw-keymap-dialog' ) ).not.toBeNull();
-		expect( document.querySelectorAll( 'dl.cm-mw-keymap-list dt' ).length ).toStrictEqual( 25 );
+		expect( document.querySelectorAll( 'dl.cm-mw-keymap-list dt' ).length ).toStrictEqual( 24 );
 	} );
 } );

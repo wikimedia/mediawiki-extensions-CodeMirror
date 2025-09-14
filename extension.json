@@ -57,6 +57,7 @@
 				"bracketMatching": true,
 				"closeBrackets": true,
 				"highlightRefs": true,
+				"foldAllRefs": false,
 				"lineNumbering": true,
 				"lineWrapping": true,
 				"specialChars": true,
@@ -280,6 +281,7 @@
 				"codemirror-prefs-bracketmatching",
 				"codemirror-prefs-closebrackets",
 				"codemirror-prefs-codefolding",
+				"codemirror-prefs-foldallrefs",
 				"codemirror-prefs-help",
 				"codemirror-prefs-highlightrefs",
 				"codemirror-prefs-linenumbering",
@@ -394,7 +396,10 @@
 				"codemirror-keymap-underline",
 				"codemirror-prefs-autocomplete",
 				"codemirror-prefs-bidiisolation",
-				"codemirror-prefs-openlinks"
+				"codemirror-prefs-openlinks",
+				"codemirror-prefs-section-references",
+				"codemirror-potentially-slow",
+				"parentheses"
 			]
 		},
 		"ext.CodeMirror.v6.modes": {

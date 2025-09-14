@@ -320,6 +320,46 @@ const traverse = ( state, tree, effects, node, end, anchor, update, refOnly ) =>
 };
 
 /**
+ * Fold `<ref>` tags in the parse tree.
+ *
+ * @param {EditorView} view
+ * @param {number|null} [ensureTimeout] Timeout in milliseconds to wait for the syntax tree
+ * @return {boolean}
+ * @private
+ */
+const foldRefs = ( view, ensureTimeout = null ) => {
+	const { state } = view;
+	let tree = ensureTimeout ?
+		ensureSyntaxTree( state, state.doc.length, ensureTimeout ) :
+		syntaxTree( state );
+	if ( !tree && ensureTimeout ) {
+		mw.log.warn( `[CodeMirror] foldRefs: syntax tree not available after ${ ensureTimeout }ms` );
+		tree = syntaxTree( state );
+	}
+	const effects = [],
+		anchor = traverse(
+			state,
+			tree,
+			effects,
+			tree.topNode.firstChild,
+			Infinity,
+			getAnchor( state ),
+			updateAll,
+			true
+		);
+	return execute( view, effects, anchor );
+};
+
+/**
+ * Fold all `<ref>` tags in the document.
+ *
+ * @param {EditorView} view
+ * @type {Function}
+ * @ignore
+ */
+const foldAllRefs = ( view ) => foldRefs( view, 1000 );
+
+/**
  * Keymap for folding templates.
  *
  * @type {CodeMirrorKeyBinding[]}
@@ -391,27 +431,8 @@ const foldKeymap = [
 			return execute( view, effects, anchor );
 		}
 	},
-	{ key: 'Ctrl-Alt-]', run: unfoldAll },
-	{
-		// Fold all `<ref>` tags in the document
-		key: 'Mod-Alt-,',
-		run( view ) {
-			const { state } = view,
-				tree = syntaxTree( state ),
-				effects = [],
-				anchor = traverse(
-					state,
-					tree,
-					effects,
-					tree.topNode.firstChild,
-					Infinity,
-					getAnchor( state ),
-					updateAll,
-					true
-				);
-			return execute( view, effects, anchor );
-		}
-	}
+	{ key: 'Ctrl-Alt-]', run: unfoldAll }
+	// NOTE: foldAllRefs is added in CodeMirrorMediaWiki where we have access to the preferences
 ];
 
 /**
@@ -461,4 +482,4 @@ const codeFoldingExtension = [
 	keymap.of( foldKeymap )
 ];
 
-module.exports = { codeFoldingExtension };
+module.exports = { codeFoldingExtension, foldAllRefs };
