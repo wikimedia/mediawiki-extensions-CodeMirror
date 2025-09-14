@@ -278,11 +278,12 @@ describe( 'logEditFeature', () => {
 		// Re-call the extension getter to verify *all* enabled extensions are logged.
 		// eslint-disable-next-line no-unused-expressions
 		cmWe.preferences.extension;
-		expect( spy ).toHaveBeenNthCalledWith( 2, 'prefs-bracketMatching' );
-		expect( spy ).toHaveBeenNthCalledWith( 3, 'prefs-lineNumbering' );
-		expect( spy ).toHaveBeenNthCalledWith( 4, 'prefs-lineWrapping' );
-		expect( spy ).toHaveBeenNthCalledWith( 5, 'prefs-activeLine' );
-		expect( spy ).toHaveBeenNthCalledWith( 6, 'prefs-specialChars' );
+		expect( spy ).toHaveBeenNthCalledWith( 2, 'prefs-autofocus' );
+		expect( spy ).toHaveBeenNthCalledWith( 3, 'prefs-bracketMatching' );
+		expect( spy ).toHaveBeenNthCalledWith( 4, 'prefs-lineNumbering' );
+		expect( spy ).toHaveBeenNthCalledWith( 5, 'prefs-lineWrapping' );
+		expect( spy ).toHaveBeenNthCalledWith( 6, 'prefs-activeLine' );
+		expect( spy ).toHaveBeenNthCalledWith( 7, 'prefs-specialChars' );
 		// Other extensions are not used here because we aren't using the mediawiki language.
 	} );
 

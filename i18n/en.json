@@ -24,6 +24,7 @@
 	"codemirror-prefs-activeline": "Highlight the active line",
 	"codemirror-prefs-specialchars": "Show special characters",
 	"codemirror-prefs-whitespace": "Highlight whitespace",
+	"codemirror-prefs-autofocus": "Put initial focus the editor",
 	"codemirror-prefs-colorblind": "Enable colorblind-friendly scheme for syntax highlighting when editing wikitext",
 	"codemirror-prefs-colorblind-help": "If you use a gadget for syntax highlighting, this preference will not work.",
 	"codemirror-close": "Close",

@@ -52,6 +52,7 @@
 		"CodeMirrorDefaultPreferences": {
 			"value": {
 				"activeLine": false,
+				"autofocus": true,
 				"bidiIsolation": false,
 				"bracketMatching": true,
 				"lineNumbering": true,
@@ -292,6 +293,7 @@
 				"codemirror-next",
 				"codemirror-prefs-activeline",
 				"codemirror-prefs-autocomplete",
+				"codemirror-prefs-autofocus",
 				"codemirror-prefs-bracketmatching",
 				"codemirror-prefs-codefolding",
 				"codemirror-prefs-help",

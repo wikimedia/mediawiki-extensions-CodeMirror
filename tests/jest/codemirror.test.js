@@ -189,6 +189,22 @@ describe( 'toggle', () => {
 		cm.toggle();
 		expect.assertions( 2 );
 	} );
+
+	it( 'should put focus on the editor if the autofocus preference is set', () => {
+		// Autofocus is on by default.
+		cm.initialize();
+		expect( document.activeElement ).toBe( cm.view.contentDOM );
+		cm.toggle();
+		document.activeElement.blur();
+		cm.toggle();
+		expect( document.activeElement ).toBe( cm.view.contentDOM );
+		// Disable the preference and re-test.
+		cm.preferences.setPreference( 'autofocus', false );
+		cm.toggle();
+		document.activeElement.blur();
+		cm.toggle();
+		expect( document.activeElement ).not.toBe( cm.view.contentDOM );
+	} );
 } );
 
 describe( 'activate', () => {
@@ -360,15 +376,15 @@ describe( 'setCodeMirrorPreference', () => {
 
 describe( 'domEventHandlersExtension', () => {
 	const testCases = [
-		{ eventName: 'focus', eventConstructor: FocusEvent },
 		{ eventName: 'blur', eventConstructor: FocusEvent },
+		{ eventName: 'focus', eventConstructor: FocusEvent, assertions: 2 },
 		{ eventName: 'keyup', eventConstructor: KeyboardEvent },
 		{ eventName: 'keydown', eventConstructor: KeyboardEvent },
 		{ eventName: 'scroll', eventConstructor: Event, target: 'scrollDOM' }
 	];
 
 	it.each( testCases )( 'should bubble $eventName events to the original textarea',
-		( { eventName, eventConstructor, target = 'contentDOM' } ) => {
+		( { eventName, eventConstructor, target = 'contentDOM', assertions = 1 } ) => {
 			textarea.addEventListener( eventName, () => {
 				expect( true ).toBe( true );
 			} );
@@ -376,7 +392,7 @@ describe( 'domEventHandlersExtension', () => {
 			// eslint-disable-next-line new-cap
 			const dispatchedEvent = new eventConstructor( eventName );
 			cm.view[ target ].dispatchEvent( dispatchedEvent );
-			expect.assertions( 1 );
+			expect.assertions( assertions );
 		}
 	);
 } );
