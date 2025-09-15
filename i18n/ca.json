@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Abella",
-			"Vriullop"
+			"Vriullop",
+			"Paucabot"
 		]
 	},
 	"codemirror-desc": "Proporciona ressaltat de la sintaxi a l'editor de text al wiki",
