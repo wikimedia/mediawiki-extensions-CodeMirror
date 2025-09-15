@@ -119,7 +119,7 @@ class CodeMirrorCodex {
 		wrapper.className = 'cdx-checkbox cdx-checkbox--inline cm-mw-panel--checkbox';
 		const input = document.createElement( 'input' );
 		input.className = 'cdx-checkbox__input';
-		input.id = `cm-mw-panel--checkbox-${ name }`;
+		input.id = `cm-mw__${ this.getRandomId() }`;
 		input.type = 'checkbox';
 		input.name = name;
 		input.checked = checked;
@@ -143,6 +143,22 @@ class CodeMirrorCodex {
 		labelWrapper.appendChild( labelElement );
 		wrapper.appendChild( labelWrapper );
 		return [ wrapper, input ];
+	}
+
+	/**
+	 * Get a random ID string.
+	 *
+	 * @return {string}
+	 * @private
+	 */
+	getRandomId() {
+		// Based on https://stackoverflow.com/a/6860916/604142 (CC BY-SA 3.0)
+		// We don't need cryptographic quality randomness here, just something to
+		// avoid collisions in the DOM.
+		// eslint-disable-next-line no-bitwise
+		return ( ( ( 1 + Math.random() ) * 0x10000 ) | 0 )
+			.toString( 16 )
+			.slice( 1 );
 	}
 
 	/**
@@ -274,8 +290,7 @@ class CodeMirrorCodex {
 		const headerTitleGroup = document.createElement( 'div' );
 		headerTitleGroup.classList.add( 'cdx-dialog__header__title-group' );
 		const h2 = document.createElement( 'h2' );
-		h2.id = 'cdx-dialog__header__title-group';
-		h2.classList.add( 'cdx-dialog__header__title' );
+		h2.className = 'cdx-dialog__header__title';
 		// The following messages may be used here:
 		// * codemirror-keymap-help-title
 		// * codemirror-prefs-title

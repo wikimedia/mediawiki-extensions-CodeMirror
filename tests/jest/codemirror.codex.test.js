@@ -159,4 +159,12 @@ describe( 'CodeMirrorCodex', () => {
 		expect( document.activeElement ).toBe( input );
 		document.body.removeChild( input );
 	} );
+
+	it( 'should use random IDs for checkboxes', () => {
+		const [ , checkbox1 ] = cmCodex.getCheckbox( 'foo1', 'bar1', true );
+		const [ , checkbox2 ] = cmCodex.getCheckbox( 'foo2', 'bar2', false );
+		expect( checkbox1.id ).toBeDefined();
+		expect( checkbox2.id ).toBeDefined();
+		expect( checkbox1.id ).not.toBe( checkbox2.id );
+	} );
 } );
