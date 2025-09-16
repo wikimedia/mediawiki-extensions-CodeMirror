@@ -141,6 +141,8 @@
 	"codemirror-keymap-next-diagnostic": "حدد التشخيص التالي",
 	"prefs-accessibility": "إمكانية الوصول",
 	"prefs-syntax-highlighting": "إبراز التركيب",
+	"codemirror-wikilint-remove": "إزالة",
+	"codemirror-wikilint-vertical-alignment": "محاذاة عمودية",
 	"codemirror-beta-feature-title": "تحسين إبراز التركيب",
 	"codemirror-beta-feature-description": "احصل على إمكانية الوصول المبكر إلى ميزاتٍ جديدة لإبراز التركيب والتحرير مثل طي التعليمات البرمجية والإكمال التلقائي."
 }

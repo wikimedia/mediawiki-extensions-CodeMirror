@@ -30,6 +30,8 @@
 	"codemirror-prefs-activeline": "Aktiv sətri vurğula",
 	"codemirror-prefs-specialchars": "Xüsusi simvolları göstər",
 	"codemirror-prefs-whitespace": "Boşluğu vurğula",
+	"codemirror-prefs-autofocus": "İlkin fokusu redaktora ver",
+	"codemirror-prefs-highlightrefs": "<ref> teqlərinin məzmununu vurğula",
 	"codemirror-prefs-reset": "Defolta sıfırla",
 	"codemirror-prefs-colorblind": "Vikimətn redaktə edərkən rəng korluğuna uyğun sintaksis sxemini aktivləşdir",
 	"codemirror-prefs-colorblind-help": "Sintaksis üçün hansısa qadcetdən istifadə etsəniz, bu seçim işləməyəcək.",

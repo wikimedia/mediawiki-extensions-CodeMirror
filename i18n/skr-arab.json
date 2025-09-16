@@ -41,6 +41,8 @@
 	"codemirror-keymap-advanced-preferences": "وِدھیک ترجیحات",
 	"codemirror-keymap-help": "کی بورڈ  شارٹ کٹ",
 	"prefs-accessibility": "رسائیت",
+	"codemirror-wikilint-close": "بند کرو",
 	"codemirror-wikilint-escape": "ایسکیپ",
-	"codemirror-wikilint-open": "کھولو"
+	"codemirror-wikilint-open": "کھولو",
+	"codemirror-wikilint-table": "ٹیبل"
 }
