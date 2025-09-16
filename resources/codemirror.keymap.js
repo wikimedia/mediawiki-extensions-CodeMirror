@@ -152,8 +152,8 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 				}
 			},
 			paragraph: {
-				indent: { key: 'Mod-[' },
-				outdent: { key: 'Mod-]' }
+				indent: { key: 'Mod-]' },
+				outdent: { key: 'Mod-[' }
 			},
 			search: {
 				find: { key: 'Mod-f' },
