@@ -27,9 +27,6 @@ use MediaWiki\Title\Title;
 use MediaWiki\User\User;
 use MediaWiki\User\UserOptionsManager;
 
-/**
- * @phpcs:disable MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName
- */
 class Hooks implements
 	EditPage__showEditForm_initialHook,
 	EditPage__showReadOnlyForm_initialHook,
