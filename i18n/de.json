@@ -28,6 +28,7 @@
 	"codemirror-prefs-activeline": "Aktive Zeile hervorheben",
 	"codemirror-prefs-specialchars": "Sonderzeichen anzeigen",
 	"codemirror-prefs-whitespace": "Leerzeichen hervorheben",
+	"codemirror-prefs-autofocus": "Den Fokus zunächst auf den Editor legen",
 	"codemirror-prefs-colorblind": "Ein für Farbenfehlsichtige angepasstes Farbschema der Syntaxhervorhebung zum Bearbeiten von Wikitext verwenden",
 	"codemirror-prefs-colorblind-help": "Wenn du ein Helferlein zur Syntaxhervorhebung verwendest, wird diese Einstellung nicht funktionieren.",
 	"codemirror-close": "Schließen",
