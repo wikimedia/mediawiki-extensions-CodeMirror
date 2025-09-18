@@ -172,7 +172,7 @@
 	"codemirror-wikilint-illegal-attribute-name": "Diagnostic message for invalid attribute name.",
 	"codemirror-wikilint-illegal-attribute-value": "Diagnostic message for invalid attribute value.",
 	"codemirror-wikilint-illegal-module": "Diagnostic message for invalid Scribunto module name.",
-	"codemirror-wikilint-imagemap-without-image": "Diagnostic message for <imagemap> without an image.",
+	"codemirror-wikilint-imagemap-without-image": "Diagnostic message for &lt;imagemap> without an image.",
 	"codemirror-wikilint-in-url": "Diagnostic message for unexpected characters in URL. $1 is the unexpected character or {{msg-mw|codemirror-wikilint-full-width-punctuation}}.",
 	"codemirror-wikilint-inconsistent-table": "Diagnostic message for inconsistent table layout.",
 	"codemirror-wikilint-invalid-attribute": "Diagnostic message for elements containing an invalid attribute name.",

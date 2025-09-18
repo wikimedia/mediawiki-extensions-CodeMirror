@@ -161,7 +161,7 @@
 	"codemirror-wikilint-illegal-attribute-name": "атрибутан нийса йоцу цӀе",
 	"codemirror-wikilint-illegal-attribute-value": "атрибутан нийса доцу маьӀна",
 	"codemirror-wikilint-illegal-module": "Scribunto модулан нийса йоцу цӀе",
-	"codemirror-wikilint-imagemap-without-image": "<imagemap> сурт доцуш",
+	"codemirror-wikilint-imagemap-without-image": "imagemap сурт доцуш",
 	"codemirror-wikilint-in-url": "$1 URL чохь",
 	"codemirror-wikilint-inconsistent-table": "нийса йоцу таблицин дӀахӀоттам",
 	"codemirror-wikilint-invalid-attribute": "атрибутан нийса йоцу цӀе йолу элемент",

@@ -145,7 +145,7 @@
 	"codemirror-wikilint-illegal-attribute-name": "niedozwolona nazwa atrybutu",
 	"codemirror-wikilint-illegal-attribute-value": "niedozwolona wartość atrybutu",
 	"codemirror-wikilint-illegal-module": "niedozwolona nazwa modułu",
-	"codemirror-wikilint-imagemap-without-image": "znacznik <imagemap> bez obrazu",
+	"codemirror-wikilint-imagemap-without-image": "znacznik imagemap bez obrazu",
 	"codemirror-wikilint-invalid-attribute": "zawierające niepoprawny atrybut",
 	"codemirror-wikilint-invalid-content": "niewłaściwa zawartość w <$1>",
 	"codemirror-wikilint-invalid-conversion-flag": "niewłaściwa flaga konwersji",
