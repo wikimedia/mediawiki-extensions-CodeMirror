@@ -30,6 +30,7 @@
 	"codemirror-prefs-activeline": "צביעת השורה הפעילה",
 	"codemirror-prefs-specialchars": "הצגת תווים מיוחדים",
 	"codemirror-prefs-whitespace": "צביעת רווחים",
+	"codemirror-prefs-autofocus": "למקד את העורך תחילה",
 	"codemirror-prefs-highlightrefs": "להדגיש את התוכן של תגי <ref>",
 	"codemirror-prefs-reset": "איפוס לברירות מחדל",
 	"codemirror-prefs-colorblind": "להפעיל ערכת צבעים ידידותית לעיוורי־צבעים בצביעת קוד בעריכת קוד ויקי",
