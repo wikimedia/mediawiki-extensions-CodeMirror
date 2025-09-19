@@ -56,6 +56,7 @@ global.mockMwConfigGet = ( config = {} ) => {
 			tags: {
 				nowiki: true,
 				indicator: true,
+				gallery: true,
 				ref: true,
 				pre: true,
 				references: true,

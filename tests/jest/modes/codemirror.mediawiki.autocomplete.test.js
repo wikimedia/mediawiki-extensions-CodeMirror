@@ -145,6 +145,7 @@ describe( 'MediaWiki autocomplete', () => {
 				...Object.keys( mwModeConfig.permittedHtmlTags ).map( ( label ) => ( { label, type: 'type' } ) ),
 				{ label: 'nowiki', type: 'type' },
 				{ label: 'indicator', type: 'type' },
+				{ label: 'gallery', type: 'type' },
 				{ label: 'ref', type: 'type' },
 				{ label: 'pre', type: 'type' },
 				{ label: 'references', type: 'type' },

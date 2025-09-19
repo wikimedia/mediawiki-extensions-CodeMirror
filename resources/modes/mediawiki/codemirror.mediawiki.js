@@ -30,6 +30,31 @@ const specialParserFunctions = {
 		Object.entries( nsIds ).filter( ( [ , id ] ) => id === 6 ).map( ( [ ns ] ) => ns ).join( '|' )
 	})\\s*:`, 'i' );
 
+const startState = ( tokenize ) => ( {
+	tokenize,
+	stack: [],
+	inHtmlTag: [],
+	extName: false,
+	extMode: false,
+	extState: false,
+	nTemplate: 0,
+	nLink: 0,
+	nExtLink: 0,
+	nExt: 0,
+	nDt: 0,
+	bold: false,
+	italic: false,
+	sof: true,
+	data: {
+		firstSingleLetterWord: null,
+		firstMultiLetterWord: null,
+		firstSpace: null,
+		readyTokens: [],
+		oldToken: null,
+		mark: null
+	}
+} );
+
 const copyState = ( state ) => {
 	const newState = {};
 	for ( const key in state ) {
@@ -465,6 +490,23 @@ class CodeMirrorMediaWiki {
 		return this.eatWikiText( mwModeConfig.tags.extLinkText )( stream, state );
 	}
 
+	inGallery( stream, state ) {
+		if ( stream.match( /^[\s\u00a0]*\|[\s\u00a0]*/ ) ) {
+			state.tokenize = this.eatLinkText( true, true );
+			this.toEatImageParameters( stream, state );
+			return this.makeLocalStyle( mwModeConfig.tags.linkDelimiter, state );
+		}
+		if ( stream.match( /^[\s\u00a0]*[^\s\u00a0|&{]+/ ) || stream.eatSpace() ) {
+			return this.makeStyle(
+				`${ mwModeConfig.tags.linkPageName } ${ mwModeConfig.tags.pageName }`,
+				state
+			);
+		}
+		return this.eatWikiText(
+			`${ mwModeConfig.tags.linkPageName } ${ mwModeConfig.tags.pageName }`
+		)( stream, state );
+	}
+
 	inLink( file ) {
 		return ( stream, state ) => {
 			if ( stream.sol() ) {
@@ -522,11 +564,11 @@ class CodeMirrorMediaWiki {
 		return this.eatWikiText( mwModeConfig.tags.linkToSection )( stream, state );
 	}
 
-	eatLinkText( file ) {
+	eatLinkText( file, gallery ) {
 		let linkIsBold, linkIsItalic;
 		return ( stream, state ) => {
 			let tmpstyle;
-			if ( stream.match( ']]' ) || !file && stream.match( '[[', false ) ) {
+			if ( !gallery && stream.match( ']]' ) || !file && stream.match( '[[', false ) ) {
 				state.tokenize = state.stack.pop();
 				return this.makeLocalStyle( mwModeConfig.tags.linkBracket, state, 'nLink' );
 			}
@@ -698,6 +740,18 @@ class CodeMirrorMediaWiki {
 						copyState: () => {},
 						token: this.eatNowiki()
 					};
+				} else if ( name === 'gallery' ) {
+					state.extMode = {
+						startState: () => startState( this.inGallery.bind( this ) ),
+						copyState,
+						token: ( stream2, state2 ) => {
+							if ( stream2.sol() ) {
+								Object.assign( state2, state.extMode.startState() );
+							}
+							return state2.tokenize( stream2, state2 );
+						}
+					};
+					state.extState = state.extMode.startState();
 				} else if ( name in this.config.tagModes ) {
 					const mode = this.config.tagModes[ name ];
 					if ( mode === 'mediawiki' || mode === 'text/mediawiki' ) {
@@ -1354,30 +1408,7 @@ class CodeMirrorMediaWiki {
 			 * @return {Object}
 			 * @private
 			 */
-			startState: () => ( {
-				tokenize: this.eatWikiText( '' ),
-				stack: [],
-				inHtmlTag: [],
-				extName: false,
-				extMode: false,
-				extState: false,
-				nTemplate: 0,
-				nLink: 0,
-				nExtLink: 0,
-				nExt: 0,
-				nDt: 0,
-				bold: false,
-				italic: false,
-				sof: true,
-				data: {
-					firstSingleLetterWord: null,
-					firstMultiLetterWord: null,
-					firstSpace: null,
-					readyTokens: [],
-					oldToken: null,
-					mark: null
-				}
-			} ),
+			startState: () => startState( this.eatWikiText( '' ) ),
 
 			/**
 			 * Copies the given state.
