@@ -941,6 +941,8 @@ class CodeMirror {
 
 		this.setupFeatureLogging();
 
+		this.$textarea.off( '.ime' ).removeData( 'ime' ).removeData( 'imeselector' );
+
 		// Backup scroll position, selections, and focus state before we hide the textarea.
 		const selectionStart = this.textarea.selectionStart,
 			selectionEnd = this.textarea.selectionEnd,
