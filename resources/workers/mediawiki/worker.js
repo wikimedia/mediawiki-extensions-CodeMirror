@@ -14,49 +14,52 @@ const infoRules = [
 ];
 
 Parser.lintConfig = {
-	'fostered-content': [
-		1,
-		{ transclusion: 0 }
-	],
-	h1: 1,
-	'illegal-attr': [
-		2,
-		{
-			tabindex: 1,
-			unknown: 2,
-			value: 2
-		}
-	],
-	'insecure-style': 0,
-	'lonely-apos': [
-		1,
-		{
-			word: 0
-		}
-	],
-	'lonely-bracket': [
-		1,
-		{
-			extLink: 2,
-			single: 0
-		}
-	],
-	'lonely-http': 0,
-	'no-arg': 0,
-	'no-duplicate': [
-		2,
-		{
-			category: 1,
-			id: 1,
-			unknownImageParameter: 0
-		}
-	],
-	'unmatched-tag': 0
+	fix: false,
+	rules: {
+		'fostered-content': [
+			1,
+			{ transclusion: 0 }
+		],
+		h1: 1,
+		'illegal-attr': [
+			2,
+			{
+				tabindex: 1,
+				unknown: 2,
+				value: 2
+			}
+		],
+		'insecure-style': 0,
+		'lonely-apos': [
+			1,
+			{
+				word: 0
+			}
+		],
+		'lonely-bracket': [
+			1,
+			{
+				extLink: 2,
+				single: 0
+			}
+		],
+		'lonely-http': 0,
+		'no-arg': 0,
+		'no-duplicate': [
+			2,
+			{
+				category: 1,
+				id: 1,
+				unknownImageParameter: 0
+			}
+		],
+		'unmatched-tag': 0
+	}
 };
 
 // HACK: Customize severity of some rules to "info" which is not supported by wikiparser-node.
 for ( const rule of infoRules ) {
-	Parser.lintConfig[ rule ] = 1;
+	Parser.lintConfig.rules[ rule ] = 1;
 }
 
 const last = {};
