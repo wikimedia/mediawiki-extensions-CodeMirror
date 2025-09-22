@@ -1,0 +1,32 @@
+{
+    "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+    "bomFormat": "CycloneDX",
+    "specVersion": "1.6",
+    "serialNumber": "urn:uuid:20f741ef-73a8-45ce-b04c-faa5aa7a6252",
+    "version": 1,
+    "components": [
+        {
+            "type": "library",
+            "name": "codemirror",
+            "version": "5.65.15",
+            "licenses": [
+                {
+                    "license": {
+                        "id": "MIT"
+                    }
+                }
+            ],
+            "authors": [
+                {
+                    "name": "CodeMirror authors"
+                }
+            ],
+            "externalReferences": [
+                {
+                    "url": "https://github.com/codemirror/codemirror5",
+                    "type": "website"
+                }
+            ]
+        }
+    ]
+}
