@@ -83,6 +83,7 @@ class CodeMirrorExtensionRegistry {
 		 */
 		this.veSupportedExtensions = [
 			'bracketMatching',
+			'highlightRefs',
 			'lineWrapping',
 			'lineNumbering'
 		];
