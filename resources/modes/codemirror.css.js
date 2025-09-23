@@ -5,6 +5,30 @@ const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
 
 class CodeMirrorCss extends CodeMirrorMode {
 
+	constructor( name ) {
+		super( name );
+
+		/**
+		 * The dialect of the mode.
+		 *
+		 * @type {string}
+		 */
+		this.dialect = mw.config.get( 'wgPageContentModel' );
+
+		// Custom linting rules for Extension:TemplateStyles
+		if ( this.dialect === 'sanitized-css' ) {
+			this.worker.onload( () => {
+				this.worker.setConfig( {
+					'property-no-vendor-prefix': [
+						true,
+						{ ignoreProperties: [ 'user-select' ] }
+					],
+					'property-disallowed-list': [ '/^--/' ]
+				} );
+			} );
+		}
+	}
+
 	/** @inheritDoc */
 	get language() {
 		return cssLanguage;
@@ -53,27 +77,37 @@ class CodeMirrorCss extends CodeMirrorMode {
 	/** @inheritDoc */
 	get support() {
 		return cssLanguage.data.of( {
-			autocomplete( context ) {
+			autocomplete: ( context ) => {
 				const { state, pos: p } = context,
 					node = syntaxTree( state ).resolveInner( p, -1 ),
 					result = cssCompletionSource( context );
-				if ( result && node.name === 'ValueName' ) {
-					const options = [ { label: 'revert', type: 'keyword' }, ...result.options ];
-					let { prevSibling } = node;
-					while ( prevSibling && prevSibling.name !== 'PropertyName' ) {
-						( { prevSibling } = prevSibling );
-					}
-					if ( prevSibling ) {
-						for ( let i = 0; i < options.length; i++ ) {
-							const option = options[ i ];
-							if ( CSS.supports(
-								state.sliceDoc( prevSibling.from, node.from ) + option.label
-							) ) {
-								options.splice( i, 1, Object.assign( {}, option, { boost: 50 } ) );
+				if ( result ) {
+					if ( node.name === 'ValueName' ) {
+						const options = [ { label: 'revert', type: 'keyword' }, ...result.options ];
+						let { prevSibling } = node;
+						while ( prevSibling && prevSibling.name !== 'PropertyName' ) {
+							( { prevSibling } = prevSibling );
+						}
+						if ( prevSibling ) {
+							for ( let i = 0; i < options.length; i++ ) {
+								const option = options[ i ];
+								if ( CSS.supports(
+									state.sliceDoc( prevSibling.from, node.from ) + option.label
+								) ) {
+									options.splice( i, 1, Object.assign( {}, option, {
+										boost: 50
+									} ) );
+								}
 							}
 						}
+						result.options = options;
+					} else if ( this.dialect === 'sanitized-css' ) {
+						result.options = result.options.filter(
+							( { type, label } ) => type !== 'property' ||
+								!label.startsWith( '-' ) ||
+								label.endsWith( '-user-select' )
+						);
 					}
-					result.options = options;
 				}
 				return result;
 			}
