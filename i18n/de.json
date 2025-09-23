@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Brettchenweber",
 			"Inkowik",
 			"Kghbln",
 			"McDutchie",
@@ -199,7 +200,7 @@
 	"codemirror-wikilint-unclosed": "$1 nicht geschlossen",
 	"codemirror-wikilint-unclosed-comment": "nicht geschlossener HTML-Kommentar",
 	"codemirror-wikilint-unclosed-quotes": "nicht geschlossene Anführungszeichen",
-	"codemirror-wikilint-unclosed-table": "nicht geschlossener Tabelle",
+	"codemirror-wikilint-unclosed-table": "nicht geschlossene Tabelle",
 	"codemirror-wikilint-unescaped-query": "nicht maskierte Abfragezeichenfolge in einem anonymen Parameter",
 	"codemirror-wikilint-unnecessary-encoding": "unnötige Prozentkodierung in einem internen Link",
 	"codemirror-wikilint-uppercase": "in Großbuchstaben umwandeln",
