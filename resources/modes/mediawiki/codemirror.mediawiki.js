@@ -430,7 +430,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 
 	eatTemplateArgument( expectArgName ) {
 		return ( stream, state ) => {
-			if ( expectArgName && stream.eatWhile( /[^=|}{[<&~-]/ ) ) {
+			if ( expectArgName && stream.match( /^(?:[^=|}{[<&~-]|-(?!\{))+/ ) ) {
 				if ( stream.eat( '=' ) ) {
 					state.tokenize = this.eatTemplateArgument( false );
 					return this.makeLocalStyle( mwModeConfig.tags.templateArgumentName, state );
@@ -767,7 +767,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 						copyState,
 						token: ( stream2, state2 ) => {
 							if ( stream2.sol() ) {
-								Object.assign( state2, state.extMode.startState() );
+								Object.assign( state2, startState( this.inGallery.bind( this ) ) );
 							}
 							return state2.tokenize( stream2, state2 );
 						}
