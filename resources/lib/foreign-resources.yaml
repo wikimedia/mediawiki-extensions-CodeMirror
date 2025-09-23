@@ -7,10 +7,10 @@ codemirror:
   src: https://codemirror.net/5/codemirror-5.65.15.zip
   integrity: sha512-04jTPLBr37QM82YQrCFcjSYeyJGB+AGXPEFN15IArKLZtu92xyQ79Ol31LOB2kH76wnZs4Njzd51+QUhe3JCpw==
   dest:
-    codemirror-*/AUTHORS:
-    codemirror-*/CHANGELOG.md:
-    codemirror-*/CONTRIBUTING.md:
-    codemirror-*/LICENSE:
-    codemirror-*/README.md:
+    codemirror-*/AUTHORS: .
+    codemirror-*/CHANGELOG.md: .
+    codemirror-*/CONTRIBUTING.md: .
+    codemirror-*/LICENSE: .
+    codemirror-*/README.md: .
     codemirror-*/lib/codemirror.css: lib/
     codemirror-*/lib/codemirror.js: lib/

@@ -1,4 +1,5 @@
-/resources/lib/
+/resources/lib/*
+!/resources/lib/foreign-resources.*
 /vendor
 /docs
 /coverage
