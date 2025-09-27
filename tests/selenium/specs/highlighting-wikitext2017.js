@@ -23,7 +23,7 @@ describe( 'CodeMirror (enabled) - VisualEditor 2017 wikitext editor', () => {
 		await EditPage.visualEditorContentEditable.waitForDisplayed();
 		await EditPage.codeMirrorContentEditable.waitForDisplayed();
 		assert.strictEqual(
-			await EditPage.codeMirrorContentEditable.isDisplayedInViewport(),
+			await EditPage.codeMirrorContentEditable.isDisplayed(),
 			true
 		);
 		assert.strictEqual(
@@ -91,7 +91,7 @@ describe( 'CodeMirror (enabled) - VisualEditor 2017 wikitext editor', () => {
 		await EditPage.visualEditorDestructiveButton.click();
 		await EditPage.visualEditorContentEditable.waitForDisplayed( { reverse: true } );
 		assert.strictEqual(
-			await EditPage.codeMirrorContentEditable.isDisplayedInViewport(),
+			await EditPage.codeMirrorContentEditable.isDisplayed(),
 			false
 		);
 		// Refresh.

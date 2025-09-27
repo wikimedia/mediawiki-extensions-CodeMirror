@@ -46,7 +46,7 @@ describe( 'CodeMirror code folding for the wikitext 2010 editor', () => {
 		assert( await linkNode.waitForDisplayed( { reverse: true } ) );
 		// The html node should not be hidden.
 		assert( await htmlNode.waitForDisplayed() );
-		assert( await EditPage.codeMirrorCodeFoldingPlaceholder.isDisplayedInViewport() );
+		assert( await EditPage.codeMirrorCodeFoldingPlaceholder.isDisplayed() );
 	} );
 
 	it( 'expands the template parameters via the button', async () => {
@@ -79,7 +79,7 @@ describe( 'CodeMirror code folding for the wikitext 2010 editor', () => {
 		assert( await entityNode.waitForDisplayed() );
 		// The <ref> node should not be hidden.
 		assert( await refNode.waitForDisplayed() );
-		assert( await EditPage.codeMirrorCodeFoldingPlaceholder.isDisplayedInViewport() );
+		assert( await EditPage.codeMirrorCodeFoldingPlaceholder.isDisplayed() );
 	} );
 
 	it( 'expands the extension tag via the button', async () => {
@@ -112,7 +112,7 @@ describe( 'CodeMirror code folding for the wikitext 2010 editor', () => {
 		assert( await nowikiNode.waitForDisplayed( { reverse: true } ) );
 		assert( await entityNode.waitForDisplayed( { reverse: true } ) );
 		assert( await refNode.waitForDisplayed( { reverse: true } ) );
-		assert( await EditPage.codeMirrorCodeFoldingPlaceholder.isDisplayedInViewport() );
+		assert( await EditPage.codeMirrorCodeFoldingPlaceholder.isDisplayed() );
 	} );
 
 	it( 'expands all via keyboard shortcut', async () => {
@@ -155,6 +155,6 @@ describe( 'CodeMirror code folding for the wikitext 2010 editor', () => {
 		assert( await linkNode.waitForDisplayed() );
 		// The nowiki node should not be hidden.
 		assert( await nowikiNode.waitForDisplayed() );
-		assert( await EditPage.codeMirrorCodeFoldingPlaceholder.isDisplayedInViewport() );
+		assert( await EditPage.codeMirrorCodeFoldingPlaceholder.isDisplayed() );
 	} );
 } );

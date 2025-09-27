@@ -32,7 +32,11 @@ class EditPage extends Page {
 
 	async clickText() {
 		await this.codeMirrorContentEditable.isDisplayed();
-		await this.codeMirrorContentEditable.click();
+		if ( await this.visualEditorContentEditable.isDisplayed() ) {
+			await this.visualEditorContentEditable.click();
+		} else {
+			await this.codeMirrorContentEditable.click();
+		}
 	}
 
 	get visualEditorContentEditable() {
