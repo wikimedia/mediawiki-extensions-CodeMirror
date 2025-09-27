@@ -69,6 +69,15 @@ class CodeMirrorMode {
 	}
 
 	/**
+	 * The function to lint the code in the editor using a MediaWiki API.
+	 *
+	 * @type {LintSource|undefined}
+	 */
+	get lintApi() {
+		return undefined;
+	}
+
+	/**
 	 * Whether the mode should load a web worker.
 	 *
 	 * @return {boolean}

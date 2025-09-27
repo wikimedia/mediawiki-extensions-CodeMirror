@@ -8,10 +8,25 @@ const {
 } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirrorPanel = require( './codemirror.panel.js' );
 
+const renderDiagnostic = ( diagnostic ) => Object.assign( {
+	renderMessage( view ) {
+		const span = document.createElement( 'span' );
+		span.className = 'cm-diagnosticText-clickable';
+		span.textContent = diagnostic.message;
+		span.addEventListener( 'click', () => {
+			view.dispatch( {
+				selection: { anchor: diagnostic.from, head: diagnostic.to }
+			} );
+		} );
+		return span;
+	}
+}, diagnostic );
+
 class CodeMirrorLint extends CodeMirrorPanel {
-	constructor( lintSource, codemirrorKeymap ) {
+	constructor( lintSource, codemirrorKeymap, lintApi ) {
 		super();
 		this.lintSource = lintSource;
+		this.lintApi = lintApi;
 		this.keymap = codemirrorKeymap;
 		this.diagnostics = [];
 	}
@@ -21,8 +36,8 @@ class CodeMirrorLint extends CodeMirrorPanel {
 			return [];
 		}
 		this.keymap.registerKeyBindingHelp( 'lint', 'next-diagnostic', { key: 'F8' } );
-		return [
-			linter( this.lintSource ),
+		const extension = [
+			linter( async ( view ) => ( await this.lintSource( view ) ).map( renderDiagnostic ) ),
 			lintGutter(),
 			keymap.of( [ { key: 'F8', run: nextDiagnostic } ] ),
 			showPanel.of( ( view ) => {
@@ -30,6 +45,12 @@ class CodeMirrorLint extends CodeMirrorPanel {
 				return this.panel;
 			} )
 		];
+		if ( this.lintApi ) {
+			extension.push(
+				linter( async ( view ) => ( await this.lintApi( view ) ).map( renderDiagnostic ) )
+			);
+		}
+		return extension;
 	}
 
 	get panel() {

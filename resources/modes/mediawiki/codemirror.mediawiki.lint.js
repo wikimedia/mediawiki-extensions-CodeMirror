@@ -150,9 +150,67 @@ const lintSource = ( view ) => worker.lint( view ).then( ( data ) => data
 		} ) )
 	} ) )
 );
-lintSource.worker = worker;
 
-module.exports = lintSource;
+const getMsgKey = ( type ) => `linter-category-${ type }`;
+
+const api = new mw.Api(),
+	rest = new mw.Rest(),
+	hasExtLinter = mw.loader.getState( 'ext.linter.edit' ) !== null;
+let timeout, waiting;
+
+const execute = async ( wikitext ) => {
+	rest.abort();
+	if ( timeout ) {
+		waiting = wikitext;
+		return timeout;
+	}
+	timeout = new Promise( ( resolve ) => {
+		setTimeout( () => {
+			timeout = undefined;
+			if ( waiting === undefined ) {
+				resolve();
+			} else {
+				const text = waiting;
+				waiting = undefined;
+				resolve( execute( text ) );
+			}
+		}, 3000 );
+	} );
+	// This endpoint is still experimental and may change in the future.
+	return rest.post( '/v1/transform/wikitext/to/lint', { wikitext } ).then(
+		( errors ) => errors,
+		( _, e ) => {
+			if ( e.textStatus !== 'abort' ) {
+				mw.log.warn( `[CodeMirror] Parsoid linting failed: ${ e.textStatus }.` );
+			}
+			return [];
+		}
+	);
+};
+
+const lintApi = async ( { state: { doc } } ) => {
+	const errors = await execute( doc.toString() );
+	if ( hasExtLinter && errors.length ) {
+		await api.loadMessagesIfMissing( errors.map( ( { type } ) => getMsgKey( type ) ) );
+	}
+	return errors.map( ( { type, dsr: [ from, to ] } ) => {
+		const msgKey = getMsgKey( type );
+		return {
+			severity: 'info',
+			source: 'Parsoid',
+			// eslint-disable-next-line mediawiki/msg-doc
+			message: mw.messages.exists( msgKey ) ? mw.msg( msgKey ) : type,
+			from,
+			to
+		};
+	} );
+};
+
+module.exports = {
+	lintSource,
+	lintApi,
+	worker
+};
 
 if ( mw.config.get( 'cmDebug' ) ) {
 	window.mediawikiWorker = worker;

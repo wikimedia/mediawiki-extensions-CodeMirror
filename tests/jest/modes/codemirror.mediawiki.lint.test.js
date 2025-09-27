@@ -1,6 +1,6 @@
 /* eslint-disable-next-line n/no-missing-require */
 const { Text } = require( 'ext.CodeMirror.v6.lib' );
-const lintSource = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.lint.js' );
+const { lintSource, worker } = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.lint.js' );
 require( '../../../resources/workers/mediawiki/worker.min.js' );
 
 const testCases = [
@@ -338,7 +338,7 @@ id=a | b
 	}
 ];
 
-lintSource.worker.setConfig( {
+worker.setConfig( {
 	ext: [ 'imagemap', 'ref', 'references', 'gallery', 'inputbox', 'templatestyles' ],
 	doubleUnderscore: [ [], [] ],
 	img: {

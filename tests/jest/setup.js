@@ -94,6 +94,7 @@ mw.Api.prototype.loadMessagesIfMissing = jest.fn( () => {
 	mw.messages = { values: require( '../../i18n/en.json' ) };
 	mw.messages.get = jest.fn().mockReturnValue( mw.messages.values );
 } );
+mw.Rest = jest.fn().mockImplementation( () => ( {} ) );
 mw.hook = jest.fn( ( name ) => ( {
 	fire: jest.fn( ( ...args ) => {
 		if ( mw.hook.mockHooks[ name ] ) {
@@ -119,6 +120,9 @@ mw.storage = Object.create( null, {
 	get: { value: jest.fn() },
 	getObject: { value: jest.fn() },
 	setObject: { value: jest.fn() }
+} );
+mw.loader = Object.assign( mw.loader, {
+	getState: jest.fn()
 } );
 mw.hook.mockHooks = {};
 global.$ = require( 'jquery' );

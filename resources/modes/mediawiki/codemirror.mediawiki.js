@@ -15,7 +15,7 @@ const { codeFoldingExtension } = require( './codemirror.mediawiki.codeFolding.js
 const { autocompleteExtension, completionSource } = require( './codemirror.mediawiki.autocomplete.js' );
 const openLinksExtension = require( './codemirror.mediawiki.openLinks.js' );
 const mwKeymap = require( './codemirror.mediawiki.keymap.js' );
-const lintSource = require( './codemirror.mediawiki.lint.js' );
+const { lintSource, lintApi } = require( './codemirror.mediawiki.lint.js' );
 
 const specialParserFunctions = {
 		ifexist: 0,
@@ -143,6 +143,11 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 	/** @inheritDoc */
 	get lintSource() {
 		return lintSource;
+	}
+
+	/** @inheritDoc */
+	get lintApi() {
+		return lintApi;
 	}
 
 	/** @inheritDoc */

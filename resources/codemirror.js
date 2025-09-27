@@ -105,6 +105,13 @@ class CodeMirror {
 		this.lintSource = langSupport.lintSource;
 		delete langSupport.lintSource;
 		/**
+		 * The function to lint the code in the editor using a MediaWiki API.
+		 *
+		 * @type {LintSource|undefined}
+		 */
+		this.lintApi = langSupport.lintApi;
+		delete langSupport.lintApi;
+		/**
 		 * Language support and its extension(s).
 		 *
 		 * @type {LanguageSupport}
@@ -638,7 +645,7 @@ class CodeMirror {
 	 * @stable to call
 	 */
 	get lintExtension() {
-		return new CodeMirrorLint( this.lintSource, this.keymap ).extension;
+		return new CodeMirrorLint( this.lintSource, this.keymap, this.lintApi ).extension;
 	}
 
 	/* eslint-disable max-len */
