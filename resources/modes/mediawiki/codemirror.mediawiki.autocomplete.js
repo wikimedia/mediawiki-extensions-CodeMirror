@@ -33,6 +33,7 @@ const hasTag = ( types, names ) => ( Array.isArray( names ) ? names : [ names ] 
 
 const api = new mw.Api( { parameters: { formatversion: 2 } } ),
 	title = mw.config.get( 'wgPageName' );
+let promise;
 
 /**
  * Get suggestions for wiki links.
@@ -46,16 +47,27 @@ const linkSuggestFactory = ( search, namespace = 0, subpage = false ) => {
 	if ( subpage ) {
 		search = title + search;
 	}
-	return api.get( { action: 'opensearch', search, namespace, limit: 'max' } )
-		.then( ( [ , pages ] ) => {
-			if ( subpage ) {
-				const { length } = title;
-				return pages.map( ( page ) => page.slice( length ) );
-			}
-			return namespace === 0 ?
-				pages.map( ( page ) => page ) :
-				pages.map( ( page ) => new mw.Title( page ).getMainText() );
-		} ).catch( () => [] );
+	if ( !promise ) {
+		api.abort();
+		promise = api.get( { action: 'opensearch', search, namespace, limit: 'max' } )
+			.then( ( [ , pages ] ) => {
+				if ( subpage ) {
+					const { length } = title;
+					return pages.map( ( page ) => page.slice( length ) );
+				}
+				return namespace === 0 ?
+					pages.map( ( page ) => page ) :
+					pages.map( ( page ) => new mw.Title( page ).getMainText() );
+			} )
+			.catch( () => [] )
+			.then( ( result ) => {
+				setTimeout( () => {
+					promise = null;
+				}, 120 );
+				return result;
+			} );
+	}
+	return promise;
 };
 
 /**
@@ -154,35 +166,31 @@ const applyTemplateCompletion = ( closed ) => ( view, completion, from, to ) => 
  * @return {CompletionSource}
  */
 const completionSource = ( mode ) => ( context ) => {
-	const { state, pos, explicit } = context,
+	const { state, pos } = context,
 		node = syntaxTree( state ).resolve( pos, -1 ),
 		types = new Set( node.name.split( '_' ) ),
 		isParserFunction = hasTag( types, 'parserFunctionName' ),
 		{ from } = node,
 		search = state.sliceDoc( from, pos );
-	if ( explicit || isParserFunction && search.includes( '#' ) ) {
-		const validFor = /^[^|{}<>[\]#]*$/;
-		if ( isParserFunction || hasTag( types, 'templateName' ) ) {
-			const options = search.includes( ':' ) ? [] : [ ...mode.functionSynonyms ],
-				apply = applyTemplateCompletion( /^\s*[|}]/.test( state.sliceDoc( pos ) ) );
-			return linkSuggest( mode, search, 10 )
-				.then( ( suggestions = { offset: 0, options: [] } ) => {
-					options.push( ...suggestions.options
-						.map( ( option ) => Object.assign( option, { apply } ) ) );
-					return options.length === 0 ?
-						null :
-						{ from: from + suggestions.offset, options, validFor };
-				} );
-		}
-		if ( hasTag( types, 'linkPageName' ) ) {
-			const apply = applyLinkCompletion( /^\s*[|\]]/.test( state.sliceDoc( pos ) ) );
-			return linkSuggest( mode, search ).then( ( suggestions ) => suggestions ? {
-				from: from + suggestions.offset,
-				options: suggestions.options
-					.map( ( option ) => Object.assign( option, { apply } ) ),
-				validFor
-			} : null );
-		}
+	if ( isParserFunction || hasTag( types, 'templateName' ) ) {
+		const options = search.includes( ':' ) ? [] : [ ...mode.functionSynonyms ],
+			apply = applyTemplateCompletion( /^\s*[|}]/.test( state.sliceDoc( pos ) ) );
+		return linkSuggest( mode, search, 10 )
+			.then( ( suggestions = { offset: 0, options: [] } ) => {
+				options.push( ...suggestions.options
+					.map( ( option ) => Object.assign( option, { apply } ) ) );
+				return options.length === 0 ?
+					null :
+					{ from: from + suggestions.offset, options };
+			} );
+	}
+	if ( hasTag( types, 'linkPageName' ) ) {
+		const apply = applyLinkCompletion( /^\s*[|\]]/.test( state.sliceDoc( pos ) ) );
+		return linkSuggest( mode, search ).then( ( suggestions ) => suggestions ? {
+			from: from + suggestions.offset,
+			options: suggestions.options
+				.map( ( option ) => Object.assign( option, { apply } ) )
+		} : null );
 	}
 	if ( !hasTag( types, [
 		'comment',

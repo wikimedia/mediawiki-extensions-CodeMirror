@@ -14,25 +14,23 @@ const [ source ] = cm.view.state.languageDataAt( 'autocomplete' );
 /**
  * Create a completion context at a specific position.
  *
- * @param {boolean} explicit
  * @return {CompletionContext}
  */
-const createCompletionContext = ( explicit ) => new CompletionContext(
+const createCompletionContext = () => new CompletionContext(
 	cm.view.state,
 	/** @see https://github.com/codemirror/autocomplete/blob/62dead94d0f4b256f0b437b4733cfef6449e8453/src/completion.ts#L273 */
 	cm.view.state.selection.main.from,
-	explicit,
+	false,
 	cm.view
 );
 
 describe( 'MediaWiki autocomplete', () => {
-	it( 'parser functions (explicit)', async () => {
+	it( 'parser functions (without #)', async () => {
 		cm.view.dispatch( {
 			changes: { from: 0, to: cm.view.state.doc.length, insert: '{{ מיון רגיל' },
 			selection: { anchor: 4, head: 4 }
 		} );
-		expect( await source( createCompletionContext( false ) ) ).toBeNull();
-		expect( await source( createCompletionContext( true ) ) ).toEqual( {
+		expect( await source( createCompletionContext() ) ).toEqual( {
 			from: 3,
 			options: [
 				{ label: '#ifexist', type: 'function' },
@@ -44,17 +42,16 @@ describe( 'MediaWiki autocomplete', () => {
 				{ label: 'ns', type: 'function' },
 				{ label: '!', type: 'constant' },
 				{ label: 'מיון רגיל', type: 'constant' }
-			],
-			validFor: /^[^|{}<>[\]#]*$/
+			]
 		} );
 	} );
 
-	it( 'parser functions (implicit)', async () => {
+	it( 'parser functions (with #)', async () => {
 		cm.view.dispatch( {
 			changes: { from: 0, to: cm.view.state.doc.length, insert: '{{ #' },
 			selection: { anchor: 4, head: 4 }
 		} );
-		expect( await source( createCompletionContext( false ) ) ).toEqual( {
+		expect( await source( createCompletionContext() ) ).toEqual( {
 			from: 3,
 			options: [
 				{ label: '#ifexist', type: 'function' },
@@ -66,8 +63,7 @@ describe( 'MediaWiki autocomplete', () => {
 				{ label: 'ns', type: 'function' },
 				{ label: '!', type: 'constant' },
 				{ label: 'מיון רגיל', type: 'constant' }
-			],
-			validFor: /^[^|{}<>[\]#]*$/
+			]
 		} );
 	} );
 
@@ -76,7 +72,7 @@ describe( 'MediaWiki autocomplete', () => {
 			changes: { from: 0, to: cm.view.state.doc.length, insert: '__no' },
 			selection: { anchor: 4, head: 4 }
 		} );
-		expect( source( createCompletionContext( false ) ) ).toEqual( {
+		expect( source( createCompletionContext() ) ).toEqual( {
 			from: 0,
 			options: [ { label: '__notoc__', type: 'constant' } ],
 			validFor: /^[^\s<>[\]{}|#]*$/
@@ -88,7 +84,7 @@ describe( 'MediaWiki autocomplete', () => {
 			changes: { from: 0, to: cm.view.state.doc.length, insert: '<nowiki></' },
 			selection: { anchor: 10, head: 10 }
 		} );
-		expect( source( createCompletionContext( false ) ) ).toEqual( {
+		expect( source( createCompletionContext() ) ).toEqual( {
 			from: 10,
 			options: [
 				...Object.keys( mwModeConfig.permittedHtmlTags )
@@ -105,7 +101,7 @@ describe( 'MediaWiki autocomplete', () => {
 			changes: { from: 0, to: cm.view.state.doc.length, insert: '<indicator></' },
 			selection: { anchor: 13, head: 13 }
 		} );
-		expect( source( createCompletionContext( false ) ) ).toEqual( {
+		expect( source( createCompletionContext() ) ).toEqual( {
 			from: 13,
 			options: [
 				...Object.keys( mwModeConfig.permittedHtmlTags )
@@ -122,7 +118,7 @@ describe( 'MediaWiki autocomplete', () => {
 			changes: { from: 0, to: cm.view.state.doc.length, insert: '<ref></' },
 			selection: { anchor: 7, head: 7 }
 		} );
-		expect( source( createCompletionContext( false ) ) ).toEqual( {
+		expect( source( createCompletionContext() ) ).toEqual( {
 			from: 7,
 			options: [
 				...Object.keys( mwModeConfig.permittedHtmlTags )
@@ -139,7 +135,7 @@ describe( 'MediaWiki autocomplete', () => {
 			changes: { from: 0, to: cm.view.state.doc.length, insert: '<now' },
 			selection: { anchor: 4, head: 4 }
 		} );
-		expect( source( createCompletionContext( false ) ) ).toEqual( {
+		expect( source( createCompletionContext() ) ).toEqual( {
 			from: 1,
 			options: [
 				...Object.keys( mwModeConfig.permittedHtmlTags ).map( ( label ) => ( { label, type: 'type' } ) ),
@@ -161,7 +157,7 @@ describe( 'MediaWiki autocomplete', () => {
 			changes: { from: 0, to: cm.view.state.doc.length, insert: '[htt' },
 			selection: { anchor: 4, head: 4 }
 		} );
-		expect( source( createCompletionContext( false ) ) ).toEqual( {
+		expect( source( createCompletionContext() ) ).toEqual( {
 			from: 1,
 			options: [
 				{ label: 'ftp://', type: 'namespace' },

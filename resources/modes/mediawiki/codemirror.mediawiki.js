@@ -551,7 +551,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 				state.tokenize = state.stack.pop();
 				return this.makeLocalStyle( mwModeConfig.tags.linkBracket, state, 'nLink' );
 			}
-			if ( stream.match( /^[\s\u00a0]*[^\s\u00a0#|\]&~{]+/ ) || stream.eatSpace() ) {
+			if ( stream.match( /^[^#|\]&~{]+/ ) ) {
 				return this.makeStyle(
 					`${ mwModeConfig.tags.linkPageName } ${ mwModeConfig.tags.pageName }`,
 					state
