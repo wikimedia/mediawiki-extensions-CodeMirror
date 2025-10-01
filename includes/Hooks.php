@@ -303,6 +303,18 @@ class Hooks implements
 			$this->shouldLoadCodeMirror( $output, null, false )
 		) {
 			$this->loadInitModules( $output, false, [ '[name=wpInput]', '#output' ] );
+			return;
+		}
+
+		// Allow extensions to load CodeMirror on other special pages.
+		$textareas = [];
+		$this->hookRunner->onCodeMirrorSpecialPage( $special, $textareas );
+		if (
+			$textareas &&
+			$this->shouldUseV6( $output ) &&
+			$this->shouldLoadCodeMirror( $output, null, false )
+		) {
+			$this->loadInitModules( $output, false, $textareas );
 		}
 	}
 
