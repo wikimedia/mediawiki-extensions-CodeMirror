@@ -127,7 +127,7 @@
 	"codemirror-keymap-cursor-modifiers": "Modificadoras del cursor",
 	"codemirror-keymap-multicursor": "Mantén pulsada $1 y haz clic para crear múltiples cursores.",
 	"codemirror-keymap-crosshair": "Mantén pulsada $1, entonces haz clic y arrastra para hacer selecciones rectangulares.",
-	"codemirror-keymap-openlinks": "Mantén pulsada $1 y hac clic sobre títulos de páginas y URLs para abrirlos en una nueva pestaña.",
+	"codemirror-keymap-openlinks": "Mantén pulsada $1 y haz clic sobre títulos de páginas y URLs para abrirlos en una nueva pestaña.",
 	"prefs-accessibility": "Accesibilidad",
 	"prefs-syntax-highlighting": "Resaltado de sintaxis",
 	"codemirror-beta-feature-title": "Resaltado de sintaxis mejorado",
