@@ -5,12 +5,14 @@
 			"Fúlvio",
 			"Hamilton Abreu",
 			"Nemo bis",
-			"Vitorvicentevalente"
+			"Vitorvicentevalente",
+			"ItsaMeSandy",
+			"Mansil alfalb"
 		]
 	},
-	"codemirror-desc": "Fornece realce sintático no editor de texto wiki",
-	"codemirror-toggle-label": "Realce sintático",
-	"codemirror-prefs-colorblind": "Ativar esquema concebido para pessoas daltónicas, de realce sintático durante a edição de texto wiki",
-	"codemirror-prefs-colorblind-help": "Se utiliza um ''gadget'' para realce sintático, esta preferência não funcionará.",
+	"codemirror-desc": "Fornece destaque de sintaxe no editor de texto wiki",
+	"codemirror-toggle-label": "Destaque de sintaxe",
+	"codemirror-prefs-colorblind": "Ativar esquema concebido para pessoas daltónicas para o destaque de sintaxe quando edita texto wiki",
+	"codemirror-prefs-colorblind-help": "Se utiliza um ''gadget'' para destacar a sintaxe, esta preferência não funcionará.",
 	"prefs-accessibility": "Acessibilidade"
 }
