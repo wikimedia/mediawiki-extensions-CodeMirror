@@ -941,8 +941,6 @@ class CodeMirror {
 
 		this.setupFeatureLogging();
 
-		this.$textarea.off( '.ime' ).removeData( 'ime' ).removeData( 'imeselector' );
-
 		// Backup scroll position, selections, and focus state before we hide the textarea.
 		const selectionStart = this.textarea.selectionStart,
 			selectionEnd = this.textarea.selectionEnd,
@@ -970,6 +968,8 @@ class CodeMirror {
 			// Override textSelection() functions for the "real" hidden textarea to route to
 			// CodeMirror. We unregister this in this.deactivate().
 			this.$textarea.textSelection( 'register', this.cmTextSelection );
+			// Disable IME on the hidden textarea to avoid conflicts.
+			this.$textarea.addClass( 'noime' ).off( '.ime' ).removeData( [ 'ime', 'imeselector' ] );
 
 			// Sync scroll position, selections, and focus state.
 			requestAnimationFrame( () => {
@@ -1017,6 +1017,8 @@ class CodeMirror {
 			this.textarea.value = this.view.state.doc.toString();
 			// Unregister textSelection() on the hidden textarea.
 			this.$textarea.textSelection( 'unregister' );
+			// Re-enable IME on the hidden textarea.
+			this.$textarea.removeClass( 'noime' );
 		}
 
 		// Remove hook handlers.
