@@ -6,6 +6,12 @@ const {
 } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirror = require( 'ext.CodeMirror.v6' );
 
+/**
+ * CodeMirror integration for the VisualEditor
+ * {@link https://www.mediawiki.org/wiki/Special:MyLanguage/2017_wikitext_editor 2017 wikitext editor}.
+ *
+ * @extends CodeMirror
+ */
 class CodeMirrorVisualEditor extends CodeMirror {
 	/**
 	 * @param {ve.ui.Surface} surface
@@ -16,9 +22,8 @@ class CodeMirrorVisualEditor extends CodeMirror {
 		super( surface.getView().$attachedRootNode[ 0 ], langSupport );
 
 		/**
-		 * The VisualEditor surface CodeMirror is bound to.
-		 *
-		 * @type {ve.ui.Surface}
+		 * @inheritDoc
+		 * @override
 		 */
 		this.surface = surface;
 		/**
@@ -321,4 +326,13 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	}
 }
 
+/**
+ * @module ext.CodeMirror.v6.visualEditor
+ * @description
+ * This module provides CodeMirror integration for the 2017 wikitext editor that
+ * is part of the VisualEditor extension. It exports the {@link CodeMirrorVisualEditor} class.
+ * To be usable beyond a plain text editor, you will need to pass in a language mode to the
+ * constructor. See {@link CodeMirrorVisualEditor} for more information.
+ * @see CodeMirrorVisualEditor
+ */
 module.exports = CodeMirrorVisualEditor;

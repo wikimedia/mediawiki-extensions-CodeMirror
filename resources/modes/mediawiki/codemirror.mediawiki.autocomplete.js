@@ -10,12 +10,12 @@ const {
 const mwModeConfig = require( './codemirror.mediawiki.config.js' );
 
 /**
- * CodeMirror extension providing
- * autocompletion
- * for the MediaWiki mode. This automatically applied when using {@link CodeMirrorMediaWiki}.
+ * CodeMirror extension providing autocompletion for the MediaWiki mode.
+ * This automatically applied when using {@link CodeMirrorMediaWiki}.
  *
- * @module CodeMirrorAutocomplete
  * @type {Extension}
+ * @internal
+ * @ignore
  */
 const autocompleteExtension = [
 	autocompletion( { defaultKeymap: true } )
@@ -27,6 +27,7 @@ const autocompleteExtension = [
  * @param {Set<string>} types
  * @param {string[]|string} names
  * @return {boolean}
+ * @private
  */
 const hasTag = ( types, names ) => ( Array.isArray( names ) ? names : [ names ] )
 	.some( ( name ) => types.has( mwModeConfig.tags[ name ] ) );
@@ -42,6 +43,7 @@ let promise;
  * @param {number} namespace
  * @param {boolean} subpage
  * @return {Promise<string[]>}
+ * @private
  */
 const linkSuggestFactory = ( search, namespace = 0, subpage = false ) => {
 	if ( subpage ) {
@@ -77,6 +79,7 @@ const linkSuggestFactory = ( search, namespace = 0, subpage = false ) => {
  * @param {string} str
  * @param {number} ns
  * @return {Promise}
+ * @private
  */
 const linkSuggest = ( mode, str, ns = 0 ) => {
 	const { config: { titleCompletion }, nsRegex } = mode;
@@ -126,6 +129,7 @@ const linkSuggest = ( mode, str, ns = 0 ) => {
  *
  * @param {boolean} closed
  * @return {Function}
+ * @private
  */
 const applyLinkCompletion = ( closed ) => ( view, completion, from, to ) => {
 	let { label } = completion;
@@ -147,6 +151,7 @@ const applyLinkCompletion = ( closed ) => ( view, completion, from, to ) => {
  *
  * @param {boolean} closed
  * @return {Function}
+ * @private
  */
 const applyTemplateCompletion = ( closed ) => ( view, completion, from, to ) => {
 	const { label } = completion;
@@ -164,6 +169,8 @@ const applyTemplateCompletion = ( closed ) => ( view, completion, from, to ) => 
  *
  * @param {CodeMirrorMediaWiki} mode
  * @return {CompletionSource}
+ * @internal
+ * @ignore
  */
 const completionSource = ( mode ) => ( context ) => {
 	const { state, pos } = context,

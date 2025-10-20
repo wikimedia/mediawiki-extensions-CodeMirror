@@ -1,7 +1,13 @@
 /**
+ * @module ext.CodeMirror.v6.init
+ * @description
  * Main entry point for CodeMirror initialization on action=edit, Special:Upload, etc.
  *
- * The init module is loaded by Hooks.php and is not designed for direct use.
+ * The init module is loaded by Hooks.php and is not intended for external use.
+ * Use {@link module:ext.CodeMirror.v6 ext.CodeMirror.v6} instead.
+ *
+ * @see module:ext.CodeMirror.v6
+ * @internal
  */
 
 const useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
@@ -14,6 +20,7 @@ const mode = mw.config.get( 'cmMode' );
  *
  * @param {Function} require
  * @return {LanguageSupport}
+ * @private
  */
 function getLanguageSupport( require ) {
 	if ( mode !== 'mediawiki' ) {
@@ -30,6 +37,8 @@ function getLanguageSupport( require ) {
 
 /**
  * Initialize CodeMirror.
+ *
+ * @private
  */
 async function init() {
 	const require = await mw.loader.using( resourceLoaderModules );
@@ -60,6 +69,7 @@ async function init() {
  * Initialize child CodeMirror instances, if any.
  *
  * @param {CodeMirror} primaryInstance
+ * @private
  */
 function initChildren( primaryInstance ) {
 	const childTextareas = mw.config.get( 'cmChildTextareas', [] );

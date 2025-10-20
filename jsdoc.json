@@ -12,7 +12,7 @@
 	],
 	"source": {
 		"include": [ "resources" ],
-		"exclude": [ "resources/legacy", "resources/lib", "resources/codemirror.init.js" ],
+		"exclude": [ "resources/legacy", "resources/lib" ],
 		"includePattern": ".+\\.js$"
 	},
 	"tags": {},

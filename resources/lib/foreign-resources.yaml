@@ -5,6 +5,7 @@ codemirror:
   version: 5.65.15
   type: zip
   src: https://codemirror.net/5/codemirror-5.65.15.zip
+  # eslint-disable-next-line max-len
   integrity: sha512-04jTPLBr37QM82YQrCFcjSYeyJGB+AGXPEFN15IArKLZtu92xyQ79Ol31LOB2kH76wnZs4Njzd51+QUhe3JCpw==
   dest:
     codemirror-*/AUTHORS: .

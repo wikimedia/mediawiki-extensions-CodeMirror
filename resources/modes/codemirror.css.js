@@ -3,13 +3,31 @@ const { cssLanguage, cssCompletionSource } = require( '../lib/codemirror6.bundle
 const CodeMirrorMode = require( './codemirror.mode.js' );
 const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
 
+/**
+ * CSS language support for CodeMirror.
+ *
+ * @example
+ * const require = await mw.loader.using( [ 'ext.CodeMirror.v6', 'ext.CodeMirror.v6.modes' ] );
+ * const CodeMirror = require( 'ext.CodeMirror.v6' );
+ * const { css } = require( 'ext.CodeMirror.v6.modes' );
+ * const cm = new CodeMirror( myTextarea, css() );
+ * cm.initialize();
+ * @extends CodeMirrorMode
+ */
 class CodeMirrorCss extends CodeMirrorMode {
 
+	/**
+	 * @param {string} name
+	 * @internal
+	 * @hideconstructor
+	 */
 	constructor( name ) {
 		super( name );
 
 		/**
 		 * The dialect of the mode.
+		 * Either normal `css` or `sanitized-css` for
+		 * {@link https://www.mediawiki.org/wiki/Special:MyLanguage/Help:TemplateStyles TemplateStyles}.
 		 *
 		 * @type {string}
 		 */

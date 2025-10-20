@@ -13,11 +13,12 @@ const {
 /**
  * Find surrounding brackets in the syntax tree.
  *
- * @module CodeMirrorBracketMatching
  * @param {SyntaxNode|null} node
  * @param {number} pos
  * @param {string} brackets
  * @return {MatchResult|undefined}
+ * @internal
+ * @private
  */
 const findSurroundingBrackets = ( node, pos, brackets ) => {
 	let parent = node;
@@ -41,11 +42,12 @@ const findSurroundingBrackets = ( node, pos, brackets ) => {
 /**
  * Find surrounding brackets in the plain text.
  *
- * @module CodeMirrorBracketMatching
  * @param {EditorState} state
  * @param {number} pos
  * @param {Config} config
  * @return {MatchResult|null}
+ * @internal
+ * @private
  */
 const findSurroundingPlainBrackets = ( state, pos, config ) => {
 	const { brackets, maxScanDistance } = config,
@@ -74,6 +76,8 @@ const findSurroundingPlainBrackets = ( state, pos, config ) => {
  *
  * @param {Config} configs
  * @return {Extension}
+ * @internal
+ * @private
  */
 module.exports = ( configs ) => {
 	const extension = bracketMatching( configs ),

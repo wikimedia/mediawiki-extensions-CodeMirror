@@ -76,15 +76,10 @@ const copyState = ( state ) => {
 /**
  * MediaWiki language support for CodeMirror 6.
  * Adapted from the original CodeMirror 5 stream parser by Pavel Astakhov.
+ * Exposed through the {@link module:ext.CodeMirror.v6.mode.mediawiki ext.CodeMirror.v6.mode.mediawiki} module.
  *
- * @module CodeMirrorMediaWiki
- *
- * @example
- * const require = await mw.loader.using( [ 'ext.CodeMirror.v6', 'ext.CodeMirror.v6.mode.mediawiki' ] );
- * const CodeMirror = require( 'ext.CodeMirror.v6' );
- * const { mediawiki } = require( 'ext.CodeMirror.v6.mode.mediawiki' );
- * const cm = new CodeMirror( myTextarea, mediawiki() );
- * cm.initialize();
+ * @class
+ * @extends CodeMirrorMode
  */
 class CodeMirrorMediaWiki extends CodeMirrorMode {
 	/* eslint-enable max-len */
@@ -93,6 +88,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 	 *   along with additional properties documented below.
 	 * @param {string[]} config.languageVariants List of language variants to support.
 	 * @internal
+	 * @hideconstructor
 	 */
 	constructor( config ) {
 		super( 'mediawiki' );
@@ -1580,13 +1576,25 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 	}
 }
 
+/* eslint-disable max-len */
+/**
+ * @module ext.CodeMirror.v6.mode.mediawiki
+ * @description
+ * This module provides syntax highlighting for the MediaWiki mode in CodeMirror.
+ * @example
+ * const require = await mw.loader.using( [ 'ext.CodeMirror.v6', 'ext.CodeMirror.v6.mode.mediawiki' ] );
+ * const CodeMirror = require( 'ext.CodeMirror.v6' );
+ * const { mediawiki } = require( 'ext.CodeMirror.v6.mode.mediawiki' );
+ * const cm = new CodeMirror( myTextarea, mediawiki() );
+ * cm.initialize();
+ */
+/* eslint-enable max-len */
+
 let handler;
 
 /**
  * Gets a LanguageSupport-like instance for the MediaWiki mode.
  *
- * @member CodeMirrorMediaWiki
- * @method
  * @param {Object} [config] Configuration options for the MediaWiki mode.
  * @param {boolean} [config.bidiIsolation=false] Enable bidi isolation around HTML tags.
  *   This should generally always be enabled on RTL pages, but it comes with a performance cost.
@@ -1598,7 +1606,7 @@ let handler;
  * @return {CodeMirrorMediaWiki|LanguageSupport}
  * @stable to call
  */
-const mediaWikiLang = ( config = { bidiIsolation: false } ) => {
+const mediawiki = ( config = { bidiIsolation: false } ) => {
 	// Register MW-specific Extensions into CodeMirror preferences. Whether they are enabled
 	// or not is determined by the user's preferences and wiki configuration.
 	if ( handler ) {
@@ -1642,5 +1650,5 @@ const mediaWikiLang = ( config = { bidiIsolation: false } ) => {
 	return new CodeMirrorMediaWiki( mw.config.get( 'extCodeMirrorConfig' ) );
 };
 
-module.exports = mediaWikiLang;
-module.exports.mediawiki = mediaWikiLang;
+module.exports = mediawiki;
+module.exports.mediawiki = mediawiki;

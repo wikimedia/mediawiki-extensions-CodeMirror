@@ -43,8 +43,9 @@ document.addEventListener( 'visibilitychange', () => {
  * CodeMirror extension that opens links by modifier-clicking for the MediaWiki mode.
  * This automatically applied when using {@link CodeMirrorMediaWiki}.
  *
- * @module CodeMirrorOpenLinks
  * @type {Extension}
+ * @internal
+ * @private
  */
 const openLinksExtension = [
 	EditorView.domEventHandlers( {

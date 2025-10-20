@@ -2,6 +2,18 @@ const { javascript, javascriptLanguage, scopeCompletionSource } = require( '../l
 const CodeMirrorMode = require( './codemirror.mode.js' );
 const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
 
+/**
+ * JavaScript language support for CodeMirror.
+ *
+ * @example
+ * const require = await mw.loader.using( [ 'ext.CodeMirror.v6', 'ext.CodeMirror.v6.modes' ] );
+ * const CodeMirror = require( 'ext.CodeMirror.v6' );
+ * const { javascript } = require( 'ext.CodeMirror.v6.modes' );
+ * const cm = new CodeMirror( myTextarea, javascript() );
+ * cm.initialize();
+ * @extends CodeMirrorMode
+ * @hideconstructor
+ */
 class CodeMirrorJavaScript extends CodeMirrorMode {
 
 	/** @inheritDoc */

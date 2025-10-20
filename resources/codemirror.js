@@ -95,7 +95,6 @@ class CodeMirror {
 		 * The VisualEditor surface CodeMirror is bound to.
 		 *
 		 * @type {ve.ui.Surface|null}
-		 * @ignore
 		 */
 		this.surface = null;
 		/**
@@ -1159,4 +1158,13 @@ class CodeMirror {
 	}
 }
 
+/**
+ * @module ext.CodeMirror.v6
+ * @description
+ * This module provides the basic CodeMirror integration for MediaWiki editors
+ * and exports the {@link CodeMirror} class. To be usable beyond a plain text editor,
+ * you will need to pass in a language mode to the constructor.
+ * See {@link CodeMirror} for more information.
+ * @see CodeMirror
+ */
 module.exports = CodeMirror;

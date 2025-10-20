@@ -24,7 +24,7 @@ cm.initialize();
 // Normally ran by mw.hook, but we don't mock the hook system in the Jest tests.
 cm.preferences.registerExtension( 'bidiIsolation', bidiIsolationExtension, cm.view );
 
-describe( 'CodeMirrorBidiIsolation', () => {
+describe( 'CodeMirrorMediaWikiBidiIsolation', () => {
 	it.each( testCases )(
 		'bidi isolation ($title)',
 		( { input, output } ) => {

@@ -306,7 +306,7 @@ const traverse = ( state, tree, effects, node, end, anchor, update, refOnly ) =>
  * Keymap for folding templates.
  *
  * @type {CodeMirrorKeyBinding[]}
- * @memberof module:CodeMirrorCodeFolding
+ * @private
  */
 const foldKeymap = [
 	{
@@ -402,8 +402,9 @@ const foldKeymap = [
  * [code folding](https://www.mediawiki.org/wiki/Help:Extension:CodeMirror#Code_folding)
  * for the MediaWiki mode. This automatically applied when using {@link CodeMirrorMediaWiki}.
  *
- * @module CodeMirrorCodeFolding
  * @type {Extension}
+ * @internal
+ * @ignore
  */
 const codeFoldingExtension = [
 	codeFolding( {

@@ -1,10 +1,12 @@
 const { Extension, Language, LanguageSupport, LintSource } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
 
+/* eslint-disable jsdoc/valid-types */
 /**
  * Abstract interface for CodeMirror modes.
  *
- * Clients can unpack individual modes from the `ext.CodeMirror.v6.modes` module.
+ * Clients can unpack individual modes from the
+ * {@link module:ext.CodeMirror.v6.modes ext.CodeMirror.v6.modes} module.
  * Each mode is exposed as a method with the same name as the mode in the form of a
  * {@link LanguageSupport}-like instance that is consumable by {@link CodeMirror}.
  *
@@ -16,7 +18,12 @@ const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
  * @implements LanguageSupport
  */
 class CodeMirrorMode {
+	/* eslint-enable jsdoc/valid-types */
 
+	/**
+	 * @param {string} name
+	 * @internal
+	 */
 	constructor( name ) {
 		/**
 		 * The name of the mode.

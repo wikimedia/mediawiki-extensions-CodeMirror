@@ -3,8 +3,6 @@ const { EditorView, Prec } = require( 'ext.CodeMirror.v6.lib' );
 /**
  * MediaWiki-specific key bindings for CodeMirror.
  * This is automatically applied when using {@link CodeMirrorMediaWiki}.
- *
- * @module CodeMirrorMediaWikiKeymap
  */
 class CodeMirrorMediaWikiKeymap {
 
@@ -13,6 +11,8 @@ class CodeMirrorMediaWikiKeymap {
 	 * {@link event:'ext.CodeMirror.ready' ext.CodeMirror.ready} event.
 	 *
 	 * @param {CodeMirror} cm
+	 * @internal
+	 * @hideconstructor
 	 */
 	constructor( cm ) {
 		/** @type {CodeMirror} */
@@ -389,14 +389,6 @@ class CodeMirrorMediaWikiKeymap {
 	}
 }
 
-/**
- * Register MediaWiki-specific key bindings with CodeMirror.
- * This is automatically called when using {@link CodeMirrorMediaWiki}.
- *
- * @member CodeMirrorMediaWikiKeymap
- * @method
- * @param {CodeMirror} cm
- */
 module.exports = ( cm ) => {
 	const mwKeymap = new CodeMirrorMediaWikiKeymap( cm );
 	mwKeymap.registerKeyBindings();

@@ -306,6 +306,18 @@ const map = {
 	],
 	types = new Set( [ 'variableName', 'variableName.standard', 'keyword' ] );
 
+/**
+ * Lua language support for CodeMirror.
+ *
+ * @example
+ * const require = await mw.loader.using( [ 'ext.CodeMirror.v6', 'ext.CodeMirror.v6.modes' ] );
+ * const CodeMirror = require( 'ext.CodeMirror.v6' );
+ * const { lua } = require( 'ext.CodeMirror.v6.modes' );
+ * const cm = new CodeMirror( myTextarea, lua() );
+ * cm.initialize();
+ * @extends CodeMirrorMode
+ * @hideconstructor
+ */
 class CodeMirrorLua extends CodeMirrorMode {
 
 	/** @inheritDoc */

@@ -9,21 +9,12 @@ const {
  * Configuration for the MediaWiki highlighting mode for CodeMirror.
  * This is a separate class mainly to keep static configuration out of
  * the logic in {@link CodeMirrorMediaWiki}.
- *
- * @module CodeMirrorMediaWikiConfig
- *
- * @example
- * // within MediaWiki:
- * const { mwModeConfig } = require( 'ext.CodeMirror.v6.mode.mediawiki' );
- * // Reference tags by their constants in the tags property.
- * if ( tag === mwModeConfig.tags.htmlTagBracket ) {
- *   // …
- * }
  */
 class CodeMirrorMediaWikiConfig {
 
 	/**
 	 * @internal
+	 * @hideconstructor
 	 */
 	constructor() {
 		this.extHighlightStyles = [];
@@ -131,7 +122,6 @@ class CodeMirrorMediaWikiConfig {
 	 * in highlightStyle().
 	 *
 	 * @see https://lezer.codemirror.net/docs/ref/#highlight.tags
-	 * @member CodeMirrorMediaWikiConfig
 	 * @type {Object<string>}
 	 */
 	get tags() {
@@ -573,10 +563,4 @@ class CodeMirrorMediaWikiConfig {
 	}
 }
 
-/**
- * @member CodeMirrorMediaWikiConfig
- * @type {CodeMirrorMediaWikiConfig}
- */
-const mwModeConfig = new CodeMirrorMediaWikiConfig();
-
-module.exports = mwModeConfig;
+module.exports = new CodeMirrorMediaWikiConfig();
