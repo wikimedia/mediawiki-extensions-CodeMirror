@@ -402,4 +402,17 @@ describe( 'CodeMirrorPreferences', () => {
 		expect( panel.dom.querySelector( 'input[name="fooExtension"]' ).checked ).toBe( false );
 		expect( hookSpy ).toHaveBeenCalledWith( 'fooExtension', false );
 	} );
+
+	it( 'registerCallback', () => {
+		mockDefaultPreferences( { foobar: true } );
+		mockUserPreferences();
+		const callback = jest.fn();
+		const preferences = getCodeMirrorPreferences();
+		const view = new EditorView();
+		preferences.registerCallback( 'foobar', callback, view );
+		expect( callback ).toHaveBeenCalledWith( true );
+		expect( preferences.extensionRegistry.extensions.foobar ).toBeDefined();
+		preferences.setPreference( 'foobar', false );
+		expect( callback ).toHaveBeenCalledWith( false );
+	} );
 } );

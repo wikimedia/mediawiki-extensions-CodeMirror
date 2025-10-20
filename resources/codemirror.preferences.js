@@ -81,9 +81,19 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		 * Preferences that are disabled from being changed in the panel or dialog
 		 * when {@link CodeMirrorPreferences#lockPreference lockPreference()} is called.
 		 *
-		 * @type {string[]}
+		 * @type {Set<string>}
 		 */
-		this.disabledPreferences = [];
+		this.disabledPreferences = new Set();
+
+		/**
+		 * Preferences registered with
+		 * {@link CodeMirrorPreferences#registerCallback registerCallback()}.
+		 * These do not have an associated {@link Extension} and instead execute a callback function
+		 * when the preference is changed.
+		 *
+		 * @type {Map<string>}
+		 */
+		this.callbackPreferences = new Map();
 
 		/**
 		 * Fired just before {@link CodeMirrorPreferences} has been instantiated.
@@ -241,6 +251,10 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		}
 		this.preferences[ key ] = value;
 
+		if ( this.callbackPreferences.has( key ) ) {
+			this.callbackPreferences.get( key )( value );
+		}
+
 		// Only save the preferences that differ from the defaults,
 		// and use a binary representation for storage. This is to prevent
 		// bloat of the user_properties table (T54777).
@@ -295,7 +309,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	lockPreference( prefName, view, force = false ) {
 		this.extensionRegistry.toggle( prefName, view, force );
 		this.preferences[ prefName ] = force;
-		this.disabledPreferences.push( prefName );
+		this.disabledPreferences.add( prefName );
 		// Ensure any child instances also have the preference disabled.
 		this.firePreferencesApplyHook( prefName, force );
 	}
@@ -367,6 +381,25 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	registerExtension( name, extension, view ) {
 		this.extensionRegistry.register( name, extension, view, this.getPreference( name ) );
 		this.firePreferencesApplyHook( name );
+	}
+
+	/**
+	 * Instead of an {@link Extension}, register a callback function that is executed
+	 * when the preference value is changed. The callback is executed immediately if
+	 * the preference is already set when registered.
+	 *
+	 * @param {string} name
+	 * @param {Function} callback Function that takes the new preference value.
+	 * @param {EditorView} view
+	 * @internal
+	 */
+	registerCallback( name, callback, view ) {
+		// Register a dummy extension.
+		this.extensionRegistry.register( name, [], view, this.getPreference( name ) );
+		this.callbackPreferences.set( name, callback );
+		if ( this.getPreference( name ) ) {
+			callback( true );
+		}
 	}
 
 	/**
@@ -508,7 +541,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 				`codemirror-prefs-${ prefName.toLowerCase() }`,
 				this.getPreference( prefName )
 			);
-			if ( this.disabledPreferences.includes( prefName ) ) {
+			if ( this.disabledPreferences.has( prefName ) ) {
 				input.disabled = true;
 			}
 			wrappers.push( wrapper );
