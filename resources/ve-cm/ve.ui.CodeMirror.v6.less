@@ -1,6 +1,6 @@
 @import 'mediawiki.mixins.less';
 
-.ve-init-mw-desktopArticleTarget {
+.ve-init-target {
 	.cm-editor {
 		background: transparent;
 		border: 0;
@@ -12,25 +12,6 @@
 		position: absolute !important;
 		top: 0;
 		width: 100%;
-
-		// Core VE default padding
-		padding: 1.5em;
-
-		// Skin specific paddings
-		.skin-vector & {
-			padding: 0 1rem;
-
-			@media screen and ( min-width: 982px ) {
-				.skin-vector-legacy& {
-					padding: 0 1.5rem;
-				}
-			}
-		}
-
-		.skin-minerva &,
-		.skin-monobook & {
-			padding: 0;
-		}
 	}
 
 	.cm-gutterElement {

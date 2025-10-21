@@ -37,6 +37,14 @@ class CodeMirrorVisualEditor extends CodeMirror {
 		 * @override
 		 */
 		this.readOnly = this.surface.getModel().isReadOnly();
+		// TODO: lineNumbering override doesn't work because it's ran before the constructor.
+		//   To be revisited once CodeMirrorVisualEditor has its own CodeMirrorPreferences implementation
+		//   (it should use lockPreference() to disable line numbering).
+		// Disable line numbering in DiscussionTools.
+		if ( this.surface.getTarget().constructor.name === 'CommentTarget' ) {
+			delete this.extensionRegistry.extensions.lineNumbering;
+			delete this.extensionRegistry.compartments.lineNumbering;
+		}
 	}
 
 	/**
@@ -55,6 +63,11 @@ class CodeMirrorVisualEditor extends CodeMirror {
 			EditorView.theme( {
 				'.cm-content': {
 					lineHeight: 1.5
+				},
+				'&': {
+					padding: window.getComputedStyle(
+						this.surfaceView.$attachedRootNode[ 0 ]
+					).padding
 				}
 			} )
 		];
@@ -89,6 +102,17 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	/**
 	 * @inheritDoc
 	 */
+	initialize( extensions = this.defaultExtensions ) {
+		if ( this.surface.getMode() !== 'source' ) {
+			mw.log.warn( '[CodeMirror] Attempted to initialize CodeMirrorVisualEditor in non-source mode.' );
+			return;
+		}
+		super.initialize( extensions );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	addEditRecoveredHandler() {}
 
 	/**
@@ -106,8 +130,6 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	 */
 	activate() {
 		super.activate();
-
-		CodeMirror.setCodeMirrorPreference( true );
 
 		// Force infinite viewport in CodeMirror to prevent misalignment of
 		// the VE surface and the CodeMirror view. See T357482#10076432.
@@ -166,8 +188,6 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	 */
 	deactivate() {
 		super.deactivate();
-
-		CodeMirror.setCodeMirrorPreference( false );
 
 		this.surfaceView.$documentNode.removeClass(
 			've-ce-documentNode-codeEditor-webkit-hide ve-ce-documentNode-codeEditor-hide'

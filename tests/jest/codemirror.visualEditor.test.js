@@ -1,8 +1,8 @@
 const CodeMirrorVisualEditor = require( '../../resources/codemirror.visualEditor.js' );
 
-const getMockSurface = ( readOnly = false ) => ( {
+const getMockSurface = ( readOnly = false, targetName = 'article' ) => ( {
 	getView: () => ( {
-		$attachedRootNode: $( '<div>' ),
+		$attachedRootNode: $( '<div>' ).css( 'padding', '10px' ),
 		$documentNode: $( '<div>' ),
 		$element: $( '<div>' ),
 		getDocument: jest.fn().mockReturnValue( {
@@ -23,11 +23,14 @@ const getMockSurface = ( readOnly = false ) => ( {
 		off: jest.fn(),
 		getSourceOffsetFromOffset: jest.fn()
 	} ),
-	getDom: jest.fn().mockReturnValue( '' )
+	getMode: () => 'source',
+	getDom: jest.fn().mockReturnValue( '' ),
+	getTarget: jest.fn().mockReturnValue( { constructor: { name: targetName } } )
 } );
 let cmVe, surface;
 
 beforeEach( () => {
+	global.ve = { init: { target: { constructor: { name: 'article' } } } };
 	mw.config.get = jest.fn().mockReturnValue( { defaultPreferences: {}, primaryPreferences: {} } );
 	surface = getMockSurface();
 	cmVe = new CodeMirrorVisualEditor( surface );
@@ -61,6 +64,20 @@ describe( 'initialize', () => {
 		} );
 		cmVe.initialize();
 		expect( initArg ).toStrictEqual( surface );
+	} );
+
+	it( 'should not use line numbering in DiscussionTools', () => {
+		surface = getMockSurface( false, 'CommentTarget' );
+		cmVe = new CodeMirrorVisualEditor( surface );
+		expect( cmVe.extensionRegistry.lineNumber ).toBeUndefined();
+		cmVe.initialize();
+		expect( cmVe.extensionRegistry.isEnabled( 'lineNumbering', cmVe.view ) ).toBe( false );
+	} );
+
+	it( 'should use the computed padding of the attached root note', () => {
+		// Root node has 10px padding in the mock.
+		cmVe.initialize();
+		expect( global.getComputedStyle( cmVe.view.dom ).padding ).toBe( '10px' );
 	} );
 } );
 

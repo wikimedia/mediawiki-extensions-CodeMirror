@@ -40,7 +40,12 @@ ve.ui.CodeMirrorAction.static.methods = [ 'toggle' ];
 ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 	if ( !this.surface.mirror && ( enable || enable === undefined ) ) {
 		await mw.loader.using( [ 'ext.CodeMirror.v6.mode.mediawiki' ] );
+		if ( this.surface.mirror ) {
+			mw.log( '[CodeMirror] VE mirror already initialized by another action.' );
+			return;
+		}
 		const CodeMirrorVisualEditor = require( '../codemirror.visualEditor.js' );
+		CodeMirrorVisualEditor.setCodeMirrorPreference( true );
 		const { mediawiki } = require( 'ext.CodeMirror.v6.mode.mediawiki' );
 		this.surface.mirror = new CodeMirrorVisualEditor(
 			this.surface,
@@ -54,6 +59,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 		this.surface.mirror.initialize();
 	} else if ( this.surface.mirror ) {
 		this.surface.mirror.toggle( enable );
+		this.surface.mirror.constructor.setCodeMirrorPreference( this.surface.mirror.isActive );
 	}
 };
 

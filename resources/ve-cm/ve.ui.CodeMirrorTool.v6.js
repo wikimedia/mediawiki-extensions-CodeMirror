@@ -49,14 +49,17 @@ ve.ui.CodeMirrorTool.prototype.onSelect = function () {
  */
 ve.ui.CodeMirrorTool.prototype.onSurfaceChange = function ( oldSurface, newSurface ) {
 	const isDisabled = newSurface.getMode() !== 'source';
-
 	this.setDisabled( isDisabled );
 	if ( !isDisabled ) {
 		const command = this.getCommand();
-		const surface = this.toolbar.getSurface();
 		const useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
-		command.execute( surface, [ useCodeMirror ] );
+		command.execute( newSurface, [ useCodeMirror ] );
 		this.setActive( useCodeMirror );
+		newSurface.once( 'destroy', () => {
+			if ( newSurface.mirror ) {
+				newSurface.mirror.destroy();
+			}
+		} );
 	}
 };
 
