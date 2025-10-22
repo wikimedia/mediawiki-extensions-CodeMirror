@@ -1120,6 +1120,11 @@ class CodeMirror {
 		if ( !mw.user.isNamed() ) {
 			return;
 		}
+		// Abort if the preference is already set to the desired value.
+		if ( mw.user.options.get( 'usecodemirror' ) > 0 && prefValue ) {
+			mw.log( '[CodeMirror] Preference not changed, skipping save.' );
+			return;
+		}
 		new mw.Api().saveOption( 'usecodemirror', prefValue ? 1 : 0 );
 		mw.user.options.set( 'usecodemirror', prefValue ? 1 : 0 );
 	}

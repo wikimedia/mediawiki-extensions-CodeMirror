@@ -134,6 +134,7 @@ window.matchMedia = jest.fn().mockReturnValue( {
 	removeEventListener: jest.fn()
 } );
 mw.language.getDigitTransformTable = jest.fn().mockReturnValue( [] );
+mw.log = jest.fn();
 mw.log.warn = jest.fn().mockImplementation( ( ...args ) => {
 	console.warn( ...args );
 } );
