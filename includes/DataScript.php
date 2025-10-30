@@ -70,6 +70,7 @@ class DataScript {
 			'functionHooks' => $parser->getFunctionHooks(),
 			'variableIDs' => $magicWordFactory->getVariableIDs(),
 			'redirection' => $magicWordFactory->get( 'redirect' )->mSynonyms,
+			'subst' => [],
 			'urlProtocols' => $parser->getUrlProtocols(),
 			'linkTrailCharacters' => $lang->linkTrail(),
 		];
@@ -126,6 +127,15 @@ class DataScript {
 				foreach ( $mw[$name] as $n ) {
 					$n = $caseSensitive ? $n : $lang->lc( $n );
 					$config['functionSynonyms'][$caseSensitive][$n] = $name;
+				}
+			}
+		}
+
+		foreach ( $magicWordFactory->getSubstArray()->names as $name ) {
+			if ( isset( $mw[$name] ) ) {
+				array_shift( $mw[$name] );
+				foreach ( $mw[$name] as $n ) {
+					$config['subst'][$n] = $name;
 				}
 			}
 		}
