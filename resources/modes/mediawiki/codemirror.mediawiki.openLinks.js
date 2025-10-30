@@ -82,22 +82,22 @@ const openLinksExtension = [
 				const ns = names.includes( mwModeConfig.tags.templateName ) ? 10 : 0,
 					title = mw.Title.newFromText( page, ns );
 				if ( title ) {
-					open( title.getUrl(), '_blank' );
+					open( title.getUrl(), '_blank', 'noopener noreferrer' );
 					return true;
 				}
 			} else if ( names.includes( mwModeConfig.tags.extLinkProtocol ) ||
 				names.includes( mwModeConfig.tags.freeExtLinkProtocol ) ) {
-				open( state.sliceDoc( from, node.nextSibling.to ), '_blank' );
+				open( state.sliceDoc( from, node.nextSibling.to ), '_blank', 'noopener noreferrer' );
 				return true;
 			} else if ( names.includes( mwModeConfig.tags.extLink ) ||
 				names.includes( mwModeConfig.tags.freeExtLink ) ) {
-				open( state.sliceDoc( node.prevSibling.from, to ), '_blank' );
+				open( state.sliceDoc( node.prevSibling.from, to ), '_blank', 'noopener noreferrer' );
 				return true;
 			} else if ( names.includes( mwModeConfig.tags.pageName ) &&
 				names.includes( 'mw-ext-templatestyles' ) ) {
 				const title = mw.Title.newFromText( state.sliceDoc( from, to ).trim(), 10 );
 				if ( title ) {
-					open( title.getUrl(), '_blank' );
+					open( title.getUrl(), '_blank', 'noopener noreferrer' );
 					return true;
 				}
 			} else if ( name.includes( mwModeConfig.tags.pageName ) &&
@@ -105,7 +105,7 @@ const openLinksExtension = [
 				const ns = Number( /mw-function-(\d+)/.exec( name )[ 1 ] ),
 					title = mw.Title.newFromText( state.sliceDoc( from, to ).trim(), ns );
 				if ( title ) {
-					open( title.getUrl(), '_blank' );
+					open( title.getUrl(), '_blank', 'noopener noreferrer' );
 					return true;
 				}
 			}

@@ -211,7 +211,3 @@ module.exports = {
 	lintApi,
 	worker
 };
-
-if ( mw.config.get( 'cmDebug' ) ) {
-	window.mediawikiWorker = worker;
-}
