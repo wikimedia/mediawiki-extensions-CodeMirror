@@ -186,12 +186,12 @@ class CodeMirrorTextSelection {
 			} else if ( options.replace ) {
 				selectedText = options.peri;
 			} else {
-				while ( selectedText.charAt( selectedText.length - 1 ) === ' ' ) {
+				while ( selectedText.endsWith( ' ' ) ) {
 					// Exclude ending space char
 					selectedText = selectedText.slice( 0, -1 );
 					options.post += ' ';
 				}
-				while ( selectedText.charAt( 0 ) === ' ' ) {
+				while ( selectedText.startsWith( ' ' ) ) {
 					// Exclude prepending space char
 					selectedText = selectedText.slice( 1 );
 					options.pre = ' ' + options.pre;
