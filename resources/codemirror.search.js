@@ -1,3 +1,4 @@
+/* eslint-disable es-x/no-string-prototype-replaceall */
 const {
 	EditorView,
 	SearchQuery,

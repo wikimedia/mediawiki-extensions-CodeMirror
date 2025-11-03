@@ -8,35 +8,26 @@
 	"parserOptions": {
 		"sourceType": "module"
 	},
-	"env": {
-		"browser": true,
-		"commonjs": true
-	},
 	"globals": {
 		"Tree": "readonly",
 		"ve": "readonly"
 	},
-	"rules": {
-		"es-x/no-array-prototype-includes": "off",
-		"jsdoc/no-undefined-types": [
-			"warn",
-			{
-				"definedTypes": [
-					"CodeMirror",
-					"CodeMirrorChild",
-					"CodeMirrorKeyBinding",
-					"CodeMirrorKeymap",
-					"CodeMirrorMediaWiki",
-					"CodeMirrorPreferences",
-					"CodeMirrorTextSelection",
-					"Command",
-					"Hook",
-					"LanguageSupport",
-					"StateCommand"
-				]
+	"settings": {
+		"jsdoc": {
+			"preferredTypes": {
+				"CodeMirror": "CodeMirror",
+				"CodeMirrorChild": "CodeMirrorChild",
+				"CodeMirrorKeyBinding": "CodeMirrorKeyBinding",
+				"CodeMirrorKeymap": "CodeMirrorKeymap",
+				"CodeMirrorMediaWiki": "CodeMirrorMediaWiki",
+				"CodeMirrorPreferences": "CodeMirrorPreferences",
+				"CodeMirrorTextSelection": "CodeMirrorTextSelection",
+				"Command": "Command",
+				"Hook": "Hook",
+				"LanguageSupport": "LanguageSupport",
+				"StateCommand": "StateCommand"
 			}
-		],
-		"es-x/no-string-prototype-replaceall": "warn"
+		}
 	},
 	"overrides": [
 		{

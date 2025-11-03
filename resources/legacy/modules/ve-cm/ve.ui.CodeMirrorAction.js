@@ -97,7 +97,6 @@ ve.ui.CodeMirrorAction.prototype.toggle = function ( enable ) {
 				};
 
 				if ( ve.ui.CodeMirrorAction.static.isLineNumbering() ) {
-					// eslint-disable-next-line es-x/no-object-assign
 					Object.assign( cmOptions, {
 						// Set up a special "padding" gutter to create space between the line numbers
 						// and page content.  The first column name is a magic constant which causes

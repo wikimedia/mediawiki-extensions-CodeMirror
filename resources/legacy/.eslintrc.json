@@ -9,8 +9,7 @@
 		"CodeMirror": "readonly"
 	},
 	"rules": {
-		"max-len": "off",
-		"es-x/no-object-assign": "warn"
+		"max-len": "off"
 	},
 	"overrides": [
 		{
