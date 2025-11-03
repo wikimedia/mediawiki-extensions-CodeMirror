@@ -35,6 +35,10 @@ global.mockMwConfigGet = ( config = {} ) => {
 			doubleUnderscore: [ {
 				__notoc__: 'notoc'
 			}, {} ],
+			subst: {
+				'SUBST:': 'subst',
+				'SAFESUBST:': 'safesubst'
+			},
 			functionSynonyms: [ {
 				'#ifexist': 'ifexist',
 				'#invoke': 'invoke',

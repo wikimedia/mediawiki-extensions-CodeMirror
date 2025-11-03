@@ -49,6 +49,14 @@ const isComponent = ( keys ) => (
 	 */
 	isTemplateBracket = isComponent( [ 'templateBracket', 'parserFunctionBracket' ] ),
 	/**
+	 * Check if a SyntaxNode is a template name
+	 *
+	 * @param {SyntaxNode} node The SyntaxNode to check
+	 * @return {boolean}
+	 * @private
+	 */
+	isTemplateName = isComponent( [ 'templateName', 'parserFunctionName' ] ),
+	/**
 	 * Check if a SyntaxNode is a template delimiter (`|` or `:`)
 	 *
 	 * @param {SyntaxNode} node The SyntaxNode to check
@@ -56,6 +64,15 @@ const isComponent = ( keys ) => (
 	 * @private
 	 */
 	isDelimiter = isComponent( [ 'templateDelimiter', 'parserFunctionDelimiter' ] ),
+	/**
+	 * Check if a SyntaxNode is a template delimiter (`|` or `:`),
+	 * excluding `subst:` and `safesubst:`
+	 *
+	 * @param {SyntaxNode} node The SyntaxNode to check
+	 * @return {boolean}
+	 * @private
+	 */
+	isTemplateDelimiter = ( node ) => isDelimiter( node ) && !isTemplateName( node.nextSibling ),
 	/**
 	 * Check if a SyntaxNode is an extension tag bracket (`<` or `>`)
 	 *
@@ -150,7 +167,7 @@ const foldable = ( state, posOrNode, tree, refOnly ) => {
 	/** The stack of opening (+) or closing (-) brackets */
 	let stack = 1,
 		/** The first delimiter */
-		delimiter = isDelimiter( node ) ? node : null,
+		delimiter = isTemplateDelimiter( node ) ? node : null,
 		/** The start of the closing bracket */
 		to = 0;
 	while ( nextSibling ) {
@@ -165,7 +182,7 @@ const foldable = ( state, posOrNode, tree, refOnly ) => {
 				break;
 			}
 			stack += lbrace;
-		} else if ( !delimiter && stack === 1 && isDelimiter( nextSibling ) ) {
+		} else if ( !delimiter && stack === 1 && isTemplateDelimiter( nextSibling ) ) {
 			// The first delimiter of the current template so far
 			delimiter = nextSibling;
 		}
@@ -185,7 +202,7 @@ const foldable = ( state, posOrNode, tree, refOnly ) => {
 				break;
 			}
 			stack += rbrace;
-		} else if ( stack === -1 && isDelimiter( prevSibling ) ) {
+		} else if ( stack === -1 && isTemplateDelimiter( prevSibling ) ) {
 			// The first delimiter of the current template so far
 			delimiter = prevSibling;
 		}

@@ -133,6 +133,9 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 		}|(?:${
 			img.filter( ( word ) => !word.endsWith( '$1' ) ).join( '|' )
 		}|(?:\\d+x?|\\d*x\\d+)\\s*(?:px)?px)\\s*(?=\\||\\]\\]|$))` );
+		this.substRegex = new RegExp( `^(?:(${
+			Object.keys( config.subst ).join( '|' )
+		})\\s*)?`, 'i' );
 	}
 
 	/** @inheritDoc */
@@ -352,6 +355,21 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 			return this.makeLocalStyle( mwModeConfig.tags.templateVariableBracket, state );
 		}
 		return this.eatWikiText( mwModeConfig.tags.templateVariable )( stream, state );
+	}
+
+	inSubstitution( subst ) {
+		return ( stream, state ) => {
+			if ( subst ) {
+				stream.match( subst );
+				stream.backUp( 1 );
+				state.tokenize = this.inSubstitution();
+				return this.makeLocalStyle( mwModeConfig.tags.parserFunctionName, state );
+			}
+			stream.next();
+			stream.eatSpace();
+			state.tokenize = state.stack.pop();
+			return this.makeLocalStyle( mwModeConfig.tags.parserFunctionDelimiter, state );
+		};
 	}
 
 	inParserFunctionName( ns ) {
@@ -1218,11 +1236,19 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 							state
 						);
 					} else if ( stream.match( /^{(?!{(?!{))[\s\u00a0]*/ ) ) {
+						const [ { length }, subst ] = stream.match( this.substRegex ),
+							tokenizer = subst && this.inSubstitution( subst );
 						// Parser function
 						if ( stream.peek() === '#' ) {
+							stream.backUp( length );
 							state.nExt++;
 							state.stack.push( state.tokenize );
-							state.tokenize = this.inParserFunctionName();
+							if ( tokenizer ) {
+								state.stack.push( this.inParserFunctionName() );
+								state.tokenize = tokenizer;
+							} else {
+								state.tokenize = this.inParserFunctionName();
+							}
 							return this.makeLocalStyle(
 								mwModeConfig.tags.parserFunctionBracket,
 								state
@@ -1247,9 +1273,15 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 								canonicalName &&
 								( delimiter === ':' || variableIDs.includes( canonicalName ) )
 							) {
+								stream.backUp( length );
 								state.nExt++;
 								state.stack.push( state.tokenize );
-								state.tokenize = this.inParserFunctionName();
+								if ( tokenizer ) {
+									state.stack.push( this.inParserFunctionName() );
+									state.tokenize = tokenizer;
+								} else {
+									state.tokenize = this.inParserFunctionName();
+								}
 								return this.makeLocalStyle(
 									mwModeConfig.tags.parserFunctionBracket,
 									state
@@ -1257,9 +1289,15 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 							}
 						}
 						// Template
+						stream.backUp( length );
 						state.nTemplate++;
 						state.stack.push( state.tokenize );
-						state.tokenize = this.eatTemplatePageName( false );
+						if ( tokenizer ) {
+							state.stack.push( this.eatTemplatePageName( false ) );
+							state.tokenize = tokenizer;
+						} else {
+							state.tokenize = this.eatTemplatePageName( false );
+						}
 						return this.makeLocalStyle( mwModeConfig.tags.templateBracket, state );
 					}
 					break;

@@ -143,6 +143,9 @@ const map = {
 					interwikiMap: 2
 				}
 			},
+			svg: {
+				new: 2
+			},
 			text: {
 				decode: 2,
 				encode: 2,
@@ -167,6 +170,7 @@ const map = {
 				compare: 2,
 				getCurrentTitle: 2,
 				new: 2,
+				newBatch: 2,
 				makeTitle: 2
 			},
 			uri: {
