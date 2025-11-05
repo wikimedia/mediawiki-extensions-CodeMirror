@@ -429,6 +429,11 @@
 				"codemirror-toggle-label-short"
 			]
 		},
+		"ext.CodeMirror.v6.styles": {
+			"styles": [
+				"codemirror.styleModule.less"
+			]
+		},
 		"ext.CodeMirror.v6.visualEditor": {
 			"dependencies": [
 				"ext.visualEditor.mwcore",
