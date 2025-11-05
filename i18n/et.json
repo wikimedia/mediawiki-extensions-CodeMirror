@@ -18,6 +18,7 @@
 	"codemirror-prefs-bracketmatching": "Näita sulgude paare",
 	"codemirror-prefs-linenumbering": "Näita reanumbreid",
 	"codemirror-prefs-linewrapping": "Murra ridu",
+	"codemirror-prefs-lint": "Luba koodi lintimine",
 	"codemirror-prefs-activeline": "Tõsta aktiivne rida esile",
 	"codemirror-prefs-specialchars": "Näita erimärke",
 	"codemirror-prefs-whitespace": "Tõsta tühemikud esile",
