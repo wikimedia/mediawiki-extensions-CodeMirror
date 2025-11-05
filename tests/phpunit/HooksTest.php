@@ -89,6 +89,10 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			->willReturnCallback( static function ( $modules ) use ( &$modulesLoaded ) {
 				$modulesLoaded = array_merge( $modulesLoaded, is_array( $modules ) ? $modules : [ $modules ] );
 			} );
+		$out->method( 'addModuleStyles' )
+			->willReturnCallback( static function ( $modules ) use ( &$modulesLoaded ) {
+				$modulesLoaded = array_merge( $modulesLoaded, is_array( $modules ) ? $modules : [ $modules ] );
+			} );
 		$out->method( 'addJsConfigVars' )
 			->willReturnCallback( static function ( $vars ) use ( &$jsConfigVars ) {
 				$jsConfigVars = array_merge( $jsConfigVars, $vars );
@@ -207,18 +211,31 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.modes' ],
 			'css'
 		];
-		yield 'CM6, contentModel JavaScript' => [
+		yield 'CM6 + WikiEditor, contentModel JavaScript' => [
 			[
 				'contentModel' => CONTENT_MODEL_JAVASCRIPT,
-				'allowedModes' => [ CONTENT_MODEL_JAVASCRIPT => true ]
+				'allowedModes' => [ CONTENT_MODEL_JAVASCRIPT => true ],
+				Hooks::OPTION_USE_WIKIEDITOR => true,
 			],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.modes' ],
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.modes',
+				'ext.CodeMirror.v6.styles', 'ext.CodeMirror.v6.WikiEditor' ],
 			'javascript'
 		];
 		yield 'CM6, contentModel JSON' => [
 			[ 'contentModel' => CONTENT_MODEL_JSON, 'allowedModes' => [ Hooks::MODE_JSON => true ] ],
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.modes' ],
 			'json'
+		];
+		yield 'CM6 + WikiEditor, contentModel JavaScript, read-only' => [
+			[
+				'contentModel' => CONTENT_MODEL_JAVASCRIPT,
+				'allowedModes' => [ CONTENT_MODEL_JAVASCRIPT => true ],
+				'method' => 'readOnly',
+				Hooks::OPTION_USE_WIKIEDITOR => true,
+			],
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.modes',
+				'ext.CodeMirror.v6.styles', 'ext.CodeMirror.v6.WikiEditor' ],
+			'javascript'
 		];
 		yield 'CM6, contentModel CSS, CSS not allowed' => [
 			[ 'contentModel' => CONTENT_MODEL_CSS, 'allowedModes' => [ Hooks::MODE_CSS => false ] ],

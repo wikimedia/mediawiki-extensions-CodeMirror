@@ -209,6 +209,8 @@ class CodeMirrorWikiEditor extends CodeMirror {
 			} );
 		} else {
 			this.addCodeFormattingButtonsToToolbar();
+			// Remove CSS class used by style module. Should be kept in sync with Hooks::addStyleModule().
+			document.body.classList.remove( 'cm-mw-wikieditor-loading' );
 		}
 	}
 

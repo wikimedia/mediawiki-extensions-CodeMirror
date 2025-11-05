@@ -1,0 +1,29 @@
+@import 'mediawiki.skin.variables.less';
+
+// Styles here are render-blocking.
+// Only add styles that are essential for initial rendering.
+
+.client-js {
+	// From Extension:WikiEditor (GPL-2.0+)
+	.mw-editform {
+		/* Disable margin collapse, e.g. with messages boxes */
+		padding: 0.05px;
+
+		> #wpTextbox1 { /* stylelint-disable-line selector-max-id */
+			/* Toolbar height + padding + bottom border = 26 + 2*3 + 1 */
+			margin-top: 33px;
+		}
+	}
+
+	> .cm-mw-wikieditor-loading {
+		// Adjust textarea to make room for CodeMirror status bar and gutter.
+		// This makes room for a gutter with 3-digit line numbers + linting markers,
+		// which is the same assumption made by CodeEditor's style module.
+		#wpTextbox1 { /* stylelint-disable-line selector-max-id */
+			padding-bottom: @spacing-150;
+			padding-left: 70px;
+			padding-top: @spacing-25;
+			line-height: 1.4;
+		}
+	}
+}

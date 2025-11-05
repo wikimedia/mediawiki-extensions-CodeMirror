@@ -43,6 +43,7 @@ class Hooks implements
 	private readonly bool $debugMode;
 	private readonly array $enabledModes;
 	private bool $readOnly = false;
+	private bool $isEditPage = false;
 
 	public const MODE_MEDIAWIKI = 'mediawiki';
 	public const MODE_JAVASCRIPT = 'javascript';
@@ -184,6 +185,7 @@ class Hooks implements
 			return;
 		}
 
+		$this->isEditPage = true;
 		$useCodeMirror = $this->userOptionsManager->getBoolOption( $out->getUser(), self::OPTION_USE_CODEMIRROR );
 		$useWikiEditor = $this->userOptionsManager->getBoolOption( $out->getUser(), self::OPTION_USE_WIKIEDITOR );
 
@@ -245,6 +247,10 @@ class Hooks implements
 			$out->addModules( 'ext.CodeMirror.v6.init' );
 		}
 
+		if ( $useCodeMirror && $useWikiEditor && $mode !== self::MODE_MEDIAWIKI && $this->isEditPage ) {
+			$this->addStyleModule( $out );
+		}
+
 		$mainTextarea = $textareas[0];
 		$childTextareas = array_slice( $textareas, 1 );
 
@@ -262,6 +268,18 @@ class Hooks implements
 	}
 
 	/**
+	 * Add render-blocking styles to avoid FOUC in code editors.
+	 *
+	 * @todo Add server-side fetching of CM preferences and add a CSS class
+	 *   for line numbering and linting so we can style accordingly.
+	 * @param OutputPage $out
+	 */
+	private function addStyleModule( OutputPage $out ): void {
+		$out->addBodyClasses( 'cm-mw-wikieditor-loading' );
+		$out->addModuleStyles( 'ext.CodeMirror.v6.styles' );
+	}
+
+	/**
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/EditPage::showReadOnlyForm:initial
 	 *
 	 * @param EditPage $editor
@@ -269,6 +287,7 @@ class Hooks implements
 	 */
 	public function onEditPage__showReadOnlyForm_initial( $editor, $out ): void {
 		if ( $this->shouldUseV6( $out ) && $this->shouldLoadCodeMirror( $out ) ) {
+			$this->isEditPage = true;
 			$this->readOnly = true;
 			$this->loadInitModules( $out );
 		}
