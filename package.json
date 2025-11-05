@@ -13,6 +13,7 @@
 		"test:lint:styles": "stylelint --cache \"resources/**/*.less\"",
 		"test:lint:i18n": "banana-checker i18n/",
 		"test:unit": "jest",
+		"coverage": "npm run test:unit",
 		"check-built-assets": "{ git status resources/lib/ | grep \"nothing to commit, working tree clean\"; } && { echo 'CHECKING BUILD SOURCES ARE COMMITTED' && npm run build && git status resources/lib/ | grep \"nothing to commit, working tree clean\" || { npm run node-debug; false; }; }",
 		"node-debug": "node -v && npm -v && echo 'ERROR: Please ensure that production assets have been built with `npm run build` and commited, and that you are using the correct version of Node/NPM.'",
 		"selenium-test": "wdio tests/selenium/wdio.conf.js",
