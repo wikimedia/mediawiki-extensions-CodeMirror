@@ -17,6 +17,7 @@
 	"codemirror-keymap-preferences": "Nastavitve označevanja skladnje",
 	"prefs-accessibility": "Dostopnost",
 	"prefs-syntax-highlighting": "Označevanje skladnje",
+	"codemirror-wikilint-remove": "odstrani",
 	"codemirror-beta-feature-title": "Izboljšano označevanje skladnje",
 	"codemirror-beta-feature-description": "Pridobite zgodnji dostop do novih funkcij označevanja in urejanja skladnje, kot sta zlaganje kode in samodejno dokončanje."
 }
