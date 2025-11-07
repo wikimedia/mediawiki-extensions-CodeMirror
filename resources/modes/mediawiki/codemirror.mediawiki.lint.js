@@ -188,22 +188,32 @@ const execute = async ( wikitext ) => {
 	);
 };
 
+const isEqualError = ( a, b ) => a.type === b.type &&
+	a.dsr[ 0 ] === b.dsr[ 0 ] &&
+	a.dsr[ 1 ] === b.dsr[ 1 ];
+
 const lintApi = async ( { state: { doc } } ) => {
 	const errors = await execute( doc.toString() );
 	if ( hasExtLinter && errors.length ) {
 		await api.loadMessagesIfMissing( errors.map( ( { type } ) => getMsgKey( type ) ) );
 	}
-	return errors.map( ( { type, dsr: [ from, to ] } ) => {
-		const msgKey = getMsgKey( type );
-		return {
-			severity: 'info',
-			source: 'Parsoid',
-			// eslint-disable-next-line mediawiki/msg-doc
-			message: mw.messages.exists( msgKey ) ? mw.msg( msgKey ) : type,
-			from,
-			to
-		};
-	} );
+	return errors.reduce( ( acc, cur ) => {
+		if ( !acc.some( ( err ) => isEqualError( err, cur ) ) ) {
+			acc.push( cur );
+		}
+		return acc;
+	}, [] )
+		.map( ( { type, dsr: [ from, to ] } ) => {
+			const msgKey = getMsgKey( type );
+			return {
+				severity: 'info',
+				source: 'Parsoid',
+				// eslint-disable-next-line mediawiki/msg-doc
+				message: mw.messages.exists( msgKey ) ? mw.msg( msgKey ) : type,
+				from,
+				to
+			};
+		} );
 };
 
 module.exports = {
