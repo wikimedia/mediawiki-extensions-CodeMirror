@@ -21,7 +21,7 @@
 	"codemirror-prefs-bracketmatching": "Bật khớp dấu ngoặc",
 	"codemirror-prefs-linenumbering": "Hiển thị số dòng",
 	"codemirror-prefs-linewrapping": "Ngắt dòng tự động",
-	"codemirror-prefs-lint": "Kiểm tra lỗi code",
+	"codemirror-prefs-lint": "Kiểm tra lỗi lint",
 	"codemirror-prefs-activeline": "Nổi bật dòng đang hoạt động",
 	"codemirror-prefs-specialchars": "Hiển thị các ký tự đặc biệt",
 	"codemirror-prefs-whitespace": "Làm nổi bật khoảng trắng",
