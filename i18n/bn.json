@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Aftabuzzaman",
+			"আজিজ",
 			"আফতাবুজ্জামান"
 		]
 	},
@@ -12,6 +13,7 @@
 	"codemirror-prefs-section-lines": "লাইন",
 	"codemirror-prefs-section-characters": "অক্ষর",
 	"codemirror-prefs-section-code-assistance": "কোড সহায়তা",
+	"codemirror-prefs-section-references": "তথ্যসূত্র",
 	"codemirror-prefs-section-other": "অন্যান্য",
 	"codemirror-prefs-reset": "পূর্বনির্ধারিত অবস্থায় যান",
 	"codemirror-prefs-colorblind": "উইকিপাঠ্য সম্পাদনার সময় সিনট্যাক্স আলোকপাতকরণের জন্য বর্ণান্ধ-বন্ধুত্বপূর্ণ স্কিম সক্রিয় করুন",

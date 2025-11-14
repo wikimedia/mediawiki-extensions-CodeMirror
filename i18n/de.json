@@ -22,6 +22,7 @@
 	"codemirror-prefs-section-lines": "Zeilen",
 	"codemirror-prefs-section-characters": "Zeichen",
 	"codemirror-prefs-section-code-assistance": "Code-Unterstützung",
+	"codemirror-prefs-section-references": "Einzelnachweise",
 	"codemirror-prefs-section-other": "Andere",
 	"codemirror-prefs-codefolding": "Code-Faltung aktivieren",
 	"codemirror-prefs-autocomplete": "Autovervollständigung aktivieren",
@@ -37,6 +38,7 @@
 	"codemirror-prefs-whitespace": "Leerzeichen hervorheben",
 	"codemirror-prefs-autofocus": "Den Fokus zunächst auf den Editor legen",
 	"codemirror-prefs-highlightrefs": "Des Inhalt von <ref>-Tages markieren",
+	"codemirror-prefs-foldallrefs": "Alle <ref>-Tags standardmäßig einklappen",
 	"codemirror-prefs-reset": "Auf Standardwerte zurücksetzen",
 	"codemirror-prefs-colorblind": "Ein für Farbenfehlsichtige angepasstes Farbschema der Syntaxhervorhebung zum Bearbeiten von Wikitext verwenden",
 	"codemirror-prefs-colorblind-help": "Wenn {{#FORMAL:du|Sie}} ein Helferlein zur Syntaxhervorhebung {{#FORMAL:verwendest|verwenden}}, wird diese Einstellung nicht funktionieren.",
@@ -211,5 +213,6 @@
 	"codemirror-wikilint-vertical-alignment": "vertikale Ausrichtung",
 	"codemirror-wikilint-whitespace": "ein Leerzeichen einfügen",
 	"codemirror-beta-feature-title": "Verbesserte Syntaxhervorhebung",
-	"codemirror-beta-feature-description": "Erhalte frühzeitigen Zugriff auf neue Funktionen zur Syntaxhervorhebung und Bearbeitung, wie z. B. Codefaltung und Autovervollständigung."
+	"codemirror-beta-feature-description": "Erhalte frühzeitigen Zugriff auf neue Funktionen zur Syntaxhervorhebung und Bearbeitung, wie z. B. Codefaltung und Autovervollständigung.",
+	"codemirror-potentially-slow": "möglicherweise langsam"
 }

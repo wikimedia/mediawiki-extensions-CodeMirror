@@ -17,6 +17,7 @@
 	"codemirror-prefs-section-lines": "שורות",
 	"codemirror-prefs-section-characters": "תווים",
 	"codemirror-prefs-section-code-assistance": "סיוע בקוד",
+	"codemirror-prefs-section-references": "הערות שוליים",
 	"codemirror-prefs-section-other": "אחר",
 	"codemirror-prefs-codefolding": "הפעלת קיפול קוד",
 	"codemirror-prefs-autocomplete": "הפעלת השלמה אוטומטית",
@@ -32,6 +33,7 @@
 	"codemirror-prefs-whitespace": "צביעת רווחים",
 	"codemirror-prefs-autofocus": "למקד את העורך תחילה",
 	"codemirror-prefs-highlightrefs": "להדגיש את התוכן של תגי <ref>",
+	"codemirror-prefs-foldallrefs": "לקבל את כל תגי <ref> לפי ברירת מחדך",
 	"codemirror-prefs-reset": "איפוס לברירות מחדל",
 	"codemirror-prefs-colorblind": "להפעיל ערכת צבעים ידידותית לעיוורי־צבעים בצביעת קוד בעריכת קוד ויקי",
 	"codemirror-prefs-colorblind-help": "אם מופעל אצלך גאדג'ט לצביעת קוד, ההעדפה הזאת לא תעבוד",
@@ -206,5 +208,6 @@
 	"codemirror-wikilint-vertical-alignment": "יישור אנכי",
 	"codemirror-wikilint-whitespace": "הכנסת רווח",
 	"codemirror-beta-feature-title": "צביעת תחביר משופרת",
-	"codemirror-beta-feature-description": "קבלת גישה מוקדמת לתכונות חדשות של צביעת תחביר ועריכה כגון קיפול קוד והשלמה אוטומטית."
+	"codemirror-beta-feature-description": "קבלת גישה מוקדמת לתכונות חדשות של צביעת תחביר ועריכה כגון קיפול קוד והשלמה אוטומטית.",
+	"codemirror-potentially-slow": "זה יכול להיות איטי"
 }
