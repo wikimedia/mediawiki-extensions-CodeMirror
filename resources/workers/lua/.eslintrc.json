@@ -11,7 +11,8 @@
 		"ecmaVersion": 8
 	},
 	"rules": {
-		"es-x/no-promise-prototype-finally": 0
+		"es-x/no-promise-prototype-finally": 0,
+		"es-x/no-resizable-and-growable-arraybuffers": "warn"
 	},
 	"settings": {
 		"es-x": {

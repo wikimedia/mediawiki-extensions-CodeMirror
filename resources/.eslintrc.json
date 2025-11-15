@@ -35,7 +35,8 @@
 					"StateCommand"
 				]
 			}
-		]
+		],
+		"es-x/no-string-prototype-replaceall": "warn"
 	},
 	"overrides": [
 		{
@@ -43,8 +44,14 @@
 				"addon/edit/*.js"
 			],
 			"rules": {
-				"computed-property-spacing": [ "error", "never" ],
-				"indent": [ "error", 2 ]
+				"computed-property-spacing": [
+					"error",
+					"never"
+				],
+				"indent": [
+					"error",
+					2
+				]
 			}
 		}
 	]
