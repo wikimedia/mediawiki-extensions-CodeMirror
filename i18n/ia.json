@@ -15,6 +15,7 @@
 	"codemirror-prefs-section-lines": "Lineas",
 	"codemirror-prefs-section-characters": "Characteres",
 	"codemirror-prefs-section-code-assistance": "Assistentia de codice",
+	"codemirror-prefs-section-references": "Referentias",
 	"codemirror-prefs-section-other": "Altere",
 	"codemirror-prefs-codefolding": "Activar le contraction/expansion de codice",
 	"codemirror-prefs-autocomplete": "Activar le autocompletamento",
@@ -30,6 +31,7 @@
 	"codemirror-prefs-whitespace": "Evidentiar spatios blanc",
 	"codemirror-prefs-autofocus": "Mitter le puncto focal initial sur le editor",
 	"codemirror-prefs-highlightrefs": "Mitter in evidentia le contento de etiquettas <ref>",
+	"codemirror-prefs-foldallrefs": "Plicar tote le etiquettas <ref> pre predefinition",
 	"codemirror-prefs-reset": "Reinitialisar al optiones predefinite",
 	"codemirror-prefs-colorblind": "Activar le schema de coloration syntactic adaptate a personas con daltonismo durante le modification de wikitexto",
 	"codemirror-prefs-colorblind-help": "Si tu usa un accessorio pro le coloration syntactic, iste preferentia non functionara.",
@@ -204,5 +206,6 @@
 	"codemirror-wikilint-vertical-alignment": "alineamento vertical",
 	"codemirror-wikilint-whitespace": "inserer un spatio",
 	"codemirror-beta-feature-title": "Coloration syntactic meliorate",
-	"codemirror-beta-feature-description": "Obtene accesso precoce a nove functiones de coloration syntactic e de modification, como contraher/expander codice e autocompletamento."
+	"codemirror-beta-feature-description": "Obtene accesso precoce a nove functiones de coloration syntactic e de modification, como contraher/expander codice e autocompletamento.",
+	"codemirror-potentially-slow": "pote esser lente"
 }

@@ -17,6 +17,7 @@
 	"codemirror-prefs-section-lines": "Liñas",
 	"codemirror-prefs-section-characters": "Caracteres",
 	"codemirror-prefs-section-code-assistance": "Asistencia de código",
+	"codemirror-prefs-section-references": "Referencias",
 	"codemirror-prefs-section-other": "Outras",
 	"codemirror-prefs-codefolding": "Activar o pregamento de código",
 	"codemirror-prefs-autocomplete": "Activar o autocompletado",
@@ -32,6 +33,7 @@
 	"codemirror-prefs-whitespace": "Resaltar os espazos en branco",
 	"codemirror-prefs-autofocus": "Poñer o foco no editor ao cargalo",
 	"codemirror-prefs-highlightrefs": "Resaltar o contido das etiquetas <ref>",
+	"codemirror-prefs-foldallrefs": "Encartar todas as etiquetas <ref> por defecto",
 	"codemirror-prefs-reset": "Restablecer aos valores predeterminados",
 	"codemirror-prefs-colorblind": "Activar o esquema para as persoas daltónicas que resalta a sintaxe ao editar o texto wiki",
 	"codemirror-prefs-colorblind-help": "Se usas un trebello para o resaltado de sintaxe, esta preferencia non funcionará.",
@@ -206,5 +208,6 @@
 	"codemirror-wikilint-vertical-alignment": "aliñamento vertical",
 	"codemirror-wikilint-whitespace": "inserir un espazo",
 	"codemirror-beta-feature-title": "Resaltado de sintaxe mellorado",
-	"codemirror-beta-feature-description": "Obtén acceso anticipado a novas funcións de edición e resaltado de sintaxe, como o pregamento de código e o autocompletado."
+	"codemirror-beta-feature-description": "Obtén acceso anticipado a novas funcións de edición e resaltado de sintaxe, como o pregamento de código e o autocompletado.",
+	"codemirror-potentially-slow": "potencialmente lento"
 }
