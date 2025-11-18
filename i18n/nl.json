@@ -20,6 +20,7 @@
 	"codemirror-prefs-section-lines": "Regels",
 	"codemirror-prefs-section-characters": "Tekens",
 	"codemirror-prefs-section-code-assistance": "Code-assistentie",
+	"codemirror-prefs-section-references": "Referenties",
 	"codemirror-prefs-section-other": "Overige",
 	"codemirror-prefs-codefolding": "Code opvouwen inschakelen",
 	"codemirror-prefs-autocomplete": "Automatisch aanvullen inschakelen",
@@ -35,6 +36,7 @@
 	"codemirror-prefs-whitespace": "Witruimte markeren",
 	"codemirror-prefs-autofocus": "De beginfocus bij de editor leggen",
 	"codemirror-prefs-highlightrefs": "De inhoud van <ref>-tags accentueren",
+	"codemirror-prefs-foldallrefs": "Alle <ref>-tags standaard inklappen",
 	"codemirror-prefs-reset": "Terug naar standaardinstellingen",
 	"codemirror-prefs-colorblind": "Schakel een kleurenblindvriendelijk schema in voor syntaxisaccentuering bij het bewerken van wikitekst",
 	"codemirror-prefs-colorblind-help": "Als u een gadget gebruikt voor syntaxis-accentuering, werkt deze voorkeur niet.",
@@ -209,5 +211,6 @@
 	"codemirror-wikilint-vertical-alignment": "verticale uitlijning",
 	"codemirror-wikilint-whitespace": "een spatie invoegen",
 	"codemirror-beta-feature-title": "Verbeterde syntaxiskleuring",
-	"codemirror-beta-feature-description": "Krijg vroegtijdig toegang tot nieuwe functies voor syntaxiskleuring en bewerking, zoals code samenvouwen en automatisch aanvullen."
+	"codemirror-beta-feature-description": "Krijg vroegtijdig toegang tot nieuwe functies voor syntaxiskleuring en bewerking, zoals code samenvouwen en automatisch aanvullen.",
+	"codemirror-potentially-slow": "potentieel traag"
 }

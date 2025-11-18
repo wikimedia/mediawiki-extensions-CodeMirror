@@ -13,6 +13,7 @@
 	"codemirror-toggle-label": "Истицање синтаксе",
 	"codemirror-prefs-enable": "Омогући истицање синтаксе",
 	"codemirror-prefs-help": "помоћ",
+	"codemirror-prefs-section-references": "Референце",
 	"codemirror-prefs-whitespace": "Истакни беле просторе",
 	"codemirror-close": "Затвори",
 	"codemirror-find": "Пронађи",
