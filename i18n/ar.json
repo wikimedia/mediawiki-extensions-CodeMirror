@@ -23,6 +23,7 @@
 	"codemirror-prefs-section-lines": "خطوط",
 	"codemirror-prefs-section-characters": "الأحرف",
 	"codemirror-prefs-section-code-assistance": "مساعدة الكود",
+	"codemirror-prefs-section-references": "مراجع",
 	"codemirror-prefs-section-other": "أخرى",
 	"codemirror-prefs-codefolding": "فعّل طي الترميز",
 	"codemirror-prefs-autocomplete": "فعّل الإكمال التلقائي",
@@ -38,6 +39,7 @@
 	"codemirror-prefs-whitespace": "تمييز المسافات البيضاء",
 	"codemirror-prefs-autofocus": "ضع التركيز الأولي على المحرر",
 	"codemirror-prefs-highlightrefs": "تسليط الضوء على محتويات<ref> العلامات",
+	"codemirror-prefs-foldallrefs": "اطوِ الكل<ref> العلامات بشكل افتراضي",
 	"codemirror-prefs-reset": "إعادة التعيين إلى الإعدادات الافتراضية",
 	"codemirror-prefs-colorblind": "فعّل مخططًا متوافقًا مع عمى الألوان لإبراز التركيب عند تعديل نص ويكي.",
 	"codemirror-prefs-colorblind-help": "لن يعمل هذا التفضيل إذا كنت تستخدم إضافةً لإبراز التركيب.",
@@ -212,5 +214,6 @@
 	"codemirror-wikilint-vertical-alignment": "محاذاة عمودية",
 	"codemirror-wikilint-whitespace": "أدخل مسافة",
 	"codemirror-beta-feature-title": "تحسين إبراز التركيب",
-	"codemirror-beta-feature-description": "احصل على إمكانية الوصول المبكر إلى ميزاتٍ جديدة لإبراز التركيب والتحرير مثل طي التعليمات البرمجية والإكمال التلقائي."
+	"codemirror-beta-feature-description": "احصل على إمكانية الوصول المبكر إلى ميزاتٍ جديدة لإبراز التركيب والتحرير مثل طي التعليمات البرمجية والإكمال التلقائي.",
+	"codemirror-potentially-slow": "بطيئًا محتملًا"
 }

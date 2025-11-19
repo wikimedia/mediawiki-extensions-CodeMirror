@@ -18,6 +18,7 @@
 	"codemirror-prefs-section-lines": "Dòng",
 	"codemirror-prefs-section-characters": "Ký tự",
 	"codemirror-prefs-section-code-assistance": "Trợ giúp mã",
+	"codemirror-prefs-section-references": "Chú thích",
 	"codemirror-prefs-section-other": "Khác",
 	"codemirror-prefs-codefolding": "Bật thu gọn mã",
 	"codemirror-prefs-autocomplete": "Bật tự động hoàn thành",
@@ -33,6 +34,7 @@
 	"codemirror-prefs-whitespace": "Làm nổi bật khoảng trắng",
 	"codemirror-prefs-autofocus": "Đặt con trỏ vào trình soạn thảo",
 	"codemirror-prefs-highlightrefs": "Làm nổi bật nội dung của thẻ <ref>",
+	"codemirror-prefs-foldallrefs": "Thu gọn tất cả thẻ <ref> theo mặc định",
 	"codemirror-prefs-reset": "Đặt lại về mặc định",
 	"codemirror-prefs-colorblind": "Bật bộ màu thân thiện với người mù màu để làm nổi bật cú pháp khi soạn thảo mã wiki",
 	"codemirror-prefs-colorblind-help": "Nếu bạn dùng một tiện ích khác cũng có chức năng làm nổi bật cú pháp, tùy chọn này sẽ không có tác dụng.",
@@ -207,5 +209,6 @@
 	"codemirror-wikilint-vertical-alignment": "căn chỉnh theo chiều dọc",
 	"codemirror-wikilint-whitespace": "chèn một khoảng trắng",
 	"codemirror-beta-feature-title": "Nổi bật cú pháp mới",
-	"codemirror-beta-feature-description": "Nhận được quyền truy cập sớm vào tính năng nổi bật cú pháp và các tính năng hỗ trợ sửa đổi mới như thu gọn mã và tự động hoàn thành."
+	"codemirror-beta-feature-description": "Nhận được quyền truy cập sớm vào tính năng nổi bật cú pháp và các tính năng hỗ trợ sửa đổi mới như thu gọn mã và tự động hoàn thành.",
+	"codemirror-potentially-slow": "có khả năng làm chậm"
 }
