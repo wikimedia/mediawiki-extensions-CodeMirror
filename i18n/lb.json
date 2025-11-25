@@ -81,5 +81,6 @@
 	"codemirror-wikilint-prefix": "en Nummraum-Prefix asetzen",
 	"codemirror-wikilint-remove": "ewechhuelen",
 	"codemirror-wikilint-uppercase": "a Groussbuschtawen ëmwandelen",
-	"codemirror-beta-feature-title": "Verbessert Ervirhiewe vun der Syntax"
+	"codemirror-beta-feature-title": "Verbessert Ervirhiewe vun der Syntax",
+	"codemirror-potentially-slow": "potenziell lues"
 }
