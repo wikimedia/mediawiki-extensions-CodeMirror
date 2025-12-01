@@ -106,12 +106,9 @@ describe( 'CodeMirror (enabled) - VisualEditor 2017 wikitext editor', () => {
 			await browser.execute( () => mw.loader.getState( 'ext.CodeMirror.v6.mode.mediawiki' ) ),
 			'registered'
 		);
-		// FIXME: This should be 'registered' and not 'ready'. Fix after CM5 is sunset by making
-		//   'ext.CodeMirror.visualEditor.init' RL module load only the VE Tool and Action code,
-		//   and lazy-load ext.CodeMirror.v6.visualEditor when the user toggles on CodeMirror.
 		assert.strictEqual(
 			await browser.execute( () => mw.loader.getState( 'ext.CodeMirror.v6' ) ),
-			'ready'
+			'registered'
 		);
 	} );
 

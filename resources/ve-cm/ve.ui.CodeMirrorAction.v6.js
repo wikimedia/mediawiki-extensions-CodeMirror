@@ -39,7 +39,7 @@ ve.ui.CodeMirrorAction.static.methods = [ 'toggle' ];
  */
 ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 	if ( !this.surface.mirror && ( enable || enable === undefined ) ) {
-		await mw.loader.using( [ 'ext.CodeMirror.v6.mode.mediawiki' ] );
+		await mw.loader.using( [ 'ext.CodeMirror.v6.mode.mediawiki', 'jquery.client' ] );
 		if ( this.surface.mirror ) {
 			mw.log( '[CodeMirror] VE mirror already initialized by another action.' );
 			return;

@@ -438,9 +438,7 @@
 			"dependencies": [
 				"ext.visualEditor.mwcore",
 				"ext.visualEditor.mwmeta",
-				"user.options",
-				"jquery.client",
-				"ext.CodeMirror.v6"
+				"user.options"
 			],
 			"packageFiles": [
 				"ve-cm/ve.ui.CodeMirrorAction.v6.js",
