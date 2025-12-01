@@ -16,6 +16,7 @@
 	"codemirror-prefs-section-lines": "Read",
 	"codemirror-prefs-section-characters": "Märgid",
 	"codemirror-prefs-section-code-assistance": "Kooditugi",
+	"codemirror-prefs-section-references": "Viited",
 	"codemirror-prefs-section-other": "Muu",
 	"codemirror-prefs-codefolding": "Luba koodi voltimine",
 	"codemirror-prefs-autocomplete": "Luba automaattekst",
@@ -29,7 +30,8 @@
 	"codemirror-prefs-specialchars": "Näita erimärke",
 	"codemirror-prefs-whitespace": "Tõsta tühemikud esile",
 	"codemirror-prefs-autofocus": "Sea algfookus toimetile",
-	"codemirror-prefs-highlightrefs": "Tõsta esile sildi <ref> sisu",
+	"codemirror-prefs-highlightrefs": "Tõsta esile <ref>-sildi sisu",
+	"codemirror-prefs-foldallrefs": "Vaikimisi voldi kõik <ref>-sildid",
 	"codemirror-prefs-reset": "Lähtesta vaikeväärtused",
 	"codemirror-prefs-colorblind": "Kasuta vikiteksti redigeerimisel värvipimedale sobiva värviskeemiga süntaksi esiletõstu",
 	"codemirror-prefs-colorblind-help": "Kui kasutad süntaksi esiletõstu tööriista, siis see eelistus ei tööta.",
@@ -131,6 +133,7 @@
 	"codemirror-wikilint-illegal-attribute-name": "vigane atribuudi nimi",
 	"codemirror-wikilint-illegal-module": "Scribunto mooduli nimi vigane",
 	"codemirror-wikilint-imagemap-without-image": "\"imagemap\" ilma pildita",
+	"codemirror-wikilint-in-url": "$1 URL-is",
 	"codemirror-wikilint-invalid-attribute": "vigast atribuudi nime sisaldav element",
 	"codemirror-wikilint-invalid-content": "sildi \"$1\" vigane sisu",
 	"codemirror-wikilint-invalid-image-parameter": "vigane pildiparameeter",
@@ -154,5 +157,6 @@
 	"codemirror-wikilint-unclosed-table": "sulgemata tabel",
 	"codemirror-wikilint-unnecessary-encoding": "tarbetu protsentkodeering siselingis",
 	"codemirror-beta-feature-title": "Täiustatud süntaksi esiletõst",
-	"codemirror-beta-feature-description": "Kasuta esimeste seas uut süntaksi esiletõstu ja redigeerimisfunktsioone nagu koodi voltimine ja sõnade automaatne lõpetamine."
+	"codemirror-beta-feature-description": "Kasuta esimeste seas uut süntaksi esiletõstu ja redigeerimisfunktsioone nagu koodi voltimine ja sõnade automaatne lõpetamine.",
+	"codemirror-potentially-slow": "võib olla aeglane"
 }
