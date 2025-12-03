@@ -7,8 +7,11 @@
 	},
 	"codemirror-desc": "Daje potcrtavanje sintakse u uređivaču wikiteksta",
 	"codemirror-toggle-label": "Isticanje sintakse",
+	"codemirror-prefs-summary": "Više informacija o ovoj funkciji možete pronaći na [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror stranici pomoći].",
 	"codemirror-prefs-enable": "Isticanje sintakse",
 	"codemirror-prefs-colorblind": "Tema za isticanje sintakse prilagođena osobama koje imaju poteškoće s prepoznavanjem boja",
 	"codemirror-prefs-colorblind-help": "Ako rabite spravicu za isticanje sintakse, ova postavka neće funkcionirati.",
-	"prefs-accessibility": "Pristupačnost"
+	"prefs-accessibility": "Pristupačnost",
+	"codemirror-beta-feature-title": "Poboljšano isticanje sintakse",
+	"codemirror-beta-feature-description": "Nudi rani pristup novom isticanju sintakse i funkcijama uređivanja poput sažimanja koda i automatskog dovršavanja."
 }
