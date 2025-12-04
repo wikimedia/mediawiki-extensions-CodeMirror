@@ -64,6 +64,12 @@
 	.embed-img( 'settings' );
 }
 
+// Hide MediaWiki's native edit help link for consistency with CodeEditor.
+// This is also hidden by WikiEditor, but only for the wikitext content model.
+.client-js .editButtons .editHelp {
+	display: none;
+}
+
 // Hide all buttons except CodeMirror on read only pages (T301615),
 // and different content types.
 // This is the same hack that CodeEditor uses to customize the toolbar.
