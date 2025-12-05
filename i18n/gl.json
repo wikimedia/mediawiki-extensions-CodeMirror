@@ -87,7 +87,7 @@
 	"codemirror-keymap-tabescape": "Permite brevemente que a tecla do tabulador mova o foco fóra do editor",
 	"codemirror-keymap-tabmode": "Activar ou desactivar o modo de foco do tabulador",
 	"codemirror-keymap-textstyling": "Estilo do texto",
-	"codemirror-keymap-bold": "Negra",
+	"codemirror-keymap-bold": "Grosa",
 	"codemirror-keymap-italic": "Cursiva",
 	"codemirror-keymap-link": "Ligazón",
 	"codemirror-keymap-computercode": "Código máquina",
