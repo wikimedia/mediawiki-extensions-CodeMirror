@@ -23,6 +23,7 @@
 	"codemirror-prefs-section-lines": "行",
 	"codemirror-prefs-section-characters": "字符",
 	"codemirror-prefs-section-code-assistance": "代码协助",
+	"codemirror-prefs-section-references": "参考资料",
 	"codemirror-prefs-section-other": "其他",
 	"codemirror-prefs-codefolding": "启用代码折叠",
 	"codemirror-prefs-autocomplete": "启用自动填充",
@@ -38,6 +39,7 @@
 	"codemirror-prefs-whitespace": "高亮显示空白字符",
 	"codemirror-prefs-autofocus": "将初始焦点置于编辑器",
 	"codemirror-prefs-highlightrefs": "高亮<ref>标签的内容",
+	"codemirror-prefs-foldallrefs": "默认折叠全部<ref>标签",
 	"codemirror-prefs-reset": "重置为默认值",
 	"codemirror-prefs-colorblind": "编辑wikitext时，启用对色盲用户友好的语法高亮配色方案",
 	"codemirror-prefs-colorblind-help": "如果您的语法高亮功能由小工具提供，本设置将不起作用。",
@@ -212,5 +214,6 @@
 	"codemirror-wikilint-vertical-alignment": "垂直对齐",
 	"codemirror-wikilint-whitespace": "插入空格",
 	"codemirror-beta-feature-title": "增强版语法高亮",
-	"codemirror-beta-feature-description": "提前试用新版语法高亮及编辑功能，例如代码折叠和自动补全。"
+	"codemirror-beta-feature-description": "提前试用新版语法高亮及编辑功能，例如代码折叠和自动补全。",
+	"codemirror-potentially-slow": "可能导致缓慢"
 }
