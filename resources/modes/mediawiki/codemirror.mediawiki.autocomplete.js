@@ -192,12 +192,14 @@ const completionSource = ( mode ) => ( context ) => {
 			} );
 	}
 	if ( hasTag( types, 'linkPageName' ) ) {
-		const apply = applyLinkCompletion( /^\s*[|\]]/.test( state.sliceDoc( pos ) ) );
-		return linkSuggest( mode, search ).then( ( suggestions ) => suggestions ? {
-			from: from + suggestions.offset,
-			options: suggestions.options
-				.map( ( option ) => Object.assign( option, { apply } ) )
-		} : null );
+		const isGallery = types.has( 'mw-tag-gallery' ) && !node.name.includes( 'link-ground' ),
+			apply = applyLinkCompletion( isGallery || /^\s*[|\]]/.test( state.sliceDoc( pos ) ) );
+		return linkSuggest( mode, search, isGallery ? 6 : 0 )
+			.then( ( suggestions ) => suggestions ? {
+				from: from + suggestions.offset,
+				options: suggestions.options
+					.map( ( option ) => Object.assign( option, { apply } ) )
+			} : null );
 	}
 	if ( !hasTag( types, [
 		'comment',

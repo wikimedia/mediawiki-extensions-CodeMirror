@@ -12,7 +12,7 @@
 	},
 	"rules": {
 		"es-x/no-promise-prototype-finally": 0,
-		"es-x/no-resizable-and-growable-arraybuffers": "warn"
+		"es-x/no-resizable-and-growable-arraybuffers": 0
 	},
 	"settings": {
 		"es-x": {

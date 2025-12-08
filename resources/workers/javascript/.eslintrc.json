@@ -12,14 +12,13 @@
 	},
 	"rules": {
 		"es-x/no-array-prototype-flat": 0,
-		"es-x/no-array-string-prototype-at": 0,
 		"es-x/no-object-fromentries": 0,
 		"es-x/no-object-hasown": 0,
 		"es-x/no-regexp-unicode-property-escapes": 0,
 		"es-x/no-string-prototype-trimstart-trimend": 0,
 		"es-x/no-symbol-prototype-description": 0,
-		"es-x/no-array-prototype-at": "warn",
-		"es-x/no-string-prototype-at": "warn"
+		"es-x/no-array-prototype-at": 0,
+		"es-x/no-string-prototype-at": 0
 	},
 	"settings": {
 		"es-x": {

@@ -79,8 +79,11 @@ const openLinksExtension = [
 				if ( page.startsWith( '/' ) ) {
 					page = `:${ mw.config.get( 'wgPageName' ) }${ page }`;
 				}
-				const ns = names.includes( mwModeConfig.tags.templateName ) ? 10 : 0,
-					title = mw.Title.newFromText( page, ns );
+				let ns = names.includes( mwModeConfig.tags.templateName ) ? 10 : 0;
+				if ( names.includes( 'mw-tag-gallery' ) && !name.includes( 'link-ground' ) ) {
+					ns = 6;
+				}
+				const title = mw.Title.newFromText( page, ns );
 				if ( title ) {
 					open( title.getUrl(), '_blank', 'noopener noreferrer' );
 					return true;
