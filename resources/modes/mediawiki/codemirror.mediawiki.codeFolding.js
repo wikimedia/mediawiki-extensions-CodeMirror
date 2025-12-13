@@ -72,7 +72,8 @@ const isComponent = ( keys ) => (
 	 * @return {boolean}
 	 * @private
 	 */
-	isTemplateDelimiter = ( node ) => isDelimiter( node ) && !isTemplateName( node.nextSibling ),
+	isTemplateDelimiter = ( node ) => isDelimiter( node ) &&
+		!( node.nextSibling && isTemplateName( node.nextSibling ) ),
 	/**
 	 * Check if a SyntaxNode is an extension tag bracket (`<` or `>`)
 	 *
