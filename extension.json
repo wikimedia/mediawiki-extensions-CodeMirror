@@ -453,6 +453,11 @@
 			"styles": [
 				"ve-cm/ve.ui.CodeMirror.v6.less"
 			],
+			"skinStyles": {
+				"minerva": [
+					"ve-cm/ve.ui.CodeMirror.v6.minerva.less"
+				]
+			},
 			"messages": [
 				"codemirror-toggle-label"
 			]
