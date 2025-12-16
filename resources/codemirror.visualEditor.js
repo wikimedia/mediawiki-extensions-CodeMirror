@@ -95,7 +95,11 @@ class CodeMirrorVisualEditor extends CodeMirror {
 
 		return EditorView.contentAttributes.of( {
 			class: useColorBlind ? 'cm-mw-colorblind-colors' : '',
-			spellcheck: 'true'
+			spellcheck: 'true',
+			// Disable tabbing to content editable (T412827)
+			inert: 'true',
+			// Fallback for browsers not supporting inert
+			tabindex: '-1'
 		} );
 	}
 
