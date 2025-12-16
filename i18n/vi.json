@@ -11,7 +11,7 @@
 	"codemirror-toggle-label": "Nổi bật cú pháp",
 	"codemirror-toggle-label-short": "Cú pháp",
 	"codemirror-prefs-summary": "Bạn có thể tìm hiểu thêm về tính năng này bằng cách đọc [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror trang trợ giúp].",
-	"codemirror-prefs-colorblind": "Bật bộ màu thân thiện với người mù màu để làm nổi bật cú pháp khi soạn thảo mã wiki",
+	"codemirror-prefs-colorblind": "Áp dụng bảng màu dễ phân biệt cho người mù màu để làm nổi bật cú pháp khi soạn thảo mã wiki",
 	"codemirror-prefs-colorblind-help": "Nếu bạn dùng một tiện ích khác cũng có chức năng làm nổi bật cú pháp, tùy chọn này sẽ không có tác dụng.",
 	"codemirror-find": "Tìm",
 	"codemirror-next": "Tìm tiếp",
