@@ -500,7 +500,7 @@ class CodeMirror {
 			accesskey: this.textarea.accessKey,
 			// Classes need to be on .cm-content to have precedence over .cm-scroller
 			class: classList.join( ' ' ),
-			spellcheck: 'true',
+			spellcheck: this.mode === 'mediawiki',
 			tabindex: this.textarea.tabIndex
 		} );
 	}
