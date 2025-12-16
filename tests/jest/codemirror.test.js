@@ -86,6 +86,14 @@ describe( 'initialize', () => {
 		expect( Object.keys( cm2.keymap.keymapHelpRegistry.accessibility ) )
 			.toStrictEqual( [ 'tabEscape', 'tabMode' ] );
 	} );
+
+	it( 'should disable spellcheck for non-wikitext', () => {
+		cm.initialize();
+		expect( cm.view.contentDOM.getAttribute( 'spellcheck' ) ).toStrictEqual( 'true' );
+		const cm2 = new CodeMirror( textarea, javascript() );
+		cm2.initialize();
+		expect( cm2.view.contentDOM.getAttribute( 'spellcheck' ) ).toStrictEqual( 'false' );
+	} );
 } );
 
 describe( 'addDarkModeMutationObserver', () => {
