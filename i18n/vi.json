@@ -25,7 +25,7 @@
 	"codemirror-prefs-activeline": "Nổi bật dòng đang hoạt động",
 	"codemirror-prefs-specialchars": "Hiển thị các ký tự đặc biệt",
 	"codemirror-prefs-whitespace": "Làm nổi bật khoảng trắng",
-	"codemirror-prefs-colorblind": "Bật bộ màu thân thiện với người mù màu để làm nổi bật cú pháp khi soạn thảo mã wiki",
+	"codemirror-prefs-colorblind": "Áp dụng bảng màu dễ phân biệt cho người mù màu để làm nổi bật cú pháp khi soạn thảo mã wiki",
 	"codemirror-prefs-colorblind-help": "Nếu bạn dùng một tiện ích khác cũng có chức năng làm nổi bật cú pháp, tùy chọn này sẽ không có tác dụng.",
 	"codemirror-close": "Đóng",
 	"codemirror-find": "Tìm",
@@ -126,5 +126,5 @@
 	"prefs-accessibility": "Tăng cường khả năng tiếp cận",
 	"prefs-syntax-highlighting": "Nổi bật cú pháp",
 	"codemirror-beta-feature-title": "Nổi bật cú pháp mới",
-	"codemirror-beta-feature-description": "Nhận được quyền truy cập sớm vào tính năng nổi bật cú pháp và các tính năng hỗ trợ sửa đổi mới như thu gọn mã và tự động hoàn thành."
+	"codemirror-beta-feature-description": "Trải nghiệm trước tính năng nổi bật cú pháp mới và các tính năng hỗ trợ sửa đổi mới như thu gọn mã và tự động hoàn thành."
 }
