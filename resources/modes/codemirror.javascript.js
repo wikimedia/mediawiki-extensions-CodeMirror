@@ -50,9 +50,14 @@ class CodeMirrorJavaScript extends CodeMirrorMode {
 				if ( fix || suggestions.length ) {
 					diagnostic.actions = [
 						...fix ? [ { name: 'fix', fix } ] : [],
-						...suggestions.map( ( suggestion ) => ( { name: 'suggestion', fix: suggestion.fix } ) )
-					].map( ( { name, fix: { range: [ from, to ], text } } ) => ( {
+						...suggestions.map( ( suggestion ) => ( {
+							name: suggestion.messageId || 'suggestion',
+							fix: suggestion.fix,
+							tooltip: suggestion.desc
+						} ) )
+					].map( ( { name, fix: { range: [ from, to ], text }, tooltip } ) => ( {
 						name,
+						tooltip,
 						apply( v ) {
 							v.dispatch( { changes: { from, to, insert: text } } );
 						}

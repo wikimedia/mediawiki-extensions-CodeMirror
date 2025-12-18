@@ -133,11 +133,14 @@ class CodeMirrorLint extends CodeMirrorPanel {
 		if ( diagnostic ) {
 			message.textContent = diagnostic.message;
 			if ( diagnostic.actions ) {
-				message.append( ...diagnostic.actions.map( ( { name, apply } ) => {
+				message.append( ...diagnostic.actions.map( ( { name, tooltip, apply } ) => {
 					const a = document.createElement( 'button' );
 					a.type = 'button';
 					a.className = 'cm-diagnosticAction';
 					a.textContent = name;
+					if ( tooltip ) {
+						a.title = tooltip;
+					}
 					a.addEventListener( 'click', ( e ) => {
 						e.preventDefault();
 						apply( this.view, diagnostic.from, diagnostic.to );

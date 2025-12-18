@@ -29,10 +29,12 @@ describe( 'CodeMirrorLint', () => {
 				actions: [
 					{
 						name: 'Fix',
+						tooltip: 'tooltip',
 						apply
 					},
 					{
 						name: 'Suggestion',
+						tooltip: 'tooltip',
 						apply
 					}
 				]
@@ -87,6 +89,7 @@ describe( 'CodeMirrorLint', () => {
 		cmLint.updateDiagnosticMessage( 1, message );
 		expect( message.textContent ).toEqual( 'Error messageFixSuggestion' );
 		for ( const button of message.querySelectorAll( 'button' ) ) {
+			expect( button.title ).toEqual( 'tooltip' );
 			button.click();
 		}
 		expect( apply ).toHaveBeenCalledTimes( 2 );
