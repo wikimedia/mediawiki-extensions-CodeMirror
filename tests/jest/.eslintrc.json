@@ -1,5 +1,6 @@
 {
 	"extends": [
+		"wikimedia/jest",
 		"wikimedia/jquery",
 		"wikimedia/mediawiki"
 	],
@@ -12,5 +13,14 @@
 	"env": {
 		"browser": true,
 		"jest": true
+	},
+	"rules": {
+		"jest/expect-expect": [ "error", {
+			"assertFunctionNames": [ "expect", "test" ]
+		} ],
+		"jest/valid-title": [ "error", {
+			"ignoreTypeOfDescribeName": true,
+			"ignoreTypeOfTestName": true
+		} ]
 	}
 }

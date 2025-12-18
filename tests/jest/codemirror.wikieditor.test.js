@@ -200,7 +200,7 @@ describe( 'logEditFeature', () => {
 		cmWe.initialize();
 		expect( spy ).toHaveBeenCalledTimes( 1 );
 		expect( spy ).toHaveBeenCalledWith( 'activated' );
-		expect( mw.track ).toBeCalledWith( 'visualEditorFeatureUse', {
+		expect( mw.track ).toHaveBeenCalledWith( 'visualEditorFeatureUse', {
 			action: 'activated',
 			feature: 'codemirror',
 			// eslint-disable-next-line camelcase
@@ -211,7 +211,7 @@ describe( 'logEditFeature', () => {
 		cmWe.deactivate();
 		expect( spy ).toHaveBeenCalledTimes( 2 );
 		expect( spy ).toHaveBeenCalledWith( 'deactivated' );
-		expect( mw.track ).toBeCalledWith( 'visualEditorFeatureUse', {
+		expect( mw.track ).toHaveBeenCalledWith( 'visualEditorFeatureUse', {
 			action: 'deactivated',
 			feature: 'codemirror',
 			// eslint-disable-next-line camelcase
@@ -251,7 +251,7 @@ describe( 'logEditFeature', () => {
 		// Enable activeLine and assert that it was logged.
 		cmWe.preferences.setPreference( 'activeLine', true );
 		expect( spy ).toHaveBeenCalledWith( 'prefs-activeLine' );
-		expect( mw.track ).toBeCalledWith( 'visualEditorFeatureUse', {
+		expect( mw.track ).toHaveBeenCalledWith( 'visualEditorFeatureUse', {
 			action: 'prefs-activeLine',
 			feature: 'codemirror',
 			// eslint-disable-next-line camelcase
@@ -288,7 +288,7 @@ describe( 'logEditFeature', () => {
 			new KeyboardEvent( 'keydown', { key: 'f', ctrlKey: true } )
 		);
 		expect( spy ).toHaveBeenCalledWith( 'search' );
-		expect( mw.track ).toBeCalledWith( 'visualEditorFeatureUse', {
+		expect( mw.track ).toHaveBeenCalledWith( 'visualEditorFeatureUse', {
 			action: 'search',
 			feature: 'codemirror',
 			// eslint-disable-next-line camelcase
