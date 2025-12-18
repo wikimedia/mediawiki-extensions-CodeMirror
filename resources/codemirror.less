@@ -21,6 +21,10 @@
 	}
 }
 
+.cm-scroller {
+	overflow: auto;
+}
+
 .cm-matchingBracket,
 .cm-focused .cm-matchingBracket {
 	background-color: #eee;
@@ -97,10 +101,7 @@
 }
 
 .cm-editor .cm-cursor {
-	// CodeMirror defines this in JavaScript and flipping the property
-	// causes mismatch thus a noflip is needed.
-	/* @noflip */
-	border-left-color: @color-emphasized;
+	border-left: 2px solid @color-emphasized;
 }
 
 .cm-editor .cm-activeLine {
@@ -119,6 +120,7 @@
 	background-color: @background-color-neutral-subtle;
 	border-bottom: 0;
 	color: @color-base;
+	direction: ltr;
 	z-index: @z-index-above-content;
 
 	.cdx-button-group {

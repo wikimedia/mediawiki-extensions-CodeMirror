@@ -251,15 +251,6 @@ class CodeMirror {
 			this.keymap.extension,
 			indentUnit.of( '\t' ),
 			EditorState.readOnly.of( this.readOnly ),
-			EditorView.theme( {
-				'.cm-scroller': {
-					overflow: 'auto'
-				},
-				// Search panel should use the same direction as the interface language (T359611)
-				'.cm-panels': {
-					direction: document.dir
-				}
-			} ),
 			EditorState.allowMultipleSelections.of( true ),
 			drawSelection(),
 			rectangularSelection(),
