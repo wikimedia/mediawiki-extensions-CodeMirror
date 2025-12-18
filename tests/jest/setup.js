@@ -8,11 +8,20 @@ global.mw = require( '@wikimedia/mw-node-qunit/src/mockMediaWiki.js' )();
 mw.user = Object.assign( mw.user, {
 	options: {
 		get: jest.fn().mockImplementation( ( key ) => {
-			if ( key === 'codemirror-preferences' ) {
-				return '{"bracketMatching":1,"lineWrapping":1,"activeLine":0,"specialChars":1,"bidiIsolation":1}';
+			switch ( key ) {
+				case 'codemirror-preferences':
+					// Use default preferences.
+					return null;
+				case 'usecodemirror':
+					return '1';
+				case 'usecodemirror-colorblind':
+					return '0';
+				case 'editfont':
+					return 'monospace';
+				default:
+					mw.log.warn( `Unmocked mw.user.options.get() for key: ${ key }` );
+					return null;
 			}
-			// Only called for 'usecodemirror' option.
-			return '1';
 		} ),
 		set: jest.fn()
 	},
