@@ -21,6 +21,8 @@ textarea.dir = 'rtl';
 document.body.appendChild( textarea );
 const cm = new CodeMirror( textarea, mediawiki() );
 cm.initialize();
+// Enable bidiIsolation preference.
+cm.preferences.setPreference( 'bidiIsolation', true );
 // Normally ran by mw.hook, but we don't mock the hook system in the Jest tests.
 cm.preferences.registerExtension( 'bidiIsolation', bidiIsolationExtension, cm.view );
 

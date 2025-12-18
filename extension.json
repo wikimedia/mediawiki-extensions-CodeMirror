@@ -51,7 +51,13 @@
 		},
 		"CodeMirrorDefaultPreferences": {
 			"value": {
-				"activeLine": false,
+				"activeLine": [
+					"json",
+					"css",
+					"javascript",
+					"lua",
+					"vue"
+				],
 				"autofocus": true,
 				"bidiIsolation": false,
 				"bracketMatching": true,

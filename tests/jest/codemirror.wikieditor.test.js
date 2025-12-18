@@ -243,16 +243,9 @@ describe( 'logEditFeature', () => {
 	} );
 
 	it( 'should only log when preferences are not the same as the default', () => {
-		const cmWe = getCodeMirrorWikiEditor();
+		const cmWe = getCodeMirrorWikiEditor( false, mediawiki() );
 		cmWe.initialize();
-		const defaultPrefs = mw.config.get( 'extCodeMirrorConfig' ).defaultPreferences;
-		// FIXME: remove after linting is stable
-		delete defaultPrefs.lint;
-		mw.user.options.get = jest.fn().mockReturnValue( JSON.stringify( defaultPrefs ) );
-		// Force re-fetch of user preferences.
-		cmWe.preferences.preferences = cmWe.preferences.fetchPreferences();
 		const spy = jest.spyOn( cmWe, 'logEditFeature' );
-		cmWe.preferences.registerExtension( 'bracketMatching', [], cmWe.view );
 		// There should be no logging since we're using the default preferences.
 		expect( spy ).not.toHaveBeenCalledWith( 'prefs-bracketMatching' );
 		// Enable activeLine and assert that it was logged.
