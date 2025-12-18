@@ -343,8 +343,10 @@ class Hooks implements
 	 * @todo Remove check for cm6enable flag after migration is complete
 	 */
 	private function shouldUseV6( OutputPage $out ): bool {
-		return $this->useV6 || $out->getRequest()->getBool( 'cm6enable' ) ||
-			$this->isBetaFeatureEnabled( $out->getUser() );
+		return $this->useV6 || $out->getRequest()->getFuzzyBool( 'cm6enable' ) || (
+			$this->isBetaFeatureEnabled( $out->getUser() ) &&
+			$out->getRequest()->getFuzzyBool( 'cm6enable', true )
+		);
 	}
 
 	/**
