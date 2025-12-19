@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Tamzin"
+		]
+	},
+	"codemirror-special-char-left-to-right-mark": "nasin lukin pi sitelen ni li sama sitelen Lasina",
+	"codemirror-special-char-right-to-left-mark": "nasin lukin pi sitelen ni li sama sitelen Alapi",
+	"codemirror-special-char-left-to-right-override": "nasin lukin la sitelen ni ale o sama sitelen Lasina",
+	"codemirror-special-char-right-to-left-override": "nasin lukin la sitelen ni ale o sama sitelen Alapi",
+	"codemirror-special-char-left-to-right-isolate": "nasin lukin la kipisi sitelen ni li sama sitelen Lasina",
+	"codemirror-special-char-right-to-left-isolate": "nasin lukin la kipisi sitelen ni li sama sitelen Alapi"
+}
