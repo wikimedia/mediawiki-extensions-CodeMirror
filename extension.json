@@ -111,6 +111,15 @@
 	"AutoloadNamespaces": {
 		"MediaWiki\\Extension\\CodeMirror\\": "includes/"
 	},
+	"APIModules": {
+		"codemirror-validate": {
+			"class": "MediaWiki\\Extension\\CodeMirror\\ApiCodeMirrorValidate",
+			"services": [
+				"ContentHandlerFactory",
+				"ObjectFactory"
+			]
+		}
+	},
 	"ResourceModules": {
 		"ext.CodeMirror": {
 			"dependencies": [

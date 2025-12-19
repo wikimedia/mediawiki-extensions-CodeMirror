@@ -209,5 +209,11 @@
 	"codemirror-wikilint-whitespace": "insert a space",
 	"codemirror-beta-feature-title": "Improved Syntax Highlighting",
 	"codemirror-beta-feature-description": "Get early access to new syntax highlighting and editing features such as code folding and autocompletion.",
-	"codemirror-potentially-slow": "potentially slow"
+	"codemirror-potentially-slow": "potentially slow",
+	"apihelp-codemirror-validate-summary": "Check for validation errors in the given content",
+	"apihelp-codemirror-validate-param-content": "The text content to validate",
+	"apihelp-codemirror-validate-param-contentmodel": "Content model",
+	"apihelp-codemirror-validate-param-title": "Title of page the content belongs to.",
+	"apihelp-codemirror-validate-example": "Check if <code>h2 {color: red}</code> is valid for sanitized-css",
+	"codemirror-validate-js-syntaxerror": "Syntax error at column $1 on line $2: $3"
 }

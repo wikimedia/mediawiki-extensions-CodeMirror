@@ -218,5 +218,11 @@
 	"codemirror-wikilint-whitespace": "Short label for a quick-fix button that inserts a space.",
 	"codemirror-beta-feature-title": "Title of the BetaFeature for the new version of CodeMirror.",
 	"codemirror-beta-feature-description": "Description of the BetaFeature for the new version of CodeMirror.",
-	"codemirror-potentially-slow": "Text shown next to a description of a keyboard shortcut, preference, or other feature that may cause performance issues on large pages."
+	"codemirror-potentially-slow": "Text shown next to a description of a keyboard shortcut, preference, or other feature that may cause performance issues on large pages.",
+	"apihelp-codemirror-validate-summary": "{{doc-apihelp-summary|codemirror-validate}}",
+	"apihelp-codemirror-validate-param-content": "{{doc-apihelp-param|codemirror-validate|content}}",
+	"apihelp-codemirror-validate-param-contentmodel": "{{doc-apihelp-param|codemirror-validate|contentmodel}}",
+	"apihelp-codemirror-validate-param-title": "{{doc-apihelp-param|codemirror-validate|title}}",
+	"apihelp-codemirror-validate-example": "{{doc-apihelp-example|codemirror-validate}}",
+	"codemirror-validate-js-syntaxerror": "Diagnostic message for a syntax error in JavaScript. Parameters:\n*1 - column number where the error occurs.\n*2 - line number where the error occurs.\n*3 - Error message"
 }

@@ -10,6 +10,8 @@ $cfg['directory_list'] = array_merge(
 	[
 		'../../extensions/Gadgets',
 		'../../extensions/BetaFeatures',
+		'../../extensions/Scribunto',
+		'../../extensions/TemplateStyles',
 	]
 );
 
@@ -18,6 +20,8 @@ $cfg['exclude_analysis_directory_list'] = array_merge(
 	[
 		'../../extensions/Gadgets',
 		'../../extensions/BetaFeatures',
+		'../../extensions/Scribunto',
+		'../../extensions/TemplateStyles',
 	]
 );
 
