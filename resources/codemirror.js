@@ -502,7 +502,9 @@ class CodeMirror {
 		return EditorView.editorAttributes.of( {
 			// Use language of the original textbox.
 			// These should be attributes of .cm-editor, not the .cm-content (T359589)
-			lang: this.textarea.lang
+			lang: this.textarea.lang,
+			// Add a class for the mode/language.
+			class: `cm-mw-mode-${ this.mode || 'none' }`
 		} );
 	}
 
