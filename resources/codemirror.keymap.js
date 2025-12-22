@@ -36,7 +36,7 @@ const CodeMirrorCodex = require( './codemirror.codex.js' );
  * {@link CodeMirror#view CodeMirror.view} property set.
  *
  * @example
- * mw.hook( 'ext.CodeMirror.ready' ).add( ( $_dom, cm ) => {
+ * mw.hook( 'ext.CodeMirror.ready' ).add( ( cm ) => {
  *   const myKeybinding = {
  *     key: 'F1',
  *     run: () => {
@@ -45,13 +45,13 @@ const CodeMirrorCodex = require( './codemirror.codex.js' );
  *   };
  *
  *   // Register the key binding in the editor.
- *   cm.registerKeyBinding( myKeybinding, cm.view );
+ *   cm.keymap.registerKeyBinding( myKeybinding, cm.view );
  *
  *   // Or, register only in the help dialog.
- *   cm.registerKeyBindingHelp( 'other', 'myKeybinding', myKeybinding );
+ *   cm.keymap.registerKeyBindingHelp( 'other', 'myKeybinding', myKeybinding );
  *
  *   // Or, both.
- *   cm.registerKeyBindingHelp( 'other', 'myKeybinding', myKeybinding, cm.view );
+ *   cm.keymap.registerKeyBindingHelp( 'other', 'myKeybinding', myKeybinding, cm.view );
  * } );
  */
 class CodeMirrorKeymap extends CodeMirrorCodex {
