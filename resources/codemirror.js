@@ -638,7 +638,7 @@ class CodeMirror {
 	 * @stable to call
 	 */
 	get lintExtension() {
-		return new CodeMirrorLint( this.lintSource, this.keymap, this.lintApi ).extension;
+		return new CodeMirrorLint( this.lintSource, this.keymap, this.lintApi, this.gotoLine ).extension;
 	}
 
 	/* eslint-disable max-len */
