@@ -238,9 +238,11 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 
 		// Use mw.hook to add a click listener to the keymap help button.
 		mw.hook( 'ext.CodeMirror.preferences.display' ).add( ( container ) => {
-			container.querySelector( '.cm-mw-panel--kbd-help' ).addEventListener( 'click',
-				() => this.showHelpDialog()
-			);
+			if ( container ) {
+				container.querySelector( '.cm-mw-panel--kbd-help' ).addEventListener( 'click',
+					() => this.showHelpDialog()
+				);
+			}
 		} );
 	}
 

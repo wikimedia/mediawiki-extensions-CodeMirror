@@ -28,6 +28,7 @@ const {
 	lineNumbers,
 	oneDark,
 	rectangularSelection,
+	searchPanelOpen,
 	syntaxHighlighting
 } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirrorLint = require( './codemirror.lint.js' );
@@ -1098,12 +1099,16 @@ class CodeMirror {
 				this.logEditFeature( `prefs-${ prefName }` );
 			}
 		} );
-		this.addMwHook( 'ext.CodeMirror.preferences.display',
-			() => this.logEditFeature( 'prefs-display' )
-		);
-		this.addMwHook( 'ext.CodeMirror.search',
-			() => this.logEditFeature( 'search' )
-		);
+		this.addMwHook( 'ext.CodeMirror.preferences.display', () => {
+			if ( this.view.state.field( this.preferences.panelStateField ) ) {
+				this.logEditFeature( 'prefs-display' );
+			}
+		} );
+		this.addMwHook( 'ext.CodeMirror.search', () => {
+			if ( searchPanelOpen( this.view.state ) ) {
+				this.logEditFeature( 'search' );
+			}
+		} );
 		this.addMwHook( 'ext.CodeMirror.keymap',
 			() => this.logEditFeature( 'keymap' )
 		);

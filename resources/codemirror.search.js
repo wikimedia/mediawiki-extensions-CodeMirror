@@ -97,7 +97,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 			search( {
 				createPanel: ( view ) => {
 					/**
-					 * Fired when the CodeMirror search panel is opened.
+					 * Fired when the CodeMirror search panel is opened or closed.
 					 *
 					 * @event CodeMirror~ext.CodeMirror.search
 					 * @internal
@@ -120,7 +120,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 				{ key: 'Mod-f', run: this.openPanel.bind( this ), scope: 'editor search-panel' },
 				{ key: 'F3', run: this.findNext.bind( this ), shift: this.findPrevious.bind( this ), scope: 'editor search-panel', preventDefault: true },
 				{ key: 'Mod-g', run: this.findNext.bind( this ), shift: this.findPrevious.bind( this ), scope: 'editor search-panel', preventDefault: true },
-				{ key: 'Escape', run: closeSearchPanel, scope: 'editor search-panel' },
+				{ key: 'Escape', run: this.closePanel.bind( this ), scope: 'editor search-panel' },
 				{ key: 'Mod-Shift-l', run: selectSelectionMatches },
 				{ key: 'Mod-d', run: selectNextOccurrence, preventDefault: true }
 			] )
@@ -186,6 +186,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 	 *
 	 * @param {EditorView} view
 	 * @return {boolean}
+	 * @internal
 	 */
 	openPanel( view ) {
 		// If the search panel is already open and focused, pass the event to the browser.
@@ -194,6 +195,19 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 		}
 		openSearchPanel( view );
 		this.commit();
+		return true;
+	}
+
+	/**
+	 * Close the search panel.
+	 *
+	 * @param {EditorView} view
+	 * @return {boolean}
+	 * @internal
+	 */
+	closePanel( view ) {
+		closeSearchPanel( view );
+		mw.hook( 'ext.CodeMirror.search' ).fire();
 		return true;
 	}
 
@@ -307,7 +321,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 		row.appendChild( this.doneButton );
 		this.doneButton.addEventListener( 'click', ( e ) => {
 			e.preventDefault();
-			closeSearchPanel( this.view );
+			this.closePanel( this.view );
 			this.view.focus();
 		} );
 	}

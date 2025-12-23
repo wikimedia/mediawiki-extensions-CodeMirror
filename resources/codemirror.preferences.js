@@ -482,12 +482,12 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		} );
 
 		/**
-		 * Fired when the preferences panel is constructed, just before it is displayed.
+		 * Fired when the preferences panel is opened or closed.
 		 *
 		 * @event CodeMirror~'ext.CodeMirror.preferences.display'
-		 * @param {HTMLDivElement} container The preferences panel container.
+		 * @param {HTMLDivElement|null} container The preferences panel container,
+		 *   or null if the panel is being closed.
 		 * @internal
-		 * @private
 		 */
 		mw.hook( 'ext.CodeMirror.preferences.display' ).fire( container );
 
@@ -604,6 +604,8 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 			this.view.dom.querySelector(
 				'.cm-mw-preferences-panel input:first-child'
 			).focus();
+		} else {
+			mw.hook( 'ext.CodeMirror.preferences.display' ).fire( null );
 		}
 
 		return true;

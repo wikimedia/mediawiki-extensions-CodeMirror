@@ -158,6 +158,15 @@ mw.log.warn = jest.fn().mockImplementation( ( ...args ) => {
 global.CSS = {
 	supports: ( css ) => /^\s*top\s*:\s*(?:inherit|initial)\s*$/i.test( css )
 };
+global.OO = {
+	ui: {
+		ToggleButtonWidget: jest.fn().mockReturnValue( {
+			on: jest.fn(),
+			$element: $( '<button>' ),
+			setValue: jest.fn()
+		} )
+	}
+};
 
 const listeners = [];
 global.Worker = jest.fn().mockReturnValue( {

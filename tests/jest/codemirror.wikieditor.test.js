@@ -229,15 +229,7 @@ describe( 'logEditFeature', () => {
 			'addToToolbar',
 			expect.objectContaining( {
 				section: 'advanced',
-				groups: { codemirror: { tools: { CodeMirrorPreferences: {
-					label: 'codemirror-keymap-preferences',
-					oouiIcon: 'settings',
-					type: 'button',
-					action: {
-						execute: expect.any( Function ),
-						type: 'callback'
-					}
-				} } } }
+				groups: { codemirror: { tools: { CodeMirrorPreferences: expect.any( Object ) } } }
 			} )
 		);
 	} );
@@ -332,7 +324,7 @@ describe( 'addCodeFormattingButtonsToToolbar', () => {
 	} );
 } );
 
-describe( 'getTool / getToggleTool', () => {
+describe( 'getTool / getToggleToolPref', () => {
 	it( 'getTool', () => {
 		const command = jest.fn();
 		const cmWe = getCodeMirrorWikiEditor();
@@ -356,9 +348,9 @@ describe( 'getTool / getToggleTool', () => {
 		} );
 	} );
 
-	it( 'getToggleTool', () => {
+	it( 'getToggleToolPref', () => {
 		const cmWe = getCodeMirrorWikiEditor();
-		expect( cmWe.getToggleTool( 'fooBar', 'fooBarIcon' ) ).toMatchObject( {
+		expect( cmWe.getToggleToolPref( 'fooBar', 'fooBarIcon' ) ).toMatchObject( {
 			label: 'codemirror-prefs-foobar',
 			type: 'element',
 			element: expect.any( Function )

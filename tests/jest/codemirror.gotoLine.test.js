@@ -47,7 +47,7 @@ describe( 'CodeMirrorGotoLine', () => {
 
 	it( 'should be callable from the CodeMirror class', () => {
 		const cm = getCodeMirror();
-		cm.gotoLine.run( cm.view );
+		cm.gotoLine.openPanel( cm.view );
 		const panel = cm.view.dom.querySelector( '.cm-mw-goto-line-panel' );
 		expect( panel ).toBeTruthy();
 	} );

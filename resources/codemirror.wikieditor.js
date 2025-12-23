@@ -1,9 +1,11 @@
 const {
 	EditorView,
 	StateCommand,
+	closeSearchPanel,
 	indentLess,
 	indentMore,
-	openSearchPanel
+	openSearchPanel,
+	searchPanelOpen
 } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirror = require( 'ext.CodeMirror.v6' );
 
@@ -184,17 +186,10 @@ class CodeMirrorWikiEditor extends CodeMirror {
 
 		// Hijack the search button to open the CodeMirror search panel
 		// instead of the WikiEditor search dialog.
-		this.$searchBtn = this.context.modules.toolbar.$toolbar.find( '.group-default [rel=replace]' );
-		this.$oldSearchBtn = this.$searchBtn.clone( true );
-		this.$searchBtn.find( 'a' )
-			.off( 'click keydown keypress' )
-			.on( 'click keydown', ( e ) => {
-				if ( e.type === 'click' || ( e.type === 'keydown' && e.key === 'Enter' ) ) {
-					this.search.openPanel( this.view );
-					e.preventDefault();
-				}
-			} );
-
+		const $queryBtn = this.context.modules.toolbar.$toolbar.find( '.group-default [rel=replace]' );
+		this.$oldSearchBtn = $queryBtn.clone( true );
+		this.$searchBtn = this.searchTool.element();
+		$queryBtn.replaceWith( this.$searchBtn );
 		if ( this.mode === 'mediawiki' ) {
 			// Add a 'Settings' button to the search group, in the 'Advanced' section.
 			this.$textarea.wikiEditor( 'addToToolbar', {
@@ -322,24 +317,29 @@ class CodeMirrorWikiEditor extends CodeMirror {
 			},
 			'codemirror-preferences': {
 				tools: {
-					whitespace: this.getToggleTool( 'whitespace', 'pilcrow' ),
-					lineWrapping: this.getToggleTool( 'lineWrapping', 'wrapping' ),
-					autocomplete: this.getToggleTool( 'autocomplete', 'check-all' )
+					whitespace: this.getToggleToolPref( 'whitespace', 'pilcrow' ),
+					lineWrapping: this.getToggleToolPref( 'lineWrapping', 'wrapping' ),
+					autocomplete: this.getToggleToolPref( 'autocomplete', 'check-all' )
 				}
 			},
 			'codemirror-search': {
 				tools: {
-					gotoLine: this.getTool(
+					gotoLine: this.getToggleTool(
 						'gotoLine',
-						() => this.gotoLine.run( this.view ),
-						'codemirror-goto-line'
+						() => this.view.state.field( this.gotoLine.panelStateField, false ) ?
+							this.gotoLine.closePanel() :
+							this.gotoLine.openPanel( this.view ),
+						mw.msg( 'codemirror-goto-line' ),
+						'gotoLine',
+						( button ) => {
+							mw.hook( 'ext.CodeMirror.gotoLine' ).add( () => {
+								button.setValue(
+									this.view.state.field( this.gotoLine.panelStateField )
+								);
+							} );
+						}
 					),
-					search: this.getTool(
-						'search',
-						() => openSearchPanel( this.view ),
-						'codemirror-keymap-find',
-						'articleSearch'
-					)
+					search: this.searchTool
 				}
 			}
 		} } );
@@ -404,6 +404,41 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	}
 
 	/**
+	 * Get the WikiEditor configuration for a toggle button that runs a {@link Command}.
+	 *
+	 * @param {string} name
+	 * @param {Function|Command} command
+	 * @param {string} label Localized HTML-safe message.
+	 * @param {string} [icon] Defaults to `name`.
+	 * @param {Function} [callback] A callback that receives the OO.ui.ToggleButtonWidget instance.
+	 * @return {Object}
+	 * @private
+	 */
+	getToggleTool( name, command, label, icon, callback ) {
+		return {
+			label,
+			type: 'element',
+			element: () => {
+				// OOUI has already been loaded by WikiEditor.
+				const button = new OO.ui.ToggleButtonWidget( {
+					icon: icon || name,
+					value: false,
+					framed: false,
+					classes: [ 'tool' ],
+					title: label,
+					label,
+					invisibleLabel: true
+				} );
+				button.on( 'click', command.bind( this ) );
+				if ( callback ) {
+					callback( button );
+				}
+				return button.$element;
+			}
+		};
+	}
+
+	/**
 	 * Get the WikiEditor configuration for a toggle button that controls a preference.
 	 * This will toggle the extension with the given `name`.
 	 *
@@ -412,9 +447,14 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	 * @return {Object}
 	 * @private
 	 */
-	getToggleTool( name, icon ) {
+	getToggleToolPref( name, icon ) {
+		// Possible messages include but are not limited to:
+		// * codemirror-prefs-whitespace
+		// * codemirror-prefs-lineWrapping
+		// * codemirror-prefs-autocomplete
+		const label = mw.msg( `codemirror-prefs-${ name.toLowerCase() }` );
 		return {
-			label: mw.msg( `codemirror-prefs-${ name.toLowerCase() }` ),
+			label,
 			type: 'element',
 			element: () => {
 				// OOUI has already been loaded by WikiEditor.
@@ -423,11 +463,9 @@ class CodeMirrorWikiEditor extends CodeMirror {
 					value: this.preferences.getPreference( name ),
 					framed: false,
 					classes: [ 'tool' ],
-					// Possible messages include but are not limited to:
-					// * codemirror-prefs-whitespace
-					// * codemirror-prefs-lineWrapping
-					// * codemirror-prefs-autocomplete
-					title: mw.msg( `codemirror-prefs-${ name.toLowerCase() }` )
+					title: label,
+					label,
+					invisibleLabel: true
 				} );
 				button.on( 'click', () => this.preferences.toggleExtension( name, this.view ) );
 				// Sync preferences.
@@ -441,6 +479,22 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		};
 	}
 
+	get searchTool() {
+		return this.getToggleTool(
+			'search',
+			() => searchPanelOpen( this.view.state ) ?
+				closeSearchPanel( this.view ) :
+				openSearchPanel( this.view ),
+			mw.msg( 'codemirror-keymap-find' ),
+			'cm-search',
+			( button ) => {
+				mw.hook( 'ext.CodeMirror.search' ).add( () => {
+					button.setValue( searchPanelOpen( this.view.state ) );
+				} );
+			}
+		);
+	}
+
 	/**
 	 * The WikiEditor configuration for the preferences tool.
 	 *
@@ -448,11 +502,16 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	 * @private
 	 */
 	get preferencesTool() {
-		return this.getTool(
+		return this.getToggleTool(
 			'CodeMirrorPreferences',
-			() => this.preferences.toggle( this.view, true ),
-			'codemirror-keymap-preferences',
-			'settings'
+			() => this.preferences.toggle( this.view ),
+			mw.msg( 'codemirror-keymap-preferences' ),
+			'preferences',
+			( button ) => {
+				mw.hook( 'ext.CodeMirror.preferences.display' ).add( () => {
+					button.setValue( this.view.state.field( this.preferences.panelStateField ) );
+				} );
+			}
 		);
 	}
 }
