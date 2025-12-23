@@ -104,6 +104,15 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 					mw.hook( 'ext.CodeMirror.search' ).fire();
 					this.view = view;
 					return this.panel;
+				},
+				scrollToMatch: ( range, view ) => {
+					// If the match is already in the viewport, scroll as little as possible, otherwise center it.
+					const scrollRect = view.scrollDOM.getBoundingClientRect();
+					const startCoords = view.coordsAtPos( range.from );
+					const endCoords = view.coordsAtPos( range.to );
+					const isInViewport = startCoords && startCoords.top >= scrollRect.top &&
+						endCoords && endCoords.bottom <= scrollRect.bottom;
+					return EditorView.scrollIntoView( range, { y: isInViewport ? 'nearest' : 'center' } );
 				}
 			} ),
 			keymap.of( [

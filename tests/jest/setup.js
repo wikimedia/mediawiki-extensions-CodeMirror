@@ -177,3 +177,4 @@ global.postMessage = ( msg ) => {
 		listener( { data: msg } );
 	}
 };
+Range.prototype.getClientRects = jest.fn().mockReturnValue( [] );
