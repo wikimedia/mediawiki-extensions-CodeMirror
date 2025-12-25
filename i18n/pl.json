@@ -5,7 +5,8 @@
 			"Msz2001",
 			"Rail",
 			"Railfail536",
-			"Woytecr"
+			"Woytecr",
+			"YeBoy371"
 		]
 	},
 	"codemirror-desc": "Dostarcza podświetlanie składni w edytorze wikitekstu",
@@ -160,7 +161,7 @@
 	"codemirror-wikilint-missing-function": "brakująca funkcja modułu",
 	"codemirror-wikilint-newline": "nowa linia",
 	"codemirror-wikilint-nonzero-tabindex": "tabindex różny od zera",
-	"codemirror-wikilint-nothing-in": "nic nie powinno znajdować się w <$1>",
+	"codemirror-wikilint-nothing-in": "nic nie powinno znajdować się w $1",
 	"codemirror-wikilint-open": "otwórz",
 	"codemirror-wikilint-prefix": "przedrostek",
 	"codemirror-wikilint-pipe-in-table": "dodatkowy znak „|” w komórce tabeli",
