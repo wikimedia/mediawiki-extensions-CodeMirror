@@ -26,10 +26,11 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	/**
 	 * @param {CodeMirrorExtensionRegistry} extensionRegistry
 	 * @param {string} mode The CodeMirror mode being used, e.g. 'mediawiki', 'javascript', etc.
+	 * @param {CodeMirrorKeymap} cmKeymap Reference to the keymap instance.
 	 * @param {boolean} [isVisualEditor=false] Whether the VE 2017 editor is being used.
 	 * @fires CodeMirror~'ext.CodeMirror.preferences.ready'
 	 */
-	constructor( extensionRegistry, mode, isVisualEditor = false ) {
+	constructor( extensionRegistry, mode, cmKeymap, isVisualEditor = false ) {
 		super();
 
 		/** @type {string} */
@@ -40,6 +41,9 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 
 		/** @type {string} */
 		this.mode = mode;
+
+		/** @type {CodeMirrorKeymap} */
+		this.keymap = cmKeymap;
 
 		/** @type {boolean} */
 		this.isVisualEditor = isVisualEditor;
@@ -514,6 +518,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		shortcutLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror#Keyboard_shortcuts';
 		shortcutLink.textContent = mw.msg( 'codemirror-keymap-help-title' ).toLowerCase();
 		shortcutLink.onclick = ( e ) => e.preventDefault();
+		shortcutLink.title = this.keymap.getTitleWithShortcut( '', this.keymap.keymapHelpRegistry.other.help );
 		const fullPrefsLink = document.createElement( 'a' );
 		fullPrefsLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror#Features';
 		fullPrefsLink.textContent = mw.msg( 'codemirror-prefs-panel-full' ).toLowerCase();
@@ -521,6 +526,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 			e.preventDefault();
 			this.showPreferencesDialog( this.view );
 		};
+		fullPrefsLink.title = this.keymap.getTitleWithShortcut( '', this.keymap.keymapHelpRegistry.other.fullPreferences );
 		helpSpan.append(
 			' ',
 			mw.msg( 'parentheses-start' ),

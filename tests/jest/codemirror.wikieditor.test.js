@@ -337,10 +337,10 @@ describe( 'getTool / getToggleToolPref', () => {
 				execute: command
 			}
 		} );
-		expect( cmWe.getTool( 'fooBar', command, 'FOOBAR', 'customIcon' ) ).toStrictEqual( {
-			label: 'FOOBAR',
+		expect( cmWe.getTool( 'fooBar', command, { key: 'Ctrl-X' } ) ).toStrictEqual( {
+			label: 'codemirror-keymap-foobarword-separatorbrackets',
 			type: 'button',
-			oouiIcon: 'customIcon',
+			oouiIcon: 'fooBar',
 			action: {
 				type: 'callback',
 				execute: command

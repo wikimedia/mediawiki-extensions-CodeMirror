@@ -200,6 +200,7 @@ class CodeMirror {
 		this.preferences = new CodeMirrorPreferences(
 			this.extensionRegistry,
 			this.mode,
+			this.keymap,
 			this.constructor.name === 'CodeMirrorVisualEditor'
 		);
 		/**

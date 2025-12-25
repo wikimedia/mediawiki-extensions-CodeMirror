@@ -1,6 +1,7 @@
 /* eslint-disable-next-line n/no-missing-require */
 const { EditorView } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirrorPreferences = require( '../../resources/codemirror.preferences.js' );
+const CodeMirrorKeymap = require( '../../resources/codemirror.keymap.js' );
 const CodeMirrorExtensionRegistry = require( '../../resources/codemirror.extensionRegistry.js' );
 
 describe( 'CodeMirrorPreferences', () => {
@@ -26,6 +27,7 @@ describe( 'CodeMirrorPreferences', () => {
 		) => new CodeMirrorPreferences(
 			new CodeMirrorExtensionRegistry( extConfig, isVisualEditor ),
 			mode,
+			new CodeMirrorKeymap(),
 			isVisualEditor
 		);
 	} );

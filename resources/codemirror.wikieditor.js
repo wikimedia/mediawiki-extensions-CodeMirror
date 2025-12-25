@@ -311,8 +311,16 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		this.$textarea.wikiEditor( 'addToToolbar', { section: 'main', groups: {
 			'codemirror-format': {
 				tools: {
-					indentMore: this.getTool( 'indent', () => indentMore( this.stateCommand ) ),
-					indentLess: this.getTool( 'outdent', () => indentLess( this.stateCommand ) )
+					indentMore: this.getTool(
+						'indent',
+						() => indentMore( this.stateCommand ),
+						this.keymap.keymapHelpRegistry.paragraph.indent
+					),
+					indentLess: this.getTool(
+						'outdent',
+						() => indentLess( this.stateCommand ),
+						this.keymap.keymapHelpRegistry.paragraph.outdent
+					)
 				}
 			},
 			'codemirror-preferences': {
@@ -337,7 +345,8 @@ class CodeMirrorWikiEditor extends CodeMirror {
 									this.view.state.field( this.gotoLine.panelStateField )
 								);
 							} );
-						}
+						},
+						this.keymap.keymapHelpRegistry.search.gotoLine
 					),
 					search: this.searchTool
 				}
@@ -380,22 +389,21 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	 *
 	 * @param {string} name
 	 * @param {Function|Command} command
-	 * @param {string} [label]
-	 * @param {string} [icon]
+	 * @param {CodeMirrorKeyBinding} [keyBinding]
 	 * @return {Object}
 	 * @private
 	 */
-	getTool( name, command, label, icon ) {
+	getTool( name, command, keyBinding ) {
 		return {
-			// Possible messages include but are not limited to:
-			// * codemirror-keymap-preferences
-			// * codemirror-keymap-indent
-			// * codemirror-keymap-outdent
-			// * codemirror-keymap-goto-line
-			// * codemirror-keymap-find
-			label: mw.msg( label || `codemirror-keymap-${ name.toLowerCase() }` ),
+			label: this.keymap.getTitleWithShortcut(
+				// Possible messages include but are not limited to:
+				// * codemirror-keymap-indent
+				// * codemirror-keymap-outdent
+				mw.msg( `codemirror-keymap-${ name.toLowerCase() }` ),
+				keyBinding
+			),
 			type: 'button',
-			oouiIcon: icon || name,
+			oouiIcon: name,
 			action: {
 				type: 'callback',
 				execute: command
@@ -411,10 +419,11 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	 * @param {string} label Localized HTML-safe message.
 	 * @param {string} [icon] Defaults to `name`.
 	 * @param {Function} [callback] A callback that receives the OO.ui.ToggleButtonWidget instance.
+	 * @param {CodeMirrorKeyBinding} [keyBinding]
 	 * @return {Object}
 	 * @private
 	 */
-	getToggleTool( name, command, label, icon, callback ) {
+	getToggleTool( name, command, label, icon, callback, keyBinding ) {
 		return {
 			label,
 			type: 'element',
@@ -425,7 +434,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 					value: false,
 					framed: false,
 					classes: [ 'tool' ],
-					title: label,
+					title: this.keymap.getTitleWithShortcut( label, keyBinding ),
 					label,
 					invisibleLabel: true
 				} );
@@ -491,7 +500,8 @@ class CodeMirrorWikiEditor extends CodeMirror {
 				mw.hook( 'ext.CodeMirror.search' ).add( () => {
 					button.setValue( searchPanelOpen( this.view.state ) );
 				} );
-			}
+			},
+			this.keymap.keymapHelpRegistry.search.find
 		);
 	}
 
@@ -511,7 +521,8 @@ class CodeMirrorWikiEditor extends CodeMirror {
 				mw.hook( 'ext.CodeMirror.preferences.display' ).add( () => {
 					button.setValue( this.view.state.field( this.preferences.panelStateField ) );
 				} );
-			}
+			},
+			this.keymap.keymapHelpRegistry.other.preferences
 		);
 	}
 }

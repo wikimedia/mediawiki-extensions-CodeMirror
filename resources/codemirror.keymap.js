@@ -500,6 +500,25 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 	}
 
 	/**
+	 * Get a label for a shortcut with the key binding appended in brackets.
+	 * This should be used as the 'title' attribute for buttons and links with shortcuts.
+	 *
+	 * @param {string} label
+	 * @param {CodeMirrorKeyBinding|null} keyBinding
+	 * @return {string}
+	 * @internal
+	 */
+	getTitleWithShortcut( label, keyBinding ) {
+		if ( !keyBinding ) {
+			return label;
+		}
+		const shortcut = this.getShortcutHtml(
+			keyBinding[ this.platform ] || keyBinding.key
+		).innerText;
+		return label + mw.msg( 'word-separator' ) + mw.msg( 'brackets', shortcut );
+	}
+
+	/**
 	 * @typedef {Object} CodeMirrorKeymap~CodeMirrorKeyBinding
 	 * @extends KeyBinding
 	 * @description Extends CodeMirror's {@link KeyBinding} interface with additional properties.
