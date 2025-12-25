@@ -12,6 +12,7 @@ const {
 	replaceNext,
 	runScopeHandlers,
 	search,
+	searchPanelOpen,
 	selectMatches,
 	selectNextOccurrence,
 	selectSelectionMatches,
@@ -186,6 +187,10 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 	 * @return {boolean}
 	 */
 	openPanel( view ) {
+		// If the search panel is already open and focused, pass the event to the browser.
+		if ( searchPanelOpen( view.state ) && document.activeElement === this.searchInput ) {
+			return false;
+		}
 		openSearchPanel( view );
 		this.commit();
 		return true;
