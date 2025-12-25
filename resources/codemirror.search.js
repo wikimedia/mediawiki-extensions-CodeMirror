@@ -140,12 +140,13 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 		container.appendChild( firstRow );
 
 		// Search input.
+		const selection = this.view.state.selection.main;
+		const searchValue = !selection.empty && selection.to <= selection.from + 100 ?
+			this.view.state.sliceDoc( selection.from, selection.to ) :
+			this.searchQuery.search;
 		const [ searchInputWrapper, searchInput ] = this.getTextInput(
 			'search',
-			this.searchQuery.search || this.view.state.sliceDoc(
-				this.view.state.selection.main.from,
-				this.view.state.selection.main.to
-			),
+			searchValue || this.searchQuery.search,
 			'codemirror-find'
 		);
 		this.searchInput = searchInput;
