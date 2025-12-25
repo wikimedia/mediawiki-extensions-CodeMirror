@@ -61,7 +61,13 @@
 				"autofocus": true,
 				"bidiIsolation": false,
 				"bracketMatching": true,
-				"closeBrackets": true,
+				"closeBrackets": [
+					"json",
+					"css",
+					"javascript",
+					"lua",
+					"vue"
+				],
 				"highlightRefs": true,
 				"foldAllRefs": false,
 				"lineNumbering": true,

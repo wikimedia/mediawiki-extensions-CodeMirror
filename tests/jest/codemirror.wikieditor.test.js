@@ -264,11 +264,10 @@ describe( 'logEditFeature', () => {
 		cmWe.preferences.extension;
 		expect( spy ).toHaveBeenNthCalledWith( 2, 'prefs-autofocus' );
 		expect( spy ).toHaveBeenNthCalledWith( 3, 'prefs-bracketMatching' );
-		expect( spy ).toHaveBeenNthCalledWith( 4, 'prefs-closeBrackets' );
-		expect( spy ).toHaveBeenNthCalledWith( 5, 'prefs-lineNumbering' );
-		expect( spy ).toHaveBeenNthCalledWith( 6, 'prefs-lineWrapping' );
-		expect( spy ).toHaveBeenNthCalledWith( 7, 'prefs-activeLine' );
-		expect( spy ).toHaveBeenNthCalledWith( 8, 'prefs-specialChars' );
+		expect( spy ).toHaveBeenNthCalledWith( 4, 'prefs-lineNumbering' );
+		expect( spy ).toHaveBeenNthCalledWith( 5, 'prefs-lineWrapping' );
+		expect( spy ).toHaveBeenNthCalledWith( 6, 'prefs-activeLine' );
+		expect( spy ).toHaveBeenNthCalledWith( 7, 'prefs-specialChars' );
 		// Other extensions are not used here because we aren't using the mediawiki language.
 	} );
 
