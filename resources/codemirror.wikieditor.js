@@ -396,11 +396,11 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	getTool( name, command, keyBinding ) {
 		return {
 			label: this.keymap.getTitleWithShortcut(
+				keyBinding,
 				// Possible messages include but are not limited to:
 				// * codemirror-keymap-indent
 				// * codemirror-keymap-outdent
-				mw.msg( `codemirror-keymap-${ name.toLowerCase() }` ),
-				keyBinding
+				mw.msg( `codemirror-keymap-${ name.toLowerCase() }` )
 			),
 			type: 'button',
 			oouiIcon: name,
@@ -434,7 +434,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 					value: false,
 					framed: false,
 					classes: [ 'tool' ],
-					title: this.keymap.getTitleWithShortcut( label, keyBinding ),
+					title: this.keymap.getTitleWithShortcut( keyBinding, label ),
 					label,
 					invisibleLabel: true
 				} );

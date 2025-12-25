@@ -208,7 +208,7 @@ class CodeMirror {
 		 *
 		 * @type {CodeMirrorSearch}
 		 */
-		this.search = new CodeMirrorSearch();
+		this.search = new CodeMirrorSearch( this.keymap );
 		/**
 		 * The go-to line panel.
 		 *

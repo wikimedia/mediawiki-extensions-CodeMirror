@@ -33,7 +33,7 @@ const CodeMirrorCodex = require( './codemirror.codex.js' );
  * CodeMirror has been initialized. For dynamically added key bindings, use the
  * {@link event:'ext.CodeMirror.ready' ext.CodeMirror.ready} hook to have access to
  * the {@link CodeMirror} instance after initialization, which will have the
- * {@link CodeMirror#view CodeMirror.view} property set.
+ * {@link CodeMirror CodeMirror.view} property set.
  *
  * @example
  * mw.hook( 'ext.CodeMirror.ready' ).add( ( cm ) => {
@@ -503,19 +503,19 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 	 * Get a label for a shortcut with the key binding appended in brackets.
 	 * This should be used as the 'title' attribute for buttons and links with shortcuts.
 	 *
-	 * @param {string} label
 	 * @param {CodeMirrorKeyBinding|null} keyBinding
+	 * @param {string} label
 	 * @return {string}
 	 * @internal
 	 */
-	getTitleWithShortcut( label, keyBinding ) {
+	getTitleWithShortcut( keyBinding, label = '' ) {
 		if ( !keyBinding ) {
 			return label;
 		}
 		const shortcut = this.getShortcutHtml(
 			keyBinding[ this.platform ] || keyBinding.key
 		).innerText;
-		return label + mw.msg( 'word-separator' ) + mw.msg( 'brackets', shortcut );
+		return ( label ? label + mw.msg( 'word-separator' ) : '' ) + mw.msg( 'brackets', shortcut );
 	}
 
 	/**

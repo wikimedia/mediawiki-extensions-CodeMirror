@@ -1,6 +1,7 @@
 /* eslint-disable-next-line n/no-missing-require */
 const { EditorView, EditorState, SelectionRange } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirror = require( '../../resources/codemirror.js' );
+const CodeMirrorKeymap = require( '../../resources/codemirror.keymap.js' );
 const CodeMirrorSearch = require( '../../resources/codemirror.search.js' );
 
 const getCmWithSearchOpen = ( content = '' ) => {
@@ -15,10 +16,11 @@ const getCmWithSearchOpen = ( content = '' ) => {
 	);
 	return cm;
 };
+const keyMap = new CodeMirrorKeymap();
 
 describe( 'CodeMirrorSearch', () => {
 	it( 'should provide an Extension getter and a Panel getter', () => {
-		const cmSearch = new CodeMirrorSearch();
+		const cmSearch = new CodeMirrorSearch( keyMap );
 		cmSearch.view = new EditorView();
 		expect( cmSearch.extension ).toBeInstanceOf( Array );
 		expect( cmSearch.extension[ 0 ][ 0 ].constructor.name ).toStrictEqual( 'FacetProvider' );
@@ -26,7 +28,7 @@ describe( 'CodeMirrorSearch', () => {
 	} );
 
 	it( 'should disable replacement fields if the textarea is read-only', () => {
-		const cmSearch = new CodeMirrorSearch();
+		const cmSearch = new CodeMirrorSearch( keyMap );
 		cmSearch.view = new EditorView();
 		// eslint-disable-next-line no-unused-expressions
 		cmSearch.panel;

@@ -340,7 +340,9 @@
 				"codemirror-unfold",
 				"parentheses-end",
 				"parentheses-start",
-				"pipe-separator"
+				"pipe-separator",
+				"word-separator",
+				"brackets"
 			]
 		},
 		"ext.CodeMirror.v6.init": {
