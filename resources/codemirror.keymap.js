@@ -211,9 +211,9 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 					key: 'Mod-Shift-,',
 					msg: mw.msg( 'codemirror-keymap-preferences' )
 				},
-				advancedPreferences: {
+				fullPreferences: {
 					key: 'Alt-Shift-,',
-					msg: mw.msg( 'codemirror-keymap-advanced-preferences' )
+					msg: mw.msg( 'codemirror-keymap-full-preferences' )
 				},
 				help: {
 					key: 'Ctrl-Shift-/',

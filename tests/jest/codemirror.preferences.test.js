@@ -366,7 +366,7 @@ describe( 'CodeMirrorPreferences', () => {
 		expect( panelCheckboxes.length ).toBe( 2 );
 		expect( panelCheckboxes[ 0 ].textContent ).toBe( 'codemirror-prefs-linenumbering' );
 		expect( panelCheckboxes[ 1 ].textContent ).toBe( 'codemirror-prefs-bracketmatching' );
-		// Show advanced dialog.
+		// Show the full dialog.
 		preferences.showPreferencesDialog( view );
 		const dialog = preferences.dialog.querySelector( '.cm-mw-preferences-dialog' );
 		const fieldsets = dialog.querySelectorAll( '.cm-mw-panel--fieldset' );

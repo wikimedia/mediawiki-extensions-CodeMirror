@@ -15,7 +15,7 @@ require( './ext.CodeMirror.data.js' );
  * CodeMirrorPreferences is a panel that allows users to configure CodeMirror preferences.
  * It is toggled by pressing `Ctrl`-`Shift`-`,` (or `Command`-`Shift`-`,` on macOS).
  * Only the commonly used "primary" preferences with a visual effect are shown in the panel,
- * in order to reduce in-editor clutter. An "advanced" link is provided to open a dialog
+ * in order to reduce in-editor clutter. A "More preferences" link is provided to open a dialog
  * with all available preferences. This can also be opened by pressing `Alt`-`Shift`-`,`.
  *
  * Note that this code, like MediaWiki Core, refers to the user's preferences as "options".
@@ -514,10 +514,10 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		shortcutLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror#Keyboard_shortcuts';
 		shortcutLink.textContent = mw.msg( 'codemirror-keymap-help-title' ).toLowerCase();
 		shortcutLink.onclick = ( e ) => e.preventDefault();
-		const advancedLink = document.createElement( 'a' );
-		advancedLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror#Features';
-		advancedLink.textContent = mw.msg( 'codemirror-prefs-panel-advanced' ).toLowerCase();
-		advancedLink.onclick = ( e ) => {
+		const fullPrefsLink = document.createElement( 'a' );
+		fullPrefsLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror#Features';
+		fullPrefsLink.textContent = mw.msg( 'codemirror-prefs-panel-full' ).toLowerCase();
+		fullPrefsLink.onclick = ( e ) => {
 			e.preventDefault();
 			this.showPreferencesDialog( this.view );
 		};
@@ -528,7 +528,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 			mw.msg( 'pipe-separator' ),
 			shortcutLink,
 			mw.msg( 'pipe-separator' ),
-			advancedLink,
+			fullPrefsLink,
 			mw.msg( 'parentheses-end' )
 		);
 		return helpSpan;
