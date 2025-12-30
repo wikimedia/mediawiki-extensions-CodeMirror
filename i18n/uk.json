@@ -17,7 +17,6 @@
 	"codemirror-prefs-enable": "Увімкнути підсвічування синтаксису",
 	"codemirror-prefs-title": "Налаштування підсвічування синтаксису",
 	"codemirror-prefs-help": "довідка",
-	"codemirror-prefs-panel-advanced": "розширені",
 	"codemirror-prefs-codefolding": "Увімкнути згортання коду",
 	"codemirror-prefs-autocomplete": "Увімкнути автозаповнення",
 	"codemirror-prefs-openlinks": "Відкривати посилання за допомогою клавіші-модифікатора + клік",

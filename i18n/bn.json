@@ -9,7 +9,6 @@
 	"codemirror-desc": "উইকিপাঠ্য সম্পাদকে সিনট্যাক্স আলোকপাতকরণ প্রদান করে",
 	"codemirror-toggle-label": "সিনট্যাক্স আলোকপাতকরণ",
 	"codemirror-toggle-label-short": "সিনট্যাক্স",
-	"codemirror-prefs-panel-advanced": "উচ্চতর",
 	"codemirror-prefs-section-lines": "লাইন",
 	"codemirror-prefs-section-characters": "অক্ষর",
 	"codemirror-prefs-section-code-assistance": "কোড সহায়তা",
@@ -40,7 +39,6 @@
 	"codemirror-special-char-right-to-left-mark": "ডান-থেকে-বাম চিহ্ন",
 	"codemirror-special-char-line-separator": "লাইন বিভাজক",
 	"codemirror-special-char-object-replacement": "বস্তু প্রতিস্থাপন অক্ষর",
-	"codemirror-keymap-advanced-preferences": "উচ্চতর পছন্দ",
 	"codemirror-keymap-lint": "লিন্টার",
 	"prefs-accessibility": "অভিগম্যতা"
 }
