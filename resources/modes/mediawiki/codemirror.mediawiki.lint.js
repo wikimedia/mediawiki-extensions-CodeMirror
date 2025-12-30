@@ -177,7 +177,10 @@ const execute = async ( wikitext ) => {
 		}, 3000 );
 	} );
 	// This endpoint is still experimental and may change in the future.
-	return rest.post( '/v1/transform/wikitext/to/lint', { wikitext } ).then(
+	return rest.post(
+		`/v1/transform/wikitext/to/lint/${ encodeURIComponent( mw.config.get( 'wgPageName' ) ) }`,
+		{ wikitext }
+	).then(
 		( errors ) => errors,
 		( _, e ) => {
 			if ( e.textStatus !== 'abort' ) {
