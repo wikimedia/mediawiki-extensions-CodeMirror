@@ -3,6 +3,7 @@
 		"authors": [
 			"Lokal Profil",
 			"Sabelöga",
+			"Stefan2255",
 			"WikiPhoenix"
 		]
 	},
@@ -10,5 +11,7 @@
 	"codemirror-toggle-label": "Syntaxmarkering",
 	"codemirror-prefs-colorblind": "Aktivera färgblindvänligt färgschema för syntaxmarkering när du redigerar wikitext",
 	"codemirror-prefs-colorblind-help": "Om du använder en finess för syntaxmarkering kommer inställningen inte fungera.",
+	"codemirror-special-char-left-to-right-override": "Vänster-till-höger undantag",
+	"codemirror-special-char-right-to-left-override": "Höger-till-vänster undantag",
 	"prefs-accessibility": "Tillgänglighet"
 }
