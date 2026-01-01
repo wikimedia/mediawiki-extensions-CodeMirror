@@ -5,7 +5,8 @@
 			"Ellif",
 			"Kwj2772",
 			"Markingdots",
-			"Ykhwong"
+			"Ykhwong",
+			"YeBoy371"
 		]
 	},
 	"codemirror-desc": "위키텍스트 편집기에서 구문 강조 기능을 제공합니다",
@@ -82,7 +83,7 @@
 	"prefs-accessibility": "접근성",
 	"prefs-syntax-highlighting": "문법 강조",
 	"codemirror-wikilint-lonely": "외로운 \"$1\"",
-	"codemirror-wikilint-nothing-in": "<$1>은 비어있어야 합니다",
+	"codemirror-wikilint-nothing-in": "$1은 비어있어야 합니다",
 	"codemirror-wikilint-remove": "제거",
 	"codemirror-beta-feature-title": "개선된 구문 강조",
 	"codemirror-beta-feature-description": "새로운 구문 강조, 그리고 틀 접기 및 자동 완성 등의 편집 기능을 먼저 사용해 봅니다."
