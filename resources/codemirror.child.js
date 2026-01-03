@@ -1,4 +1,4 @@
-const { Extension, Prec } = require( 'ext.CodeMirror.v6.lib' );
+const { Extension, LanguageSupport, Prec } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirror = require( 'ext.CodeMirror.v6' );
 
 /**

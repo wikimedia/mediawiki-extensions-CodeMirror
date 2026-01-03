@@ -1,4 +1,5 @@
 const {
+	Command,
 	EditorSelection,
 	EditorView,
 	StateEffect,

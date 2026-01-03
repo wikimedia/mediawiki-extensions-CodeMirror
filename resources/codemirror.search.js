@@ -157,7 +157,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 					return this.panel;
 				},
 				scrollToMatch: ( range, view ) => {
-					// If the match is already in the viewport, scroll as little as possible, otherwise center it.
+					// If within the viewport, scroll to as little as possible, otherwise center it.
 					const scrollRect = view.scrollDOM.getBoundingClientRect();
 					const startCoords = view.coordsAtPos( range.from );
 					const endCoords = view.coordsAtPos( range.to );

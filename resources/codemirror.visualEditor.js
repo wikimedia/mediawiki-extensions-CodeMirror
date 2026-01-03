@@ -38,8 +38,8 @@ class CodeMirrorVisualEditor extends CodeMirror {
 		 */
 		this.readOnly = this.surface.getModel().isReadOnly();
 		// TODO: lineNumbering override doesn't work because it's ran before the constructor.
-		//   To be revisited once CodeMirrorVisualEditor has its own CodeMirrorPreferences implementation
-		//   (it should use lockPreference() to disable line numbering).
+		//   To be revisited once CodeMirrorVisualEditor has its own CodeMirrorPreferences
+		//   implementation (it should use lockPreference() to disable line numbering).
 		// Disable line numbering in DiscussionTools.
 		if ( this.surface.getTarget().constructor.name === 'CommentTarget' ) {
 			delete this.extensionRegistry.extensions.lineNumbering;

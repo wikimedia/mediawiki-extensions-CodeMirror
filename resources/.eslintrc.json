@@ -16,16 +16,27 @@
 		"jsdoc": {
 			"preferredTypes": {
 				"CodeMirror": "CodeMirror",
+				"CodeMirror.applyExtension": "CodeMirror.applyExtension",
+				"CodeMirror.ext.CodeMirror.destroy": "CodeMirror.ext.CodeMirror.destroy",
+				"CodeMirror.ext.CodeMirror.initialize": "CodeMirror.ext.CodeMirror.initialize",
+				"CodeMirror.ext.CodeMirror.input": "CodeMirror.ext.CodeMirror.input",
+				"CodeMirror.ext.CodeMirror.preferences.apply": "CodeMirror.ext.CodeMirror.preferences.apply",
+				"CodeMirror.ext.CodeMirror.preferences.ready": "CodeMirror.ext.CodeMirror.preferences.ready",
+				"CodeMirror.ext.CodeMirror.ready": "CodeMirror.ext.CodeMirror.ready",
+				"CodeMirror.ext.CodeMirror.toggle": "CodeMirror.ext.CodeMirror.toggle",
+				"CodeMirror.extensionRegistry": "CodeMirror.extensionRegistry",
+				"CodeMirror.initialize": "CodeMirror.initialize",
+				"CodeMirror.textarea": "CodeMirror.textarea",
+				"CodeMirror.view": "CodeMirror.view",
 				"CodeMirrorChild": "CodeMirrorChild",
 				"CodeMirrorKeyBinding": "CodeMirrorKeyBinding",
 				"CodeMirrorKeymap": "CodeMirrorKeymap",
 				"CodeMirrorMediaWiki": "CodeMirrorMediaWiki",
 				"CodeMirrorPreferences": "CodeMirrorPreferences",
+				"CodeMirrorPreferences.extension": "CodeMirrorPreferences.extension",
 				"CodeMirrorTextSelection": "CodeMirrorTextSelection",
-				"Command": "Command",
 				"Hook": "Hook",
-				"LanguageSupport": "LanguageSupport",
-				"StateCommand": "StateCommand"
+				"LanguageSupport": "LanguageSupport"
 			}
 		}
 	},

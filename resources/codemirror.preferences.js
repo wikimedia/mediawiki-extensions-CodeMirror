@@ -518,7 +518,9 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		shortcutLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror#Keyboard_shortcuts';
 		shortcutLink.textContent = mw.msg( 'codemirror-keymap-help-title' ).toLowerCase();
 		shortcutLink.onclick = ( e ) => e.preventDefault();
-		shortcutLink.title = this.keymap.getTitleWithShortcut( this.keymap.keymapHelpRegistry.other.help );
+		shortcutLink.title = this.keymap.getTitleWithShortcut(
+			this.keymap.keymapHelpRegistry.other.help
+		);
 		const fullPrefsLink = document.createElement( 'a' );
 		fullPrefsLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror#Features';
 		fullPrefsLink.textContent = mw.msg( 'codemirror-prefs-panel-full' ).toLowerCase();
@@ -526,7 +528,9 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 			e.preventDefault();
 			this.showPreferencesDialog( this.view );
 		};
-		fullPrefsLink.title = this.keymap.getTitleWithShortcut( this.keymap.keymapHelpRegistry.other.fullPreferences );
+		fullPrefsLink.title = this.keymap.getTitleWithShortcut(
+			this.keymap.keymapHelpRegistry.other.fullPreferences
+		);
 		helpSpan.append(
 			' ',
 			mw.msg( 'parentheses-start' ),

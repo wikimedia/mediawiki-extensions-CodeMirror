@@ -640,7 +640,9 @@ class CodeMirror {
 	 * @stable to call
 	 */
 	get lintExtension() {
-		return new CodeMirrorLint( this.lintSource, this.keymap, this.lintApi, this.gotoLine ).extension;
+		return new CodeMirrorLint(
+			this.lintSource, this.keymap, this.lintApi, this.gotoLine
+		).extension;
 	}
 
 	/* eslint-disable max-len */
@@ -926,8 +928,7 @@ class CodeMirror {
 
 	/**
 	 * Activate CodeMirror on the {@link CodeMirror#textarea textarea}.
-	 * This sets the {@link CodeMirror#state state} property and shows the editor view,
-	 * hiding the original textarea.
+	 * This shows the editor view, hiding the original textarea.
 	 *
 	 * {@link CodeMirror#initialize initialize} is expected to be called before this method.
 	 *
@@ -994,7 +995,7 @@ class CodeMirror {
 	/**
 	 * Deactivate CodeMirror on the {@link CodeMirror#textarea textarea}, restoring the original
 	 * textarea and hiding the editor. This life-cycle method should retain the
-	 * {@link CodeMirror#view view} but discard the {@link CodeMirror#state state}.
+	 * {@link CodeMirror#view view}.
 	 *
 	 * @protected
 	 * @stable to call and override by subclasses

@@ -48,6 +48,7 @@
 				"RangeSet": "https://codemirror.net/docs/ref/#state.RangeSet",
 				"SearchQuery": "https://codemirror.net/docs/ref/#search.SearchQuery",
 				"StateCommand": "https://codemirror.net/docs/ref/#state.StateCommand",
+				"StateEffect": "https://codemirror.net/docs/ref/#state.StateEffect",
 				"StateEffectType": "https://codemirror.net/docs/ref/#state.StateEffectType",
 				"StateField": "https://codemirror.net/docs/ref/#state.StateField",
 				"StreamParser": "https://codemirror.net/docs/ref/#language.StreamParser",

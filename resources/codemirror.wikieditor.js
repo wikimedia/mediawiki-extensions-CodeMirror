@@ -1,4 +1,5 @@
 const {
+	Command,
 	EditorView,
 	StateCommand,
 	closeSearchPanel,
@@ -204,7 +205,8 @@ class CodeMirrorWikiEditor extends CodeMirror {
 			} );
 		} else {
 			this.addCodeFormattingButtonsToToolbar();
-			// Remove CSS class used by style module. Should be kept in sync with Hooks::addStyleModule().
+			// Remove CSS class used by style module.
+			// This should be kept in sync with Hooks::addStyleModule() in PHP.
 			document.body.classList.remove( 'cm-mw-wikieditor-loading' );
 		}
 	}

@@ -7,6 +7,7 @@ const {
 	startCompletion,
 	undo,
 	undoSelection,
+	Command,
 	EditorView,
 	Extension,
 	KeyBinding,
