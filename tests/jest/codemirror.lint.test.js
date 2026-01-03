@@ -1,6 +1,7 @@
 // eslint-disable-next-line n/no-missing-require
-const { Text } = require( 'ext.CodeMirror.v6.lib' );
+const { EditorView, Text } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirrorLint = require( '../../resources/codemirror.lint.js' );
+const CodeMirrorGotoLine = require( '../../resources/codemirror.gotoLine.js' );
 
 const cmLint = new CodeMirrorLint();
 const { dom, update } = cmLint.panel;
@@ -103,5 +104,15 @@ describe( 'CodeMirrorLint', () => {
 		expect( line.textContent ).toEqual( '2:2|(1:1)' );
 		updateSelection( 5, 2 );
 		expect( line.textContent ).toEqual( '1:2|(1:0)' );
+	} );
+
+	it( 'should open the goto line panel when clicking on status line', () => {
+		const gotoLine = new CodeMirrorGotoLine();
+		cmLint.gotoLine = gotoLine;
+		cmLint.view = new EditorView();
+		expect( gotoLine.input ).toBeUndefined();
+		dom.querySelector( '.cm-mw-panel--status-line' ).click();
+		expect( gotoLine.input ).toBeDefined();
+		expect( gotoLine.view.state.field( gotoLine.panelStateField ) ).toBeDefined();
 	} );
 } );

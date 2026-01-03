@@ -72,7 +72,7 @@ class CodeMirrorLint extends CodeMirrorPanel {
 		const position = document.createElement( 'div' );
 		position.className = 'cm-mw-panel--status-line';
 		position.textContent = '0:0';
-		position.addEventListener( 'click', () => this.gotoLine.run( this.view ) );
+		position.addEventListener( 'click', () => this.gotoLine.openPanel( this.view ) );
 		dom.append( worker, message, position );
 		return {
 			dom,
