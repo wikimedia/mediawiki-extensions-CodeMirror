@@ -80,5 +80,9 @@
 	"codemirror-wikilint-remove": "ewechhuelen",
 	"codemirror-wikilint-uppercase": "a Groussbuschtawen ëmwandelen",
 	"codemirror-beta-feature-title": "Verbessert Ervirhiewe vun der Syntax",
-	"codemirror-potentially-slow": "potenziell lues"
+	"codemirror-potentially-slow": "potenziell lues",
+	"apihelp-codemirror-validate-param-content": "Den Textinhalt fir ze validéieren",
+	"apihelp-codemirror-validate-param-contentmodel": "Inhaltsmodell",
+	"apihelp-codemirror-validate-param-title": "Titel vun der Säit, zu där den Inhalt gehéiert.",
+	"codemirror-validate-js-syntaxerror": "Syntaxfeeler an der Kolonn $1 an der Zeil $2: $3"
 }

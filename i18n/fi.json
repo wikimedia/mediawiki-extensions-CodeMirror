@@ -18,6 +18,7 @@
 	"codemirror-prefs-section-lines": "Rivit",
 	"codemirror-prefs-section-characters": "Merkit",
 	"codemirror-prefs-section-code-assistance": "Koodiapu",
+	"codemirror-prefs-section-references": "Viitteet",
 	"codemirror-prefs-section-other": "Muut",
 	"codemirror-prefs-codefolding": "Ota käyttöön koodin piilotus",
 	"codemirror-prefs-autocomplete": "Ota käyttöön automaattinen täydennys",
@@ -102,5 +103,6 @@
 	"codemirror-wikilint-close": "sulje",
 	"codemirror-wikilint-remove": "poista",
 	"codemirror-beta-feature-title": "Parannettu syntaksin korostus",
-	"codemirror-beta-feature-description": "Pääse käyttämään uutta syntaksin korostusta ja muokkaustoimintoja, kuten koodin piilotusta ja automaattista täydennystä."
+	"codemirror-beta-feature-description": "Pääse käyttämään uutta syntaksin korostusta ja muokkaustoimintoja, kuten koodin piilotusta ja automaattista täydennystä.",
+	"apihelp-codemirror-validate-param-contentmodel": "Sisältömalli"
 }

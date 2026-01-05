@@ -217,5 +217,11 @@
 	"codemirror-wikilint-whitespace": "插入空格",
 	"codemirror-beta-feature-title": "增強版語法醒目標示",
 	"codemirror-beta-feature-description": "提前使用新的語法醒目與編輯功能，例如代碼折疊和自動完成。",
-	"codemirror-potentially-slow": "可能導致緩慢"
+	"codemirror-potentially-slow": "可能導致緩慢",
+	"apihelp-codemirror-validate-summary": "檢查給予內容裡的驗證錯誤",
+	"apihelp-codemirror-validate-param-content": "待驗證的文字內容",
+	"apihelp-codemirror-validate-param-contentmodel": "內容模組",
+	"apihelp-codemirror-validate-param-title": "內容所屬的頁面標題。",
+	"apihelp-codemirror-validate-example": "檢查 <code>h2 {color: red}</code> 是否符合 sanitized-css 規範。",
+	"codemirror-validate-js-syntaxerror": "第 $2 行的第 $1 欄出現語法錯誤：$3"
 }

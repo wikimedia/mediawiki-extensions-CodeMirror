@@ -214,5 +214,11 @@
 	"codemirror-wikilint-whitespace": "ein Leerzeichen einfügen",
 	"codemirror-beta-feature-title": "Verbesserte Syntaxhervorhebung",
 	"codemirror-beta-feature-description": "Erhalte frühzeitigen Zugriff auf neue Funktionen zur Syntaxhervorhebung und Bearbeitung, wie z. B. Codefaltung und Autovervollständigung.",
-	"codemirror-potentially-slow": "möglicherweise langsam"
+	"codemirror-potentially-slow": "möglicherweise langsam",
+	"apihelp-codemirror-validate-summary": "Überprüfung auf Validierungsfehler in den angegebenen Inhalten",
+	"apihelp-codemirror-validate-param-content": "Der zu validierende Textinhalt",
+	"apihelp-codemirror-validate-param-contentmodel": "Seiteninhaltsmodell",
+	"apihelp-codemirror-validate-param-title": "Titel der Seite, zu der der Inhalt gehört.",
+	"apihelp-codemirror-validate-example": "Prüfen, ob <code>h2 {color: red}</code> für sanitized-css gültig ist.",
+	"codemirror-validate-js-syntaxerror": "Syntaxfehler in Spalte $1 in Zeile $2: $3"
 }

@@ -222,5 +222,11 @@
 	"codemirror-wikilint-whitespace": "insérer une espace",
 	"codemirror-beta-feature-title": "Mise en évidence améliorée de la syntaxe",
 	"codemirror-beta-feature-description": "Bénéficiez d'un accès anticipé aux nouvelles fonctionnalités de mise en évidence de la syntaxe et d'édition, telles que le repli du code et l'auto-complétion.",
-	"codemirror-potentially-slow": "potentiellement lent"
+	"codemirror-potentially-slow": "potentiellement lent",
+	"apihelp-codemirror-validate-summary": "Contrôler la présence d'erreurs de validation dans le contenu fourni.",
+	"apihelp-codemirror-validate-param-content": "Le contenu textuel à valider",
+	"apihelp-codemirror-validate-param-contentmodel": "Modèle de contenu",
+	"apihelp-codemirror-validate-param-title": "Titre de la page à laquelle appartient le contenu.",
+	"apihelp-codemirror-validate-example": "Vérifier si le contenu <code>h2 {color: red}</code> est valide pour le modèle de contenu sanitized-css",
+	"codemirror-validate-js-syntaxerror": "Erreur de syntaxe à la colonne $1 sur la ligne $2 : $3"
 }

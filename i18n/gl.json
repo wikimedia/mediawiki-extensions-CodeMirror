@@ -209,5 +209,11 @@
 	"codemirror-wikilint-whitespace": "inserir un espazo",
 	"codemirror-beta-feature-title": "Resaltado de sintaxe mellorado",
 	"codemirror-beta-feature-description": "Obtén acceso anticipado a novas funcións de edición e resaltado de sintaxe, como o pregamento de código e o autocompletado.",
-	"codemirror-potentially-slow": "potencialmente lento"
+	"codemirror-potentially-slow": "potencialmente lento",
+	"apihelp-codemirror-validate-summary": "Comprobar se hai erros de validación no contido dado",
+	"apihelp-codemirror-validate-param-content": "O texto a validar",
+	"apihelp-codemirror-validate-param-contentmodel": "Modelo de contido",
+	"apihelp-codemirror-validate-param-title": "Título da páxina á que pertence o texto.",
+	"apihelp-codemirror-validate-example": "Comprobar se <code>h2 {color: red}</code> é válido para CSS hixienizado",
+	"codemirror-validate-js-syntaxerror": "Erro de sintaxe na columna $1 da liña $2: $3"
 }
