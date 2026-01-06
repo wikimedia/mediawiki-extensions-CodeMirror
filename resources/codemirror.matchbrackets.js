@@ -2,6 +2,7 @@ const {
 	Config,
 	Decoration,
 	EditorState,
+	EditorView,
 	Extension,
 	MatchResult,
 	SyntaxNode,
@@ -72,6 +73,45 @@ const findSurroundingPlainBrackets = ( state, pos, config ) => {
 };
 
 /**
+ * Try to select between matching brackets on one side of the position.
+ *
+ * @param {EditorState} state
+ * @param {number} pos
+ * @param {number} dir
+ * @param {Config} config
+ * @param {boolean} inside
+ * @return {Object<number>|false}
+ * @internal
+ * @private
+ */
+const trySelectMatchingBrackets = ( state, pos, dir, config, inside = false ) => {
+	if ( pos < 0 ) {
+		return false;
+	}
+	const match = matchBrackets( state, pos, dir, config ) || false,
+		rightInside = dir === 1 === inside;
+	return match && match.matched && {
+		anchor: match.start[ rightInside ? 'to' : 'from' ],
+		head: match.end[ rightInside ? 'from' : 'to' ]
+	};
+};
+
+/**
+ * Select between matching brackets.
+ *
+ * @param {EditorState} state
+ * @param {number} pos
+ * @param {Config} config
+ * @return {Object<number>|false}
+ * @internal
+ * @private
+ */
+const selectMatchingBrackets = ( state, pos, config ) => trySelectMatchingBrackets( state, pos, -1, config ) ||
+	trySelectMatchingBrackets( state, pos, 1, config ) ||
+	trySelectMatchingBrackets( state, pos + 1, -1, config, true ) ||
+	trySelectMatchingBrackets( state, pos - 1, 1, config, true );
+
+/**
  * Highlight surrounding brackets in addition to matching brackets.
  *
  * @param {Config} configs
@@ -112,5 +152,22 @@ module.exports = ( configs ) => {
 			return Decoration.set( decorations, true );
 		}
 	} );
-	return extension;
+	return [
+		extension,
+		EditorView.domEventHandlers( {
+			dblclick( e, view ) {
+				const pos = view.posAtCoords( e );
+				if ( pos === null ) {
+					return false;
+				}
+				const { state } = view,
+					selection = selectMatchingBrackets( state, pos, state.facet( facet ) );
+				if ( selection ) {
+					view.dispatch( { selection } );
+					return true;
+				}
+				return false;
+			}
+		} )
+	];
 };
