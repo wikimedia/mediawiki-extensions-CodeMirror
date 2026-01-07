@@ -215,5 +215,11 @@
 	"codemirror-wikilint-whitespace": "插入空格",
 	"codemirror-beta-feature-title": "增强版语法高亮",
 	"codemirror-beta-feature-description": "提前试用新版语法高亮及编辑功能，例如代码折叠和自动补全。",
-	"codemirror-potentially-slow": "可能导致缓慢"
+	"codemirror-potentially-slow": "可能导致缓慢",
+	"apihelp-codemirror-validate-summary": "检查给定内容中的验证错误",
+	"apihelp-codemirror-validate-param-content": "待验证的文本内容",
+	"apihelp-codemirror-validate-param-contentmodel": "内容模型",
+	"apihelp-codemirror-validate-param-title": "内容所属页面的标题。",
+	"apihelp-codemirror-validate-example": "检查<code>h2 {color: red}</code>是否符合sanitized-css规范",
+	"codemirror-validate-js-syntaxerror": "第$2行的第$1列出现语法错误：$3"
 }
