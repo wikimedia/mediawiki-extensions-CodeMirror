@@ -436,6 +436,7 @@
 				"modes/codemirror.css.js",
 				"modes/codemirror.lua.js",
 				"modes/codemirror.vue.js",
+				"codemirror.validate.js",
 				"workers/codemirror.worker.js",
 				"lib/codemirror6.bundle.modes.js"
 			],

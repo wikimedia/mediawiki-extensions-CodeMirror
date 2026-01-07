@@ -2,6 +2,7 @@ const { syntaxTree, StreamLanguage, foldService, snippetCompletion } = require( 
 const { lua } = require( '../lib/codemirror6.bundle.modes.js' );
 const CodeMirrorMode = require( './codemirror.mode.js' );
 const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
+const getCodeMirrorValidator = require( '../codemirror.validate.js' );
 
 const map = {
 		1: 'constant',
@@ -453,6 +454,28 @@ class CodeMirrorLua extends CodeMirrorMode {
 				from: CodeMirrorWorker.pos( view, line, column ),
 				to: CodeMirrorWorker.pos( view, line, endColumn + 1 )
 			} ) );
+		};
+	}
+
+	/** @inheritdoc */
+	get lintApi() {
+		const execute = getCodeMirrorValidator(
+			new mw.Api(),
+			mw.config.get( 'wgPageName' ),
+			'Scribunto'
+		);
+		return async ( { state: { doc } } ) => {
+			const errors = await execute( doc.toString() );
+			return errors.map( ( { message, line } ) => {
+				const { from, to } = line === undefined ? { from: 0, to: 0 } : doc.line( line );
+				return {
+					severity: 'error',
+					source: 'Scribunto',
+					message,
+					from,
+					to
+				};
+			} );
 		};
 	}
 

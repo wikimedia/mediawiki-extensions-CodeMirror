@@ -2,6 +2,7 @@ const { syntaxTree } = require( 'ext.CodeMirror.v6.lib' );
 const { cssLanguage, cssCompletionSource } = require( '../lib/codemirror6.bundle.modes.js' );
 const CodeMirrorMode = require( './codemirror.mode.js' );
 const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
+const getCodeMirrorValidator = require( '../codemirror.validate.js' );
 
 /**
  * CSS language support for CodeMirror.
@@ -88,6 +89,39 @@ class CodeMirrorCss extends CodeMirrorMode {
 					];
 				}
 				return diagnostic;
+			} );
+		};
+	}
+
+	/** @inheritdoc */
+	get lintApi() {
+		if ( this.dialect !== 'sanitized-css' ) {
+			return undefined;
+		}
+		const execute = getCodeMirrorValidator(
+			new mw.Api(),
+			mw.config.get( 'wgPageName' ),
+			'sanitized-css'
+		);
+		const tmp = new mw.Map();
+		return async ( { state: { doc } } ) => {
+			const errors = await execute( doc.toString() );
+			return errors.map( ( { message, line, column } ) => {
+				const from = doc.line( line ).from + column - 1;
+				return {
+					severity: 'error',
+					source: 'TemplateStyles',
+					message,
+					renderMessage() {
+						tmp.set( '', message );
+						const span = document.createElement( 'span' );
+						// eslint-disable-next-line mediawiki/msg-doc
+						span.innerHTML = new mw.Message( tmp, '' ).parse();
+						return span;
+					},
+					from,
+					to: from
+				};
 			} );
 		};
 	}
