@@ -11,6 +11,7 @@
 	"codemirror-prefs-enable": "Activar le coloration syntactic",
 	"codemirror-prefs-title": "Preferentias de coloration syntactic",
 	"codemirror-prefs-help": "adjuta",
+	"codemirror-prefs-panel-full": "preferentias complete",
 	"codemirror-prefs-section-lines": "Lineas",
 	"codemirror-prefs-section-characters": "Characteres",
 	"codemirror-prefs-section-code-assistance": "Assistentia de codice",
@@ -126,6 +127,7 @@
 	"codemirror-keymap-copyline": "Copiar le lineas seligite al linea supra o infra",
 	"codemirror-keymap-direction": "Cambiar direction",
 	"codemirror-keymap-preferences": "Preferentias de coloration syntactic",
+	"codemirror-keymap-full-preferences": "Dialogo de preferentias complete",
 	"codemirror-keymap-help": "Claves accelerator",
 	"codemirror-keymap-cursor-modifiers": "Modificatores del cursor",
 	"codemirror-keymap-multicursor": "Tene premite $1 e clicca pro crear plure cursores.",
@@ -205,5 +207,11 @@
 	"codemirror-wikilint-whitespace": "inserer un spatio",
 	"codemirror-beta-feature-title": "Coloration syntactic meliorate",
 	"codemirror-beta-feature-description": "Obtene accesso precoce a nove functiones de coloration syntactic e de modification, como contraher/expander codice e autocompletamento.",
-	"codemirror-potentially-slow": "pote esser lente"
+	"codemirror-potentially-slow": "pote esser lente",
+	"apihelp-codemirror-validate-summary": "Verificar si il ha errores de validation in le contento date",
+	"apihelp-codemirror-validate-param-content": "Le contento textual a validar",
+	"apihelp-codemirror-validate-param-contentmodel": "Modello de contento",
+	"apihelp-codemirror-validate-param-title": "Titulo del pagina al qual le contento pertine.",
+	"apihelp-codemirror-validate-example": "Verificar si <code>h2 {color: red}</code> es valide pro sanitized-css",
+	"codemirror-validate-js-syntaxerror": "Error de syntaxe al columna $1 sur le linea $2: $3"
 }

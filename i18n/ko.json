@@ -86,5 +86,6 @@
 	"codemirror-wikilint-nothing-in": "$1은 비어있어야 합니다",
 	"codemirror-wikilint-remove": "제거",
 	"codemirror-beta-feature-title": "개선된 구문 강조",
-	"codemirror-beta-feature-description": "새로운 구문 강조, 그리고 틀 접기 및 자동 완성 등의 편집 기능을 먼저 사용해 봅니다."
+	"codemirror-beta-feature-description": "새로운 구문 강조, 그리고 틀 접기 및 자동 완성 등의 편집 기능을 먼저 사용해 봅니다.",
+	"apihelp-codemirror-validate-param-contentmodel": "콘텐츠 모델"
 }
