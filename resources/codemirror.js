@@ -4,14 +4,16 @@ const {
 	EditorState,
 	EditorView,
 	Extension,
-	StateEffect,
 	LanguageSupport,
 	LintSource,
+	Prec,
+	StateEffect,
 	ViewUpdate,
 	autocompletion,
 	closeBrackets,
 	crosshairCursor,
 	defaultHighlightStyle,
+	deleteCharBackwardStrict,
 	drawSelection,
 	dropCursor,
 	foldGutter,
@@ -25,6 +27,7 @@ const {
 	indentOnInput,
 	indentUnit,
 	indentWithTab,
+	insertNewlineKeepIndent,
 	keymap,
 	lineNumbers,
 	oneDark,
@@ -253,7 +256,6 @@ class CodeMirror {
 			this.domEventHandlersExtension,
 			this.preferences.extension,
 			this.keymap.extension,
-			indentUnit.of( '\t' ),
 			EditorState.readOnly.of( this.readOnly ),
 			EditorState.allowMultipleSelections.of( true ),
 			drawSelection(),
@@ -281,11 +283,19 @@ class CodeMirror {
 			} ) );
 		}
 
-		if ( this.mode !== 'mediawiki' ) {
+		if ( this.mode === 'mediawiki' ) {
+			extensions.push(
+				Prec.high( keymap.of( [
+					{ key: 'Enter', run: insertNewlineKeepIndent, shift: insertNewlineKeepIndent },
+					{ key: 'Backspace', run: deleteCharBackwardStrict, preventDefault: true }
+				] ) )
+			);
+		} else {
 			extensions.push(
 				syntaxHighlighting( defaultHighlightStyle, { fallback: true } ),
 				highlightSelectionMatches( { wholeWords: true } ),
 				// Make the [Tab] key indent for languages other than MediaWiki.
+				indentUnit.of( '\t' ),
 				indentOnInput(),
 				keymap.of( indentWithTab ),
 				keymap.of( foldKeymap )
