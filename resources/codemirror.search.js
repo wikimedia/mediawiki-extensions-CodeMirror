@@ -221,10 +221,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 		container.appendChild( firstRow );
 
 		// Search input.
-		const selection = this.view.state.selection.main;
-		const searchValue = !selection.empty && selection.to <= selection.from + 100 ?
-			this.view.state.sliceDoc( selection.from, selection.to ) :
-			this.searchQuery.search;
+		const searchValue = this.getSearchValue();
 		const [ searchInputWrapper, searchInput ] = this.getTextInput(
 			'search',
 			searchValue || this.searchQuery.search,
@@ -263,6 +260,19 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 	}
 
 	/**
+	 * Get the current search value.
+	 *
+	 * @return {string}
+	 * @internal
+	 */
+	getSearchValue() {
+		const selection = this.view.state.selection.main;
+		return !selection.empty && selection.to <= selection.from + 100 ?
+			this.view.state.sliceDoc( selection.from, selection.to ) :
+			this.searchQuery.search;
+	}
+
+	/**
 	 * Open the search panel.
 	 *
 	 * @param {EditorView} view
@@ -271,10 +281,16 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 	 */
 	openPanel( view ) {
 		// If the search panel is already open and focused, pass the event to the browser.
-		if ( searchPanelOpen( view.state ) && document.activeElement === this.searchInput ) {
-			return false;
+		if ( searchPanelOpen( view.state ) ) {
+			if ( document.activeElement === this.searchInput ) {
+				return false;
+			}
+			this.searchInput.value = this.getSearchValue();
+			this.searchInput.focus();
+			this.searchInput.select();
+		} else {
+			openSearchPanel( view );
 		}
-		openSearchPanel( view );
 		this.commit();
 		return true;
 	}
