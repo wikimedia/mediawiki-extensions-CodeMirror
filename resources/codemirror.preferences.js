@@ -146,7 +146,8 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 			],
 			characters: [
 				'specialChars',
-				'whitespace'
+				'whitespace',
+				'trailingWhitespace'
 			],
 			'code-assistance': [
 				'autocomplete',

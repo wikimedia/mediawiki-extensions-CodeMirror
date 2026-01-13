@@ -31,6 +31,7 @@
 	"codemirror-prefs-activeline": "Highlight the active line",
 	"codemirror-prefs-specialchars": "Show special characters",
 	"codemirror-prefs-whitespace": "Highlight whitespace",
+	"codemirror-prefs-trailingwhitespace": "Highlight trailing whitespace",
 	"codemirror-prefs-autofocus": "Put initial focus on the editor",
 	"codemirror-prefs-highlightrefs": "Highlight the contents of <ref> tags",
 	"codemirror-prefs-foldallrefs": "Fold all <ref> tags by default",

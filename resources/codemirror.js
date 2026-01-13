@@ -19,6 +19,7 @@ const {
 	highlightActiveLine,
 	highlightSelectionMatches,
 	highlightSpecialChars,
+	highlightTrailingWhitespace,
 	highlightWhitespace,
 	history,
 	indentOnInput,
@@ -184,7 +185,8 @@ class CodeMirror {
 			lineWrapping: this.lineWrappingExtension,
 			activeLine: this.activeLineExtension,
 			specialChars: this.specialCharsExtension,
-			whitespace: this.whitespaceExtension
+			whitespace: this.whitespaceExtension,
+			trailingWhitespace: this.trailingWhitespaceExtension
 		}, this.constructor.name === 'CodeMirrorVisualEditor' );
 		/**
 		 * Compartment to control the direction of the editor.
@@ -599,6 +601,15 @@ class CodeMirror {
 	 */
 	get whitespaceExtension() {
 		return highlightWhitespace();
+	}
+
+	/**
+	 * This extension highlights trailing whitespace characters.
+	 *
+	 * @return {Extension}
+	 */
+	get trailingWhitespaceExtension() {
+		return highlightTrailingWhitespace();
 	}
 
 	/**

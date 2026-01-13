@@ -77,6 +77,7 @@
 				"autocomplete": true,
 				"openLinks": true,
 				"whitespace": false,
+				"trailingWhitespace": false,
 				"lint": [
 					"json",
 					"css",
@@ -316,6 +317,7 @@
 				"codemirror-prefs-section-other",
 				"codemirror-prefs-specialchars",
 				"codemirror-prefs-title",
+				"codemirror-prefs-trailingwhitespace",
 				"codemirror-prefs-whitespace",
 				"codemirror-previous",
 				"codemirror-regexp",
