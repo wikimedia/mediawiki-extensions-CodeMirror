@@ -40,7 +40,7 @@
 	"codemirror-replace-all": "Remplacer tout",
 	"codemirror-done": "Terminer",
 	"codemirror-goto-line": "Aller à la ligne",
-	"codemirror-goto-line-go": "Lancer",
+	"codemirror-goto-line-go": "Aller",
 	"codemirror-control-character": "Caractère de contrôle $1",
 	"codemirror-special-char-null": "Caractère de contrôle",
 	"codemirror-special-char-bell": "Caractère d'appel",
