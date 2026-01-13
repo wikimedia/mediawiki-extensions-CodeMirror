@@ -18,6 +18,12 @@ class ApiCodeMirrorValidate extends ApiBase {
 	public const VALIDATOR_SPECS = [
 		'javascript' => [
 			'class' => JavaScriptValidator::class,
+			'services' => [
+				'ResourceLoader',
+				'MainWANObjectCache',
+				'SkinFactory',
+				'UserGroupManager',
+			],
 		],
 		'sanitized-css' => [
 			'class' => SanitizedCssValidator::class,

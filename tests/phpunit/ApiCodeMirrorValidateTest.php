@@ -6,6 +6,7 @@ use MediaWiki\Tests\Api\ApiTestCase;
 
 /**
  * @covers \MediaWiki\Extension\CodeMirror\ApiCodeMirrorValidate
+ * @group Database
  */
 class ApiCodeMirrorValidateTest extends ApiTestCase {
 
@@ -24,7 +25,7 @@ class ApiCodeMirrorValidateTest extends ApiTestCase {
 			'content' => $content,
 			'contentmodel' => $contentModel,
 			'title' => match ( $contentModel ) {
-				'javascript' => 'MediaWiki:Foo.js',
+				'javascript' => 'MediaWiki:Common.js',
 				'sanitized-css' => 'Template:Foo/styles.css',
 				'Scribunto' => 'Module:Foo',
 			},

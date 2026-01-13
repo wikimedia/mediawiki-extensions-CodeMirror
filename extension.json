@@ -542,6 +542,17 @@
 			]
 		}
 	},
+	"DomainEventIngresses": [
+		{
+			"events": [
+				"PageLatestRevisionChanged"
+			],
+			"class": "MediaWiki\\Extension\\CodeMirror\\EventIngress",
+			"services": [
+				"MainWANObjectCache"
+			]
+		}
+	],
 	"attributes": {
 		"CodeMirror": {
 			"PluginModules": [
