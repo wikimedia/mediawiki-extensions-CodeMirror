@@ -6,7 +6,7 @@
 
 	.cm-selectionBackground {
 		background: #d9d9d9;
-		.darkmode( background, #3E4450 );
+		.darkmode( background, #3e4450 );
 	}
 
 	// For the highlightSelectionMatches extension, only used in non-wikitext.
@@ -30,6 +30,23 @@
 	background-color: #eee;
 	box-shadow: inset 0 0 1px 1px #999;
 	font-weight: bold;
+
+	/* Dark mode: cool / valid */
+	.darkmode( background-color, rgba( 140, 170, 255, 0.35 ) );
+	.darkmode( box-shadow, inset 0 0 1px 1px rgba( 140, 170, 255, 0.9 ) );
+	.darkmode( color, #f0f3ff );
+}
+
+.cm-nonmatchingBracket,
+.cm-focused .cm-nonmatchingBracket {
+	background-color: #fdd;
+	box-shadow: inset 0 0 1px 1px #a22;
+	font-weight: bold;
+
+	/* Dark mode: warm / error */
+	.darkmode( background-color, rgba( 255, 110, 110, 0.45 ) );
+	.darkmode( box-shadow, inset 0 0 1px 1px rgba( 255, 110, 110, 1 ) );
+	.darkmode( color, #fff0f0 );
 }
 
 .cm-editor .cm-specialChar {
@@ -224,7 +241,6 @@
 	.cm-mw-panel--text-input {
 		min-width: auto;
 	}
-
 	// Responsive design (T386777)
 	@container ( max-width: 400px ) {
 		// NOTE: We can't use & here yet, see https://github.com/wikimedia/less.php/issues/91
