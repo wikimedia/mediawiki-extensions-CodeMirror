@@ -36,6 +36,7 @@
 	"codemirror-prefs-activeline": "Aktive Zeile hervorheben",
 	"codemirror-prefs-specialchars": "Sonderzeichen anzeigen",
 	"codemirror-prefs-whitespace": "Leerzeichen hervorheben",
+	"codemirror-prefs-trailingwhitespace": "Nachfolgende Leerzeichen hervorheben",
 	"codemirror-prefs-autofocus": "Den Fokus zunächst auf den Editor legen",
 	"codemirror-prefs-highlightrefs": "Des Inhalt von <ref>-Tages markieren",
 	"codemirror-prefs-foldallrefs": "Alle <ref>-Tags standardmäßig einklappen",

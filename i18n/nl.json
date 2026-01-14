@@ -16,6 +16,7 @@
 	"codemirror-prefs-enable": "Syntaxiskleuring inschakelen",
 	"codemirror-prefs-title": "Voorkeuren voor syntaxiskleuring",
 	"codemirror-prefs-help": "hulp",
+	"codemirror-prefs-panel-full": "volledige voorkeuren",
 	"codemirror-prefs-section-lines": "Regels",
 	"codemirror-prefs-section-characters": "Tekens",
 	"codemirror-prefs-section-code-assistance": "Code-assistentie",
@@ -131,6 +132,7 @@
 	"codemirror-keymap-copyline": "Geselecteerde regels naar de regel erboven of eronder kopiëren",
 	"codemirror-keymap-direction": "Tekstrichting wijzigen",
 	"codemirror-keymap-preferences": "Voorkeuren voor syntaxiskleuring",
+	"codemirror-keymap-full-preferences": "Dialoogvenster met de volledige voorkeuren",
 	"codemirror-keymap-help": "Sneltoetsen",
 	"codemirror-keymap-cursor-modifiers": "Cursor-aanpassers",
 	"codemirror-keymap-multicursor": "Houd $1 ingedrukt en klik om meerdere cursors aan te maken.",
@@ -210,5 +212,11 @@
 	"codemirror-wikilint-whitespace": "een spatie invoegen",
 	"codemirror-beta-feature-title": "Verbeterde syntaxiskleuring",
 	"codemirror-beta-feature-description": "Krijg vroegtijdig toegang tot nieuwe functies voor syntaxiskleuring en bewerking, zoals code samenvouwen en automatisch aanvullen.",
-	"codemirror-potentially-slow": "potentieel traag"
+	"codemirror-potentially-slow": "potentieel traag",
+	"apihelp-codemirror-validate-summary": "De gegeven inhoud op validatiefouten controleren",
+	"apihelp-codemirror-validate-param-content": "De te valideren tekstinhoud",
+	"apihelp-codemirror-validate-param-contentmodel": "Inhoudsmodel",
+	"apihelp-codemirror-validate-param-title": "Titel van de pagina waar de inhoud bij hoort.",
+	"apihelp-codemirror-validate-example": "Controleer of <code>h2 {color: red}</code> geldig is voor sanitized-css",
+	"codemirror-validate-js-syntaxerror": "Syntaxisfout in kolom $1 op regel $2: $3"
 }
