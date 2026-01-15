@@ -31,6 +31,7 @@
 	"codemirror-prefs-activeline": "Resaltar a liña activa",
 	"codemirror-prefs-specialchars": "Amosar os caracteres especiais",
 	"codemirror-prefs-whitespace": "Resaltar os espazos en branco",
+	"codemirror-prefs-trailingwhitespace": "Resaltar os espazos en branco finais",
 	"codemirror-prefs-autofocus": "Poñer o foco no editor ao cargalo",
 	"codemirror-prefs-highlightrefs": "Resaltar o contido das etiquetas <ref>",
 	"codemirror-prefs-foldallrefs": "Encartar todas as etiquetas <ref> por defecto",

@@ -34,6 +34,7 @@
 	"codemirror-prefs-activeline": "De actieve regel markeren",
 	"codemirror-prefs-specialchars": "Speciale tekens weergeven",
 	"codemirror-prefs-whitespace": "Witruimte markeren",
+	"codemirror-prefs-trailingwhitespace": "Witruimte aan het einde van de regel markeren",
 	"codemirror-prefs-autofocus": "De beginfocus bij de editor leggen",
 	"codemirror-prefs-highlightrefs": "De inhoud van <ref>-tags accentueren",
 	"codemirror-prefs-foldallrefs": "Alle <ref>-tags standaard inklappen",

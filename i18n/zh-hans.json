@@ -37,6 +37,7 @@
 	"codemirror-prefs-activeline": "高亮显示光标所在行",
 	"codemirror-prefs-specialchars": "显示特殊字符",
 	"codemirror-prefs-whitespace": "高亮显示空白字符",
+	"codemirror-prefs-trailingwhitespace": "高亮显示尾随空格",
 	"codemirror-prefs-autofocus": "将初始焦点置于编辑器",
 	"codemirror-prefs-highlightrefs": "高亮<ref>标签的内容",
 	"codemirror-prefs-foldallrefs": "默认折叠全部<ref>标签",

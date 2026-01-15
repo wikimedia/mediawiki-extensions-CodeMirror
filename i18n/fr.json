@@ -44,6 +44,7 @@
 	"codemirror-prefs-activeline": "Mettre en surbrillance la ligne active",
 	"codemirror-prefs-specialchars": "Afficher les caractères spéciaux",
 	"codemirror-prefs-whitespace": "Surligner les espaces blancs",
+	"codemirror-prefs-trailingwhitespace": "Mettre en évidence les espaces blancs en fin de ligne",
 	"codemirror-prefs-autofocus": "Centrer sur l'éditeur une fois chargé",
 	"codemirror-prefs-highlightrefs": "Mettez en évidence le contenu des balises <ref>",
 	"codemirror-prefs-foldallrefs": "Plier toutes les balises <ref> par défaut",

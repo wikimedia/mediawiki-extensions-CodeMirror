@@ -39,6 +39,7 @@
 	"codemirror-prefs-activeline": "突顯游標所在行",
 	"codemirror-prefs-specialchars": "顯示特殊字元",
 	"codemirror-prefs-whitespace": "突顯空白字元",
+	"codemirror-prefs-trailingwhitespace": "醒目標示尾隨空白字元",
 	"codemirror-prefs-autofocus": "將初始焦點設於在編輯器",
 	"codemirror-prefs-highlightrefs": "突顯 <ref> 標籤的內容",
 	"codemirror-prefs-foldallrefs": "預設折疊全部 <ref> 標籤",
