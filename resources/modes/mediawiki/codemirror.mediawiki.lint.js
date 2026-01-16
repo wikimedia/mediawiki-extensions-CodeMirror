@@ -48,7 +48,7 @@ worker.onload( async () => {
 		protocol: urlProtocols.replace( /\|\\?\/\\?\/$|\\(?=[:/])/g, '' ),
 		img: imageKeywords,
 		redirection,
-		variants: mw.config.get( 'cmLanguageVariants' ) || []
+		variants: mw.config.get( 'cmLanguageVariants', [] )
 	};
 	worker.setConfig( config );
 	const messages = [

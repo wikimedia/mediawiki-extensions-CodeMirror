@@ -31,7 +31,7 @@ function getLanguageSupport( require ) {
 	const urlParams = new URLSearchParams( window.location.search );
 	return langSupport( {
 		bidiIsolation: urlParams.get( 'cm6bidi' ),
-		languageVariants: mw.config.get( 'cmLanguageVariants' )
+		languageVariants: mw.config.get( 'cmLanguageVariants', [] )
 	} );
 }
 

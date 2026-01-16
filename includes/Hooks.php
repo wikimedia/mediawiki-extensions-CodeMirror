@@ -13,7 +13,8 @@ use MediaWiki\Hook\EditPage__showEditForm_initialHook;
 use MediaWiki\Hook\EditPage__showReadOnlyForm_initialHook;
 use MediaWiki\HookContainer\HookContainer;
 use MediaWiki\HTMLForm\HTMLForm;
-use MediaWiki\Languages\LanguageConverterFactory;
+use MediaWiki\Language\LanguageConverter;
+use MediaWiki\Language\LanguageConverterFactory;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
@@ -254,12 +255,19 @@ class Hooks implements
 		$mainTextarea = $textareas[0];
 		$childTextareas = array_slice( $textareas, 1 );
 
+		$lang = $out->getTitle()->getPageLanguage();
+		$code = mb_strtolower( $lang->getCode() );
+		$variants = [];
+		if (
+			!$this->languageConverterFactory->isConversionDisabled() &&
+			in_array( $code, LanguageConverter::$languagesWithVariants )
+		) {
+			$variants = $this->languageConverterFactory->getLanguageConverter( $lang )->getVariants();
+		}
 		$out->addJsConfigVars( [
 			'cmRLModules' => $modules,
 			'cmReadOnly' => $this->readOnly,
-			'cmLanguageVariants' => $this->languageConverterFactory->getLanguageConverter(
-				$out->getTitle()->getPageLanguage()
-			)->getVariants(),
+			'cmLanguageVariants' => $variants,
 			'cmMode' => $mode,
 			'cmTextarea' => $mainTextarea,
 			'cmChildTextareas' => $childTextareas,
