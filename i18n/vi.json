@@ -32,6 +32,7 @@
 	"codemirror-prefs-activeline": "Nổi bật dòng đang hoạt động",
 	"codemirror-prefs-specialchars": "Hiển thị các ký tự đặc biệt",
 	"codemirror-prefs-whitespace": "Làm nổi bật khoảng trắng",
+	"codemirror-prefs-trailingwhitespace": "Nổi bật khoảng trắng cuối dòng",
 	"codemirror-prefs-autofocus": "Đặt con trỏ vào trình soạn thảo",
 	"codemirror-prefs-highlightrefs": "Làm nổi bật nội dung của thẻ <ref>",
 	"codemirror-prefs-foldallrefs": "Thu gọn tất cả thẻ <ref> theo mặc định",
@@ -210,5 +211,11 @@
 	"codemirror-wikilint-whitespace": "chèn một khoảng trắng",
 	"codemirror-beta-feature-title": "Nổi bật cú pháp mới",
 	"codemirror-beta-feature-description": "Trải nghiệm trước tính năng nổi bật cú pháp mới và các tính năng hỗ trợ sửa đổi mới như thu gọn mã và tự động hoàn thành.",
-	"codemirror-potentially-slow": "có khả năng làm chậm"
+	"codemirror-potentially-slow": "có khả năng làm chậm",
+	"apihelp-codemirror-validate-summary": "Kiểm tra lỗi trong nội dung đã cho",
+	"apihelp-codemirror-validate-param-content": "Nội dung văn bản cần kiểm tra",
+	"apihelp-codemirror-validate-param-contentmodel": "Kiểu nội dung",
+	"apihelp-codemirror-validate-param-title": "Tiêu đề của trang chứa nội dung đó.",
+	"apihelp-codemirror-validate-example": "Kiểm tra xem <code>h2 {color: red}</code> có hợp lệ với sanitized-css hay không",
+	"codemirror-validate-js-syntaxerror": "Lỗi cú pháp tại cột $1 trên dòng $2: $3"
 }

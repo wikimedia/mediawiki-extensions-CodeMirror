@@ -4,5 +4,9 @@
 			"Merrahtar"
 		]
 	},
-	"codemirror-toggle-label": "Синтаксесс тӯзхуввмушш"
+	"codemirror-toggle-label": "Синтаксесс тӯзхуввмушш",
+	"codemirror-keymap-computercode": "Коаммпьютэр ко̄дт",
+	"codemirror-keymap-subscript": "Ню̄ллас вӯлленҍ",
+	"codemirror-keymap-superscript": "Ню̄ллас альн",
+	"codemirror-keymap-nowiki": "Игноруввэ вики-форматлаһтҍмуж"
 }
