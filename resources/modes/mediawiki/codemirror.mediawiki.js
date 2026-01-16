@@ -1721,3 +1721,4 @@ const mediawiki = ( config = { bidiIsolation: false } ) => {
 
 module.exports = mediawiki;
 module.exports.mediawiki = mediawiki;
+module.exports.CodeMirrorMediaWiki = CodeMirrorMediaWiki;

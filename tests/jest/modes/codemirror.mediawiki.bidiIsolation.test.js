@@ -1,6 +1,6 @@
-const CodeMirror = require( '../../resources/codemirror.js' );
-const { mediawiki } = require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
-const bidiIsolationExtension = require( '../../resources/modes/mediawiki/codemirror.mediawiki.bidiIsolation.js' );
+const CodeMirror = require( '../../../resources/codemirror.js' );
+const { mediawiki } = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.js' );
+const bidiIsolationExtension = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.bidiIsolation.js' );
 
 const testCases = [
 	{

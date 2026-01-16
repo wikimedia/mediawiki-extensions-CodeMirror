@@ -35,6 +35,9 @@ _NOTE: Consider using [Fresh](https://gerrit.wikimedia.org/g/fresh/) to run thes
 * `npm run test:i18n` for linting of i18n messages with banana-checker.
 * `npm run test:unit` for the new Jest unit tests.
 * `npm run selenium-test` for the Selenium tests.
+* `npm run update-parser-tests` to update the Jest parser tests in
+  `tests/jest/parser/tests.json` after making changes to the MediaWiki
+  [Stream parser](resources/modes/mediawiki/codemirror.mediawiki.js).
 * `npm run build` to rebundle the CodeMirror library. If changes are made to the `@codemirror`
   or `@lezer` dependencies in [package.json](package.json), this command *must* be run before
   sending the patch or CI will fail. This also calls the `build:eslint`,

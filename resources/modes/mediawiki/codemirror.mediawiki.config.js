@@ -85,7 +85,7 @@ class CodeMirrorMediaWikiConfig {
 	 */
 	get permittedHtmlTags() {
 		return {
-			b: true, bdi: true, del: true, i: true, ins: true,
+			b: true, bdi: true, bdo: true, del: true, i: true, ins: true,
 			u: true, font: true, big: true, small: true, sub: true, sup: true,
 			h1: true, h2: true, h3: true, h4: true, h5: true, h6: true, cite: true,
 			code: true, em: true, s: true, strike: true, strong: true, tt: true,
