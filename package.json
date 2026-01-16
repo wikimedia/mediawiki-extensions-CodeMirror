@@ -59,7 +59,7 @@
 		"jquery": "3.7.1",
 		"jsdoc": "4.0.5",
 		"jsdoc-wmf-theme": "1.1.0",
-		"luacheck-browserify": "^0.7.1",
+		"luacheck-browserify": "0.10.0",
 		"rollup": "4.22.4",
 		"stylelint-config-wikimedia": "0.18.0",
 		"wdio-mediawiki": "4.1.3",

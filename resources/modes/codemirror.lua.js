@@ -112,7 +112,9 @@ const map = {
 				isSupportedLanguage: 2,
 				isValidBuiltInCode: 2,
 				isValidCode: 2,
-				new: 2
+				new: 2,
+				FALLBACK_MESSAGES: 1,
+				FALLBACK_STRICT: 1
 			},
 			message: {
 				new: 2,
@@ -212,7 +214,8 @@ const map = {
 				toNFKD: 2,
 				upper: 2
 			},
-			ext: 4
+			ext: 4,
+			wikibase: 4
 		}
 	},
 	builtin = [ 'false', 'nil', 'true' ],
