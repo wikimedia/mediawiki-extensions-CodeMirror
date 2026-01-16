@@ -9,7 +9,7 @@ const assert = require( 'assert' ),
 	Util = require( 'wdio-mediawiki/Util' );
 
 describe( 'CodeMirror code folding for the wikitext 2010 editor', () => {
-	let title, htmlNode, linkNode, nowikiNode, entityNode, refNode;
+	let title, htmlNode, linkNode, nowikiNode, entityNode, refNode, hasRef;
 
 	before( async () => {
 		title = Util.getTestString( 'CodeMirror-fixture1-' );
@@ -24,6 +24,8 @@ describe( 'CodeMirror code folding for the wikitext 2010 editor', () => {
 				'{{foo|1={{bar|<p>{{baz|[[link]]}}}}}}<nowiki>plain text</nowiki><ref><nowiki>&lt;</nowiki></ref>'
 			);
 		} );
+		// References are provided by the Cite extension which might not be available
+		hasRef = await browser.execute( () => 'ref' in mw.config.get( 'extCodeMirrorConfig' ).tags );
 		htmlNode = $( '.cm-mw-htmltag-name' );
 		linkNode = $( '.cm-mw-link-pagename' );
 		nowikiNode = $( '.cm-mw-tag-nowiki:not(.cm-mw-html-entity)' );
@@ -77,8 +79,10 @@ describe( 'CodeMirror code folding for the wikitext 2010 editor', () => {
 		assert( await nowikiNode.waitForDisplayed( { reverse: true } ) );
 		// The entity node should not be hidden.
 		assert( await entityNode.waitForDisplayed() );
-		// The <ref> node should not be hidden.
-		assert( await refNode.waitForDisplayed() );
+		if ( hasRef ) {
+			// The <ref> node should not be hidden.
+			assert( await refNode.waitForDisplayed() );
+		}
 		assert( await EditPage.codeMirrorCodeFoldingPlaceholder.isDisplayed() );
 	} );
 
@@ -101,7 +105,9 @@ describe( 'CodeMirror code folding for the wikitext 2010 editor', () => {
 		assert( await linkNode.waitForDisplayed() );
 		assert( await nowikiNode.waitForDisplayed() );
 		assert( await entityNode.waitForDisplayed() );
-		assert( await refNode.waitForDisplayed() );
+		if ( hasRef ) {
+			assert( await refNode.waitForDisplayed() );
+		}
 		// Fold all.
 		await browser.execute( () => {
 			$( '.cm-content' )[ 0 ].dispatchEvent( new KeyboardEvent( 'keydown', { key: '[', ctrlKey: true, altKey: true } ) );
@@ -111,7 +117,9 @@ describe( 'CodeMirror code folding for the wikitext 2010 editor', () => {
 		assert( await linkNode.waitForDisplayed( { reverse: true } ) );
 		assert( await nowikiNode.waitForDisplayed( { reverse: true } ) );
 		assert( await entityNode.waitForDisplayed( { reverse: true } ) );
-		assert( await refNode.waitForDisplayed( { reverse: true } ) );
+		if ( hasRef ) {
+			assert( await refNode.waitForDisplayed( { reverse: true } ) );
+		}
 		assert( await EditPage.codeMirrorCodeFoldingPlaceholder.isDisplayed() );
 	} );
 
@@ -121,7 +129,9 @@ describe( 'CodeMirror code folding for the wikitext 2010 editor', () => {
 		assert( await linkNode.waitForDisplayed( { reverse: true } ) );
 		assert( await nowikiNode.waitForDisplayed( { reverse: true } ) );
 		assert( await entityNode.waitForDisplayed( { reverse: true } ) );
-		assert( await refNode.waitForDisplayed( { reverse: true } ) );
+		if ( hasRef ) {
+			assert( await refNode.waitForDisplayed( { reverse: true } ) );
+		}
 		// Expand all.
 		await browser.execute( () => {
 			$( '.cm-content' )[ 0 ].dispatchEvent( new KeyboardEvent( 'keydown', { key: ']', ctrlKey: true, altKey: true } ) );
@@ -131,14 +141,19 @@ describe( 'CodeMirror code folding for the wikitext 2010 editor', () => {
 		assert( await linkNode.waitForDisplayed() );
 		assert( await nowikiNode.waitForDisplayed() );
 		assert( await entityNode.waitForDisplayed() );
-		assert( await refNode.waitForDisplayed() );
+		if ( hasRef ) {
+			assert( await refNode.waitForDisplayed() );
+		}
 		assert(
 			await EditPage.codeMirrorCodeFoldingPlaceholder
 				.waitForDisplayed( { reverse: true } )
 		);
 	} );
 
-	it( 'folds all <ref> tags via keyboard shortcut', async () => {
+	it( 'folds all <ref> tags via keyboard shortcut', async function () {
+		if ( !hasRef ) {
+			this.skip();
+		}
 		// First make sure <ref> nodes are visible.
 		assert( await refNode.waitForDisplayed() );
 		// Fold all.
