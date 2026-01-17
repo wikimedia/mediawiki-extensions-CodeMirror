@@ -8,32 +8,32 @@ describe( 'CodeMirrorKeymap', () => {
 		{
 			shortcut: 'Mod-ArrowUp',
 			platform: 'Mac',
-			expected: '<kbd class="cm-mw-keymap-key"><kbd>⌘ Cmd</kbd>+<kbd>↑</kbd></kbd>'
+			expected: '<kbd class="cm-mw-keymap-key" dir="ltr"><kbd>⌘ Cmd</kbd>+<kbd>↑</kbd></kbd>'
 		},
 		{
 			shortcut: 'Cmd-ArrowDown',
 			platform: 'Mac',
-			expected: '<kbd class="cm-mw-keymap-key"><kbd>⌘ Cmd</kbd>+<kbd>↓</kbd></kbd>'
+			expected: '<kbd class="cm-mw-keymap-key" dir="ltr"><kbd>⌘ Cmd</kbd>+<kbd>↓</kbd></kbd>'
 		},
 		{
 			shortcut: 'Mod-y',
 			platform: 'Windows',
-			expected: '<kbd class="cm-mw-keymap-key"><kbd>Ctrl</kbd>+<kbd>y</kbd></kbd>'
+			expected: '<kbd class="cm-mw-keymap-key" dir="ltr"><kbd>Ctrl</kbd>+<kbd>y</kbd></kbd>'
 		},
 		{
 			shortcut: 'Mod-K',
 			platform: 'Mac',
-			expected: '<kbd class="cm-mw-keymap-key"><kbd>⌘ Cmd</kbd>+<kbd>Shift</kbd>+<kbd>k</kbd></kbd>'
+			expected: '<kbd class="cm-mw-keymap-key" dir="ltr"><kbd>⌘ Cmd</kbd>+<kbd>Shift</kbd>+<kbd>k</kbd></kbd>'
 		},
 		{
 			shortcut: 'Cmd-Alt-[',
 			platform: 'Mac',
-			expected: '<kbd class="cm-mw-keymap-key"><kbd>⌘ Cmd</kbd>+<kbd>⌥ Option</kbd>+<kbd>[</kbd></kbd>'
+			expected: '<kbd class="cm-mw-keymap-key" dir="ltr"><kbd>⌘ Cmd</kbd>+<kbd>⌥ Option</kbd>+<kbd>[</kbd></kbd>'
 		},
 		{
 			shortcut: 'Ctrl-Alt-[',
 			platform: 'Linux',
-			expected: '<kbd class="cm-mw-keymap-key"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>[</kbd></kbd>'
+			expected: '<kbd class="cm-mw-keymap-key" dir="ltr"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>[</kbd></kbd>'
 		}
 	];
 	it.each( shortcutTestCases )( 'getShortcutHtml ($shortcut on $platform)', ( { shortcut, platform, expected } ) => {

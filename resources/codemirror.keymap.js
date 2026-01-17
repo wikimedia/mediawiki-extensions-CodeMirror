@@ -465,6 +465,8 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 	getShortcutHtml( keyBindingSequence ) {
 		const outerKbd = document.createElement( 'kbd' );
 		outerKbd.classList.add( 'cm-mw-keymap-key' );
+		// T384940: Ensure LTR direction for displayed keyboard shortcuts.
+		outerKbd.dir = 'ltr';
 		const keys = keyBindingSequence.split( '-' )
 			.map( ( key ) => {
 				// Normalize capitalized keys to include Shift in the help dialog.
