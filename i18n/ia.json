@@ -29,6 +29,7 @@
 	"codemirror-prefs-activeline": "Mitter in evidentia le linea active",
 	"codemirror-prefs-specialchars": "Monstrar characteres special",
 	"codemirror-prefs-whitespace": "Evidentiar spatios blanc",
+	"codemirror-prefs-trailingwhitespace": "Mitter in evidentia le spatios al fin de lineas",
 	"codemirror-prefs-autofocus": "Mitter le puncto focal initial sur le editor",
 	"codemirror-prefs-highlightrefs": "Mitter in evidentia le contento de etiquettas <ref>",
 	"codemirror-prefs-foldallrefs": "Plicar tote le etiquettas <ref> pre predefinition",
