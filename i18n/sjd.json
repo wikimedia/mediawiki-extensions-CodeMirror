@@ -5,8 +5,20 @@
 		]
 	},
 	"codemirror-toggle-label": "Синтаксесс тӯзхуввмушш",
+	"codemirror-close": "Ка̄һтӭ",
+	"codemirror-find": "О̄дзэ",
+	"codemirror-next": "О̄дзэ пуэдтӭй",
+	"codemirror-match-case": "Мугка шэ регистрэнҍ",
+	"codemirror-replace": "Воа̄йхэ",
+	"codemirror-fold": "Ко̄д ле̄вхэмушш",
+	"codemirror-unfold": "ле̄вхэ",
 	"codemirror-keymap-computercode": "Коаммпьютэр ко̄дт",
 	"codemirror-keymap-subscript": "Ню̄ллас вӯлленҍ",
 	"codemirror-keymap-superscript": "Ню̄ллас альн",
-	"codemirror-keymap-nowiki": "Игноруввэ вики-форматлаһтҍмуж"
+	"codemirror-keymap-underline": "Вӯльма ця̄һксэнҍ",
+	"codemirror-keymap-nowiki": "Игноруввэ вики-форматлаһтҍмуж",
+	"codemirror-keymap-paragraph": "Абзац форматлаһтҍмушш",
+	"codemirror-keymap-indent": "Кугкьнэ туммплаһтҍмуж",
+	"codemirror-keymap-outdent": "Оанҍхэ туммплаһтҍмуж",
+	"codemirror-keymap-preformatted": "Э̄ввтформатлаһтҍма"
 }
