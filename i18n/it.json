@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Amedeo463",
 			"Beta16",
 			"Sakretsu",
 			"Statix64"
@@ -12,6 +13,7 @@
 	"codemirror-prefs-enable": "Attiva l'evidenziazione della sintassi",
 	"codemirror-prefs-title": "Preferenze di evidenziazione della sintassi",
 	"codemirror-prefs-help": "aiuto",
+	"codemirror-prefs-panel-full": "preferenze complete",
 	"codemirror-prefs-section-references": "Riferimenti",
 	"codemirror-prefs-bidiisolation": "Isola il testo bidirezionale",
 	"codemirror-prefs-linenumbering": "Mostra i numeri di riga",
