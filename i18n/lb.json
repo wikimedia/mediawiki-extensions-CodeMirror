@@ -34,6 +34,7 @@
 	"codemirror-special-char-newline": "Nei Zeil",
 	"codemirror-special-char-escape": "Escape-Zeechen",
 	"codemirror-special-char-line-separator": "Zeilen-Trennzeechen",
+	"codemirror-keymap-help-title": "Tastekombinatiounen",
 	"codemirror-keymap-help-close": "Zoumaachen",
 	"codemirror-keymap-bold": "Fett",
 	"codemirror-keymap-italic": "Kursiv",
@@ -61,6 +62,7 @@
 	"codemirror-keymap-autocomplete": "Automatesch Vervollstännegung",
 	"codemirror-keymap-other": "Anerer",
 	"codemirror-keymap-preferences": "Astellunge fir d'Ervirhiewe vun der Syntax",
+	"codemirror-keymap-help": "Tastekombinatiounen",
 	"prefs-accessibility": "Accessibilitéit",
 	"prefs-syntax-highlighting": "Ervirhiewe vun der Syntax",
 	"codemirror-beta-feature-title": "Verbessert Ervirhiewe vun der Syntax"
