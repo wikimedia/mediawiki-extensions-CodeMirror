@@ -19,6 +19,7 @@
 	"codemirror-prefs-enable": "تمكين تمييز بناء الجملة",
 	"codemirror-prefs-title": "تفضيلات إبراز التركيب",
 	"codemirror-prefs-help": "مساعدة",
+	"codemirror-prefs-panel-full": "التفضيلات الكاملة",
 	"codemirror-prefs-section-lines": "خطوط",
 	"codemirror-prefs-section-characters": "الأحرف",
 	"codemirror-prefs-section-code-assistance": "مساعدة الكود",
@@ -36,6 +37,7 @@
 	"codemirror-prefs-activeline": "أبرز السطر النشط",
 	"codemirror-prefs-specialchars": "اعرض الأحرف الخاصة",
 	"codemirror-prefs-whitespace": "تمييز المسافات البيضاء",
+	"codemirror-prefs-trailingwhitespace": "قم بتمييز المساحة البيضاء الزائدة",
 	"codemirror-prefs-autofocus": "ضع التركيز الأولي على المحرر",
 	"codemirror-prefs-highlightrefs": "تسليط الضوء على محتويات<ref> العلامات",
 	"codemirror-prefs-foldallrefs": "اطوِ الكل<ref> العلامات بشكل افتراضي",
@@ -134,6 +136,7 @@
 	"codemirror-keymap-copyline": "نسخ الأسطر المحددة إلى السطر أعلاه أو أسفله",
 	"codemirror-keymap-direction": "تغيير الاتجاه",
 	"codemirror-keymap-preferences": "تفضيلات تمييز بناء الجملة",
+	"codemirror-keymap-full-preferences": "مربع حوار التفضيلات الكاملة",
 	"codemirror-keymap-help": "اختصارات لوحة المفاتيح",
 	"codemirror-keymap-cursor-modifiers": "معدِّلات المؤشر",
 	"codemirror-keymap-multicursor": "اضغط على $1 وانقر لإنشاء مؤشرات متعددة.",
@@ -213,5 +216,10 @@
 	"codemirror-wikilint-whitespace": "أدخل مسافة",
 	"codemirror-beta-feature-title": "تحسين إبراز التركيب",
 	"codemirror-beta-feature-description": "احصل على إمكانية الوصول المبكر إلى ميزاتٍ جديدة لإبراز التركيب والتحرير مثل طي التعليمات البرمجية والإكمال التلقائي.",
-	"codemirror-potentially-slow": "بطيئًا محتملًا"
+	"codemirror-potentially-slow": "بطيئًا محتملًا",
+	"apihelp-codemirror-validate-summary": "تحقق من وجود أخطاء في التحقق من صحة المحتوى المُعطى",
+	"apihelp-codemirror-validate-param-content": "محتوى النص المراد التحقق منه",
+	"apihelp-codemirror-validate-param-contentmodel": "نموذج المحتوى",
+	"apihelp-codemirror-validate-param-title": "عنوان الصفحة التي ينتمي إليها المحتوى.",
+	"codemirror-validate-js-syntaxerror": "خطأ في بناء الجملة في العمود $1 في السطر $2 : $3"
 }
