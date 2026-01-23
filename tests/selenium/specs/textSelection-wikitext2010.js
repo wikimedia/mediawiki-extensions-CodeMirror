@@ -16,6 +16,7 @@ describe( 'CodeMirror textSelection for the wikitext 2010 editor', () => {
 		await FixtureContent.createFixturePage( title );
 		await UserPreferences.enableWikitext2010EditorWithCodeMirror();
 		await EditPage.openForEditing( title );
+		await EditPage.wikiEditorToolbar.waitForDisplayed();
 		await EditPage.codeMirrorButton.waitForDisplayed();
 	} );
 

@@ -17,7 +17,7 @@
 		"coverage": "npm run test:unit",
 		"check-built-assets": "{ git status resources/lib/ | grep \"nothing to commit, working tree clean\"; } && { echo 'CHECKING BUILD SOURCES ARE COMMITTED' && npm run build && git status resources/lib/ | grep \"nothing to commit, working tree clean\" || { npm run node-debug; false; }; }",
 		"node-debug": "node -v && npm -v && echo 'ERROR: Please ensure that production assets have been built with `npm run build` and committed. For the recommended Node.js version, see .nvmrc.'",
-		"selenium-test": "wdio tests/selenium/wdio.conf.js",
+		"selenium-test": "wdio tests/selenium/wdio.conf.js --suite editor2010 && wdio tests/selenium/wdio.conf.js --suite editor2017",
 		"doc": "jsdoc -c jsdoc.json"
 	},
 	"devDependencies": {
