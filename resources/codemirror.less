@@ -92,6 +92,14 @@
 	unicode-bidi: isolate;
 }
 
+// T415461: Style for JavaScript/Lua globals
+// reuses CodeMirror style for `tags.standard(tags.variableName)` */
+.cm-globals,
+.cm-globals > * {
+	color: #164;
+	.darkmode( color, #d19a66 );
+}
+
 .ext-codemirror-wrapper {
 	height: 100%;
 

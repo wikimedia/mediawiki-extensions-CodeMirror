@@ -1,4 +1,13 @@
-const { syntaxTree, StreamLanguage, foldService, snippetCompletion } = require( 'ext.CodeMirror.v6.lib' );
+const {
+	defaultHighlightStyle,
+	foldService,
+	snippetCompletion,
+	syntaxHighlighting,
+	syntaxTree,
+	tags,
+	HighlightStyle,
+	StreamLanguage
+} = require( 'ext.CodeMirror.v6.lib' );
 const { lua } = require( '../lib/codemirror6.bundle.modes.js' );
 const CodeMirrorMode = require( './codemirror.mode.js' );
 const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
@@ -486,28 +495,39 @@ class CodeMirrorLua extends CodeMirrorMode {
 
 	/** @inheritDoc */
 	get support() {
-		return foldService.of( ( { doc, tabSize }, start, from ) => {
-			const { text, number } = doc.lineAt( start );
-			if ( !text.trim() ) {
-				return null;
-			}
-			const getIndent = ( line ) => /^\s*/.exec( line )[ 0 ]
-				.replace( /\t/g, ' '.repeat( tabSize ) ).length;
-			const indent = getIndent( text );
-			let j = number,
-				empty = true;
-			for ( ; j < doc.lines; j++ ) {
-				const { text: next } = doc.line( j + 1 );
-				if ( next.trim() ) {
-					const nextIndent = getIndent( next );
-					if ( indent >= nextIndent ) {
-						break;
-					}
-					empty = false;
+		return [
+			syntaxHighlighting( HighlightStyle.define(
+				[
+					// Include default highlight styles for other tokens
+					...defaultHighlightStyle.specs,
+					{ tag: tags.standard( tags.variableName ), class: 'cm-globals' }
+				],
+				// Only necessary for the light theme
+				{ themeType: 'light' }
+			) ),
+			foldService.of( ( { doc, tabSize }, start, from ) => {
+				const { text, number } = doc.lineAt( start );
+				if ( !text.trim() ) {
+					return null;
 				}
-			}
-			return empty || j === number ? null : { from, to: doc.line( j ).to };
-		} );
+				const getIndent = ( line ) => /^\s*/.exec( line )[ 0 ]
+					.replace( /\t/g, ' '.repeat( tabSize ) ).length;
+				const indent = getIndent( text );
+				let j = number,
+					empty = true;
+				for ( ; j < doc.lines; j++ ) {
+					const { text: next } = doc.line( j + 1 );
+					if ( next.trim() ) {
+						const nextIndent = getIndent( next );
+						if ( indent >= nextIndent ) {
+							break;
+						}
+						empty = false;
+					}
+				}
+				return empty || j === number ? null : { from, to: doc.line( j ).to };
+			} )
+		];
 	}
 }
 
