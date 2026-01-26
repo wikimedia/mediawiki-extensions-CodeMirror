@@ -2,10 +2,14 @@
 	"@metadata": {
 		"authors": [
 			"Abijeet Patro",
-			"AnupamM"
+			"AnupamM",
+			"Saurmandal"
 		]
 	},
 	"codemirror-toggle-label-short": "वाक्यविन्यास",
+	"codemirror-prefs-summary": "आप [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror सहायता पृष्ठ] पढ़के इस सुविधा के बारे में अधिक जान सकते हैं।",
+	"codemirror-prefs-enable": "सिनटैक्स हाइलाइटिंग सक्षम करें",
+	"codemirror-prefs-colorblind": "विकिटेक्स्ट सम्पादित करते समय सिनटैक्स हाइलाइटिंग के लिए वर्णांध-अनुकूल स्कीम सक्षम करें",
 	"codemirror-close": "बंद करें",
 	"codemirror-find": "खोजें",
 	"codemirror-next": "अगला",
@@ -25,5 +29,6 @@
 	"codemirror-keymap-redo": "फिर से करें",
 	"codemirror-keymap-insert": "जोड़ें",
 	"codemirror-keymap-comment": "टिप्पणी",
-	"codemirror-keymap-other": "अन्य"
+	"codemirror-keymap-other": "अन्य",
+	"prefs-syntax-highlighting": "सिनटैक्स हाइलाइटिंग"
 }
