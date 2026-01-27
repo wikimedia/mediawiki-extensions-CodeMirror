@@ -4,5 +4,10 @@
 			"Merrahtar"
 		]
 	},
-	"codemirror-toggle-label": "Синтаксесс тӯзхуввмушш"
+	"codemirror-toggle-label": "Синтаксесс тӯзхуввмушш",
+	"codemirror-find": "О̄дзэ",
+	"codemirror-next": "О̄дзэ пуэдтӭй",
+	"codemirror-match-case": "Мугка шэ регистрэнҍ",
+	"codemirror-replace": "Воа̄йхэ",
+	"codemirror-unfold": "ле̄вхэ"
 }
