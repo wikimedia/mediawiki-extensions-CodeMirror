@@ -34,6 +34,7 @@
 	"codemirror-prefs-activeline": "Podświetlanie aktywnej linii",
 	"codemirror-prefs-specialchars": "Pokaż znaki specjalne",
 	"codemirror-prefs-whitespace": "Zaznacz odstępy",
+	"codemirror-prefs-trailingwhitespace": "Podświetl końcowe spacje",
 	"codemirror-prefs-autofocus": "Przełącz skupienie na edytor po jego załadowaniu",
 	"codemirror-prefs-highlightrefs": "Koloruj zawartość znacznika <ref>",
 	"codemirror-prefs-foldallrefs": "Domyślnie zwijaj wszystkie znaczniki <ref>",
@@ -206,5 +207,9 @@
 	"codemirror-wikilint-whitespace": "wstaw spację",
 	"codemirror-beta-feature-title": "Ulepszone podświetlanie składni",
 	"codemirror-beta-feature-description": "Uzyskaj wczesny dostęp do nowych funkcji podświetlania składni i edycji wikikodu, jak zwijanie kodu i autouzupełnianie.",
-	"codemirror-potentially-slow": "może spowalniać"
+	"codemirror-potentially-slow": "może spowalniać",
+	"apihelp-codemirror-validate-param-contentmodel": "Model zawartości",
+	"apihelp-codemirror-validate-param-title": "Tytuł strony, do której należy treść.",
+	"apihelp-codemirror-validate-example": "Sprawdź, czy kod <code>h2 {color: red}</code> jest prawidłowy dla modelu sanitized-css",
+	"codemirror-validate-js-syntaxerror": "Błąd składni w kolumnie $1 w wierszu $2: $3"
 }
