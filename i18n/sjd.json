@@ -12,7 +12,9 @@
 	"codemirror-replace": "Воа̄йхэ",
 	"codemirror-fold": "Ко̄д ле̄вхэмушш",
 	"codemirror-unfold": "ле̄вхэ",
+	"codemirror-keymap-help-title": "Пуалэ э̄ххтътэмуж",
 	"codemirror-keymap-computercode": "Коаммпьютэр ко̄дт",
+	"codemirror-keymap-strikethrough": "Туэресь ця̄һксэнҍ",
 	"codemirror-keymap-subscript": "Ню̄ллас вӯлленҍ",
 	"codemirror-keymap-superscript": "Ню̄ллас альн",
 	"codemirror-keymap-underline": "Вӯльма ця̄һксэнҍ",
@@ -20,5 +22,6 @@
 	"codemirror-keymap-paragraph": "Абзац форматлаһтҍмушш",
 	"codemirror-keymap-indent": "Кугкьнэ туммплаһтҍмуж",
 	"codemirror-keymap-outdent": "Оанҍхэ туммплаһтҍмуж",
-	"codemirror-keymap-preformatted": "Э̄ввтформатлаһтҍма"
+	"codemirror-keymap-preformatted": "Э̄ввтформатлаһтҍма",
+	"codemirror-keymap-help": "Пуалэ э̄ххтътэмуж"
 }
