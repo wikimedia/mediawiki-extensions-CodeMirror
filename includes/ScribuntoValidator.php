@@ -6,9 +6,9 @@ use MediaWiki\Extension\Scribunto\EngineFactory;
 use MediaWiki\Extension\Scribunto\Engines\LuaCommon\LuaEngine;
 use MediaWiki\Extension\Scribunto\Engines\LuaCommon\LuaModule;
 use MediaWiki\Extension\Scribunto\ScribuntoException;
+use MediaWiki\Language\MessageLocalizer;
 use MediaWiki\Linker\LinkTarget;
 use MediaWiki\Title\Title;
-use MessageLocalizer;
 
 class ScribuntoValidator extends BaseValidator {
 

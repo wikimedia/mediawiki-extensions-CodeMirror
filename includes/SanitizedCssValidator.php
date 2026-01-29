@@ -4,8 +4,8 @@ namespace MediaWiki\Extension\CodeMirror;
 
 use MediaWiki\Content\IContentHandlerFactory;
 use MediaWiki\Extension\TemplateStyles\TemplateStylesContent;
+use MediaWiki\Language\MessageLocalizer;
 use MediaWiki\Linker\LinkTarget;
-use MessageLocalizer;
 
 class SanitizedCssValidator extends BaseValidator {
 	public function __construct(

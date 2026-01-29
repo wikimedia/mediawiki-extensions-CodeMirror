@@ -11,7 +11,6 @@ use MediaWiki\Extension\CodeMirror\Hooks\HookRunner;
 use MediaWiki\Extension\Gadgets\GadgetRepo;
 use MediaWiki\Hook\EditPage__showEditForm_initialHook;
 use MediaWiki\Hook\EditPage__showReadOnlyForm_initialHook;
-use MediaWiki\Hook\UploadForm_initialHook;
 use MediaWiki\HookContainer\HookContainer;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Languages\LanguageConverterFactory;
@@ -22,10 +21,11 @@ use MediaWiki\Preferences\Hook\PreferencesFormPreSaveHook;
 use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\SpecialPage\Hook\SpecialPageBeforeExecuteHook;
 use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\Specials\Hook\UploadForm_initialHook;
 use MediaWiki\Specials\SpecialUpload;
 use MediaWiki\Title\Title;
+use MediaWiki\User\Options\UserOptionsManager;
 use MediaWiki\User\User;
-use MediaWiki\User\UserOptionsManager;
 
 class Hooks implements
 	EditPage__showEditForm_initialHook,

@@ -2,8 +2,8 @@
 
 namespace MediaWiki\Extension\CodeMirror;
 
+use MediaWiki\Language\MessageLocalizer;
 use MediaWiki\Linker\LinkTarget;
-use MessageLocalizer;
 
 abstract class BaseValidator implements MessageLocalizer {
 
