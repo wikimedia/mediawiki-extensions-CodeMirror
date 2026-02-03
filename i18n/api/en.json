@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Siddharth VP"
+		]
+	},
+	"apihelp-codemirror-validate-summary": "Check for validation errors in the given content",
+	"apihelp-codemirror-validate-param-content": "The text content to validate",
+	"apihelp-codemirror-validate-param-contentmodel": "Content model",
+	"apihelp-codemirror-validate-param-title": "Title of page the content belongs to.",
+	"apihelp-codemirror-validate-example": "Check if <code>h2 {color: red}</code> is valid for sanitized-css"
+}

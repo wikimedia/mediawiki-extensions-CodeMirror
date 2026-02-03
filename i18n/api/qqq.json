@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Siddharth VP"
+		]
+	},
+	"apihelp-codemirror-validate-summary": "{{doc-apihelp-summary|codemirror-validate}}",
+	"apihelp-codemirror-validate-param-content": "{{doc-apihelp-param|codemirror-validate|content}}",
+	"apihelp-codemirror-validate-param-contentmodel": "{{doc-apihelp-param|codemirror-validate|contentmodel}}",
+	"apihelp-codemirror-validate-param-title": "{{doc-apihelp-param|codemirror-validate|title}}",
+	"apihelp-codemirror-validate-example": "{{doc-apihelp-example|codemirror-validate}}"
+}

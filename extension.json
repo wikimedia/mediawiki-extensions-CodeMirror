@@ -106,7 +106,8 @@
 	},
 	"MessagesDirs": {
 		"CodeMirror": [
-			"i18n"
+			"i18n",
+			"i18n/api"
 		]
 	},
 	"AutoloadNamespaces": {
