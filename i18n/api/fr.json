@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Escargot bleu"
+		]
+	},
+	"apihelp-codemirror-validate-summary": "Contrôler la présence d'erreurs de validation dans le contenu fourni.",
+	"apihelp-codemirror-validate-param-content": "Le contenu textuel à valider",
+	"apihelp-codemirror-validate-param-contentmodel": "Modèle de contenu",
+	"apihelp-codemirror-validate-param-title": "Titre de la page à laquelle appartient le contenu.",
+	"apihelp-codemirror-validate-example": "Vérifier si le contenu <code>h2 {color: red}</code> est valide pour le modèle de contenu sanitized-css"
+}

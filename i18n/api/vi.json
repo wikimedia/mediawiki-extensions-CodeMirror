@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Nvdtn19"
+		]
+	},
+	"apihelp-codemirror-validate-summary": "Kiểm tra lỗi trong nội dung đã cho",
+	"apihelp-codemirror-validate-param-content": "Nội dung văn bản cần kiểm tra",
+	"apihelp-codemirror-validate-param-contentmodel": "Kiểu nội dung",
+	"apihelp-codemirror-validate-param-title": "Tiêu đề của trang chứa nội dung đó.",
+	"apihelp-codemirror-validate-example": "Kiểm tra xem <code>h2 {color: red}</code> có hợp lệ với sanitized-css hay không"
+}

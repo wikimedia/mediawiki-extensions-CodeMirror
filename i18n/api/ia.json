@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"McDutchie"
+		]
+	},
+	"apihelp-codemirror-validate-summary": "Verificar si il ha errores de validation in le contento date",
+	"apihelp-codemirror-validate-param-content": "Le contento textual a validar",
+	"apihelp-codemirror-validate-param-contentmodel": "Modello de contento",
+	"apihelp-codemirror-validate-param-title": "Titulo del pagina al qual le contento pertine.",
+	"apihelp-codemirror-validate-example": "Verificar si <code>h2 {color: red}</code> es valide pro sanitized-css"
+}

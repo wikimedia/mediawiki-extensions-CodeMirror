@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": []
+	},
+	"apihelp-codemirror-validate-summary": "Überprüfung auf Validierungsfehler in den angegebenen Inhalten",
+	"apihelp-codemirror-validate-param-content": "Der zu validierende Textinhalt",
+	"apihelp-codemirror-validate-param-contentmodel": "Seiteninhaltsmodell",
+	"apihelp-codemirror-validate-param-title": "Titel der Seite, zu der der Inhalt gehört.",
+	"apihelp-codemirror-validate-example": "Prüfen, ob <code>h2 {color: red}</code> für sanitized-css gültig ist."
+}

@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Woytecr"
+		]
+	},
+	"apihelp-codemirror-validate-param-contentmodel": "Model zawartości",
+	"apihelp-codemirror-validate-param-title": "Tytuł strony, do której należy treść.",
+	"apihelp-codemirror-validate-example": "Sprawdź, czy kod <code>h2 {color: red}</code> jest prawidłowy dla modelu sanitized-css"
+}

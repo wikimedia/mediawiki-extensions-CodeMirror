@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Amire80"
+		]
+	},
+	"apihelp-codemirror-validate-summary": "חיפוש שגיאות בדיקת תקינות בתוכן הנתון",
+	"apihelp-codemirror-validate-param-content": "תוכן הטקסט שיש לבדוק את תקינותו",
+	"apihelp-codemirror-validate-param-contentmodel": "מודל תוכן",
+	"apihelp-codemirror-validate-param-title": "כותרת הדף שהתוכן שייך אליו.",
+	"apihelp-codemirror-validate-example": "לבדוק שהקוד <code dir=\"ltr\">h2 {color: red}</code> תקין עבור CSS מחוטא"
+}

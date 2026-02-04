@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"Meno25"
+		]
+	},
+	"apihelp-codemirror-validate-summary": "تحقق من وجود أخطاء في التحقق من صحة المحتوى المُعطى",
+	"apihelp-codemirror-validate-param-content": "محتوى النص المراد التحقق منه",
+	"apihelp-codemirror-validate-param-contentmodel": "نموذج المحتوى",
+	"apihelp-codemirror-validate-param-title": "عنوان الصفحة التي ينتمي إليها المحتوى."
+}

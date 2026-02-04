@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Toliño"
+		]
+	},
+	"apihelp-codemirror-validate-summary": "Comprobar se hai erros de validación no contido dado",
+	"apihelp-codemirror-validate-param-content": "O texto a validar",
+	"apihelp-codemirror-validate-param-contentmodel": "Modelo de contido",
+	"apihelp-codemirror-validate-param-title": "Título da páxina á que pertence o texto.",
+	"apihelp-codemirror-validate-example": "Comprobar se <code>h2 {color: red}</code> é válido para CSS hixienizado"
+}

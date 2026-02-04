@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"McDutchie"
+		]
+	},
+	"apihelp-codemirror-validate-summary": "De gegeven inhoud op validatiefouten controleren",
+	"apihelp-codemirror-validate-param-content": "De te valideren tekstinhoud",
+	"apihelp-codemirror-validate-param-contentmodel": "Inhoudsmodel",
+	"apihelp-codemirror-validate-param-title": "Titel van de pagina waar de inhoud bij hoort.",
+	"apihelp-codemirror-validate-example": "Controleer of <code>h2 {color: red}</code> geldig is voor sanitized-css"
+}

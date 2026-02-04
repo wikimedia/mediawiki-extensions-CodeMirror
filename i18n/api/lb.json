@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Volvox"
+		]
+	},
+	"apihelp-codemirror-validate-param-content": "Den Textinhalt fir ze validéieren",
+	"apihelp-codemirror-validate-param-contentmodel": "Inhaltsmodell",
+	"apihelp-codemirror-validate-param-title": "Titel vun der Säit, zu där den Inhalt gehéiert."
+}

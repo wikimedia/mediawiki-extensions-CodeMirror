@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Kly"
+		]
+	},
+	"apihelp-codemirror-validate-summary": "檢查給予內容裡的驗證錯誤",
+	"apihelp-codemirror-validate-param-content": "待驗證的文字內容",
+	"apihelp-codemirror-validate-param-contentmodel": "內容模組",
+	"apihelp-codemirror-validate-param-title": "內容所屬的頁面標題。",
+	"apihelp-codemirror-validate-example": "檢查 <code>h2 {color: red}</code> 是否符合 sanitized-css 規範。"
+}
