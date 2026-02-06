@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Joseph"
+		]
+	},
+	"apihelp-codemirror-validate-summary": "Verilen içerikteki doğrulama hatalarını kontrol edin",
+	"apihelp-codemirror-validate-param-content": "Doğrulanacak metin içeriği",
+	"apihelp-codemirror-validate-param-contentmodel": "İçerik modeli",
+	"apihelp-codemirror-validate-param-title": "İçeriğin ait olduğu sayfanın başlığı.",
+	"apihelp-codemirror-validate-example": "<code>h2 {color: red}</code> etiketinin temizlenmiş-css için geçerli olup olmadığını kontrol edin"
+}
