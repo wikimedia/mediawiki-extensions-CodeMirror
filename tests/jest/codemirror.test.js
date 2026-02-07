@@ -56,6 +56,13 @@ describe( 'initialize', () => {
 		expect( cm.view.dom.querySelector( '.cm-content' ).classList ).toContain( 'mw-editfont-monospace' );
 	} );
 
+	it( 'should not retain mw-editfont- classes for programming languages', () => {
+		const cm2 = new CodeMirror( textarea, javascript() );
+		cm2.$textarea.addClass( 'mw-editfont-serif' );
+		cm2.initialize();
+		expect( cm2.view.dom.querySelector( '.cm-content' ).classList ).not.toContain( 'mw-editfont-serif' );
+	} );
+
 	it( "should copy the 'dir' and 'lang' attributes of the textarea to .cm-editor", () => {
 		cm.$textarea.prop( 'dir', 'rtl' )
 			.prop( 'lang', 'ar' );
