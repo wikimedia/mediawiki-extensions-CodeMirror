@@ -1,8 +1,13 @@
 {
 	"@metadata": {
 		"authors": [
+			"Hakimi97",
 			"Tofeiku"
 		]
 	},
-	"apihelp-codemirror-validate-param-contentmodel": "Model kandungan"
+	"apihelp-codemirror-validate-summary": "Semak ralat pengesahan dalam kandungan yang diberikan",
+	"apihelp-codemirror-validate-param-content": "Kandungan teks untuk disahkan",
+	"apihelp-codemirror-validate-param-contentmodel": "Model kandungan",
+	"apihelp-codemirror-validate-param-title": "Tajuk laman yang mengandungi kandungan tersebut.",
+	"apihelp-codemirror-validate-example": "Semak sama ada <code>h2 {color: red}</code> sah untuk css tersanitasi"
 }

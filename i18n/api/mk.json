@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Bjankuloski06"
+		]
+	},
+	"apihelp-codemirror-validate-summary": "Провери грешки во заверката за дадениот контекст",
+	"apihelp-codemirror-validate-param-content": "Текстуалната содржина за заверување",
+	"apihelp-codemirror-validate-param-contentmodel": "Содржински модел",
+	"apihelp-codemirror-validate-param-title": "Наслов на страницата каде припаѓа содржината.",
+	"apihelp-codemirror-validate-example": "Провери дали <code>h2 {color: red}</code> е важечки за sanitized-css"
+}
