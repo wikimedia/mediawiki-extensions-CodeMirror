@@ -484,19 +484,20 @@ class CodeMirror {
 	get contentAttributesExtension() {
 		const classList = [];
 
-		if ( this.mode === 'mediawiki' ) {
-			// T245568: Sync text editor font preferences with CodeMirror.
-			const fontClass = Array.from( this.textarea.classList )
-				.find( ( style ) => style.startsWith( 'mw-editfont-' ) );
-			if ( fontClass ) {
-				classList.push( fontClass );
-			}
+		// T245568: Sync text editor font preferences with CodeMirror.
+		const fontClass = Array.from( this.textarea.classList )
+			.find( ( style ) => style.startsWith( 'mw-editfont-' ) );
+		if ( fontClass ) {
+			classList.push( this.mode === 'mediawiki' ? fontClass : 'mw-editfont-monospace' );
+		}
 
-			// Add colorblind mode if preference is set.
-			// This currently is only to be used for the MediaWiki markup language.
-			if ( mw.user.options.get( 'usecodemirror-colorblind' ) ) {
-				classList.push( 'cm-mw-colorblind-colors' );
-			}
+		// Add colorblind mode if preference is set.
+		// This currently is only to be used for the MediaWiki markup language.
+		if (
+			mw.user.options.get( 'usecodemirror-colorblind' ) &&
+			this.mode === 'mediawiki'
+		) {
+			classList.push( 'cm-mw-colorblind-colors' );
 		}
 
 		return EditorView.contentAttributes.of( {

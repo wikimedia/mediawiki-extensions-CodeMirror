@@ -60,7 +60,7 @@ describe( 'initialize', () => {
 		const cm2 = new CodeMirror( textarea, javascript() );
 		cm2.$textarea.addClass( 'mw-editfont-serif' );
 		cm2.initialize();
-		expect( cm2.view.dom.querySelector( '.cm-content' ).classList ).not.toContain( 'mw-editfont-serif' );
+		expect( cm2.view.dom.querySelector( '.cm-content' ).classList ).toContain( 'mw-editfont-monospace' );
 	} );
 
 	it( "should copy the 'dir' and 'lang' attributes of the textarea to .cm-editor", () => {
