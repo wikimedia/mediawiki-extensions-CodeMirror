@@ -37,8 +37,7 @@
 			"value": [
 				"wikEd"
 			],
-			"description": "An array of gadget names that, if enabled, will prevent CodeMirror from loading on action=edit and action=submit.",
-			"public": true
+			"description": "An array of gadget names that, if enabled, will prevent CodeMirror from loading on action=edit and action=submit."
 		},
 		"CodeMirrorLineNumberingNamespaces": {
 			"value": null,
@@ -46,8 +45,7 @@
 		},
 		"CodeMirrorTitleCompletion": {
 			"value": true,
-			"description": "Whether to enable title completion.",
-			"public": true
+			"description": "Whether to enable title completion."
 		},
 		"CodeMirrorDefaultPreferences": {
 			"value": {
@@ -86,8 +84,7 @@
 					"vue"
 				]
 			},
-			"description": "Defaults for CodeMirror user preferences. See https://w.wiki/BwzZ for more information.",
-			"public": true
+			"description": "Defaults for CodeMirror user preferences. See https://w.wiki/BwzZ for more information."
 		},
 		"CodeMirrorPrimaryPreferences": {
 			"value": {
@@ -100,8 +97,7 @@
 				"autocomplete": true,
 				"lint": true
 			},
-			"description": "Preferences advertised in the in-editor preferences panel. These should have a clear visual effect and be useful to most users. Preferences not listed here will be available in the full preferences dialog.",
-			"public": true
+			"description": "Preferences advertised in the in-editor preferences panel. These should have a clear visual effect and be useful to most users. Preferences not listed here will be available in the full preferences dialog."
 		}
 	},
 	"MessagesDirs": {
