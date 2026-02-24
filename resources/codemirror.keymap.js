@@ -237,9 +237,10 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 			[ 'crosshair', mw.msg( 'codemirror-keymap-crosshair', this.getShortcutHtml( 'Alt' ).outerHTML ) ]
 		] );
 
-		// Use mw.hook to add a click listener to the keymap help button.
+		// Use mw.hook to add only one click listener to the keymap help button.
 		mw.hook( 'ext.CodeMirror.preferences.display' ).add( ( container ) => {
-			if ( container ) {
+			if ( container && !container.dataset.kbdHelpListener ) {
+				container.dataset.kbdHelpListener = '1';
 				container.querySelector( '.cm-mw-panel--kbd-help' ).addEventListener( 'click',
 					() => this.showHelpDialog()
 				);
