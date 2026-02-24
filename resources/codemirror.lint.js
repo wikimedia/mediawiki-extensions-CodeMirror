@@ -71,13 +71,13 @@ class CodeMirrorLint extends CodeMirrorPanel {
 		message.className = 'cm-mw-panel--status-message';
 		const position = document.createElement( 'div' );
 		position.className = 'cm-mw-panel--status-line';
-		position.textContent = '0:0';
+		this.updatePosition( this.view.state, position );
 		position.addEventListener( 'click', () => this.gotoLine.openPanel( this.view ) );
 		dom.append( worker, message, position );
 		return {
 			dom,
 			update: ( update ) => {
-				const { anchor, head } = update.state.selection.main;
+				const { head } = update.state.selection.main;
 				for ( const tr of update.transactions ) {
 					for ( const effect of tr.effects ) {
 						if ( effect.is( setDiagnosticsEffect ) ) {
@@ -90,18 +90,7 @@ class CodeMirrorLint extends CodeMirrorPanel {
 					}
 				}
 				if ( update.docChanged || update.selectionSet ) {
-					const line = update.state.doc.lineAt( head ),
-						col = head - line.from;
-					position.textContent = `${ line.number }:${ col }`;
-					if ( anchor !== head ) {
-						const line2 = update.state.doc.lineAt( anchor ),
-							col2 = anchor - line2.from;
-						if ( anchor < head ) {
-							position.textContent += `|(${ line.number - line2.number }:${ Math.max( col - col2, 0 ) })`;
-						} else {
-							position.textContent += `|(${ line2.number - line.number }:${ Math.max( col2 - col, 0 ) })`;
-						}
-					}
+					this.updatePosition( update.state, position );
 					this.updateDiagnosticMessage( head, message );
 				}
 			}
@@ -156,6 +145,22 @@ class CodeMirrorLint extends CodeMirrorPanel {
 			}
 		} else {
 			message.textContent = '';
+		}
+	}
+
+	updatePosition( state, position ) {
+		const { anchor, head } = state.selection.main,
+			line = state.doc.lineAt( head ),
+			col = head - line.from;
+		position.textContent = `${ line.number }:${ col }`;
+		if ( anchor !== head ) {
+			const line2 = state.doc.lineAt( anchor ),
+				col2 = anchor - line2.from;
+			if ( anchor < head ) {
+				position.textContent += `|(${ line.number - line2.number }:${ Math.max( col - col2, 0 ) })`;
+			} else {
+				position.textContent += `|(${ line2.number - line.number }:${ Math.max( col2 - col, 0 ) })`;
+			}
 		}
 	}
 }

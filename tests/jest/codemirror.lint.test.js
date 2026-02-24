@@ -4,6 +4,7 @@ const CodeMirrorLint = require( '../../resources/codemirror.lint.js' );
 const CodeMirrorGotoLine = require( '../../resources/codemirror.gotoLine.js' );
 
 const cmLint = new CodeMirrorLint();
+cmLint.view = new EditorView();
 const { dom, update } = cmLint.panel;
 const doc = Text.of( [ 'foo', 'bar' ] );
 const apply = jest.fn();
@@ -67,6 +68,7 @@ describe( 'CodeMirrorLint', () => {
 		expect( dom.firstChild.lastChild.lastChild.textContent ).toEqual( '0' );
 		expect( dom.children[ 1 ].className ).toEqual( 'cm-mw-panel--status-message' );
 		expect( dom.lastChild.className ).toEqual( 'cm-mw-panel--status-line' );
+		expect( dom.lastChild.textContent ).toEqual( '1:0' );
 	} );
 
 	it( 'should update the diagnostics count', () => {
