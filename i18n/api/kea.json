@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"GrogeXaKaba"
+		]
+	},
+	"apihelp-codemirror-validate-summary": "Birifika si ta izisti érus di balidason na kuntiúdu furnisidu",
+	"apihelp-codemirror-validate-param-contentmodel": "Mudelu di kuntiúdu",
+	"apihelp-codemirror-validate-param-title": "Titlu di pájina na kol es kuntiúdu ta pirtensi.",
+	"apihelp-codemirror-validate-example": "Birifika si <code>h2 {kor: burmedju}</code> é bálidu pa CSS sanitizadu"
+}
