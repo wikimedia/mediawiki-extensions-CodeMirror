@@ -2,10 +2,13 @@ const CodeMirror = require( '../../resources/codemirror.js' );
 const CodeMirrorChild = require( '../../resources/codemirror.child.js' );
 const { mediawiki } = require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
 
-let textarea, otherTextarea, cm, childCm, cmLogEditFeatureSpy, childCmLogEditFeatureSpy;
+let textarea, otherTextarea, cm, childCm, form, cmLogEditFeatureSpy, childCmLogEditFeatureSpy;
 
 beforeEach( () => {
+	form = document.createElement( 'form' );
 	textarea = document.createElement( 'textarea' );
+	form.appendChild( textarea );
+	document.body.appendChild( form );
 	cm = new CodeMirror( textarea, mediawiki() );
 	cmLogEditFeatureSpy = jest.spyOn( cm, 'logEditFeature' );
 	// Force logging of preferences by setting something different first.
@@ -54,5 +57,14 @@ describe( 'CodeMirrorChild', () => {
 		childCm.initialize();
 		cm.preferences.setPreference( 'lineNumbering', false );
 		expect( childSpy ).not.toHaveBeenCalled();
+	} );
+
+	it( 'should put focus on the primary instance if the autofocus preference is set', () => {
+		// Autofocus is on by default.
+		expect( document.activeElement ).toBe( cm.view.contentDOM );
+		cm.toggle();
+		document.activeElement.blur();
+		cm.toggle();
+		expect( document.activeElement ).toBe( cm.view.contentDOM );
 	} );
 } );

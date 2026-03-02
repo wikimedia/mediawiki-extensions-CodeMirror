@@ -969,6 +969,7 @@ class CodeMirror {
 			selectionEnd = this.textarea.selectionEnd,
 			scrollTop = this.textarea.scrollTop,
 			hasFocus = document.activeElement === this.textarea ||
+				this.constructor.name !== 'CodeMirrorChild' &&
 				this.preferences.getPreference( 'autofocus' );
 
 		if ( this.view ) {
