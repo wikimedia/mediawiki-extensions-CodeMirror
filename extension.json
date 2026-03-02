@@ -233,6 +233,7 @@
 			"codexStyleOnly": true,
 			"codexComponents": [
 				"CdxButton",
+				"CdxButtonGroup",
 				"CdxCheckbox",
 				"CdxDialog",
 				"CdxLabel",
