@@ -5,6 +5,9 @@
 			"Gmelfi"
 		]
 	},
+	"codemirror-prefs-section-lines": "Lini",
+	"codemirror-prefs-section-characters": "Caràttari",
+	"codemirror-prefs-section-other": "Autru",
 	"apihelp-codemirror-validate-summary": "Cuntrullari li errura di cunvalidazzioni ntô cuntinutu datu",
 	"apihelp-codemirror-validate-param-contentmodel": "Modellu di cuntinutu"
 }

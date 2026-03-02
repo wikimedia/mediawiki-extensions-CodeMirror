@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Srdjan m",
+			"Srđan"
+		]
+	},
+	"codemirror-desc": "Omogućava isticanje sintakse u uređivaču wikiteksta",
+	"codemirror-toggle-label": "Isticanje sintakse",
+	"codemirror-prefs-colorblind": "Uključi temu za isticanje sintakse prilagođenu osobama koje imaju poteškoće s prepoznavanjem boja",
+	"prefs-accessibility": "Pristupačnost"
+}

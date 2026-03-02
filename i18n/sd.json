@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Mehtab ahmed"
+		]
+	},
+	"codemirror-desc": "وڪي ٽيڪسٽ سنوارگاھ ۾ سنٽيڪس کي نمايان ڪرڻ مھيا ڪري ٿو",
+	"codemirror-toggle-label": "سنٽيڪس نمايان ڪرڻ",
+	"codemirror-prefs-colorblind": "وڪي ٽيڪسٽ سنوارڻ وقت سنٽيڪس کي نمايان ڪرڻ لاءِ رنگ انڌي سازگار اسڪيم کي فعال ڪريو",
+	"codemirror-prefs-colorblind-help": "جيڪڏهن توهان سنٽيڪس کي نمايان ڪرڻ لاءِ گيجٽ استعمال ڪندا آهيو، تہ ھي ترجيح ڪم نہ ڪندي.",
+	"prefs-accessibility": "ايڪسيسبلٽي"
+}

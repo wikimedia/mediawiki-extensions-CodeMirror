@@ -1,0 +1,16 @@
+{
+	"@metadata": {
+		"authors": [
+			"Kareyac",
+			"Դավիթ Սարոյան"
+		]
+	},
+	"codemirror-toggle-label": "Շարահյուսության ընդգծում",
+	"codemirror-prefs-help": "օգնություն",
+	"codemirror-previous": "Գտնել նախորդը",
+	"codemirror-replace": "Փոխարինել",
+	"codemirror-replace-all": "Փոխարինել բոլորը",
+	"codemirror-done": "Արված է",
+	"codemirror-goto-line-go": "Անցնել",
+	"codemirror-keymap-history": "Պատմություն"
+}

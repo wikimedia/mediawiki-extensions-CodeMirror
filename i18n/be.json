@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Artsiom91",
+			"Maksim L."
+		]
+	},
+	"codemirror-desc": "Забяспечвае вылучэнне колерам сінтаксісу ў рэдактары вікіразметкі",
+	"codemirror-toggle-label": "Выдзяленне сінтаксісу"
+}

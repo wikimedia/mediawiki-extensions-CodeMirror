@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Geraki",
+			"Αντιγόνη"
+		]
+	},
+	"codemirror-desc": "Παρέχει επισήμανση σύνταξης στον επεξεργαστή κώδικα wiki",
+	"codemirror-toggle-label": "Επισήμανση σύνταξης"
+}

@@ -1,0 +1,41 @@
+{
+	"@metadata": {
+		"authors": [
+			"McDutchie",
+			"MthulisiNcube"
+		]
+	},
+	"codemirror-find": "Wana",
+	"codemirror-next": "kunotebela",
+	"codemirror-previous": "hule",
+	"codemirror-all": "kose",
+	"codemirror-match-case": "kunofanana khesi",
+	"codemirror-regexp": "Rigesipi",
+	"codemirror-by-word": "nde bala",
+	"codemirror-replace": "Mmisa",
+	"codemirror-replace-placeholder": "Mmisa",
+	"codemirror-replace-all": "mmisa kose",
+	"codemirror-control-character": "Lawula bunhu $1",
+	"codemirror-special-char-null": "Bheli bala",
+	"codemirror-special-char-bell": "Bheli bala",
+	"codemirror-special-char-backspace": "Bhekispesi",
+	"codemirror-special-char-newline": "Layini itshwa",
+	"codemirror-special-char-vertical-tab": "thebhu imile",
+	"codemirror-special-char-carriage-return": "Kheriyegi retheni",
+	"codemirror-special-char-escape": "tjuluka bala",
+	"codemirror-special-char-nbsp": "Sipeyisi sisingapalalanyiwe",
+	"codemirror-special-char-zero-width-space": "Zero - bupabi sipeyisi",
+	"codemirror-special-char-zero-width-non-joiner": "Zero - bupabi kusingahanganye",
+	"codemirror-special-char-zero-width-joiner": "Zero - bupabi kusingahanganye",
+	"codemirror-special-char-left-to-right-mark": "Lumehho - kuyenda - kuludli nyola",
+	"codemirror-special-char-right-to-left-mark": "Ludli - kuyenda - kulumehho nyola",
+	"codemirror-special-char-line-separator": "Kunopalalanya layini",
+	"codemirror-special-char-left-to-right-override": "Lumehho - kuyenda - kuludli kuhhaligwa",
+	"codemirror-special-char-right-to-left-override": "Ludli - kuyenda - kulumehho ukodusa kuyapo",
+	"codemirror-special-char-narrow-nbsp": "Kutehlanana sipesi tjisazohhalilika",
+	"codemirror-special-char-left-to-right-isolate": "Lumehho - kuyenda - kuludli ayisolethe",
+	"codemirror-special-char-right-to-left-isolate": "Ludli - kuyenda - Kulumehho ayisolethi",
+	"codemirror-special-char-pop-directional-isolate": "Phophu kwayinolakidza ayisolethi",
+	"codemirror-special-char-paragraph-separator": "Kunopaladza pharagrafu",
+	"codemirror-special-char-zero-width-no-break-space": "Kunohanganya Bala"
+}

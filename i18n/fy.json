@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"PiefPafPier"
+		]
+	},
+	"codemirror-desc": "Jout syntaks-aksintuearring yn 'e wikitekstbewurker",
+	"codemirror-toggle-label": "Syntaks-aksintuearring",
+	"codemirror-prefs-colorblind": "Kleureblinefreonlik skema foar syntaks-aksintuearring ynskeakelje by it bewurkjen fan wikitekst",
+	"codemirror-prefs-colorblind-help": "At jo 'lytsark' foar syntaks-aksintuearring brûke, sil dizze foarkar net wurkje.",
+	"prefs-accessibility": "Tagonklikens"
+}

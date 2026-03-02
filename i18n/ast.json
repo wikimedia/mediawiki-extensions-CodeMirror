@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Xuacu"
+		]
+	},
+	"codemirror-desc": "Ufre sintaxis resaltada nel editor de testu wiki",
+	"codemirror-toggle-label": "Resaltador de sintaxis"
+}

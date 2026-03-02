@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Daud I.F. Argana"
+		]
+	},
+	"codemirror-desc": "Menyediakan penyorotan sintaksis di penyunting teks wiki",
+	"codemirror-toggle-label": "Penyorotan sintaksis"
+}

@@ -1,0 +1,14 @@
+{
+	"@metadata": {
+		"authors": [
+			"NGC 54",
+			"Paloi Sciurala",
+			"Strainu"
+		]
+	},
+	"codemirror-desc": "Oferă evidențierea sintaxei în editorul wikitext",
+	"codemirror-toggle-label": "Evidențierea sintaxei",
+	"codemirror-prefs-colorblind": "Activează schema favorabilă daltoniștilor pentru evidențierea sintaxei atunci când se editează wikitext",
+	"codemirror-prefs-colorblind-help": "Dacă utilizați un gadget pentru evidențierea sintaxei, această preferință nu va funcționa.",
+	"prefs-accessibility": "Accesibilitate"
+}

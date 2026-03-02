@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Papuass"
+		]
+	},
+	"codemirror-desc": "Nodrošina sintakses iezīmēšanu vikiteksta redaktorā",
+	"codemirror-toggle-label": "Sintakses izcelšana",
+	"codemirror-prefs-colorblind": "Iespējot krāsu aklumam draudzīgu sintakses izcelšanas režīmu, rediģējot vikitekstu",
+	"codemirror-prefs-colorblind-help": "Ja sintakses iezīmēšanai tiek izmantots sīkrīks, šī preference nedarbosies.",
+	"prefs-accessibility": "Pieejamība"
+}

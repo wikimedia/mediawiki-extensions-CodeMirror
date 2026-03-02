@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Aram"
+		]
+	},
+	"codemirror-desc": "ڕۆشنکەری ڕستەسازی لە دەستکاریکەری ویکیدەق دابین دەکات",
+	"codemirror-toggle-label": "ڕۆشنکردنی ڕستەسازی",
+	"codemirror-prefs-colorblind": "سیستمی دۆستی ڕەنگکوێر بۆ ڕۆشنکردنی ڕستەسازی لەکاتی دەستکاریکردنی ویکیدەق چالاک بکە",
+	"codemirror-prefs-colorblind-help": "ئەگەر ئامرازێک بۆ ڕۆشنکردنی ڕستەسازی بەکاردێنیت، ئەم ھەڵبژاردنە کار ناکات.",
+	"prefs-accessibility": "دەستپێگەیشتن"
+}
