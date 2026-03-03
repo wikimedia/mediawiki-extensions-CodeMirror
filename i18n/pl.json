@@ -208,8 +208,5 @@
 	"codemirror-beta-feature-title": "Ulepszone podświetlanie składni",
 	"codemirror-beta-feature-description": "Uzyskaj wczesny dostęp do nowych funkcji podświetlania składni i edycji wikikodu, jak zwijanie kodu i autouzupełnianie.",
 	"codemirror-potentially-slow": "może spowalniać",
-	"apihelp-codemirror-validate-param-contentmodel": "Model zawartości",
-	"apihelp-codemirror-validate-param-title": "Tytuł strony, do której należy treść.",
-	"apihelp-codemirror-validate-example": "Sprawdź, czy kod <code>h2 {color: red}</code> jest prawidłowy dla modelu sanitized-css",
 	"codemirror-validate-js-syntaxerror": "Błąd składni w kolumnie $1 w wierszu $2: $3"
 }

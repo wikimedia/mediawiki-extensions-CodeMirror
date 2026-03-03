@@ -211,10 +211,5 @@
 	"codemirror-beta-feature-title": "צביעת תחביר משופרת",
 	"codemirror-beta-feature-description": "קבלת גישה מוקדמת לתכונות חדשות של צביעת תחביר ועריכה כגון קיפול קוד והשלמה אוטומטית.",
 	"codemirror-potentially-slow": "זה יכול להיות איטי",
-	"apihelp-codemirror-validate-summary": "חיפוש שגיאות בדיקת תקינות בתוכן הנתון",
-	"apihelp-codemirror-validate-param-content": "תוכן הטקסט שיש לבדוק את תקינותו",
-	"apihelp-codemirror-validate-param-contentmodel": "מודל תוכן",
-	"apihelp-codemirror-validate-param-title": "כותרת הדף שהתוכן שייך אליו.",
-	"apihelp-codemirror-validate-example": "לבדוק שהקוד <code dir=\"ltr\">h2 {color: red}</code> תקין עבור CSS מחוטא",
 	"codemirror-validate-js-syntaxerror": "במיקום $1 בשורה $2 יש שגיאת תחביר: $3"
 }

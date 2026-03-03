@@ -150,6 +150,5 @@
 	"codemirror-wikilint-close": "закрыть",
 	"codemirror-wikilint-comment": "закомментировать",
 	"codemirror-beta-feature-title": "Улучшенная подсветка синтаксиса",
-	"codemirror-beta-feature-description": "Получите ранний доступ к улучшенной подсветке синтаксиса и таким функциям редактора, как сворачивание кода и автодополнение.",
-	"apihelp-codemirror-validate-param-contentmodel": "Модель содержимого"
+	"codemirror-beta-feature-description": "Получите ранний доступ к улучшенной подсветке синтаксиса и таким функциям редактора, как сворачивание кода и автодополнение."
 }
