@@ -15,6 +15,7 @@ beforeEach( () => {
 	cm.preferences.setPreference( 'activeLine', true );
 	cm.initialize();
 	otherTextarea = document.createElement( 'textarea' );
+	form.appendChild( otherTextarea );
 	childCm = new CodeMirrorChild( otherTextarea, cm );
 	childCmLogEditFeatureSpy = jest.spyOn( childCm, 'logEditFeature' );
 	childCm.initialize();
