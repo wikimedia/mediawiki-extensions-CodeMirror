@@ -303,9 +303,9 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 	 * @internal
 	 */
 	closePanel( view ) {
-		closeSearchPanel( view );
+		const ret = closeSearchPanel( view );
 		mw.hook( 'ext.CodeMirror.search' ).fire();
-		return true;
+		return ret;
 	}
 
 	/**
