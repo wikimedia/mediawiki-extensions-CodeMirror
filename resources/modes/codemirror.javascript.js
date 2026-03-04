@@ -7,6 +7,7 @@ const {
 } = require( '../lib/codemirror6.bundle.modes.js' );
 const CodeMirrorMode = require( './codemirror.mode.js' );
 const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
+const getCodeMirrorValidator = require( '../codemirror.validate.js' );
 
 // Extracted from globals/globals.json (NPM)
 const builtin = new Set( [
@@ -164,6 +165,28 @@ class CodeMirrorJavaScript extends CodeMirrorMode {
 					} ) );
 				}
 				return diagnostic;
+			} );
+		};
+	}
+
+	/** @inheritdoc */
+	get lintApi() {
+		const execute = getCodeMirrorValidator(
+			new mw.Api(),
+			mw.config.get( 'wgPageName' ),
+			'javascript'
+		);
+		return async ( { state: { doc } } ) => {
+			const errors = await execute( doc.toString() );
+			return errors.map( ( { message, line, column } ) => {
+				const from = doc.line( line ).from + column;
+				return {
+					severity: 'error',
+					source: 'Peast',
+					message,
+					from,
+					to: from
+				};
 			} );
 		};
 	}
