@@ -79,6 +79,20 @@ describe( 'initialize', () => {
 		cmVe.initialize();
 		expect( global.getComputedStyle( cmVe.view.dom ).padding ).toBe( '10px' );
 	} );
+
+	it( 'should maintain the focus state of the VE surface (focused)', () => {
+		cmVe.surfaceView.focus();
+		const spy = jest.spyOn( cmVe.surfaceView, 'focus' );
+		cmVe.initialize();
+		expect( spy ).toHaveBeenCalledTimes( 1 );
+	} );
+
+	it( 'should maintain the focus state of the VE surface (not focused)', () => {
+		document.activeElement.blur();
+		const spy = jest.spyOn( cmVe.surfaceView, 'focus' );
+		cmVe.initialize();
+		expect( spy ).not.toHaveBeenCalled();
+	} );
 } );
 
 describe( 'activate', () => {

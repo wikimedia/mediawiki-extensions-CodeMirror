@@ -158,9 +158,6 @@ class CodeMirrorVisualEditor extends CodeMirror {
 		// Account for the gutter width in the margin.
 		this.updateGutterWidth( this.surfaceView.getDocument().getDir() );
 
-		// Set focus on the surface view.
-		this.surfaceView.focus();
-
 		// As the action is regenerated each time,
 		// we need to track the listeners for later disconnection.
 

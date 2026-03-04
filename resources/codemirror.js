@@ -725,7 +725,11 @@ class CodeMirror {
 
 		// Restore focus state.
 		if ( hasFocus ) {
-			this.view.focus();
+			if ( this.surfaceView ) {
+				this.surfaceView.focus();
+			} else {
+				this.view.focus();
+			}
 		}
 
 		// Use toggle() instead of activate() directly so that the toggle hook is fired.
