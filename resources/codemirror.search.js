@@ -223,7 +223,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 		// Search input.
 		const searchValue = this.getSearchValue();
 		const [ searchInputWrapper, searchInput ] = this.getTextInput(
-			'search',
+			'cm-search',
 			searchValue || this.searchQuery.search,
 			'codemirror-find'
 		);

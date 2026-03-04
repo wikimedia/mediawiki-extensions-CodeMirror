@@ -52,7 +52,7 @@ describe( 'CodeMirrorSearch', () => {
 	it( 'should select all occurrences with the All button', () => {
 		const cm = getCmWithSearchOpen( 'foo bar baz foo bar foo' );
 		const panel = cm.view.dom.querySelector( '.cm-mw-panel--search-panel' );
-		const input = panel.querySelector( '[name=search]' );
+		const input = panel.querySelector( '[name=cm-search]' );
 		input.value = 'foo';
 		input.dispatchEvent( new Event( 'change' ) );
 		panel.querySelector( '.cm-mw-panel--search__all' ).click();
@@ -62,7 +62,7 @@ describe( 'CodeMirrorSearch', () => {
 	it( 'should replace the first occurrence with the Replace button', () => {
 		const cm = getCmWithSearchOpen( 'foo bar baz foo bar foo' );
 		const panel = cm.view.dom.querySelector( '.cm-mw-panel--search-panel' );
-		const searchInput = panel.querySelector( '[name=search]' );
+		const searchInput = panel.querySelector( '[name=cm-search]' );
 		searchInput.value = 'foo';
 		searchInput.dispatchEvent( new Event( 'change' ) );
 		const replaceInput = panel.querySelector( '[name=replace]' );
@@ -77,7 +77,7 @@ describe( 'CodeMirrorSearch', () => {
 	it( 'should replace all occurrences with the Replace all button', () => {
 		const cm = getCmWithSearchOpen( 'foo bar baz foo bar foo' );
 		const panel = cm.view.dom.querySelector( '.cm-mw-panel--search-panel' );
-		const searchInput = panel.querySelector( '[name=search]' );
+		const searchInput = panel.querySelector( '[name=cm-search]' );
 		searchInput.value = 'foo';
 		searchInput.dispatchEvent( new Event( 'change' ) );
 		const replaceInput = panel.querySelector( '[name=replace]' );
@@ -90,7 +90,7 @@ describe( 'CodeMirrorSearch', () => {
 	it( 'should maintain the search query across different searches', () => {
 		const cm = getCmWithSearchOpen( 'foo bar baz foo bar foo' );
 		const panel = cm.view.dom.querySelector( '.cm-mw-panel--search-panel' );
-		const searchInput = panel.querySelector( '[name=search]' );
+		const searchInput = panel.querySelector( '[name=cm-search]' );
 		searchInput.value = 'foo';
 		searchInput.dispatchEvent( new Event( 'change' ) );
 		const replaceInput = panel.querySelector( '[name=replace]' );
@@ -108,7 +108,7 @@ describe( 'CodeMirrorSearch', () => {
 			new KeyboardEvent( 'keydown', { key: 'f', ctrlKey: true } )
 		);
 		const newPanel = cm.view.dom.querySelector( '.cm-mw-panel--search-panel' );
-		expect( newPanel.querySelector( '[name=search]' ).value ).toBe( 'foo' );
+		expect( newPanel.querySelector( '[name=cm-search]' ).value ).toBe( 'foo' );
 		expect( newPanel.querySelector( '[name=replace]' ).value ).toBe( 'bar' );
 		// Replace again.
 		newPanel.querySelector( '.cm-mw-panel--search__replace' ).click();
@@ -118,7 +118,7 @@ describe( 'CodeMirrorSearch', () => {
 	it( 'should update the searchQuery when toggle buttons are used', () => {
 		const cm = getCmWithSearchOpen( 'FOO bar baz foo bar foo' );
 		const panel = cm.view.dom.querySelector( '.cm-mw-panel--search-panel' );
-		const searchInput = panel.querySelector( '[name=search]' );
+		const searchInput = panel.querySelector( '[name=cm-search]' );
 		searchInput.value = 'foo';
 		searchInput.dispatchEvent( new Event( 'change' ) );
 		expect( cm.search.searchQuery.caseSensitive ).toBeFalsy();
