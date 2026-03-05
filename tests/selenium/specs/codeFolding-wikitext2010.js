@@ -1,6 +1,5 @@
 import EditPage from '../pageobjects/edit.page.js';
 import FixtureContent from '../fixturecontent.js';
-import LoginPage from 'wdio-mediawiki/LoginPage.js';
 import UserPreferences from '../userpreferences.js';
 import { getTestString } from 'wdio-mediawiki/Util.js';
 
@@ -9,7 +8,7 @@ describe( 'CodeMirror code folding for the wikitext 2010 editor', () => {
 
 	before( async () => {
 		title = getTestString( 'CodeMirror-fixture1-' );
-		await LoginPage.loginAdmin();
+		await UserPreferences.loginAsOther();
 		await FixtureContent.createFixturePage( title );
 		await UserPreferences.enableWikitext2010EditorWithCodeMirror();
 		await EditPage.openForEditing( title );

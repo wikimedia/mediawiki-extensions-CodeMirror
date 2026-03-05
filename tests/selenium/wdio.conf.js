@@ -7,19 +7,7 @@ export const config = { ...wdioDefaults,
 	// Example:
 	// logLevel: 'info',
 
-	// Group tests by editor type to avoid conflicts from parallel tests
-	// setting different user preferences (2010 vs 2017 editor).
-	// Run with: npm run selenium-test -- --suite editor2010
-	// Or run all suites sequentially with: npm run selenium-test
-	suites: {
-		editor2010: [
-			'./specs/*-wikitext2010.js'
-		],
-		editor2017: [
-			'./specs/*-wikitext2017.js'
-		]
-	},
-
-	// Allow parallel execution within each suite
-	maxInstances: 2
+	// Each test file creates its own user, so all specs can run in parallel
+	// without preference conflicts between 2010 and 2017 editor tests.
+	maxInstances: 4
 };
