@@ -262,7 +262,12 @@ class Hooks implements
 			!$this->languageConverterFactory->isConversionDisabled() &&
 			in_array( $code, LanguageConverter::$languagesWithVariants )
 		) {
-			$variants = $this->languageConverterFactory->getLanguageConverter( $lang )->getVariants();
+			$converter = $this->languageConverterFactory->getLanguageConverter( $lang );
+			// Language conversion is disabled for English if `$wgUsePigLatinVariant` is falsy.
+			// The `getLanguageVariants` method exists in EnConverter but not in TrivialLanguageConverter.
+			if ( $code !== 'en' || method_exists( $converter, 'getLanguageVariants' ) ) {
+				$variants = $converter->getVariants();
+			}
 		}
 		$out->addJsConfigVars( [
 			'cmRLModules' => $modules,

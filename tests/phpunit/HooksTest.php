@@ -48,12 +48,18 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			'method' => 'edit',
 			'reupload' => false,
 			'pageLang' => 'en',
+			'disableLangConversion' => false,
+			'disabledVariants' => [],
+			'usePigLatinVariant' => true,
 		], $conds );
 		$this->overrideConfigValues( [
 			'CodeMirrorV6' => $conds['useV6'],
 			'CodeMirrorEnabledModes' => $conds['allowedModes'] ?? [
 				Hooks::MODE_MEDIAWIKI => true,
 			],
+			'DisableLangConversion' => $conds['disableLangConversion'],
+			'DisabledVariants' => $conds['disabledVariants'],
+			'UsePigLatinVariant' => $conds['usePigLatinVariant'],
 		] );
 
 		$out = $this->getMockOutputPage( $conds['contentModel'], $conds['isRTL'], $conds['pageLang'] );
@@ -110,29 +116,41 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			$uploadMock->method( 'getOutput' )->willReturn( $out );
 			$uploadMock->mForReUpload = $conds['reupload'];
 			$hooks->onUploadForm_initial( $uploadMock );
+			if ( $conds['useV6'] && !$conds['reupload'] ) {
+				$this->assertEquals( '#wpUploadDescription', $jsConfigVars['cmTextarea'] );
+			}
 		} elseif ( $conds['method'] === 'expandTemplates' ) {
 			$expandTemplatesMock = $this->createMock( SpecialExpandTemplates::class );
 			$expandTemplatesMock->method( 'getName' )->willReturn( 'ExpandTemplates' );
 			$expandTemplatesMock->method( 'getOutput' )->willReturn( $out );
 			$hooks->onSpecialPageBeforeExecute( $expandTemplatesMock, '' );
-			$this->assertEquals( '[name=wpInput]', $jsConfigVars['cmTextarea'] );
-			$this->assertArrayEquals( [ '#output' ], $jsConfigVars['cmChildTextareas'] );
+			if ( $conds['useV6'] ) {
+				$this->assertEquals( '[name=wpInput]', $jsConfigVars['cmTextarea'] );
+				$this->assertArrayEquals( [ '#output' ], $jsConfigVars['cmChildTextareas'] );
+			}
 		} else {
 			$method = $conds['method'] === 'readOnly' ?
 				'onEditPage__showReadOnlyForm_initial' :
 				'onEditPage__showEditForm_initial';
 			$hooks->{$method}( $this->createMock( EditPage::class ), $out );
+			if ( $conds['useV6'] && $expectedModules ) {
+				$this->assertEquals( '#wpTextbox1', $jsConfigVars['cmTextarea'] );
+			}
 		}
 		$this->assertArrayEquals( $expectedModules, $modulesLoaded );
 		if ( $conds['useV6'] ) {
 			$this->assertEquals( $expectedMode, $jsConfigVars['cmMode'] ?? 'mediawiki' );
-		}
-		if ( $conds['useV6'] && $conds['pageLang'] !== 'en' ) {
-			$langConverterFactory = $this->getServiceContainer()->getLanguageConverterFactory();
-			$pageLang = $langFactory->getLanguage( $conds['pageLang'] );
-			$variants = $langConverterFactory->getLanguageConverter( $pageLang )->getVariants();
-			$this->assertArrayEquals( $variants, $jsConfigVars['cmLanguageVariants'] );
-			$this->assertEquals( '#wpTextbox1', $jsConfigVars['cmTextarea'] );
+			if (
+				$conds['disableLangConversion'] ||
+				( $conds['pageLang'] === 'en' && !$conds['usePigLatinVariant'] )
+			) {
+				$this->assertArrayEquals( [], $jsConfigVars['cmLanguageVariants'] );
+			} elseif ( $expectedModules ) {
+				$langConverterFactory = $this->getServiceContainer()->getLanguageConverterFactory();
+				$pageLang = $langFactory->getLanguage( $conds['pageLang'] );
+				$variants = $langConverterFactory->getLanguageConverter( $pageLang )->getVariants();
+				$this->assertArrayEquals( $variants, $jsConfigVars['cmLanguageVariants'] );
+			}
 		}
 	}
 
@@ -184,6 +202,10 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		];
 		yield 'CM5, Special:Upload' => [
 			[ 'useV6' => false, 'method' => 'upload' ],
+			[]
+		];
+		yield 'CM5, Special:ExpandTemplates' => [
+			[ 'useV6' => false, 'method' => 'expandTemplates' ],
 			[]
 		];
 		yield 'CM6' => [
@@ -271,6 +293,18 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		];
 		yield 'CM6, Special:ExpandTemplates' => [
 			[ 'method' => 'expandTemplates' ],
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
+		];
+		yield 'CM6, page language zh with conversion disabled' => [
+			[ 'pageLang' => 'zh', 'disableLangConversion' => true ],
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
+		];
+		yield 'CM6, page language wuu with all variants disabled' => [
+			[ 'pageLang' => 'wuu', 'disabledVariants' => [ 'wuu-hans', 'wuu-hant' ] ],
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
+		];
+		yield 'CM6, page language en with Pig Latin variant disabled' => [
+			[ 'pageLang' => 'en', 'usePigLatinVariant' => false ],
 			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
 		];
 	}
