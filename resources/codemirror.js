@@ -228,6 +228,19 @@ class CodeMirror {
 		 * @private
 		 */
 		this.hooks = {};
+		/**
+		 * State of the textarea's selection and scroll before CodeMirror is initialized.
+		 * This is used for restoration during the initial call to `activate()`, since
+		 * initialization does DOM manipulation that can cause the scroll position to be lost.
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		this.preInitSelection = {
+			selectionStart: null,
+			selectionEnd: null,
+			scrollTop: null
+		};
 	}
 
 	/**
@@ -700,8 +713,10 @@ class CodeMirror {
 		 */
 		mw.hook( 'ext.CodeMirror.initialize' ).fire( this.surface || this.textarea );
 
-		// Make note of the focus state before we hide the textarea.
-		const hasFocus = document.activeElement === this.textarea;
+		// Make note of the focus state, scroll and selection before we hide the textarea.
+		const hasFocus = document.activeElement === this.textarea,
+			{ selectionStart, selectionEnd, scrollTop } = this.textarea;
+		this.preInitSelection = { selectionStart, selectionEnd, scrollTop };
 		// Remove required attribute, which can otherwise cause the valueMissing constraint
 		// to fail ("invalid form control … is not focusable") on submission.
 		// For now, CodeMirror clients are expected to handle validation by other means.
@@ -974,12 +989,13 @@ class CodeMirror {
 		this.setupFeatureLogging();
 
 		// Backup scroll position, selections, and focus state before we hide the textarea.
-		const selectionStart = this.textarea.selectionStart,
-			selectionEnd = this.textarea.selectionEnd,
-			scrollTop = this.textarea.scrollTop,
-			hasFocus = document.activeElement === this.textarea ||
-				this.constructor.name !== 'CodeMirrorChild' &&
-				this.preferences.getPreference( 'autofocus' );
+		const { selectionStart, selectionEnd, scrollTop } = this.preInitSelection || this.textarea;
+		// Clear the pre-init selection since it's no longer valid after the first activation.
+		this.preInitSelection = null;
+		const hasFocus = document.activeElement === this.textarea || (
+			this.constructor.name !== 'CodeMirrorChild' &&
+			this.preferences.getPreference( 'autofocus' )
+		);
 
 		if ( this.view ) {
 			// We're re-enabling, so we want to sync contents from the textarea.
@@ -1005,22 +1021,35 @@ class CodeMirror {
 			this.$textarea.addClass( 'noime' ).off( '.ime' ).removeData( [ 'ime', 'imeselector' ] );
 
 			// Sync scroll position, selections, and focus state.
-			requestAnimationFrame( () => {
+			this.requestAnimationFrame( () => {
 				this.view.scrollDOM.scrollTop = scrollTop;
+				if ( selectionStart !== 0 || selectionEnd !== 0 ) {
+					const range = EditorSelection.range( selectionStart, selectionEnd ),
+						scrollEffect = EditorView.scrollIntoView( range );
+					// Restore scroll position when previewing (T254962).
+					scrollEffect.value.isSnapshot = true;
+					this.view.dispatch( {
+						selection: EditorSelection.create( [ range ] ),
+						effects: scrollEffect
+					} );
+				}
+				if ( hasFocus ) {
+					this.view.focus();
+				}
 			} );
-			if ( selectionStart !== 0 || selectionEnd !== 0 ) {
-				const range = EditorSelection.range( selectionStart, selectionEnd ),
-					scrollEffect = EditorView.scrollIntoView( range );
-				scrollEffect.value.isSnapshot = true;
-				this.view.dispatch( {
-					selection: EditorSelection.create( [ range ] ),
-					effects: scrollEffect
-				} );
-			}
-			if ( hasFocus ) {
-				this.view.focus();
-			}
 		}
+	}
+
+	/**
+	 * Wrapper for requestAnimationFrame to allow overriding in Jest tests.
+	 *
+	 * @param {function} callback
+	 * @return {number}
+	 * @private
+	 * @ignore
+	 */
+	requestAnimationFrame( callback ) {
+		return window.requestAnimationFrame( callback );
 	}
 
 	/**

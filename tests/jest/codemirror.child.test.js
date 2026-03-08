@@ -10,6 +10,8 @@ beforeEach( () => {
 	form.appendChild( textarea );
 	document.body.appendChild( form );
 	cm = new CodeMirror( textarea, mediawiki() );
+	// Needed because focus() is called in a requestAnimationFrame callback.
+	jest.spyOn( cm, 'requestAnimationFrame' ).mockImplementation( ( cb ) => cb() );
 	cmLogEditFeatureSpy = jest.spyOn( cm, 'logEditFeature' );
 	// Force logging of preferences by setting something different first.
 	cm.preferences.setPreference( 'activeLine', true );
@@ -22,6 +24,7 @@ beforeEach( () => {
 } );
 
 afterEach( () => {
+	cm.requestAnimationFrame.mockRestore();
 	mw.hook.mockHooks = {};
 	document.body.innerHTML = '';
 } );

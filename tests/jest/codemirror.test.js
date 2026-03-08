@@ -13,6 +13,9 @@ beforeEach( () => {
 	form.appendChild( textarea );
 	document.body.appendChild( form );
 	cm = new CodeMirror( textarea );
+	// Mock requestAnimationFrame to immediately call the callback, since JSDOM doesn't implement it
+	// and some tests rely on it to synchronously apply changes.
+	jest.spyOn( cm, 'requestAnimationFrame' ).mockImplementation( ( cb ) => cb() );
 	// Suppress console warning about re-initialization, etc.
 	jest.spyOn( console, 'warn' ).mockImplementation( () => {} );
 } );
@@ -208,6 +211,7 @@ describe( 'toggle', () => {
 		document.activeElement.blur();
 		cm.toggle();
 		expect( document.activeElement ).not.toBe( cm.view.contentDOM );
+		cm.requestAnimationFrame.mockRestore();
 	} );
 } );
 
@@ -227,6 +231,20 @@ describe( 'activate', () => {
 		cm.textarea.value = 'activate - sync contents';
 		cm.activate();
 		expect( cm.view.state.doc.toString() ).toStrictEqual( 'activate - sync contents' );
+	} );
+
+	it( 'should restore the scroll position and selection', () => {
+		textarea.value = 'Line\n'.repeat( 100 );
+		textarea.selectionStart = 50;
+		textarea.selectionEnd = 70;
+		textarea.scrollTop = 100;
+		cm = new CodeMirror( textarea );
+		jest.spyOn( cm, 'requestAnimationFrame' ).mockImplementation( ( cb ) => cb() );
+		cm.initialize();
+		const { anchor, head } = cm.view.state.selection.ranges[ 0 ];
+		expect( anchor ).toBe( 50 );
+		expect( head ).toBe( 70 );
+		expect( cm.view.scrollDOM.scrollTop ).toBe( 100 );
 	} );
 } );
 
