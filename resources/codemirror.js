@@ -725,11 +725,7 @@ class CodeMirror {
 
 		// Restore focus state.
 		if ( hasFocus ) {
-			if ( this.surfaceView ) {
-				this.surfaceView.focus();
-			} else {
-				this.view.focus();
-			}
+			this.focus();
 		}
 
 		// Use toggle() instead of activate() directly so that the toggle hook is fired.
@@ -914,6 +910,15 @@ class CodeMirror {
 	}
 
 	/**
+	 * Focus the CodeMirror editor.
+	 *
+	 * @stable to call and override
+	 */
+	focus() {
+		this.view.focus();
+	}
+
+	/**
 	 * Toggle CodeMirror on or off from the textarea.
 	 * This will call {@link CodeMirror#initialize initialize} if CodeMirror
 	 * is being enabled for the first time.
@@ -1062,11 +1067,11 @@ class CodeMirror {
 		this.isActive = false;
 		this.logEditFeature( 'deactivated' );
 
+		// Sync focus state, selections and scroll position.
+		if ( hasFocus ) {
+			this.focus();
+		}
 		if ( !this.surface ) {
-			// Sync focus state, selections and scroll position.
-			if ( hasFocus ) {
-				this.textarea.focus();
-			}
 			this.textarea.selectionStart = Math.min( from, to );
 			this.textarea.selectionEnd = Math.max( from, to );
 			this.textarea.scrollTop = scrollTop;

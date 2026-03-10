@@ -132,6 +132,13 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	/**
 	 * @inheritDoc
 	 */
+	focus() {
+		this.surfaceView.focus();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	activate() {
 		super.activate();
 
@@ -208,9 +215,6 @@ class CodeMirrorVisualEditor extends CodeMirror {
 		this.surface.getModel().getDocument().off( 'precommit', this.transactionListener );
 		this.surface.getModel().off( 'select', this.selectListener );
 		this.surfaceView.off( 'position', this.positionListener );
-
-		// Set focus on the surface view.
-		this.surfaceView.focus();
 	}
 
 	/**
