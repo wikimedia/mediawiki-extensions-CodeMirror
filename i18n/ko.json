@@ -6,11 +6,13 @@
 			"Markingdots",
 			"Ykhwong",
 			"Bisang",
-			"YeBoy371"
+			"YeBoy371",
+			"Tensama0415"
 		]
 	},
 	"codemirror-desc": "위키텍스트 편집기에서 구문 강조 기능을 제공합니다",
 	"codemirror-toggle-label": "문법 강조",
+	"codemirror-toggle-label-short": "문법",
 	"codemirror-prefs-enable": "위키텍스트에 대한 구문 강조 활성화",
 	"codemirror-v6-prefs-colorblind": "색각 이상자 친화 스킴 사용",
 	"codemirror-prefs-colorblind": "위키텍스트 편집 시 색각 이상자에게 친숙한 문법 강조용 스킴 활성화하기",
@@ -23,6 +25,7 @@
 	"codemirror-replace": "바꾸기",
 	"codemirror-replace-placeholder": "바꾸기",
 	"codemirror-replace-all": "모두 바꾸기",
+	"codemirror-goto-line": "줄로 이동",
 	"codemirror-control-character": "제어 문자 $1",
 	"codemirror-special-char-null": "널 문자",
 	"codemirror-special-char-bell": "벨 문자",
