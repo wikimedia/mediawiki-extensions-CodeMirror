@@ -41,6 +41,24 @@ class DataScript {
 	}
 
 	/**
+	 * Normalize any legacy values for $wgCodeMirrorDefaultPreferences to the new format.
+	 * Non-array values as of MW 1.46 should be only integers corresponding to Hooks::PREF_MODES.
+	 *
+	 * @param array $defaultPrefs
+	 * @return array
+	 */
+	private static function normalizeDefaultPrefs( array $defaultPrefs ): array {
+		$normalized = [];
+		foreach ( $defaultPrefs as $key => $value ) {
+			$normalized[ $key ] = $value;
+			if ( is_bool( $value ) ) {
+				$normalized[ $key ] = $value ? Hooks::PREF_ENABLED : Hooks::PREF_DISABLED;
+			}
+		}
+		return $normalized;
+	}
+
+	/**
 	 * Returns an array of variables for CodeMirror to work (tags and so on)
 	 *
 	 * @return array
@@ -58,7 +76,8 @@ class DataScript {
 		// initialize configuration
 		$config = [
 			'useV6' => $mwConfig->get( 'CodeMirrorV6' ),
-			'defaultPreferences' => $mwConfig->get( 'CodeMirrorDefaultPreferences' ),
+			'defaultPreferences' => static::normalizeDefaultPrefs( $mwConfig->get( 'CodeMirrorDefaultPreferences' ) ),
+			'preferenceModeIds' => Hooks::PREF_MODES,
 			'primaryPreferences' => $mwConfig->get( 'CodeMirrorPrimaryPreferences' ),
 			'legacyLineNumberingNamespaces' => $mwConfig->get( 'CodeMirrorLineNumberingNamespaces' ),
 			'pluginModules' => $registry->getAttribute( 'CodeMirrorPluginModules' ),

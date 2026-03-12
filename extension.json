@@ -45,41 +45,23 @@
 		},
 		"CodeMirrorDefaultPreferences": {
 			"value": {
-				"activeLine": [
-					"json",
-					"css",
-					"javascript",
-					"lua",
-					"vue"
-				],
-				"autofocus": true,
-				"bidiIsolation": false,
-				"bracketMatching": true,
-				"closeBrackets": [
-					"json",
-					"css",
-					"javascript",
-					"lua",
-					"vue"
-				],
-				"highlightRefs": true,
-				"foldAllRefs": false,
-				"lineNumbering": true,
-				"lineWrapping": true,
-				"specialChars": true,
-				"codeFolding": true,
-				"autocomplete": true,
-				"openLinks": true,
-				"closeTags": false,
-				"whitespace": false,
-				"trailingWhitespace": false,
-				"lint": [
-					"json",
-					"css",
-					"javascript",
-					"lua",
-					"vue"
-				]
+				"activeLine": 3,
+				"autofocus": 1,
+				"bidiIsolation": 0,
+				"bracketMatching": 1,
+				"closeBrackets": 3,
+				"closeTags": 0,
+				"highlightRefs": 1,
+				"foldAllRefs": 0,
+				"lineNumbering": 1,
+				"lineWrapping": 1,
+				"specialChars": 1,
+				"codeFolding": 1,
+				"autocomplete": 1,
+				"openLinks": 1,
+				"whitespace": 0,
+				"trailingWhitespace": 0,
+				"lint": 3
 			},
 			"description": "Defaults for CodeMirror user preferences. See https://w.wiki/BwzZ for more information."
 		},
@@ -541,6 +523,7 @@
 			]
 		}
 	},
+	"callback": "MediaWiki\\Extension\\CodeMirror\\Hooks::onRegistration",
 	"DomainEventIngresses": [
 		{
 			"events": [

@@ -1690,7 +1690,12 @@ const mediawiki = ( config = { bidiIsolation: false } ) => {
 						backgroundColor: 'var( --background-color-refs )'
 					}
 				} );
-				cm.preferences.registerExtension( 'highlightRefs', highlightRefsExtension, cm.view );
+				cm.preferences.registerExtension(
+					'highlightRefs',
+					highlightRefsExtension,
+					cm.view,
+					{ mode: 'mediawiki' }
+				);
 			}
 		}
 
@@ -1713,7 +1718,7 @@ const mediawiki = ( config = { bidiIsolation: false } ) => {
 						if ( enabled ) {
 							foldAllRefs( cm.view );
 						}
-					}, cm.view, true );
+					}, cm.view, { slow: true, mode: 'mediawiki' } );
 				}
 			}
 		}
@@ -1721,13 +1726,18 @@ const mediawiki = ( config = { bidiIsolation: false } ) => {
 			cm.preferences.registerExtension( 'autocomplete', autocompleteExtension, cm.view );
 		}
 		if ( config.openLinks !== false ) {
-			cm.preferences.registerExtension( 'openLinks', openLinksExtension, cm.view );
+			cm.preferences.registerExtension( 'openLinks', openLinksExtension, cm.view, { mode: 'mediawiki' } );
 		}
 		if ( config.closeTags !== false ) {
-			cm.preferences.registerExtension( 'closeTags', closeTagsExtension, cm.view );
+			cm.preferences.registerExtension( 'closeTags', closeTagsExtension, cm.view, { mode: 'mediawiki' } );
 		}
 		if ( config.bidiIsolation ) {
-			cm.preferences.registerExtension( 'bidiIsolation', bidiIsolationExtension, cm.view );
+			cm.preferences.registerExtension(
+				'bidiIsolation',
+				bidiIsolationExtension,
+				cm.view,
+				{ mode: 'mediawiki' }
+			);
 		}
 	};
 	mw.hook( 'ext.CodeMirror.ready' ).add( handler );

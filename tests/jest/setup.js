@@ -40,6 +40,12 @@ global.mockMwConfigGet = ( config = {} ) => {
 		extCodeMirrorConfig: {
 			urlProtocols: 'ftp://|https://|news:',
 			defaultPreferences: extensionJson.config.CodeMirrorDefaultPreferences.value,
+			preferenceModeIds: {
+				DISABLED: 0,
+				ENABLED: 1,
+				MEDIAWIKI_ONLY: 2,
+				NON_MEDIAWIKI_ONLY: 3
+			},
 			primaryPreferences: extensionJson.config.CodeMirrorPrimaryPreferences.value,
 			doubleUnderscore: [ {
 				__notoc__: 'notoc'

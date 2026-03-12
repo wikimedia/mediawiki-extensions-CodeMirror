@@ -61,6 +61,21 @@ class Hooks implements
 		self::MODE_LUA,
 	];
 
+	public const PREF_DISABLED = 0;
+	public const PREF_ENABLED = 1;
+	public const PREF_MEDIAWIKI_ONLY = 2;
+	public const PREF_NON_MEDIAWIKI_ONLY = 3;
+	public const PREF_MODES = [
+		// Preference is disabled for all modes.
+		'DISABLED' => self::PREF_DISABLED,
+		// Preference is enabled for all modes.
+		'ENABLED' => self::PREF_ENABLED,
+		// Preference is enabled only for the `mediawiki` mode.
+		'MEDIAWIKI_ONLY' => self::PREF_MEDIAWIKI_ONLY,
+		// Preference is enabled for all modes except `mediawiki`.
+		'NON_MEDIAWIKI_ONLY' => self::PREF_NON_MEDIAWIKI_ONLY
+	];
+
 	public const OPTION_USE_CODEMIRROR = 'usecodemirror';
 	public const OPTION_COLORBLIND = 'usecodemirror-colorblind';
 	public const OPTION_BETA_FEATURE = 'codemirror-beta-feature-enable';
@@ -478,5 +493,18 @@ class Hooks implements
 		) {
 			$this->userOptionsManager->setOption( $user, self::OPTION_USE_CODEMIRROR, 1 );
 		}
+	}
+
+	/**
+	 * Define constants for preferences values for use in configuration like LocalSettings.php.
+	 * Called after the extension is registered.
+	 *
+	 * @see https://www.mediawiki.org/wiki/Manual:Extension.json/Schema#callback
+	 */
+	public static function onRegistration(): void {
+		define( 'CM_PREF_ENABLED', self::PREF_ENABLED );
+		define( 'CM_PREF_DISABLED', self::PREF_DISABLED );
+		define( 'CM_PREF_MEDIAWIKI_ONLY', self::PREF_MEDIAWIKI_ONLY );
+		define( 'CM_PREF_NON_MEDIAWIKI_ONLY', self::PREF_NON_MEDIAWIKI_ONLY );
 	}
 }

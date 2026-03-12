@@ -31,7 +31,7 @@ let cmVe, surface;
 
 beforeEach( () => {
 	global.ve = { init: { target: { constructor: { name: 'article' } } } };
-	mw.config.get = jest.fn().mockReturnValue( { defaultPreferences: {}, primaryPreferences: {} } );
+	mockMwConfigGet();
 	surface = getMockSurface();
 	cmVe = new CodeMirrorVisualEditor( surface );
 } );
