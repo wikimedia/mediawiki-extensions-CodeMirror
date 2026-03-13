@@ -43,10 +43,6 @@
 			"value": null,
 			"description": "Legacy CM5 setting. List of namespace IDs where line numbering should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere."
 		},
-		"CodeMirrorTitleCompletion": {
-			"value": true,
-			"description": "Whether to enable title completion."
-		},
 		"CodeMirrorDefaultPreferences": {
 			"value": {
 				"activeLine": [

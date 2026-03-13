@@ -82,8 +82,8 @@ const linkSuggestFactory = ( search, namespace = 0, subpage = false ) => {
  * @private
  */
 const linkSuggest = ( mode, str, ns = 0 ) => {
-	const { config: { titleCompletion }, nsRegex } = mode;
-	if ( !titleCompletion || /[|{}<>[\]#]/.test( str ) ) {
+	const { nsRegex } = mode;
+	if ( /[|{}<>[\]#]/.test( str ) ) {
 		return Promise.resolve( undefined );
 	}
 	let subpage = false,

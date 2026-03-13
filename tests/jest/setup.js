@@ -107,6 +107,8 @@ mw.Api.prototype.loadMessagesIfMissing = jest.fn( () => {
 	mw.messages = { values: require( '../../i18n/en.json' ) };
 	mw.messages.get = jest.fn().mockReturnValue( mw.messages.values );
 } );
+mw.Api.prototype.get = jest.fn().mockReturnValue( Promise.resolve( {} ) );
+mw.Api.prototype.abort = jest.fn();
 mw.Rest = jest.fn().mockImplementation( () => ( {} ) );
 mw.hook = jest.fn( ( name ) => ( {
 	fire: jest.fn( ( ...args ) => {

@@ -61,7 +61,6 @@ class DataScript {
 			'defaultPreferences' => $mwConfig->get( 'CodeMirrorDefaultPreferences' ),
 			'primaryPreferences' => $mwConfig->get( 'CodeMirrorPrimaryPreferences' ),
 			'legacyLineNumberingNamespaces' => $mwConfig->get( 'CodeMirrorLineNumberingNamespaces' ),
-			'titleCompletion' => $mwConfig->get( 'CodeMirrorTitleCompletion' ),
 			'pluginModules' => $registry->getAttribute( 'CodeMirrorPluginModules' ),
 			'tagModes' => $tagModes,
 			'tags' => array_fill_keys( $tagNames, true ),
