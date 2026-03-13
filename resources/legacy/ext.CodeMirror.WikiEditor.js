@@ -187,7 +187,7 @@ function init() {
 				maxHighlightLineLength: 10000
 			};
 
-			codeMirror = CodeMirror.fromTextArea( $textbox1[ 0 ], cmOptions );
+			codeMirror = CodeMirror.fromTextArea( $textbox1[ 0 ], cmOptions, true );
 			const $codeMirror = $( codeMirror.getWrapperElement() );
 
 			codeMirror.on( 'focus', () => {
@@ -249,7 +249,11 @@ function init() {
 			// T305333: Reload CodeMirror to fix a cursor caret issue.
 			codeMirror.refresh();
 
-			mw.hook( 'ext.CodeMirror.switch' ).fire( true, $codeMirror );
+			const switchHook = mw.hook( 'ext.CodeMirror.switch' );
+			switchHook.deprecate(
+				'Use "ext.CodeMirror.toggle" instead. See https://w.wiki/B3pr for more information.'
+			);
+			switchHook.fire( true, $codeMirror );
 			mw.hook( 'ext.CodeMirror.toggle' ).fire( true, null, $textbox1[ 0 ] );
 		} );
 	}

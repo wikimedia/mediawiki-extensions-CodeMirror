@@ -1,6 +1,10 @@
 require( './ext.CodeMirror.data.js' );
 
-if ( mw.config.get( 'extCodeMirrorConfig' ).useV6 ) {
+/**
+ * Show deprecation warning for CodeMirror 5 if CodeMirror 6 is enabled or
+ * if CodeMirror 5 loaded outside the extension.
+ */
+if ( mw.config.get( 'extCodeMirrorConfig' ).useV6 || !mw.config.get( 'cm5-from-extension' ) ) {
 	const deprecationFn = mw.log.makeDeprecated(
 		'CodeMirror5-deprecation',
 		'CodeMirror 5 has been deprecated in MediaWiki 1.43 and will be eventually removed. ' +

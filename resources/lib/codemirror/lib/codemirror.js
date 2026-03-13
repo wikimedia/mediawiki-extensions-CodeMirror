@@ -9723,7 +9723,16 @@
 
   TextareaInput.prototype.needsContentAttribute = false;
 
-  function fromTextArea(textarea, options) {
+  function fromTextArea(textarea, options, skipWarning = false) {
+    // HACK: Log warnings about CM5 deprecation, exluding Extension:CodeMirror itself (T373720)
+    if ( !skipWarning ) {
+      const deprecationFn = mw.log.makeDeprecated(
+      'CodeMirror5-deprecation',
+      'CodeMirror 5 has been deprecated in MediaWiki 1.43 and will be eventually removed. ' +
+        'Please migrate to CodeMirror 6. See https://w.wiki/B3pr for more information.'
+      );
+      deprecationFn();
+    }
     options = options ? copyObj(options) : {};
     options.value = textarea.value;
     if (!options.tabindex && textarea.tabIndex)
