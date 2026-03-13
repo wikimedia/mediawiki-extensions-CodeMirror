@@ -196,6 +196,10 @@ class Hooks implements
 		} elseif ( $useWikiEditor ) {
 			// Legacy CM5
 
+			// Add a config var to indicate use of CM5 is triggered by the extension itself.
+			// Any other usage will fire deprecation warnings.
+			$out->addJsConfigVars( 'cm5-from-extension', true );
+
 			// ext.CodeMirror.WikiEditor adds the toggle button to the toolbar.
 			$out->addModules( 'ext.CodeMirror.WikiEditor' );
 

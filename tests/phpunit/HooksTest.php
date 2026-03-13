@@ -101,7 +101,10 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			} );
 		$out->method( 'addJsConfigVars' )
 			->willReturnCallback( static function ( $vars ) use ( &$jsConfigVars ) {
-				$jsConfigVars = array_merge( $jsConfigVars, $vars );
+				// Temporarily deprecation JS config var (T373720)
+				if ( is_array( $vars ) ) {
+					$jsConfigVars = array_merge( $jsConfigVars, $vars );
+				}
 			} );
 
 		$hooks = new Hooks(
