@@ -740,7 +740,7 @@ class CodeMirror {
 
 		// Restore focus state.
 		if ( hasFocus ) {
-			this.focus();
+			this.focus( true );
 		}
 
 		// Use toggle() instead of activate() directly so that the toggle hook is fired.
@@ -927,10 +927,15 @@ class CodeMirror {
 	/**
 	 * Focus the CodeMirror editor.
 	 *
+	 * @param {boolean} [isActive] Whether the CodeMirror editor is active.
 	 * @stable to call and override
 	 */
-	focus() {
-		this.view.focus();
+	focus( isActive = this.isActive ) {
+		if ( isActive ) {
+			this.view.focus();
+		} else {
+			this.textarea.focus( { preventScroll: true } );
+		}
 	}
 
 	/**
@@ -1043,7 +1048,7 @@ class CodeMirror {
 	/**
 	 * Wrapper for requestAnimationFrame to allow overriding in Jest tests.
 	 *
-	 * @param {function} callback
+	 * @param {Function} callback
 	 * @return {number}
 	 * @private
 	 * @ignore
