@@ -51,7 +51,6 @@ class ApiCodeMirrorValidate extends ApiBase {
 		foreach ( self::VALIDATOR_SPECS as $model => $spec ) {
 			if ( $this->contentHandlerFactory->isDefinedModel( $model ) ) {
 				// ObjectFactory::createObject accepts an array, not just a callable (phan bug)
-				// @phan-suppress-next-line PhanTypeInvalidCallableArrayKey
 				$this->validators[$model] = $this->objectFactory->createObject( $spec, [
 					'extraArgs' => [
 						$this->getContext(),
