@@ -1,4 +1,5 @@
-const { vue, vueLanguage } = require( '../lib/codemirror6.bundle.modes.js' );
+const { syntaxTree } = require( 'ext.CodeMirror.v6.lib' );
+const { javascriptLanguage, vue, vueLanguage } = require( '../lib/codemirror6.bundle.modes.js' );
 const CodeMirrorMode = require( './codemirror.mode.js' );
 
 /**
@@ -33,6 +34,16 @@ class CodeMirrorVue extends CodeMirrorMode {
 	/** @inheritDoc */
 	get hasWorker() {
 		return false;
+	}
+
+	/** @inheritDoc */
+	get bracketMatchingConfig() {
+		return {
+			exclude( state, pos ) {
+				return javascriptLanguage.isActiveAt( state, pos, 0 ) &&
+					syntaxTree( state ).resolveInner( pos, 0 ).name === 'RegExp';
+			}
+		};
 	}
 }
 

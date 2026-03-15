@@ -155,6 +155,15 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 	}
 
 	/** @inheritDoc */
+	get bracketMatchingConfig() {
+		return {
+			// Also match CJK full-width brackets (T362992)
+			// This is only for wikitext as it can be confusing in programming languages.
+			brackets: '()[]{}（）【】［］｛｝'
+		};
+	}
+
+	/** @inheritDoc */
 	get support() {
 		return [ syntaxHighlighting(
 			HighlightStyle.define(

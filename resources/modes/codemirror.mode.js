@@ -1,4 +1,10 @@
-const { Extension, Language, LanguageSupport, LintSource } = require( 'ext.CodeMirror.v6.lib' );
+const {
+	Config,
+	Extension,
+	Language,
+	LanguageSupport,
+	LintSource
+} = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
 
 /* eslint-disable jsdoc/valid-types */
@@ -84,6 +90,15 @@ class CodeMirrorMode {
 	 */
 	get hasWorker() {
 		return !!this.lintSource;
+	}
+
+	/**
+	 * The configuration for bracket matching.
+	 *
+	 * @type {Config|undefined}
+	 */
+	get bracketMatchingConfig() {
+		return undefined;
 	}
 
 	/**

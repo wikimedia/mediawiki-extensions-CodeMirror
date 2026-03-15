@@ -192,6 +192,15 @@ class CodeMirrorJavaScript extends CodeMirrorMode {
 	}
 
 	/** @inheritDoc */
+	get bracketMatchingConfig() {
+		return {
+			exclude( state, pos ) {
+				return syntaxTree( state ).resolveInner( pos, 0 ).name === 'RegExp';
+			}
+		};
+	}
+
+	/** @inheritDoc */
 	get support() {
 		return [
 			javascript().support,

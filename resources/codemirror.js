@@ -1,5 +1,6 @@
 const {
 	Compartment,
+	Config,
 	EditorSelection,
 	EditorState,
 	EditorView,
@@ -108,14 +109,18 @@ class CodeMirror {
 		 * @type {LintSource|undefined}
 		 */
 		this.lintSource = langSupport.lintSource;
-		delete langSupport.lintSource;
 		/**
 		 * The function to lint the code in the editor using a MediaWiki API.
 		 *
 		 * @type {LintSource|undefined}
 		 */
 		this.lintApi = langSupport.lintApi;
-		delete langSupport.lintApi;
+		/**
+		 * The extended configuration for bracket matching.
+		 *
+		 * @type {Config|undefined}
+		 */
+		this.bracketMatchingConfig = langSupport.bracketMatchingConfig;
 		/**
 		 * Language support and its extension(s).
 		 *
@@ -426,13 +431,7 @@ class CodeMirror {
 	 * @type {Extension}
 	 */
 	get bracketMatchingExtension() {
-		return bracketMatching( this.mode === 'mediawiki' ?
-			{
-				// Also match CJK full-width brackets (T362992)
-				// This is only for wikitext as it can be confusing in programming languages.
-				brackets: '()[]{}（）【】［］｛｝'
-			} : {}
-		);
+		return bracketMatching( this.bracketMatchingConfig );
 	}
 
 	/**

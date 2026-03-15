@@ -106,7 +106,11 @@ const trySelectMatchingBrackets = ( state, pos, dir, config, inside = false ) =>
  * @internal
  * @private
  */
-const selectMatchingBrackets = ( state, pos, config ) => trySelectMatchingBrackets( state, pos, -1, config ) ||
+const selectMatchingBrackets = (
+	state,
+	pos,
+	config
+) => trySelectMatchingBrackets( state, pos, -1, config ) ||
 	trySelectMatchingBrackets( state, pos, 1, config ) ||
 	trySelectMatchingBrackets( state, pos + 1, -1, config, true ) ||
 	trySelectMatchingBrackets( state, pos - 1, 1, config, true );
@@ -129,22 +133,25 @@ module.exports = ( configs ) => {
 			}
 			const decorations = [],
 				config = state.facet( facet ),
-				{ afterCursor, brackets, renderMatch } = config;
+				{ afterCursor, brackets, renderMatch, exclude } = config;
 			for ( const { empty, head } of state.selection.ranges ) {
 				if ( !empty ) {
 					continue;
 				}
 				const tree = syntaxTree( state ),
-					match = matchBrackets( state, head, -1, config ) ||
+					excluded = exclude && exclude( state, head ),
+					match = !excluded && (
+						matchBrackets( state, head, -1, config ) ||
 						head > 0 && matchBrackets( state, head - 1, 1, config ) ||
 						afterCursor && (
 							matchBrackets( state, head, 1, config ) ||
 							head < state.doc.length && matchBrackets( state, head + 1, -1, config )
-						) ||
-						findSurroundingBrackets( tree.resolveInner( head, -1 ), head, brackets ) ||
-						afterCursor &&
-						findSurroundingBrackets( tree.resolveInner( head, 1 ), head, brackets ) ||
-						findSurroundingPlainBrackets( state, head, config );
+						)
+					) ||
+					findSurroundingBrackets( tree.resolveInner( head, -1 ), head, brackets ) ||
+					afterCursor &&
+					findSurroundingBrackets( tree.resolveInner( head, 1 ), head, brackets ) ||
+					!excluded && findSurroundingPlainBrackets( state, head, config );
 				if ( match ) {
 					decorations.push( ...renderMatch( match, state ) );
 				}
@@ -156,12 +163,13 @@ module.exports = ( configs ) => {
 		extension,
 		EditorView.domEventHandlers( {
 			dblclick( e, view ) {
-				const pos = view.posAtCoords( e );
-				if ( pos === null ) {
+				const pos = view.posAtCoords( e ),
+					{ state } = view,
+					config = state.facet( facet );
+				if ( pos === null || config.exclude && config.exclude( state, pos ) ) {
 					return false;
 				}
-				const { state } = view,
-					selection = selectMatchingBrackets( state, pos, state.facet( facet ) );
+				const selection = selectMatchingBrackets( state, pos, config );
 				if ( selection ) {
 					view.dispatch( { selection } );
 					return true;
