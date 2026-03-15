@@ -204,7 +204,20 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 				this.searchPanelKeymap.regexp,
 				this.searchPanelKeymap.wholeWord,
 				this.searchPanelKeymap.replaceFocus
-			] )
+			] ),
+			EditorView.scrollHandler.of( ( view, { head }, options ) => {
+				if ( options.x === 'nearest' && options.y === 'center' ) {
+					// T417784: prevent page scrolling when centering the match vertically.
+					const { scrollDOM } = view,
+						{ clientHeight } = scrollDOM,
+						{ top, height } = view.lineBlockAt( head );
+					if ( height < clientHeight - options.yMargin * 2 ) {
+						scrollDOM.scrollTop = top + ( height - clientHeight ) / 2;
+					}
+					options.y = 'nearest';
+				}
+				return false;
+			} )
 		];
 	}
 
@@ -581,6 +594,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 
 	/**
 	 * Update the right padding of the search input so the results text doesn't overlap with the input text.
+	 *
 	 * @private
 	 */
 	updateSearchInputPadding() {
