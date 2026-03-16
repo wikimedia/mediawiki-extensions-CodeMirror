@@ -70,6 +70,7 @@
 				"codeFolding": true,
 				"autocomplete": true,
 				"openLinks": true,
+				"closeTags": false,
 				"whitespace": false,
 				"trailingWhitespace": false,
 				"lint": [
@@ -296,6 +297,7 @@
 				"codemirror-prefs-autofocus",
 				"codemirror-prefs-bracketmatching",
 				"codemirror-prefs-closebrackets",
+				"codemirror-prefs-closetags",
 				"codemirror-prefs-codefolding",
 				"codemirror-prefs-foldallrefs",
 				"codemirror-prefs-help",
@@ -379,6 +381,7 @@
 				"modes/mediawiki/codemirror.mediawiki.matchTag.js",
 				"modes/mediawiki/codemirror.mediawiki.autocomplete.js",
 				"modes/mediawiki/codemirror.mediawiki.openLinks.js",
+				"modes/mediawiki/codemirror.mediawiki.closeTags.js",
 				"modes/mediawiki/codemirror.mediawiki.keymap.js",
 				"modes/mediawiki/codemirror.mediawiki.lint.js",
 				"modes/codemirror.mode.js",

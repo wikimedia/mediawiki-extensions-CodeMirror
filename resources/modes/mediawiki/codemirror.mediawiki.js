@@ -14,6 +14,7 @@ const bidiIsolationExtension = require( './codemirror.mediawiki.bidiIsolation.js
 const { codeFoldingExtension, foldAllRefs } = require( './codemirror.mediawiki.codeFolding.js' );
 const { autocompleteExtension, completionSource } = require( './codemirror.mediawiki.autocomplete.js' );
 const openLinksExtension = require( './codemirror.mediawiki.openLinks.js' );
+const closeTagsExtension = require( './codemirror.mediawiki.closeTags.js' );
 const mwKeymap = require( './codemirror.mediawiki.keymap.js' );
 const { lintSource, lintApi } = require( './codemirror.mediawiki.lint.js' );
 
@@ -1648,6 +1649,7 @@ let handler;
  * @param {boolean} [config.autocomplete=true] Enable autocompletion.
  * @param {boolean} [config.openLinks=true] Enable opening of links.
  * @param {boolean} [config.highlightRefs=true] Highlight references.
+ * @param {boolean} [config.closeTags=true] Enable auto-closing of HTML tags.
  * @param {string[]} [config.languageVariants] Language variants that should be supported.
  * @return {CodeMirrorMediaWiki|LanguageSupport}
  * @stable to call
@@ -1711,6 +1713,9 @@ const mediawiki = ( config = { bidiIsolation: false } ) => {
 		}
 		if ( config.openLinks !== false ) {
 			cm.preferences.registerExtension( 'openLinks', openLinksExtension, cm.view );
+		}
+		if ( config.closeTags !== false ) {
+			cm.preferences.registerExtension( 'closeTags', closeTagsExtension, cm.view );
 		}
 		if ( config.bidiIsolation ) {
 			cm.preferences.registerExtension( 'bidiIsolation', bidiIsolationExtension, cm.view );

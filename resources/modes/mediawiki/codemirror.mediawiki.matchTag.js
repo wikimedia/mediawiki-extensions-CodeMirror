@@ -1,7 +1,6 @@
 const {
 	EditorState,
-	SyntaxNode,
-	ensureSyntaxTree
+	SyntaxNode
 } = require( 'ext.CodeMirror.v6.lib' );
 const mwModeConfig = require( './codemirror.mediawiki.config.js' );
 
@@ -100,6 +99,9 @@ class Tag {
  * @private
  */
 const getTag = ( state, node ) => {
+	if ( !isTag( node ) ) {
+		return null;
+	}
 	const names = node.name.split( '_' ),
 		type = [ 'extTagAttribute', 'extTagAttributeValue', 'extTagName', 'extTagBracket' ]
 			.some( ( t ) => names.includes( mwModeConfig.tags[ t ] ) ) ? 'ext' : 'html';
@@ -152,34 +154,4 @@ const searchTag = ( state, origin ) => {
 	return null;
 };
 
-/**
- * Get result of matching tags
- *
- * @param {EditorState} state
- * @param {number} pos
- * @return {{matched: boolean, start: Tag, end: Tag}|{matched: boolean, start: Tag}}
- * @private
- */
-const matchTag = ( state, pos ) => {
-	const tree = ensureSyntaxTree( state, pos );
-	if ( !tree ) {
-		return null;
-	}
-	let node = tree.resolve( pos, -1 );
-	if ( !isTag( node ) ) {
-		node = tree.resolve( pos, 1 );
-		if ( !isTag( node ) ) {
-			return null;
-		}
-	}
-	const start = getTag( state, node );
-	if ( !start ) {
-		return null;
-	} else if ( start.selfClosing ) {
-		return { matched: true, start };
-	}
-	const end = searchTag( state, start );
-	return end ? { matched: true, start, end } : { matched: false, start };
-};
-
-module.exports = { getTag, matchTag };
+module.exports = { getTag, searchTag };

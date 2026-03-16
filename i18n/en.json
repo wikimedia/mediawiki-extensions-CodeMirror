@@ -22,6 +22,7 @@
 	"codemirror-prefs-codefolding": "Enable code folding",
 	"codemirror-prefs-autocomplete": "Enable autocompletion",
 	"codemirror-prefs-openlinks": "Open links with modifier key + click",
+	"codemirror-prefs-closetags": "Enable auto-closing HTML tags",
 	"codemirror-prefs-bidiisolation": "Isolate bidirectional text",
 	"codemirror-prefs-bracketmatching": "Enable bracket matching",
 	"codemirror-prefs-closebrackets": "Enable auto-closing brackets",

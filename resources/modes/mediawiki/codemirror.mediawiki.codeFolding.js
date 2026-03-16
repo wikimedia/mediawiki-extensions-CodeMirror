@@ -18,7 +18,7 @@ const {
 	unfoldEffect
 } = require( 'ext.CodeMirror.v6.lib' );
 const mwModeConfig = require( './codemirror.mediawiki.config.js' );
-const { getTag, matchTag } = require( './codemirror.mediawiki.matchTag.js' );
+const { getTag, searchTag } = require( './codemirror.mediawiki.matchTag.js' );
 
 const updateSelection = ( pos, { to } ) => Math.max( pos, to ),
 	updateAll = ( pos, { from, to } ) => from <= pos && to > pos ? to : pos;
@@ -155,11 +155,11 @@ const foldable = ( state, posOrNode, tree, refOnly ) => {
 				state.sliceDoc( nextSibling.from, nextSibling.from + 2 ) === '</' ) ) {
 				( { nextSibling } = nextSibling );
 			}
+			const next = nextSibling && nextSibling.nextSibling,
+				closing = next && getTag( state, next );
 			// The closing bracket of the extension tag
-			if ( nextSibling &&
-				( !refOnly || nextSibling.nextSibling && getTag( state, nextSibling.nextSibling ).name === 'ref' )
-			) {
-				return { from: matchTag( state, nextSibling.to ).end.to, to: nextSibling.from };
+			if ( closing && ( !refOnly || closing.name === 'ref' ) ) {
+				return { from: searchTag( state, closing ).to, to: nextSibling.from };
 			}
 		}
 		return false;

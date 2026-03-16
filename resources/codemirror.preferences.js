@@ -154,6 +154,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 				'codeFolding',
 				'bracketMatching',
 				'closeBrackets',
+				'closeTags',
 				'lint'
 			]
 		};
