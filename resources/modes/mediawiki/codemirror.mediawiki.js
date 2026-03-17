@@ -1505,9 +1505,11 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 					stream.string === oldToken.string
 				) {
 					const { pos, string, state: other, style } = readyTokens[ 0 ];
-					delete other.bold;
-					delete other.italic;
-					Object.assign( state, other );
+					for ( const key in other ) {
+						if ( key !== 'bold' && key !== 'italic' ) {
+							state[ key ] = other[ key ];
+						}
+					}
 					if (
 						!( state.extName && state.extMode ) &&
 						state.nLink === 0 &&
