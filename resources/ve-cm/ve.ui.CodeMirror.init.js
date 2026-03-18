@@ -51,11 +51,11 @@ if ( shouldUseV6 ) {
 		} );
 	} );
 } else {
+	// Don't log deprecation warnings from Extension:CodeMirror itself (T373720).
+	mw.config.set( 'cm5-from-extension', true );
 	// Hack to ensure ext.CodeMirror.visualEditor is loaded before VE initializes (T374072).
 	// ve.loadModules is only fired on desktop articles, which for CM5 is what we want.
-	mw.config.set( 'cm5-from-extension', true );
 	mw.hook( 've.loadModules' ).add( ( addPlugin ) => {
-		// Don't log deprecation warnings from Extension:CodeMirror itself (T373720).
 		addPlugin( () => mw.loader.using( 'ext.CodeMirror.visualEditor' ) );
 	} );
 }
