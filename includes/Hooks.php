@@ -243,6 +243,16 @@ class Hooks implements
 			$modules = [];
 		}
 
+		// Load modules from CodeMirrorPluginModules extension attribute.
+		$pluginModules = ExtensionRegistry::getInstance()->getAttribute( 'CodeMirrorPluginModules' ) ?? [];
+		foreach ( $pluginModules as $module ) {
+			// TODO: To be removed after CM5 is retired.
+			if ( $module === 'ext.CodeMirror.addons' ) {
+				continue;
+			}
+			$modules[] = $module;
+		}
+
 		if ( $useCodeMirror ) {
 			// Pre-load modules if we know we're going to need them.
 			$out->addModules( $modules );
