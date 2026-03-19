@@ -130,6 +130,25 @@ describe( 'MediaWiki autocomplete', () => {
 		} );
 	} );
 
+	it( 'closing HTML tag', () => {
+		cm.view.dispatch( {
+			changes: { from: 0, to: cm.view.state.doc.length, insert: '<div><p></' },
+			selection: { anchor: 10, head: 10 }
+		} );
+		expect( source( createCompletionContext() ) ).toEqual( {
+			from: 10,
+			options: [
+				...Object.keys( mwModeConfig.permittedHtmlTags )
+					.filter( ( label ) => !( label in mwModeConfig.implicitlyClosedHtmlTags ) )
+					.map( ( label ) => Object.assign(
+						{ label, type: 'type', apply: `${ label }>` },
+						label === 'p' ? { boost: 99 } : {}
+					) )
+			],
+			validFor: /^[a-z\d]*$/i
+		} );
+	} );
+
 	it( 'opening tag', () => {
 		cm.view.dispatch( {
 			changes: { from: 0, to: cm.view.state.doc.length, insert: '<now' },

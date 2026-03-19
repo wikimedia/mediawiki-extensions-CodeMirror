@@ -235,14 +235,21 @@ const completionSource = ( mode ) => ( context ) => {
 		if ( mt && mt.to - mt.from > 1 ) {
 			const validFor = /^[a-z\d]*$/i;
 			if ( mt.text[ 1 ] === '/' ) {
-				const extTag = extTags[ extTags.length - 1 ],
+				const mt2 = context.matchBefore( /<[a-z\d]+(?:\s[^<>]*)?>(?:(?!<\/?[a-z]).)*<\/[a-z\d]*$/i ),
+					target = mt2 && /^<([a-z\d]+)/i.exec( mt2.text )[ 1 ].toLowerCase(),
+					extTag = extTags[ extTags.length - 1 ],
 					closed = /^\s*>/.test( state.sliceDoc( pos ) ),
 					options = [
 						...mode.htmlTags.filter( ( { label } ) => !(
 							label in mwModeConfig.implicitlyClosedHtmlTags
 						) ),
 						...extTag ? [ { type: 'type', label: extTag, boost: 50 } ] : []
-					];
+					],
+					i = !!target && ( target in mwModeConfig.permittedHtmlTags ) &&
+						options.findIndex( ( { label } ) => label === target );
+				if ( i !== false && i !== -1 ) {
+					options.splice( i, 1, Object.assign( { boost: 99 }, options[ i ] ) );
+				}
 				return {
 					from: mt.from + 2,
 					options: closed ? options : options.map( ( option ) => Object.assign( {
