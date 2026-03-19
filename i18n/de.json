@@ -27,6 +27,7 @@
 	"codemirror-prefs-codefolding": "Code-Faltung aktivieren",
 	"codemirror-prefs-autocomplete": "Autovervollständigung aktivieren",
 	"codemirror-prefs-openlinks": "Öffnen von Links per Hilfstaste + Klick",
+	"codemirror-prefs-closetags": "Automatisches Schließen von HTML-Tags aktivieren",
 	"codemirror-prefs-bidiisolation": "Bidirektionalen Text isolieren",
 	"codemirror-prefs-bracketmatching": "Klammernübereinstimmung aktivieren",
 	"codemirror-prefs-closebrackets": "Automatisch schließende Klammern aktivieren",
