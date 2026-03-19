@@ -4,6 +4,7 @@ const {
 	EditorState,
 	EditorView,
 	Extension,
+	Facet,
 	MatchResult,
 	SyntaxNode,
 	bracketMatching,
@@ -116,6 +117,73 @@ const selectMatchingBrackets = (
 	trySelectMatchingBrackets( state, pos - 1, 1, config, true );
 
 /**
+ * Find matching brackets in all possible directions.
+ *
+ * @param {EditorState} state
+ * @param {number} pos
+ * @param {Config} config
+ * @return {MatchResult|false|null}
+ * @internal
+ * @private
+ */
+const tryMatchBrackets = ( state, pos, config ) => matchBrackets( state, pos, -1, config ) ||
+	pos > 0 && matchBrackets( state, pos - 1, 1, config ) ||
+	matchBrackets( state, pos, 1, config ) ||
+	pos < state.doc.length && matchBrackets( state, pos + 1, -1, config );
+
+/**
+ * Select the whole line block containing the matching brackets.
+ *
+ * @param {EditorState} state
+ * @param {number} pos
+ * @param {Config} config
+ * @return {Object<number>|false}
+ * @internal
+ * @private
+ */
+const selectLineBlock = ( state, pos, config ) => {
+	const { doc } = state,
+		matching = tryMatchBrackets( state, pos, config );
+	if ( !matching || !matching.matched ) {
+		return false;
+	}
+	const { start, end } = matching,
+		a = doc.lineAt( start.from ),
+		b = doc.lineAt( end.from ),
+		dir = a.from < b.from;
+	return {
+		anchor: ( dir ? a : b ).from,
+		head: Math.min( doc.length, ( dir ? b : a ).to + 1 )
+	};
+};
+
+/**
+ * Click handler that selects matching brackets on double/triple click.
+ *
+ * @param {MouseEvent} e
+ * @param {EditorView} view
+ * @param {Facet} facet
+ * @param {Function} select
+ * @return {boolean}
+ * @internal
+ * @private
+ */
+const clickHandler = ( e, view, facet, select ) => {
+	const pos = view.posAtCoords( e ),
+		{ state } = view,
+		config = state.facet( facet );
+	if ( pos === null || config.exclude && config.exclude( state, pos ) ) {
+		return false;
+	}
+	const selection = select( state, pos, config );
+	if ( selection ) {
+		view.dispatch( { selection } );
+		return true;
+	}
+	return false;
+};
+
+/**
  * Highlight surrounding brackets in addition to matching brackets.
  *
  * @param {Config} configs
@@ -133,23 +201,15 @@ module.exports = ( configs ) => {
 			}
 			const decorations = [],
 				config = state.facet( facet ),
-				{ afterCursor, brackets, renderMatch, exclude } = config;
+				{ brackets, renderMatch, exclude } = config;
 			for ( const { empty, head } of state.selection.ranges ) {
 				if ( !empty ) {
 					continue;
 				}
 				const tree = syntaxTree( state ),
 					excluded = exclude && exclude( state, head ),
-					match = !excluded && (
-						matchBrackets( state, head, -1, config ) ||
-						head > 0 && matchBrackets( state, head - 1, 1, config ) ||
-						afterCursor && (
-							matchBrackets( state, head, 1, config ) ||
-							head < state.doc.length && matchBrackets( state, head + 1, -1, config )
-						)
-					) ||
+					match = !excluded && tryMatchBrackets( state, head, config ) ||
 					findSurroundingBrackets( tree.resolveInner( head, -1 ), head, brackets ) ||
-					afterCursor &&
 					findSurroundingBrackets( tree.resolveInner( head, 1 ), head, brackets ) ||
 					!excluded && findSurroundingPlainBrackets( state, head, config );
 				if ( match ) {
@@ -162,19 +222,11 @@ module.exports = ( configs ) => {
 	return [
 		extension,
 		EditorView.domEventHandlers( {
+			click( e, view ) {
+				return e.detail === 3 && clickHandler( e, view, facet, selectLineBlock );
+			},
 			dblclick( e, view ) {
-				const pos = view.posAtCoords( e ),
-					{ state } = view,
-					config = state.facet( facet );
-				if ( pos === null || config.exclude && config.exclude( state, pos ) ) {
-					return false;
-				}
-				const selection = selectMatchingBrackets( state, pos, config );
-				if ( selection ) {
-					view.dispatch( { selection } );
-					return true;
-				}
-				return false;
+				return clickHandler( e, view, facet, selectMatchingBrackets );
 			}
 		} )
 	];
