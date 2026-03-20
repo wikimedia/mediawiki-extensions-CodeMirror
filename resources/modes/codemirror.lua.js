@@ -385,6 +385,32 @@ const markDocTag = ( tree, visibleRanges, state ) => {
  */
 class CodeMirrorLua extends CodeMirrorMode {
 
+	/**
+	 * @param {string} name
+	 * @internal
+	 * @hideconstructor
+	 */
+	constructor( name ) {
+		super( name );
+
+		// Update for Scribunto globals
+		this.worker.onload( () => {
+			this.worker.setConfig( {
+				read_globals: { // eslint-disable-line camelcase
+					mw: {
+						fields: {
+							site: {
+								fields: {
+									wikiId: {}
+								}
+							}
+						}
+					}
+				}
+			} );
+		} );
+	}
+
 	/** @inheritDoc */
 	get language() {
 		lua.languageData.autocomplete = ( ( context ) => {
