@@ -21,6 +21,7 @@
 	"codemirror-prefs-codefolding": "Dayakan pelipatan kod",
 	"codemirror-prefs-autocomplete": "Dayakan autolengkap",
 	"codemirror-prefs-openlinks": "Buka pautan dengan kunci pengubah suai + klik",
+	"codemirror-prefs-closetags": "Dayakan tag HTML tutup automatik",
 	"codemirror-prefs-bidiisolation": "Asingkan teks dwiarah",
 	"codemirror-prefs-bracketmatching": "Dayakan padanan kurungan",
 	"codemirror-prefs-closebrackets": "Dayakan kurungan tutup automatik",

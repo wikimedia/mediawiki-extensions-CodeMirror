@@ -22,6 +22,7 @@
 	"codemirror-prefs-codefolding": "Activar o pregamento de código",
 	"codemirror-prefs-autocomplete": "Activar o autocompletado",
 	"codemirror-prefs-openlinks": "Abrir as ligazóns coa tecla modificadora + clic",
+	"codemirror-prefs-closetags": "Activar as etiquetas HTML automáticas de peche",
 	"codemirror-prefs-bidiisolation": "Illar o texto bidireccional",
 	"codemirror-prefs-bracketmatching": "Activar a coincidencia de corchetes",
 	"codemirror-prefs-closebrackets": "Activar o peche automático de corchetes",
