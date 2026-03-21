@@ -81,6 +81,8 @@ class Hooks implements
 	public const OPTION_BETA_FEATURE = 'codemirror-beta-feature-enable';
 	public const OPTION_USE_WIKIEDITOR = 'usebetatoolbar';
 
+	public const NO_PRIMARY_TEXTAREA = 0;
+
 	public function __construct(
 		Config $config,
 		HookContainer $hookContainer,

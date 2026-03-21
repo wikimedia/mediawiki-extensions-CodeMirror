@@ -54,7 +54,11 @@ async function init() {
 			initChildren( cm );
 		} );
 	} else {
-		const textarea = document.querySelector( mw.config.get( 'cmTextarea' ) );
+		const cmTextarea = mw.config.get( 'cmTextarea' );
+		const textarea = cmTextarea ?
+			document.querySelector( cmTextarea ) :
+			// This textarea is never added to the DOM.
+			document.createElement( 'textarea' );
 		cm = new CodeMirror( textarea, langSupport );
 		cm.initialize();
 		initChildren( cm );
@@ -75,10 +79,11 @@ function initChildren( primaryInstance ) {
 	const childTextareas = mw.config.get( 'cmChildTextareas', [] );
 
 	childTextareas.forEach( ( textarea ) => {
-		const childTextarea = document.querySelector( textarea );
-		if ( childTextarea ) {
+		// The selector may match zero or more textareas.
+		// We want to initialize a child instance for each of them.
+		for ( const childTextarea of document.querySelectorAll( textarea ) ) {
 			// eslint-disable-next-line new-cap
-			const cmChild = new primaryInstance.child( textarea, primaryInstance );
+			const cmChild = new primaryInstance.child( childTextarea, primaryInstance );
 			cmChild.initialize();
 		}
 	} );

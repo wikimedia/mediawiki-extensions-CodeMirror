@@ -704,6 +704,13 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 */
 	toggle( view, force ) {
 		this.view = view;
+
+		// If there is no primary CodeMirror instance (e.g. on Special:SecurePoll/translate).
+		if ( !view.dom.isConnected ) {
+			this.showPreferencesDialog( view );
+			return true;
+		}
+
 		const effects = [];
 		let bool;
 

@@ -4,6 +4,7 @@ const { javascript } = require( '../../resources/modes/codemirror.mode.exporter.
 
 function getCodeMirrorWikiEditor( readOnly = false, langSupport = [] ) {
 	const form = document.createElement( 'form' );
+	document.body.appendChild( form );
 	const textarea = document.createElement( 'textarea' );
 	textarea.readOnly = readOnly;
 	form.appendChild( textarea );
@@ -267,6 +268,7 @@ describe( 'logEditFeature', () => {
 		const cmWe = getCodeMirrorWikiEditor();
 		cmWe.initialize();
 		const spy = jest.spyOn( cmWe, 'logEditFeature' );
+		expect( cmWe.view.dom.isConnected ).toBe( true );
 		cmWe.preferences.toggle( cmWe.view, true );
 		expect( spy ).toHaveBeenCalledWith( 'prefs-display' );
 	} );
