@@ -545,6 +545,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 		if ( !!this.searchQuery.search && this.searchQuery.regexp && !this.searchQuery.valid ) {
 			this.searchInputWrapper.classList.add( 'cdx-text-input--status-error' );
 			this.findResultsText.textContent = mw.msg( 'codemirror-regexp-invalid' );
+			this.updateSearchInputPadding();
 			return;
 		}
 		const cursor = query ?
@@ -557,6 +558,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 		// Remove messaging if there's no search query.
 		if ( !this.searchQuery.search ) {
 			this.findResultsText.textContent = '';
+			this.searchInput.style.paddingInlineEnd = '';
 			return;
 		}
 
@@ -574,6 +576,20 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 		this.findResultsText.textContent = count ?
 			mw.msg( 'codemirror-find-results', current, count ) :
 			'';
+		this.updateSearchInputPadding();
+	}
+
+	/**
+	 * Update the right padding of the search input so the results text doesn't overlap with the input text.
+	 * @private
+	 */
+	updateSearchInputPadding() {
+		if ( this.findResultsText.textContent ) {
+			const resultsTextWidth = this.findResultsText.getBoundingClientRect().width;
+			this.searchInput.style.paddingInlineEnd = `${ resultsTextWidth + 20 }px`;
+		} else {
+			this.searchInput.style.paddingInlineEnd = '';
+		}
 	}
 
 	/**
