@@ -41,7 +41,7 @@ class JavaScriptValidatorTest extends MediaWikiIntegrationTestCase {
 		$this->assertEquals( $expected, $this->validator->requiresValidation( Title::newFromText( $pageName ) ) );
 	}
 
-	public function provideTitles() {
+	public static function provideTitles() {
 		return [
 			[ 'MediaWiki:Common.js', true ],
 			[ 'MediaWiki:Group-sysop.js', true ],

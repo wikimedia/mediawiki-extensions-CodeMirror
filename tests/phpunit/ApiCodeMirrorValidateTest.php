@@ -39,7 +39,7 @@ class ApiCodeMirrorValidateTest extends ApiTestCase {
 		}
 	}
 
-	public function provideInputs(): array {
+	public static function provideInputs(): array {
 		return [
 			// Valid JavaScript
 			[ 'javascript', 'let x = 4;', true ],
