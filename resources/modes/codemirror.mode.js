@@ -1,5 +1,9 @@
 const {
+	defaultHighlightStyle,
+	oneDarkHighlightStyle,
+	tags,
 	Config,
+	EditorView,
 	Extension,
 	Language,
 	LanguageSupport,
@@ -108,6 +112,43 @@ class CodeMirrorMode {
 	 */
 	get support() {
 		return [];
+	}
+
+	/**
+	 * This extension adds extra highlighting styles for JavaScript/Lua.
+	 *
+	 * @type {Extension}
+	 * @protected
+	 * @internal
+	 */
+	get theme() {
+		const getColor = ( style, target ) => style.specs.find(
+			( { tag } ) => tag === target || Array.isArray( tag ) && tag.includes( target )
+		).color;
+		const doctag = tags.labelName;
+		const doctagType = tags.typeName;
+		const doctagVar = tags.special( tags.variableName );
+
+		return EditorView.baseTheme( {
+			'&light .cm-doctag > *': {
+				color: getColor( defaultHighlightStyle, doctag )
+			},
+			'&dark .cm-doctag > *': {
+				color: getColor( oneDarkHighlightStyle, doctag )
+			},
+			'&light .cm-doctag-type > *': {
+				color: getColor( defaultHighlightStyle, doctagType )
+			},
+			'&dark .cm-doctag-type > *': {
+				color: getColor( oneDarkHighlightStyle, doctagType )
+			},
+			'&light .cm-doctag-var > *': {
+				color: getColor( defaultHighlightStyle, doctagVar )
+			},
+			'&dark .cm-doctag-var > *': {
+				color: getColor( oneDarkHighlightStyle, doctagVar )
+			}
+		} );
 	}
 }
 

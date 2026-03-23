@@ -410,6 +410,7 @@
 			"packageFiles": [
 				"modes/codemirror.mode.exporter.js",
 				"modes/codemirror.mode.js",
+				"modes/codemirror.doctag.js",
 				"modes/codemirror.javascript.js",
 				"modes/codemirror.json.js",
 				"modes/json/codemirror.json.lint.js",

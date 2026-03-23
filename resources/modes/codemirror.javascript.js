@@ -1,4 +1,4 @@
-const { syntaxTree, Decoration, ViewPlugin } = require( 'ext.CodeMirror.v6.lib' );
+const { syntaxTree, Decoration } = require( 'ext.CodeMirror.v6.lib' );
 const {
 	localCompletionSource,
 	javascript,
@@ -6,6 +6,7 @@ const {
 	scopeCompletionSource
 } = require( '../lib/codemirror6.bundle.modes.js' );
 const CodeMirrorMode = require( './codemirror.mode.js' );
+const { doctag, markDocTagType, getViewPlugin } = require( './codemirror.doctag.js' );
 const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
 const getCodeMirrorValidator = require( '../codemirror.validate.js' );
 
@@ -76,7 +77,8 @@ const builtin = new Set( [
 	'WeakSet'
 ] );
 
-const globals = Decoration.mark( { class: 'cm-globals' } );
+const globals = Decoration.mark( { class: 'cm-globals' } ),
+	doctagName = Decoration.mark( { class: 'cm-doctag-var' } );
 
 const markGlobals = ( tree, visibleRanges, state ) => {
 	const decorations = [];
@@ -95,6 +97,30 @@ const markGlobals = ( tree, visibleRanges, state ) => {
 						!completions.options.some( ( { label } ) => label === name )
 					) {
 						decorations.push( globals.range( f, t ) );
+					}
+				} else if ( type.is( 'BlockComment' ) && /^\/\*{2}(?!\*)/.test( name ) ) {
+					// JSDoc annotations
+					const comment = name.slice( 2 ),
+						pos = f + 2,
+						re = /(^[ \t]*\*\s*)(@[a-z]+)(\s+\{)?|\{(@[a-z]+)/gim;
+					let mt = re.exec( comment );
+					while ( mt ) {
+						if ( mt[ 4 ] ) {
+							// Inline tag, e.g. {@link}
+							decorations.push(
+								doctag.range( pos + mt.index + 1, pos + mt.index + mt[ 0 ].length )
+							);
+						} else {
+							const index = markDocTagType( decorations, pos, mt ),
+								m = /(^\s+)([a-z_]\w*)\s+-/i.exec( comment.slice( index ) );
+							if ( m ) {
+								// JSDoc name annotation, e.g. @param {string} name - description
+								const start = pos + index + m[ 1 ].length,
+									end = start + m[ 2 ].length;
+								decorations.push( doctagName.range( start, end ) );
+							}
+						}
+						mt = re.exec( comment );
 					}
 				}
 			}
@@ -203,24 +229,10 @@ class CodeMirrorJavaScript extends CodeMirrorMode {
 	/** @inheritDoc */
 	get support() {
 		return [
+			this.theme,
 			javascript().support,
 			javascriptLanguage.data.of( { autocomplete: scopeCompletionSource( window ) } ),
-			ViewPlugin.fromClass( class {
-				constructor( { state, visibleRanges } ) {
-					this.tree = syntaxTree( state );
-					this.decorations = markGlobals( this.tree, visibleRanges, state );
-				}
-
-				update( { docChanged, viewportChanged, state, view: { visibleRanges } } ) {
-					const tree = syntaxTree( state );
-					if ( docChanged || viewportChanged || tree !== this.tree ) {
-						this.tree = tree;
-						this.decorations = markGlobals( tree, visibleRanges, state );
-					}
-				}
-			}, {
-				decorations: ( v ) => v.decorations
-			} )
+			getViewPlugin( markGlobals )
 		];
 	}
 }

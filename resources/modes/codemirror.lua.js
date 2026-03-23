@@ -5,11 +5,13 @@ const {
 	syntaxHighlighting,
 	syntaxTree,
 	tags,
+	Decoration,
 	HighlightStyle,
 	StreamLanguage
 } = require( 'ext.CodeMirror.v6.lib' );
 const { lua } = require( '../lib/codemirror6.bundle.modes.js' );
 const CodeMirrorMode = require( './codemirror.mode.js' );
+const { markDocTagType, getViewPlugin } = require( './codemirror.doctag.js' );
 const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
 const getCodeMirrorValidator = require( '../codemirror.validate.js' );
 
@@ -326,6 +328,49 @@ const map = {
 	],
 	types = new Set( [ 'variableName', 'variableName.standard', 'keyword' ] );
 
+const markDocTag = ( tree, visibleRanges, state ) => {
+	const decorations = [];
+	for ( const { from, to } of visibleRanges ) {
+		let node = tree.resolveInner( from, 1 );
+		while ( node && node.from < to ) {
+			if ( node.name === 'comment' ) {
+				const firstLine = state.sliceDoc( node.from, node.to ),
+					/** Whether the comment is a LDoc block comment. */
+					block = firstLine.startsWith( '--[[--' );
+				if (
+					block ||
+					firstLine.startsWith( '---' ) &&
+					// Exclude comments like `---- (text) ----`.
+					!( firstLine.endsWith( '--' ) && /[^-]/.test( firstLine ) )
+				) {
+					while ( node.name === 'comment' ) {
+						const comment = state.sliceDoc( node.from, node.to ),
+							mt = /(^\s*(?:-{2,}\s*)?)(@[a-z]+)(\s+\{)?/i.exec( comment );
+						if ( mt ) {
+							markDocTagType( decorations, node.from, mt, 1 );
+						}
+						const { nextSibling } = node;
+						if ( !nextSibling ) {
+							break;
+						} else if ( block ) {
+							// End of block comment.
+							if ( comment.endsWith( ']]' ) ) {
+								break;
+							}
+						} else if ( state.sliceDoc( node.to, nextSibling.from ).split( '\n', 3 ).length > 2 ) {
+							// Non-consecutive line comments.
+							break;
+						}
+						node = nextSibling;
+					}
+				}
+			}
+			node = node.nextSibling;
+		}
+	}
+	return Decoration.set( decorations );
+};
+
 /**
  * Lua language support for CodeMirror.
  *
@@ -497,6 +542,7 @@ class CodeMirrorLua extends CodeMirrorMode {
 	/** @inheritDoc */
 	get support() {
 		return [
+			this.theme,
 			syntaxHighlighting( HighlightStyle.define(
 				[
 					// Include default highlight styles for other tokens
@@ -527,7 +573,8 @@ class CodeMirrorLua extends CodeMirrorMode {
 					}
 				}
 				return empty || j === number ? null : { from, to: doc.line( j ).to };
-			} )
+			} ),
+			getViewPlugin( markDocTag )
 		];
 	}
 }
