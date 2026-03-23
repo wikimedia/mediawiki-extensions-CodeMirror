@@ -35,6 +35,7 @@
 	"codemirror-prefs-codefolding": "Activer le masquage/démasquage de code",
 	"codemirror-prefs-autocomplete": "Activer la saisie semi-automatique",
 	"codemirror-prefs-openlinks": "Activer les liens avec la clé du modificateur + clic",
+	"codemirror-prefs-closetags": "Activer la fermeture automatique des balises HTML",
 	"codemirror-prefs-bidiisolation": "Isoler le texte bidirectionnel",
 	"codemirror-prefs-bracketmatching": "Activer la correspondance des parenthèses",
 	"codemirror-prefs-closebrackets": "Activer la fermeture automatique des crochets",

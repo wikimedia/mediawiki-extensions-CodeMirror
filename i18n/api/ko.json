@@ -4,5 +4,6 @@
 			"Ykhwong"
 		]
 	},
+	"apihelp-codemirror-validate-summary": "지정된 내용의 유효성 오류를 검사합니다",
 	"apihelp-codemirror-validate-param-contentmodel": "콘텐츠 모델"
 }

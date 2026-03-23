@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Eduardoaddad"
+		]
+	},
+	"apihelp-codemirror-validate-summary": "Verifique se há erros de validação no conteúdo fornecido",
+	"apihelp-codemirror-validate-param-contentmodel": "Modelo de conteúdo"
+}
