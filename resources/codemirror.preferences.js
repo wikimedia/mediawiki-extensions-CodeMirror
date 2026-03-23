@@ -315,12 +315,14 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * This is useful for integrations that need to disable incompatible extensions.
 	 *
 	 * @param {string} prefName
-	 * @param {EditorView} view
+	 * @param {EditorView} [view]
 	 * @param {boolean} [force=false] Force the extension to be enabled or disabled.
 	 * @stable to call
 	 */
 	lockPreference( prefName, view, force = false ) {
-		this.extensionRegistry.toggle( prefName, view, force );
+		if ( view ) {
+			this.extensionRegistry.toggle( prefName, view, force );
+		}
 		this.preferences[ prefName ] = force;
 		this.disabledPreferences.add( prefName );
 		// Ensure any child instances also have the preference disabled.
