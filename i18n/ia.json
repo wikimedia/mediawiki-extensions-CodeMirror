@@ -20,6 +20,7 @@
 	"codemirror-prefs-codefolding": "Activar le contraction/expansion de codice",
 	"codemirror-prefs-autocomplete": "Activar le autocompletamento",
 	"codemirror-prefs-openlinks": "Aperir ligamines con clave modificator + clic",
+	"codemirror-prefs-closetags": "Activar le clausura automatic de etiquettas HTML",
 	"codemirror-prefs-bidiisolation": "Isolar texto bidirectional",
 	"codemirror-prefs-bracketmatching": "Mitter in evidentia le parentheses correspondente",
 	"codemirror-prefs-closebrackets": "Clauder automaticamente le parentheses",
