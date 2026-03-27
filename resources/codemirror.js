@@ -119,8 +119,10 @@ class CodeMirror {
 		 * The extended configuration for bracket matching.
 		 *
 		 * @type {Config|undefined}
+		 * @private
 		 */
-		this.bracketMatchingConfig = langSupport.bracketMatchingConfig;
+		// eslint-disable-next-line no-underscore-dangle
+		this._bracketMatchingConfig = langSupport.bracketMatchingConfig;
 		/**
 		 * Language support and its extension(s).
 		 *
@@ -246,6 +248,36 @@ class CodeMirror {
 			selectionEnd: null,
 			scrollTop: null
 		};
+	}
+
+	/**
+	 * The extended configuration for bracket matching.
+	 * Setting this will update the
+	 * {@link CodeMirror#bracketMatchingExtension bracket matching extension}
+	 *
+	 * @type {Config|undefined}
+	 *
+	 * @example
+	 * // Highlight matching angle brackets in addition to the default.
+	 * mw.hook( 'ext.CodeMirror.ready' ).add( ( cm ) => {
+	 *   const config = cm.bracketMatchingConfig || {};
+	 *   config.brackets = ( config.brackets || '()[]{}' ) + '<>';
+	 *   cm.bracketMatchingConfig = config;
+	 * } );
+	 *
+	 */
+	get bracketMatchingConfig() {
+		return this._bracketMatchingConfig; // eslint-disable-line no-underscore-dangle
+	}
+
+	set bracketMatchingConfig( config ) {
+		this._bracketMatchingConfig = config; // eslint-disable-line no-underscore-dangle
+		if ( this.extensionRegistry.isRegistered( 'bracketMatching', this.view ) ) {
+			this.extensionRegistry.extensions.bracketMatching = this.bracketMatchingExtension;
+			if ( this.extensionRegistry.isEnabled( 'bracketMatching', this.view ) ) {
+				this.extensionRegistry.toggle( 'bracketMatching', this.view, true );
+			}
+		}
 	}
 
 	/**

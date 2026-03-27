@@ -50,6 +50,24 @@ describe( 'CodeMirrorBracketMatching for StreamLanguage', () => {
 		cm.textSelection.setSelection( { start: 2 } );
 		expect( cm.view.contentDOM.querySelectorAll( '.cm-matchingBracket' ).length ).toEqual( 2 );
 	} );
+
+	it( 'should update the extension with a new config', () => {
+		cm.textSelection.setContents( '<div>[http://example.org]' );
+		// Should not highlight angle brackets.
+		cm.textSelection.setSelection( { start: 2 } );
+		expect( cm.view.contentDOM.querySelectorAll( selector ).length ).toEqual( 0 );
+		// Should highlight square brackets.
+		cm.textSelection.setSelection( { start: 6 } );
+		expect( cm.view.contentDOM.querySelectorAll( '.cm-matchingBracket' ).length ).toEqual( 2 );
+
+		cm.bracketMatchingConfig = { brackets: '<>' };
+		// Should highlight angle brackets.
+		cm.textSelection.setSelection( { start: 2 } );
+		expect( cm.view.contentDOM.querySelectorAll( '.cm-matchingBracket' ).length ).toEqual( 2 );
+		// Should not highlight square brackets.
+		cm.textSelection.setSelection( { start: 6 } );
+		expect( cm.view.contentDOM.querySelectorAll( selector ).length ).toEqual( 0 );
+	} );
 } );
 
 describe( 'CodeMirrorBracketMatching for LRLanguage', () => {
@@ -108,6 +126,30 @@ describe( 'CodeMirrorBracketMatching for LRLanguage', () => {
 		cm.textSelection.setSelection( { start: 3 } );
 		expect( cm.view.contentDOM.querySelectorAll( '.cm-matchingBracket' ).length ).toEqual( 2 );
 		cm.textSelection.setSelection( { start: 6 } );
+		expect( cm.view.contentDOM.querySelectorAll( '.cm-matchingBracket' ).length ).toEqual( 2 );
+	} );
+
+	it( 'should update the extension with a new config', () => {
+		cm.textSelection.setContents( 'let a = "string", b = [], c = `[]`;' );
+		// Should not highlight double quotes.
+		cm.textSelection.setSelection( { start: 8 } );
+		expect( cm.view.contentDOM.querySelectorAll( selector ).length ).toEqual( 0 );
+		// Should highlight square brackets.
+		cm.textSelection.setSelection( { start: 22 } );
+		expect( cm.view.contentDOM.querySelectorAll( '.cm-matchingBracket' ).length ).toEqual( 2 );
+		cm.textSelection.setSelection( { start: 32 } );
+		expect( cm.view.contentDOM.querySelectorAll( '.cm-matchingBracket' ).length ).toEqual( 2 );
+
+		cm.bracketMatchingConfig = { brackets: '""' };
+		// Should highlight double quotes.
+		// But the matching fails because of identical opening and closing characters.
+		cm.textSelection.setSelection( { start: 8 } );
+		expect( cm.view.contentDOM.querySelectorAll( '.cm-nonmatchingBracket' ).length ).toEqual( 1 );
+		// Should not highlight plain-text square brackets.
+		cm.textSelection.setSelection( { start: 32 } );
+		expect( cm.view.contentDOM.querySelectorAll( selector ).length ).toEqual( 0 );
+		// Cannot disable highlighting of syntax brackets.
+		cm.textSelection.setSelection( { start: 22 } );
 		expect( cm.view.contentDOM.querySelectorAll( '.cm-matchingBracket' ).length ).toEqual( 2 );
 	} );
 } );
