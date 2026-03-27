@@ -1,5 +1,5 @@
 /* eslint-disable-next-line n/no-missing-require */
-const { EditorView, Prec } = require( 'ext.CodeMirror.v6.lib' );
+const { diagnosticCount, EditorView, Prec } = require( 'ext.CodeMirror.v6.lib' );
 const CodeMirror = require( '../../resources/codemirror.js' );
 const { javascript } = require( '../../resources/modes/codemirror.mode.exporter.js' );
 
@@ -132,6 +132,82 @@ describe( 'applyExtension', () => {
 			spellcheck: 'false'
 		} ) ) );
 		expect( cm.view.contentDOM.getAttribute( 'spellcheck' ) ).toStrictEqual( 'false' );
+	} );
+} );
+
+describe( 'applyLinter', () => {
+	it( 'should apply the given linter with a function argument', async () => {
+		cm.initialize();
+		cm.applyLinter( ( text, view ) => {
+			expect( text ).toStrictEqual( cm.view.state.doc.toString() );
+			expect( view ).toBe( cm.view );
+			return [ { from: 0, to: 0, severity: 'error', message: 'Test diagnostic' } ];
+		}, { delay: 0 } );
+		expect( diagnosticCount( cm.view.state ) ).toEqual( 0 );
+
+		// Enable the lint extension
+		cm.extensionRegistry.toggle( 'lint', cm.view, true );
+		await new Promise( ( resolve, reject ) => {
+			setTimeout( () => {
+				try {
+					expect( diagnosticCount( cm.view.state ) ).toEqual( 1 );
+					resolve();
+				} catch ( e ) {
+					reject( e );
+				}
+			}, 0 );
+		} );
+
+		// Disable the lint extension
+		cm.extensionRegistry.toggle( 'lint', cm.view, false );
+		await new Promise( ( resolve, reject ) => {
+			setTimeout( () => {
+				try {
+					expect( diagnosticCount( cm.view.state ) ).toEqual( 0 );
+					resolve();
+				} catch ( e ) {
+					reject( e );
+				}
+			}, 0 );
+		} );
+	} );
+
+	it( 'should apply the given linter with an object argument', async () => {
+		cm.initialize();
+		cm.view.dispatch( { changes: { from: 0, to: cm.view.state.doc.length, insert: 'foo' } } );
+		cm.applyLinter( {
+			pattern: /^./,
+			callback( { index } ) {
+				return { from: index, to: index + 1, severity: 'error', message: 'Test diagnostic' };
+			}
+		}, { delay: 0 } );
+		expect( diagnosticCount( cm.view.state ) ).toEqual( 0 );
+
+		// Enable the lint extension
+		cm.extensionRegistry.toggle( 'lint', cm.view, true );
+		await new Promise( ( resolve, reject ) => {
+			setTimeout( () => {
+				try {
+					expect( diagnosticCount( cm.view.state ) ).toEqual( 1 );
+					resolve();
+				} catch ( e ) {
+					reject( e );
+				}
+			}, 0 );
+		} );
+
+		// Disable the lint extension
+		cm.extensionRegistry.toggle( 'lint', cm.view, false );
+		await new Promise( ( resolve, reject ) => {
+			setTimeout( () => {
+				try {
+					expect( diagnosticCount( cm.view.state ) ).toEqual( 0 );
+					resolve();
+				} catch ( e ) {
+					reject( e );
+				}
+			}, 0 );
+		} );
 	} );
 } );
 

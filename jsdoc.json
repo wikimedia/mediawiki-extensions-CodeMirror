@@ -31,6 +31,7 @@
 				"Config": "https://codemirror.net/docs/ref/#language.Config",
 				"Decoration": "https://codemirror.net/docs/ref/#view.Decoration",
 				"DecorationSet": "https://codemirror.net/docs/ref/#view.DecorationSet",
+				"Diagnostic": "https://codemirror.net/docs/ref/#lint.Diagnostic",
 				"Direction": "https://codemirror.net/docs/ref/#view.Direction",
 				"EditorState": "https://codemirror.net/docs/ref/#state.EditorState",
 				"EditorView": "https://codemirror.net/docs/ref/#view.EditorView",

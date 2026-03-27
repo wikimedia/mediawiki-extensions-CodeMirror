@@ -33,12 +33,11 @@ class CodeMirrorLint extends CodeMirrorPanel {
 	}
 
 	get extension() {
-		if ( !this.lintSource ) {
-			return [];
-		}
 		this.keymap.registerKeyBindingHelp( 'lint', 'next-diagnostic', { key: 'F8' } );
+
+		// These extensions are only initialized when this.lintSource or this.lintApi are set,
+		// or CodeMirror#applyLinter is called.
 		const extension = [
-			linter( async ( view ) => ( await this.lintSource( view ) ).map( renderDiagnostic ) ),
 			lintGutter(),
 			keymap.of( [ { key: 'F8', run: nextDiagnostic } ] ),
 			showPanel.of( ( view ) => {
@@ -46,6 +45,11 @@ class CodeMirrorLint extends CodeMirrorPanel {
 				return this.panel;
 			} )
 		];
+		if ( this.lintSource ) {
+			extension.push( linter(
+				async ( view ) => ( await this.lintSource( view ) ).map( renderDiagnostic )
+			) );
+		}
 		if ( this.lintApi ) {
 			extension.push(
 				linter( async ( view ) => ( await this.lintApi( view ) ).map( renderDiagnostic ) )

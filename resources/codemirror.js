@@ -1,6 +1,7 @@
 const {
 	Compartment,
 	Config,
+	Diagnostic,
 	EditorSelection,
 	EditorState,
 	EditorView,
@@ -31,6 +32,7 @@ const {
 	insertNewlineKeepIndent,
 	keymap,
 	lineNumbers,
+	linter,
 	oneDark,
 	rectangularSelection,
 	searchPanelOpen,
@@ -228,6 +230,13 @@ class CodeMirror {
 		 */
 		this.gotoLine = new CodeMirrorGotoLine();
 		/**
+		 * Custom linters added via {@link CodeMirror#applyLinter}.
+		 *
+		 * @type {Extension}
+		 * @private
+		 */
+		this.customLinters = [];
+		/**
 		 * Mapping of mw.hook handlers added by CodeMirror.
 		 * Handlers added here will be removed during deactivation.
 		 *
@@ -264,7 +273,6 @@ class CodeMirror {
 	 *   config.brackets = ( config.brackets || '()[]{}' ) + '<>';
 	 *   cm.bracketMatchingConfig = config;
 	 * } );
-	 *
 	 */
 	get bracketMatchingConfig() {
 		return this._bracketMatchingConfig; // eslint-disable-line no-underscore-dangle
@@ -705,9 +713,12 @@ class CodeMirror {
 	 * @stable to call
 	 */
 	get lintExtension() {
-		return new CodeMirrorLint(
-			this.lintSource, this.keymap, this.lintApi, this.gotoLine
-		).extension;
+		return [
+			new CodeMirrorLint(
+				this.lintSource, this.keymap, this.lintApi, this.gotoLine
+			).extension,
+			this.customLinters
+		];
 	}
 
 	/* eslint-disable max-len */
@@ -793,7 +804,7 @@ class CodeMirror {
 			this.addDarkModeMutationObserver();
 		}
 
-		if ( this.lintSource ) {
+		if ( this.lintSource || this.lintApi ) {
 			this.preferences.registerExtension( 'lint', this.lintExtension, this.view );
 		}
 
@@ -953,6 +964,78 @@ class CodeMirror {
 		this.view.dispatch( {
 			effects: StateEffect.appendConfig.of( extension )
 		} );
+	}
+
+	/**
+	 * Apply an extra {@link LintSource linter} to the CodeMirror editor.
+	 * This linter respects the user preference for enabling or diabling linting.
+	 *
+	 * @example
+	 * // Report Ukrainian letter 'і' among Latin letters as a warning.
+	 * const lint = {
+	 *   pattern: /[a-zA-Z]і|і(?=[a-zA-Z])/g,
+	 *   callback( match ) {
+	 *     return {
+	 *       from: match.index + match[ 0 ].indexOf( 'і' ),
+	 *       to: match.index + match[ 0 ].indexOf( 'і' ) + 1,
+	 *       severity: 'warning',
+	 *       message: 'Ukrainian letter "і" found among Latin letters.',
+	 *       actions: [ {
+	 *         name: 'To Latin',
+	 *         apply( view, from, to ) {
+	 *           view.dispatch( {
+	 *             changes: { from, to, insert: 'i' }
+	 *           } );
+	 *         }
+	 *       } ]
+	 *     };
+	 *   }
+	 * };
+	 * mw.hook( 'ext.CodeMirror.ready' ).add( ( cm ) => {
+	 *   cm.applyLinter( lint );
+	 * } );
+	 *
+	 * @param {Function|Object} lint Function that takes a string and returns an array of
+	 * {@link Diagnostic}, or an object with a `pattern` RegExp and `callback` function that takes
+	 * a RegExp match and returns {@link Diagnostic} or an array of {@link Diagnostic}.
+	 * @param {Object} [config] Optional {@link https://codemirror.net/docs/ref/#lint.linter^config configuration}.
+	 */
+	applyLinter( lint, config ) {
+		const extension = linter( ( view ) => {
+			if ( typeof lint === 'function' ) {
+				return lint( view.state.doc.toString(), view );
+			}
+			const { pattern, callback } = lint;
+			const re = new RegExp( pattern, pattern.flags + ( pattern.global ? '' : 'g' ) );
+			const text = view.state.doc.toString();
+			const diagnostics = [];
+			let match = re.exec( text );
+			let lastIndex = 0;
+			while ( match ) {
+				if ( re.lastIndex === lastIndex ) {
+					// Avoid infinite loop on zero-length matches.
+					re.lastIndex++;
+				}
+				const errors = callback( match, view );
+				if ( Array.isArray( errors ) ) {
+					diagnostics.push( ...errors );
+				} else if ( errors ) {
+					diagnostics.push( errors );
+				}
+				( { lastIndex } = re );
+				match = re.exec( text );
+			}
+			return diagnostics;
+		}, config );
+		this.customLinters.push( extension );
+		if ( this.extensionRegistry.isRegistered( 'lint', this.view ) ) {
+			this.extensionRegistry.extensions.lint = this.lintExtension;
+		} else {
+			this.preferences.registerExtension( 'lint', this.lintExtension, this.view );
+		}
+		if ( this.extensionRegistry.isEnabled( 'lint', this.view ) ) {
+			this.extensionRegistry.toggle( 'lint', this.view, true );
+		}
 	}
 
 	/**
