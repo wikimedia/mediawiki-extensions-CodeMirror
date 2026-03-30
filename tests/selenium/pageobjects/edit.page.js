@@ -1,8 +1,5 @@
-'use strict';
+import Page from 'wdio-mediawiki/Page.js';
 
-const Page = require( 'wdio-mediawiki/Page' );
-
-// Copied from mediawiki-core edit.page.js
 class EditPage extends Page {
 	async openForEditing( title, queryParams = {} ) {
 		queryParams = Object.assign( {
@@ -88,4 +85,4 @@ class EditPage extends Page {
 	}
 }
 
-module.exports = new EditPage();
+export default new EditPage();

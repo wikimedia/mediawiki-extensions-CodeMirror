@@ -1,6 +1,4 @@
-'use strict';
-
-const Api = require( 'wdio-mediawiki/Api' );
+import { createApiClient } from 'wdio-mediawiki/Api.js';
 
 const fixture1 = '[]{{template}}';
 
@@ -11,9 +9,9 @@ class FixtureContent {
 	 * @param {string} title
 	 */
 	async createFixturePage( title ) {
-		const bot = await Api.bot();
-		await bot.edit( title, fixture1 );
+		const apiClient = await createApiClient();
+		await apiClient.edit( title, fixture1 );
 	}
 }
 
-module.exports = new FixtureContent();
+export default new FixtureContent();

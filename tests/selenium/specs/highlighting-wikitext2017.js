@@ -1,18 +1,14 @@
-/* global document */
-'use strict';
-
-const assert = require( 'assert' ),
-	EditPage = require( '../pageobjects/edit.page' ),
-	FixtureContent = require( '../fixturecontent' ),
-	UserPreferences = require( '../userpreferences' ),
-	Api = require( 'wdio-mediawiki/Api.js' ),
-	Util = require( 'wdio-mediawiki/Util' );
+import EditPage from '../pageobjects/edit.page.js';
+import FixtureContent from '../fixturecontent.js';
+import UserPreferences from '../userpreferences.js';
+import { createApiClient } from 'wdio-mediawiki/Api.js';
+import { getTestString } from 'wdio-mediawiki/Util.js';
 
 describe( 'CodeMirror (enabled) - VisualEditor 2017 wikitext editor', () => {
 	let title;
 
 	before( async () => {
-		title = Util.getTestString( 'CodeMirror-fixture1-' );
+		title = getTestString( 'CodeMirror-fixture1-' );
 		await UserPreferences.loginAsOther();
 		await FixtureContent.createFixturePage( title );
 		await UserPreferences.enableWikitext2017EditorWithCodeMirror();
@@ -22,41 +18,34 @@ describe( 'CodeMirror (enabled) - VisualEditor 2017 wikitext editor', () => {
 		await EditPage.openForEditing( title );
 		await EditPage.visualEditorContentEditable.waitForDisplayed();
 		await EditPage.codeMirrorContentEditable.waitForDisplayed();
-		assert.strictEqual(
-			await EditPage.codeMirrorContentEditable.isDisplayed(),
-			true
-		);
-		assert.strictEqual(
+		await expect( EditPage.codeMirrorContentEditable ).toBeDisplayed();
+		expect(
 			await browser.execute(
 				() => document.activeElement.classList.contains( 've-ce-attachedRootNode' )
-			),
-			true
-		);
+			)
+		).toBe( true );
 	} );
 
 	it( 'updates CodeMirror with VE document changes', async () => {
 		await EditPage.clickText();
 		// VE registers textSelection on #wpTextbox1.
 		await browser.execute( () => $( '#wpTextbox1' ).textSelection( 'setContents', 'foobar' ) );
-		assert.strictEqual(
-			await browser.execute( () => $( '.cm-editor' ).textSelection( 'getContents' ) ),
-			'foobar\n'
-		);
+		expect(
+			await browser.execute( () => $( '.cm-editor' ).textSelection( 'getContents' ) )
+		).toBe( 'foobar\n' );
 	} );
 
 	it( 'retains content when CodeMirror is disabled and maintains focus on VE surface', async () => {
 		await EditPage.visualEditorToggleCodeMirror();
-		await EditPage.codeMirrorContentEditable.waitForDisplayed( { reverse: true } );
-		assert.strictEqual(
-			await browser.execute( () => $( '#wpTextbox1' ).textSelection( 'getContents' ) ),
-			'foobar\n'
-		);
-		assert.strictEqual(
+		await expect( EditPage.codeMirrorContentEditable ).not.toBeDisplayed();
+		expect(
+			await browser.execute( () => $( '#wpTextbox1' ).textSelection( 'getContents' ) )
+		).toBe( 'foobar\n' );
+		expect(
 			await browser.execute(
 				() => document.activeElement.classList.contains( 've-ce-attachedRootNode' )
-			),
-			true
-		);
+			)
+		).toBe( true );
 	} );
 
 	it( 'retains content when CodeMirror is re-enabled', async () => {
@@ -64,11 +53,10 @@ describe( 'CodeMirror (enabled) - VisualEditor 2017 wikitext editor', () => {
 			() => $( '#wpTextbox1' ).textSelection( 'setContents', 'baz' )
 		);
 		await EditPage.visualEditorToggleCodeMirror();
-		await EditPage.codeMirrorContentEditable.waitForDisplayed();
-		assert.strictEqual(
-			await browser.execute( () => $( '.cm-editor' ).textSelection( 'getContents' ) ),
-			'baz\n'
-		);
+		await expect( EditPage.codeMirrorContentEditable ).toBeDisplayed();
+		expect(
+			await browser.execute( () => $( '.cm-editor' ).textSelection( 'getContents' ) )
+		).toBe( 'baz\n' );
 	} );
 
 	it( 'adjusts gutter accordingly when pasting many lines of wrapping text', async () => {
@@ -78,8 +66,9 @@ describe( 'CodeMirror (enabled) - VisualEditor 2017 wikitext editor', () => {
 				( 'foo <div>bar</div> baz'.repeat( 50 ) + '\n' ).repeat( 100 )
 			)
 		);
-		assert.strictEqual(
-			await browser.execute( () => $( '.cm-content' ).outerHeight() ),
+		expect(
+			await browser.execute( () => $( '.cm-content' ).outerHeight() )
+		).toBe(
 			await browser.execute( () => $( '.ve-ce-attachedRootNode' ).outerHeight() )
 		);
 	} );
@@ -89,31 +78,26 @@ describe( 'CodeMirror (enabled) - VisualEditor 2017 wikitext editor', () => {
 		await browser.keys( 'Escape' );
 		await EditPage.visualEditorMessageDialog.waitForDisplayed();
 		await EditPage.visualEditorDestructiveButton.click();
-		await EditPage.visualEditorContentEditable.waitForDisplayed( { reverse: true } );
-		assert.strictEqual(
-			await EditPage.codeMirrorContentEditable.isDisplayed(),
-			false
-		);
+		await expect( EditPage.visualEditorContentEditable ).not.toBeDisplayed();
+		await expect( EditPage.codeMirrorContentEditable ).not.toBeDisplayed();
 		// Refresh.
 		await UserPreferences.setPreferences( {
 			usecodemirror: '0'
 		} );
 		await EditPage.openForEditing( title );
 		// Assertions.
-		await EditPage.codeMirrorContentEditable.waitForDisplayed( { reverse: true } );
-		await EditPage.visualEditorContentEditable.waitForDisplayed();
-		assert.strictEqual(
-			await browser.execute( () => mw.loader.getState( 'ext.CodeMirror.v6.mode.mediawiki' ) ),
-			'registered'
-		);
-		assert.strictEqual(
-			await browser.execute( () => mw.loader.getState( 'ext.CodeMirror.v6' ) ),
-			'registered'
-		);
+		await expect( EditPage.codeMirrorContentEditable ).not.toBeDisplayed();
+		await expect( EditPage.visualEditorContentEditable ).toBeDisplayed();
+		expect(
+			await browser.execute( () => mw.loader.getState( 'ext.CodeMirror.v6.mode.mediawiki' ) )
+		).toBe( 'registered' );
+		expect(
+			await browser.execute( () => mw.loader.getState( 'ext.CodeMirror.v6' ) )
+		).toBe( 'registered' );
 	} );
 
 	after( async () => {
-		const bot = await Api.bot();
-		bot.delete( title, 'Test cleanup' ).catch( ( e ) => console.error( e ) );
+		const apiClient = await createApiClient();
+		await apiClient.delete( title, 'Test cleanup' ).catch( ( e ) => console.error( e ) );
 	} );
 } );

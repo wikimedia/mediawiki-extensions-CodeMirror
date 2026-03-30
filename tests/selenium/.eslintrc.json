@@ -4,7 +4,12 @@
 		"wikimedia/selenium"
 	],
 	"globals": {
-		"mw": "readonly"
+		"mw": "readonly",
+		"document": "readonly"
+	},
+	"parserOptions": {
+		"ecmaVersion": 2022,
+		"sourceType": "module"
 	},
 	"rules": {
 		"wdio/no-pause": "warn"

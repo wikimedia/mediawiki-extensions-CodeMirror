@@ -1,20 +1,19 @@
-'use strict';
-
-const Api = require( 'wdio-mediawiki/Api' ),
-	BlankPage = require( 'wdio-mediawiki/BlankPage' ),
-	LoginPage = require( 'wdio-mediawiki/LoginPage' ),
-	Util = require( 'wdio-mediawiki/Util' );
+import { createApiClient } from 'wdio-mediawiki/Api.js';
+import BlankPage from 'wdio-mediawiki/BlankPage.js';
+import LoginPage from 'wdio-mediawiki/LoginPage.js';
+import { getTestString, waitForModuleState } from 'wdio-mediawiki/Util.js';
 
 class UserPreferences {
 	async loginAsOther() {
-		const username = Util.getTestString( 'User-' );
-		const password = Util.getTestString();
-		await Api.createAccount( await Api.bot(), username, password );
+		const username = getTestString( 'User-' );
+		const password = getTestString();
+		const apiClient = await createApiClient();
+		await apiClient.createAccount( username, password );
 		await LoginPage.login( username, password );
 	}
 
 	async setPreferences( preferences ) {
-		Util.waitForModuleState( 'mediawiki.base' );
+		await waitForModuleState( 'mediawiki.base' );
 
 		return await browser.execute( ( prefs ) => mw.loader.using( 'mediawiki.api' ).then( () => new mw.Api().saveOptions( prefs ) ), preferences );
 	}
@@ -42,4 +41,4 @@ class UserPreferences {
 	}
 }
 
-module.exports = new UserPreferences();
+export default new UserPreferences();
