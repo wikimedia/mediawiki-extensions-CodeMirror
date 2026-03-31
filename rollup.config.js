@@ -53,5 +53,35 @@ module.exports = [
 				]
 			} )
 		]
+	},
+
+	// ext.CodeMirror.v6.abusefilter
+	{
+		input: 'resources/modes/codemirror.bundle.abusefilter.js',
+		output: {
+			file: 'resources/lib/codemirror6.bundle.abusefilter.js',
+			format: 'cjs'
+		},
+		plugins: [
+			alias( {
+				entries: [
+					{ find: '@codemirror/autocomplete', replacement: 'ext.CodeMirror.v6.lib' },
+					{ find: '@codemirror/commands', replacement: 'ext.CodeMirror.v6.lib' },
+					{ find: '@codemirror/language', replacement: 'ext.CodeMirror.v6.lib' },
+					{ find: '@codemirror/lint', replacement: 'ext.CodeMirror.v6.lib' },
+					{ find: '@codemirror/search', replacement: 'ext.CodeMirror.v6.lib' },
+					{ find: '@codemirror/state', replacement: 'ext.CodeMirror.v6.lib' },
+					{ find: '@codemirror/view', replacement: 'ext.CodeMirror.v6.lib' },
+					{ find: '@lezer/highlight', replacement: 'ext.CodeMirror.v6.lib' }
+				]
+			} ),
+			nodeResolve( {
+				resolveOnly: [
+					'@bhsd/lezer-abusefilter',
+					'@lezer/common',
+					'@lezer/lr'
+				]
+			} )
+		]
 	}
 ];

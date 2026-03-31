@@ -425,6 +425,17 @@
 				"ext.CodeMirror.v6.lib"
 			]
 		},
+		"ext.CodeMirror.v6.abusefilter": {
+			"packageFiles": [
+				"modes/codemirror.abusefilter.js",
+				"modes/codemirror.mode.js",
+				"workers/codemirror.worker.js",
+				"lib/codemirror6.bundle.abusefilter.js"
+			],
+			"dependencies": [
+				"ext.CodeMirror.v6.lib"
+			]
+		},
 		"ext.CodeMirror.v6.WikiEditor": {
 			"dependencies": [
 				"ext.wikiEditor",
