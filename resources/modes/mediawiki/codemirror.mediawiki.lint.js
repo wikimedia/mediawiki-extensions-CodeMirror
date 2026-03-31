@@ -1,4 +1,5 @@
 const CodeMirrorWorker = require( '../../workers/codemirror.worker.js' );
+const CodeMirrorMediaWikiValidator = require( './codemirror.mediawiki.validator.js' );
 
 const worker = new CodeMirrorWorker( 'mediawiki' );
 
@@ -160,49 +161,16 @@ const lintSource = ( view ) => worker.lint( view ).then( ( data ) => data
 const getMsgKey = ( type ) => `linter-category-${ type }`;
 
 const api = new mw.Api(),
-	rest = new mw.Rest(),
 	hasExtLinter = mw.loader.getState( 'ext.linter.edit' ) !== null;
-let timeout, waiting;
 
-const execute = async ( wikitext ) => {
-	rest.abort();
-	if ( timeout ) {
-		waiting = wikitext;
-		return timeout;
-	}
-	timeout = new Promise( ( resolve ) => {
-		setTimeout( () => {
-			timeout = undefined;
-			if ( waiting === undefined ) {
-				resolve();
-			} else {
-				const text = waiting;
-				waiting = undefined;
-				resolve( execute( text ) );
-			}
-		}, 3000 );
-	} );
-	// This endpoint is still experimental and may change in the future.
-	return rest.post(
-		`/v1/transform/wikitext/to/lint/${ encodeURIComponent( mw.config.get( 'wgPageName' ) ) }`,
-		{ wikitext }
-	).then(
-		( errors ) => errors,
-		( _, e ) => {
-			if ( e.textStatus !== 'abort' ) {
-				mw.log.warn( `[CodeMirror] Parsoid linting failed: ${ e.textStatus }.` );
-			}
-			return [];
-		}
-	);
-};
+const validator = new CodeMirrorMediaWikiValidator();
 
 const isEqualError = ( a, b ) => a.type === b.type &&
 	a.dsr[ 0 ] === b.dsr[ 0 ] &&
 	a.dsr[ 1 ] === b.dsr[ 1 ];
 
 const lintApi = async ( { state: { doc } } ) => {
-	const errors = await execute( doc.toString() );
+	const errors = await validator.execute( doc.toString() );
 	if ( hasExtLinter && errors.length ) {
 		await api.loadMessagesIfMissing( errors.map( ( { type } ) => getMsgKey( type ) ) );
 	}

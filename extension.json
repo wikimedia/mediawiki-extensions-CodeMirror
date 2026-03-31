@@ -302,7 +302,9 @@
 				"modes/mediawiki/codemirror.mediawiki.closeTags.js",
 				"modes/mediawiki/codemirror.mediawiki.keymap.js",
 				"modes/mediawiki/codemirror.mediawiki.lint.js",
+				"modes/mediawiki/codemirror.mediawiki.validator.js",
 				"modes/codemirror.mode.js",
+				"codemirror.validator.js",
 				"workers/codemirror.worker.js"
 			],
 			"styles": [
@@ -353,7 +355,7 @@
 				"modes/codemirror.css.js",
 				"modes/codemirror.lua.js",
 				"modes/codemirror.vue.js",
-				"codemirror.validate.js",
+				"codemirror.validator.js",
 				"workers/codemirror.worker.js",
 				"lib/codemirror.bundle.modes.js"
 			],
@@ -363,8 +365,10 @@
 		},
 		"ext.CodeMirror.abusefilter": {
 			"packageFiles": [
-				"modes/codemirror.abusefilter.js",
+				"modes/abusefilter/codemirror.abusefilter.js",
+				"modes/abusefilter/codemirror.abusefilter.validator.js",
 				"modes/codemirror.mode.js",
+				"codemirror.validator.js",
 				"workers/codemirror.worker.js",
 				"lib/codemirror.bundle.abusefilter.js"
 			],

@@ -1,60 +1,7 @@
 const { Diagnostic, Text } = require( 'ext.CodeMirror.lib' );
-const { abusefilterLanguage, abusefilter } = require( '../lib/codemirror.bundle.abusefilter.js' );
-const CodeMirrorMode = require( './codemirror.mode.js' );
-
-/**
- * Gets a API-powered AbuseFilter validator function.
- *
- * @param {mw.Api} api
- * @return {Function}
- * @private
- */
-const getValidator = ( api ) => {
-	let timeout,
-		waiting,
-		denied = false;
-	const execute = async ( filter ) => {
-		api.abort();
-		if ( denied ) {
-			return [];
-		} else if ( timeout ) {
-			waiting = filter;
-			return timeout;
-		}
-		timeout = new Promise( ( resolve ) => {
-			setTimeout( () => {
-				timeout = undefined;
-				if ( waiting === undefined ) {
-					resolve( [] );
-				} else {
-					const text = waiting;
-					waiting = undefined;
-					resolve( execute( text ) );
-				}
-			}, 3000 );
-		} );
-		return filter ?
-			api.post( {
-				action: 'abusefilterchecksyntax',
-				filter
-			} ).then(
-				( r ) => r.abusefilterchecksyntax,
-				( msg, e ) => {
-					if ( msg === 'permissiondenied' ) {
-						denied = true;
-					} else if ( typeof e !== 'object' || e.textStatus !== 'abort' ) {
-						mw.log.warn(
-							'[CodeMirror] API validation failed',
-							typeof e === 'object' ? e.textStatus : e
-						);
-					}
-					return [];
-				}
-			) :
-			[];
-	};
-	return execute;
-};
+const { abusefilterLanguage, abusefilter } = require( '../../lib/codemirror.bundle.abusefilter.js' );
+const CodeMirrorMode = require( '../codemirror.mode.js' );
+const CodeMirrorAbuseFilterValidator = require( './codemirror.abusefilter.validator.js' );
 
 /**
  * Converts an API response into a CodeMirror diagnostic.
@@ -93,6 +40,22 @@ const convertDiagnostic = ( obj, severity, doc ) => {
  */
 class CodeMirrorAbuseFilter extends CodeMirrorMode {
 
+	/**
+	 * @param {string} name
+	 * @internal
+	 * @hideconstructor
+	 */
+	constructor( name ) {
+		super( name );
+
+		/**
+		 * The API-powered validator.
+		 *
+		 * @type {CodeMirrorAbuseFilterValidator}
+		 */
+		this.validator = new CodeMirrorAbuseFilterValidator();
+	}
+
 	/** @inheritDoc */
 	get language() {
 		return abusefilterLanguage;
@@ -100,9 +63,8 @@ class CodeMirrorAbuseFilter extends CodeMirrorMode {
 
 	/** @inheritdoc */
 	get lintApi() {
-		const execute = getValidator( new mw.Api() );
 		return async ( { state: { doc } } ) => {
-			const result = await execute( doc.toString() );
+			const result = await this.validator.execute( doc.toString() );
 			if ( result.status === 'error' ) {
 				return [ convertDiagnostic( result, 'error', doc ) ];
 			} else if ( result.warnings ) {

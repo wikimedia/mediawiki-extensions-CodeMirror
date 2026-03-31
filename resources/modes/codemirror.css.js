@@ -2,7 +2,7 @@ const { syntaxTree } = require( 'ext.CodeMirror.lib' );
 const { cssLanguage, cssCompletionSource } = require( '../lib/codemirror.bundle.modes.js' );
 const CodeMirrorMode = require( './codemirror.mode.js' );
 const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
-const getCodeMirrorValidator = require( '../codemirror.validate.js' );
+const CodeMirrorValidator = require( '../codemirror.validator.js' );
 
 /**
  * CSS language support for CodeMirror.
@@ -33,6 +33,14 @@ class CodeMirrorCss extends CodeMirrorMode {
 		 * @type {string}
 		 */
 		this.dialect = mw.config.get( 'wgPageContentModel' );
+
+		/**
+		 * The API-powered validator, only used for
+		 * {@link https://www.mediawiki.org/wiki/Special:MyLanguage/Help:TemplateStyles TemplateStyles}.
+		 *
+		 * @type {CodeMirrorValidator}
+		 */
+		this.validator = new CodeMirrorValidator( 'sanitized-css' );
 
 		// Custom linting rules for Extension:TemplateStyles
 		if ( this.dialect === 'sanitized-css' ) {
@@ -98,14 +106,9 @@ class CodeMirrorCss extends CodeMirrorMode {
 		if ( this.dialect !== 'sanitized-css' ) {
 			return undefined;
 		}
-		const execute = getCodeMirrorValidator(
-			new mw.Api(),
-			mw.config.get( 'wgPageName' ),
-			'sanitized-css'
-		);
 		const tmp = new mw.Map();
 		return async ( { state: { doc } } ) => {
-			const errors = await execute( doc.toString() );
+			const errors = await this.validator.execute( doc.toString() );
 			return errors.map( ( { message, line, column } ) => {
 				const from = doc.line( line ).from + column - 1;
 				return {

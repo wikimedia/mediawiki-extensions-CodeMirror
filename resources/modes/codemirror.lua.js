@@ -13,7 +13,7 @@ const { lua } = require( '../lib/codemirror.bundle.modes.js' );
 const CodeMirrorMode = require( './codemirror.mode.js' );
 const { markDocTagType, getViewPlugin } = require( './codemirror.doctag.js' );
 const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
-const getCodeMirrorValidator = require( '../codemirror.validate.js' );
+const CodeMirrorValidator = require( '../codemirror.validator.js' );
 
 const map = {
 		1: 'constant',
@@ -393,6 +393,13 @@ class CodeMirrorLua extends CodeMirrorMode {
 	constructor( name ) {
 		super( name );
 
+		/**
+		 * The API-powered validator.
+		 *
+		 * @type {CodeMirrorValidator}
+		 */
+		this.validator = new CodeMirrorValidator( 'Scribunto' );
+
 		// Update for Scribunto globals
 		this.worker.onload( () => {
 			this.worker.setConfig( {
@@ -545,13 +552,8 @@ class CodeMirrorLua extends CodeMirrorMode {
 
 	/** @inheritdoc */
 	get lintApi() {
-		const execute = getCodeMirrorValidator(
-			new mw.Api(),
-			mw.config.get( 'wgPageName' ),
-			'Scribunto'
-		);
 		return async ( { state: { doc } } ) => {
-			const errors = await execute( doc.toString() );
+			const errors = await this.validator.execute( doc.toString() );
 			return errors.map( ( { message, line } ) => {
 				const { from, to } = line === undefined ? { from: 0, to: 0 } : doc.line( line );
 				return {

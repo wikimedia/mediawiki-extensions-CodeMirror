@@ -8,7 +8,7 @@ const {
 const CodeMirrorMode = require( './codemirror.mode.js' );
 const { doctag, markDocTagType, getViewPlugin } = require( './codemirror.doctag.js' );
 const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
-const getCodeMirrorValidator = require( '../codemirror.validate.js' );
+const CodeMirrorValidator = require( '../codemirror.validator.js' );
 
 // Extracted from globals/globals.json (NPM)
 const builtin = new Set( [
@@ -143,6 +143,22 @@ const markGlobals = ( tree, visibleRanges, state ) => {
  */
 class CodeMirrorJavaScript extends CodeMirrorMode {
 
+	/**
+	 * @param {string} name
+	 * @internal
+	 * @hideconstructor
+	 */
+	constructor( name ) {
+		super( name );
+
+		/**
+		 * The API-powered validator.
+		 *
+		 * @type {CodeMirrorValidator}
+		 */
+		this.validator = new CodeMirrorValidator( 'javascript' );
+	}
+
 	/** @inheritDoc */
 	get language() {
 		return javascriptLanguage;
@@ -197,13 +213,8 @@ class CodeMirrorJavaScript extends CodeMirrorMode {
 
 	/** @inheritdoc */
 	get lintApi() {
-		const execute = getCodeMirrorValidator(
-			new mw.Api(),
-			mw.config.get( 'wgPageName' ),
-			'javascript'
-		);
 		return async ( { state: { doc } } ) => {
-			const errors = await execute( doc.toString() );
+			const errors = await this.validator.execute( doc.toString() );
 			return errors.map( ( { message, line, column } ) => {
 				const from = doc.line( line ).from + column;
 				return {
