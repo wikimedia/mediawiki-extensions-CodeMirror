@@ -86,6 +86,9 @@ const lint = ( wikitext ) => {
 		return last.diagnostics;
 	}
 	const diagnostics = Parser.parse( wikitext ).lint()
+		// Temporarily filter out "nowrap" attribute which is valid but obsolete
+		.filter( ( { rule, startIndex, endIndex } ) => rule !== 'illegal-attr' ||
+			wikitext.slice( startIndex, endIndex ).toLowerCase() !== 'nowrap' )
 		.map( ( diag ) => {
 			if ( infoRules.includes( diag.rule ) ) {
 				diag.severity = 'info';

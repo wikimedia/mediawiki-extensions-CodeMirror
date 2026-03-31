@@ -3,6 +3,17 @@ const { Text } = require( 'ext.CodeMirror.v6.lib' );
 const { lintSource, worker } = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.lint.js' );
 require( '../../../resources/workers/mediawiki/worker.min.js' );
 
+const passCases = [
+	{
+		title: 'nowrap in a wikitext td cell',
+		input: '{|\n|nowrap|\n|}'
+	},
+	{
+		title: 'nowrap in a HTML th cell',
+		input: '<table><tr><th NOWRAP></th></tr></table>'
+	}
+];
+
 const testCases = [
 	{
 		title: 'bold text in a section header (bold-header)',
@@ -354,6 +365,13 @@ worker.setConfig( {
 const lint = ( code ) => lintSource( { state: { doc: Text.of( code.split( '\n' ) ) } } );
 
 describe( 'CodeMirrorLint: WikiLint', () => {
+	for ( const { title, input } of passCases ) {
+		it( title, async () => {
+			const errors = await lint( input );
+			expect( errors ).toEqual( [] );
+		} );
+	}
+
 	for ( const { title, input, severity, actions = [] } of testCases ) {
 		it( title, async () => {
 			const [ error ] = await lint( input );
