@@ -9,6 +9,7 @@
 			"Shulmj",
 			"SkyDaisy9",
 			"Suzukaze-c",
+			"Tensama0415",
 			"Waki285"
 		]
 	},
@@ -19,6 +20,7 @@
 	"codemirror-prefs-enable": "構文強調表示を有効にする",
 	"codemirror-prefs-title": "構文強調表示の個人設定",
 	"codemirror-prefs-help": "ヘルプ",
+	"codemirror-prefs-section-other": "その他",
 	"codemirror-prefs-colorblind": "ウィキテキストでの編集時にカラーブラインドに応じた配色を使用する",
 	"codemirror-prefs-colorblind-help": "構文強調表示のガジェットを使用している場合、この設定は機能しません。",
 	"codemirror-close": "閉じる",
