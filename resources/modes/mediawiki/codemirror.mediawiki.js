@@ -94,7 +94,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 	constructor( config ) {
 		super( 'mediawiki' );
 		this.config = config;
-		this.urlProtocols = new RegExp( `^(?:${ config.urlProtocols })(?=[^\\s\u00a0{[\\]<>~).,'])`, 'i' );
+		this.urlProtocols = new RegExp( `^(?:${ config.urlProtocols })(?=[^\\s{[\\]<>~).,'])`, 'i' );
 		this.languageVariants = config.languageVariants || mw.config.get( 'cmLanguageVariants', [] );
 		this.tokenTable = mwModeConfig.tokenTable;
 		this.registerGroundTokens();
@@ -427,15 +427,15 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 
 	eatTemplatePageName( haveAte ) {
 		return ( stream, state ) => {
-			if ( stream.match( /^[\s\u00a0]*\|[\s\u00a0]*/ ) ) {
+			if ( stream.match( /^\s*\|\s*/ ) ) {
 				state.tokenize = this.eatTemplateArgument( true );
 				return this.makeLocalStyle( mwModeConfig.tags.templateDelimiter, state );
 			}
-			if ( stream.match( /^[\s\u00a0]*\}\}/ ) ) {
+			if ( stream.match( /^\s*\}\}/ ) ) {
 				state.tokenize = state.stack.pop();
 				return this.makeLocalStyle( mwModeConfig.tags.templateBracket, state, 'nTemplate' );
 			}
-			if ( stream.match( /^[\s\u00a0]*<!--.*?-->/ ) ) {
+			if ( stream.match( /^\s*<!--.*?-->/ ) ) {
 				return this.makeLocalStyle( mwModeConfig.tags.comment, state );
 			}
 			if ( haveAte && stream.sol() ) {
@@ -444,7 +444,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 				state.tokenize = state.stack.pop();
 				return '';
 			}
-			if ( stream.match( /^[\s\u00a0]*[^\s\u00a0|}<{&~]+/ ) ) {
+			if ( stream.match( /^\s*[^\s|}<{&~]+/ ) ) {
 				state.tokenize = this.eatTemplatePageName( true );
 				return this.makeLocalStyle( mwModeConfig.tags.templateName, state );
 			} else if ( stream.eatSpace() ) {
@@ -502,7 +502,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 			state.tokenize = state.stack.pop();
 			return '';
 		}
-		if ( stream.match( /^[\s\u00a0]*\]/ ) ) {
+		if ( stream.match( /^\s*\]/ ) ) {
 			state.tokenize = state.stack.pop();
 			return this.makeLocalStyle( mwModeConfig.tags.extLinkBracket, state, 'nExtLink' );
 		}
@@ -510,7 +510,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 			state.tokenize = this.inExternalLinkText.bind( this );
 			return this.makeStyle( '', state );
 		}
-		if ( stream.match( /^[^\s\u00a0\]{&~']+/ ) || stream.eatSpace() ) {
+		if ( stream.match( /^[^\s\]{&~']+/ ) || stream.eatSpace() ) {
 			if ( stream.peek() === '\'' ) {
 				if ( stream.match( '\'\'', false ) ) {
 					state.tokenize = this.inExternalLinkText.bind( this );
@@ -541,12 +541,12 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 	}
 
 	inGallery( stream, state ) {
-		if ( stream.match( /^[\s\u00a0]*\|[\s\u00a0]*/ ) ) {
+		if ( stream.match( /^\s*\|\s*/ ) ) {
 			state.tokenize = this.eatLinkText( true, true );
 			this.toEatImageParameters( stream, state );
 			return this.makeLocalStyle( mwModeConfig.tags.linkDelimiter, state );
 		}
-		if ( stream.match( /^[\s\u00a0]*[^\s\u00a0|&{]+/ ) || stream.eatSpace() ) {
+		if ( stream.match( /^\s*[^\s|&{]+/ ) || stream.eatSpace() ) {
 			return this.makeStyle(
 				`${ mwModeConfig.tags.linkPageName } ${ mwModeConfig.tags.pageName }`,
 				state
@@ -565,18 +565,18 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 				state.tokenize = state.stack.pop();
 				return '';
 			}
-			if ( stream.match( /^[\s\u00a0]*#[\s\u00a0]*/ ) ) {
+			if ( stream.match( /^\s*#\s*/ ) ) {
 				state.tokenize = this.inLinkToSection.bind( this );
 				return this.makeLocalStyle( mwModeConfig.tags.link, state );
 			}
-			if ( stream.match( /^[\s\u00a0]*\|[\s\u00a0]*/ ) ) {
+			if ( stream.match( /^\s*\|\s*/ ) ) {
 				state.tokenize = this.eatLinkText( file );
 				if ( file ) {
 					this.toEatImageParameters( stream, state );
 				}
 				return this.makeLocalStyle( mwModeConfig.tags.linkDelimiter, state );
 			}
-			if ( stream.match( /^[\s\u00a0]*\]\]/ ) ) {
+			if ( stream.match( /^\s*\]\]/ ) ) {
 				state.tokenize = state.stack.pop();
 				return this.makeLocalStyle( mwModeConfig.tags.linkBracket, state, 'nLink' );
 			}
@@ -991,7 +991,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 		}
 		return ( stream, state ) => {
 			if ( stream.sol() ) {
-				if ( stream.match( /^[\s\u00a0]*[|!]/, false ) ) {
+				if ( stream.match( /^\s*[|!]/, false ) ) {
 					state.tokenize = this.inTable.bind( this );
 					return this.inTable( stream, state );
 				}
@@ -1025,7 +1025,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 	eatFreeExternalLink( stream, state ) {
 		if ( stream.sol() ) {
 			// @todo error message
-		} else if ( stream.match( /^[^\s\u00a0{[\]<>~).,']*/ ) ) {
+		} else if ( stream.match( /^[^\s{[\]<>~).,']*/ ) ) {
 			if ( stream.peek() === '~' ) {
 				if ( !stream.match( /^~~~+/, false ) ) {
 					stream.match( /^~*/ );
@@ -1041,7 +1041,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 					stream.next();
 					return this.makeLocalStyle( mwModeConfig.tags.freeExtLink, state );
 				}
-			} else if ( stream.match( /^[).,]+(?=[^\s\u00a0{[\]<>~).,])/ ) ) {
+			} else if ( stream.match( /^[).,]+(?=[^\s{[\]<>~).,])/ ) ) {
 				return this.makeLocalStyle( mwModeConfig.tags.freeExtLink, state );
 			}
 		}
@@ -1158,7 +1158,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 						return this.eatList( stream, state );
 					case ':':
 						// Highlight indented tables :{|, bug T108454
-						if ( stream.match( /^:*[\s\u00a0]*(?={\|)/ ) ) {
+						if ( stream.match( /^:*\s*(?={\|)/ ) ) {
 							state.stack.push( state.tokenize );
 							state.tokenize = this.eatStartTable.bind( this );
 							return mwModeConfig.tags.indenting;
@@ -1166,7 +1166,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 						return this.eatList( stream, state );
 					case ' ':
 						// Leading spaces is valid syntax for tables, bug T108454
-						if ( stream.match( /^[\s\u00a0]*(?::+[\s\u00a0]*)?{\|/, false ) ) {
+						if ( stream.match( /^\s*(?::+\s*)?{\|/, false ) ) {
 							stream.eatSpace();
 							if ( stream.match( /^:+/ ) ) { // ::{|
 								stream.eatSpace();
@@ -1245,7 +1245,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 							mwModeConfig.tags.templateVariableBracket,
 							state
 						);
-					} else if ( stream.match( /^{(?!{(?!{))[\s\u00a0]*/ ) ) {
+					} else if ( stream.match( /^{(?!{(?!{))\s*/ ) ) {
 						const [ { length }, subst ] = stream.match( this.substRegex ),
 							tokenizer = subst && this.inSubstitution( subst );
 						// Parser function
@@ -1316,7 +1316,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 						return chain( this.eatBlock( mwModeConfig.tags.comment, '-->' ) );
 					}
 					isCloseTag = !!stream.eat( '/' );
-					tagname = stream.match( /^[a-z][^>/\s\u00a0]*/i );
+					tagname = stream.match( /^[a-z][^>/\s]*/i );
 					if ( tagname ) {
 						tagname = tagname[ 0 ].toLowerCase();
 						if ( tagname in this.config.tags ) {
@@ -1379,7 +1379,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 						// Check on double underscore Magic Word
 					} else if ( tmp === 2 ) {
 						// The same as the end of function except '_' inside and '__' at the end.
-						name = stream.match( /^([^\s\u00a0>}[\]<{'|&:~]+?)__/ );
+						name = stream.match( /^([^\s>}[\]<{'|&:~]+?)__/ );
 						if ( name && name[ 0 ] ) {
 							if (
 								'__' + name[ 0 ].toLowerCase() in this.config.doubleUnderscore[ 0 ] ||
@@ -1411,7 +1411,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 					}
 					break;
 				default:
-					if ( /[\s\u00a0]/.test( ch ) ) {
+					if ( /\s/.test( ch ) ) {
 						stream.eatSpace();
 						// highlight free external links, bug T108448
 						if ( stream.match( this.urlProtocols, false ) && !stream.match( '//' ) ) {
