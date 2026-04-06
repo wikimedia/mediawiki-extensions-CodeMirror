@@ -221,5 +221,7 @@
 	"codemirror-beta-feature-title": "Title of the BetaFeature for the new version of CodeMirror.",
 	"codemirror-beta-feature-description": "Description of the BetaFeature for the new version of CodeMirror.",
 	"codemirror-potentially-slow": "Text shown next to a description of a keyboard shortcut, preference, or other feature that may cause performance issues on large pages.",
-	"codemirror-validate-js-syntaxerror": "Diagnostic message for a syntax error in JavaScript. Parameters:\n*1 - column number where the error occurs.\n*2 - line number where the error occurs.\n*3 - Error message"
+	"codemirror-validate-js-syntaxerror": "Diagnostic message for a syntax error in JavaScript. Parameters:\n*1 - column number where the error occurs.\n*2 - line number where the error occurs.\n*3 - Error message",
+	"codemirror-ve-limit-exceeded": "Error message shown when CodeMirror is attempt to be used on very large pages in the 2017 editor.",
+	"codemirror-ve-limit-exceeded-info": "Link text for a link to more information, shown beneath the {{msg-mw|codemirror-ve-limit-exceeded}} message."
 }

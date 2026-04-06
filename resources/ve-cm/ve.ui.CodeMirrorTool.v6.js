@@ -31,6 +31,19 @@ ve.ui.CodeMirrorTool.static.commandName = 'codeMirror';
 ve.ui.CodeMirrorTool.static.deactivateOnSelect = false;
 
 /**
+ * The maximum document size that CodeMirror will handle.
+ * VisualEditor uses an infinite viewport which causes massive performance
+ * problems in CodeMirror on very large pages, and can even crash the browser.
+ * Until the integration is reworked, or VE uses a finite viewport, we put
+ * a hard limit on the document size that CodeMirror will attempt to load.
+ *
+ * See https://phabricator.wikimedia.org/T184857
+ *
+ * @type {number}
+ */
+ve.ui.CodeMirrorTool.static.maxDocSize = 250000;
+
+/**
  * @inheritdoc
  */
 ve.ui.CodeMirrorTool.prototype.onSelect = function () {
@@ -48,6 +61,21 @@ ve.ui.CodeMirrorTool.prototype.onSelect = function () {
  * @inheritdoc
  */
 ve.ui.CodeMirrorTool.prototype.onSurfaceChange = function ( oldSurface, newSurface ) {
+	// Disable CM on very large documents (T184857).
+	if ( newSurface.getMode() === 'source' &&
+		newSurface.getModel().getDocument().getLength() > this.constructor.static.maxDocSize
+	) {
+		const messageElem = document.createElement( 'p' );
+		messageElem.textContent = mw.msg( 'codemirror-ve-limit-exceeded' );
+		const helpLink = document.createElement( 'a' );
+		helpLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror#2017_editor';
+		helpLink.target = '_blank';
+		helpLink.textContent = mw.msg( 'codemirror-ve-limit-exceeded-info' );
+		mw.notify( [ messageElem, helpLink ] );
+		this.setDisabled( true );
+		return;
+	}
+
 	const isDisabled = newSurface.getMode() !== 'source';
 	this.setDisabled( isDisabled );
 	if ( !isDisabled ) {

@@ -477,7 +477,9 @@
 				]
 			},
 			"messages": [
-				"codemirror-toggle-label"
+				"codemirror-toggle-label",
+				"codemirror-ve-limit-exceeded",
+				"codemirror-ve-limit-exceeded-info"
 			]
 		},
 		"ext.CodeMirror.visualEditor.init": {
