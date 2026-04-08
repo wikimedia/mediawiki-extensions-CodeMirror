@@ -36,7 +36,7 @@ const getCodeMirrorValidator = ( api, title, contentmodel ) => {
 				title,
 				formatversion: 2
 			} ).then(
-				( r ) => r[ 'codemirror-validate' ].errors || [],
+				( r ) => ( r[ 'codemirror-validate' ] || {} ).errors || [],
 				( _, e ) => {
 					if ( typeof e !== 'object' || e.textStatus !== 'abort' ) {
 						mw.log.warn(

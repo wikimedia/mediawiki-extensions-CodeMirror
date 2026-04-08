@@ -22,6 +22,11 @@ const renderDiagnostic = ( diagnostic ) => Object.assign( {
 	}
 }, diagnostic );
 
+/**
+ * Provides linting support, including gutter markers and a status panel.
+ *
+ * @extends CodeMirrorPanel
+ */
 class CodeMirrorLint extends CodeMirrorPanel {
 	constructor( lintSource, codemirrorKeymap, lintApi, gotoLine ) {
 		super();

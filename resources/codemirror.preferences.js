@@ -98,7 +98,9 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		 * These do not have an associated {@link Extension} and instead execute a callback function
 		 * when the preference is changed.
 		 *
-		 * @type {Map<string, Function>}
+		 * The Map object is keyed by preference name, with values being the callback function.
+		 *
+		 * @type {Map}
 		 */
 		this.callbackPreferences = new Map();
 
@@ -110,9 +112,9 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		this.slowPreferences = new Set();
 
 		/**
-		 * Preferences only applicable to specific modes.
+		 * Preferences only applicable to specific modes, keyed by the mode name.
 		 *
-		 * @type {Map<string, string[]>} Preference names keyed by mode.
+		 * @type {Map<string, string[]>}
 		 */
 		this.modeSpecficPreferences = new Map();
 

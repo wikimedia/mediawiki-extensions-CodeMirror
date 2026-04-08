@@ -968,7 +968,7 @@ class CodeMirror {
 
 	/**
 	 * Apply an extra {@link LintSource linter} to the CodeMirror editor.
-	 * This linter respects the user preference for enabling or diabling linting.
+	 * This linter respects the user preference for enabling or disabling linting.
 	 *
 	 * @example
 	 * // Report Ukrainian letter 'і' among Latin letters as a warning.

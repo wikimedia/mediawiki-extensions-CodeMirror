@@ -593,7 +593,8 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 	}
 
 	/**
-	 * Update the right padding of the search input so the results text doesn't overlap with the input text.
+	 * Update the right padding of the search input so the
+	 * results text doesn't overlap with the input text.
 	 *
 	 * @private
 	 */

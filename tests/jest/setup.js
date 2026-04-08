@@ -114,6 +114,7 @@ mw.Api.prototype.loadMessagesIfMissing = jest.fn( () => {
 	mw.messages.get = jest.fn().mockReturnValue( mw.messages.values );
 } );
 mw.Api.prototype.get = jest.fn().mockReturnValue( Promise.resolve( {} ) );
+mw.Api.prototype.post = jest.fn().mockReturnValue( Promise.resolve( {} ) );
 mw.Api.prototype.abort = jest.fn();
 mw.Rest = jest.fn().mockImplementation( () => ( {} ) );
 mw.hook = jest.fn( ( name ) => ( {

@@ -32,7 +32,9 @@ const markDocTagType = ( decorations, from, mt, offset = 0 ) => {
 			balance += m[ 0 ] === '{' ? 1 : -1;
 			if ( balance === 0 ) {
 				if ( offset || m.index > left ) {
-					decorations.push( doctagType.range( from + left - offset, from + m.index + offset ) );
+					decorations.push(
+						doctagType.range( from + left - offset, from + m.index + offset )
+					);
 				}
 				return m.index + 1;
 			}
