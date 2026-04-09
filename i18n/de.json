@@ -217,5 +217,7 @@
 	"codemirror-beta-feature-title": "Verbesserte Syntaxhervorhebung",
 	"codemirror-beta-feature-description": "Erhalte frühzeitigen Zugriff auf neue Funktionen zur Syntaxhervorhebung und Bearbeitung, wie z. B. Codefaltung und Autovervollständigung.",
 	"codemirror-potentially-slow": "möglicherweise langsam",
-	"codemirror-validate-js-syntaxerror": "Syntaxfehler in Spalte $1 in Zeile $2: $3"
+	"codemirror-validate-js-syntaxerror": "Syntaxfehler in Spalte $1 in Zeile $2: $3",
+	"codemirror-ve-limit-exceeded": "Das Dokument ist zu groß für die Syntaxhervorhebung und diese wurde daher deaktiviert.",
+	"codemirror-ve-limit-exceeded-info": "Weitere Informationen"
 }

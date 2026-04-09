@@ -59,5 +59,6 @@
 	"codemirror-keymap-direction": "Промена усмерености",
 	"codemirror-keymap-help": "Тастерске пречице",
 	"prefs-accessibility": "Приступачност",
-	"prefs-syntax-highlighting": "Истицање синтаксе"
+	"prefs-syntax-highlighting": "Истицање синтаксе",
+	"codemirror-ve-limit-exceeded-info": "Више информација"
 }

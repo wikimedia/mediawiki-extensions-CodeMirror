@@ -211,5 +211,7 @@
 	"codemirror-beta-feature-title": "Penyerlahan Sintaks Dipertingkatkan",
 	"codemirror-beta-feature-description": "Dapatkan akses awal kepada ciri penyerlahan dan penyerlahan sintaks baharu seperti lipatan kod dan autolengkap.",
 	"codemirror-potentially-slow": "berpotensi perlahan",
-	"codemirror-validate-js-syntaxerror": "Ralat sintaks pada lajur $1 pada baris $2: $3"
+	"codemirror-validate-js-syntaxerror": "Ralat sintaks pada lajur $1 pada baris $2: $3",
+	"codemirror-ve-limit-exceeded": "Dokumen terlalu besar untuk penyerlahan sintaks dan telah dilumpuhkan.",
+	"codemirror-ve-limit-exceeded-info": "Maklumat lanjut"
 }
