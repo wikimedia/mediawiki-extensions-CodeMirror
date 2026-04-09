@@ -1,5 +1,9 @@
-/* eslint-disable-next-line n/no-missing-require */
-const { diagnosticCount, EditorView, Prec } = require( 'ext.CodeMirror.lib' );
+const {
+	diagnosticCount,
+	forEachDiagnostic,
+	EditorView,
+	Prec
+} = require( 'ext.CodeMirror.lib' ); // eslint-disable-line n/no-missing-require
 const CodeMirror = require( '../../resources/codemirror.js' );
 const { javascript } = require( '../../resources/modes/codemirror.mode.exporter.js' );
 
@@ -151,6 +155,9 @@ describe( 'applyLinter', () => {
 			setTimeout( () => {
 				try {
 					expect( diagnosticCount( cm.view.state ) ).toEqual( 1 );
+					forEachDiagnostic( cm.view.state, ( diagnostic ) => {
+						expect( diagnostic.renderMessage ).toBeInstanceOf( Function );
+					} );
 					resolve();
 				} catch ( e ) {
 					reject( e );
@@ -189,6 +196,9 @@ describe( 'applyLinter', () => {
 			setTimeout( () => {
 				try {
 					expect( diagnosticCount( cm.view.state ) ).toEqual( 1 );
+					forEachDiagnostic( cm.view.state, ( diagnostic ) => {
+						expect( diagnostic.renderMessage ).toBeInstanceOf( Function );
+					} );
 					resolve();
 				} catch ( e ) {
 					reject( e );

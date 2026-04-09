@@ -4,23 +4,10 @@ const {
 	lintGutter,
 	nextDiagnostic,
 	setDiagnosticsEffect,
-	showPanel
+	showPanel,
+	Diagnostic
 } = require( 'ext.CodeMirror.lib' );
 const CodeMirrorPanel = require( './codemirror.panel.js' );
-
-const renderDiagnostic = ( diagnostic ) => Object.assign( {
-	renderMessage( view ) {
-		const span = document.createElement( 'span' );
-		span.className = 'cm-diagnosticText-clickable';
-		span.textContent = diagnostic.message;
-		span.addEventListener( 'click', () => {
-			view.dispatch( {
-				selection: { anchor: diagnostic.from, head: diagnostic.to }
-			} );
-		} );
-		return span;
-	}
-}, diagnostic );
 
 /**
  * Provides linting support, including gutter markers and a status panel.
@@ -28,6 +15,43 @@ const renderDiagnostic = ( diagnostic ) => Object.assign( {
  * @extends CodeMirrorPanel
  */
 class CodeMirrorLint extends CodeMirrorPanel {
+
+	/**
+	 * Clicking on a diagnostic message will select the relevant code.
+	 *
+	 * @param {Diagnostic[]} diagnostics
+	 * @param {boolean} readOnly Whether the editor is read-only
+	 * @return {Diagnostic[]}
+	 * @internal
+	 * @ignore
+	 */
+	static renderDiagnostics( diagnostics, readOnly ) {
+		return diagnostics.map( ( diagnostic ) => {
+			const clickableDiagnostic = Object.assign( {}, diagnostic, {
+				renderMessage( view ) {
+					const span = document.createElement( 'span' );
+					span.className = 'cm-diagnosticText-clickable';
+					// TemplateStyles diagnostics already have a renderMessage method.
+					if ( diagnostic.renderMessage ) {
+						span.replaceChildren( diagnostic.renderMessage.call( this, view ) );
+					} else {
+						span.textContent = this.message;
+					}
+					span.addEventListener( 'click', () => {
+						view.dispatch( {
+							selection: { anchor: this.from, head: this.to }
+						} );
+					} );
+					return span;
+				}
+			} );
+			if ( readOnly ) {
+				delete clickableDiagnostic.actions;
+			}
+			return clickableDiagnostic;
+		} );
+	}
+
 	constructor( lintSource, codemirrorKeymap, lintApi, gotoLine ) {
 		super();
 		this.lintSource = lintSource;
@@ -52,13 +76,19 @@ class CodeMirrorLint extends CodeMirrorPanel {
 		];
 		if ( this.lintSource ) {
 			extension.push( linter(
-				async ( view ) => ( await this.lintSource( view ) ).map( renderDiagnostic )
+				async ( view ) => CodeMirrorLint.renderDiagnostics(
+					await this.lintSource( view ),
+					view.state.readOnly
+				)
 			) );
 		}
 		if ( this.lintApi ) {
-			extension.push(
-				linter( async ( view ) => ( await this.lintApi( view ) ).map( renderDiagnostic ) )
-			);
+			extension.push( linter(
+				async ( view ) => CodeMirrorLint.renderDiagnostics(
+					await this.lintApi( view ),
+					view.state.readOnly
+				)
+			) );
 		}
 		return extension;
 	}
@@ -132,7 +162,15 @@ class CodeMirrorLint extends CodeMirrorPanel {
 			.find( ( d ) => d.from <= head && d.to >= head );
 		if ( diagnostic ) {
 			if ( diagnostic.renderMessage ) {
-				message.replaceChildren( diagnostic.renderMessage() );
+				const rendered = diagnostic.renderMessage( this.view );
+				// Make the rendered message unclickable.
+				if ( rendered instanceof Element &&
+					rendered.classList.contains( 'cm-diagnosticText-clickable' )
+				) {
+					message.replaceChildren( ...rendered.childNodes );
+				} else {
+					message.replaceChildren( rendered );
+				}
 			} else {
 				message.textContent = diagnostic.message;
 			}

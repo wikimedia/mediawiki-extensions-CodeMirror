@@ -1001,7 +1001,10 @@ class CodeMirror {
 	applyLinter( lint, config ) {
 		const extension = linter( ( view ) => {
 			if ( typeof lint === 'function' ) {
-				return lint( view.state.doc.toString(), view );
+				return CodeMirrorLint.renderDiagnostics(
+					lint( view.state.doc.toString(), view ),
+					this.readOnly
+				);
 			}
 			const { pattern, callback } = lint;
 			const re = new RegExp( pattern, pattern.flags + ( pattern.global ? '' : 'g' ) );
@@ -1023,7 +1026,7 @@ class CodeMirror {
 				( { lastIndex } = re );
 				match = re.exec( text );
 			}
-			return diagnostics;
+			return CodeMirrorLint.renderDiagnostics( diagnostics, this.readOnly );
 		}, config );
 		this.customLinters.push( extension );
 		if ( this.extensionRegistry.isRegistered( 'lint', this.view ) ) {

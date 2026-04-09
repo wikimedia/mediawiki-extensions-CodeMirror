@@ -22,7 +22,7 @@ const updateSelection = ( anchor, head ) => {
 
 describe( 'CodeMirrorLint', () => {
 	beforeEach( () => {
-		cmLint.diagnostics = [
+		cmLint.diagnostics = CodeMirrorLint.renderDiagnostics( [
 			{
 				from: 0,
 				to: 1,
@@ -53,7 +53,7 @@ describe( 'CodeMirrorLint', () => {
 				severity: 'info',
 				message: 'Info message'
 			}
-		];
+		] );
 	} );
 
 	it( 'should contain 3 parts', () => {
@@ -87,15 +87,46 @@ describe( 'CodeMirrorLint', () => {
 		const message = dom.querySelector( '.cm-mw-panel--status-message' );
 		cmLint.updateDiagnosticMessage( 0, message );
 		expect( message.textContent ).toEqual( 'Error messageFixSuggestion' );
+		expect( message.querySelector( '.cm-diagnosticText-clickable' ) ).toBeNull();
 		cmLint.updateDiagnosticMessage( 2, message );
 		expect( message.textContent ).toEqual( '' );
 		cmLint.updateDiagnosticMessage( 1, message );
 		expect( message.textContent ).toEqual( 'Error messageFixSuggestion' );
+		expect( message.querySelector( '.cm-diagnosticText-clickable' ) ).toBeNull();
+		expect( message.querySelectorAll( 'button' ).length ).toEqual( 2 );
 		for ( const button of message.querySelectorAll( 'button' ) ) {
 			expect( button.title ).toEqual( 'tooltip' );
 			button.click();
 		}
 		expect( apply ).toHaveBeenCalledTimes( 2 );
+	} );
+
+	it( 'should hide action buttons when read-only', () => {
+		cmLint.diagnostics = CodeMirrorLint.renderDiagnostics( [
+			{
+				from: 0,
+				to: 1,
+				severity: 'error',
+				message: 'Error message',
+				actions: [
+					{
+						name: 'Fix',
+						tooltip: 'tooltip',
+						apply
+					},
+					{
+						name: 'Suggestion',
+						tooltip: 'tooltip',
+						apply
+					}
+				]
+			}
+		], true );
+		const message = dom.querySelector( '.cm-mw-panel--status-message' );
+		cmLint.updateDiagnosticMessage( 1, message );
+		expect( message.textContent ).toEqual( 'Error message' );
+		expect( message.querySelector( '.cm-diagnosticText-clickable' ) ).toBeNull();
+		expect( message.querySelectorAll( 'button' ).length ).toEqual( 0 );
 	} );
 
 	it( 'should update the position/selection', () => {
