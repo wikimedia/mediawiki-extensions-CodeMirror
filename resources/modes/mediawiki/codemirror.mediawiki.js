@@ -459,13 +459,13 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 
 	eatTemplateArgument( expectArgName ) {
 		return ( stream, state ) => {
-			if ( expectArgName && stream.match( /^(?:[^=|}{[<&~-]|-(?!\{))+/ ) ) {
+			if ( expectArgName && stream.match( /^(?:[^=|}{[<&~_-]|-(?!\{)|_(?!_))+/ ) ) {
 				if ( stream.eat( '=' ) ) {
 					state.tokenize = this.eatTemplateArgument( false );
 					return this.makeLocalStyle( mwModeConfig.tags.templateArgumentName, state );
 				}
 				return this.makeLocalStyle( mwModeConfig.tags.template, state );
-			} else if ( stream.eatWhile( /[^|}{[<&~-]/ ) ) {
+			} else if ( stream.eatWhile( /[^|}{[<&~_-]/ ) ) {
 				return this.makeLocalStyle( mwModeConfig.tags.template, state );
 			} else if ( stream.eat( '|' ) ) {
 				state.tokenize = this.eatTemplateArgument( true );

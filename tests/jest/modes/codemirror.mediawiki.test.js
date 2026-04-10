@@ -54,8 +54,8 @@ const testCases = [
 	},
 	{
 		title: 'magic words',
-		input: '__NOTOC__',
-		output: '<div class="cm-line"><span class="cm-mw-double-underscore">__NOTOC__</span> </div>'
+		input: '__NOTOC__\n{{foo|__notoc__}}',
+		output: '<div class="cm-line"><span class="cm-mw-double-underscore">__NOTOC__</span></div><div class="cm-line"><span class="cm-mw-template-ground cm-mw-template-bracket">{{</span><span class="cm-mw-template-ground cm-mw-pagename cm-mw-template-name">foo</span><span class="cm-mw-template-ground cm-mw-template-delimiter">|</span><span class="cm-mw-double-underscore">__notoc__</span><span class="cm-mw-template-ground cm-mw-template-bracket">}}</span> </div>'
 	},
 	{
 		title: 'nowiki',
