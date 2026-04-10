@@ -44,6 +44,7 @@
 		"@codemirror/theme-one-dark": "6.1.2",
 		"@codemirror/view": "6.36.8",
 		"@lezer/common": "1.2.3",
+		"@lezer/css": "1.2.1",
 		"@lezer/highlight": "1.2.1",
 		"@lezer/lr": "1.4.2",
 		"@rollup/plugin-alias": "5.1.1",
