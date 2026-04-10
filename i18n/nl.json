@@ -215,5 +215,7 @@
 	"codemirror-beta-feature-title": "Verbeterde syntaxiskleuring",
 	"codemirror-beta-feature-description": "Krijg vroegtijdig toegang tot nieuwe functies voor syntaxiskleuring en bewerking, zoals code samenvouwen en automatisch aanvullen.",
 	"codemirror-potentially-slow": "potentieel traag",
-	"codemirror-validate-js-syntaxerror": "Syntaxisfout in kolom $1 op regel $2: $3"
+	"codemirror-validate-js-syntaxerror": "Syntaxisfout in kolom $1 op regel $2: $3",
+	"codemirror-ve-limit-exceeded": "Het document is te groot voor syntaxismarkering en is daarom uitgeschakeld.",
+	"codemirror-ve-limit-exceeded-info": "Meer informatie"
 }

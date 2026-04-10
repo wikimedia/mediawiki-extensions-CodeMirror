@@ -1,9 +1,12 @@
 {
 	"@metadata": {
 		"authors": [
+			"Budhiastawa",
 			"Daud I.F. Argana"
 		]
 	},
 	"codemirror-desc": "Menyediakan penyorotan sintaksis di penyunting teks wiki",
-	"codemirror-toggle-label": "Penyorotan sintaksis"
+	"codemirror-toggle-label": "Penyorotan sintaksis",
+	"codemirror-ve-limit-exceeded": "Ukuran dokumen terlalu besar untuk penyorotan sintaks dan telah dinonaktifkan.",
+	"codemirror-ve-limit-exceeded-info": "Informasi lebih lanjut"
 }
