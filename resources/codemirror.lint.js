@@ -76,18 +76,22 @@ class CodeMirrorLint extends CodeMirrorPanel {
 		];
 		if ( this.lintSource ) {
 			extension.push( linter(
-				async ( view ) => CodeMirrorLint.renderDiagnostics(
-					await this.lintSource( view ),
-					view.state.readOnly
-				)
+				async ( view ) => this.lintSource.disabled ?
+					[] :
+					CodeMirrorLint.renderDiagnostics(
+						await this.lintSource( view ),
+						view.state.readOnly
+					)
 			) );
 		}
 		if ( this.lintApi ) {
 			extension.push( linter(
-				async ( view ) => CodeMirrorLint.renderDiagnostics(
-					await this.lintApi( view ),
-					view.state.readOnly
-				)
+				async ( view ) => this.lintApi.disabled ?
+					[] :
+					CodeMirrorLint.renderDiagnostics(
+						await this.lintApi( view ),
+						view.state.readOnly
+					)
 			) );
 		}
 		return extension;

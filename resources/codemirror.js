@@ -104,13 +104,30 @@ class CodeMirror {
 		 */
 		this.surface = null;
 		/**
-		 * The function to lint the code in the editor.
+		 * The function to lint the code in the editor using a web worker.
+		 * It can be disabled by setting `this.lintSource.disabled = true`.
+		 *
+		 * @example
+		 * mw.hook( 'ext.CodeMirror.ready' ).add( ( cm ) => {
+		 *   if ( cm.lintSource ) {
+		 *     cm.lintSource.disabled = true;
+		 *   }
+		 * } );
 		 *
 		 * @type {LintSource|undefined}
 		 */
 		this.lintSource = langSupport.lintSource;
 		/**
 		 * The function to lint the code in the editor using a MediaWiki API.
+		 * It can be disabled by setting `this.lintApi.disabled = true`.
+		 *
+		 * @example
+		 * mw.hook( 'ext.CodeMirror.ready' ).add( ( cm ) => {
+		 *   if ( cm.lintApi ) {
+		 *     cm.lintApi.disabled = true;
+		 *   }
+		 * } );
+		 *
 		 *
 		 * @type {LintSource|undefined}
 		 */
