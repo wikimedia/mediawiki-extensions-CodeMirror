@@ -220,5 +220,7 @@
 	"codemirror-beta-feature-title": "增强版语法高亮",
 	"codemirror-beta-feature-description": "提前试用新版语法高亮及编辑功能，例如代码折叠和自动补全。",
 	"codemirror-potentially-slow": "可能导致缓慢",
-	"codemirror-validate-js-syntaxerror": "第$2行的第$1列出现语法错误：$3"
+	"codemirror-validate-js-syntaxerror": "第$2行的第$1列出现语法错误：$3",
+	"codemirror-ve-limit-exceeded": "文档过大，语法高亮无法显示，已被禁用。",
+	"codemirror-ve-limit-exceeded-info": "更多信息"
 }
