@@ -3,10 +3,10 @@
 namespace MediaWiki\Extension\CodeMirror\Tests;
 
 use MediaWiki\Extension\CodeMirror\JavaScriptValidator;
+use MediaWiki\Language\MessageLocalizer;
 use MediaWiki\ResourceLoader\WikiModule;
 use MediaWiki\Title\Title;
 use MediaWikiIntegrationTestCase;
-use MessageLocalizer;
 
 /**
  * @covers \MediaWiki\Extension\CodeMirror\JavaScriptValidator

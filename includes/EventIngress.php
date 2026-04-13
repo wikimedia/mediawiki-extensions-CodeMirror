@@ -7,7 +7,7 @@ use MediaWiki\Page\Event\PageLatestRevisionChangedEvent;
 use MediaWiki\Page\Event\PageLatestRevisionChangedListener;
 use MediaWiki\Storage\PageUpdateCauses;
 use MediaWiki\Title\Title;
-use WANObjectCache;
+use Wikimedia\ObjectCache\WANObjectCache;
 
 class EventIngress extends DomainEventIngress implements PageLatestRevisionChangedListener {
 

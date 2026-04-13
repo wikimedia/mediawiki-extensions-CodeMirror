@@ -3,12 +3,12 @@
 namespace MediaWiki\Extension\CodeMirror;
 
 use MediaWiki\Context\RequestContext;
+use MediaWiki\Language\MessageLocalizer;
 use MediaWiki\Linker\LinkTarget;
 use MediaWiki\ResourceLoader as RL;
 use MediaWiki\Skin\SkinFactory;
 use MediaWiki\Title\Title;
 use MediaWiki\User\UserGroupManager;
-use MessageLocalizer;
 use Peast\Peast;
 use Peast\Syntax\Exception as PeastSyntaxException;
 use Wikimedia\ObjectCache\WANObjectCache;
