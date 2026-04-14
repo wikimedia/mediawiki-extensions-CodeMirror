@@ -1,14 +1,14 @@
-const { syntaxTree } = require( 'ext.CodeMirror.v6.lib' );
-const { javascriptLanguage, vue, vueLanguage } = require( '../lib/codemirror6.bundle.modes.js' );
+const { syntaxTree } = require( 'ext.CodeMirror.lib' );
+const { javascriptLanguage, vue, vueLanguage } = require( '../lib/codemirror.bundle.modes.js' );
 const CodeMirrorMode = require( './codemirror.mode.js' );
 
 /**
  * Vue language support for CodeMirror.
  *
  * @example
- * const require = await mw.loader.using( [ 'ext.CodeMirror.v6', 'ext.CodeMirror.v6.modes' ] );
- * const CodeMirror = require( 'ext.CodeMirror.v6' );
- * const { vue } = require( 'ext.CodeMirror.v6.modes' );
+ * const require = await mw.loader.using( [ 'ext.CodeMirror', 'ext.CodeMirror.modes' ] );
+ * const CodeMirror = require( 'ext.CodeMirror' );
+ * const { vue } = require( 'ext.CodeMirror.modes' );
  * const cm = new CodeMirror( myTextarea, vue() );
  * cm.initialize();
  * @extends CodeMirrorMode

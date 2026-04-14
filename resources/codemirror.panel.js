@@ -1,4 +1,4 @@
-const { EditorView, Extension, Panel } = require( 'ext.CodeMirror.v6.lib' );
+const { EditorView, Extension, Panel } = require( 'ext.CodeMirror.lib' );
 const CodeMirrorCodex = require( './codemirror.codex.js' );
 
 /**

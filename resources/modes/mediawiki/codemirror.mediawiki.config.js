@@ -3,7 +3,7 @@ const {
 	Tag,
 	TagStyle,
 	tags
-} = require( 'ext.CodeMirror.v6.lib' );
+} = require( 'ext.CodeMirror.lib' );
 
 /**
  * Configuration for the MediaWiki highlighting mode for CodeMirror.

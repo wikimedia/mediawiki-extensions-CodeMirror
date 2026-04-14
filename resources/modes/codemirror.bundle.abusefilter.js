@@ -1,6 +1,6 @@
 /**
  * This file is managed by Rollup and bundles all the listed dependencies
- * into the single file resources/lib/codemirror6.bundle.abusefilter.js.
+ * into the single file resources/lib/codemirror.bundle.abusefilter.js.
  */
 
 /* eslint-disable es-x/no-export-ns-from */

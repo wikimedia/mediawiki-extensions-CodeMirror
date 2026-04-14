@@ -11,7 +11,7 @@ const {
 	bracketMatching,
 	matchBrackets,
 	syntaxTree
-} = require( 'ext.CodeMirror.v6.lib' );
+} = require( 'ext.CodeMirror.lib' );
 
 /**
  * Find surrounding brackets in the syntax tree.

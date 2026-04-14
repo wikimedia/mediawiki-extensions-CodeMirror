@@ -1,5 +1,5 @@
 /* eslint-disable-next-line n/no-missing-require */
-const { diagnosticCount, EditorView, Prec } = require( 'ext.CodeMirror.v6.lib' );
+const { diagnosticCount, EditorView, Prec } = require( 'ext.CodeMirror.lib' );
 const CodeMirror = require( '../../resources/codemirror.js' );
 const { javascript } = require( '../../resources/modes/codemirror.mode.exporter.js' );
 

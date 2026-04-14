@@ -1,4 +1,4 @@
-const { EditorView, syntaxTree } = require( 'ext.CodeMirror.v6.lib' );
+const { EditorView, syntaxTree } = require( 'ext.CodeMirror.lib' );
 const { getTag, searchTag } = require( './codemirror.mediawiki.matchTag.js' );
 const mwModeConfig = require( './codemirror.mediawiki.config.js' );
 

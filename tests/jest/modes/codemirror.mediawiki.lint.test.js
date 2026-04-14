@@ -1,5 +1,5 @@
 /* eslint-disable-next-line n/no-missing-require */
-const { Text } = require( 'ext.CodeMirror.v6.lib' );
+const { Text } = require( 'ext.CodeMirror.lib' );
 const { lintSource, worker } = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.lint.js' );
 require( '../../../resources/workers/mediawiki/worker.min.js' );
 

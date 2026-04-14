@@ -5,7 +5,7 @@ const {
 	nextDiagnostic,
 	setDiagnosticsEffect,
 	showPanel
-} = require( 'ext.CodeMirror.v6.lib' );
+} = require( 'ext.CodeMirror.lib' );
 const CodeMirrorPanel = require( './codemirror.panel.js' );
 
 const renderDiagnostic = ( diagnostic ) => Object.assign( {

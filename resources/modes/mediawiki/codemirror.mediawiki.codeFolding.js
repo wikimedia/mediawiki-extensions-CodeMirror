@@ -16,7 +16,7 @@ const {
 	syntaxTree,
 	unfoldAll,
 	unfoldEffect
-} = require( 'ext.CodeMirror.v6.lib' );
+} = require( 'ext.CodeMirror.lib' );
 const mwModeConfig = require( './codemirror.mediawiki.config.js' );
 const { getTag, searchTag } = require( './codemirror.mediawiki.matchTag.js' );
 

@@ -7,7 +7,7 @@ const {
 	StringStream,
 	Tag,
 	syntaxHighlighting
-} = require( 'ext.CodeMirror.v6.lib' );
+} = require( 'ext.CodeMirror.lib' );
 const CodeMirrorMode = require( '../codemirror.mode.js' );
 const mwModeConfig = require( './codemirror.mediawiki.config.js' );
 const bidiIsolationExtension = require( './codemirror.mediawiki.bidiIsolation.js' );
@@ -77,7 +77,7 @@ const copyState = ( state ) => {
 /**
  * MediaWiki language support for CodeMirror 6.
  * Adapted from the original CodeMirror 5 stream parser by Pavel Astakhov.
- * Exposed through the {@link module:ext.CodeMirror.v6.mode.mediawiki ext.CodeMirror.v6.mode.mediawiki} module.
+ * Exposed through the {@link module:ext.CodeMirror.mode.mediawiki ext.CodeMirror.mode.mediawiki} module.
  *
  * @class
  * @extends CodeMirrorMode
@@ -1631,19 +1631,17 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 	}
 }
 
-/* eslint-disable max-len */
 /**
- * @module ext.CodeMirror.v6.mode.mediawiki
+ * @module ext.CodeMirror.mode.mediawiki
  * @description
  * This module provides syntax highlighting for the MediaWiki mode in CodeMirror.
  * @example
- * const require = await mw.loader.using( [ 'ext.CodeMirror.v6', 'ext.CodeMirror.v6.mode.mediawiki' ] );
- * const CodeMirror = require( 'ext.CodeMirror.v6' );
- * const { mediawiki } = require( 'ext.CodeMirror.v6.mode.mediawiki' );
+ * const require = await mw.loader.using( [ 'ext.CodeMirror', 'ext.CodeMirror.mode.mediawiki' ] );
+ * const CodeMirror = require( 'ext.CodeMirror' );
+ * const { mediawiki } = require( 'ext.CodeMirror.mode.mediawiki' );
  * const cm = new CodeMirror( myTextarea, mediawiki() );
  * cm.initialize();
  */
-/* eslint-enable max-len */
 
 let handler;
 

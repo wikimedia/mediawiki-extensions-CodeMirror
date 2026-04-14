@@ -1,6 +1,6 @@
 'use strict';
 
-var ext_CodeMirror_v6_lib = require('ext.CodeMirror.v6.lib');
+var ext_CodeMirror_lib = require('ext.CodeMirror.lib');
 
 /**
 The default maximum length of a `TreeBuffer` node.
@@ -4146,65 +4146,65 @@ const jsx = new ExternalTokenizer((input, stack) => {
   input.acceptToken(JSXStartTag, -back);
 });
 
-const jsHighlight = ext_CodeMirror_v6_lib.styleTags({
-  "get set async static": ext_CodeMirror_v6_lib.tags.modifier,
-  "for while do if else switch try catch finally return throw break continue default case defer": ext_CodeMirror_v6_lib.tags.controlKeyword,
-  "in of await yield void typeof delete instanceof as satisfies": ext_CodeMirror_v6_lib.tags.operatorKeyword,
-  "let var const using function class extends": ext_CodeMirror_v6_lib.tags.definitionKeyword,
-  "import export from": ext_CodeMirror_v6_lib.tags.moduleKeyword,
-  "with debugger new": ext_CodeMirror_v6_lib.tags.keyword,
-  TemplateString: ext_CodeMirror_v6_lib.tags.special(ext_CodeMirror_v6_lib.tags.string),
-  super: ext_CodeMirror_v6_lib.tags.atom,
-  BooleanLiteral: ext_CodeMirror_v6_lib.tags.bool,
-  this: ext_CodeMirror_v6_lib.tags.self,
-  null: ext_CodeMirror_v6_lib.tags.null,
-  Star: ext_CodeMirror_v6_lib.tags.modifier,
-  VariableName: ext_CodeMirror_v6_lib.tags.variableName,
-  "CallExpression/VariableName TaggedTemplateExpression/VariableName": ext_CodeMirror_v6_lib.tags.function(ext_CodeMirror_v6_lib.tags.variableName),
-  VariableDefinition: ext_CodeMirror_v6_lib.tags.definition(ext_CodeMirror_v6_lib.tags.variableName),
-  Label: ext_CodeMirror_v6_lib.tags.labelName,
-  PropertyName: ext_CodeMirror_v6_lib.tags.propertyName,
-  PrivatePropertyName: ext_CodeMirror_v6_lib.tags.special(ext_CodeMirror_v6_lib.tags.propertyName),
-  "CallExpression/MemberExpression/PropertyName": ext_CodeMirror_v6_lib.tags.function(ext_CodeMirror_v6_lib.tags.propertyName),
-  "FunctionDeclaration/VariableDefinition": ext_CodeMirror_v6_lib.tags.function(ext_CodeMirror_v6_lib.tags.definition(ext_CodeMirror_v6_lib.tags.variableName)),
-  "ClassDeclaration/VariableDefinition": ext_CodeMirror_v6_lib.tags.definition(ext_CodeMirror_v6_lib.tags.className),
-  "NewExpression/VariableName": ext_CodeMirror_v6_lib.tags.className,
-  PropertyDefinition: ext_CodeMirror_v6_lib.tags.definition(ext_CodeMirror_v6_lib.tags.propertyName),
-  PrivatePropertyDefinition: ext_CodeMirror_v6_lib.tags.definition(ext_CodeMirror_v6_lib.tags.special(ext_CodeMirror_v6_lib.tags.propertyName)),
-  UpdateOp: ext_CodeMirror_v6_lib.tags.updateOperator,
-  "LineComment Hashbang": ext_CodeMirror_v6_lib.tags.lineComment,
-  BlockComment: ext_CodeMirror_v6_lib.tags.blockComment,
-  Number: ext_CodeMirror_v6_lib.tags.number,
-  String: ext_CodeMirror_v6_lib.tags.string,
-  Escape: ext_CodeMirror_v6_lib.tags.escape,
-  ArithOp: ext_CodeMirror_v6_lib.tags.arithmeticOperator,
-  LogicOp: ext_CodeMirror_v6_lib.tags.logicOperator,
-  BitOp: ext_CodeMirror_v6_lib.tags.bitwiseOperator,
-  CompareOp: ext_CodeMirror_v6_lib.tags.compareOperator,
-  RegExp: ext_CodeMirror_v6_lib.tags.regexp,
-  Equals: ext_CodeMirror_v6_lib.tags.definitionOperator,
-  Arrow: ext_CodeMirror_v6_lib.tags.function(ext_CodeMirror_v6_lib.tags.punctuation),
-  ": Spread": ext_CodeMirror_v6_lib.tags.punctuation,
-  "( )": ext_CodeMirror_v6_lib.tags.paren,
-  "[ ]": ext_CodeMirror_v6_lib.tags.squareBracket,
-  "{ }": ext_CodeMirror_v6_lib.tags.brace,
-  "InterpolationStart InterpolationEnd": ext_CodeMirror_v6_lib.tags.special(ext_CodeMirror_v6_lib.tags.brace),
-  ".": ext_CodeMirror_v6_lib.tags.derefOperator,
-  ", ;": ext_CodeMirror_v6_lib.tags.separator,
-  "@": ext_CodeMirror_v6_lib.tags.meta,
+const jsHighlight = ext_CodeMirror_lib.styleTags({
+  "get set async static": ext_CodeMirror_lib.tags.modifier,
+  "for while do if else switch try catch finally return throw break continue default case defer": ext_CodeMirror_lib.tags.controlKeyword,
+  "in of await yield void typeof delete instanceof as satisfies": ext_CodeMirror_lib.tags.operatorKeyword,
+  "let var const using function class extends": ext_CodeMirror_lib.tags.definitionKeyword,
+  "import export from": ext_CodeMirror_lib.tags.moduleKeyword,
+  "with debugger new": ext_CodeMirror_lib.tags.keyword,
+  TemplateString: ext_CodeMirror_lib.tags.special(ext_CodeMirror_lib.tags.string),
+  super: ext_CodeMirror_lib.tags.atom,
+  BooleanLiteral: ext_CodeMirror_lib.tags.bool,
+  this: ext_CodeMirror_lib.tags.self,
+  null: ext_CodeMirror_lib.tags.null,
+  Star: ext_CodeMirror_lib.tags.modifier,
+  VariableName: ext_CodeMirror_lib.tags.variableName,
+  "CallExpression/VariableName TaggedTemplateExpression/VariableName": ext_CodeMirror_lib.tags.function(ext_CodeMirror_lib.tags.variableName),
+  VariableDefinition: ext_CodeMirror_lib.tags.definition(ext_CodeMirror_lib.tags.variableName),
+  Label: ext_CodeMirror_lib.tags.labelName,
+  PropertyName: ext_CodeMirror_lib.tags.propertyName,
+  PrivatePropertyName: ext_CodeMirror_lib.tags.special(ext_CodeMirror_lib.tags.propertyName),
+  "CallExpression/MemberExpression/PropertyName": ext_CodeMirror_lib.tags.function(ext_CodeMirror_lib.tags.propertyName),
+  "FunctionDeclaration/VariableDefinition": ext_CodeMirror_lib.tags.function(ext_CodeMirror_lib.tags.definition(ext_CodeMirror_lib.tags.variableName)),
+  "ClassDeclaration/VariableDefinition": ext_CodeMirror_lib.tags.definition(ext_CodeMirror_lib.tags.className),
+  "NewExpression/VariableName": ext_CodeMirror_lib.tags.className,
+  PropertyDefinition: ext_CodeMirror_lib.tags.definition(ext_CodeMirror_lib.tags.propertyName),
+  PrivatePropertyDefinition: ext_CodeMirror_lib.tags.definition(ext_CodeMirror_lib.tags.special(ext_CodeMirror_lib.tags.propertyName)),
+  UpdateOp: ext_CodeMirror_lib.tags.updateOperator,
+  "LineComment Hashbang": ext_CodeMirror_lib.tags.lineComment,
+  BlockComment: ext_CodeMirror_lib.tags.blockComment,
+  Number: ext_CodeMirror_lib.tags.number,
+  String: ext_CodeMirror_lib.tags.string,
+  Escape: ext_CodeMirror_lib.tags.escape,
+  ArithOp: ext_CodeMirror_lib.tags.arithmeticOperator,
+  LogicOp: ext_CodeMirror_lib.tags.logicOperator,
+  BitOp: ext_CodeMirror_lib.tags.bitwiseOperator,
+  CompareOp: ext_CodeMirror_lib.tags.compareOperator,
+  RegExp: ext_CodeMirror_lib.tags.regexp,
+  Equals: ext_CodeMirror_lib.tags.definitionOperator,
+  Arrow: ext_CodeMirror_lib.tags.function(ext_CodeMirror_lib.tags.punctuation),
+  ": Spread": ext_CodeMirror_lib.tags.punctuation,
+  "( )": ext_CodeMirror_lib.tags.paren,
+  "[ ]": ext_CodeMirror_lib.tags.squareBracket,
+  "{ }": ext_CodeMirror_lib.tags.brace,
+  "InterpolationStart InterpolationEnd": ext_CodeMirror_lib.tags.special(ext_CodeMirror_lib.tags.brace),
+  ".": ext_CodeMirror_lib.tags.derefOperator,
+  ", ;": ext_CodeMirror_lib.tags.separator,
+  "@": ext_CodeMirror_lib.tags.meta,
 
-  TypeName: ext_CodeMirror_v6_lib.tags.typeName,
-  TypeDefinition: ext_CodeMirror_v6_lib.tags.definition(ext_CodeMirror_v6_lib.tags.typeName),
-  "type enum interface implements namespace module declare": ext_CodeMirror_v6_lib.tags.definitionKeyword,
-  "abstract global Privacy readonly override": ext_CodeMirror_v6_lib.tags.modifier,
-  "is keyof unique infer asserts": ext_CodeMirror_v6_lib.tags.operatorKeyword,
+  TypeName: ext_CodeMirror_lib.tags.typeName,
+  TypeDefinition: ext_CodeMirror_lib.tags.definition(ext_CodeMirror_lib.tags.typeName),
+  "type enum interface implements namespace module declare": ext_CodeMirror_lib.tags.definitionKeyword,
+  "abstract global Privacy readonly override": ext_CodeMirror_lib.tags.modifier,
+  "is keyof unique infer asserts": ext_CodeMirror_lib.tags.operatorKeyword,
 
-  JSXAttributeValue: ext_CodeMirror_v6_lib.tags.attributeValue,
-  JSXText: ext_CodeMirror_v6_lib.tags.content,
-  "JSXStartTag JSXStartCloseTag JSXSelfCloseEndTag JSXEndTag": ext_CodeMirror_v6_lib.tags.angleBracket,
-  "JSXIdentifier JSXNameSpacedName": ext_CodeMirror_v6_lib.tags.tagName,
-  "JSXAttribute/JSXIdentifier JSXAttribute/JSXNameSpacedName": ext_CodeMirror_v6_lib.tags.attributeName,
-  "JSXBuiltin/JSXIdentifier": ext_CodeMirror_v6_lib.tags.standard(ext_CodeMirror_v6_lib.tags.tagName)
+  JSXAttributeValue: ext_CodeMirror_lib.tags.attributeValue,
+  JSXText: ext_CodeMirror_lib.tags.content,
+  "JSXStartTag JSXStartCloseTag JSXSelfCloseEndTag JSXEndTag": ext_CodeMirror_lib.tags.angleBracket,
+  "JSXIdentifier JSXNameSpacedName": ext_CodeMirror_lib.tags.tagName,
+  "JSXAttribute/JSXIdentifier JSXAttribute/JSXNameSpacedName": ext_CodeMirror_lib.tags.attributeName,
+  "JSXBuiltin/JSXIdentifier": ext_CodeMirror_lib.tags.standard(ext_CodeMirror_lib.tags.tagName)
 });
 
 // This file was generated by lezer-generator. You probably shouldn't edit it.
@@ -4242,57 +4242,57 @@ A collection of JavaScript-related
 [snippets](https://codemirror.net/6/docs/ref/#autocomplete.snippet).
 */
 const snippets = [
-    /*@__PURE__*/ext_CodeMirror_v6_lib.snippetCompletion("function ${name}(${params}) {\n\t${}\n}", {
+    /*@__PURE__*/ext_CodeMirror_lib.snippetCompletion("function ${name}(${params}) {\n\t${}\n}", {
         label: "function",
         detail: "definition",
         type: "keyword"
     }),
-    /*@__PURE__*/ext_CodeMirror_v6_lib.snippetCompletion("for (let ${index} = 0; ${index} < ${bound}; ${index}++) {\n\t${}\n}", {
+    /*@__PURE__*/ext_CodeMirror_lib.snippetCompletion("for (let ${index} = 0; ${index} < ${bound}; ${index}++) {\n\t${}\n}", {
         label: "for",
         detail: "loop",
         type: "keyword"
     }),
-    /*@__PURE__*/ext_CodeMirror_v6_lib.snippetCompletion("for (let ${name} of ${collection}) {\n\t${}\n}", {
+    /*@__PURE__*/ext_CodeMirror_lib.snippetCompletion("for (let ${name} of ${collection}) {\n\t${}\n}", {
         label: "for",
         detail: "of loop",
         type: "keyword"
     }),
-    /*@__PURE__*/ext_CodeMirror_v6_lib.snippetCompletion("do {\n\t${}\n} while (${})", {
+    /*@__PURE__*/ext_CodeMirror_lib.snippetCompletion("do {\n\t${}\n} while (${})", {
         label: "do",
         detail: "loop",
         type: "keyword"
     }),
-    /*@__PURE__*/ext_CodeMirror_v6_lib.snippetCompletion("while (${}) {\n\t${}\n}", {
+    /*@__PURE__*/ext_CodeMirror_lib.snippetCompletion("while (${}) {\n\t${}\n}", {
         label: "while",
         detail: "loop",
         type: "keyword"
     }),
-    /*@__PURE__*/ext_CodeMirror_v6_lib.snippetCompletion("try {\n\t${}\n} catch (${error}) {\n\t${}\n}", {
+    /*@__PURE__*/ext_CodeMirror_lib.snippetCompletion("try {\n\t${}\n} catch (${error}) {\n\t${}\n}", {
         label: "try",
         detail: "/ catch block",
         type: "keyword"
     }),
-    /*@__PURE__*/ext_CodeMirror_v6_lib.snippetCompletion("if (${}) {\n\t${}\n}", {
+    /*@__PURE__*/ext_CodeMirror_lib.snippetCompletion("if (${}) {\n\t${}\n}", {
         label: "if",
         detail: "block",
         type: "keyword"
     }),
-    /*@__PURE__*/ext_CodeMirror_v6_lib.snippetCompletion("if (${}) {\n\t${}\n} else {\n\t${}\n}", {
+    /*@__PURE__*/ext_CodeMirror_lib.snippetCompletion("if (${}) {\n\t${}\n} else {\n\t${}\n}", {
         label: "if",
         detail: "/ else block",
         type: "keyword"
     }),
-    /*@__PURE__*/ext_CodeMirror_v6_lib.snippetCompletion("class ${name} {\n\tconstructor(${params}) {\n\t\t${}\n\t}\n}", {
+    /*@__PURE__*/ext_CodeMirror_lib.snippetCompletion("class ${name} {\n\tconstructor(${params}) {\n\t\t${}\n\t}\n}", {
         label: "class",
         detail: "definition",
         type: "keyword"
     }),
-    /*@__PURE__*/ext_CodeMirror_v6_lib.snippetCompletion("import {${names}} from \"${module}\"\n${}", {
+    /*@__PURE__*/ext_CodeMirror_lib.snippetCompletion("import {${names}} from \"${module}\"\n${}", {
         label: "import",
         detail: "named",
         type: "keyword"
     }),
-    /*@__PURE__*/ext_CodeMirror_v6_lib.snippetCompletion("import ${name} from \"${module}\"\n${}", {
+    /*@__PURE__*/ext_CodeMirror_lib.snippetCompletion("import ${name} from \"${module}\"\n${}", {
         label: "import",
         detail: "default",
         type: "keyword"
@@ -4303,17 +4303,17 @@ A collection of snippet completions for TypeScript. Includes the
 JavaScript [snippets](https://codemirror.net/6/docs/ref/#lang-javascript.snippets).
 */
 const typescriptSnippets = /*@__PURE__*/snippets.concat([
-    /*@__PURE__*/ext_CodeMirror_v6_lib.snippetCompletion("interface ${name} {\n\t${}\n}", {
+    /*@__PURE__*/ext_CodeMirror_lib.snippetCompletion("interface ${name} {\n\t${}\n}", {
         label: "interface",
         detail: "definition",
         type: "keyword"
     }),
-    /*@__PURE__*/ext_CodeMirror_v6_lib.snippetCompletion("type ${name} = ${type}", {
+    /*@__PURE__*/ext_CodeMirror_lib.snippetCompletion("type ${name} = ${type}", {
         label: "type",
         detail: "definition",
         type: "keyword"
     }),
-    /*@__PURE__*/ext_CodeMirror_v6_lib.snippetCompletion("enum ${name} {\n\t${}\n}", {
+    /*@__PURE__*/ext_CodeMirror_lib.snippetCompletion("enum ${name} {\n\t${}\n}", {
         label: "enum",
         detail: "definition",
         type: "keyword"
@@ -4389,7 +4389,7 @@ Completion source that looks up locally defined names in
 JavaScript code.
 */
 function localCompletionSource(context) {
-    let inner = ext_CodeMirror_v6_lib.syntaxTree(context.state).resolveInner(context.pos, -1);
+    let inner = ext_CodeMirror_lib.syntaxTree(context.state).resolveInner(context.pos, -1);
     if (dontComplete.indexOf(inner.name) > -1)
         return null;
     let isWord = inner.name == "VariableName" ||
@@ -4437,7 +4437,7 @@ name, it will return null if `context.explicit` is false, and
 */
 function completionPath(context) {
     let read = (node) => context.state.doc.sliceString(node.from, node.to);
-    let inner = ext_CodeMirror_v6_lib.syntaxTree(context.state).resolveInner(context.pos, -1);
+    let inner = ext_CodeMirror_lib.syntaxTree(context.state).resolveInner(context.pos, -1);
     if (inner.name == "PropertyName") {
         return pathFor(read, inner.parent, read(inner));
     }
@@ -4518,22 +4518,22 @@ A language provider based on the [Lezer JavaScript
 parser](https://github.com/lezer-parser/javascript), extended with
 highlighting and indentation information.
 */
-const javascriptLanguage = /*@__PURE__*/ext_CodeMirror_v6_lib.LRLanguage.define({
+const javascriptLanguage = /*@__PURE__*/ext_CodeMirror_lib.LRLanguage.define({
     name: "javascript",
     parser: /*@__PURE__*/parser$4.configure({
         props: [
-            /*@__PURE__*/ext_CodeMirror_v6_lib.indentNodeProp.add({
-                IfStatement: /*@__PURE__*/ext_CodeMirror_v6_lib.continuedIndent({ except: /^\s*({|else\b)/ }),
-                TryStatement: /*@__PURE__*/ext_CodeMirror_v6_lib.continuedIndent({ except: /^\s*({|catch\b|finally\b)/ }),
-                LabeledStatement: ext_CodeMirror_v6_lib.flatIndent,
+            /*@__PURE__*/ext_CodeMirror_lib.indentNodeProp.add({
+                IfStatement: /*@__PURE__*/ext_CodeMirror_lib.continuedIndent({ except: /^\s*({|else\b)/ }),
+                TryStatement: /*@__PURE__*/ext_CodeMirror_lib.continuedIndent({ except: /^\s*({|catch\b|finally\b)/ }),
+                LabeledStatement: ext_CodeMirror_lib.flatIndent,
                 SwitchBody: context => {
                     let after = context.textAfter, closed = /^\s*\}/.test(after), isCase = /^\s*(case|default)\b/.test(after);
                     return context.baseIndent + (closed ? 0 : isCase ? 1 : 2) * context.unit;
                 },
-                Block: /*@__PURE__*/ext_CodeMirror_v6_lib.delimitedIndent({ closing: "}" }),
+                Block: /*@__PURE__*/ext_CodeMirror_lib.delimitedIndent({ closing: "}" }),
                 ArrowFunction: cx => cx.baseIndent + cx.unit,
                 "TemplateString BlockComment": () => null,
-                "Statement Property": /*@__PURE__*/ext_CodeMirror_v6_lib.continuedIndent({ except: /^{/ }),
+                "Statement Property": /*@__PURE__*/ext_CodeMirror_lib.continuedIndent({ except: /^{/ }),
                 JSXElement(context) {
                     let closed = /^\s*<\//.test(context.textAfter);
                     return context.lineIndent(context.node.from) + (closed ? 0 : context.unit);
@@ -4546,8 +4546,8 @@ const javascriptLanguage = /*@__PURE__*/ext_CodeMirror_v6_lib.LRLanguage.define(
                     return context.column(context.node.from) + context.unit;
                 }
             }),
-            /*@__PURE__*/ext_CodeMirror_v6_lib.foldNodeProp.add({
-                "Block ClassBody SwitchBody EnumBody ObjectExpression ArrayExpression ObjectType": ext_CodeMirror_v6_lib.foldInside,
+            /*@__PURE__*/ext_CodeMirror_lib.foldNodeProp.add({
+                "Block ClassBody SwitchBody EnumBody ObjectExpression ArrayExpression ObjectType": ext_CodeMirror_lib.foldInside,
                 BlockComment(tree) { return { from: tree.from + 2, to: tree.to - 2 }; }
             })
         ]
@@ -4561,7 +4561,7 @@ const javascriptLanguage = /*@__PURE__*/ext_CodeMirror_v6_lib.LRLanguage.define(
 });
 const jsxSublanguage = {
     test: node => /^JSX/.test(node.name),
-    facet: /*@__PURE__*/ext_CodeMirror_v6_lib.defineLanguageFacet({ commentTokens: { block: { open: "{/*", close: "*/}" } } })
+    facet: /*@__PURE__*/ext_CodeMirror_lib.defineLanguageFacet({ commentTokens: { block: { open: "{/*", close: "*/}" } } })
 };
 /**
 A language provider for TypeScript.
@@ -4572,14 +4572,14 @@ Language provider for JSX.
 */
 const jsxLanguage = /*@__PURE__*/javascriptLanguage.configure({
     dialect: "jsx",
-    props: [/*@__PURE__*/ext_CodeMirror_v6_lib.sublanguageProp.add(n => n.isTop ? [jsxSublanguage] : undefined)]
+    props: [/*@__PURE__*/ext_CodeMirror_lib.sublanguageProp.add(n => n.isTop ? [jsxSublanguage] : undefined)]
 });
 /**
 Language provider for JSX + TypeScript.
 */
 const tsxLanguage = /*@__PURE__*/javascriptLanguage.configure({
     dialect: "jsx ts",
-    props: [/*@__PURE__*/ext_CodeMirror_v6_lib.sublanguageProp.add(n => n.isTop ? [jsxSublanguage] : undefined)]
+    props: [/*@__PURE__*/ext_CodeMirror_lib.sublanguageProp.add(n => n.isTop ? [jsxSublanguage] : undefined)]
 }, "typescript");
 let kwCompletion = (name) => ({ label: name, type: "keyword" });
 const keywords$1 = /*@__PURE__*/"break case const continue default delete export extends false finally in instanceof let new return static super switch this throw true typeof var yield".split(" ").map(kwCompletion);
@@ -4592,9 +4592,9 @@ function javascript(config = {}) {
     let lang = config.jsx ? (config.typescript ? tsxLanguage : jsxLanguage)
         : config.typescript ? typescriptLanguage : javascriptLanguage;
     let completions = config.typescript ? typescriptSnippets.concat(typescriptKeywords) : snippets.concat(keywords$1);
-    return new ext_CodeMirror_v6_lib.LanguageSupport(lang, [
+    return new ext_CodeMirror_lib.LanguageSupport(lang, [
         javascriptLanguage.data.of({
-            autocomplete: ext_CodeMirror_v6_lib.ifNotIn(dontComplete, ext_CodeMirror_v6_lib.completeFromList(completions))
+            autocomplete: ext_CodeMirror_lib.ifNotIn(dontComplete, ext_CodeMirror_lib.completeFromList(completions))
         }),
         javascriptLanguage.data.of({
             autocomplete: localCompletionSource
@@ -4624,7 +4624,7 @@ const android = typeof navigator == "object" && /*@__PURE__*//Android\b/.test(na
 Extension that will automatically insert JSX close tags when a `>` or
 `/` is typed.
 */
-const autoCloseTags$1 = /*@__PURE__*/ext_CodeMirror_v6_lib.EditorView.inputHandler.of((view, from, to, text, defaultInsert) => {
+const autoCloseTags$1 = /*@__PURE__*/ext_CodeMirror_lib.EditorView.inputHandler.of((view, from, to, text, defaultInsert) => {
     if ((android ? view.composing : view.compositionStarted) || view.state.readOnly ||
         from != to || (text != ">" && text != "/") ||
         !javascriptLanguage.isActiveAt(view.state, from, -1))
@@ -4632,7 +4632,7 @@ const autoCloseTags$1 = /*@__PURE__*/ext_CodeMirror_v6_lib.EditorView.inputHandl
     let base = defaultInsert(), { state } = base;
     let closeTags = state.changeByRange(range => {
         var _a;
-        let { head } = range, around = ext_CodeMirror_v6_lib.syntaxTree(state).resolveInner(head - 1, -1), name;
+        let { head } = range, around = ext_CodeMirror_lib.syntaxTree(state).resolveInner(head - 1, -1), name;
         if (around.name == "JSXStartTag")
             around = around.parent;
         if (state.doc.sliceString(head - 1, head) != text || around.name == "JSXAttributeValue" && around.to > head) ;
@@ -4644,7 +4644,7 @@ const autoCloseTags$1 = /*@__PURE__*/ext_CodeMirror_v6_lib.EditorView.inputHandl
             if (base && empty.from == head - 2 &&
                 ((name = elementName$1(state.doc, base.firstChild, head)) || ((_a = base.firstChild) === null || _a === void 0 ? void 0 : _a.name) == "JSXFragmentTag")) {
                 let insert = `${name}>`;
-                return { range: ext_CodeMirror_v6_lib.EditorSelection.cursor(head + insert.length, -1), changes: { from: head, insert } };
+                return { range: ext_CodeMirror_lib.EditorSelection.cursor(head + insert.length, -1), changes: { from: head, insert } };
             }
         }
         else if (text == ">") {
@@ -4788,39 +4788,39 @@ const unitToken = new ExternalTokenizer(input => {
   }
 });
 
-const cssHighlighting = ext_CodeMirror_v6_lib.styleTags({
-  "AtKeyword import charset namespace keyframes media supports": ext_CodeMirror_v6_lib.tags.definitionKeyword,
-  "from to selector": ext_CodeMirror_v6_lib.tags.keyword,
-  NamespaceName: ext_CodeMirror_v6_lib.tags.namespace,
-  KeyframeName: ext_CodeMirror_v6_lib.tags.labelName,
-  KeyframeRangeName: ext_CodeMirror_v6_lib.tags.operatorKeyword,
-  TagName: ext_CodeMirror_v6_lib.tags.tagName,
-  ClassName: ext_CodeMirror_v6_lib.tags.className,
-  PseudoClassName: ext_CodeMirror_v6_lib.tags.constant(ext_CodeMirror_v6_lib.tags.className),
-  IdName: ext_CodeMirror_v6_lib.tags.labelName,
-  "FeatureName PropertyName": ext_CodeMirror_v6_lib.tags.propertyName,
-  AttributeName: ext_CodeMirror_v6_lib.tags.attributeName,
-  NumberLiteral: ext_CodeMirror_v6_lib.tags.number,
-  KeywordQuery: ext_CodeMirror_v6_lib.tags.keyword,
-  UnaryQueryOp: ext_CodeMirror_v6_lib.tags.operatorKeyword,
-  "CallTag ValueName": ext_CodeMirror_v6_lib.tags.atom,
-  VariableName: ext_CodeMirror_v6_lib.tags.variableName,
-  Callee: ext_CodeMirror_v6_lib.tags.operatorKeyword,
-  Unit: ext_CodeMirror_v6_lib.tags.unit,
-  "UniversalSelector NestingSelector": ext_CodeMirror_v6_lib.tags.definitionOperator,
-  "MatchOp CompareOp": ext_CodeMirror_v6_lib.tags.compareOperator,
-  "ChildOp SiblingOp, LogicOp": ext_CodeMirror_v6_lib.tags.logicOperator,
-  BinOp: ext_CodeMirror_v6_lib.tags.arithmeticOperator,
-  Important: ext_CodeMirror_v6_lib.tags.modifier,
-  Comment: ext_CodeMirror_v6_lib.tags.blockComment,
-  ColorLiteral: ext_CodeMirror_v6_lib.tags.color,
-  "ParenthesizedContent StringLiteral": ext_CodeMirror_v6_lib.tags.string,
-  ":": ext_CodeMirror_v6_lib.tags.punctuation,
-  "PseudoOp #": ext_CodeMirror_v6_lib.tags.derefOperator,
-  "; ,": ext_CodeMirror_v6_lib.tags.separator,
-  "( )": ext_CodeMirror_v6_lib.tags.paren,
-  "[ ]": ext_CodeMirror_v6_lib.tags.squareBracket,
-  "{ }": ext_CodeMirror_v6_lib.tags.brace
+const cssHighlighting = ext_CodeMirror_lib.styleTags({
+  "AtKeyword import charset namespace keyframes media supports": ext_CodeMirror_lib.tags.definitionKeyword,
+  "from to selector": ext_CodeMirror_lib.tags.keyword,
+  NamespaceName: ext_CodeMirror_lib.tags.namespace,
+  KeyframeName: ext_CodeMirror_lib.tags.labelName,
+  KeyframeRangeName: ext_CodeMirror_lib.tags.operatorKeyword,
+  TagName: ext_CodeMirror_lib.tags.tagName,
+  ClassName: ext_CodeMirror_lib.tags.className,
+  PseudoClassName: ext_CodeMirror_lib.tags.constant(ext_CodeMirror_lib.tags.className),
+  IdName: ext_CodeMirror_lib.tags.labelName,
+  "FeatureName PropertyName": ext_CodeMirror_lib.tags.propertyName,
+  AttributeName: ext_CodeMirror_lib.tags.attributeName,
+  NumberLiteral: ext_CodeMirror_lib.tags.number,
+  KeywordQuery: ext_CodeMirror_lib.tags.keyword,
+  UnaryQueryOp: ext_CodeMirror_lib.tags.operatorKeyword,
+  "CallTag ValueName": ext_CodeMirror_lib.tags.atom,
+  VariableName: ext_CodeMirror_lib.tags.variableName,
+  Callee: ext_CodeMirror_lib.tags.operatorKeyword,
+  Unit: ext_CodeMirror_lib.tags.unit,
+  "UniversalSelector NestingSelector": ext_CodeMirror_lib.tags.definitionOperator,
+  "MatchOp CompareOp": ext_CodeMirror_lib.tags.compareOperator,
+  "ChildOp SiblingOp, LogicOp": ext_CodeMirror_lib.tags.logicOperator,
+  BinOp: ext_CodeMirror_lib.tags.arithmeticOperator,
+  Important: ext_CodeMirror_lib.tags.modifier,
+  Comment: ext_CodeMirror_lib.tags.blockComment,
+  ColorLiteral: ext_CodeMirror_lib.tags.color,
+  "ParenthesizedContent StringLiteral": ext_CodeMirror_lib.tags.string,
+  ":": ext_CodeMirror_lib.tags.punctuation,
+  "PseudoOp #": ext_CodeMirror_lib.tags.derefOperator,
+  "; ,": ext_CodeMirror_lib.tags.separator,
+  "( )": ext_CodeMirror_lib.tags.paren,
+  "[ ]": ext_CodeMirror_lib.tags.squareBracket,
+  "{ }": ext_CodeMirror_lib.tags.brace
 });
 
 // This file was generated by lezer-generator. You probably shouldn't edit it.
@@ -5041,7 +5041,7 @@ completable variable. This is used by language modes like Sass and
 Less to reuse this package's completion logic.
 */
 const defineCSSCompletionSource = (isVariable) => context => {
-    let { state, pos } = context, node = ext_CodeMirror_v6_lib.syntaxTree(state).resolveInner(pos, -1);
+    let { state, pos } = context, node = ext_CodeMirror_lib.syntaxTree(state).resolveInner(pos, -1);
     let isDash = node.type.isError && node.from == node.to - 1 && state.doc.sliceString(node.from, node.to) == "-";
     if (node.name == "PropertyName" ||
         (isDash || node.name == "TagName") && /^(Block|Styles)$/.test(node.resolve(node.to).name))
@@ -5083,15 +5083,15 @@ A language provider based on the [Lezer CSS
 parser](https://github.com/lezer-parser/css), extended with
 highlighting and indentation information.
 */
-const cssLanguage = /*@__PURE__*/ext_CodeMirror_v6_lib.LRLanguage.define({
+const cssLanguage = /*@__PURE__*/ext_CodeMirror_lib.LRLanguage.define({
     name: "css",
     parser: /*@__PURE__*/parser$3.configure({
         props: [
-            /*@__PURE__*/ext_CodeMirror_v6_lib.indentNodeProp.add({
-                Declaration: /*@__PURE__*/ext_CodeMirror_v6_lib.continuedIndent()
+            /*@__PURE__*/ext_CodeMirror_lib.indentNodeProp.add({
+                Declaration: /*@__PURE__*/ext_CodeMirror_lib.continuedIndent()
             }),
-            /*@__PURE__*/ext_CodeMirror_v6_lib.foldNodeProp.add({
-                "Block KeyframeList": ext_CodeMirror_v6_lib.foldInside
+            /*@__PURE__*/ext_CodeMirror_lib.foldNodeProp.add({
+                "Block KeyframeList": ext_CodeMirror_lib.foldInside
             })
         ]
     }),
@@ -5105,18 +5105,18 @@ const cssLanguage = /*@__PURE__*/ext_CodeMirror_v6_lib.LRLanguage.define({
 Language support for CSS.
 */
 function css() {
-    return new ext_CodeMirror_v6_lib.LanguageSupport(cssLanguage, cssLanguage.data.of({ autocomplete: cssCompletionSource }));
+    return new ext_CodeMirror_lib.LanguageSupport(cssLanguage, cssLanguage.data.of({ autocomplete: cssCompletionSource }));
 }
 
-const jsonHighlighting = ext_CodeMirror_v6_lib.styleTags({
-  String: ext_CodeMirror_v6_lib.tags.string,
-  Number: ext_CodeMirror_v6_lib.tags.number,
-  "True False": ext_CodeMirror_v6_lib.tags.bool,
-  PropertyName: ext_CodeMirror_v6_lib.tags.propertyName,
-  Null: ext_CodeMirror_v6_lib.tags.null,
-  ", :": ext_CodeMirror_v6_lib.tags.separator,
-  "[ ]": ext_CodeMirror_v6_lib.tags.squareBracket,
-  "{ }": ext_CodeMirror_v6_lib.tags.brace
+const jsonHighlighting = ext_CodeMirror_lib.styleTags({
+  String: ext_CodeMirror_lib.tags.string,
+  Number: ext_CodeMirror_lib.tags.number,
+  "True False": ext_CodeMirror_lib.tags.bool,
+  PropertyName: ext_CodeMirror_lib.tags.propertyName,
+  Null: ext_CodeMirror_lib.tags.null,
+  ", :": ext_CodeMirror_lib.tags.separator,
+  "[ ]": ext_CodeMirror_lib.tags.squareBracket,
+  "{ }": ext_CodeMirror_lib.tags.brace
 });
 
 // This file was generated by lezer-generator. You probably shouldn't edit it.
@@ -5176,16 +5176,16 @@ function getErrorPosition(error, doc) {
 /**
 A language provider that provides JSON parsing.
 */
-const jsonLanguage = /*@__PURE__*/ext_CodeMirror_v6_lib.LRLanguage.define({
+const jsonLanguage = /*@__PURE__*/ext_CodeMirror_lib.LRLanguage.define({
     name: "json",
     parser: /*@__PURE__*/parser$2.configure({
         props: [
-            /*@__PURE__*/ext_CodeMirror_v6_lib.indentNodeProp.add({
-                Object: /*@__PURE__*/ext_CodeMirror_v6_lib.continuedIndent({ except: /^\s*\}/ }),
-                Array: /*@__PURE__*/ext_CodeMirror_v6_lib.continuedIndent({ except: /^\s*\]/ })
+            /*@__PURE__*/ext_CodeMirror_lib.indentNodeProp.add({
+                Object: /*@__PURE__*/ext_CodeMirror_lib.continuedIndent({ except: /^\s*\}/ }),
+                Array: /*@__PURE__*/ext_CodeMirror_lib.continuedIndent({ except: /^\s*\]/ })
             }),
-            /*@__PURE__*/ext_CodeMirror_v6_lib.foldNodeProp.add({
-                "Object Array": ext_CodeMirror_v6_lib.foldInside
+            /*@__PURE__*/ext_CodeMirror_lib.foldNodeProp.add({
+                "Object Array": ext_CodeMirror_lib.foldInside
             })
         ]
     }),
@@ -5198,7 +5198,7 @@ const jsonLanguage = /*@__PURE__*/ext_CodeMirror_v6_lib.LRLanguage.define({
 JSON language support.
 */
 function json() {
-    return new ext_CodeMirror_v6_lib.LanguageSupport(jsonLanguage);
+    return new ext_CodeMirror_lib.LanguageSupport(jsonLanguage);
 }
 
 // This file was generated by lezer-generator. You probably shouldn't edit it.
@@ -5423,18 +5423,18 @@ const styleTokens = contentTokenizer("style", styleText, StartCloseStyleTag);
 
 const textareaTokens = contentTokenizer("textarea", textareaText, StartCloseTextareaTag);
 
-const htmlHighlighting = ext_CodeMirror_v6_lib.styleTags({
-  "Text RawText IncompleteTag IncompleteCloseTag": ext_CodeMirror_v6_lib.tags.content,
-  "StartTag StartCloseTag SelfClosingEndTag EndTag": ext_CodeMirror_v6_lib.tags.angleBracket,
-  TagName: ext_CodeMirror_v6_lib.tags.tagName,
-  "MismatchedCloseTag/TagName": [ext_CodeMirror_v6_lib.tags.tagName,  ext_CodeMirror_v6_lib.tags.invalid],
-  AttributeName: ext_CodeMirror_v6_lib.tags.attributeName,
-  "AttributeValue UnquotedAttributeValue": ext_CodeMirror_v6_lib.tags.attributeValue,
-  Is: ext_CodeMirror_v6_lib.tags.definitionOperator,
-  "EntityReference CharacterReference": ext_CodeMirror_v6_lib.tags.character,
-  Comment: ext_CodeMirror_v6_lib.tags.blockComment,
-  ProcessingInst: ext_CodeMirror_v6_lib.tags.processingInstruction,
-  DoctypeDecl: ext_CodeMirror_v6_lib.tags.documentMeta
+const htmlHighlighting = ext_CodeMirror_lib.styleTags({
+  "Text RawText IncompleteTag IncompleteCloseTag": ext_CodeMirror_lib.tags.content,
+  "StartTag StartCloseTag SelfClosingEndTag EndTag": ext_CodeMirror_lib.tags.angleBracket,
+  TagName: ext_CodeMirror_lib.tags.tagName,
+  "MismatchedCloseTag/TagName": [ext_CodeMirror_lib.tags.tagName,  ext_CodeMirror_lib.tags.invalid],
+  AttributeName: ext_CodeMirror_lib.tags.attributeName,
+  "AttributeValue UnquotedAttributeValue": ext_CodeMirror_lib.tags.attributeValue,
+  Is: ext_CodeMirror_lib.tags.definitionOperator,
+  "EntityReference CharacterReference": ext_CodeMirror_lib.tags.character,
+  Comment: ext_CodeMirror_lib.tags.blockComment,
+  ProcessingInst: ext_CodeMirror_lib.tags.processingInstruction,
+  DoctypeDecl: ext_CodeMirror_lib.tags.documentMeta
 });
 
 // This file was generated by lezer-generator. You probably shouldn't edit it.
@@ -5990,7 +5990,7 @@ function completeAttrValue(state, schema, tree, from, to) {
     return { from, to, options, validFor: token };
 }
 function htmlCompletionFor(schema, context) {
-    let { state, pos } = context, tree = ext_CodeMirror_v6_lib.syntaxTree(state).resolveInner(pos, -1), around = tree.resolve(pos);
+    let { state, pos } = context, tree = ext_CodeMirror_lib.syntaxTree(state).resolveInner(pos, -1), around = tree.resolve(pos);
     for (let scan = pos, before; around == tree && (before = tree.childBefore(scan));) {
         let last = before.lastChild;
         if (!last || !last.type.isError || last.from < last.to)
@@ -6075,11 +6075,11 @@ parser](https://github.com/lezer-parser/html), extended with the
 JavaScript and CSS parsers to parse the content of `<script>` and
 `<style>` tags.
 */
-const htmlPlain = /*@__PURE__*/ext_CodeMirror_v6_lib.LRLanguage.define({
+const htmlPlain = /*@__PURE__*/ext_CodeMirror_lib.LRLanguage.define({
     name: "html",
     parser: /*@__PURE__*/parser$1.configure({
         props: [
-            /*@__PURE__*/ext_CodeMirror_v6_lib.indentNodeProp.add({
+            /*@__PURE__*/ext_CodeMirror_lib.indentNodeProp.add({
                 Element(context) {
                     let after = /^(\s*)(<\/)?/.exec(context.textAfter);
                     if (context.node.to <= context.pos + after[0].length)
@@ -6104,7 +6104,7 @@ const htmlPlain = /*@__PURE__*/ext_CodeMirror_v6_lib.LRLanguage.define({
                     return null;
                 }
             }),
-            /*@__PURE__*/ext_CodeMirror_v6_lib.foldNodeProp.add({
+            /*@__PURE__*/ext_CodeMirror_lib.foldNodeProp.add({
                 Element(node) {
                     let first = node.firstChild, last = node.lastChild;
                     if (!first || first.name != "OpenTag")
@@ -6112,7 +6112,7 @@ const htmlPlain = /*@__PURE__*/ext_CodeMirror_v6_lib.LRLanguage.define({
                     return { from: first.to, to: last.name == "CloseTag" ? last.from : node.to };
                 }
             }),
-            /*@__PURE__*/ext_CodeMirror_v6_lib.bracketMatchingHandle.add({
+            /*@__PURE__*/ext_CodeMirror_lib.bracketMatchingHandle.add({
                 "OpenTag CloseTag": node => node.getChild("TagName")
             })
         ]
@@ -6147,7 +6147,7 @@ function html(config = {}) {
         config.nestedAttributes && config.nestedAttributes.length)
         wrap = configureNesting((config.nestedLanguages || []).concat(defaultNesting), (config.nestedAttributes || []).concat(defaultAttrs));
     let lang = wrap ? htmlPlain.configure({ wrap, dialect }) : dialect ? htmlLanguage.configure({ dialect }) : htmlLanguage;
-    return new ext_CodeMirror_v6_lib.LanguageSupport(lang, [
+    return new ext_CodeMirror_lib.LanguageSupport(lang, [
         htmlLanguage.data.of({ autocomplete: htmlCompletionSourceWith(config) }),
         config.autoCloseTags !== false ? autoCloseTags : [],
         javascript().support,
@@ -6159,7 +6159,7 @@ const selfClosers = /*@__PURE__*/new Set(/*@__PURE__*/"area base br col command 
 Extension that will automatically insert close tags when a `>` or
 `/` is typed.
 */
-const autoCloseTags = /*@__PURE__*/ext_CodeMirror_v6_lib.EditorView.inputHandler.of((view, from, to, text, insertTransaction) => {
+const autoCloseTags = /*@__PURE__*/ext_CodeMirror_lib.EditorView.inputHandler.of((view, from, to, text, insertTransaction) => {
     if (view.composing || view.state.readOnly || from != to || (text != ">" && text != "/") ||
         !htmlLanguage.isActiveAt(view.state, from, -1))
         return false;
@@ -6167,7 +6167,7 @@ const autoCloseTags = /*@__PURE__*/ext_CodeMirror_v6_lib.EditorView.inputHandler
     let closeTags = state.changeByRange(range => {
         var _a, _b, _c;
         let didType = state.doc.sliceString(range.from - 1, range.to) == text;
-        let { head } = range, after = ext_CodeMirror_v6_lib.syntaxTree(state).resolveInner(head, -1), name;
+        let { head } = range, after = ext_CodeMirror_lib.syntaxTree(state).resolveInner(head, -1), name;
         if (didType && text == ">" && after.name == "EndTag") {
             let tag = after.parent;
             if (((_b = (_a = tag.parent) === null || _a === void 0 ? void 0 : _a.lastChild) === null || _b === void 0 ? void 0 : _b.name) != "CloseTag" &&
@@ -6185,7 +6185,7 @@ const autoCloseTags = /*@__PURE__*/ext_CodeMirror_v6_lib.EditorView.inputHandler
                 let to = head + (state.doc.sliceString(head, head + 1) === ">" ? 1 : 0);
                 let insert = `${name}>`;
                 return {
-                    range: ext_CodeMirror_v6_lib.EditorSelection.cursor(head + insert.length, -1),
+                    range: ext_CodeMirror_lib.EditorSelection.cursor(head + insert.length, -1),
                     changes: { from: head, to, insert }
                 };
             }
@@ -6228,16 +6228,16 @@ const exprParser = /*@__PURE__*/javascriptLanguage.parser.configure({
 });
 const baseParser = /*@__PURE__*/parser.configure({
     props: [
-        /*@__PURE__*/ext_CodeMirror_v6_lib.styleTags({
-            Text: ext_CodeMirror_v6_lib.tags.content,
-            Is: ext_CodeMirror_v6_lib.tags.definitionOperator,
-            AttributeName: ext_CodeMirror_v6_lib.tags.attributeName,
-            VueAttributeName: ext_CodeMirror_v6_lib.tags.keyword,
-            Identifier: ext_CodeMirror_v6_lib.tags.variableName,
-            "AttributeValue ScriptAttributeValue": ext_CodeMirror_v6_lib.tags.attributeValue,
-            Entity: ext_CodeMirror_v6_lib.tags.character,
-            "{{ }}": ext_CodeMirror_v6_lib.tags.brace,
-            "@ :": ext_CodeMirror_v6_lib.tags.punctuation
+        /*@__PURE__*/ext_CodeMirror_lib.styleTags({
+            Text: ext_CodeMirror_lib.tags.content,
+            Is: ext_CodeMirror_lib.tags.definitionOperator,
+            AttributeName: ext_CodeMirror_lib.tags.attributeName,
+            VueAttributeName: ext_CodeMirror_lib.tags.keyword,
+            Identifier: ext_CodeMirror_lib.tags.variableName,
+            "AttributeValue ScriptAttributeValue": ext_CodeMirror_lib.tags.attributeValue,
+            Entity: ext_CodeMirror_lib.tags.character,
+            "{{ }}": ext_CodeMirror_lib.tags.brace,
+            "@ :": ext_CodeMirror_lib.tags.punctuation
         })
     ]
 });
@@ -6276,11 +6276,11 @@ Vue template support.
 function vue(config = {}) {
     let base = baseHTML;
     if (config.base) {
-        if (config.base.language.name != "html" || !(config.base.language instanceof ext_CodeMirror_v6_lib.LRLanguage))
+        if (config.base.language.name != "html" || !(config.base.language instanceof ext_CodeMirror_lib.LRLanguage))
             throw new RangeError("The base option must be the result of calling html(...)");
         base = config.base;
     }
-    return new ext_CodeMirror_v6_lib.LanguageSupport(base.language == baseHTML.language ? vueLanguage : makeVue(base.language), [
+    return new ext_CodeMirror_lib.LanguageSupport(base.language == baseHTML.language ? vueLanguage : makeVue(base.language), [
         base.support,
         base.language.data.of({ closeBrackets: { brackets: ["{", '"'] } })
     ]);

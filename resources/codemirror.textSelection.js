@@ -1,4 +1,4 @@
-const { EditorSelection, EditorView } = require( 'ext.CodeMirror.v6.lib' );
+const { EditorSelection, EditorView } = require( 'ext.CodeMirror.lib' );
 
 /**
  * [jQuery.textSelection]{@link jQuery.fn.textSelection} implementation for CodeMirror.

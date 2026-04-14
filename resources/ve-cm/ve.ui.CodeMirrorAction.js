@@ -2,7 +2,7 @@
  * VisualEditor UserInterface CodeMirrorAction class.
  */
 
-require( './ve.ui.CodeMirrorTool.v6.js' );
+require( './ve.ui.CodeMirrorTool.js' );
 
 /**
  * CodeMirror action
@@ -39,14 +39,14 @@ ve.ui.CodeMirrorAction.static.methods = [ 'toggle' ];
  */
 ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 	if ( !this.surface.mirror && ( enable || enable === undefined ) ) {
-		await mw.loader.using( [ 'ext.CodeMirror.v6.mode.mediawiki', 'jquery.client' ] );
+		await mw.loader.using( [ 'ext.CodeMirror.mode.mediawiki', 'jquery.client' ] );
 		if ( this.surface.mirror ) {
 			mw.log( '[CodeMirror] VE mirror already initialized by another action.' );
 			return;
 		}
 		const CodeMirrorVisualEditor = require( '../codemirror.visualEditor.js' );
 		CodeMirrorVisualEditor.setCodeMirrorPreference( true );
-		const { mediawiki } = require( 'ext.CodeMirror.v6.mode.mediawiki' );
+		const { mediawiki } = require( 'ext.CodeMirror.mode.mediawiki' );
 		this.surface.mirror = new CodeMirrorVisualEditor(
 			this.surface,
 			mediawiki( {

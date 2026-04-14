@@ -1,5 +1,5 @@
 /* eslint-disable-next-line n/no-missing-require */
-const { syntaxTree } = require( 'ext.CodeMirror.v6.lib' );
+const { syntaxTree } = require( 'ext.CodeMirror.lib' );
 const CodeMirror = require( '../../../resources/codemirror.js' );
 const { mediawiki } = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.js' );
 const { getTag } = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.matchTag.js' );

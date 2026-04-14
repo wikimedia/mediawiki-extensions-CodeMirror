@@ -1,8 +1,0 @@
-{
-	"extends": [
-		"wikimedia/qunit"
-	],
-	"rules": {
-		"no-jquery/no-global-selector": "off"
-	}
-}

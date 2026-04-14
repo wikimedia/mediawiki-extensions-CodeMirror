@@ -1,5 +1,5 @@
-const { Diagnostic } = require( 'ext.CodeMirror.v6.lib' );
-const { abusefilterLanguage, abusefilter, analyzer } = require( '../lib/codemirror6.bundle.abusefilter.js' );
+const { Diagnostic } = require( 'ext.CodeMirror.lib' );
+const { abusefilterLanguage, abusefilter, analyzer } = require( '../lib/codemirror.bundle.abusefilter.js' );
 const CodeMirrorMode = require( './codemirror.mode.js' );
 
 /**
@@ -77,11 +77,11 @@ const convertDiagnostic = ( obj, severity ) => ( {
  *
  * @example
  * const require = await mw.loader.using( [
- *   'ext.CodeMirror.v6',
- *   'ext.CodeMirror.v6.abusefilter'
+ *   'ext.CodeMirror',
+ *   'ext.CodeMirror.abusefilter'
  * ] );
- * const CodeMirror = require( 'ext.CodeMirror.v6' );
- * const abusefilter = require( 'ext.CodeMirror.v6.abusefilter' );
+ * const CodeMirror = require( 'ext.CodeMirror' );
+ * const abusefilter = require( 'ext.CodeMirror.abusefilter' );
  * const cm = new CodeMirror( myTextarea, abusefilter() );
  * cm.initialize();
  * @extends CodeMirrorMode

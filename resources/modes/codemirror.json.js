@@ -1,4 +1,4 @@
-const { jsonLanguage, jsonParseLinter } = require( '../lib/codemirror6.bundle.modes.js' );
+const { jsonLanguage, jsonParseLinter } = require( '../lib/codemirror.bundle.modes.js' );
 const CodeMirrorMode = require( './codemirror.mode.js' );
 const jsonLint = require( './json/codemirror.json.lint.js' );
 
@@ -6,9 +6,9 @@ const jsonLint = require( './json/codemirror.json.lint.js' );
  * JSON language support for CodeMirror.
  *
  * @example
- * const require = await mw.loader.using( [ 'ext.CodeMirror.v6', 'ext.CodeMirror.v6.modes' ] );
- * const CodeMirror = require( 'ext.CodeMirror.v6' );
- * const { json } = require( 'ext.CodeMirror.v6.modes' );
+ * const require = await mw.loader.using( [ 'ext.CodeMirror', 'ext.CodeMirror.modes' ] );
+ * const CodeMirror = require( 'ext.CodeMirror' );
+ * const { json } = require( 'ext.CodeMirror.modes' );
  * const cm = new CodeMirror( myTextarea, json() );
  * cm.initialize();
  * @extends CodeMirrorMode

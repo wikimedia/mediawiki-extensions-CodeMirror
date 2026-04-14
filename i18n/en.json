@@ -209,8 +209,6 @@
 	"codemirror-wikilint-variable-anchor": "variable anchor in a section header",
 	"codemirror-wikilint-vertical-alignment": "vertical-alignment",
 	"codemirror-wikilint-whitespace": "insert a space",
-	"codemirror-beta-feature-title": "Improved Syntax Highlighting",
-	"codemirror-beta-feature-description": "Get early access to new syntax highlighting and editing features such as code folding and autocompletion.",
 	"codemirror-potentially-slow": "potentially slow",
 	"codemirror-validate-js-syntaxerror": "Syntax error at column $1 on line $2: $3",
 	"codemirror-ve-limit-exceeded": "Document is too large for syntax highlighting and has been disabled.",

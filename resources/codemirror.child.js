@@ -1,5 +1,5 @@
-const { Extension, LanguageSupport, Prec } = require( 'ext.CodeMirror.v6.lib' );
-const CodeMirror = require( 'ext.CodeMirror.v6' );
+const { Extension, LanguageSupport, Prec } = require( 'ext.CodeMirror.lib' );
+const CodeMirror = require( 'ext.CodeMirror' );
 
 /**
  * A `CodeMirrorChild` is a CodeMirror instance controlled by a 'primary'

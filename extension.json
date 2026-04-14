@@ -3,11 +3,10 @@
 	"version": "6.0.0",
 	"author": [
 		"[https://www.mediawiki.org/wiki/User:Pastakhov Pavel Astakhov]",
-		"[https://www.mediawiki.org/wiki/User:Florianschmidtwelzow Florian Schmidt]",
 		"Marijn Haverbeke",
 		"MusikAnimal",
 		"Bhsd",
-		"[https://raw.githubusercontent.com/codemirror/CodeMirror/master/AUTHORS CodeMirror contributors]"
+		"[https://www.mediawiki.org/wiki/User:Florianschmidtwelzow Florian Schmidt]"
 	],
 	"url": "https://www.mediawiki.org/wiki/Extension:CodeMirror",
 	"descriptionmsg": "codemirror-desc",
@@ -23,10 +22,6 @@
 		}
 	},
 	"config": {
-		"CodeMirrorV6": {
-			"value": false,
-			"description": "Temporary feature flag for the CodeMirror 6 upgrade."
-		},
 		"CodeMirrorEnabledModes": {
 			"value": {
 				"mediawiki": true
@@ -38,10 +33,6 @@
 				"wikEd"
 			],
 			"description": "An array of gadget names that, if enabled, will prevent CodeMirror from loading on action=edit and action=submit."
-		},
-		"CodeMirrorLineNumberingNamespaces": {
-			"value": null,
-			"description": "Legacy CM5 setting. List of namespace IDs where line numbering should be enabled, or `null` to enable for all namespaces. Set to [] to disable everywhere."
 		},
 		"CodeMirrorDefaultPreferences": {
 			"value": {
@@ -99,85 +90,6 @@
 	},
 	"ResourceModules": {
 		"ext.CodeMirror": {
-			"dependencies": [
-				"mediawiki.api",
-				"mediawiki.user",
-				"user.options"
-			],
-			"packageFiles": [
-				"legacy/ext.CodeMirror.js",
-				{
-					"name": "legacy/ext.CodeMirror.data.js",
-					"callback": "MediaWiki\\Extension\\CodeMirror\\DataScript::makeScript"
-				}
-			]
-		},
-		"ext.CodeMirror.WikiEditor": {
-			"dependencies": [
-				"ext.CodeMirror",
-				"jquery.textSelection",
-				"mediawiki.user",
-				"user.options",
-				"oojs-ui.styles.icons-editing-styling"
-			],
-			"packageFiles": [
-				"legacy/ext.CodeMirror.WikiEditor.js"
-			],
-			"styles": [
-				"legacy/ext.CodeMirror.less"
-			],
-			"messages": [
-				"codemirror-toggle-label"
-			]
-		},
-		"ext.CodeMirror.lib": {
-			"scripts": [
-				"lib/codemirror/lib/codemirror.js"
-			],
-			"styles": [
-				"lib/codemirror/lib/codemirror.css",
-				"legacy/codemirror-fixes.less"
-			]
-		},
-		"ext.CodeMirror.addons": {
-			"scripts": [
-				"legacy/addon/matchbrackets-wmde.js"
-			],
-			"dependencies": [
-				"ext.CodeMirror.lib"
-			]
-		},
-		"ext.CodeMirror.mode.mediawiki": {
-			"packageFiles": "legacy/mode/mediawiki/mediawiki.js",
-			"styles": [
-				"modes/mediawiki/codemirror.mediawiki.less",
-				"modes/mediawiki/codemirror.mediawiki.colorblind.less"
-			],
-			"dependencies": [
-				"ext.CodeMirror.lib"
-			]
-		},
-		"ext.CodeMirror.visualEditor": {
-			"dependencies": [
-				"ext.visualEditor.mwcore",
-				"ext.visualEditor.mwmeta",
-				"mediawiki.api",
-				"user.options",
-				"ext.CodeMirror"
-			],
-			"scripts": [
-				"legacy/modules/ve-cm/ve.ui.CodeMirrorAction.js",
-				"legacy/modules/ve-cm/ve.ui.CodeMirrorTool.js"
-			],
-			"styles": [
-				"legacy/modules/ve-cm/ve.ui.CodeMirror.less",
-				"legacy/ext.CodeMirror.less"
-			],
-			"messages": [
-				"codemirror-toggle-label"
-			]
-		},
-		"ext.CodeMirror.v6": {
 			"class": "MediaWiki\\ResourceLoader\\CodexModule",
 			"dependencies": [
 				"jquery.textSelection",
@@ -185,7 +97,7 @@
 				"mediawiki.language",
 				"mediawiki.user",
 				"user.options",
-				"ext.CodeMirror.v6.lib"
+				"ext.CodeMirror.lib"
 			],
 			"packageFiles": [
 				"codemirror.js",
@@ -334,7 +246,7 @@
 				"brackets"
 			]
 		},
-		"ext.CodeMirror.v6.init": {
+		"ext.CodeMirror.init": {
 			"packageFiles": [
 				"codemirror.init.js"
 			],
@@ -349,12 +261,12 @@
 				"codemirror-toggle-label-short"
 			]
 		},
-		"ext.CodeMirror.v6.lib": {
+		"ext.CodeMirror.lib": {
 			"packageFiles": [
-				"lib/codemirror6.bundle.lib.js"
+				"lib/codemirror.bundle.lib.js"
 			]
 		},
-		"ext.CodeMirror.v6.mode.mediawiki": {
+		"ext.CodeMirror.mode.mediawiki": {
 			"packageFiles": [
 				"modes/mediawiki/codemirror.mediawiki.js",
 				"modes/mediawiki/codemirror.mediawiki.config.js",
@@ -376,8 +288,8 @@
 			"dependencies": [
 				"mediawiki.Title",
 				"jquery.client",
-				"ext.CodeMirror.v6",
-				"ext.CodeMirror.v6.lib"
+				"ext.CodeMirror",
+				"ext.CodeMirror.lib"
 			],
 			"messages": [
 				"codemirror-fold",
@@ -406,7 +318,7 @@
 				"parentheses"
 			]
 		},
-		"ext.CodeMirror.v6.modes": {
+		"ext.CodeMirror.modes": {
 			"packageFiles": [
 				"modes/codemirror.mode.exporter.js",
 				"modes/codemirror.mode.js",
@@ -419,27 +331,27 @@
 				"modes/codemirror.vue.js",
 				"codemirror.validate.js",
 				"workers/codemirror.worker.js",
-				"lib/codemirror6.bundle.modes.js"
+				"lib/codemirror.bundle.modes.js"
 			],
 			"dependencies": [
-				"ext.CodeMirror.v6.lib"
+				"ext.CodeMirror.lib"
 			]
 		},
-		"ext.CodeMirror.v6.abusefilter": {
+		"ext.CodeMirror.abusefilter": {
 			"packageFiles": [
 				"modes/codemirror.abusefilter.js",
 				"modes/codemirror.mode.js",
 				"workers/codemirror.worker.js",
-				"lib/codemirror6.bundle.abusefilter.js"
+				"lib/codemirror.bundle.abusefilter.js"
 			],
 			"dependencies": [
-				"ext.CodeMirror.v6.lib"
+				"ext.CodeMirror.lib"
 			]
 		},
-		"ext.CodeMirror.v6.WikiEditor": {
+		"ext.CodeMirror.WikiEditor": {
 			"dependencies": [
 				"ext.wikiEditor",
-				"ext.CodeMirror.v6"
+				"ext.CodeMirror"
 			],
 			"packageFiles": [
 				"codemirror.wikieditor.js"
@@ -452,28 +364,28 @@
 				"codemirror-toggle-label-short"
 			]
 		},
-		"ext.CodeMirror.v6.styles": {
+		"ext.CodeMirror.styles": {
 			"styles": [
 				"codemirror.styleModule.less"
 			]
 		},
-		"ext.CodeMirror.v6.visualEditor": {
+		"ext.CodeMirror.visualEditor": {
 			"dependencies": [
 				"ext.visualEditor.mwcore",
 				"ext.visualEditor.mwmeta",
 				"user.options"
 			],
 			"packageFiles": [
-				"ve-cm/ve.ui.CodeMirrorAction.v6.js",
-				"ve-cm/ve.ui.CodeMirrorTool.v6.js",
+				"ve-cm/ve.ui.CodeMirrorAction.js",
+				"ve-cm/ve.ui.CodeMirrorTool.js",
 				"codemirror.visualEditor.js"
 			],
 			"styles": [
-				"ve-cm/ve.ui.CodeMirror.v6.less"
+				"ve-cm/ve.ui.CodeMirror.less"
 			],
 			"skinStyles": {
 				"minerva": [
-					"ve-cm/ve.ui.CodeMirror.v6.minerva.less"
+					"ve-cm/ve.ui.CodeMirror.minerva.less"
 				]
 			},
 			"messages": [
@@ -496,32 +408,17 @@
 		"localBasePath": "resources",
 		"remoteExtPath": "CodeMirror/resources"
 	},
-	"ForeignResourcesDir": "resources/lib",
 	"DefaultUserOptions": {
 		"usecodemirror": 0,
 		"usecodemirror-colorblind": 0,
 		"codemirror-preferences": ""
-	},
-	"QUnitTestModule": {
-		"localBasePath": "resources/legacy/mode/mediawiki/tests",
-		"remoteExtPath": "CodeMirror/resources/legacy/mode/mediawiki/tests",
-		"packageFiles": [
-			"qunit/CodeMirror.mediawiki.test.js"
-		],
-		"dependencies": [
-			"ext.CodeMirror",
-			"ext.CodeMirror.lib",
-			"ext.CodeMirror.mode.mediawiki"
-		]
 	},
 	"Hooks": {
 		"EditPage::showEditForm:initial": "main",
 		"EditPage::showReadOnlyForm:initial": "main",
 		"UploadForm:initial": "main",
 		"SpecialPageBeforeExecute": "main",
-		"GetPreferences": "main",
-		"GetBetaFeaturePreferences": "main",
-		"PreferencesFormPreSave": "main"
+		"GetPreferences": "main"
 	},
 	"HookHandlers": {
 		"main": {
@@ -551,9 +448,6 @@
 	],
 	"attributes": {
 		"CodeMirror": {
-			"PluginModules": [
-				"ext.CodeMirror.addons"
-			],
 			"TagModes": {
 				"pre": "mw-tag-pre",
 				"nowiki": "mw-tag-nowiki"

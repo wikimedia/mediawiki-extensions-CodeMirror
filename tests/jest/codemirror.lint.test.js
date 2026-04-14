@@ -1,5 +1,5 @@
 // eslint-disable-next-line n/no-missing-require
-const { EditorView, Text } = require( 'ext.CodeMirror.v6.lib' );
+const { EditorView, Text } = require( 'ext.CodeMirror.lib' );
 const CodeMirrorLint = require( '../../resources/codemirror.lint.js' );
 const CodeMirrorGotoLine = require( '../../resources/codemirror.gotoLine.js' );
 
