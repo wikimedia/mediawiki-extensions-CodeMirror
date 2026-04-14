@@ -13,7 +13,7 @@ const {
 	KeyBinding,
 	Prec,
 	StateEffect
-} = require( 'ext.CodeMirror.v6.lib' );
+} = require( 'ext.CodeMirror.lib' );
 const CodeMirrorCodex = require( './codemirror.codex.js' );
 
 /**

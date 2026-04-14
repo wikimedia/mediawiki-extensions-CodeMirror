@@ -4,7 +4,7 @@ const {
 	EditorView,
 	Extension,
 	StateEffect
-} = require( 'ext.CodeMirror.v6.lib' );
+} = require( 'ext.CodeMirror.lib' );
 
 /**
  * Container class for housing CodeMirror {@link Extension Extensions}. Each Extension
@@ -18,9 +18,9 @@ const {
  * The constructor is internal. The class can be accessed via {@link CodeMirror#extensionRegistry}.
  *
  * @example
- * const require = await mw.loader.using( 'ext.CodeMirror.v6' );
+ * const require = await mw.loader.using( 'ext.CodeMirror' );
  * mw.hook( 'ext.CodeMirror.ready' ).add( ( cm ) => {
- *   const { EditorView, Prec } = require( 'ext.CodeMirror.v6.lib' );
+ *   const { EditorView, Prec } = require( 'ext.CodeMirror.lib' );
  *   // Disable spellchecking. Use Prec.high() to override the
  *   // contentAttributesExtension which adds spellcheck="true".
  *   cm.extensionRegistry.register(

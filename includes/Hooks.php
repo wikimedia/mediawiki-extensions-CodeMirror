@@ -6,19 +6,16 @@ namespace MediaWiki\Extension\CodeMirror;
 use InvalidArgumentException;
 use MediaWiki\Config\Config;
 use MediaWiki\EditPage\EditPage;
-use MediaWiki\Extension\BetaFeatures\BetaFeatures;
 use MediaWiki\Extension\CodeMirror\Hooks\HookRunner;
 use MediaWiki\Extension\Gadgets\GadgetRepo;
 use MediaWiki\Hook\EditPage__showEditForm_initialHook;
 use MediaWiki\Hook\EditPage__showReadOnlyForm_initialHook;
 use MediaWiki\HookContainer\HookContainer;
-use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Language\LanguageConverter;
 use MediaWiki\Language\LanguageConverterFactory;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
-use MediaWiki\Preferences\Hook\PreferencesFormPreSaveHook;
 use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\SpecialPage\Hook\SpecialPageBeforeExecuteHook;
 use MediaWiki\SpecialPage\SpecialPage;
@@ -33,12 +30,10 @@ class Hooks implements
 	EditPage__showReadOnlyForm_initialHook,
 	UploadForm_initialHook,
 	SpecialPageBeforeExecuteHook,
-	GetPreferencesHook,
-	PreferencesFormPreSaveHook
+	GetPreferencesHook
 {
 
 	private readonly HookRunner $hookRunner;
-	private readonly bool $useV6;
 	private readonly array $conflictingGadgets;
 	private readonly string $extensionAssetsPath;
 	private readonly bool $debugMode;
@@ -78,7 +73,6 @@ class Hooks implements
 
 	public const OPTION_USE_CODEMIRROR = 'usecodemirror';
 	public const OPTION_COLORBLIND = 'usecodemirror-colorblind';
-	public const OPTION_BETA_FEATURE = 'codemirror-beta-feature-enable';
 	public const OPTION_USE_WIKIEDITOR = 'usebetatoolbar';
 
 	public const NO_PRIMARY_TEXTAREA = 0;
@@ -91,7 +85,6 @@ class Hooks implements
 		private readonly ?GadgetRepo $gadgetRepo,
 	) {
 		$this->hookRunner = new HookRunner( $hookContainer );
-		$this->useV6 = $config->get( 'CodeMirrorV6' );
 		$this->conflictingGadgets = $config->get( 'CodeMirrorConflictingGadgets' );
 		$this->extensionAssetsPath = $config->get( MainConfigNames::ExtensionAssetsPath );
 		$this->debugMode = $config->get( MainConfigNames::ShowExceptionDetails );
@@ -140,33 +133,19 @@ class Hooks implements
 		?ExtensionRegistry $extensionRegistry = null,
 		bool $supportWikiEditor = true
 	): bool {
-		$shouldUseV6 = $this->shouldUseV6( $out );
 		$useCodeMirror = $this->userOptionsManager->getBoolOption( $out->getUser(), self::OPTION_USE_CODEMIRROR );
 		$useWikiEditor = $supportWikiEditor &&
 			$this->userOptionsManager->getBoolOption( $out->getUser(), self::OPTION_USE_WIKIEDITOR );
-		// Disable CodeMirror 5 when the WikiEditor toolbar is not enabled in preferences.
-		if ( !$shouldUseV6 && !$useWikiEditor ) {
-			return false;
-		}
 		// In CodeMirror 6, either WikiEditor or the 'usecodemirror' preference must be enabled.
-		if ( $shouldUseV6 && !$useWikiEditor && !$useCodeMirror ) {
+		if ( !$useWikiEditor && !$useCodeMirror ) {
 			return false;
 		}
 
 		$extensionRegistry ??= ExtensionRegistry::getInstance();
-		$contentModel = $out->getTitle()->getContentModel();
 		$isEnabledMode = $this->getMode( $out->getTitle() ) !== null;
-		$isRTL = $out->getTitle()->getPageLanguage()->isRTL();
 		// Disable CodeMirror if we're on an edit page with a conflicting gadget (T178348)
 		return !$this->conflictingGadgetsEnabled( $extensionRegistry, $out->getUser() ) &&
-			// CodeMirror 5 on any textarea doesn't support RTL (T170001)
-			( !$isRTL || $shouldUseV6 ) &&
-			// Limit to supported content models. CM5 only supports wikitext.
-			// See https://www.mediawiki.org/wiki/Content_handlers#Extension_content_handlers
-			(
-				( $shouldUseV6 && $isEnabledMode ) ||
-				( !$shouldUseV6 && $contentModel === CONTENT_MODEL_WIKITEXT )
-			);
+			$isEnabledMode;
 	}
 
 	/**
@@ -202,30 +181,9 @@ class Hooks implements
 		if ( !$this->shouldLoadCodeMirror( $out ) ) {
 			return;
 		}
-
 		$this->isEditPage = true;
-		$useCodeMirror = $this->userOptionsManager->getBoolOption( $out->getUser(), self::OPTION_USE_CODEMIRROR );
-		$useWikiEditor = $this->userOptionsManager->getBoolOption( $out->getUser(), self::OPTION_USE_WIKIEDITOR );
-
-		if ( $this->shouldUseV6( $out ) ) {
-			// Pre-deliver modules for faster loading.
-			$this->loadInitModules( $out );
-		} elseif ( $useWikiEditor ) {
-			// Legacy CM5
-
-			// Add a config var to indicate use of CM5 is triggered by the extension itself.
-			// Any other usage will fire deprecation warnings.
-			$out->addJsConfigVars( 'cm5-from-extension', true );
-
-			// ext.CodeMirror.WikiEditor adds the toggle button to the toolbar.
-			$out->addModules( 'ext.CodeMirror.WikiEditor' );
-
-			if ( $useCodeMirror ) {
-				// These modules are predelivered for performance when needed
-				// keep these modules in sync with ext.CodeMirror.js
-				$out->addModules( [ 'ext.CodeMirror.lib', 'ext.CodeMirror.mode.mediawiki' ] );
-			}
-		}
+		// Pre-deliver modules for faster loading.
+		$this->loadInitModules( $out );
 	}
 
 	/**
@@ -246,15 +204,15 @@ class Hooks implements
 		$useWikiEditor = $supportWikiEditor &&
 			$this->userOptionsManager->getBoolOption( $out->getUser(), self::OPTION_USE_WIKIEDITOR );
 		$modules = [
-			'ext.CodeMirror.v6',
-			...( $useWikiEditor ? [ 'ext.CodeMirror.v6.WikiEditor' ] : [] ),
-			'ext.CodeMirror.v6.lib',
-			'ext.CodeMirror.v6.init',
+			'ext.CodeMirror',
+			...( $useWikiEditor ? [ 'ext.CodeMirror.WikiEditor' ] : [] ),
+			'ext.CodeMirror.lib',
+			'ext.CodeMirror.init',
 		];
 		$mode = $this->getMode( $out->getTitle() );
 
 		if ( in_array( $mode, self::SUPPORTED_MODES, true ) ) {
-			$modules[] = 'ext.CodeMirror.v6.' . ( $mode === self::MODE_MEDIAWIKI ? 'mode.mediawiki' : 'modes' );
+			$modules[] = 'ext.CodeMirror.' . ( $mode === self::MODE_MEDIAWIKI ? 'mode.mediawiki' : 'modes' );
 		} else {
 			wfLogWarning( "[CodeMirror] Unsupported CodeMirror mode '$mode'" );
 			$modules = [];
@@ -263,10 +221,6 @@ class Hooks implements
 		// Load modules from CodeMirrorPluginModules extension attribute.
 		$pluginModules = ExtensionRegistry::getInstance()->getAttribute( 'CodeMirrorPluginModules' ) ?? [];
 		foreach ( $pluginModules as $module ) {
-			// TODO: To be removed after CM5 is retired.
-			if ( $module === 'ext.CodeMirror.addons' ) {
-				continue;
-			}
 			$modules[] = $module;
 		}
 
@@ -276,7 +230,7 @@ class Hooks implements
 		} elseif ( $useWikiEditor ) {
 			// Load only the init module, which will add the toolbar button
 			// and lazy-load the rest of the modules via the cmRLModules config variable.
-			$out->addModules( 'ext.CodeMirror.v6.init' );
+			$out->addModules( 'ext.CodeMirror.init' );
 		}
 
 		if ( $useCodeMirror && $useWikiEditor && $mode !== self::MODE_MEDIAWIKI && $this->isEditPage ) {
@@ -320,7 +274,7 @@ class Hooks implements
 	 */
 	private function addStyleModule( OutputPage $out ): void {
 		$out->addBodyClasses( 'cm-mw-wikieditor-loading' );
-		$out->addModuleStyles( 'ext.CodeMirror.v6.styles' );
+		$out->addModuleStyles( 'ext.CodeMirror.styles' );
 	}
 
 	/**
@@ -330,7 +284,7 @@ class Hooks implements
 	 * @param OutputPage $out
 	 */
 	public function onEditPage__showReadOnlyForm_initial( $editor, $out ): void {
-		if ( $this->shouldUseV6( $out ) && $this->shouldLoadCodeMirror( $out ) ) {
+		if ( $this->shouldLoadCodeMirror( $out ) ) {
 			$this->isEditPage = true;
 			$this->readOnly = true;
 			$this->loadInitModules( $out );
@@ -347,7 +301,7 @@ class Hooks implements
 			return;
 		}
 		$out = $upload->getOutput();
-		if ( $this->shouldUseV6( $out ) && $this->shouldLoadCodeMirror( $out, null, false ) ) {
+		if ( $this->shouldLoadCodeMirror( $out, null, false ) ) {
 			$this->loadInitModules( $out, false, [ '#wpUploadDescription' ] );
 		}
 	}
@@ -362,7 +316,6 @@ class Hooks implements
 		$output = $special->getOutput();
 		if (
 			$special->getName() === 'ExpandTemplates' &&
-			$this->shouldUseV6( $output ) &&
 			$this->shouldLoadCodeMirror( $output, null, false )
 		) {
 			$this->loadInitModules( $output, false, [ '[name=wpInput]', '#output' ] );
@@ -374,32 +327,10 @@ class Hooks implements
 		$this->hookRunner->onCodeMirrorSpecialPage( $special, $textareas );
 		if (
 			$textareas &&
-			$this->shouldUseV6( $output ) &&
 			$this->shouldLoadCodeMirror( $output, null, false )
 		) {
 			$this->loadInitModules( $output, false, $textareas );
 		}
-	}
-
-	/**
-	 * @param OutputPage $out
-	 * @return bool
-	 * @todo Remove check for cm6enable flag after migration is complete
-	 */
-	private function shouldUseV6( OutputPage $out ): bool {
-		return $this->useV6 || $out->getRequest()->getFuzzyBool( 'cm6enable' ) || (
-			$this->isBetaFeatureEnabled( $out->getUser() ) &&
-			$out->getRequest()->getFuzzyBool( 'cm6enable', true )
-		);
-	}
-
-	/**
-	 * @param User $user
-	 * @return bool
-	 */
-	private function isBetaFeatureEnabled( User $user ): bool {
-		return ExtensionRegistry::getInstance()->isLoaded( 'BetaFeatures' ) &&
-			BetaFeatures::isFeatureEnabled( $user, self::OPTION_BETA_FEATURE );
 	}
 
 	/**
@@ -412,22 +343,6 @@ class Hooks implements
 	 * @return bool|void True or no return value to continue or false to abort
 	 */
 	public function onGetPreferences( $user, &$defaultPreferences ) {
-		if ( !$this->useV6 && !$this->isBetaFeatureEnabled( $user ) ) {
-			$defaultPreferences[self::OPTION_USE_CODEMIRROR] = [
-				'type' => 'api',
-			];
-
-			// The following messages are generated upstream by the 'section' value
-			// * prefs-accessibility
-			$defaultPreferences[self::OPTION_COLORBLIND] = [
-				'type' => 'toggle',
-				'label-message' => 'codemirror-prefs-colorblind',
-				'help-message' => 'codemirror-prefs-colorblind-help',
-				'section' => 'editing/accessibility',
-			];
-			return;
-		}
-
 		// Show message with a link to the Help page under "Syntax highlighting".
 		// The following messages are generated upstream by the 'section' value:
 		// * prefs-syntax-highlighting
@@ -456,45 +371,6 @@ class Hooks implements
 		$defaultPreferences['codemirror-preferences'] = [
 			'type' => 'api',
 		];
-	}
-
-	/**
-	 * GetBetaFeaturePreferences hook handler
-	 *
-	 * @param User $user
-	 * @param array &$betaPrefs
-	 */
-	public function onGetBetaFeaturePreferences( User $user, array &$betaPrefs ): void {
-		if ( $this->useV6 ) {
-			return;
-		}
-		$betaPrefs[ self::OPTION_BETA_FEATURE ] = [
-			'label-message' => 'codemirror-beta-feature-title',
-			'desc-message' => 'codemirror-beta-feature-description',
-			'screenshot' => [
-				'ltr' => $this->extensionAssetsPath . '/CodeMirror/resources/images/codemirror.beta-feature-ltr.svg',
-				'rtl' => $this->extensionAssetsPath . '/CodeMirror/resources/images/codemirror.beta-feature-rtl.svg'
-			],
-			'info-link' => 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror',
-			'discussion-link' => 'https://www.mediawiki.org/wiki/Help_talk:Extension:CodeMirror'
-		];
-	}
-
-	/**
-	 * When a user enables the CodeMirror beta feature, automatically enable the 'usecodemirror' preference.
-	 *
-	 * @param array $formData
-	 * @param HTMLForm $form
-	 * @param User $user
-	 * @param bool &$result
-	 * @param array $oldUserOptions
-	 */
-	public function onPreferencesFormPreSave( $formData, $form, $user, &$result, $oldUserOptions ) {
-		if ( ( $formData[self::OPTION_BETA_FEATURE] ?? false ) &&
-			!( $oldUserOptions[self::OPTION_BETA_FEATURE] ?? false )
-		) {
-			$this->userOptionsManager->setOption( $user, self::OPTION_USE_CODEMIRROR, 1 );
-		}
 	}
 
 	/**

@@ -1,18 +1,18 @@
 module.exports = {};
 
 /**
- * @module ext.CodeMirror.v6.modes
+ * @module ext.CodeMirror.modes
  * @description
  * This module provides syntax highlighting for JavaScript, JSON, CSS, Lua, and Vue in CodeMirror.
  * Each mode is exposed as a method that returns a {@link LanguageSupport}-compatible instance
  * that can be used with the {@link CodeMirror} constructor.
  *
  * For MediaWiki wikitext syntax highlighting, use
- * {@link module:ext.CodeMirror.v6.mode.mediawiki ext.CodeMirror.v6.mode.mediawiki}.
+ * {@link module:ext.CodeMirror.mode.mediawiki ext.CodeMirror.mode.mediawiki}.
  * @example
- * const require = await mw.loader.using( [ 'ext.CodeMirror.v6', 'ext.CodeMirror.v6.modes' ] );
- * const CodeMirror = require( 'ext.CodeMirror.v6' );
- * const { javascript, css } = require( 'ext.CodeMirror.v6.modes' );
+ * const require = await mw.loader.using( [ 'ext.CodeMirror', 'ext.CodeMirror.modes' ] );
+ * const CodeMirror = require( 'ext.CodeMirror' );
+ * const { javascript, css } = require( 'ext.CodeMirror.modes' );
  * const cmJs = new CodeMirror( myJsTextarea, javascript() );
  * cmJs.initialize();
  * const cmCss = new CodeMirror( myCssTextarea, css() );

@@ -1,10 +1,10 @@
-const { syntaxTree, Decoration } = require( 'ext.CodeMirror.v6.lib' );
+const { syntaxTree, Decoration } = require( 'ext.CodeMirror.lib' );
 const {
 	localCompletionSource,
 	javascript,
 	javascriptLanguage,
 	scopeCompletionSource
-} = require( '../lib/codemirror6.bundle.modes.js' );
+} = require( '../lib/codemirror.bundle.modes.js' );
 const CodeMirrorMode = require( './codemirror.mode.js' );
 const { doctag, markDocTagType, getViewPlugin } = require( './codemirror.doctag.js' );
 const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
@@ -133,9 +133,9 @@ const markGlobals = ( tree, visibleRanges, state ) => {
  * JavaScript language support for CodeMirror.
  *
  * @example
- * const require = await mw.loader.using( [ 'ext.CodeMirror.v6', 'ext.CodeMirror.v6.modes' ] );
- * const CodeMirror = require( 'ext.CodeMirror.v6' );
- * const { javascript } = require( 'ext.CodeMirror.v6.modes' );
+ * const require = await mw.loader.using( [ 'ext.CodeMirror', 'ext.CodeMirror.modes' ] );
+ * const CodeMirror = require( 'ext.CodeMirror' );
+ * const { javascript } = require( 'ext.CodeMirror.modes' );
  * const cm = new CodeMirror( myTextarea, javascript() );
  * cm.initialize();
  * @extends CodeMirrorMode

@@ -1,4 +1,4 @@
-const { EditorView, Text } = require( 'ext.CodeMirror.v6.lib' );
+const { EditorView, Text } = require( 'ext.CodeMirror.lib' );
 
 const workers = new Map();
 

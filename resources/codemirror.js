@@ -37,7 +37,7 @@ const {
 	rectangularSelection,
 	searchPanelOpen,
 	syntaxHighlighting
-} = require( 'ext.CodeMirror.v6.lib' );
+} = require( 'ext.CodeMirror.lib' );
 const CodeMirrorLint = require( './codemirror.lint.js' );
 const CodeMirrorTextSelection = require( './codemirror.textSelection.js' );
 const CodeMirrorSearch = require( './codemirror.search.js' );
@@ -48,7 +48,6 @@ const CodeMirrorExtensionRegistry = require( './codemirror.extensionRegistry.js'
 const bracketMatching = require( './codemirror.matchbrackets.js' );
 require( './ext.CodeMirror.data.js' );
 
-/* eslint-disable max-len */
 /**
  * Interface for the CodeMirror editor.
  *
@@ -65,9 +64,9 @@ require( './ext.CodeMirror.data.js' );
  *
  * @example
  * // Creating a new CodeMirror instance.
- * const require = await mw.loader.using( [ 'ext.CodeMirror.v6', 'ext.CodeMirror.v6.mode.mediawiki' ] );
- * const CodeMirror = require( 'ext.CodeMirror.v6' );
- * const { mediawiki } = require( 'ext.CodeMirror.v6.mode.mediawiki' );
+ * const require = await mw.loader.using( [ 'ext.CodeMirror', 'ext.CodeMirror.mode.mediawiki' ] );
+ * const CodeMirror = require( 'ext.CodeMirror' );
+ * const { mediawiki } = require( 'ext.CodeMirror.mode.mediawiki' );
  * const cm = new CodeMirror( myTextarea, mediawiki() );
  * cm.initialize();
  *
@@ -77,7 +76,6 @@ require( './ext.CodeMirror.data.js' );
  * } );
  */
 class CodeMirror {
-	/* eslint-enable max-len */
 	/**
 	 * Instantiate a new CodeMirror instance.
 	 *
@@ -947,9 +945,9 @@ class CodeMirror {
 	 * {@link CodeMirror#extensionRegistry extensionRegistry} instead.
 	 *
 	 * @example
-	 * const require = await mw.loader.using( 'ext.CodeMirror.v6' );
+	 * const require = await mw.loader.using( 'ext.CodeMirror' );
 	 * mw.hook( 'ext.CodeMirror.ready' ).add( ( cm ) => {
-	 *   const { EditorView, Prec } = require( 'ext.CodeMirror.v6.lib' );
+	 *   const { EditorView, Prec } = require( 'ext.CodeMirror.lib' );
 	 *   // Disable spellchecking. Use Prec.high() to override the
 	 *   // contentAttributesExtension which adds spellcheck="true".
 	 *   cm.applyExtension( Prec.high( EditorView.contentAttributes.of( {
@@ -1350,7 +1348,7 @@ class CodeMirror {
 }
 
 /**
- * @module ext.CodeMirror.v6
+ * @module ext.CodeMirror
  * @description
  * This module provides the basic CodeMirror integration for MediaWiki editors
  * and exports the {@link CodeMirror} class. To be usable beyond a plain text editor,

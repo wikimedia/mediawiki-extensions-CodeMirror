@@ -2,7 +2,7 @@ describe( 'CodeMirror.init.js', () => {
 	it( 'should load only ext.WikiEditor for read-only pages with usebetatoolbar=1', () => {
 		mw.config.get = jest.fn().mockImplementation( ( key ) => {
 			if ( key === 'cmRLModules' ) {
-				return [ 'ext.CodeMirror.v6', 'ext.CodeMirror.v6.WikiEditor' ];
+				return [ 'ext.CodeMirror', 'ext.CodeMirror.WikiEditor' ];
 			} else if ( key === 'cmReadOnly' ) {
 				return true;
 			}

@@ -1,5 +1,5 @@
 /* eslint-disable-next-line n/no-missing-require */
-const { foldable } = require( 'ext.CodeMirror.v6.lib' );
+const { foldable } = require( 'ext.CodeMirror.lib' );
 const CodeMirror = require( '../../../resources/codemirror.js' );
 const { lua } = require( '../../../resources/modes/codemirror.mode.exporter.js' );
 

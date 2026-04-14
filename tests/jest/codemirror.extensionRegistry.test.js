@@ -1,5 +1,5 @@
 /* eslint-disable-next-line n/no-missing-require */
-const { Compartment, EditorState, EditorView, Prec } = require( 'ext.CodeMirror.v6.lib' );
+const { Compartment, EditorState, EditorView, Prec } = require( 'ext.CodeMirror.lib' );
 const CodeMirrorExtensionRegistry = require( '../../resources/codemirror.extensionRegistry.js' );
 
 describe( 'CodeMirrorExtensionRegistry', () => {

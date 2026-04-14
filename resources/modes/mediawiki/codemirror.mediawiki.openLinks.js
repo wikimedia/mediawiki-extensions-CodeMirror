@@ -2,7 +2,7 @@ const {
 	EditorView,
 	Extension,
 	ensureSyntaxTree
-} = require( 'ext.CodeMirror.v6.lib' );
+} = require( 'ext.CodeMirror.lib' );
 const mwModeConfig = require( './codemirror.mediawiki.config.js' );
 const { platform } = $.client.profile();
 

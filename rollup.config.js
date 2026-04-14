@@ -4,11 +4,11 @@ const nodeResolve = require( '@rollup/plugin-node-resolve' );
 const alias = require( '@rollup/plugin-alias' );
 
 module.exports = [
-	// ext.CodeMirror.v6.lib
+	// ext.CodeMirror.lib
 	{
 		input: 'resources/codemirror.bundle.lib.js',
 		output: {
-			file: 'resources/lib/codemirror6.bundle.lib.js',
+			file: 'resources/lib/codemirror.bundle.lib.js',
 			format: 'cjs'
 		},
 		plugins: [
@@ -16,24 +16,24 @@ module.exports = [
 		]
 	},
 
-	// ext.CodeMirror.v6.modes
+	// ext.CodeMirror.modes
 	{
 		input: 'resources/modes/codemirror.bundle.modes.js',
 		output: {
-			file: 'resources/lib/codemirror6.bundle.modes.js',
+			file: 'resources/lib/codemirror.bundle.modes.js',
 			format: 'cjs'
 		},
 		plugins: [
 			alias( {
 				entries: [
-					{ find: '@codemirror/autocomplete', replacement: 'ext.CodeMirror.v6.lib' },
-					{ find: '@codemirror/commands', replacement: 'ext.CodeMirror.v6.lib' },
-					{ find: '@codemirror/language', replacement: 'ext.CodeMirror.v6.lib' },
-					{ find: '@codemirror/lint', replacement: 'ext.CodeMirror.v6.lib' },
-					{ find: '@codemirror/search', replacement: 'ext.CodeMirror.v6.lib' },
-					{ find: '@codemirror/state', replacement: 'ext.CodeMirror.v6.lib' },
-					{ find: '@codemirror/view', replacement: 'ext.CodeMirror.v6.lib' },
-					{ find: '@lezer/highlight', replacement: 'ext.CodeMirror.v6.lib' }
+					{ find: '@codemirror/autocomplete', replacement: 'ext.CodeMirror.lib' },
+					{ find: '@codemirror/commands', replacement: 'ext.CodeMirror.lib' },
+					{ find: '@codemirror/language', replacement: 'ext.CodeMirror.lib' },
+					{ find: '@codemirror/lint', replacement: 'ext.CodeMirror.lib' },
+					{ find: '@codemirror/search', replacement: 'ext.CodeMirror.lib' },
+					{ find: '@codemirror/state', replacement: 'ext.CodeMirror.lib' },
+					{ find: '@codemirror/view', replacement: 'ext.CodeMirror.lib' },
+					{ find: '@lezer/highlight', replacement: 'ext.CodeMirror.lib' }
 				]
 			} ),
 			nodeResolve( {
@@ -55,24 +55,24 @@ module.exports = [
 		]
 	},
 
-	// ext.CodeMirror.v6.abusefilter
+	// ext.CodeMirror.abusefilter
 	{
 		input: 'resources/modes/codemirror.bundle.abusefilter.js',
 		output: {
-			file: 'resources/lib/codemirror6.bundle.abusefilter.js',
+			file: 'resources/lib/codemirror.bundle.abusefilter.js',
 			format: 'cjs'
 		},
 		plugins: [
 			alias( {
 				entries: [
-					{ find: '@codemirror/autocomplete', replacement: 'ext.CodeMirror.v6.lib' },
-					{ find: '@codemirror/commands', replacement: 'ext.CodeMirror.v6.lib' },
-					{ find: '@codemirror/language', replacement: 'ext.CodeMirror.v6.lib' },
-					{ find: '@codemirror/lint', replacement: 'ext.CodeMirror.v6.lib' },
-					{ find: '@codemirror/search', replacement: 'ext.CodeMirror.v6.lib' },
-					{ find: '@codemirror/state', replacement: 'ext.CodeMirror.v6.lib' },
-					{ find: '@codemirror/view', replacement: 'ext.CodeMirror.v6.lib' },
-					{ find: '@lezer/highlight', replacement: 'ext.CodeMirror.v6.lib' }
+					{ find: '@codemirror/autocomplete', replacement: 'ext.CodeMirror.lib' },
+					{ find: '@codemirror/commands', replacement: 'ext.CodeMirror.lib' },
+					{ find: '@codemirror/language', replacement: 'ext.CodeMirror.lib' },
+					{ find: '@codemirror/lint', replacement: 'ext.CodeMirror.lib' },
+					{ find: '@codemirror/search', replacement: 'ext.CodeMirror.lib' },
+					{ find: '@codemirror/state', replacement: 'ext.CodeMirror.lib' },
+					{ find: '@codemirror/view', replacement: 'ext.CodeMirror.lib' },
+					{ find: '@lezer/highlight', replacement: 'ext.CodeMirror.lib' }
 				]
 			} ),
 			nodeResolve( {

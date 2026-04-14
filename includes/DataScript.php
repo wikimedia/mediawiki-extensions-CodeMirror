@@ -75,11 +75,9 @@ class DataScript {
 
 		// initialize configuration
 		$config = [
-			'useV6' => $mwConfig->get( 'CodeMirrorV6' ),
 			'defaultPreferences' => static::normalizeDefaultPrefs( $mwConfig->get( 'CodeMirrorDefaultPreferences' ) ),
 			'preferenceModeIds' => Hooks::PREF_MODES,
 			'primaryPreferences' => $mwConfig->get( 'CodeMirrorPrimaryPreferences' ),
-			'legacyLineNumberingNamespaces' => $mwConfig->get( 'CodeMirrorLineNumberingNamespaces' ),
 			'pluginModules' => $registry->getAttribute( 'CodeMirrorPluginModules' ),
 			'tagModes' => $tagModes,
 			'tags' => array_fill_keys( $tagNames, true ),

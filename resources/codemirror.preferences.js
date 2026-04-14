@@ -6,7 +6,7 @@ const {
 	StateField,
 	keymap,
 	showPanel
-} = require( 'ext.CodeMirror.v6.lib' );
+} = require( 'ext.CodeMirror.lib' );
 const CodeMirrorPanel = require( './codemirror.panel.js' );
 const CodeMirrorExtensionRegistry = require( './codemirror.extensionRegistry.js' );
 require( './ext.CodeMirror.data.js' );

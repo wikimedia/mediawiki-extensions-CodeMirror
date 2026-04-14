@@ -1,4 +1,4 @@
-const { syntaxTree, Decoration, Range, ViewPlugin } = require( 'ext.CodeMirror.v6.lib' );
+const { syntaxTree, Decoration, Range, ViewPlugin } = require( 'ext.CodeMirror.lib' );
 
 const doctag = Decoration.mark( { class: 'cm-doctag' } ),
 	doctagType = Decoration.mark( { class: 'cm-doctag-type' } );

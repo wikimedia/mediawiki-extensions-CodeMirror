@@ -1,18 +1,18 @@
 /**
- * @module ext.CodeMirror.v6.init
+ * @module ext.CodeMirror.init
  * @description
  * Main entry point for CodeMirror initialization on action=edit, Special:Upload, etc.
  *
  * The init module is loaded by Hooks.php and is not intended for external use.
- * Use {@link module:ext.CodeMirror.v6 ext.CodeMirror.v6} instead.
+ * Use {@link module:ext.CodeMirror ext.CodeMirror} instead.
  *
- * @see module:ext.CodeMirror.v6
+ * @see module:ext.CodeMirror
  * @internal
  */
 
 const useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
 const resourceLoaderModules = mw.config.get( 'cmRLModules' );
-const useWikiEditor = resourceLoaderModules.includes( 'ext.CodeMirror.v6.WikiEditor' );
+const useWikiEditor = resourceLoaderModules.includes( 'ext.CodeMirror.WikiEditor' );
 const mode = mw.config.get( 'cmMode' );
 
 /**
@@ -24,10 +24,10 @@ const mode = mw.config.get( 'cmMode' );
  */
 function getLanguageSupport( require ) {
 	if ( mode !== 'mediawiki' ) {
-		return require( 'ext.CodeMirror.v6.modes' )[ mode ]();
+		return require( 'ext.CodeMirror.modes' )[ mode ]();
 	}
 
-	const langSupport = require( 'ext.CodeMirror.v6.mode.mediawiki' ).mediawiki;
+	const langSupport = require( 'ext.CodeMirror.mode.mediawiki' ).mediawiki;
 	const urlParams = new URLSearchParams( window.location.search );
 	return langSupport( {
 		bidiIsolation: urlParams.get( 'cm6bidi' ),
@@ -43,7 +43,7 @@ function getLanguageSupport( require ) {
 async function init() {
 	const require = await mw.loader.using( resourceLoaderModules );
 	// eslint-disable-next-line security/detect-non-literal-require
-	const CodeMirror = require( `ext.CodeMirror.v6${ useWikiEditor ? '.WikiEditor' : '' }` );
+	const CodeMirror = require( `ext.CodeMirror${ useWikiEditor ? '.WikiEditor' : '' }` );
 	const langSupport = getLanguageSupport( require );
 	let cm;
 

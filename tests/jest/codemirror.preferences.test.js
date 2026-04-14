@@ -1,5 +1,5 @@
 /* eslint-disable-next-line n/no-missing-require */
-const { EditorView } = require( 'ext.CodeMirror.v6.lib' );
+const { EditorView } = require( 'ext.CodeMirror.lib' );
 const CodeMirrorPreferences = require( '../../resources/codemirror.preferences.js' );
 const CodeMirrorKeymap = require( '../../resources/codemirror.keymap.js' );
 const CodeMirrorExtensionRegistry = require( '../../resources/codemirror.extensionRegistry.js' );

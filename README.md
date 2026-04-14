@@ -11,13 +11,7 @@ JS documentation:
 
 ### Preface
 
-Extension:CodeMirror is currently in the process of being upgraded to the new major version, CodeMirror 6.
-See the [change log](https://www.mediawiki.org/wiki/Extension:CodeMirror#Change_log) for details.
-
-Use of CodeMirror 6 is controlled by the `wgCodeMirrorV6` configuration setting, or by
-passing in `cm6enable=1` in the URL query string.
-
-CodeMirror 6 requires the use of NPM to bundle the dependencies. These are built using
+CodeMirror requires the use of NPM to bundle the dependencies. These are built using
 [Rollup](https://rollupjs.org/) and packaged as ResourceLoader-compatible modules under `lib/`.
 If you make changes to the versions of `@codemirror` or `@lezer` packages,
 you will need to run `npm run build` to update the ResourceLoader modules.
@@ -58,5 +52,3 @@ _NOTE: Consider using [Fresh](https://gerrit.wikimedia.org/g/fresh/) to run thes
   `wikiparser-node` dependency in [package.json](package.json) or the
   [MediaWiki worker](resources/workers/mediawiki/worker.js), this command *must* be run before
   sending the patch.
-* Older QUnit tests are in `resources/mode/mediawiki/tests/qunit/`. These have been
-  replaced and will be removed after the CodeMirror 6 upgrade is complete.

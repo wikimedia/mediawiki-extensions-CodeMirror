@@ -8,7 +8,6 @@ use MediaWiki\EditPage\EditPage;
 use MediaWiki\Extension\CodeMirror\Hooks;
 use MediaWiki\Extension\Gadgets\Gadget;
 use MediaWiki\Extension\Gadgets\GadgetRepo;
-use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Language\Language;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Request\WebRequest;
@@ -41,7 +40,6 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			'module' => null,
 			'gadget' => null,
 			'contentModel' => CONTENT_MODEL_WIKITEXT,
-			'useV6' => true,
 			Hooks::OPTION_USE_CODEMIRROR => true,
 			'isRTL' => false,
 			Hooks::OPTION_USE_WIKIEDITOR => false,
@@ -53,7 +51,6 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			'usePigLatinVariant' => true,
 		], $conds );
 		$this->overrideConfigValues( [
-			'CodeMirrorV6' => $conds['useV6'],
 			'CodeMirrorEnabledModes' => $conds['allowedModes'] ?? [
 				Hooks::MODE_MEDIAWIKI => true,
 			],
@@ -119,7 +116,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			$uploadMock->method( 'getOutput' )->willReturn( $out );
 			$uploadMock->mForReUpload = $conds['reupload'];
 			$hooks->onUploadForm_initial( $uploadMock );
-			if ( $conds['useV6'] && !$conds['reupload'] ) {
+			if ( !$conds['reupload'] ) {
 				$this->assertEquals( '#wpUploadDescription', $jsConfigVars['cmTextarea'] );
 			}
 		} elseif ( $conds['method'] === 'expandTemplates' ) {
@@ -127,33 +124,29 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			$expandTemplatesMock->method( 'getName' )->willReturn( 'ExpandTemplates' );
 			$expandTemplatesMock->method( 'getOutput' )->willReturn( $out );
 			$hooks->onSpecialPageBeforeExecute( $expandTemplatesMock, '' );
-			if ( $conds['useV6'] ) {
-				$this->assertEquals( '[name=wpInput]', $jsConfigVars['cmTextarea'] );
-				$this->assertArrayEquals( [ '#output' ], $jsConfigVars['cmChildTextareas'] );
-			}
+			$this->assertEquals( '[name=wpInput]', $jsConfigVars['cmTextarea'] );
+			$this->assertArrayEquals( [ '#output' ], $jsConfigVars['cmChildTextareas'] );
 		} else {
 			$method = $conds['method'] === 'readOnly' ?
 				'onEditPage__showReadOnlyForm_initial' :
 				'onEditPage__showEditForm_initial';
 			$hooks->{$method}( $this->createMock( EditPage::class ), $out );
-			if ( $conds['useV6'] && $expectedModules ) {
+			if ( $expectedModules ) {
 				$this->assertEquals( '#wpTextbox1', $jsConfigVars['cmTextarea'] );
 			}
 		}
 		$this->assertArrayEquals( $expectedModules, $modulesLoaded );
-		if ( $conds['useV6'] ) {
-			$this->assertEquals( $expectedMode, $jsConfigVars['cmMode'] ?? 'mediawiki' );
-			if (
-				$conds['disableLangConversion'] ||
-				( $conds['pageLang'] === 'en' && !$conds['usePigLatinVariant'] )
-			) {
-				$this->assertArrayEquals( [], $jsConfigVars['cmLanguageVariants'] );
-			} elseif ( $expectedModules ) {
-				$langConverterFactory = $this->getServiceContainer()->getLanguageConverterFactory();
-				$pageLang = $langFactory->getLanguage( $conds['pageLang'] );
-				$variants = $langConverterFactory->getLanguageConverter( $pageLang )->getVariants();
-				$this->assertArrayEquals( $variants, $jsConfigVars['cmLanguageVariants'] );
-			}
+		$this->assertEquals( $expectedMode, $jsConfigVars['cmMode'] ?? 'mediawiki' );
+		if (
+			$conds['disableLangConversion'] ||
+			( $conds['pageLang'] === 'en' && !$conds['usePigLatinVariant'] )
+		) {
+			$this->assertArrayEquals( [], $jsConfigVars['cmLanguageVariants'] );
+		} elseif ( $expectedModules ) {
+			$langConverterFactory = $this->getServiceContainer()->getLanguageConverterFactory();
+			$pageLang = $langFactory->getLanguage( $conds['pageLang'] );
+			$variants = $langConverterFactory->getLanguageConverter( $pageLang )->getVariants();
+			$this->assertArrayEquals( $variants, $jsConfigVars['cmLanguageVariants'] );
 		}
 	}
 
@@ -161,79 +154,30 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 	 * @return Generator
 	 */
 	public static function provideOnEditPageShowEditFormInitial(): Generator {
-		$cm6DefaultModules = [ 'ext.CodeMirror.v6', 'ext.CodeMirror.v6.lib', 'ext.CodeMirror.v6.init' ];
-		yield 'CM5, no WikiEditor' => [
-			[ 'useV6' => false ],
-			[]
-		];
-		yield 'CM5 + WikiEditor' => [
-			[ 'useV6' => false, Hooks::OPTION_USE_WIKIEDITOR => true ],
-			[ 'ext.CodeMirror.WikiEditor', 'ext.CodeMirror.lib', 'ext.CodeMirror.mode.mediawiki' ]
-		];
-		yield 'CM5 + WikiEditor, read-only' => [
-			[ 'useV6' => false, Hooks::OPTION_USE_WIKIEDITOR => true, 'method' => 'readOnly' ],
-			[]
-		];
-		yield 'CM5, read-only' => [
-			[ 'useV6' => false, 'method' => 'readOnly' ],
-			[]
-		];
-		yield 'CM5 + WikiEditor, RTL' => [
-			[ 'useV6' => false, Hooks::OPTION_USE_WIKIEDITOR => true, 'isRTL' => true, 'pageLang' => 'ar' ],
-			[]
-		];
-		yield 'CM5 + WikiEditor, contentModel CSS' => [
-			[ 'useV6' => false, Hooks::OPTION_USE_WIKIEDITOR => true, 'contentModel' => CONTENT_MODEL_CSS ],
-			[]
-		];
-		yield 'CM5 + WikiEditor, contentModel CSS, CSS allowed' => [
-			[
-				'useV6' => false,
-				Hooks::OPTION_USE_WIKIEDITOR => true,
-				'contentModel' => CONTENT_MODEL_CSS,
-				'allowedModes' => [ Hooks::MODE_CSS => true ]
-			],
-			[]
-		];
-		yield 'CM5 + WikiEditor, preference false' => [
-			[ 'useV6' => false, Hooks::OPTION_USE_WIKIEDITOR => true, Hooks::OPTION_USE_CODEMIRROR => false ],
-			[ 'ext.CodeMirror.WikiEditor' ]
-		];
-		yield 'CM5 + WikiEditor, wikEd enabled' => [
-			[ 'useV6' => false, Hooks::OPTION_USE_WIKIEDITOR => true, 'gadget' => 'wikEd' ],
-			[]
-		];
-		yield 'CM5, Special:Upload' => [
-			[ 'useV6' => false, 'method' => 'upload' ],
-			[]
-		];
-		yield 'CM5, Special:ExpandTemplates' => [
-			[ 'useV6' => false, 'method' => 'expandTemplates' ],
-			[]
-		];
+		$cm6DefaultModules = [ 'ext.CodeMirror', 'ext.CodeMirror.lib', 'ext.CodeMirror.init' ];
 		yield 'CM6' => [
 			[],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
 		yield 'CM6, read-only' => [
 			[ 'method' => 'readOnly' ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
 		yield 'CM6 + WikiEditor' => [
 			[ Hooks::OPTION_USE_WIKIEDITOR => true ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki', 'ext.CodeMirror.v6.WikiEditor' ]
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki', 'ext.CodeMirror.WikiEditor' ]
 		];
 		yield 'CM6 + WikiEditor, read-only' => [
 			[ Hooks::OPTION_USE_WIKIEDITOR => true, 'method' => 'readOnly' ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki', 'ext.CodeMirror.v6.WikiEditor' ]
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki', 'ext.CodeMirror.WikiEditor' ]
 		];
 		yield 'CM6, RTL' => [
 			[ 'isRTL' => true, 'lang' => 'ar' ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
 		yield 'CM6, contentModel CSS' => [
 			[ 'contentModel' => CONTENT_MODEL_CSS, 'allowedModes' => [ Hooks::MODE_CSS => true ] ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.modes' ],
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.modes' ],
 			'css'
 		];
 		yield 'CM6 + WikiEditor, contentModel JavaScript' => [
@@ -242,13 +186,13 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 				'allowedModes' => [ CONTENT_MODEL_JAVASCRIPT => true ],
 				Hooks::OPTION_USE_WIKIEDITOR => true,
 			],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.modes',
-				'ext.CodeMirror.v6.styles', 'ext.CodeMirror.v6.WikiEditor' ],
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.modes',
+				'ext.CodeMirror.styles', 'ext.CodeMirror.WikiEditor' ],
 			'javascript'
 		];
 		yield 'CM6, contentModel JSON' => [
 			[ 'contentModel' => CONTENT_MODEL_JSON, 'allowedModes' => [ Hooks::MODE_JSON => true ] ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.modes' ],
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.modes' ],
 			'json'
 		];
 		yield 'CM6 + WikiEditor, contentModel JavaScript, read-only' => [
@@ -258,8 +202,8 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 				'method' => 'readOnly',
 				Hooks::OPTION_USE_WIKIEDITOR => true,
 			],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.modes',
-				'ext.CodeMirror.v6.styles', 'ext.CodeMirror.v6.WikiEditor' ],
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.modes',
+				'ext.CodeMirror.styles', 'ext.CodeMirror.WikiEditor' ],
 			'javascript'
 		];
 		yield 'CM6, contentModel CSS, CSS not allowed' => [
@@ -276,11 +220,11 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		];
 		yield 'CM6, preference false, WikiEditor' => [
 			[ Hooks::OPTION_USE_WIKIEDITOR => true, Hooks::OPTION_USE_CODEMIRROR => false ],
-			[ 'ext.CodeMirror.v6.init' ]
+			[ 'ext.CodeMirror.init' ]
 		];
 		yield 'CM6, Special:Upload' => [
 			[ 'method' => 'upload' ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
 		yield 'CM6, Special:Upload, reupload' => [
 			[ 'method' => 'upload', 'reupload' => true ],
@@ -288,27 +232,27 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		];
 		yield 'CM6 + WikiEditor, Special:Upload' => [
 			[ Hooks::OPTION_USE_WIKIEDITOR => true, 'method' => 'upload' ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
 		yield 'CM6, page language zh' => [
 			[ 'pageLang' => 'zh' ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
 		yield 'CM6, Special:ExpandTemplates' => [
 			[ 'method' => 'expandTemplates' ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
 		yield 'CM6, page language zh with conversion disabled' => [
 			[ 'pageLang' => 'zh', 'disableLangConversion' => true ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
 		yield 'CM6, page language wuu with all variants disabled' => [
 			[ 'pageLang' => 'wuu', 'disabledVariants' => [ 'wuu-hans', 'wuu-hant' ] ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
 		yield 'CM6, page language en with Pig Latin variant disabled' => [
 			[ 'pageLang' => 'en', 'usePigLatinVariant' => false ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.v6.mode.mediawiki' ]
+			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
 	}
 
@@ -327,19 +271,6 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		$hookContainer = $this->getServiceContainer()->getHookContainer();
 		$langConverterFactory = $this->getServiceContainer()->getLanguageConverterFactory();
 		$userOptionsManager = $this->getServiceContainer()->getUserOptionsManager();
-
-		// CodeMirror 5
-		$this->overrideConfigValues( [ 'CodeMirrorV6' => false ] );
-		$hooks = new Hooks( $config, $hookContainer, $langConverterFactory, $userOptionsManager, null );
-		$preferences = [];
-		$hooks->onGetPreferences( $user, $preferences );
-		self::assertArrayHasKey( Hooks::OPTION_USE_CODEMIRROR, $preferences );
-		self::assertArrayHasKey( Hooks::OPTION_COLORBLIND, $preferences );
-		self::assertArrayNotHasKey( 'usecodemirror-summary', $preferences );
-		self::assertSame( 'api', $preferences[Hooks::OPTION_USE_CODEMIRROR]['type'] );
-
-		// CodeMirror 6
-		$this->overrideConfigValues( [ 'CodeMirrorV6' => true ] );
 		$hooks = new Hooks( $config, $hookContainer, $langConverterFactory, $userOptionsManager, null );
 		$preferences = [];
 		$hooks->onGetPreferences( $user, $preferences );
@@ -347,31 +278,6 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		self::assertArrayHasKey( Hooks::OPTION_COLORBLIND, $preferences );
 		self::assertArrayHasKey( 'usecodemirror-summary', $preferences );
 		self::assertSame( 'toggle', $preferences[Hooks::OPTION_USE_CODEMIRROR]['type'] );
-	}
-
-	public function testOnPreferencesFormPreSave(): void {
-		$user = self::getTestUser()->getUser();
-		$config = $this->getServiceContainer()->getMainConfig();
-		$hookContainer = $this->getServiceContainer()->getHookContainer();
-		$langConverterFactory = $this->getServiceContainer()->getLanguageConverterFactory();
-		$userOptionsManager = $this->getMockBuilder( UserOptionsManager::class )
-			->disableOriginalConstructor()
-			->onlyMethods( [ 'setOption' ] )
-			->getMock();
-		$userOptionsManager->expects( $this->once() )
-			->method( 'setOption' )
-			->with( $user, Hooks::OPTION_USE_CODEMIRROR, 1 );
-		$hooks = new Hooks( $config, $hookContainer, $langConverterFactory, $userOptionsManager, null );
-		$result = true;
-		$hooks->onPreferencesFormPreSave(
-			[ Hooks::OPTION_BETA_FEATURE => '1' ],
-			$this->getMockBuilder( HTMLForm::class )
-				->disableOriginalConstructor()
-				->getMock(),
-			$user,
-			$result,
-			[ Hooks::OPTION_USE_CODEMIRROR => '' ]
-		);
 	}
 
 	/**

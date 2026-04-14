@@ -1,6 +1,6 @@
 'use strict';
 
-var ext_CodeMirror_v6_lib = require('ext.CodeMirror.v6.lib');
+var ext_CodeMirror_lib = require('ext.CodeMirror.lib');
 
 /**
 The default maximum length of a `TreeBuffer` node.
@@ -4888,39 +4888,39 @@ const getScope = (doc, scope) => {
     cache.set(scope, completions);
     return completions;
 };
-const abusefilterLanguage = ext_CodeMirror_v6_lib.LRLanguage.define({
+const abusefilterLanguage = ext_CodeMirror_lib.LRLanguage.define({
     name: 'abusefilter',
     parser: parser.configure({
         props: [
-            ext_CodeMirror_v6_lib.styleTags({
-                String: ext_CodeMirror_v6_lib.tags.string,
-                Comment: ext_CodeMirror_v6_lib.tags.comment,
-                Bool: ext_CodeMirror_v6_lib.tags.bool,
-                null: ext_CodeMirror_v6_lib.tags.null,
-                'else end if then': ext_CodeMirror_v6_lib.tags.controlKeyword,
-                Rel: ext_CodeMirror_v6_lib.tags.operatorKeyword,
-                Callee: ext_CodeMirror_v6_lib.tags.invalid,
-                Func: ext_CodeMirror_v6_lib.tags.definition(ext_CodeMirror_v6_lib.tags.variableName),
-                GlobalVar: ext_CodeMirror_v6_lib.tags.local(ext_CodeMirror_v6_lib.tags.variableName),
-                DeprecatedVar: [ext_CodeMirror_v6_lib.tags.local(ext_CodeMirror_v6_lib.tags.variableName), ext_CodeMirror_v6_lib.tags.strikethrough],
-                DisabledVar: ext_CodeMirror_v6_lib.tags.invalid,
-                '; ,': ext_CodeMirror_v6_lib.tags.separator,
-                '( )': ext_CodeMirror_v6_lib.tags.paren,
-                '[ ]': ext_CodeMirror_v6_lib.tags.squareBracket,
-                CompareOp: ext_CodeMirror_v6_lib.tags.compareOperator,
-                ArithOp: ext_CodeMirror_v6_lib.tags.arithmeticOperator,
-                BitOp: ext_CodeMirror_v6_lib.tags.logicOperator,
-                LogicOp: ext_CodeMirror_v6_lib.tags.logicOperator,
-                Equals: ext_CodeMirror_v6_lib.tags.updateOperator,
-                Num: ext_CodeMirror_v6_lib.tags.number,
+            ext_CodeMirror_lib.styleTags({
+                String: ext_CodeMirror_lib.tags.string,
+                Comment: ext_CodeMirror_lib.tags.comment,
+                Bool: ext_CodeMirror_lib.tags.bool,
+                null: ext_CodeMirror_lib.tags.null,
+                'else end if then': ext_CodeMirror_lib.tags.controlKeyword,
+                Rel: ext_CodeMirror_lib.tags.operatorKeyword,
+                Callee: ext_CodeMirror_lib.tags.invalid,
+                Func: ext_CodeMirror_lib.tags.definition(ext_CodeMirror_lib.tags.variableName),
+                GlobalVar: ext_CodeMirror_lib.tags.local(ext_CodeMirror_lib.tags.variableName),
+                DeprecatedVar: [ext_CodeMirror_lib.tags.local(ext_CodeMirror_lib.tags.variableName), ext_CodeMirror_lib.tags.strikethrough],
+                DisabledVar: ext_CodeMirror_lib.tags.invalid,
+                '; ,': ext_CodeMirror_lib.tags.separator,
+                '( )': ext_CodeMirror_lib.tags.paren,
+                '[ ]': ext_CodeMirror_lib.tags.squareBracket,
+                CompareOp: ext_CodeMirror_lib.tags.compareOperator,
+                ArithOp: ext_CodeMirror_lib.tags.arithmeticOperator,
+                BitOp: ext_CodeMirror_lib.tags.logicOperator,
+                LogicOp: ext_CodeMirror_lib.tags.logicOperator,
+                Equals: ext_CodeMirror_lib.tags.updateOperator,
+                Num: ext_CodeMirror_lib.tags.number,
             }),
-            ext_CodeMirror_v6_lib.indentNodeProp.add({
-                ArrayExpression: ext_CodeMirror_v6_lib.delimitedIndent({ closing: ']' }),
-                'ParenthesizedExpression ArgList': ext_CodeMirror_v6_lib.delimitedIndent({ closing: ')' }),
-                IfStatement: ext_CodeMirror_v6_lib.continuedIndent({ except: /^\s*(?:then|else|end)\b/u }),
+            ext_CodeMirror_lib.indentNodeProp.add({
+                ArrayExpression: ext_CodeMirror_lib.delimitedIndent({ closing: ']' }),
+                'ParenthesizedExpression ArgList': ext_CodeMirror_lib.delimitedIndent({ closing: ')' }),
+                IfStatement: ext_CodeMirror_lib.continuedIndent({ except: /^\s*(?:then|else|end)\b/u }),
             }),
-            ext_CodeMirror_v6_lib.foldNodeProp.add({
-                'ArrayExpression ParenthesizedExpression': ext_CodeMirror_v6_lib.foldInside,
+            ext_CodeMirror_lib.foldNodeProp.add({
+                'ArrayExpression ParenthesizedExpression': ext_CodeMirror_lib.foldInside,
                 Comment({ from, to }) {
                     return { from: from + 2, to: to - 2 };
                 },
@@ -4944,10 +4944,10 @@ const abusefilterLanguage = ext_CodeMirror_v6_lib.LRLanguage.define({
 });
 const abusefilter = (dialect) => {
     updateData(dialect);
-    return new ext_CodeMirror_v6_lib.LanguageSupport(abusefilterLanguage, abusefilterLanguage.data.of({
+    return new ext_CodeMirror_lib.LanguageSupport(abusefilterLanguage, abusefilterLanguage.data.of({
         autocomplete({ state, pos }) {
             var _a;
-            const tree = ext_CodeMirror_v6_lib.syntaxTree(state), inner = tree.resolveInner(pos, -1);
+            const tree = ext_CodeMirror_lib.syntaxTree(state), inner = tree.resolveInner(pos, -1);
             switch (inner.name) {
                 case 'Bool':
                 case 'null':

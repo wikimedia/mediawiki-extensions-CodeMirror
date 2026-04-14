@@ -1,4 +1,4 @@
-const { EditorView, Prec } = require( 'ext.CodeMirror.v6.lib' );
+const { EditorView, Prec } = require( 'ext.CodeMirror.lib' );
 
 /**
  * MediaWiki-specific key bindings for CodeMirror.

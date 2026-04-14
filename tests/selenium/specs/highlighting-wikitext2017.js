@@ -89,10 +89,10 @@ describe( 'CodeMirror (enabled) - VisualEditor 2017 wikitext editor', () => {
 		await expect( EditPage.codeMirrorContentEditable ).not.toBeDisplayed();
 		await expect( EditPage.visualEditorContentEditable ).toBeDisplayed();
 		expect(
-			await browser.execute( () => mw.loader.getState( 'ext.CodeMirror.v6.mode.mediawiki' ) )
+			await browser.execute( () => mw.loader.getState( 'ext.CodeMirror.mode.mediawiki' ) )
 		).toBe( 'registered' );
 		expect(
-			await browser.execute( () => mw.loader.getState( 'ext.CodeMirror.v6' ) )
+			await browser.execute( () => mw.loader.getState( 'ext.CodeMirror' ) )
 		).toBe( 'registered' );
 	} );
 

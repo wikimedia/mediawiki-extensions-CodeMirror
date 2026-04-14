@@ -1,20 +1,20 @@
 /**
  * This file is managed by Rollup and bundles all the CodeMirror dependencies
- * into the single file resources/lib/codemirror6.bundle.lib.js.
+ * into the single file resources/lib/codemirror.bundle.lib.js.
  */
 
 /**
- * @module ext.CodeMirror.v6.lib
+ * @module ext.CodeMirror.lib
  * @description
  * This module provides the core upstream CodeMirror library.
  * You shouldn't need to require this directly unless you want
  * access to the upstream {@link https://codemirror.net/docs/ref/ CodeMirror API}.
  * @example
- * await require = mw.loader.using( [ 'ext.CodeMirror.v6', 'ext.CodeMirror.v6.mode.mediawiki' ] );
- * const CodeMirror = require( 'ext.CodeMirror.v6' );
- * const { mediawiki } = require( 'ext.CodeMirror.v6.mode.mediawiki' );
- * // ext.CodeMirror.v6.lib is a dependency of ext.CodeMirror.v6, so it's already loaded.
- * const { EditorView } = require( 'ext.CodeMirror.v6.lib' );
+ * await require = mw.loader.using( [ 'ext.CodeMirror', 'ext.CodeMirror.mode.mediawiki' ] );
+ * const CodeMirror = require( 'ext.CodeMirror' );
+ * const { mediawiki } = require( 'ext.CodeMirror.mode.mediawiki' );
+ * // ext.CodeMirror.lib is a dependency of ext.CodeMirror, so it's already loaded.
+ * const { EditorView } = require( 'ext.CodeMirror.lib' );
  * const myExtension = EditorView.updateListener.of( ( update ) => {
  *   if ( update.docChanged ) {
  *     // do something

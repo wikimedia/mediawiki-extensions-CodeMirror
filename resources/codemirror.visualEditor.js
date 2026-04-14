@@ -3,8 +3,8 @@ const {
 	EditorState,
 	EditorView,
 	LanguageSupport
-} = require( 'ext.CodeMirror.v6.lib' );
-const CodeMirror = require( 'ext.CodeMirror.v6' );
+} = require( 'ext.CodeMirror.lib' );
+const CodeMirror = require( 'ext.CodeMirror' );
 
 /**
  * CodeMirror integration for the VisualEditor
@@ -352,7 +352,7 @@ class CodeMirrorVisualEditor extends CodeMirror {
 }
 
 /**
- * @module ext.CodeMirror.v6.visualEditor
+ * @module ext.CodeMirror.visualEditor
  * @description
  * This module provides CodeMirror integration for the 2017 wikitext editor that
  * is part of the VisualEditor extension. It exports the {@link CodeMirrorVisualEditor} class.

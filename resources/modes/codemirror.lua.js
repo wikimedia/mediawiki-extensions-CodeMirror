@@ -8,8 +8,8 @@ const {
 	Decoration,
 	HighlightStyle,
 	StreamLanguage
-} = require( 'ext.CodeMirror.v6.lib' );
-const { lua } = require( '../lib/codemirror6.bundle.modes.js' );
+} = require( 'ext.CodeMirror.lib' );
+const { lua } = require( '../lib/codemirror.bundle.modes.js' );
 const CodeMirrorMode = require( './codemirror.mode.js' );
 const { markDocTagType, getViewPlugin } = require( './codemirror.doctag.js' );
 const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
@@ -375,9 +375,9 @@ const markDocTag = ( tree, visibleRanges, state ) => {
  * Lua language support for CodeMirror.
  *
  * @example
- * const require = await mw.loader.using( [ 'ext.CodeMirror.v6', 'ext.CodeMirror.v6.modes' ] );
- * const CodeMirror = require( 'ext.CodeMirror.v6' );
- * const { lua } = require( 'ext.CodeMirror.v6.modes' );
+ * const require = await mw.loader.using( [ 'ext.CodeMirror', 'ext.CodeMirror.modes' ] );
+ * const CodeMirror = require( 'ext.CodeMirror' );
+ * const { lua } = require( 'ext.CodeMirror.modes' );
  * const cm = new CodeMirror( myTextarea, lua() );
  * cm.initialize();
  * @extends CodeMirrorMode

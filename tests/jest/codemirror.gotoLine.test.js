@@ -1,5 +1,5 @@
 /* eslint-disable-next-line n/no-missing-require */
-const { StateEffectType, StateField } = require( 'ext.CodeMirror.v6.lib' );
+const { StateEffectType, StateField } = require( 'ext.CodeMirror.lib' );
 const CodeMirror = require( '../../resources/codemirror.js' );
 const CodeMirrorGotoLine = require( '../../resources/codemirror.gotoLine.js' );
 

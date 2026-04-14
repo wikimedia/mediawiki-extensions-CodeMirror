@@ -7,8 +7,8 @@ const {
 	indentMore,
 	openSearchPanel,
 	searchPanelOpen
-} = require( 'ext.CodeMirror.v6.lib' );
-const CodeMirror = require( 'ext.CodeMirror.v6' );
+} = require( 'ext.CodeMirror.lib' );
+const CodeMirror = require( 'ext.CodeMirror' );
 
 /**
  * CodeMirror integration with
@@ -19,11 +19,11 @@ const CodeMirror = require( 'ext.CodeMirror.v6' );
  *
  * @example
  * const require = await mw.loader.using( [
- *   'ext.wikiEditor', 'ext.CodeMirror.v6.WikiEditor', 'ext.CodeMirror.v6.mode.mediawiki'
+ *   'ext.wikiEditor', 'ext.CodeMirror.WikiEditor', 'ext.CodeMirror.mode.mediawiki'
  * ] );
  * mw.addWikiEditor( myTextarea );
- * const CodeMirrorWikiEditor = require( 'ext.CodeMirror.v6.WikiEditor' );
- * const { mediawiki } = require( 'ext.CodeMirror.v6.mode.mediawiki' );
+ * const CodeMirrorWikiEditor = require( 'ext.CodeMirror.WikiEditor' );
+ * const { mediawiki } = require( 'ext.CodeMirror.mode.mediawiki' );
  * const cmWe = new CodeMirrorWikiEditor( myTextarea, mediawiki() );
  * cmWe.initialize();
  * @class
