@@ -91,6 +91,7 @@
 	"codemirror-wikilint-illegal-attribute-name": "ongültegen Attributnumm",
 	"codemirror-wikilint-illegal-attribute-value": "ongültegen Attributwäert",
 	"codemirror-wikilint-illegal-module": "ongültege Scribunto-Modulnumm",
+	"codemirror-wikilint-invalid-image-parameter": "ongültege Bildparameter",
 	"codemirror-wikilint-invalid-isbn": "ongülteg ISBN",
 	"codemirror-wikilint-missing-function": "feelende Funktiounsnumm vum Scribunto-Modul",
 	"codemirror-wikilint-newline": "eng nei Zeil asetzen",
