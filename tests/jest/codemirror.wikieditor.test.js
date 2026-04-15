@@ -230,7 +230,22 @@ describe( 'logEditFeature', () => {
 			'addToToolbar',
 			expect.objectContaining( {
 				section: 'advanced',
-				groups: { codemirror: { tools: { CodeMirrorPreferences: expect.any( Object ) } } }
+				groups: { codemirror: { tools: {
+					CodeMirrorPreferences: expect.any( Object )
+				} } }
+			} )
+		);
+		expect( cmWe.$textarea.wikiEditor ).toHaveBeenCalledWith(
+			'addToToolbar',
+			expect.objectContaining( {
+				section: 'advanced',
+				groups: { 'codemirror-sort': {
+					label: 'codemirror-we-group-sort',
+					tools: {
+						sortLines: expect.any( Object ),
+						sortLinesDescending: expect.any( Object )
+					} }
+				}
 			} )
 		);
 	} );
@@ -301,9 +316,17 @@ describe( 'addCodeFormattingButtonsToToolbar', () => {
 			expect.objectContaining( {
 				groups: {
 					'codemirror-format': {
+						label: 'wikieditor-toolbar-group-format',
 						tools: {
 							indentMore: expect.any( Object ),
 							indentLess: expect.any( Object )
+						}
+					},
+					'codemirror-sort': {
+						label: 'codemirror-we-group-sort',
+						tools: {
+							sortLines: expect.any( Object ),
+							sortLinesDescending: expect.any( Object )
 						}
 					},
 					'codemirror-preferences': {

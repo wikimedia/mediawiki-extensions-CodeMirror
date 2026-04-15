@@ -142,6 +142,8 @@
 	"codemirror-keymap-other": "Section heading in the keyboard shortcuts help dialog.",
 	"codemirror-keymap-moveline": "Label for the keyboard shortcut for moving a line of text.",
 	"codemirror-keymap-copyline": "Label for the keyboard shortcut for copying a line of text.",
+	"codemirror-keymap-sortlines": "Label for the keyboard shortcut and toolbar button that sorts selected lines alphabetically.",
+	"codemirror-keymap-sortlinesdescending": "Label for the toolbar button that sorts selected lines in descending alphabetical order.",
 	"codemirror-keymap-direction": "Label for the keyboard shortcut for changing the directionality of text. Left to Right or Right to Left.",
 	"codemirror-keymap-preferences": "Label for the keyboard shortcut for opening the syntax highlighting preferences.",
 	"codemirror-keymap-full-preferences": "Label for the keyboard shortcut for opening the full preferences dialog.",
@@ -229,5 +231,6 @@
 	"codemirror-potentially-slow": "Text shown next to a description of a keyboard shortcut, preference, or other feature that may cause performance issues on large pages.",
 	"codemirror-validate-js-syntaxerror": "Diagnostic message for a syntax error in JavaScript. Parameters:\n*1 - column number where the error occurs.\n*2 - line number where the error occurs.\n*3 - Error message",
 	"codemirror-ve-limit-exceeded": "Error message shown when CodeMirror is attempt to be used on very large pages in the 2017 editor.",
-	"codemirror-ve-limit-exceeded-info": "Link text for a link to more information, shown beneath the {{msg-mw|codemirror-ve-limit-exceeded}} message."
+	"codemirror-ve-limit-exceeded-info": "Link text for a link to more information, shown beneath the {{msg-mw|codemirror-ve-limit-exceeded}} message.",
+	"codemirror-we-group-sort": "Label for the 'Sort' group of buttons in the WikiEditor toolbar."
 }

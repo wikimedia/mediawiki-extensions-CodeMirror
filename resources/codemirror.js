@@ -43,6 +43,7 @@ const CodeMirrorLint = require( './codemirror.lint.js' );
 const CodeMirrorTextSelection = require( './codemirror.textSelection.js' );
 const CodeMirrorSearch = require( './codemirror.search.js' );
 const CodeMirrorGotoLine = require( './codemirror.gotoLine.js' );
+const CodeMirrorSortLines = require( './codemirror.sortLines.js' );
 const CodeMirrorPreferences = require( './codemirror.preferences.js' );
 const CodeMirrorKeymap = require( './codemirror.keymap.js' );
 const CodeMirrorExtensionRegistry = require( './codemirror.extensionRegistry.js' );
@@ -195,11 +196,17 @@ class CodeMirror {
 		 */
 		this.textSelection = null;
 		/**
+		 * CodeMirror line sorting functionality.
+		 *
+		 * @type {CodeMirrorSortLines}
+		 */
+		this.sortLines = new CodeMirrorSortLines();
+		/**
 		 * CodeMirror key mappings and help dialog.
 		 *
 		 * @type {CodeMirrorKeymap}
 		 */
-		this.keymap = new CodeMirrorKeymap();
+		this.keymap = new CodeMirrorKeymap( this.sortLines );
 		/**
 		 * Registry of CodeMirror {@link Extension Extensions}.
 		 *

@@ -37,6 +37,7 @@
 				"EditorView": "https://codemirror.net/docs/ref/#view.EditorView",
 				"Extension": "https://codemirror.net/docs/ref/#state.Extension",
 				"Hook": "https://doc.wikimedia.org/mediawiki-core/master/js/Hook.html",
+				"Intl.CollatorOptions": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Collator/Collator#options",
 				"KeyBinding": "https://codemirror.net/docs/ref/#view.KeyBinding",
 				"Language": "https://codemirror.net/docs/ref/#language.Language",
 				"LanguageSupport": "https://codemirror.net/docs/ref/#language.LanguageSupport",

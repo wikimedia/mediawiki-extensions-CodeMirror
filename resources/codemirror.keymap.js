@@ -15,6 +15,7 @@ const {
 	StateEffect
 } = require( 'ext.CodeMirror.lib' );
 const CodeMirrorCodex = require( './codemirror.codex.js' );
+const CodeMirrorSortLines = require( './codemirror.sortLines.js' );
 
 /**
  * Key bindings for CodeMirror.
@@ -57,8 +58,24 @@ const CodeMirrorCodex = require( './codemirror.codex.js' );
  */
 class CodeMirrorKeymap extends CodeMirrorCodex {
 
-	constructor() {
+	/**
+	 * The constructor is internal. An instance can be accessed via {@link CodeMirror#keymap}.
+	 *
+	 * @param {CodeMirrorSortLines} sortLines
+	 * @hideconstructor
+	 * @internal
+	 */
+	constructor( sortLines ) {
 		super();
+
+		/**
+		 * Falling back to a new CodeMirrorSortLines instance is for
+		 * Jest test only. This class should never be instantiated normally
+		 * other than the property assignment in {@link CodeMirror#sortLines}.
+		 *
+		 * @type {CodeMirrorSortLines}
+		 */
+		this.sortLines = sortLines || new CodeMirrorSortLines();
 
 		/** @type {Function} */
 		this.keydownListener = null;
@@ -210,6 +227,16 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 				copyLine: {
 					key: 'Alt-Shift-↑/↓',
 					msg: mw.msg( 'codemirror-keymap-copyline' )
+				},
+				sortLines: {
+					key: 'Mod-s',
+					run: this.sortLines.sortAscending.bind( this.sortLines ),
+					preventDefault: true
+				},
+				sortLinesDescending: {
+					key: 'Shift-Mod-s',
+					run: this.sortLines.sortDescending.bind( this.sortLines ),
+					preventDefault: true
 				},
 				direction: { key: 'Mod-Shift-x' },
 				preferences: {

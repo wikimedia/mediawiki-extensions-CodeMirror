@@ -135,6 +135,7 @@
 				"codemirror.child.js",
 				"codemirror.matchbrackets.js",
 				"codemirror.indentGuides.js",
+				"codemirror.sortLines.js",
 				{
 					"name": "ext.CodeMirror.data.js",
 					"callback": "MediaWiki\\Extension\\CodeMirror\\DataScript::makeScript"
@@ -201,6 +202,8 @@
 				"codemirror-keymap-search",
 				"codemirror-keymap-selectcompletion",
 				"codemirror-keymap-selectnext",
+				"codemirror-keymap-sortlines",
+				"codemirror-keymap-sortlinesdescending",
 				"codemirror-keymap-startcompletion",
 				"codemirror-keymap-tabescape",
 				"codemirror-keymap-tabmode",
@@ -263,6 +266,7 @@
 				"codemirror-special-char-zero-width-no-break-space",
 				"codemirror-special-char-zero-width-non-joiner",
 				"codemirror-special-char-zero-width-space",
+				"codemirror-we-group-sort",
 				"codemirror-unfold",
 				"parentheses-end",
 				"parentheses-start",
@@ -380,7 +384,8 @@
 		"ext.CodeMirror.WikiEditor": {
 			"dependencies": [
 				"ext.wikiEditor",
-				"ext.CodeMirror"
+				"ext.CodeMirror",
+				"oojs-ui.styles.icons-movement"
 			],
 			"packageFiles": [
 				"codemirror.wikieditor.js"

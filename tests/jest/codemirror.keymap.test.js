@@ -1,5 +1,5 @@
 /* eslint-disable-next-line n/no-missing-require */
-const { EditorView } = require( 'ext.CodeMirror.lib' );
+const { EditorSelection, EditorView } = require( 'ext.CodeMirror.lib' );
 const CodeMirror = require( '../../resources/codemirror.js' );
 const CodeMirrorKeymap = require( '../../resources/codemirror.keymap.js' );
 const { css } = require( '../../resources/modes/codemirror.mode.exporter.js' );
@@ -133,7 +133,22 @@ describe( 'CodeMirrorKeymap (integration)', () => {
 		cm.view.contentDOM.dispatchEvent( new KeyboardEvent( 'keydown', { key: '/', shiftKey: true, ctrlKey: true } ) );
 		expect( spy ).toHaveBeenCalledWith( 'keymap' );
 		expect( document.querySelector( '.cm-mw-keymap-dialog' ) ).not.toBeNull();
-		expect( document.querySelectorAll( 'dl.cm-mw-keymap-list dt' ).length ).toStrictEqual( 24 );
+		expect( document.querySelectorAll( 'dl.cm-mw-keymap-list dt' ).length ).toStrictEqual( 26 );
+	} );
+
+	it( 'should sort selected lines in ascending and descending order', () => {
+		const cm = new CodeMirror( textarea );
+		textarea.value = 'zebra\nApple\nban\u00E1na';
+		cm.initialize();
+
+		// Select the whole document.
+		cm.view.dispatch( { selection: EditorSelection.single( 0, cm.view.state.doc.length ) } );
+
+		expect( cm.sortLines.sortAscending( cm.view ) ).toBe( true );
+		expect( cm.view.state.doc.toString() ).toStrictEqual( 'Apple\nban\u00E1na\nzebra' );
+
+		expect( cm.sortLines.sortDescending( cm.view ) ).toBe( true );
+		expect( cm.view.state.doc.toString() ).toStrictEqual( 'zebra\nban\u00E1na\nApple' );
 	} );
 
 	it( 'should reset the help dialog when preferences are changed', () => {

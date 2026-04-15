@@ -196,7 +196,12 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		this.$searchBtn = this.searchTool.element();
 		$queryBtn.replaceWith( this.$searchBtn );
 		if ( this.mode === 'mediawiki' ) {
-			// Add a 'Settings' button to the search group, in the 'Advanced' section.
+			// Add line-sorting tools to the existing "Format" group in Advanced.
+			this.$textarea.wikiEditor( 'addToToolbar', {
+				section: 'advanced',
+				groups: { 'codemirror-sort': this.sortGroup }
+			} );
+			// Add Settings button to Advanced.
 			this.$textarea.wikiEditor( 'addToToolbar', {
 				section: 'advanced',
 				groups: {
@@ -225,6 +230,12 @@ class CodeMirrorWikiEditor extends CodeMirror {
 			// Restore original search button.
 			this.$searchBtn.replaceWith( this.$oldSearchBtn );
 
+			// Remove line-sorting tools.
+			this.$textarea.wikiEditor( 'removeFromToolbar', {
+				section: 'advanced',
+				group: 'codemirror-sort'
+			} );
+
 			// Remove the CodeMirror preferences button from the advanced section.
 			this.$textarea.wikiEditor( 'removeFromToolbar', {
 				section: 'advanced',
@@ -237,7 +248,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 				group: 'codemirror'
 			} );
 			// Remove the main toolbar buttons that we added.
-			for ( const group of [ 'format', 'preferences', 'search' ] ) {
+			for ( const group of [ 'format', 'sort', 'preferences', 'search' ] ) {
 				this.$textarea.wikiEditor( 'removeFromToolbar', {
 					section: 'main',
 					group: `codemirror-${ group }`
@@ -314,6 +325,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	addCodeFormattingButtonsToToolbar() {
 		this.$textarea.wikiEditor( 'addToToolbar', { section: 'main', groups: {
 			'codemirror-format': {
+				label: mw.msg( 'wikieditor-toolbar-group-format' ),
 				tools: {
 					indentMore: this.getTool(
 						'indent',
@@ -327,6 +339,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 					)
 				}
 			},
+			'codemirror-sort': this.sortGroup,
 			'codemirror-preferences': {
 				tools: {
 					whitespace: this.getToggleToolPref( 'whitespace', 'pilcrow' ),
@@ -394,10 +407,11 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	 * @param {string} name
 	 * @param {Function|Command} command
 	 * @param {CodeMirrorKeyBinding} [keyBinding]
+	 * @param {string} [icon] Defaults to `name`.
 	 * @return {Object}
 	 * @private
 	 */
-	getTool( name, command, keyBinding ) {
+	getTool( name, command, keyBinding, icon ) {
 		return {
 			label: this.keymap.getTitleWithShortcut(
 				keyBinding,
@@ -407,7 +421,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 				mw.msg( `codemirror-keymap-${ name.toLowerCase() }` )
 			),
 			type: 'button',
-			oouiIcon: name,
+			oouiIcon: icon || name,
 			action: {
 				type: 'callback',
 				execute: command
@@ -528,6 +542,30 @@ class CodeMirrorWikiEditor extends CodeMirror {
 			},
 			this.keymap.keymapHelpRegistry.other.preferences
 		);
+	}
+
+	/**
+	 * @type {Object}
+	 * @private
+	 */
+	get sortGroup() {
+		return {
+			label: mw.msg( 'codemirror-we-group-sort' ),
+			tools: {
+				sortLines: this.getTool(
+					'sortLines',
+					() => this.sortLines.sortAscending( this.view ),
+					this.keymap.keymapHelpRegistry.other.sortLines,
+					'arrowDown'
+				),
+				sortLinesDescending: this.getTool(
+					'sortLinesDescending',
+					() => this.sortLines.sortDescending( this.view ),
+					this.keymap.keymapHelpRegistry.other.sortLinesDescending,
+					'arrowUp'
+				)
+			}
+		};
 	}
 }
 

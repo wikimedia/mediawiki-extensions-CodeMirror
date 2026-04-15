@@ -133,6 +133,8 @@
 	"codemirror-keymap-other": "Other",
 	"codemirror-keymap-moveline": "Move selected lines up or down one line",
 	"codemirror-keymap-copyline": "Copy selected lines to the above or below line",
+	"codemirror-keymap-sortlines": "Sort selected lines",
+	"codemirror-keymap-sortlinesdescending": "Sort selected lines descending",
 	"codemirror-keymap-direction": "Change directionality",
 	"codemirror-keymap-preferences": "Syntax highlighting preferences",
 	"codemirror-keymap-full-preferences": "Full preferences dialog",
@@ -220,5 +222,6 @@
 	"codemirror-potentially-slow": "potentially slow",
 	"codemirror-validate-js-syntaxerror": "Syntax error at column $1 on line $2: $3",
 	"codemirror-ve-limit-exceeded": "Document is too large for syntax highlighting and has been disabled.",
-	"codemirror-ve-limit-exceeded-info": "More information"
+	"codemirror-ve-limit-exceeded-info": "More information",
+	"codemirror-we-group-sort": "Sort"
 }
