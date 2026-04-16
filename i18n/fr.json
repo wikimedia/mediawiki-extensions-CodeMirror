@@ -222,8 +222,6 @@
 	"codemirror-wikilint-variable-anchor": "ancre variable pour un en-tête de section",
 	"codemirror-wikilint-vertical-alignment": "alignement vertical d'une image",
 	"codemirror-wikilint-whitespace": "insérer une espace",
-	"codemirror-beta-feature-title": "Mise en évidence améliorée de la syntaxe",
-	"codemirror-beta-feature-description": "Bénéficiez d'un accès anticipé aux nouvelles fonctionnalités de mise en évidence de la syntaxe et d'édition, telles que le repli du code et l'auto-complétion.",
 	"codemirror-potentially-slow": "potentiellement lent",
 	"codemirror-validate-js-syntaxerror": "Erreur de syntaxe à la colonne $1 sur la ligne $2 : $3"
 }

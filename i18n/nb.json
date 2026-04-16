@@ -119,7 +119,5 @@
 	"codemirror-keymap-crosshair": "Hold $1 og klikk og dra for å gjøre rektangulære valg.",
 	"codemirror-keymap-openlinks": "Hold $1 og klikk på sidetitler og URL-er for å åpne dem i nye faner.",
 	"prefs-accessibility": "Tilgjengelighet",
-	"prefs-syntax-highlighting": "Syntaksfremheving",
-	"codemirror-beta-feature-title": "Forbedret syntaksfremheving",
-	"codemirror-beta-feature-description": "Få tidlig tilgang til ny syntaksfremheving og nye redigeringsfunksjoner, som sammenslåbar kode og autofullføring."
+	"prefs-syntax-highlighting": "Syntaksfremheving"
 }

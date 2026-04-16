@@ -156,7 +156,5 @@
 	"codemirror-wikilint-unclosed-quotes": "sulgemata jutumärgid",
 	"codemirror-wikilint-unclosed-table": "sulgemata tabel",
 	"codemirror-wikilint-unnecessary-encoding": "tarbetu protsentkodeering siselingis",
-	"codemirror-beta-feature-title": "Täiustatud süntaksi esiletõst",
-	"codemirror-beta-feature-description": "Kasuta esimeste seas uut süntaksi esiletõstu ja redigeerimisfunktsioone nagu koodi voltimine ja sõnade automaatne lõpetamine.",
 	"codemirror-potentially-slow": "võib olla aeglane"
 }

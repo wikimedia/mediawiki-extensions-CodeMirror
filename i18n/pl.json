@@ -205,8 +205,6 @@
 	"codemirror-wikilint-useless-link-text": "zbędny tytuł linku",
 	"codemirror-wikilint-vertical-alignment": "wyrównanie w pionie",
 	"codemirror-wikilint-whitespace": "wstaw spację",
-	"codemirror-beta-feature-title": "Ulepszone podświetlanie składni",
-	"codemirror-beta-feature-description": "Uzyskaj wczesny dostęp do nowych funkcji podświetlania składni i edycji wikikodu, jak zwijanie kodu i autouzupełnianie.",
 	"codemirror-potentially-slow": "może spowalniać",
 	"codemirror-validate-js-syntaxerror": "Błąd składni w kolumnie $1 w wierszu $2: $3"
 }

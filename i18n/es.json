@@ -214,7 +214,5 @@
 	"codemirror-wikilint-useless-link-text": "texto de enlace inútil",
 	"codemirror-wikilint-variable-anchor": "enlace ancla variable en un encabezamiento",
 	"codemirror-wikilint-vertical-alignment": "alineamiento-vertical",
-	"codemirror-wikilint-whitespace": "insertar un espacio",
-	"codemirror-beta-feature-title": "Resaltado de sintaxis mejorado",
-	"codemirror-beta-feature-description": "Obtén acceso anticipado a nuevas funciones de resaltado y edición de sintaxis, como plegado de código y autocompletado."
+	"codemirror-wikilint-whitespace": "insertar un espacio"
 }

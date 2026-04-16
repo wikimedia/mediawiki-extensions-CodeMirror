@@ -109,7 +109,5 @@
 	"codemirror-keymap-crosshair": "Düzbucaqlı seçimlər etmək üçün $1 düyməsini basıb saxlayın, sonra klikləyin və sürüşdürün.",
 	"codemirror-keymap-openlinks": "Səhifə başlıqlarını və URL-ləri yeni vərəqədə açmaq üçün $1 düyməsini basılı saxlayın və klikləyin",
 	"prefs-accessibility": "Əlçatanlıq",
-	"prefs-syntax-highlighting": "Sintaksis vurğulanması",
-	"codemirror-beta-feature-title": "Təkmilləşdirilmiş Sintaksis Vurğulanması",
-	"codemirror-beta-feature-description": "Kod qatlama və avtomatik tamamlama kimi yeni sintaksisin vurğulanması və redaktə xüsusiyyətlərinə erkən giriş əldə edin."
+	"prefs-syntax-highlighting": "Sintaksis vurğulanması"
 }

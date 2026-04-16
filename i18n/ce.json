@@ -201,7 +201,5 @@
 	"codemirror-wikilint-useless-link-text": "пайдабоцу хьажорган текст",
 	"codemirror-wikilint-variable-anchor": "хийцалуш йолу уьйр дакъан корта тӀехь",
 	"codemirror-wikilint-vertical-alignment": "вертикалан нисдар",
-	"codemirror-wikilint-whitespace": "кӀайдарг чуйилла",
-	"codemirror-beta-feature-title": "Тодина синтаксис билгалйаккхар",
-	"codemirror-beta-feature-description": "Хьалхе кхача синтаксисан билгалдаккхаран а, редакторан а тоьллачу агӀонашна тӀекхача, масала, код дӀасатохар а, автотӀейузар а."
+	"codemirror-wikilint-whitespace": "кӀайдарг чуйилла"
 }

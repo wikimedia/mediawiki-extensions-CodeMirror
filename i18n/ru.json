@@ -148,7 +148,5 @@
 	"codemirror-wikilint-bold-apostrophes": "полужирные апострофы",
 	"codemirror-wikilint-bold-in-header": "полужирный текст в заголовке раздела",
 	"codemirror-wikilint-close": "закрыть",
-	"codemirror-wikilint-comment": "закомментировать",
-	"codemirror-beta-feature-title": "Улучшенная подсветка синтаксиса",
-	"codemirror-beta-feature-description": "Получите ранний доступ к улучшенной подсветке синтаксиса и таким функциям редактора, как сворачивание кода и автодополнение."
+	"codemirror-wikilint-comment": "закомментировать"
 }

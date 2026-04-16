@@ -149,8 +149,6 @@
 	"codemirror-wikilint-imagemap-without-image": "बिना चित्र का imagemap",
 	"codemirror-wikilint-in-url": "URL में $1",
 	"codemirror-wikilint-inconsistent-table": "असंगत टेबल लेआउट",
-	"codemirror-beta-feature-title": "बेहतर सिनटैक्स हाइलाइटिंग",
-	"codemirror-beta-feature-description": "नई सिनटैक्स हाइलाइटिंग तथा कोड तह करने और स्वतः पूर्णकरण जैसी सम्पादन सुविधाओं तक जल्दी पहुँच प्राप्त करें।",
 	"codemirror-potentially-slow": "धीमा हो सकता है",
 	"codemirror-validate-js-syntaxerror": "पंक्ति $2 के कॉलम $1 में सिनटैक्स त्रुटि: $3",
 	"codemirror-ve-limit-exceeded": "दस्तावेज़ सिनटैक्स हाइलाइटिंग के लिए कुछ ज़्यादा ही बड़ा है, इसलिए यह सुविधा अक्षम कर दी गई है।",

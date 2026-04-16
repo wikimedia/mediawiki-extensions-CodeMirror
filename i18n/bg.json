@@ -41,7 +41,5 @@
 	"codemirror-unfold": "разгъване",
 	"codemirror-folded-code": "сгънат код",
 	"prefs-accessibility": "Достъпност",
-	"prefs-syntax-highlighting": "Оцветяване на синтаксиса",
-	"codemirror-beta-feature-title": "Подобрено оцветяване на синтаксиса",
-	"codemirror-beta-feature-description": "Получаване на ранен достъп до нови възможности за оцветяване на синтаксиса и редактиране, като например сгъване на шаблон и автоматично дописване."
+	"prefs-syntax-highlighting": "Оцветяване на синтаксиса"
 }

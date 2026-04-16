@@ -208,8 +208,6 @@
 	"codemirror-wikilint-variable-anchor": "sauh boleh ubah dalam pengepala bahagian",
 	"codemirror-wikilint-vertical-alignment": "penjajaran menegak",
 	"codemirror-wikilint-whitespace": "masukkan ruang jarak",
-	"codemirror-beta-feature-title": "Penyerlahan Sintaks Dipertingkatkan",
-	"codemirror-beta-feature-description": "Dapatkan akses awal kepada ciri penyerlahan dan penyerlahan sintaks baharu seperti lipatan kod dan autolengkap.",
 	"codemirror-potentially-slow": "berpotensi perlahan",
 	"codemirror-validate-js-syntaxerror": "Ralat sintaks pada lajur $1 pada baris $2: $3",
 	"codemirror-ve-limit-exceeded": "Dokumen terlalu besar untuk penyerlahan sintaks dan telah dilumpuhkan.",

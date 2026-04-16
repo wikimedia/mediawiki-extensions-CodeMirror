@@ -93,6 +93,5 @@
 	"codemirror-wikilint-in-url": "$1 no URL",
 	"codemirror-wikilint-invalid-isbn": "ISBN inválido",
 	"codemirror-wikilint-remove": "remover",
-	"codemirror-wikilint-whitespace": "inserir um espaço",
-	"codemirror-beta-feature-title": "Destaque de Sintaxe Melhorado"
+	"codemirror-wikilint-whitespace": "inserir um espaço"
 }

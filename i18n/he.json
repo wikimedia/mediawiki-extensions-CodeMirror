@@ -208,8 +208,6 @@
 	"codemirror-wikilint-variable-anchor": "עוגן משתנה בכותרת פרק",
 	"codemirror-wikilint-vertical-alignment": "יישור אנכי",
 	"codemirror-wikilint-whitespace": "הכנסת רווח",
-	"codemirror-beta-feature-title": "צביעת תחביר משופרת",
-	"codemirror-beta-feature-description": "קבלת גישה מוקדמת לתכונות חדשות של צביעת תחביר ועריכה כגון קיפול קוד והשלמה אוטומטית.",
 	"codemirror-potentially-slow": "זה יכול להיות איטי",
 	"codemirror-validate-js-syntaxerror": "במיקום $1 בשורה $2 יש שגיאת תחביר: $3"
 }

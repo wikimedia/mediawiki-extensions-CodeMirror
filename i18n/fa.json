@@ -134,7 +134,5 @@
 	"codemirror-keymap-lint": "لینتر",
 	"codemirror-keymap-next-diagnostic": "انتخاب عیب‌یابی بعدی",
 	"prefs-accessibility": "دسترسی‌پذیری",
-	"prefs-syntax-highlighting": "برجسته‌سازی نحوی",
-	"codemirror-beta-feature-title": "برجسته‌سازی نحوی بهبودیافته",
-	"codemirror-beta-feature-description": "دسترسی زودهنگام به برجسته‌سازی نحوی جدید و ویژگی‌های ویرایشی نظیر تا شدن کد و تکمیل خودکار."
+	"prefs-syntax-highlighting": "برجسته‌سازی نحوی"
 }

@@ -30,7 +30,5 @@
 	"codemirror-goto-line": "Mont d'al linenn",
 	"codemirror-goto-line-go": "Mont",
 	"prefs-accessibility": "Diraezañ",
-	"prefs-syntax-highlighting": "Livañ ereadurezh",
-	"codemirror-beta-feature-title": "Livañ ereadurezh gwellaet",
-	"codemirror-beta-feature-description": "Grit abred gant arc’hweladurioù livañ ereadurezh nevez evel plegañ ar c’hod hag klokaat emgefre"
+	"prefs-syntax-highlighting": "Livañ ereadurezh"
 }

@@ -209,8 +209,6 @@
 	"codemirror-wikilint-variable-anchor": "áncora variable nunha cabeceira de sección",
 	"codemirror-wikilint-vertical-alignment": "aliñamento vertical",
 	"codemirror-wikilint-whitespace": "inserir un espazo",
-	"codemirror-beta-feature-title": "Resaltado de sintaxe mellorado",
-	"codemirror-beta-feature-description": "Obtén acceso anticipado a novas funcións de edición e resaltado de sintaxe, como o pregamento de código e o autocompletado.",
 	"codemirror-potentially-slow": "potencialmente lento",
 	"codemirror-validate-js-syntaxerror": "Erro de sintaxe na columna $1 da liña $2: $3",
 	"codemirror-ve-limit-exceeded": "O documento é demasiado grande para o realzado de sintaxe e foi desactivado.",

@@ -215,8 +215,6 @@
 	"codemirror-wikilint-variable-anchor": "مرساة متغيرة في رأس القسم",
 	"codemirror-wikilint-vertical-alignment": "محاذاة عمودية",
 	"codemirror-wikilint-whitespace": "أدخل مسافة",
-	"codemirror-beta-feature-title": "تحسين إبراز التركيب",
-	"codemirror-beta-feature-description": "احصل على إمكانية الوصول المبكر إلى ميزاتٍ جديدة لإبراز التركيب والتحرير مثل طي التعليمات البرمجية والإكمال التلقائي.",
 	"codemirror-potentially-slow": "بطيئًا محتملًا",
 	"codemirror-validate-js-syntaxerror": "خطأ في بناء الجملة في العمود $1 في السطر $2 : $3",
 	"codemirror-ve-limit-exceeded": "حجم المستند كبير جدًا بحيث لا يمكن تمييز الصيغة، ولذلك تم تعطيل هذه الميزة.",

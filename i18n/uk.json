@@ -165,7 +165,5 @@
 	"codemirror-wikilint-horizontal-alignment": "горизонтальне вирівнювання",
 	"codemirror-wikilint-html-in-table": "тег HTML в атрибутах таблиці",
 	"codemirror-wikilint-illegal-attribute-name": "недійсна назва атрибута",
-	"codemirror-wikilint-illegal-attribute-value": "недійсне значення атрибута",
-	"codemirror-beta-feature-title": "Покращене підсвічування синтаксису",
-	"codemirror-beta-feature-description": "Отримайте ранній доступ до нових функцій підсвічування синтаксису та редагування, таких як згортання коду та автозаповнення."
+	"codemirror-wikilint-illegal-attribute-value": "недійсне значення атрибута"
 }

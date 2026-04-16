@@ -205,8 +205,6 @@
 	"codemirror-wikilint-variable-anchor": "âncora variável em um cabeçalho de seção",
 	"codemirror-wikilint-vertical-alignment": "alinhamento vertical",
 	"codemirror-wikilint-whitespace": "inserir um espaço",
-	"codemirror-beta-feature-title": "Destaque de sintaxe aprimorado",
-	"codemirror-beta-feature-description": "Obtenha acesso antecipado aos novos recursos de edição e realce de sintaxe, como dobramento de código e preenchimento automático.",
 	"codemirror-potentially-slow": "potencialmente lento",
 	"codemirror-validate-js-syntaxerror": "Erro de sintaxe na coluna $1, linha $2: $3"
 }

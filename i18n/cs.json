@@ -14,7 +14,5 @@
 	"codemirror-prefs-help": "nápověda",
 	"codemirror-prefs-colorblind": "Zapnout schéma pro barvoslepé u zvýrazňování syntaxe při editaci wikitextu",
 	"codemirror-prefs-colorblind-help": "Pokud používáte pro zvýrazňování syntaxe udělátko, nebude toto nastavení fungovat.",
-	"prefs-accessibility": "Přístupnost",
-	"codemirror-beta-feature-title": "Vylepšené zvýrazňování syntaxe",
-	"codemirror-beta-feature-description": "Získejte předběžný přístup k novému zvýrazňování syntaxe a editačním funkcím jako sbalování a automatické dokončování kódu."
+	"prefs-accessibility": "Přístupnost"
 }

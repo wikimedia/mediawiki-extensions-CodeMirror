@@ -207,8 +207,6 @@
 	"codemirror-wikilint-variable-anchor": "ancora variabile in un titulo de section",
 	"codemirror-wikilint-vertical-alignment": "alineamento vertical",
 	"codemirror-wikilint-whitespace": "inserer un spatio",
-	"codemirror-beta-feature-title": "Coloration syntactic meliorate",
-	"codemirror-beta-feature-description": "Obtene accesso precoce a nove functiones de coloration syntactic e de modification, como contraher/expander codice e autocompletamento.",
 	"codemirror-potentially-slow": "pote esser lente",
 	"codemirror-validate-js-syntaxerror": "Error de syntaxe al columna $1 sur le linea $2: $3"
 }
