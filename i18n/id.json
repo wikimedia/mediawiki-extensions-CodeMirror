@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Daud I.F. Argana"
+			"Daud I.F. Argana",
+			"Budhiastawa"
 		]
 	},
 	"codemirror-desc": "Menyediakan penyorotan sintaksis di penyunting teks wiki",
