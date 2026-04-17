@@ -81,6 +81,9 @@ const getI18N = () => Parser.i18n;
 const setLintConfig = ( config ) => {
 	Parser.lintConfig = config;
 };
+const getLintConfig = () => Object.assign( {}, Parser.lintConfig, {
+	rules: Object.assign( {}, Parser.lintConfig.rules )
+} );
 const lint = ( wikitext ) => {
 	if ( last.wikitext === wikitext ) {
 		return last.diagnostics;
@@ -100,4 +103,4 @@ const lint = ( wikitext ) => {
 	return diagnostics;
 };
 
-onmessage( setConfig, getConfig, lint, setI18N, getI18N, setLintConfig );
+onmessage( setConfig, getConfig, lint, setI18N, getI18N, setLintConfig, getLintConfig );

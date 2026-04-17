@@ -124,12 +124,25 @@ class CodeMirrorWorker {
 	}
 
 	/**
+	 * Get the linting configuration for the worker.
+	 *
+	 * @return {Promise}
+	 */
+	getLintConfig() {
+		return this.getFeedback( 'getLintConfig' );
+	}
+
+	/**
 	 * Add a callback to be called when the worker is loaded.
 	 *
 	 * @param {Function} callback
 	 */
 	onload( callback ) {
-		this.queue.push( callback );
+		if ( workers.has( this.mode ) ) {
+			callback( this );
+		} else {
+			this.queue.push( callback );
+		}
 	}
 
 	/**

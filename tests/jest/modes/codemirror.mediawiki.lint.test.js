@@ -380,4 +380,10 @@ describe( 'CodeMirrorLint: WikiLint', () => {
 			expect( error.actions.map( ( { name } ) => name ) ).toEqual( actions );
 		} );
 	}
+
+	it( 'rule customization', async () => {
+		worker.setLintConfig( { rules: { 'tag-like': 0 } } );
+		expect( ( await lint( '<a>' ) ).length ).toEqual( 0 );
+		expect( ( await worker.getLintConfig() ).rules[ 'tag-like' ] ).toEqual( 0 );
+	} );
 } );

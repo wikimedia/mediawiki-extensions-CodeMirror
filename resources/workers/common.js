@@ -1,4 +1,4 @@
-module.exports = ( setConfig, getConfig, lint, setI18N, getI18N, setLintConfig ) => {
+module.exports = ( setConfig, getConfig, lint, setI18N, getI18N, setLintConfig, getLintConfig ) => {
 	self.onmessage = async ( { data: [ command, code ] } ) => {
 		switch ( command ) {
 			case 'setConfig':
@@ -15,6 +15,9 @@ module.exports = ( setConfig, getConfig, lint, setI18N, getI18N, setLintConfig )
 				break;
 			case 'setLintConfig':
 				setLintConfig( code );
+				break;
+			case 'getLintConfig':
+				postMessage( [ command, getLintConfig() ] );
 				break;
 			case 'lint':
 				postMessage( [ command, await lint( code ), code ] );
