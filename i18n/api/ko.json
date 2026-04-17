@@ -1,9 +1,13 @@
 {
 	"@metadata": {
 		"authors": [
+			"Tensama0415",
 			"Ykhwong"
 		]
 	},
 	"apihelp-codemirror-validate-summary": "지정된 내용의 유효성 오류를 검사합니다",
-	"apihelp-codemirror-validate-param-contentmodel": "콘텐츠 모델"
+	"apihelp-codemirror-validate-param-content": "유효성을 검사할 텍스트 내용",
+	"apihelp-codemirror-validate-param-contentmodel": "콘텐츠 모델",
+	"apihelp-codemirror-validate-param-title": "내용이 속한 문서의 제목.",
+	"apihelp-codemirror-validate-example": "세니타이즈드 CSS에 대해 <code>h2 {color: red}</code>가 유효한지 확인"
 }

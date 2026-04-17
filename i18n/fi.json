@@ -5,6 +5,7 @@
 			"Nike",
 			"Pyscowicz",
 			"Samoasambia",
+			"Wikipeedikko",
 			"Yupik"
 		]
 	},
@@ -101,5 +102,7 @@
 	"prefs-accessibility": "Saavutettavuus",
 	"prefs-syntax-highlighting": "Syntaksin korostus",
 	"codemirror-wikilint-close": "sulje",
-	"codemirror-wikilint-remove": "poista"
+	"codemirror-wikilint-remove": "poista",
+	"codemirror-ve-limit-exceeded": "Asiakirja on liian suuri syntaksin korostamiseen, joten toiminto on otettu pois käytöstä.",
+	"codemirror-ve-limit-exceeded-info": "Lisätietoja"
 }
