@@ -348,11 +348,23 @@ describe( 'CodeMirrorLint: ESLint', () => {
 		} );
 	}
 	it( 'rule customization', async () => {
+		// Disable a recommended rule
 		worker.setConfig( { rules: { 'no-empty': 0 } } );
 		expect( ( await lint( '{}' ) ).length ).toEqual( 0 );
 		expect( ( await worker.getConfig() ).rules[ 'no-empty' ] ).toEqual( 0 );
+
+		// Enable a new rule
 		worker.setConfig( { rules: { semi: 2 } } );
 		expect( ( await lint( 'let a' ) ).some( ( { rule } ) => rule === 'semi' ) ).toBeTruthy();
 		expect( ( await worker.getConfig() ).rules.semi ).toEqual( 2 );
+
+		// New customization supersedes the previous one
+		expect( ( await lint( '{}' ) ).length ).toEqual( 1 );
+		expect( ( await worker.getConfig() )[ 'no-empty' ] ).toEqual( undefined );
+
+		// Other rules should follow the default configuration
+		expect(
+			( await lint( '!!!0' ) ).some( ( { rule } ) => rule === 'no-extra-boolean-cast' )
+		).toBeTruthy();
 	} );
 } );

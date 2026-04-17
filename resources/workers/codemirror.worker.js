@@ -80,6 +80,34 @@ class CodeMirrorWorker {
 
 	/**
 	 * Set the configuration for the worker.
+	 * This can be used to customize the rules for
+	 * {@link https://eslint.org/docs/v8.x/use/configure/language-options#specifying-environments ESLint}
+	 * and
+	 * {@link https://stylelint.io/user-guide/configure#rules Stylelint}.
+	 *
+	 * @example
+	 * mw.hook( 'ext.CodeMirror.ready' ).add( ( cm ) => {
+	 *   const { worker } = cm.langExtension;
+	 *   if ( cm.mode === 'javascript' ) {
+	 *     // ESLint configuration
+	 *     worker.onload( () => {
+	 *       worker.setConfig( {
+	 *         rules: {
+	 *           semi: 2
+	 *         }
+	 *       } );
+	 *     } );
+	 *   } else if ( cm.mode === 'css' ) {
+	 *     // Stylelint configuration
+	 *     worker.onload( () => {
+	 *       worker.setConfig( {
+	 *         rules: {
+	 *           'length-zero-no-unit': true
+	 *         }
+	 *       } );
+	 *    } );
+	 *   }
+	 * } );
 	 *
 	 * @param {Object} config
 	 */
@@ -116,6 +144,23 @@ class CodeMirrorWorker {
 
 	/**
 	 * Set the linting configuration for the worker.
+	 * This can be used to customize the rules for
+	 * {@link https://www.mediawiki.org/wiki/Help:Extension:CodeMirror/Wikitext_linting WikiLint}.
+	 *
+	 * @example
+	 * mw.hook( 'ext.CodeMirror.ready' ).add( ( cm ) => {
+	 *   const { worker } = cm.langExtension;
+	 *   if ( cm.mode === 'mediawiki' ) {
+	 *     // WikiLint configuration
+	 *     worker.onload( () => {
+	 *       worker.setLintConfig( {
+	 *         rules: {
+	 *           'insecure-style': 2
+	 *         }
+	 *       } );
+	 *     } );
+	 *   }
+	 * } );
 	 *
 	 * @param {Object} config
 	 */

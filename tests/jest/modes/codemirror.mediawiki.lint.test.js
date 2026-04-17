@@ -382,7 +382,28 @@ describe( 'CodeMirrorLint: WikiLint', () => {
 	}
 
 	it( 'rule customization', async () => {
+		// Disable a recommended rule
 		worker.setLintConfig( { rules: { 'tag-like': 0 } } );
+		expect( ( await lint( '<a>' ) ).length ).toEqual( 0 );
+		expect( ( await worker.getLintConfig() ).rules[ 'tag-like' ] ).toEqual( 0 );
+
+		// Enable a new rule
+		worker.setLintConfig( { rules: { 'lonely-bracket': 1 } } );
+		expect( ( await lint( '[' ) ).length ).toEqual( 1 );
+		expect( ( await worker.getLintConfig() ).rules[ 'lonely-bracket' ] ).toEqual( 1 );
+
+		// New customization supersedes the previous one
+		expect( ( await lint( '<a>' ) ).length ).toEqual( 1 );
+		expect( ( await worker.getLintConfig() ).rules[ 'tag-like' ] )
+			.toEqual( [ 2, { disallowed: 1, invalid: 1 } ] );
+
+		// Other rules should follow the default configuration
+		expect(
+			( await lint( '=a==' ) ).some( ( { rule } ) => rule === 'unbalanced-header' )
+		).toBeTruthy();
+
+		// For convenience and uniformity, `setConfig` can also be used for rule customization
+		worker.setConfig( { rules: { 'tag-like': 0 } } );
 		expect( ( await lint( '<a>' ) ).length ).toEqual( 0 );
 		expect( ( await worker.getLintConfig() ).rules[ 'tag-like' ] ).toEqual( 0 );
 	} );

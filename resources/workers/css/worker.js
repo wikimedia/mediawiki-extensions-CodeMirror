@@ -6,6 +6,10 @@ require( '@bhsd/stylelint-browserify/bundle/stylelint-es8.min.js' );
 let customRules = rules;
 
 const setConfig = ( config ) => {
+	// For backward compatibility, support both a full config object and just the rules
+	if ( 'rules' in config ) {
+		config = config.rules;
+	}
 	customRules = Object.assign( {}, rules, config );
 };
 const getConfig = () => customRules;

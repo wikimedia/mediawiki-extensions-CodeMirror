@@ -168,14 +168,26 @@ describe( 'CodeMirrorLint: Stylelint', () => {
 		} );
 	}
 	it( 'rule customization', async () => {
-		worker.setConfig( { 'no-empty-source': null } );
+		// Disable a recommended rule
+		worker.setConfig( { rules: { 'no-empty-source': null } } );
 		expect( ( await lint( '' ) ).length ).toEqual( 0 );
 		expect( ( await worker.getConfig() )[ 'no-empty-source' ] ).toEqual( null );
-		worker.setConfig( { 'length-zero-no-unit': true } );
+
+		// Enable a new rule
+		worker.setConfig( { rules: { 'length-zero-no-unit': true } } );
 		expect(
 			( await lint( 'a { width: 0px; }' ) )
 				.some( ( { rule } ) => rule === 'length-zero-no-unit' )
 		).toBeTruthy();
 		expect( ( await worker.getConfig() )[ 'length-zero-no-unit' ] ).toEqual( true );
+
+		// New customization supersedes the previous one
+		expect( ( await lint( '' ) ).length ).toEqual( 1 );
+		expect( ( await worker.getConfig() )[ 'no-empty-source' ] ).toEqual( true );
+
+		// Other rules should follow the default configuration
+		expect(
+			( await lint( 'a {}' ) ).some( ( { rule } ) => rule === 'block-no-empty' )
+		).toBeTruthy();
 	} );
 } );
