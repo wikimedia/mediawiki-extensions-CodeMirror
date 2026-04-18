@@ -76,8 +76,18 @@ const openLinksExtension = [
 			if ( names.includes( mwModeConfig.tags.linkPageName ) ||
 				names.includes( mwModeConfig.tags.templateName ) ) {
 				let page = state.sliceDoc( from, to ).trim();
+				const pageName = mw.config.get( 'wgPageName' );
 				if ( page.startsWith( '/' ) ) {
-					page = `:${ mw.config.get( 'wgPageName' ) }${ page }`;
+					page = `:${ pageName }${ page }`;
+				} else if ( page.startsWith( '../' ) ) {
+					const [ { length } ] = /^(?:\.\.\/)*/.exec( page ),
+						level = length / 3,
+						parts = pageName.split( '/' );
+					if ( level >= parts.length ) {
+						return false;
+					}
+					const sub = page.slice( length );
+					page = `:${ parts.slice( 0, -level ).join( '/' ) }${ sub && '/' }${ sub }`;
 				}
 				let ns = names.includes( mwModeConfig.tags.templateName ) ? 10 : 0;
 				if ( names.includes( 'mw-tag-gallery' ) && !name.includes( 'link-ground' ) ) {
