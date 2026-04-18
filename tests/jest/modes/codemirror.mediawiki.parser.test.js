@@ -367,6 +367,7 @@ const mwConfig = {
 	tagModes: {
 		nowiki: 'mw-tag-nowiki',
 		pre: 'mw-tag-pre',
+		indicator: 'mediawiki',
 		ref: 'text/mediawiki',
 		references: 'text/mediawiki'
 	},

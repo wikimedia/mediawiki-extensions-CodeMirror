@@ -450,7 +450,8 @@
 		"CodeMirror": {
 			"TagModes": {
 				"pre": "mw-tag-pre",
-				"nowiki": "mw-tag-nowiki"
+				"nowiki": "mw-tag-nowiki",
+				"indicator": "mediawiki"
 			}
 		},
 		"VisualEditor": {

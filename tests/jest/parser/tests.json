@@ -95605,7 +95605,7 @@
 			},
 			{
 				"text": "hello world",
-				"name": "mw-exttag"
+				"name": "mw-tag-indicator"
 			},
 			{
 				"text": "</",
@@ -95640,8 +95640,16 @@
 				"name": "mw-exttag-bracket mw-ext-indicator"
 			},
 			{
-				"text": "[[Main Page]]",
-				"name": "mw-exttag"
+				"text": "[[",
+				"name": "mw-tag-indicator mw-link-ground squareBracket"
+			},
+			{
+				"text": "Main Page",
+				"name": "mw-tag-indicator mw-link-ground mw-link-pagename mw-pagename"
+			},
+			{
+				"text": "]]",
+				"name": "mw-tag-indicator mw-link-ground squareBracket"
 			},
 			{
 				"text": "</",
@@ -95676,8 +95684,32 @@
 				"name": "mw-exttag-bracket mw-ext-indicator"
 			},
 			{
-				"text": "[[File:Foobar.jpg|25px|link=]]",
-				"name": "mw-exttag"
+				"text": "[[",
+				"name": "mw-tag-indicator mw-link-ground squareBracket"
+			},
+			{
+				"text": "File:Foobar.jpg",
+				"name": "mw-tag-indicator mw-link-ground mw-link-pagename mw-pagename"
+			},
+			{
+				"text": "|",
+				"name": "mw-tag-indicator mw-link-ground operator"
+			},
+			{
+				"text": "25px",
+				"name": "mw-tag-indicator mw-link-ground mw-image-parameter"
+			},
+			{
+				"text": "|",
+				"name": "mw-tag-indicator mw-link-ground operator"
+			},
+			{
+				"text": "link=",
+				"name": "mw-tag-indicator mw-link-ground mw-image-parameter"
+			},
+			{
+				"text": "]]",
+				"name": "mw-tag-indicator mw-link-ground squareBracket"
 			},
 			{
 				"text": "</",
@@ -95712,8 +95744,24 @@
 				"name": "mw-exttag-bracket mw-ext-indicator"
 			},
 			{
-				"text": "[[File:Foobar.jpg|25px]]",
-				"name": "mw-exttag"
+				"text": "[[",
+				"name": "mw-tag-indicator mw-link-ground squareBracket"
+			},
+			{
+				"text": "File:Foobar.jpg",
+				"name": "mw-tag-indicator mw-link-ground mw-link-pagename mw-pagename"
+			},
+			{
+				"text": "|",
+				"name": "mw-tag-indicator mw-link-ground operator"
+			},
+			{
+				"text": "25px",
+				"name": "mw-tag-indicator mw-link-ground mw-image-parameter"
+			},
+			{
+				"text": "]]",
+				"name": "mw-tag-indicator mw-link-ground squareBracket"
 			},
 			{
 				"text": "</",
@@ -95749,11 +95797,15 @@
 			},
 			{
 				"text": "*foo",
-				"name": "mw-exttag"
+				"name": "mw-tag-indicator"
 			},
 			{
-				"text": "*bar",
-				"name": "mw-exttag"
+				"text": "*",
+				"name": "mw-tag-indicator list"
+			},
+			{
+				"text": "bar",
+				"name": "mw-tag-indicator"
 			},
 			{
 				"text": "</",
@@ -95788,8 +95840,32 @@
 				"name": "mw-exttag-bracket mw-ext-indicator"
 			},
 			{
-				"text": "<nowiki>foo</nowiki>",
-				"name": "mw-exttag"
+				"text": "<",
+				"name": "mw-tag-indicator mw-exttag-bracket mw-ext-nowiki"
+			},
+			{
+				"text": "nowiki",
+				"name": "mw-tag-indicator mw-exttag-name mw-ext-nowiki"
+			},
+			{
+				"text": ">",
+				"name": "mw-tag-indicator mw-exttag-bracket mw-ext-nowiki"
+			},
+			{
+				"text": "foo",
+				"name": "mw-tag-indicator mw-tag-nowiki"
+			},
+			{
+				"text": "</",
+				"name": "mw-tag-indicator mw-exttag-bracket mw-ext-nowiki"
+			},
+			{
+				"text": "nowiki",
+				"name": "mw-tag-indicator mw-exttag-name mw-ext-nowiki"
+			},
+			{
+				"text": ">",
+				"name": "mw-tag-indicator mw-exttag-bracket mw-ext-nowiki"
 			},
 			{
 				"text": "</",
@@ -95825,7 +95901,7 @@
 			},
 			{
 				"text": " Preformatted",
-				"name": "mw-exttag"
+				"name": "mw-tag-indicator"
 			},
 			{
 				"text": "</",
@@ -95860,8 +95936,20 @@
 				"name": "mw-exttag-bracket mw-ext-indicator"
 			},
 			{
-				"text": "<div>Broken tag",
-				"name": "mw-exttag"
+				"text": "<",
+				"name": "mw-tag-indicator angleBracket"
+			},
+			{
+				"text": "div",
+				"name": "mw-tag-indicator tagName"
+			},
+			{
+				"text": ">",
+				"name": "mw-tag-indicator angleBracket"
+			},
+			{
+				"text": "Broken tag",
+				"name": "mw-tag-indicator"
 			},
 			{
 				"text": "</",
@@ -95897,15 +95985,15 @@
 			},
 			{
 				"text": "{| class=wikitable",
-				"name": "mw-exttag"
+				"name": "mw-tag-indicator"
 			},
 			{
 				"text": "|cell",
-				"name": "mw-exttag"
+				"name": "mw-tag-indicator"
 			},
 			{
 				"text": "|}",
-				"name": "mw-exttag"
+				"name": "mw-tag-indicator"
 			},
 			{
 				"text": "</",
@@ -95941,11 +96029,11 @@
 			},
 			{
 				"text": "Two",
-				"name": "mw-exttag"
+				"name": "mw-tag-indicator"
 			},
 			{
 				"text": "paragraphs",
-				"name": "mw-exttag"
+				"name": "mw-tag-indicator"
 			},
 			{
 				"text": "</",
@@ -95987,7 +96075,7 @@
 			},
 			{
 				"text": "Indicator",
-				"name": "mw-exttag"
+				"name": "mw-tag-indicator"
 			},
 			{
 				"text": "</",
@@ -96029,7 +96117,7 @@
 			},
 			{
 				"text": "Indicator",
-				"name": "mw-exttag"
+				"name": "mw-tag-indicator"
 			},
 			{
 				"text": "</",
@@ -96071,7 +96159,7 @@
 			},
 			{
 				"text": "foo",
-				"name": "mw-exttag"
+				"name": "mw-tag-indicator"
 			},
 			{
 				"text": "</",
@@ -96107,7 +96195,7 @@
 			},
 			{
 				"text": "bar",
-				"name": "mw-exttag"
+				"name": "mw-tag-indicator"
 			},
 			{
 				"text": "</",
@@ -96161,7 +96249,7 @@
 			},
 			{
 				"text": "foo",
-				"name": "mw-template-ground mw-exttag"
+				"name": "mw-template-ground mw-tag-indicator"
 			},
 			{
 				"text": "</",
@@ -96207,7 +96295,7 @@
 			},
 			{
 				"text": "bar",
-				"name": "mw-exttag"
+				"name": "mw-tag-indicator"
 			},
 			{
 				"text": "</",
@@ -96255,7 +96343,7 @@
 			},
 			{
 				"text": "foo",
-				"name": "mw-template-ground mw-exttag"
+				"name": "mw-template-ground mw-tag-indicator"
 			},
 			{
 				"text": "</",
@@ -96317,7 +96405,7 @@
 			},
 			{
 				"text": "foo",
-				"name": "mw-template-ground mw-exttag"
+				"name": "mw-template-ground mw-tag-indicator"
 			},
 			{
 				"text": "</",
@@ -96363,7 +96451,7 @@
 			},
 			{
 				"text": "bar",
-				"name": "mw-exttag"
+				"name": "mw-tag-indicator"
 			},
 			{
 				"text": "</",
@@ -96415,7 +96503,7 @@
 			},
 			{
 				"text": "foo",
-				"name": "mw-template-ground mw-exttag"
+				"name": "mw-template-ground mw-tag-indicator"
 			},
 			{
 				"text": "</",
@@ -96465,7 +96553,7 @@
 			},
 			{
 				"text": "foo",
-				"name": "mw-exttag"
+				"name": "mw-tag-indicator"
 			},
 			{
 				"text": "</",
@@ -96515,15 +96603,39 @@
 			},
 			{
 				"text": "<!-- hello -->",
-				"name": "mw-exttag"
+				"name": "mw-tag-indicator comment"
 			},
 			{
-				"text": "<span>some stuff</span>",
-				"name": "mw-exttag"
+				"text": "<",
+				"name": "mw-tag-indicator angleBracket"
+			},
+			{
+				"text": "span",
+				"name": "mw-tag-indicator tagName"
+			},
+			{
+				"text": ">",
+				"name": "mw-tag-indicator angleBracket"
+			},
+			{
+				"text": "some stuff",
+				"name": "mw-tag-indicator"
+			},
+			{
+				"text": "</",
+				"name": "mw-tag-indicator angleBracket"
+			},
+			{
+				"text": "span",
+				"name": "mw-tag-indicator tagName"
+			},
+			{
+				"text": ">",
+				"name": "mw-tag-indicator angleBracket"
 			},
 			{
 				"text": "<!-- second comment-->",
-				"name": "mw-exttag"
+				"name": "mw-tag-indicator comment"
 			},
 			{
 				"text": "</",
@@ -96576,8 +96688,32 @@
 				"name": "mw-exttag-bracket mw-ext-indicator"
 			},
 			{
-				"text": "<span>some stuff</span>",
-				"name": "mw-exttag"
+				"text": "<",
+				"name": "mw-tag-indicator angleBracket"
+			},
+			{
+				"text": "span",
+				"name": "mw-tag-indicator tagName"
+			},
+			{
+				"text": ">",
+				"name": "mw-tag-indicator angleBracket"
+			},
+			{
+				"text": "some stuff",
+				"name": "mw-tag-indicator"
+			},
+			{
+				"text": "</",
+				"name": "mw-tag-indicator angleBracket"
+			},
+			{
+				"text": "span",
+				"name": "mw-tag-indicator tagName"
+			},
+			{
+				"text": ">",
+				"name": "mw-tag-indicator angleBracket"
 			},
 			{
 				"text": "</",
@@ -96630,8 +96766,28 @@
 				"name": "mw-exttag-bracket mw-ext-indicator"
 			},
 			{
-				"text": "[http://www.example.com Example]",
-				"name": "mw-exttag"
+				"text": "[",
+				"name": "mw-tag-indicator mw-link-ground modifier"
+			},
+			{
+				"text": "http://",
+				"name": "mw-tag-indicator mw-link-ground namespace"
+			},
+			{
+				"text": "www.example.com",
+				"name": "mw-tag-indicator mw-link-ground url"
+			},
+			{
+				"text": " ",
+				"name": "mw-tag-indicator mw-link-ground"
+			},
+			{
+				"text": "Example",
+				"name": "mw-tag-indicator mw-link-ground labelName"
+			},
+			{
+				"text": "]",
+				"name": "mw-tag-indicator mw-link-ground modifier"
 			},
 			{
 				"text": "</",
