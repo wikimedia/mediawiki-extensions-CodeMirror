@@ -79984,15 +79984,11 @@
 				"name": "mw-link-ground namespace"
 			},
 			{
-				"text": "www.example.com/<hello>",
+				"text": "www.example.com/",
 				"name": "mw-link-ground url"
 			},
 			{
-				"text": " ",
-				"name": "mw-link-ground"
-			},
-			{
-				"text": "stuff",
+				"text": "<hello> stuff",
 				"name": "mw-link-ground labelName"
 			},
 			{
@@ -80014,15 +80010,39 @@
 				"name": "mw-link-ground namespace"
 			},
 			{
-				"text": "www.example.com/<b>html</b>",
+				"text": "www.example.com/",
 				"name": "mw-link-ground url"
 			},
 			{
-				"text": " ",
-				"name": "mw-link-ground"
+				"text": "<",
+				"name": "mw-link-ground angleBracket"
 			},
 			{
-				"text": "stuff",
+				"text": "b",
+				"name": "mw-link-ground tagName"
+			},
+			{
+				"text": ">",
+				"name": "mw-link-ground angleBracket"
+			},
+			{
+				"text": "html",
+				"name": "mw-link-ground labelName"
+			},
+			{
+				"text": "</",
+				"name": "mw-link-ground angleBracket"
+			},
+			{
+				"text": "b",
+				"name": "mw-link-ground tagName"
+			},
+			{
+				"text": ">",
+				"name": "mw-link-ground angleBracket"
+			},
+			{
+				"text": " stuff",
 				"name": "mw-link-ground labelName"
 			},
 			{
@@ -149224,16 +149244,36 @@
 				"name": "mw-link-ground namespace"
 			},
 			{
-				"text": "google.com<nowiki>",
+				"text": "google.com",
 				"name": "mw-link-ground url"
 			},
 			{
-				"text": "]",
-				"name": "mw-link-ground modifier"
+				"text": "<",
+				"name": "mw-link-ground mw-exttag-bracket mw-ext-nowiki"
 			},
 			{
-				"text": "</nowiki",
-				"name": "mw-error"
+				"text": "nowiki",
+				"name": "mw-link-ground mw-exttag-name mw-ext-nowiki"
+			},
+			{
+				"text": ">",
+				"name": "mw-link-ground mw-exttag-bracket mw-ext-nowiki"
+			},
+			{
+				"text": "]",
+				"name": "mw-link-ground mw-tag-nowiki"
+			},
+			{
+				"text": "</",
+				"name": "mw-link-ground mw-exttag-bracket mw-ext-nowiki"
+			},
+			{
+				"text": "nowiki",
+				"name": "mw-link-ground mw-exttag-name mw-ext-nowiki"
+			},
+			{
+				"text": ">",
+				"name": "mw-link-ground mw-exttag-bracket mw-ext-nowiki"
 			},
 			{
 				"text": "{{",

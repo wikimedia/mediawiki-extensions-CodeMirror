@@ -537,11 +537,11 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 			state.tokenize = state.stack.pop();
 			return this.makeLocalStyle( mwModeConfig.tags.extLinkBracket, state, 'nExtLink' );
 		}
-		if ( stream.eatSpace() ) {
+		if ( stream.eatSpace() || stream.peek() === '<' ) {
 			state.tokenize = this.inExternalLinkText.bind( this );
 			return this.makeStyle( '', state );
 		}
-		if ( stream.match( /^[^\s\]{&~']+/ ) || stream.eatSpace() ) {
+		if ( stream.match( /^[^\s\]{&~'<]+/ ) || stream.eatSpace() ) {
 			if ( stream.peek() === '\'' ) {
 				if ( stream.match( '\'\'', false ) ) {
 					state.tokenize = this.inExternalLinkText.bind( this );
@@ -611,7 +611,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 				state.tokenize = state.stack.pop();
 				return this.makeLocalStyle( mwModeConfig.tags.linkBracket, state, 'nLink' );
 			}
-			if ( stream.match( /^[^#|\]&~{]+/ ) ) {
+			if ( stream.match( /^(?:[^#|\]&~{<]|<(?!!--))+/ ) ) {
 				return this.makeStyle(
 					`${ mwModeConfig.tags.linkPageName } ${ mwModeConfig.tags.pageName }`,
 					state

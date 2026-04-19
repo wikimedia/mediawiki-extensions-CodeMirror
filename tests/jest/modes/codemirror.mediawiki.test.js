@@ -159,8 +159,8 @@ const testCases = [
 	},
 	{
 		title: 'comments',
-		input: '<!-- foo [[bar]] {{{param}}} -->',
-		output: '<div class="cm-line"><span class="cm-mw-comment">&lt;!-- foo [[bar]] {{{param}}} --&gt;</span> </div>'
+		input: '<!-- foo [[bar]] {{{param}}} -->\n[[foo <!-- [[bar]] -->]]',
+		output: '<div class="cm-line"><span class="cm-mw-comment">&lt;!-- foo [[bar]] {{{param}}} --&gt;</span></div><div class="cm-line"><span class="cm-mw-link-ground cm-mw-link-bracket">[[</span><span class="cm-mw-link-ground cm-mw-link-pagename cm-mw-pagename">foo </span><span class="cm-mw-link-ground cm-mw-comment">&lt;!-- [[bar]] --&gt;</span><span class="cm-mw-link-ground cm-mw-link-bracket">]]</span> </div>'
 	},
 	{
 		title: 'signatures',
