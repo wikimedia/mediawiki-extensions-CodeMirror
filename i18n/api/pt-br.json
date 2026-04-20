@@ -5,5 +5,7 @@
 		]
 	},
 	"apihelp-codemirror-validate-summary": "Verifique se há erros de validação no conteúdo fornecido",
-	"apihelp-codemirror-validate-param-contentmodel": "Modelo de conteúdo"
+	"apihelp-codemirror-validate-param-content": "O conteúdo do texto a ser validado",
+	"apihelp-codemirror-validate-param-contentmodel": "Modelo de conteúdo",
+	"apihelp-codemirror-validate-param-title": "Título da página à qual o conteúdo pertence."
 }
