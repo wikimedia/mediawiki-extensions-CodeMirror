@@ -23,6 +23,7 @@
 	"codemirror-prefs-codefolding": "Bật thu gọn mã",
 	"codemirror-prefs-autocomplete": "Bật tự động hoàn thành",
 	"codemirror-prefs-openlinks": "Mở liên kết bằng phím sửa đổi + nhấp chuột",
+	"codemirror-prefs-closetags": "Bật tính năng tự động đóng thẻ HTML",
 	"codemirror-prefs-bidiisolation": "Tách văn bản hai chiều",
 	"codemirror-prefs-bracketmatching": "Bật khớp dấu ngoặc",
 	"codemirror-prefs-closebrackets": "Bật chế độ đóng ngoặc tự động",
@@ -210,5 +211,7 @@
 	"codemirror-wikilint-vertical-alignment": "căn chỉnh theo chiều dọc",
 	"codemirror-wikilint-whitespace": "chèn một khoảng trắng",
 	"codemirror-potentially-slow": "có khả năng làm chậm",
-	"codemirror-validate-js-syntaxerror": "Lỗi cú pháp tại cột $1 trên dòng $2: $3"
+	"codemirror-validate-js-syntaxerror": "Lỗi cú pháp tại cột $1 trên dòng $2: $3",
+	"codemirror-ve-limit-exceeded": "Mã nguồn quá lớn nên tính năng nổi bật cú pháp đã bị vô hiệu hóa.",
+	"codemirror-ve-limit-exceeded-info": "Thêm thông tin"
 }

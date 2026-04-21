@@ -223,5 +223,7 @@
 	"codemirror-wikilint-vertical-alignment": "alignement vertical d'une image",
 	"codemirror-wikilint-whitespace": "insérer une espace",
 	"codemirror-potentially-slow": "potentiellement lent",
-	"codemirror-validate-js-syntaxerror": "Erreur de syntaxe à la colonne $1 sur la ligne $2 : $3"
+	"codemirror-validate-js-syntaxerror": "Erreur de syntaxe à la colonne $1 sur la ligne $2 : $3",
+	"codemirror-ve-limit-exceeded": "Le document est trop volumineux pour la coloration syntaxique et celle-ci a été désactivée.",
+	"codemirror-ve-limit-exceeded-info": "Plus d’informations"
 }
