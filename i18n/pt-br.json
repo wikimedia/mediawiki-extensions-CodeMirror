@@ -45,6 +45,7 @@
 	"codemirror-special-char-right-to-left-override": "Substituição da direita para a esquerda",
 	"codemirror-special-char-narrow-nbsp": "Espaço não separável curto",
 	"codemirror-special-char-paragraph-separator": "Separador de parágrafo",
+	"codemirror-special-char-zero-width-no-break-space": "Unificador de palavras",
 	"codemirror-special-char-object-replacement": "Caractere de substituição de objeto",
 	"codemirror-unfold": "desdobrar",
 	"codemirror-folded-code": "código dobrado",
