@@ -4,6 +4,6 @@
  */
 
 /* eslint-disable es-x/no-export-ns-from */
-export * from '@bhsd/lezer-abusefilter';
+export { abusefilterLanguage, abusefilter } from '@bhsd/lezer-abusefilter';
 export * from '@lezer/common';
 export * from '@lezer/lr';

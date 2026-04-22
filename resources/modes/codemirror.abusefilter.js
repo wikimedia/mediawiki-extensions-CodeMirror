@@ -1,5 +1,5 @@
-const { Diagnostic } = require( 'ext.CodeMirror.lib' );
-const { abusefilterLanguage, abusefilter, analyzer } = require( '../lib/codemirror.bundle.abusefilter.js' );
+const { Diagnostic, Text } = require( 'ext.CodeMirror.lib' );
+const { abusefilterLanguage, abusefilter } = require( '../lib/codemirror.bundle.abusefilter.js' );
 const CodeMirrorMode = require( './codemirror.mode.js' );
 
 /**
@@ -61,16 +61,20 @@ const getValidator = ( api ) => {
  *
  * @param {Object} obj
  * @param {string} severity
+ * @param {Text} doc
  * @return {Diagnostic}
  * @private
  */
-const convertDiagnostic = ( obj, severity ) => ( {
-	severity,
-	source: 'AbuseFilter',
-	message: obj.message,
-	from: obj.character,
-	to: obj.character
-} );
+const convertDiagnostic = ( obj, severity, doc ) => {
+	const pos = Math.min( obj.character, doc.length );
+	return {
+		severity,
+		source: 'AbuseFilter',
+		message: obj.message,
+		from: pos,
+		to: pos
+	};
+};
 
 /**
  * AbuseFilter language support for CodeMirror.
@@ -94,20 +98,15 @@ class CodeMirrorAbuseFilter extends CodeMirrorMode {
 		return abusefilterLanguage;
 	}
 
-	/** @inheritDoc */
-	get lintSource() {
-		return analyzer;
-	}
-
 	/** @inheritdoc */
 	get lintApi() {
 		const execute = getValidator( new mw.Api() );
 		return async ( { state: { doc } } ) => {
 			const result = await execute( doc.toString() );
 			if ( result.status === 'error' ) {
-				return [ convertDiagnostic( result, 'error' ) ];
+				return [ convertDiagnostic( result, 'error', doc ) ];
 			} else if ( result.warnings ) {
-				return result.warnings.map( ( warning ) => convertDiagnostic( warning, 'warning' ) );
+				return result.warnings.map( ( warning ) => convertDiagnostic( warning, 'warning', doc ) );
 			}
 			return [];
 		};
