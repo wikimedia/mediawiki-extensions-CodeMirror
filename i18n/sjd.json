@@ -9,9 +9,16 @@
 	"codemirror-close": "Ка̄һтӭ",
 	"codemirror-find": "О̄дзэ",
 	"codemirror-next": "О̄дзэ пуэдтӭй",
+	"codemirror-previous": "О̄дзэ э̄ввтла",
+	"codemirror-all": "Пугк",
+	"codemirror-all-tooltip": "Воа̄лшэ пугк, мӣ ше̄һт",
 	"codemirror-match-case": "Мугка шэ регистрэнҍ",
 	"codemirror-regexp": "Регулярнэ выраженья",
+	"codemirror-by-word": "О̄ммп са̄нҍ",
 	"codemirror-replace": "Воа̄йхэ",
+	"codemirror-replace-placeholder": "Воа̄йхэ",
+	"codemirror-replace-all": "Пугк воа̄йхэ",
+	"codemirror-done": "Воа̄лмаш",
 	"codemirror-fold": "Ко̄д ле̄вхэмушш",
 	"codemirror-unfold": "ле̄вхэ",
 	"codemirror-keymap-help-title": "Пуалэ э̄ххтътэмуж",
@@ -26,5 +33,6 @@
 	"codemirror-keymap-indent": "Кугкьнэ туммплаһтҍмуж",
 	"codemirror-keymap-outdent": "Оанҍхэ туммплаһтҍмуж",
 	"codemirror-keymap-preformatted": "Э̄ввтформаһтлаһтма",
+	"codemirror-keymap-find": "Коа̄ввнэ я воа̄йхэ",
 	"codemirror-keymap-help": "Пуалэ э̄ххтътэмуж"
 }
