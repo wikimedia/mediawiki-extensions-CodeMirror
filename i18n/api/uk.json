@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Repakr"
+		]
+	},
+	"apihelp-codemirror-validate-param-contentmodel": "Модель вмісту",
+	"apihelp-codemirror-validate-param-title": "Назва сторінки, до якої належить вміст."
+}
