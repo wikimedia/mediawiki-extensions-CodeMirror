@@ -108,7 +108,11 @@ const openLinksExtension = [
 				return true;
 			} else if ( names.includes( mwModeConfig.tags.pageName ) &&
 				names.includes( 'mw-ext-templatestyles' ) ) {
-				const title = mw.Title.newFromText( state.sliceDoc( from, to ).trim(), 10 );
+				const title = mw.Title.newFromText(
+					state.sliceDoc( from, to ).trim(),
+					// templateStylesDefaultNamespace is always set in this case
+					mw.config.get( 'extCodeMirrorConfig' ).templateStylesDefaultNamespace
+				);
 				if ( title ) {
 					open( title.getUrl(), '_blank', 'noopener noreferrer' );
 					return true;

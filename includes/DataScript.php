@@ -156,6 +156,10 @@ class DataScript {
 			}
 		}
 
+		if ( $mwConfig->has( 'TemplateStylesDefaultNamespace' ) ) {
+			$config['templateStylesDefaultNamespace'] = $mwConfig->get( 'TemplateStylesDefaultNamespace' );
+		}
+
 		return $config;
 	}
 }
