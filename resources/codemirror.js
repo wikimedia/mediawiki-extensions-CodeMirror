@@ -28,7 +28,7 @@ const {
 	history,
 	indentOnInput,
 	indentUnit,
-	indentWithTab,
+	insertTab,
 	insertNewlineKeepIndent,
 	keymap,
 	lineNumbers,
@@ -367,10 +367,11 @@ class CodeMirror {
 			extensions.push(
 				syntaxHighlighting( defaultHighlightStyle, { fallback: true } ),
 				highlightSelectionMatches( { wholeWords: true } ),
-				// Make the [Tab] key indent for languages other than MediaWiki.
 				indentUnit.of( '\t' ),
 				indentOnInput(),
-				keymap.of( indentWithTab ),
+				// Make the [Tab] key inserts a tab character when no text is selected,
+				// or indent the selected lines for languages other than MediaWiki.
+				keymap.of( [ { key: 'Tab', run: insertTab } ] ),
 				keymap.of( foldKeymap )
 			);
 		}
