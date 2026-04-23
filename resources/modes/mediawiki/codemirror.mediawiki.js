@@ -6,7 +6,10 @@ const {
 	StreamParser,
 	StringStream,
 	Tag,
-	syntaxHighlighting
+	codeFolding,
+	foldedRanges,
+	syntaxHighlighting,
+	unfoldEffect
 } = require( 'ext.CodeMirror.lib' );
 const CodeMirrorMode = require( '../codemirror.mode.js' );
 const mwModeConfig = require( './codemirror.mediawiki.config.js' );
@@ -165,11 +168,39 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 
 	/** @inheritDoc */
 	get support() {
-		return [ syntaxHighlighting(
-			HighlightStyle.define(
-				mwModeConfig.getTagStyles( this.parser )
-			)
-		) ];
+		return [
+			syntaxHighlighting(
+				HighlightStyle.define(
+					mwModeConfig.getTagStyles( this.parser )
+				)
+			),
+			// This only makes Wikitext "foldable".
+			// Given no fold service registered, this will actually takes no effect.
+			codeFolding( {
+				placeholderDOM( view ) {
+					const element = document.createElement( 'span' );
+					element.textContent = '…';
+					element.setAttribute( 'aria-label', mw.msg( 'codemirror-folded-code' ) );
+					element.title = mw.msg( 'codemirror-unfold' );
+					element.className = 'cm-foldPlaceholder';
+					element.onclick = ( { target } ) => {
+						const pos = view.posAtDOM( target ),
+							{ state } = view,
+							{ selection } = state;
+						foldedRanges( state ).between( pos, pos, ( from, to ) => {
+							if ( from === pos ) {
+								// Unfold the code and redraw the selections
+								view.dispatch( {
+									effects: unfoldEffect.of( { from, to } ),
+									selection
+								} );
+							}
+						} );
+					};
+					return element;
+				}
+			} )
+		];
 	}
 
 	/**
@@ -1695,6 +1726,14 @@ const mediawiki = ( config = { bidiIsolation: false } ) => {
 					{ mode: 'mediawiki' }
 				);
 			}
+
+			if ( config.foldAllRefs !== false ) {
+				cm.preferences.registerCallback( 'foldAllRefs', ( enabled ) => {
+					if ( enabled ) {
+						foldAllRefs( cm.view );
+					}
+				}, cm.view, { slow: true, mode: 'mediawiki' } );
+			}
 		}
 
 		if ( config.codeFolding !== false ) {
@@ -1710,14 +1749,6 @@ const mediawiki = ( config = { bidiIsolation: false } ) => {
 					},
 					cm.view
 				);
-
-				if ( config.foldAllRefs !== false ) {
-					cm.preferences.registerCallback( 'foldAllRefs', ( enabled ) => {
-						if ( enabled ) {
-							foldAllRefs( cm.view );
-						}
-					}, cm.view, { slow: true, mode: 'mediawiki' } );
-				}
 			}
 		}
 		if ( config.autocomplete !== false ) {

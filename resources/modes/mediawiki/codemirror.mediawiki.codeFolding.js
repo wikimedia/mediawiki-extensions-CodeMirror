@@ -7,7 +7,6 @@ const {
 	SyntaxNode,
 	Tree,
 	Tooltip,
-	codeFolding,
 	ensureSyntaxTree,
 	foldEffect,
 	foldedRanges,
@@ -446,27 +445,6 @@ const foldKeymap = [
  * @ignore
  */
 const codeFoldingExtension = [
-	codeFolding( {
-		placeholderDOM( view ) {
-			const element = document.createElement( 'span' );
-			element.textContent = '…';
-			element.setAttribute( 'aria-label', mw.msg( 'codemirror-folded-code' ) );
-			element.title = mw.msg( 'codemirror-unfold' );
-			element.className = 'cm-foldPlaceholder';
-			element.onclick = ( { target } ) => {
-				const pos = view.posAtDOM( target ),
-					{ state } = view,
-					{ selection } = state;
-				foldedRanges( state ).between( pos, pos, ( from, to ) => {
-					if ( from === pos ) {
-						// Unfold the code and redraw the selections
-						view.dispatch( { effects: unfoldEffect.of( { from, to } ), selection } );
-					}
-				} );
-			};
-			return element;
-		}
-	} ),
 	/** @see https://codemirror.net/examples/tooltip/ */
 	StateField.define( {
 		create,
