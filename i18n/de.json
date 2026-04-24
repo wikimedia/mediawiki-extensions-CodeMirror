@@ -39,7 +39,7 @@
 	"codemirror-prefs-whitespace": "Leerzeichen hervorheben",
 	"codemirror-prefs-trailingwhitespace": "Nachfolgende Leerzeichen hervorheben",
 	"codemirror-prefs-autofocus": "Den Fokus zunächst auf den Editor legen",
-	"codemirror-prefs-highlightrefs": "Des Inhalt von <ref>-Tages markieren",
+	"codemirror-prefs-highlightrefs": "Den Inhalt von <ref>-Tags markieren",
 	"codemirror-prefs-foldallrefs": "Alle <ref>-Tags standardmäßig einklappen",
 	"codemirror-prefs-reset": "Auf Standardwerte zurücksetzen",
 	"codemirror-prefs-colorblind": "Ein für Farbenfehlsichtige angepasstes Farbschema der Syntaxhervorhebung zum Bearbeiten von Wikitext verwenden",
