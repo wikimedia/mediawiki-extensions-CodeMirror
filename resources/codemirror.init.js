@@ -10,10 +10,11 @@
  * @internal
  */
 
-const useCodeMirror = mw.user.options.get( 'usecodemirror' ) > 0;
+const mode = mw.config.get( 'cmMode' );
+const optionName = mode === 'mediawiki' ? 'usecodemirror' : 'usecodemirror-code';
+const useCodeMirror = mw.user.options.get( optionName ) > 0;
 const resourceLoaderModules = mw.config.get( 'cmRLModules' );
 const useWikiEditor = resourceLoaderModules.includes( 'ext.CodeMirror.WikiEditor' );
-const mode = mw.config.get( 'cmMode' );
 
 /**
  * Get a LanguageSupport instance for the current mode.

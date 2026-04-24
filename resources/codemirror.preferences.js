@@ -15,14 +15,12 @@ require( './ext.CodeMirror.data.js' );
  * CodeMirrorPreferences is a panel that allows users to configure CodeMirror preferences.
  * It is toggled by pressing `Ctrl`-`Shift`-`,` (or `Command`-`Shift`-`,` on macOS).
  * Only the commonly used "primary" preferences with a visual effect are shown in the panel,
- * in order to reduce in-editor clutter. A "More preferences" link is provided to open a dialog
+ * in order to reduce in-editor clutter. A "Full preferences" link is provided to open a dialog
  * with all available preferences. This can also be opened by pressing `Alt`-`Shift`-`,`.
  *
  * Note that this code, like MediaWiki Core, refers to the user's preferences as "options".
  * In this class, "preferences" refer to the user's preferences for CodeMirror, which
  * are stored as a single user 'option' in the database.
- *
- * See {@link CodeMirrorPreferences#modeIds modeIds} for possible values of preferences.
  */
 class CodeMirrorPreferences extends CodeMirrorPanel {
 
@@ -35,9 +33,6 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 */
 	constructor( extensionRegistry, mode, cmKeymap, isVisualEditor = false ) {
 		super();
-
-		/** @type {string} */
-		this.optionName = 'codemirror-preferences';
 
 		/** @type {CodeMirrorExtensionRegistry} */
 		this.extensionRegistry = extensionRegistry;
@@ -112,13 +107,6 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		this.slowPreferences = new Set();
 
 		/**
-		 * Preferences only applicable to specific modes, keyed by the mode name.
-		 *
-		 * @type {Map<string, string[]>}
-		 */
-		this.modeSpecficPreferences = new Map();
-
-		/**
 		 * Fired just before {@link CodeMirrorPreferences} has been instantiated.
 		 *
 		 * @event CodeMirror~'ext.CodeMirror.preferences.ready'
@@ -173,24 +161,14 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	}
 
 	/**
-	 * Possible values for CodeMirror preferences when stored in the database.
-	 * - DISABLED means the preference is disabled for all modes.
-	 * - ENABLED means the preference is enabled for all modes.
-	 * - MEDIAWIKI_ONLY means the preference is enabled only for the mediawiki (wikitext) mode.
-	 * - NON_MEDIAWIKI_ONLY means the preference is enabled for all non-mediawiki modes.
-	 *
-	 * @return {Object<string, number>}
-	 */
-	get modeIds() {
-		return mw.config.get( 'extCodeMirrorConfig' ).preferenceModeIds;
-	}
-
-	/**
-	 * @type {Object<string, number|Array>}
+	 * @return {Object<string, boolean|Array>}
 	 * @private
 	 */
-	get mwConfigDefaults() {
-		return mw.config.get( 'extCodeMirrorConfig' ).defaultPreferences;
+	getMwConfigDefaults() {
+		if ( this.mode === 'mediawiki' ) {
+			return mw.config.get( 'extCodeMirrorConfig' ).defaultPreferences;
+		}
+		return mw.config.get( 'extCodeMirrorConfig' ).defaultPreferencesCode;
 	}
 
 	/**
@@ -202,8 +180,19 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	}
 
 	/**
-	 * The default CodeMirror preferences in boolean format,
-	 * derived from `$wgCodeMirrorPreferences` and taking into account the current mode.
+	 * Get the name of the user option where CodeMirror preferences are stored for the current mode.
+	 *
+	 * @return {string}
+	 * @private
+	 */
+	getOptionName() {
+		return this.mode === 'mediawiki' ? 'codemirror-preferences' : 'codemirror-preferences-code';
+	}
+
+	/**
+	 * The default CodeMirror preferences in boolean format, derived from
+	 * `$wgCodeMirrorDefaultPreferences` or `$wgCodeMirrorDefaultPreferencesCode`
+	 * depending on the current mode.
 	 *
 	 * @return {Object<string, boolean>}
 	 */
@@ -215,21 +204,16 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		const nsId = mw.config.get( 'wgNamespaceNumber' );
 		const newDefaults = {};
 
-		const { ENABLED, DISABLED, MEDIAWIKI_ONLY, NON_MEDIAWIKI_ONLY } = this.modeIds;
-		for ( const prefName in this.mwConfigDefaults ) {
-			const defaultValue = this.mwConfigDefaults[ prefName ] || DISABLED;
-			if ( defaultValue === ENABLED || defaultValue === DISABLED ) {
-				newDefaults[ prefName ] = !!defaultValue;
-			} else if ( Array.isArray( defaultValue ) ) {
-				// Assume an array of namespace IDs (integers) and CM modes (strings).
-				const supportedNamespace = defaultValue.includes( nsId );
-				const supportedMode = defaultValue.includes( this.mode );
-				newDefaults[ prefName ] = supportedNamespace || supportedMode;
-			} else {
-				// defaultValue is a mode-specific value.
-				newDefaults[ prefName ] = ( defaultValue === MEDIAWIKI_ONLY && this.mode === 'mediawiki' ) ||
-					( defaultValue === NON_MEDIAWIKI_ONLY && this.mode !== 'mediawiki' );
+		for ( const prefName in this.getMwConfigDefaults() ) {
+			const prefValue = this.getMwConfigDefaults()[ prefName ] || false;
+			if ( typeof prefValue === 'boolean' ) {
+				newDefaults[ prefName ] = prefValue;
+				continue;
 			}
+			// Assume an array of namespace IDs (integers) and CM modes (strings).
+			const supportedNamespace = prefValue.includes( nsId );
+			const supportedMode = prefValue.includes( this.mode );
+			newDefaults[ prefName ] = supportedNamespace || supportedMode;
 		}
 
 		/**
@@ -249,20 +233,24 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * @internal
 	 */
 	fetchPreferences() {
-		const preferences = {};
-		const fetchedPrefs = this.fetchPreferencesInternal();
-		const defaultPrefs = this.getDefaultPreferences();
-		const { ENABLED, MEDIAWIKI_ONLY, NON_MEDIAWIKI_ONLY } = this.modeIds;
+		const storageObj = Object.assign(
+			{},
+			this.getDefaultPreferences(),
+			this.fetchPreferencesInternal()
+		);
 
-		for ( const prefName in defaultPrefs ) {
-			const fetchedPrefValue = fetchedPrefs[ prefName ];
-			if ( fetchedPrefValue !== undefined ) {
-				preferences[ prefName ] = fetchedPrefValue === ENABLED ||
-					( fetchedPrefValue === MEDIAWIKI_ONLY && this.mode === 'mediawiki' ) ||
-					( fetchedPrefValue === NON_MEDIAWIKI_ONLY && this.mode !== 'mediawiki' );
-			} else {
-				preferences[ prefName ] = defaultPrefs[ prefName ];
+		// Convert binary representation to boolean.
+		const preferences = {};
+		for ( const prefName in storageObj ) {
+			// B/c with older "mode ID" system; 2 = mediawiki-only, 3 = all other modes.
+			let prefValue = storageObj[ prefName ];
+			if ( prefValue === 2 ) {
+				prefValue = this.mode === 'mediawiki';
+			} else if ( prefValue === 3 ) {
+				prefValue = this.mode !== 'mediawiki';
 			}
+
+			preferences[ prefName ] = !!prefValue;
 		}
 
 		return preferences;
@@ -276,13 +264,13 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	fetchPreferencesInternal() {
 		if ( mw.user.isNamed() ) {
 			try {
-				return JSON.parse( mw.user.options.get( this.optionName ) ) || {};
+				return JSON.parse( mw.user.options.get( this.getOptionName() ) ) || {};
 			} catch ( e ) {
 				// Invalid JSON, or no preferences set.
 				return {};
 			}
 		} else {
-			return mw.storage.getObject( this.optionName ) || {};
+			return mw.storage.getObject( this.getOptionName() ) || {};
 		}
 	}
 
@@ -316,65 +304,12 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 			this.callbackPreferences.get( key )( value );
 		}
 
-		const { ENABLED, DISABLED, MEDIAWIKI_ONLY, NON_MEDIAWIKI_ONLY } = this.modeIds;
-		let storageObj = this.fetchPreferencesInternal();
-		const oldPrefValue = storageObj[ key ] !== undefined ?
-			storageObj[ key ] :
-			this.mwConfigDefaults[ key ];
-		const newPrefValue = Number( value );
-		const isMediaWiki = this.mode === 'mediawiki';
-
-		switch ( oldPrefValue ) {
-			case MEDIAWIKI_ONLY:
-				if ( newPrefValue === ENABLED && !isMediaWiki ) {
-					// Now enabled for all modes, so set to `ENABLED`.
-					storageObj[ key ] = ENABLED;
-				} else if ( newPrefValue === DISABLED && isMediaWiki ) {
-					// Now disabled for all modes, so set to `DISABLED`.
-					storageObj[ key ] = DISABLED;
-				}
-				break;
-			case NON_MEDIAWIKI_ONLY:
-				if ( newPrefValue === ENABLED && isMediaWiki ) {
-					// Now enabled for all modes, so set to `ENABLED`.
-					storageObj[ key ] = ENABLED;
-				} else if ( newPrefValue === DISABLED && !isMediaWiki ) {
-					// Now disabled for all modes, so set to `DISABLED`.
-					storageObj[ key ] = DISABLED;
-				}
-				break;
-			case ENABLED:
-				if ( newPrefValue === DISABLED ) {
-					// Become disabled in one of the modes -> switch to the opposite "only" value.
-					storageObj[ key ] = isMediaWiki ? NON_MEDIAWIKI_ONLY : MEDIAWIKI_ONLY;
-				}
-				break;
-			case DISABLED:
-				if ( newPrefValue === ENABLED ) {
-					// Become enabled in one of the modes -> switch to the opposite "only" value.
-					storageObj[ key ] = isMediaWiki ? MEDIAWIKI_ONLY : NON_MEDIAWIKI_ONLY;
-				}
-				break;
-			default:
-				// Old preference was not set.
-				storageObj[ key ] = newPrefValue ?
-					( isMediaWiki ? MEDIAWIKI_ONLY : NON_MEDIAWIKI_ONLY ) :
-					( isMediaWiki ? NON_MEDIAWIKI_ONLY : MEDIAWIKI_ONLY );
-		}
-
-		// Mode-specific preferences can be normalized to ENABLED or DISABLED when toggled.
-		if ( this.modeSpecficPreferences.has( this.mode ) &&
-			this.modeSpecficPreferences.get( this.mode ).includes( key ) &&
-			( storageObj[ key ] === MEDIAWIKI_ONLY || storageObj[ key ] === NON_MEDIAWIKI_ONLY )
-		) {
-			storageObj[ key ] = value ? ENABLED : DISABLED;
-		}
-
-		// Loop through all preferences and remove any that match the defaults
-		// in order to keep the storage footprint at a minimum.
-		for ( const prefName in this.mwConfigDefaults ) {
-			if ( storageObj[ prefName ] === this.mwConfigDefaults[ prefName ] ) {
-				delete storageObj[ prefName ];
+		// Only save the preferences that differ from the defaults,
+		// and use a binary representation for storage.
+		let storageObj = {};
+		for ( const prefName in this.preferences ) {
+			if ( !!this.preferences[ prefName ] !== !!this.getDefaultPreferences()[ prefName ] ) {
+				storageObj[ prefName ] = this.preferences[ prefName ] ? 1 : 0;
 			}
 		}
 
@@ -394,12 +329,34 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 */
 	setPreferencesInternal( storageObj ) {
 		const stringified = storageObj === null ? null : JSON.stringify( storageObj );
-		mw.user.options.set( this.optionName, stringified || null );
 		if ( mw.user.isNamed() ) {
-			this.api.saveOption( this.optionName, stringified );
+			this.saveUserOptionInternal( this.getOptionName(), stringified );
 		} else {
-			mw.storage.setObject( this.optionName, storageObj );
+			mw.user.options.set( this.getOptionName(), stringified || null );
+			mw.storage.setObject( this.getOptionName(), storageObj );
 		}
+	}
+
+	/**
+	 * Save the given user option with GlobalPreferences if it is installed,
+	 * otherwise save locally. Also update the mw.user.options Map.
+	 *
+	 * @param {string} optionname
+	 * @param {string|number|null} optionvalue
+	 * @internal
+	 */
+	saveUserOptionInternal( optionname, optionvalue ) {
+		if ( mw.config.get( 'extCodeMirrorConfig' ).hasGlobalPreferences ) {
+			this.api.postWithToken( 'csrf', {
+				action: 'globalpreferences',
+				change: optionname +
+					// Omitting =value will delete the row
+					( optionvalue !== null ? `=${ optionvalue }` : '' )
+			} );
+		} else {
+			this.api.saveOption( optionname, optionvalue );
+		}
+		mw.user.options.set( optionname, optionvalue || null );
 	}
 
 	/**
@@ -486,21 +443,14 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * @param {string} name
 	 * @param {Extension} extension
 	 * @param {EditorView} view
-	 * @param {Object} [config]
-	 * @param {boolean} [config.slow] Setting to true will indicate that the feature
-	 *   is slow in the preferences dialog.
-	 * @param {string|null} [config.mode] Indicates the preference only applies to a specific
-	 *   mode, and storage values will be normalized to `ENABLED` or `DISABLED` when toggled.
+	 * @param {boolean} [slow=false] Setting to true will indicate that
+	 *   the feature is "potentially slow" in the preferences dialog.
 	 * @internal
 	 */
-	registerExtension( name, extension, view, config = { slow: false, mode: null } ) {
+	registerExtension( name, extension, view, slow = false ) {
 		this.extensionRegistry.register( name, extension, view, this.getPreference( name ) );
-		if ( config.slow ) {
+		if ( slow ) {
 			this.slowPreferences.add( name );
-		}
-		if ( config.mode ) {
-			const existingPrefs = this.modeSpecficPreferences.get( config.mode ) || [];
-			this.modeSpecficPreferences.set( config.mode, existingPrefs.concat( [ name ] ) );
 		}
 		this.firePreferencesApplyHook( name );
 	}
@@ -513,26 +463,19 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * @param {string} name
 	 * @param {Function} callback Function that takes the new preference value.
 	 * @param {EditorView} view
-	 * @param {Object} [config]
-	 * @param {boolean} [config.slow] Setting to true will indicate that the feature
-	 *   is slow in the preferences dialog.
-	 * @param {string|null} [config.mode] Indicates the preference only applies to a specific
-	 *   mode, and storage values will be normalized to `ENABLED` or `DISABLED` when toggled.
+	 * @param {boolean} [slow=false] Setting to true will indicate that
+	 *   the feature is "potentially slow" in the preferences dialog.
 	 * @internal
 	 */
-	registerCallback( name, callback, view, config = { slow: false, mode: null } ) {
+	registerCallback( name, callback, view, slow = false ) {
 		// Register a dummy extension.
 		this.extensionRegistry.register( name, [], view, this.getPreference( name ) );
 		this.callbackPreferences.set( name, callback );
 		if ( this.getPreference( name ) ) {
 			callback( true );
 		}
-		if ( config.slow ) {
+		if ( slow ) {
 			this.slowPreferences.add( name );
-		}
-		if ( config.mode ) {
-			const existingPrefs = this.modeSpecficPreferences.get( config.mode ) || [];
-			this.modeSpecficPreferences.set( config.mode, existingPrefs.concat( [ name ] ) );
 		}
 	}
 

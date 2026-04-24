@@ -41,6 +41,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			'gadget' => null,
 			'contentModel' => CONTENT_MODEL_WIKITEXT,
 			Hooks::OPTION_USE_CODEMIRROR => true,
+			Hooks::OPTION_USE_CODEMIRROR_CODE => true,
 			'isRTL' => false,
 			Hooks::OPTION_USE_WIKIEDITOR => false,
 			'method' => 'edit',
@@ -65,6 +66,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		$userOptionsManager->method( 'getBoolOption' )
 			->willReturnMap( [
 				[ $out->getUser(), Hooks::OPTION_USE_CODEMIRROR, 0, $conds[Hooks::OPTION_USE_CODEMIRROR] ],
+				[ $out->getUser(), Hooks::OPTION_USE_CODEMIRROR_CODE, 0, $conds[Hooks::OPTION_USE_CODEMIRROR_CODE] ],
 				[ $out->getUser(), Hooks::OPTION_USE_WIKIEDITOR, 0, $conds[Hooks::OPTION_USE_WIKIEDITOR] ]
 			] );
 		$langFactory = $this->getServiceContainer()->getLanguageFactory();
@@ -266,6 +268,10 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 	}
 
 	public function testOnGetPreferences(): void {
+		$this->overrideConfigValue( 'CodeMirrorEnabledModes', [
+			Hooks::MODE_MEDIAWIKI => true,
+			Hooks::MODE_JAVASCRIPT => true,
+		] );
 		$user = self::getTestUser()->getUser();
 		$config = $this->getServiceContainer()->getMainConfig();
 		$hookContainer = $this->getServiceContainer()->getHookContainer();
@@ -275,9 +281,11 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		$preferences = [];
 		$hooks->onGetPreferences( $user, $preferences );
 		self::assertArrayHasKey( Hooks::OPTION_USE_CODEMIRROR, $preferences );
+		self::assertArrayHasKey( Hooks::OPTION_USE_CODEMIRROR_CODE, $preferences );
 		self::assertArrayHasKey( Hooks::OPTION_COLORBLIND, $preferences );
 		self::assertArrayHasKey( 'usecodemirror-summary', $preferences );
 		self::assertSame( 'toggle', $preferences[Hooks::OPTION_USE_CODEMIRROR]['type'] );
+		self::assertSame( 'toggle', $preferences[Hooks::OPTION_USE_CODEMIRROR_CODE]['type'] );
 	}
 
 	/**

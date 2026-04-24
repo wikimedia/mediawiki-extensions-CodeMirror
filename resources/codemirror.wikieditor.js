@@ -182,7 +182,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	activate() {
 		super.activate();
 
-		CodeMirror.setCodeMirrorPreference( true );
+		this.setCodeMirrorPreference( true );
 		this.addRealtimePreviewHandler();
 
 		// Hijack the search button to open the CodeMirror search panel
@@ -217,7 +217,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	deactivate() {
 		super.deactivate();
 
-		CodeMirror.setCodeMirrorPreference( false );
+		this.setCodeMirrorPreference( false );
 
 		if ( this.mode === 'mediawiki' ) {
 			// Restore original search button.

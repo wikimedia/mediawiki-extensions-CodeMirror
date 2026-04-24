@@ -1320,18 +1320,21 @@ class CodeMirror {
 	 * @param {boolean} prefValue `true` to enable CodeMirror where possible on page load.
 	 * @stable to call and override
 	 */
-	static setCodeMirrorPreference( prefValue ) {
+	setCodeMirrorPreference( prefValue ) {
 		// Skip for unnamed users
 		if ( !mw.user.isNamed() ) {
 			return;
 		}
+		let optionName = 'usecodemirror';
+		if ( this.mode !== 'mediawiki' ) {
+			optionName += '-code';
+		}
 		// Abort if the preference is already set to the desired value.
-		if ( mw.user.options.get( 'usecodemirror' ) > 0 && prefValue ) {
+		if ( mw.user.options.get( optionName ) > 0 && prefValue ) {
 			mw.log( '[CodeMirror] Preference not changed, skipping save.' );
 			return;
 		}
-		new mw.Api().saveOption( 'usecodemirror', prefValue ? 1 : 0 );
-		mw.user.options.set( 'usecodemirror', prefValue ? 1 : 0 );
+		this.preferences.saveUserOptionInternal( optionName, prefValue ? 1 : 0 );
 	}
 
 	/**

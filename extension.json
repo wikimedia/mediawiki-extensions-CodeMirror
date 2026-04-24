@@ -36,25 +36,47 @@
 		},
 		"CodeMirrorDefaultPreferences": {
 			"value": {
-				"activeLine": 3,
-				"autofocus": 1,
-				"bidiIsolation": 0,
-				"bracketMatching": 1,
-				"closeBrackets": 3,
-				"closeTags": 0,
-				"highlightRefs": 1,
-				"foldAllRefs": 0,
-				"lineNumbering": 1,
-				"lineWrapping": 1,
-				"specialChars": 1,
-				"codeFolding": 1,
-				"autocomplete": 1,
-				"openLinks": 1,
-				"whitespace": 0,
-				"trailingWhitespace": 0,
-				"lint": 3
+				"activeLine": false,
+				"autofocus": true,
+				"bidiIsolation": false,
+				"bracketMatching": true,
+				"closeBrackets": false,
+				"closeTags": false,
+				"highlightRefs": true,
+				"foldAllRefs": false,
+				"lineNumbering": true,
+				"lineWrapping": true,
+				"specialChars": true,
+				"codeFolding": true,
+				"autocomplete": true,
+				"openLinks": true,
+				"whitespace": false,
+				"trailingWhitespace": false,
+				"lint": false
 			},
-			"description": "Defaults for CodeMirror user preferences. See https://w.wiki/BwzZ for more information."
+			"description": "Defaults for CodeMirror user preferences for wikitext. See https://w.wiki/BwzZ for more information."
+		},
+		"CodeMirrorDefaultPreferencesCode": {
+			"value": {
+				"activeLine": true,
+				"autofocus": true,
+				"bidiIsolation": false,
+				"bracketMatching": true,
+				"closeBrackets": true,
+				"closeTags": false,
+				"highlightRefs": true,
+				"foldAllRefs": false,
+				"lineNumbering": true,
+				"lineWrapping": true,
+				"specialChars": true,
+				"codeFolding": true,
+				"autocomplete": true,
+				"openLinks": true,
+				"whitespace": false,
+				"trailingWhitespace": false,
+				"lint": true
+			},
+			"description": "Defaults for CodeMirror user preferences for non-wikitext. See https://w.wiki/BwzZ for more information."
 		},
 		"CodeMirrorPrimaryPreferences": {
 			"value": {
@@ -411,8 +433,10 @@
 	},
 	"DefaultUserOptions": {
 		"usecodemirror": 0,
+		"usecodemirror-code": 1,
 		"usecodemirror-colorblind": 0,
-		"codemirror-preferences": ""
+		"codemirror-preferences": "",
+		"codemirror-preferences-code": ""
 	},
 	"Hooks": {
 		"EditPage::showEditForm:initial": "main",
@@ -435,7 +459,6 @@
 			]
 		}
 	},
-	"callback": "MediaWiki\\Extension\\CodeMirror\\Hooks::onRegistration",
 	"DomainEventIngresses": [
 		{
 			"events": [

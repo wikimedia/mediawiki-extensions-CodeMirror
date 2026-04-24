@@ -4,22 +4,15 @@ const CodeMirrorPreferences = require( '../../resources/codemirror.preferences.j
 const CodeMirrorKeymap = require( '../../resources/codemirror.keymap.js' );
 const CodeMirrorExtensionRegistry = require( '../../resources/codemirror.extensionRegistry.js' );
 
-const preferenceModeIds = mw.config.get( 'extCodeMirrorConfig' ).preferenceModeIds;
-const { ENABLED, DISABLED, MEDIAWIKI_ONLY, NON_MEDIAWIKI_ONLY } = preferenceModeIds;
-
 describe( 'CodeMirrorPreferences', () => {
 	let mockDefaultPreferences, mockUserPreferences, getCodeMirrorPreferences;
 
 	beforeEach( () => {
 		mockDefaultPreferences = (
-			defaultPreferences = { fooExtension: DISABLED, barExtension: ENABLED },
+			defaultPreferences = { fooExtension: false, barExtension: true },
 			primaryPreferences = { fooExtension: true, barExtension: true }
 		) => {
-			mw.config.get = jest.fn().mockReturnValue( {
-				defaultPreferences,
-				primaryPreferences,
-				preferenceModeIds
-			} );
+			mw.config.get = jest.fn().mockReturnValue( { defaultPreferences, primaryPreferences } );
 		};
 		mockUserPreferences = ( preferences = {} ) => {
 			mw.user.options.get = jest.fn().mockReturnValue( JSON.stringify( preferences ) );
@@ -56,7 +49,7 @@ describe( 'CodeMirrorPreferences', () => {
 
 	it( 'fetchPreferences', () => {
 		mockDefaultPreferences();
-		mockUserPreferences( { fooExtension: ENABLED } );
+		mockUserPreferences( { fooExtension: 1 } );
 		const preferences = getCodeMirrorPreferences();
 		expect( preferences.fetchPreferences() ).toStrictEqual( {
 			fooExtension: true,
@@ -66,44 +59,99 @@ describe( 'CodeMirrorPreferences', () => {
 
 	it( 'setPreference', () => {
 		mockDefaultPreferences();
-		mockUserPreferences( { fooExtension: DISABLED } );
+		mockUserPreferences( { fooExtension: 0 } );
 		const preferences = getCodeMirrorPreferences();
 		preferences.setPreference( 'fooExtension', true );
 		expect( preferences.preferences.fooExtension ).toStrictEqual( true );
-		expect( mw.user.options.set ).toHaveBeenCalledWith( 'codemirror-preferences', '{"fooExtension":2}' );
-		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledWith( 'codemirror-preferences', '{"fooExtension":2}' );
+		expect( mw.user.options.set ).toHaveBeenCalledWith( 'codemirror-preferences', '{"fooExtension":1}' );
+		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledWith( 'codemirror-preferences', '{"fooExtension":1}' );
 		// Set again, and verify we do not call saveOption again.
 		preferences.setPreference( 'fooExtension', true );
 		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledTimes( 1 );
 	} );
 
-	it( 'setPreference (from MEDIAWIKI_ONLY)', () => {
+	it( 'setPreference (with GlobalPreferences)', () => {
+		mockUserPreferences( { fooExtension: 0 } );
+		mockMwConfigGet( {
+			extCodeMirrorConfig: {
+				defaultPreferences: { fooExtension: false, barExtension: true },
+				primaryPreferences: { fooExtension: true, barExtension: true },
+				hasGlobalPreferences: true
+			}
+		} );
+		const preferences = getCodeMirrorPreferences();
+		preferences.setPreference( 'fooExtension', true );
+		expect( preferences.preferences.fooExtension ).toStrictEqual( true );
+		expect( mw.user.options.set ).toHaveBeenCalledWith( 'codemirror-preferences', '{"fooExtension":1}' );
+		expect( mw.Api.prototype.postWithToken ).toHaveBeenCalledWith(
+			'csrf',
+			{
+				action: 'globalpreferences',
+				change: 'codemirror-preferences={"fooExtension":1}'
+			}
+		);
+		// Set again, and verify we do not submit to the API again.
+		preferences.setPreference( 'fooExtension', true );
+		expect( mw.Api.prototype.postWithToken ).toHaveBeenCalledTimes( 1 );
+	} );
+
+	it( 'setPreference (non-mediawiki)', () => {
 		mockDefaultPreferences();
-		mockUserPreferences( { fooExtension: MEDIAWIKI_ONLY } );
+		mockUserPreferences( { fooExtension: 0 } );
 		const preferences = getCodeMirrorPreferences( {
 			fooExtension: EditorView.theme()
 		}, 'css' );
 		preferences.setPreference( 'fooExtension', true );
 		expect( preferences.preferences.fooExtension ).toStrictEqual( true );
-		expect( mw.user.options.set ).toHaveBeenCalledWith( 'codemirror-preferences', '{"fooExtension":1}' );
-		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledWith( 'codemirror-preferences', '{"fooExtension":1}' );
+		expect( preferences.getOptionName() ).toStrictEqual( 'codemirror-preferences-code' );
+		expect( mw.user.options.set )
+			.toHaveBeenCalledWith( 'codemirror-preferences-code', '{"fooExtension":1}' );
+		expect( mw.Api.prototype.saveOption )
+			.toHaveBeenCalledWith( 'codemirror-preferences-code', '{"fooExtension":1}' );
+	} );
+
+	it( 'setPreference (from old mode ID format)', () => {
+		mockDefaultPreferences( { lineNumbering: true, autocompletion: false } );
+		mockUserPreferences( { lineNumbering: 2, autocompletion: 3 } );
+		const preferences = getCodeMirrorPreferences( {
+			lineNumbering: EditorView.theme(),
+			autocompletion: EditorView.theme()
+		}, 'mediawiki' );
+		expect( preferences.preferences.lineNumbering ).toStrictEqual( true );
+		expect( preferences.preferences.autocompletion ).toStrictEqual( false );
+		preferences.setPreference( 'lineNumbering', true );
+		expect( mw.user.options.set ).not.toHaveBeenCalled();
+		preferences.setPreference( 'lineNumbering', false );
+		expect( mw.user.options.set )
+			.toHaveBeenCalledWith( 'codemirror-preferences', '{"lineNumbering":0}' );
 	} );
 
 	it( 'getPreference', () => {
 		mockDefaultPreferences();
-		mockUserPreferences( { barExtension: DISABLED } );
+		mockUserPreferences( { barExtension: 0 } );
 		const preferences = getCodeMirrorPreferences();
 		expect( preferences.getPreference( 'fooExtension' ) ).toStrictEqual( false );
 		expect( preferences.getPreference( 'barExtension' ) ).toStrictEqual( false );
 	} );
 
+	it( 'getPreference (from old mode ID format)', () => {
+		mockDefaultPreferences();
+		mockUserPreferences( { lineNumbering: 2, autocompletion: 3 } );
+		const preferences = getCodeMirrorPreferences( {
+			lineNumbering: EditorView.theme(),
+			autocompletion: EditorView.theme()
+		}, 'mediawiki' );
+		expect( preferences.getPreference( 'lineNumbering' ) ).toBeTruthy();
+		expect( preferences.getPreference( 'autocompletion' ) ).toBeFalsy();
+	} );
+
 	it( 'getPreference (VisualEditor)', () => {
-		mockDefaultPreferences( { fooExtension: ENABLED, bracketMatching: DISABLED } );
+		mockDefaultPreferences( { fooExtension: true, bracketMatching: false } );
 		mockUserPreferences( { bracketMatching: 1 } );
 		const preferences = getCodeMirrorPreferences( {
 			fooExtension: EditorView.theme(),
 			bracketMatching: EditorView.theme()
-		}, 'mediawiki', true );
+		}, 'mediawiki', new CodeMirrorKeymap(), true );
 		expect( preferences.getPreference( 'bracketMatching' ) ).toBeFalsy();
 	} );
 
@@ -120,7 +168,7 @@ describe( 'CodeMirrorPreferences', () => {
 
 	it( 'registerExtension', () => {
 		mockDefaultPreferences();
-		mockUserPreferences( { bazExtension: ENABLED } );
+		mockUserPreferences( { bazExtension: 1 } );
 		const bazExtension = EditorView.theme();
 		const preferences = getCodeMirrorPreferences();
 		const view = new EditorView();
@@ -132,7 +180,7 @@ describe( 'CodeMirrorPreferences', () => {
 
 	it( 'toggleExtension', () => {
 		mockDefaultPreferences();
-		mockUserPreferences( { fooExtension: ENABLED, barExtension: ENABLED } );
+		mockUserPreferences( { fooExtension: 1, barExtension: 1 } );
 		const preferences = getCodeMirrorPreferences();
 		const view = new EditorView();
 		preferences.registerExtension( 'fooExtension', EditorView.theme(), view );
@@ -145,7 +193,7 @@ describe( 'CodeMirrorPreferences', () => {
 	} );
 
 	it( 'extension', () => {
-		mockUserPreferences( { fooExtension: ENABLED, barExtension: ENABLED } );
+		mockUserPreferences( { fooExtension: 1, barExtension: 1 } );
 		const preferences = getCodeMirrorPreferences( { fooExtension: 1, barExtension: 1 } );
 		const hookSpy = jest.spyOn( preferences, 'firePreferencesApplyHook' );
 		const ext = preferences.extension;
@@ -157,9 +205,7 @@ describe( 'CodeMirrorPreferences', () => {
 
 	it( 'panel', () => {
 		mockDefaultPreferences();
-		mockUserPreferences(
-			{ fooExtension: ENABLED, barExtension: DISABLED, inapplicableExtension: ENABLED }
-		);
+		mockUserPreferences( { fooExtension: 1, barExtension: 0, inapplicableExtension: 1 } );
 		const preferences = getCodeMirrorPreferences();
 		const panel = preferences.panel;
 		expect( panel.dom.className ).toStrictEqual( 'cm-mw-preferences-panel cm-mw-panel' );
@@ -171,9 +217,8 @@ describe( 'CodeMirrorPreferences', () => {
 
 	it( 'overriding namespace and mode preferences', () => {
 		const extCodeMirrorConfig = {
-			defaultPreferences: { lineNumbering: ENABLED, autocomplete: [ 0 /* NS_MAIN */ ] },
-			primaryPreferences: { lineNumbering: true, autocomplete: true },
-			preferenceModeIds
+			defaultPreferences: { lineNumbering: true, autocomplete: [ 0 /* NS_MAIN */ ] },
+			primaryPreferences: { lineNumbering: true, autocomplete: true }
 		};
 		mockUserPreferences( {} );
 
@@ -201,7 +246,7 @@ describe( 'CodeMirrorPreferences', () => {
 		preferences.setPreference( 'autocomplete', true );
 		// Assert storage.
 		expect( mw.user.options.set )
-			.toHaveBeenCalledWith( 'codemirror-preferences', '{"autocomplete":2}' );
+			.toHaveBeenCalledWith( 'codemirror-preferences', '{"autocomplete":1}' );
 
 		// Now simulate editing an article.
 		mockMwConfigGet( {
@@ -209,7 +254,7 @@ describe( 'CodeMirrorPreferences', () => {
 			extCodeMirrorConfig
 		} );
 		// We need to re-mock mw.user.options.get to return the updated preferences.
-		mockUserPreferences( { autocomplete: ENABLED } );
+		mockUserPreferences( { autocomplete: 1 } );
 		preferences = getCodeMirrorPreferences( {
 			lineNumbering: EditorView.theme(),
 			autocomplete: EditorView.theme()
@@ -228,13 +273,13 @@ describe( 'CodeMirrorPreferences', () => {
 
 		// Disable lineNumbering.
 		preferences.setPreference( 'lineNumbering', false );
-		// Assert storage, and that lineNumbering is still enabled, but now only for MEDIAWIKI_ONLY.
+		// Assert storage, and that autocomplete is still enabled.
 		expect( mw.user.options.set ).toHaveBeenCalledWith(
 			'codemirror-preferences',
-			'{"autocomplete":1,"lineNumbering":3}'
+			'{"lineNumbering":0}'
 		);
 		// Mock user preferences to return the updated preferences.
-		mockUserPreferences( { lineNumbering: DISABLED, autocomplete: ENABLED } );
+		mockUserPreferences( { lineNumbering: 0, autocomplete: 1 } );
 		// Autocomplete should still be enabled.
 		expect( preferences.fetchPreferences() ).toStrictEqual( {
 			lineNumbering: false,
@@ -246,8 +291,8 @@ describe( 'CodeMirrorPreferences', () => {
 		mw.user.isNamed = jest.fn().mockReturnValue( false );
 		let mockStorage = {
 			// Opposite of the values set in beforeEach
-			fooExtension: ENABLED,
-			barExtension: DISABLED
+			fooExtension: 1,
+			barExtension: 0
 		};
 		mw.storage = {
 			getObject: jest.fn( () => mockStorage ),
@@ -270,24 +315,16 @@ describe( 'CodeMirrorPreferences', () => {
 	} );
 
 	it( 'should delete a user option if it matches the defaults', () => {
-		mockDefaultPreferences( { fooExtension: DISABLED, barExtension: ENABLED } );
-		mockUserPreferences( { fooExtension: ENABLED, barExtension: ENABLED } );
+		mockDefaultPreferences( { fooExtension: false, barExtension: true } );
+		mockUserPreferences( { fooExtension: 1, barExtension: 1 } );
 		const preferences = getCodeMirrorPreferences();
 		preferences.setPreference( 'fooExtension', false );
-		expect( mw.user.options.set ).toHaveBeenCalledWith( 'codemirror-preferences', '{"fooExtension":3}' );
-		// Simulate disabling fooExtension in non-wikitext.
-		mockUserPreferences( { fooExtension: NON_MEDIAWIKI_ONLY, barExtension: ENABLED } );
-		const preferences2 = getCodeMirrorPreferences( {
-			fooExtension: EditorView.theme(),
-			barExtension: EditorView.theme()
-		}, 'css' );
-		preferences2.setPreference( 'fooExtension', false );
 		expect( mw.user.options.set ).toHaveBeenCalledWith( 'codemirror-preferences', null );
 	} );
 
 	it( 'should toggle the preference checkbox when the preferences panel is open', () => {
-		mockDefaultPreferences( { fooExtension: DISABLED, barExtension: DISABLED } );
-		mockUserPreferences( { fooExtension: DISABLED, barExtension: ENABLED } );
+		mockDefaultPreferences( { fooExtension: false, barExtension: false } );
+		mockUserPreferences( { fooExtension: 0, barExtension: 1 } );
 		const preferences = getCodeMirrorPreferences();
 		const view = new EditorView();
 		preferences.toggle( view );
@@ -305,43 +342,43 @@ describe( 'CodeMirrorPreferences', () => {
 		const defPrefsTestCases = [
 			{
 				title: 'no user prefs',
-				defaultPreferences: { lineNumbering: DISABLED, bracketMatching: ENABLED },
+				defaultPreferences: { lineNumbering: false, bracketMatching: true },
 				nsId: 0,
 				expected: { lineNumbering: false, bracketMatching: true }
 			}, {
 				title: 'lineNumbering only for Templates, editing mainspace',
-				defaultPreferences: { lineNumbering: [ 10 ], bracketMatching: ENABLED },
+				defaultPreferences: { lineNumbering: [ 10 ], bracketMatching: true },
 				nsId: 0,
 				expected: { lineNumbering: false, bracketMatching: true }
 			}, {
 				title: 'lineNumbering only for Templates, editing Template',
-				defaultPreferences: { lineNumbering: [ 10 ], bracketMatching: ENABLED },
+				defaultPreferences: { lineNumbering: [ 10 ], bracketMatching: true },
 				nsId: 10,
 				expected: { lineNumbering: true, bracketMatching: true }
 			}, {
 				title: 'bracketMatching only for CSS, editing wikitext',
-				defaultPreferences: { lineNumbering: ENABLED, bracketMatching: [ 'css' ] },
+				defaultPreferences: { lineNumbering: true, bracketMatching: [ 'css' ] },
 				nsId: 10,
 				expected: { lineNumbering: true, bracketMatching: false }
 			}, {
 				title: 'bracketMatching only for CSS, editing css',
-				defaultPreferences: { lineNumbering: ENABLED, bracketMatching: [ 'css' ] },
+				defaultPreferences: { lineNumbering: true, bracketMatching: [ 'css' ] },
 				nsId: 10,
 				mode: 'css',
 				expected: { lineNumbering: true, bracketMatching: true }
 			}, {
 				title: 'lineNumbering for Templates or CSS, editing main/wikitext',
-				defaultPreferences: { lineNumbering: [ 10, 'css' ], bracketMatching: ENABLED },
+				defaultPreferences: { lineNumbering: [ 10, 'css' ], bracketMatching: true },
 				nsId: 0,
 				expected: { lineNumbering: false, bracketMatching: true }
 			}, {
 				title: 'lineNumbering for Templates or CSS, editing Template/wikitext',
-				defaultPreferences: { lineNumbering: [ 10, 'css' ], bracketMatching: ENABLED },
+				defaultPreferences: { lineNumbering: [ 10, 'css' ], bracketMatching: true },
 				nsId: 10,
 				expected: { lineNumbering: true, bracketMatching: true }
 			}, {
 				title: 'lineNumbering for Templates or CSS, editing Template/css',
-				defaultPreferences: { lineNumbering: [ 10, 'css' ], bracketMatching: ENABLED },
+				defaultPreferences: { lineNumbering: [ 10, 'css' ], bracketMatching: true },
 				nsId: 10,
 				mode: 'css',
 				expected: { lineNumbering: true, bracketMatching: true }
@@ -353,8 +390,8 @@ describe( 'CodeMirrorPreferences', () => {
 				mockMwConfigGet( {
 					extCodeMirrorConfig: {
 						defaultPreferences,
-						primaryPreferences: defaultPreferences,
-						preferenceModeIds
+						defaultPreferencesCode: defaultPreferences,
+						primaryPreferences: defaultPreferences
 					},
 					wgNamespaceNumber: nsId
 				} );
@@ -373,7 +410,7 @@ describe( 'CodeMirrorPreferences', () => {
 
 	it( 'getCheckboxesFieldset', () => {
 		mockDefaultPreferences();
-		mockUserPreferences( { fooExtension: ENABLED, barExtension: ENABLED } );
+		mockUserPreferences( { fooExtension: 1, barExtension: 1 } );
 		const preferences = getCodeMirrorPreferences();
 		const fieldset = preferences.getCheckboxesFieldset(
 			[ 'fooExtension', 'barExtension', 'doesNotExistExtension' ]
@@ -386,20 +423,11 @@ describe( 'CodeMirrorPreferences', () => {
 
 	it( 'primary preferences - panel / showPreferencesDialog', () => {
 		const realPreferences = {
-			lineNumbering: ENABLED,
-			bracketMatching: ENABLED,
-			autocomplete: ENABLED,
-			openLinks: ENABLED
+			lineNumbering: true, bracketMatching: true, autocomplete: true, openLinks: true
 		};
-		mockDefaultPreferences(
-			realPreferences,
-			{ lineNumbering: ENABLED, bracketMatching: ENABLED }
-		);
+		mockDefaultPreferences( realPreferences, { lineNumbering: true, bracketMatching: true } );
 		mockUserPreferences( {
-			lineNumbering: ENABLED,
-			bracketMatching: ENABLED,
-			autocomplete: ENABLED,
-			openLinks: ENABLED
+			lineNumbering: 1, bracketMatching: 1, autocomplete: 1, openLinks: 1
 		} );
 		const view = new EditorView();
 		const openLinks = EditorView.theme();
@@ -439,7 +467,7 @@ describe( 'CodeMirrorPreferences', () => {
 
 	it( 'lockPreference', () => {
 		mockDefaultPreferences();
-		mockUserPreferences( { fooExtension: ENABLED } );
+		mockUserPreferences( { fooExtension: 1 } );
 		const view = new EditorView();
 		const preferences = getCodeMirrorPreferences();
 		preferences.registerExtension( 'fooExtension', EditorView.theme(), view );
@@ -454,7 +482,7 @@ describe( 'CodeMirrorPreferences', () => {
 	} );
 
 	it( 'registerCallback', () => {
-		mockDefaultPreferences( { foobar: ENABLED } );
+		mockDefaultPreferences( { foobar: true } );
 		mockUserPreferences();
 		const callback = jest.fn();
 		const preferences = getCodeMirrorPreferences();
@@ -467,7 +495,7 @@ describe( 'CodeMirrorPreferences', () => {
 	} );
 
 	it( 'slow preferences', () => {
-		mockDefaultPreferences( { slowExtension: DISABLED, slowCallback: DISABLED } );
+		mockDefaultPreferences( { slowExtension: false, slowCallback: false } );
 		const preferences = getCodeMirrorPreferences();
 		const view = new EditorView();
 		preferences.registerExtension( 'slowExtension', EditorView.theme(), view, { slow: true } );

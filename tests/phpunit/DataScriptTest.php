@@ -29,6 +29,7 @@ class DataScriptTest extends MediaWikiIntegrationTestCase {
 		$this->assertStringContainsString( '"urlProtocols":', $script );
 		$this->assertStringContainsString( '"linkTrailCharacters":', $script );
 		$this->assertStringContainsString( '"imageKeywords":', $script );
+		$this->assertStringContainsString( '"hasGlobalPreferences":', $script );
 	}
 
 }

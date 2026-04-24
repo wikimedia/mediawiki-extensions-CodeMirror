@@ -45,7 +45,6 @@ ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 			return;
 		}
 		const CodeMirrorVisualEditor = require( '../codemirror.visualEditor.js' );
-		CodeMirrorVisualEditor.setCodeMirrorPreference( true );
 		const { mediawiki } = require( 'ext.CodeMirror.mode.mediawiki' );
 		this.surface.mirror = new CodeMirrorVisualEditor(
 			this.surface,
@@ -57,9 +56,10 @@ ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 			} )
 		);
 		this.surface.mirror.initialize();
+		this.surface.mirror.setCodeMirrorPreference( true );
 	} else if ( this.surface.mirror ) {
 		this.surface.mirror.toggle( enable );
-		this.surface.mirror.constructor.setCodeMirrorPreference( this.surface.mirror.isActive );
+		this.surface.mirror.setCodeMirrorPreference( this.surface.mirror.isActive );
 	}
 };
 

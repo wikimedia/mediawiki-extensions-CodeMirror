@@ -56,22 +56,10 @@ class Hooks implements
 		self::MODE_LUA,
 	];
 
-	public const PREF_DISABLED = 0;
-	public const PREF_ENABLED = 1;
-	public const PREF_MEDIAWIKI_ONLY = 2;
-	public const PREF_NON_MEDIAWIKI_ONLY = 3;
-	public const PREF_MODES = [
-		// Preference is disabled for all modes.
-		'DISABLED' => self::PREF_DISABLED,
-		// Preference is enabled for all modes.
-		'ENABLED' => self::PREF_ENABLED,
-		// Preference is enabled only for the `mediawiki` mode.
-		'MEDIAWIKI_ONLY' => self::PREF_MEDIAWIKI_ONLY,
-		// Preference is enabled for all modes except `mediawiki`.
-		'NON_MEDIAWIKI_ONLY' => self::PREF_NON_MEDIAWIKI_ONLY
-	];
-
 	public const OPTION_USE_CODEMIRROR = 'usecodemirror';
+	public const OPTION_USE_CODEMIRROR_CODE = 'usecodemirror-code';
+	public const OPTION_CODEMIRROR_PREFS = 'codemirror-preferences';
+	public const OPTION_CODEMIRROR_PREFS_CODE = 'codemirror-preferences-code';
 	public const OPTION_COLORBLIND = 'usecodemirror-colorblind';
 	public const OPTION_USE_WIKIEDITOR = 'usebetatoolbar';
 
@@ -120,6 +108,19 @@ class Hooks implements
 	}
 
 	/**
+	 * Get the option name (preference) that dictates whether CodeMirror should be enabled for a given mode.
+	 *
+	 * @param string $mode
+	 * @return string
+	 */
+	private function getOptionName( string $mode ): string {
+		return match ( $mode ) {
+			self::MODE_MEDIAWIKI => self::OPTION_USE_CODEMIRROR,
+			default => self::OPTION_USE_CODEMIRROR_CODE,
+		};
+	}
+
+	/**
 	 * Checks if any CodeMirror modules should be loaded on this page or not.
 	 * Ultimately ::loadInitModules() decides which module(s) get loaded.
 	 *
@@ -133,19 +134,21 @@ class Hooks implements
 		?ExtensionRegistry $extensionRegistry = null,
 		bool $supportWikiEditor = true
 	): bool {
-		$useCodeMirror = $this->userOptionsManager->getBoolOption( $out->getUser(), self::OPTION_USE_CODEMIRROR );
+		$mode = $this->getMode( $out->getTitle() );
+		if ( $mode === null ) {
+			return false;
+		}
+		$useCodeMirror = $this->userOptionsManager->getBoolOption( $out->getUser(), $this->getOptionName( $mode ) );
 		$useWikiEditor = $supportWikiEditor &&
 			$this->userOptionsManager->getBoolOption( $out->getUser(), self::OPTION_USE_WIKIEDITOR );
-		// In CodeMirror 6, either WikiEditor or the 'usecodemirror' preference must be enabled.
+		// Either WikiEditor or the preference must be enabled.
 		if ( !$useWikiEditor && !$useCodeMirror ) {
 			return false;
 		}
 
 		$extensionRegistry ??= ExtensionRegistry::getInstance();
-		$isEnabledMode = $this->getMode( $out->getTitle() ) !== null;
 		// Disable CodeMirror if we're on an edit page with a conflicting gadget (T178348)
-		return !$this->conflictingGadgetsEnabled( $extensionRegistry, $out->getUser() ) &&
-			$isEnabledMode;
+		return !$this->conflictingGadgetsEnabled( $extensionRegistry, $out->getUser() );
 	}
 
 	/**
@@ -189,7 +192,8 @@ class Hooks implements
 	/**
 	 * Set client-side JS variables and pre-deliver modules for optimal performance.
 	 * `cmRLModules` is a list of modules that will be lazy-loaded by the client, and,
-	 * if the 'usecodemirror' preference is enabled, pre-delivered by ResourceLoader.
+	 * if the 'usecodemirror' or 'usecodemirror-code' preference is enabled (depending
+	 * on the mode), pre-delivered by ResourceLoader.
 	 *
 	 * @param OutputPage $out
 	 * @param bool $supportWikiEditor
@@ -200,7 +204,11 @@ class Hooks implements
 		bool $supportWikiEditor = true,
 		array $textareas = [ '#wpTextbox1' ]
 	): void {
-		$useCodeMirror = $this->userOptionsManager->getBoolOption( $out->getUser(), self::OPTION_USE_CODEMIRROR );
+		$mode = $this->getMode( $out->getTitle() );
+		if ( $mode === null ) {
+			return;
+		}
+		$useCodeMirror = $this->userOptionsManager->getBoolOption( $out->getUser(), $this->getOptionName( $mode ) );
 		$useWikiEditor = $supportWikiEditor &&
 			$this->userOptionsManager->getBoolOption( $out->getUser(), self::OPTION_USE_WIKIEDITOR );
 		$modules = [
@@ -209,7 +217,6 @@ class Hooks implements
 			'ext.CodeMirror.lib',
 			'ext.CodeMirror.init',
 		];
-		$mode = $this->getMode( $out->getTitle() );
 
 		if ( in_array( $mode, self::SUPPORTED_MODES, true ) ) {
 			$modules[] = 'ext.CodeMirror.' . ( $mode === self::MODE_MEDIAWIKI ? 'mode.mediawiki' : 'modes' );
@@ -353,13 +360,21 @@ class Hooks implements
 			'section' => 'editing/syntax-highlighting'
 		];
 
-		// CodeMirror is disabled by default for all users. It can enabled for everyone
-		// by default by adding '$wgDefaultUserOptions['usecodemirror'] = 1;' into LocalSettings.php
 		$defaultPreferences[self::OPTION_USE_CODEMIRROR] = [
 			'type' => 'toggle',
 			'label-message' => 'codemirror-prefs-enable',
+			'help-message' => 'codemirror-prefs-enable-help',
 			'section' => 'editing/syntax-highlighting',
 		];
+
+		if ( array_diff( $this->enabledModes, [ 'mediawiki' ] ) ) {
+			$defaultPreferences[self::OPTION_USE_CODEMIRROR_CODE] = [
+				'type' => 'toggle',
+				'label-message' => 'codemirror-prefs-enable-code',
+				'help-message' => 'codemirror-prefs-enable-code-help',
+				'section' => 'editing/syntax-highlighting',
+			];
+		}
 
 		$defaultPreferences[self::OPTION_COLORBLIND] = [
 			'type' => 'toggle',
@@ -368,21 +383,12 @@ class Hooks implements
 			'disable-if' => [ '!==', self::OPTION_USE_CODEMIRROR, '1' ]
 		];
 
-		$defaultPreferences['codemirror-preferences'] = [
+		$defaultPreferences[self::OPTION_CODEMIRROR_PREFS] = [
 			'type' => 'api',
 		];
-	}
 
-	/**
-	 * Define constants for preferences values for use in configuration like LocalSettings.php.
-	 * Called after the extension is registered.
-	 *
-	 * @see https://www.mediawiki.org/wiki/Manual:Extension.json/Schema#callback
-	 */
-	public static function onRegistration(): void {
-		define( 'CM_PREF_ENABLED', self::PREF_ENABLED );
-		define( 'CM_PREF_DISABLED', self::PREF_DISABLED );
-		define( 'CM_PREF_MEDIAWIKI_ONLY', self::PREF_MEDIAWIKI_ONLY );
-		define( 'CM_PREF_NON_MEDIAWIKI_ONLY', self::PREF_NON_MEDIAWIKI_ONLY );
+		$defaultPreferences[self::OPTION_CODEMIRROR_PREFS_CODE] = [
+			'type' => 'api',
+		];
 	}
 }

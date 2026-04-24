@@ -1722,8 +1722,7 @@ const mediawiki = ( config = { bidiIsolation: false } ) => {
 				cm.preferences.registerExtension(
 					'highlightRefs',
 					highlightRefsExtension,
-					cm.view,
-					{ mode: 'mediawiki' }
+					cm.view
 				);
 			}
 
@@ -1732,7 +1731,7 @@ const mediawiki = ( config = { bidiIsolation: false } ) => {
 					if ( enabled ) {
 						foldAllRefs( cm.view );
 					}
-				}, cm.view, { slow: true, mode: 'mediawiki' } );
+				}, cm.view, true );
 			}
 		}
 
@@ -1755,18 +1754,13 @@ const mediawiki = ( config = { bidiIsolation: false } ) => {
 			cm.preferences.registerExtension( 'autocomplete', autocompleteExtension, cm.view );
 		}
 		if ( config.openLinks !== false ) {
-			cm.preferences.registerExtension( 'openLinks', openLinksExtension, cm.view, { mode: 'mediawiki' } );
+			cm.preferences.registerExtension( 'openLinks', openLinksExtension, cm.view );
 		}
 		if ( config.closeTags !== false ) {
-			cm.preferences.registerExtension( 'closeTags', closeTagsExtension, cm.view, { mode: 'mediawiki' } );
+			cm.preferences.registerExtension( 'closeTags', closeTagsExtension, cm.view );
 		}
 		if ( config.bidiIsolation ) {
-			cm.preferences.registerExtension(
-				'bidiIsolation',
-				bidiIsolationExtension,
-				cm.view,
-				{ mode: 'mediawiki' }
-			);
+			cm.preferences.registerExtension( 'bidiIsolation', bidiIsolationExtension, cm.view );
 		}
 	};
 	mw.hook( 'ext.CodeMirror.ready' ).add( handler );

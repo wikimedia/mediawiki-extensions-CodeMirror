@@ -10,9 +10,11 @@ mw.user = Object.assign( mw.user, {
 		get: jest.fn().mockImplementation( ( key ) => {
 			switch ( key ) {
 				case 'codemirror-preferences':
+				case 'codemirror-preferences-code':
 					// Use default preferences.
 					return null;
 				case 'usecodemirror':
+				case 'usecodemirror-code':
 					return '1';
 				case 'usecodemirror-colorblind':
 					return '0';
@@ -40,12 +42,7 @@ global.mockMwConfigGet = ( config = {} ) => {
 		extCodeMirrorConfig: {
 			urlProtocols: 'ftp://|https://|news:',
 			defaultPreferences: extensionJson.config.CodeMirrorDefaultPreferences.value,
-			preferenceModeIds: {
-				DISABLED: 0,
-				ENABLED: 1,
-				MEDIAWIKI_ONLY: 2,
-				NON_MEDIAWIKI_ONLY: 3
-			},
+			defaultPreferencesCode: extensionJson.config.CodeMirrorDefaultPreferencesCode.value,
 			primaryPreferences: extensionJson.config.CodeMirrorPrimaryPreferences.value,
 			doubleUnderscore: [ {
 				__notoc__: 'notoc'
@@ -102,7 +99,8 @@ global.mockMwConfigGet = ( config = {} ) => {
 			file: 6
 		},
 		cmMode: 'mediawiki',
-		cmLanguageVariants: [ 'en', 'en-x-piglatin' ]
+		cmLanguageVariants: [ 'en', 'en-x-piglatin' ],
+		hasGlobalPreferences: false
 	}, config );
 	mw.config.get = jest.fn().mockImplementation( ( key ) => mockConfig[ key ] );
 };
@@ -115,6 +113,7 @@ mw.Api.prototype.loadMessagesIfMissing = jest.fn( () => {
 } );
 mw.Api.prototype.get = jest.fn().mockReturnValue( Promise.resolve( {} ) );
 mw.Api.prototype.post = jest.fn().mockReturnValue( Promise.resolve( {} ) );
+mw.Api.prototype.postWithToken = jest.fn().mockReturnValue( Promise.resolve( {} ) );
 mw.Api.prototype.abort = jest.fn();
 mw.Rest = jest.fn().mockImplementation( () => ( {} ) );
 mw.hook = jest.fn( ( name ) => ( {

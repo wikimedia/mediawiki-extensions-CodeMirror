@@ -471,7 +471,8 @@ describe( 'setCodeMirrorPreference', () => {
 	it( 'should save using the API with the correct value', () => {
 		mw.user.isNamed = jest.fn().mockReturnValue( true );
 		mw.user.options.get = jest.fn().mockReturnValue( 0 );
-		CodeMirror.setCodeMirrorPreference( true );
+		cm.initialize();
+		cm.setCodeMirrorPreference( true );
 		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledWith( 'usecodemirror', 1 );
 		expect( mw.user.options.set ).toHaveBeenCalledWith( 'usecodemirror', 1 );
 	} );
@@ -479,7 +480,8 @@ describe( 'setCodeMirrorPreference', () => {
 	it( 'should not save if the user is not named', () => {
 		mw.user.isNamed = jest.fn().mockReturnValue( false );
 		mw.user.options.get = jest.fn().mockReturnValue( 0 );
-		CodeMirror.setCodeMirrorPreference( true );
+		cm.initialize();
+		cm.setCodeMirrorPreference( true );
 		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledTimes( 0 );
 		expect( mw.user.options.set ).toHaveBeenCalledTimes( 0 );
 	} );
@@ -487,11 +489,12 @@ describe( 'setCodeMirrorPreference', () => {
 	it( 'should not save if the preference hasn\'t changed', () => {
 		mw.user.isNamed = jest.fn().mockReturnValue( true );
 		mw.user.options.get = jest.fn().mockReturnValue( 0 );
-		CodeMirror.setCodeMirrorPreference( true );
+		cm.initialize();
+		cm.setCodeMirrorPreference( true );
 		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledWith( 'usecodemirror', 1 );
 		expect( mw.user.options.set ).toHaveBeenCalledWith( 'usecodemirror', 1 );
 		mw.user.options.get = jest.fn().mockReturnValue( 1 );
-		CodeMirror.setCodeMirrorPreference( true );
+		cm.setCodeMirrorPreference( true );
 		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledTimes( 1 );
 		expect( mw.user.options.set ).toHaveBeenCalledTimes( 1 );
 	} );
