@@ -624,19 +624,19 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		const helpLink = document.createElement( 'a' );
 		helpLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror';
 		helpLink.target = '_blank';
-		helpLink.textContent = mw.msg( 'codemirror-prefs-help' ).toLowerCase();
+		helpLink.textContent = mw.msg( 'codemirror-prefs-help' );
 		// Click listener added in CodeMirrorKeymap since we don't have a CodeMirror instance here.
 		const shortcutLink = document.createElement( 'a' );
 		shortcutLink.className = 'cm-mw-panel--kbd-help';
 		shortcutLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror#Keyboard_shortcuts';
-		shortcutLink.textContent = mw.msg( 'codemirror-keymap-help-title' ).toLowerCase();
+		shortcutLink.textContent = mw.msg( 'codemirror-prefs-keymap' );
 		shortcutLink.onclick = ( e ) => e.preventDefault();
 		shortcutLink.title = this.keymap.getTitleWithShortcut(
 			this.keymap.keymapHelpRegistry.other.help
 		);
 		const fullPrefsLink = document.createElement( 'a' );
 		fullPrefsLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror#Features';
-		fullPrefsLink.textContent = mw.msg( 'codemirror-prefs-panel-full' ).toLowerCase();
+		fullPrefsLink.textContent = mw.msg( 'codemirror-prefs-panel-full' );
 		fullPrefsLink.onclick = ( e ) => {
 			e.preventDefault();
 			this.showPreferencesDialog( this.view );

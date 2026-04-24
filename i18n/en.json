@@ -26,6 +26,7 @@
 	"codemirror-prefs-bidiisolation": "Isolate bidirectional text",
 	"codemirror-prefs-bracketmatching": "Enable bracket matching",
 	"codemirror-prefs-closebrackets": "Enable auto-closing brackets",
+	"codemirror-prefs-keymap": "keyboard shortcuts",
 	"codemirror-prefs-linenumbering": "Show line numbers",
 	"codemirror-prefs-linewrapping": "Wrap lines",
 	"codemirror-prefs-lint": "Lint the code",

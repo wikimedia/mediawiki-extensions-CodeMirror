@@ -196,6 +196,7 @@
 				"codemirror-prefs-foldallrefs",
 				"codemirror-prefs-help",
 				"codemirror-prefs-highlightrefs",
+				"codemirror-prefs-keymap",
 				"codemirror-prefs-linenumbering",
 				"codemirror-prefs-linewrapping",
 				"codemirror-prefs-lint",
