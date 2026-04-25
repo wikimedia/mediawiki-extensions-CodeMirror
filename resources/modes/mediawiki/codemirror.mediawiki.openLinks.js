@@ -75,7 +75,31 @@ const openLinksExtension = [
 				names = name.split( '_' );
 			if ( names.includes( mwModeConfig.tags.linkPageName ) ||
 				names.includes( mwModeConfig.tags.templateName ) ) {
-				let page = state.sliceDoc( from, to ).trim();
+				let page = state.sliceDoc( from, to ),
+					{ prevSibling, nextSibling } = node,
+					start = from,
+					end = to;
+				while ( prevSibling && prevSibling.to === start && (
+					prevSibling.name === name ||
+					prevSibling.name.includes( mwModeConfig.tags.comment )
+				) ) {
+					if ( prevSibling.name === name ) {
+						page = state.sliceDoc( prevSibling.from, prevSibling.to ) + page;
+					}
+					start = prevSibling.from;
+					prevSibling = prevSibling.prevSibling;
+				}
+				while ( nextSibling && nextSibling.from === end && (
+					nextSibling.name === name ||
+					nextSibling.name.includes( mwModeConfig.tags.comment )
+				) ) {
+					if ( nextSibling.name === name ) {
+						page += state.sliceDoc( nextSibling.from, nextSibling.to );
+					}
+					end = nextSibling.to;
+					nextSibling = nextSibling.nextSibling;
+				}
+				page = page.trim();
 				const pageName = mw.config.get( 'wgPageName' );
 				if ( page.startsWith( '/' ) ) {
 					page = `:${ pageName }${ page }`;
