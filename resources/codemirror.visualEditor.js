@@ -207,10 +207,12 @@ class CodeMirrorVisualEditor extends CodeMirror {
 			.addClass( 'mw-editfont-' + mw.user.options.get( 'editfont' ) );
 
 		// Reset gutter.
-		this.surfaceView.$documentNode.css( {
+		const margins = {
 			'margin-left': '',
 			'margin-right': ''
-		} );
+		};
+		this.surfaceView.$documentNode.css( margins );
+		this.surfaceView.$element.prevAll( '.ve-ui-surface-placeholder' ).css( margins );
 
 		this.surface.getModel().getDocument().off( 'precommit', this.transactionListener );
 		this.surface.getModel().off( 'select', this.selectListener );
@@ -247,10 +249,12 @@ class CodeMirrorVisualEditor extends CodeMirror {
 			return;
 		}
 		const guttersWidth = gutter.getBoundingClientRect().width;
-		this.surfaceView.$documentNode.css( {
+		const margins = {
 			'margin-left': dir === 'rtl' ? 0 : guttersWidth,
 			'margin-right': dir === 'rtl' ? guttersWidth : 0
-		} );
+		};
+		this.surfaceView.$documentNode.css( margins );
+		this.surfaceView.$element.prevAll( '.ve-ui-surface-placeholder' ).css( margins );
 		// Also update width of .cm-content due to apparent Chromium bug.
 		this.view.contentDOM.style.width = 'calc(100% - ' + guttersWidth + 'px)';
 	}
