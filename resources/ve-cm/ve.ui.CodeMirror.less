@@ -38,10 +38,6 @@
 		min-width: 0;
 	}
 
-	.CodeMirror-selected {
-		display: none;
-	}
-
 	// Ensure surfaces are using identical font rules
 	.cm-scroller,
 	.cm-scroller *,
@@ -80,11 +76,10 @@
 	.cm-mw-section-1 ~ *,
 	.cm-mw-section-2,
 	.cm-mw-section-2 ~ *,
-	/* TODO: remove overqualified `span` after CM6 upgrade */
-	span.cm-mw-section-3 ~ *,
-	span.cm-mw-section-4 ~ *,
-	span.cm-mw-section-5 ~ *,
-	span.cm-mw-section-6 ~ * {
+	.cm-mw-section-3 ~ *,
+	.cm-mw-section-4 ~ *,
+	.cm-mw-section-5 ~ *,
+	.cm-mw-section-6 ~ * {
 		font-size: inherit;
 		line-height: inherit;
 		font-weight: inherit;

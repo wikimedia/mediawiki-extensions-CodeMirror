@@ -48,8 +48,6 @@
 	.wikitext-formatting-color();
 	font-weight: bold;
 }
-// FIXME: Remove camelCase variant after CM6 upgrade is complete (also check Global Search)
-.cm-mw-doubleUnderscore,
 .cm-mw-double-underscore,
 .cm-mw-signature,
 .cm-mw-hr,
@@ -59,8 +57,6 @@
 	background-color: @background-color-disabled-subtle;
 }
 
-// TODO: Deprecate .cm-mw-mnemonic in favor of -html-entity
-.cm-mw-mnemonic,
 .cm-mw-html-entity {
 	color: @xml-tag-color;
 }
@@ -74,45 +70,30 @@
 .cm-mw-strong {
 	font-weight: bold;
 }
+.cm-mw-em {
+	font-style: italic;
+}
 
-// FIXME: Remove .CodeMirror-line rules after CM6 upgrade
-pre.CodeMirror-line.cm-mw-section-1,
-pre.CodeMirror-line-like.cm-mw-section-1,
 .cm-mw-section-1,
 .cm-mw-section-1 ~ * {
 	font-size: 1.8em;
 	line-height: 1.2em;
 }
-pre.CodeMirror-line.cm-mw-section-2,
-pre.CodeMirror-line-like.cm-mw-section-2,
 .cm-mw-section-2,
 .cm-mw-section-2 ~ * {
 	font-size: 1.5em;
 	line-height: 1.2em;
 }
-pre.CodeMirror-line.cm-mw-section-3,
-pre.CodeMirror-line-like.cm-mw-section-3,
-pre.CodeMirror-line.cm-mw-section-4,
-pre.CodeMirror-line-like.cm-mw-section-4,
-pre.CodeMirror-line.cm-mw-section-5,
-pre.CodeMirror-line-like.cm-mw-section-5,
-pre.CodeMirror-line.cm-mw-section-6,
-pre.CodeMirror-line-like.cm-mw-section-6,
-/* TODO: remove overqualified `span` after CM6 upgrade */
-span.cm-mw-section-3 ~ *,
-span.cm-mw-section-4 ~ *,
-span.cm-mw-section-5 ~ *,
-span.cm-mw-section-6 ~ * {
+.cm-mw-section-3 ~ *,
+.cm-mw-section-4 ~ *,
+.cm-mw-section-5 ~ *,
+.cm-mw-section-6 ~ * {
 	font-weight: bold;
 }
 
 .cm-mw-template {
 	font-weight: normal;
-}
-
-// TODO: deprecate/remove after CM6 upgrade
-.cm-mw-template-name-mnemonic {
-	font-weight: normal;
+	font-style: normal;
 }
 
 .cm-mw-template-name,
@@ -137,6 +118,7 @@ span.cm-mw-section-6 ~ * {
 
 .cm-mw-parserfunction {
 	font-weight: normal;
+	font-style: normal;
 }
 .cm-mw-parserfunction-name,
 .cm-mw-parserfunction-bracket,
@@ -149,10 +131,6 @@ span.cm-mw-section-6 ~ * {
 	font-weight: bold;
 }
 
-pre.CodeMirror-line.cm-mw-exttag,
-pre.CodeMirror-line-like.cm-mw-exttag {
-	.ground( @ext: 0.5 );
-}
 .cm-mw-exttag {
 	.ground( @ext: 1 );
 }
@@ -177,11 +155,7 @@ pre.CodeMirror-line-like.cm-mw-exttag {
 }
 
 .cm-mw-tag-pre,
-.cm-mw-tag-nowiki,
-pre.CodeMirror-line.cm-mw-tag-pre,
-pre.CodeMirror-line-like.cm-mw-tag-pre,
-pre.CodeMirror-line.cm-mw-tag-nowiki,
-pre.CodeMirror-line-like.cm-mw-tag-nowiki {
+.cm-mw-tag-nowiki {
 	background-color: rgba( 0, 0, 0, 0.04 );
 	.darkmode( background-color, rgba( 255, 255, 255, 0.06 ) );
 }
@@ -305,10 +279,6 @@ pre.CodeMirror-line-like.cm-mw-tag-nowiki {
 
 .cm-mw-error {
 	color: @error-color;
-}
-
-.cm-mw-em {
-	font-style: italic;
 }
 
 .cm-mw-open-links[ data-open-links ] {
