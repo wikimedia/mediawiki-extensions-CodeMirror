@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Dhondup"
+		]
+	},
+	"codemirror-prefs-enable-help": "ནང་དོན་གྱི་ཤོག་ངོས་དང་མ་དཔེ་རྣམས་རྩོམ་སྒྲིག་བྱེད་སྐབས་སྤྱོད་རྒྱུ་ཡིན།",
+	"codemirror-prefs-enable-code": "ཨང་བརྡའི་ཚོན་མདོག་གསལ་བྱེད་ཀྱི་ནུས་པ་སྒོ་ཕྱེས།",
+	"codemirror-prefs-enable-code-help": "JavaScript དང་། CSS ཡང་ན་ Lua modules ལྟ་བུའི་ཨང་བརྡ་ (Code) རྩོམ་སྒྲིག་བྱེད་སྐབས་སྤྱོད་རྒྱུ་ཡིན།"
+}

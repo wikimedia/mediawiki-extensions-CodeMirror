@@ -1,12 +1,16 @@
 {
 	"@metadata": {
 		"authors": [
+			"23artashes",
 			"Kareyac",
 			"Դավիթ Սարոյան"
 		]
 	},
 	"codemirror-toggle-label": "Շարահյուսության ընդգծում",
+	"codemirror-prefs-enable-help": "Կիրառվում է բովանդակության էջերը և ձևանմուշները խմբագրելիս։",
+	"codemirror-prefs-enable-code": "Միացնել կոդի սինտաքսի ընդգծումը",
 	"codemirror-prefs-help": "օգնություն",
+	"codemirror-prefs-keymap": "ստեղնաշարային դյուրանցում",
 	"codemirror-previous": "Գտնել նախորդը",
 	"codemirror-replace": "Փոխարինել",
 	"codemirror-replace-all": "Փոխարինել բոլորը",
