@@ -85,7 +85,8 @@ class CodeMirrorExtensionRegistry {
 			'bracketMatching',
 			'highlightRefs',
 			'lineWrapping',
-			'lineNumbering'
+			'lineNumbering',
+			'theme'
 		];
 
 		/**

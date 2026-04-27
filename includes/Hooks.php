@@ -60,7 +60,6 @@ class Hooks implements
 	public const OPTION_USE_CODEMIRROR_CODE = 'usecodemirror-code';
 	public const OPTION_CODEMIRROR_PREFS = 'codemirror-preferences';
 	public const OPTION_CODEMIRROR_PREFS_CODE = 'codemirror-preferences-code';
-	public const OPTION_COLORBLIND = 'usecodemirror-colorblind';
 	public const OPTION_USE_WIKIEDITOR = 'usebetatoolbar';
 
 	public const NO_PRIMARY_TEXTAREA = 0;
@@ -388,13 +387,6 @@ class Hooks implements
 				'section' => 'editing/syntax-highlighting',
 			];
 		}
-
-		$defaultPreferences[self::OPTION_COLORBLIND] = [
-			'type' => 'toggle',
-			'label-message' => 'codemirror-prefs-colorblind',
-			'section' => 'editing/syntax-highlighting',
-			'disable-if' => [ '!==', self::OPTION_USE_CODEMIRROR, '1' ]
-		];
 
 		$defaultPreferences[self::OPTION_CODEMIRROR_PREFS] = [
 			'type' => 'api',

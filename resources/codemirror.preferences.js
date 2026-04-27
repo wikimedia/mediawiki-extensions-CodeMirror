@@ -151,6 +151,9 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		 * @type {Object}
 		 */
 		this.dialogConfig = {
+			appearance: [
+				'theme'
+			],
 			lines: [
 				'lineNumbering',
 				'lineWrapping',
@@ -170,6 +173,9 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 				'lint'
 			]
 		};
+
+		// Temporary migration of 'usecodemirror-colorblind' option to 'theme' preference.
+		this.migrateColorblindUserOption();
 	}
 
 	/**
@@ -284,6 +290,23 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 			}
 		} else {
 			return mw.storage.getObject( this.getOptionName() ) || {};
+		}
+	}
+
+	/**
+	 * Migrate the 'usecodemirror-colorblind' user option to the 'theme' CM preference.
+	 * After another MW release or two, it may be fine to remove this method.
+	 *
+	 * @private
+	 */
+	migrateColorblindUserOption() {
+		if ( !mw.user.isNamed() || this.mode !== 'mediawiki' ) {
+			return;
+		}
+		if ( mw.user.options.get( 'usecodemirror-colorblind' ) > 0 ) {
+			this.setPreference( 'theme', 'colorblind' );
+			// Delete the user option from the DB.
+			this.saveUserOptionInternal( 'usecodemirror-colorblind', null );
 		}
 	}
 

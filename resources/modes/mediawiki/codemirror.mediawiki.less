@@ -18,268 +18,271 @@
 @link-background-color: #219;
 @skip-formatting-color: #adf;
 
-/* Add scoped CSS variable for use by the highlightRefs extension (T384908) */
-.cm-editor {
-	--background-color-refs: fade( #dff2eb, 50% );
-	.darkmode( --background-color-refs, fade( #29493e, 50% ) );
-}
+.cm-mw-theme-default,
+.cm-mw-theme-colorblind {
+	/* Add scoped CSS variable for use by the highlightRefs extension (T384908) */
+	.cm-editor {
+		--background-color-refs: fade( #dff2eb, 50% );
+		.darkmode( --background-color-refs, fade( #29493e, 50% ) );
+	}
 
-.ground( @template: 0, @ext: 0, @link: 0 ) {
-	@template-shade: fade( @template-background-color, 4% * @template );
-	@ext-shade: fade( @ext-background-color, 4% * @ext );
-	@link-shade: fade( @link-background-color, 4% * @link );
-	background-color: average( average( @template-shade, @ext-shade ), @link-shade );
-}
+	.ground( @template: 0, @ext: 0, @link: 0 ) {
+		@template-shade: fade( @template-background-color, 4% * @template );
+		@ext-shade: fade( @ext-background-color, 4% * @ext );
+		@link-shade: fade( @link-background-color, 4% * @link );
+		background-color: average( average( @template-shade, @ext-shade ), @link-shade );
+	}
 
-.wikitext-formatting-color {
-	color: @wikitext-formatting-color;
-	.darkmode( color, @wikitext-formatting-color-dark );
-}
+	.wikitext-formatting-color {
+		color: @wikitext-formatting-color;
+		.darkmode( color, @wikitext-formatting-color-dark );
+	}
 
-.cm-mw-pagename {
-	text-decoration: @text-decoration-underline;
-}
+	.cm-mw-pagename {
+		text-decoration: @text-decoration-underline;
+	}
 
-.cm-mw-skipformatting {
-	background-color: @skip-formatting-color;
-}
-.cm-mw-list,
-.cm-mw-indenting {
-	.wikitext-formatting-color();
-	font-weight: bold;
-}
-.cm-mw-double-underscore,
-.cm-mw-signature,
-.cm-mw-hr,
-.cm-mw-redirect {
-	.wikitext-formatting-color();
-	font-weight: bold;
-	background-color: rgba( 22, 44, 88, 0.09 );
-	.darkmode( background-color, rgba( 255, 255, 255, 0.09 ) );
-}
+	.cm-mw-skipformatting {
+		background-color: @skip-formatting-color;
+	}
+	.cm-mw-list,
+	.cm-mw-indenting {
+		.wikitext-formatting-color();
+		font-weight: bold;
+	}
+	.cm-mw-double-underscore,
+	.cm-mw-signature,
+	.cm-mw-hr,
+	.cm-mw-redirect {
+		.wikitext-formatting-color();
+		font-weight: bold;
+		background-color: rgba( 22, 44, 88, 0.09 );
+		.darkmode( background-color, rgba( 255, 255, 255, 0.09 ) );
+	}
 
-.cm-mw-html-entity {
-	color: @xml-tag-color;
-}
-.cm-mw-comment {
-	color: @color-subtle;
-	font-weight: normal;
-}
-.cm-mw-apostrophes {
-	.wikitext-formatting-color();
-}
-.cm-mw-strong {
-	font-weight: bold;
-}
-.cm-mw-em {
-	font-style: italic;
-}
-
-.cm-mw-section-1,
-.cm-mw-section-1 ~ * {
-	font-size: 1.8em;
-	line-height: 1.2em;
-}
-.cm-mw-section-2,
-.cm-mw-section-2 ~ * {
-	font-size: 1.5em;
-	line-height: 1.2em;
-}
-.cm-mw-section-3 ~ *,
-.cm-mw-section-4 ~ *,
-.cm-mw-section-5 ~ *,
-.cm-mw-section-6 ~ * {
-	font-weight: bold;
-}
-
-.cm-mw-template {
-	font-weight: normal;
-	font-style: normal;
-}
-
-.cm-mw-template-name,
-.cm-mw-template-argument-name,
-.cm-mw-template-delimiter,
-.cm-mw-template-bracket {
-	color: @template-color;
-	font-weight: bold;
-	.darkmode( color, @template-color-dark );
-}
-
-.cm-mw-templatevariable,
-.cm-mw-templatevariable-bracket {
-	color: @template-variable-color;
-	font-weight: normal;
-}
-.cm-mw-templatevariable-name,
-.cm-mw-templatevariable-delimiter {
-	color: @template-variable-color;
-	font-weight: bold;
-}
-
-.cm-mw-parserfunction {
-	font-weight: normal;
-	font-style: normal;
-}
-.cm-mw-parserfunction-name,
-.cm-mw-parserfunction-bracket,
-.cm-mw-parserfunction-delimiter,
-.cm-mw-conversion-bracket,
-.cm-mw-conversion-delimiter,
-.cm-mw-conversion-flag,
-.cm-mw-conversion-lang {
-	color: @parser-function-color;
-	font-weight: bold;
-}
-
-.cm-mw-exttag {
-	.ground( @ext: 1 );
-}
-.cm-mw-exttag-name,
-.cm-mw-htmltag-name {
-	color: @xml-tag-color;
-	font-weight: bold;
-}
-.cm-mw-exttag-bracket,
-.cm-mw-exttag-attribute,
-.cm-mw-htmltag-bracket,
-.cm-mw-htmltag-attribute {
-	color: @xml-tag-color;
-	font-weight: normal;
-}
-.cm-mw-exttag-attribute-value,
-.cm-mw-htmltag-attribute-value,
-.cm-mw-table-definition-value,
-.cm-mw-image-parameter {
-	color: @xml-tag-attribute-color;
-	font-weight: normal;
-}
-
-.cm-mw-tag-pre,
-.cm-mw-tag-nowiki {
-	background-color: rgba( 0, 0, 0, 0.04 );
-	.darkmode( background-color, rgba( 255, 255, 255, 0.06 ) );
-}
-
-.cm-mw-link,
-.cm-mw-link-tosection,
-.cm-mw-section-header {
-	.wikitext-formatting-color();
-	font-weight: normal;
-}
-.cm-mw-link-pagename,
-.cm-mw-link-bracket,
-.cm-mw-link-delimiter,
-.cm-mw-extlink,
-.cm-mw-free-extlink {
-	color: @link-color;
-	&:not( .cm-mw-strong ) {
+	.cm-mw-html-entity {
+		color: @xml-tag-color;
+	}
+	.cm-mw-comment {
+		color: @color-subtle;
 		font-weight: normal;
 	}
-}
-.cm-mw-extlink-protocol,
-.cm-mw-free-extlink-protocol,
-.cm-mw-extlink-bracket {
-	color: @link-color;
-	font-weight: bold;
-}
+	.cm-mw-apostrophes {
+		.wikitext-formatting-color();
+	}
+	.cm-mw-strong {
+		font-weight: bold;
+	}
+	.cm-mw-em {
+		font-style: italic;
+	}
 
-.cm-mw-table-bracket,
-.cm-mw-table-delimiter {
-	color: @table-color;
-	font-weight: bold;
-	.darkmode( color, @table-color-dark );
-}
-.cm-mw-table-definition {
-	color: @table-color;
-	font-weight: normal;
-	.darkmode( color, @table-color-dark );
-}
-.cm-mw-table-caption {
-	font-weight: bold;
-}
+	.cm-mw-section-1,
+	.cm-mw-section-1 ~ * {
+		font-size: 1.8em;
+		line-height: 1.2em;
+	}
+	.cm-mw-section-2,
+	.cm-mw-section-2 ~ * {
+		font-size: 1.5em;
+		line-height: 1.2em;
+	}
+	.cm-mw-section-3 ~ *,
+	.cm-mw-section-4 ~ *,
+	.cm-mw-section-5 ~ *,
+	.cm-mw-section-6 ~ * {
+		font-weight: bold;
+	}
 
-.cm-mw-template2-ground {
-	.ground( @template: 1 );
-}
-.cm-mw-template3-ground {
-	.ground( @template: 2 );
-}
-.cm-mw-ext-ground,
-.cm-mw-template-ext-ground {
-	.ground( @ext: 1 );
-}
-.cm-mw-ext2-ground,
-.cm-mw-template-ext2-ground {
-	.ground( @ext: 2 );
-}
-.cm-mw-ext3-ground,
-.cm-mw-template-ext3-ground {
-	.ground( @ext: 3 );
-}
-.cm-mw-link-ground,
-.cm-mw-ext-link-ground,
-.cm-mw-template-link-ground {
-	.ground( @link: 1 );
-}
-.cm-mw-ext2-link-ground,
-.cm-mw-template-ext-link-ground {
-	.ground( @ext: 1, @link: 1 );
-}
-.cm-mw-ext3-link-ground,
-.cm-mw-template-ext2-link-ground {
-	.ground( @ext: 2, @link: 1 );
-}
-.cm-mw-template-ext3-link-ground {
-	.ground( @ext: 3, @link: 1 );
-}
+	.cm-mw-template {
+		font-weight: normal;
+		font-style: normal;
+	}
 
-.cm-mw-template2-ext-ground {
-	.ground( @template: 1, @ext: 1 );
-}
-.cm-mw-template2-ext2-ground {
-	.ground( @template: 1, @ext: 2 );
-}
-.cm-mw-template2-ext3-ground {
-	.ground( @template: 1, @ext: 3 );
-}
-.cm-mw-template2-link-ground {
-	.ground( @template: 1, @link: 1 );
-}
-.cm-mw-template2-ext-link-ground {
-	.ground( @template: 1, @ext: 1, @link: 1 );
-}
-.cm-mw-template2-ext2-link-ground {
-	.ground( @template: 1, @ext: 2, @link: 1 );
-}
-.cm-mw-template2-ext3-link-ground {
-	.ground( @template: 1, @ext: 3, @link: 1 );
-}
+	.cm-mw-template-name,
+	.cm-mw-template-argument-name,
+	.cm-mw-template-delimiter,
+	.cm-mw-template-bracket {
+		color: @template-color;
+		font-weight: bold;
+		.darkmode( color, @template-color-dark );
+	}
 
-.cm-mw-template3-ext-ground {
-	.ground( @template: 2, @ext: 1 );
-}
-.cm-mw-template3-ext2-ground {
-	.ground( @template: 2, @ext: 2 );
-}
-.cm-mw-template3-ext3-ground {
-	.ground( @template: 2, @ext: 3 );
-}
-.cm-mw-template3-link-ground {
-	.ground( @template: 2, @link: 1 );
-}
-.cm-mw-template3-ext-link-ground {
-	.ground( @template: 2, @ext: 1, @link: 1 );
-}
-.cm-mw-template3-ext2-link-ground {
-	.ground( @template: 2, @ext: 2, @link: 1 );
-}
-.cm-mw-template3-ext3-link-ground {
-	.ground( @template: 2, @ext: 3, @link: 1 );
-}
+	.cm-mw-templatevariable,
+	.cm-mw-templatevariable-bracket {
+		color: @template-variable-color;
+		font-weight: normal;
+	}
+	.cm-mw-templatevariable-name,
+	.cm-mw-templatevariable-delimiter {
+		color: @template-variable-color;
+		font-weight: bold;
+	}
 
-.cm-mw-error {
-	color: @error-color;
+	.cm-mw-parserfunction {
+		font-weight: normal;
+		font-style: normal;
+	}
+	.cm-mw-parserfunction-name,
+	.cm-mw-parserfunction-bracket,
+	.cm-mw-parserfunction-delimiter,
+	.cm-mw-conversion-bracket,
+	.cm-mw-conversion-delimiter,
+	.cm-mw-conversion-flag,
+	.cm-mw-conversion-lang {
+		color: @parser-function-color;
+		font-weight: bold;
+	}
+
+	.cm-mw-exttag {
+		.ground( @ext: 1 );
+	}
+	.cm-mw-exttag-name,
+	.cm-mw-htmltag-name {
+		color: @xml-tag-color;
+		font-weight: bold;
+	}
+	.cm-mw-exttag-bracket,
+	.cm-mw-exttag-attribute,
+	.cm-mw-htmltag-bracket,
+	.cm-mw-htmltag-attribute {
+		color: @xml-tag-color;
+		font-weight: normal;
+	}
+	.cm-mw-exttag-attribute-value,
+	.cm-mw-htmltag-attribute-value,
+	.cm-mw-table-definition-value,
+	.cm-mw-image-parameter {
+		color: @xml-tag-attribute-color;
+		font-weight: normal;
+	}
+
+	.cm-mw-tag-pre,
+	.cm-mw-tag-nowiki {
+		background-color: rgba( 0, 0, 0, 0.04 );
+		.darkmode( background-color, rgba( 255, 255, 255, 0.06 ) );
+	}
+
+	.cm-mw-link,
+	.cm-mw-link-tosection,
+	.cm-mw-section-header {
+		.wikitext-formatting-color();
+		font-weight: normal;
+	}
+	.cm-mw-link-pagename,
+	.cm-mw-link-bracket,
+	.cm-mw-link-delimiter,
+	.cm-mw-extlink,
+	.cm-mw-free-extlink {
+		color: @link-color;
+		&:not( .cm-mw-strong ) {
+			font-weight: normal;
+		}
+	}
+	.cm-mw-extlink-protocol,
+	.cm-mw-free-extlink-protocol,
+	.cm-mw-extlink-bracket {
+		color: @link-color;
+		font-weight: bold;
+	}
+
+	.cm-mw-table-bracket,
+	.cm-mw-table-delimiter {
+		color: @table-color;
+		font-weight: bold;
+		.darkmode( color, @table-color-dark );
+	}
+	.cm-mw-table-definition {
+		color: @table-color;
+		font-weight: normal;
+		.darkmode( color, @table-color-dark );
+	}
+	.cm-mw-table-caption {
+		font-weight: bold;
+	}
+
+	.cm-mw-template2-ground {
+		.ground( @template: 1 );
+	}
+	.cm-mw-template3-ground {
+		.ground( @template: 2 );
+	}
+	.cm-mw-ext-ground,
+	.cm-mw-template-ext-ground {
+		.ground( @ext: 1 );
+	}
+	.cm-mw-ext2-ground,
+	.cm-mw-template-ext2-ground {
+		.ground( @ext: 2 );
+	}
+	.cm-mw-ext3-ground,
+	.cm-mw-template-ext3-ground {
+		.ground( @ext: 3 );
+	}
+	.cm-mw-link-ground,
+	.cm-mw-ext-link-ground,
+	.cm-mw-template-link-ground {
+		.ground( @link: 1 );
+	}
+	.cm-mw-ext2-link-ground,
+	.cm-mw-template-ext-link-ground {
+		.ground( @ext: 1, @link: 1 );
+	}
+	.cm-mw-ext3-link-ground,
+	.cm-mw-template-ext2-link-ground {
+		.ground( @ext: 2, @link: 1 );
+	}
+	.cm-mw-template-ext3-link-ground {
+		.ground( @ext: 3, @link: 1 );
+	}
+
+	.cm-mw-template2-ext-ground {
+		.ground( @template: 1, @ext: 1 );
+	}
+	.cm-mw-template2-ext2-ground {
+		.ground( @template: 1, @ext: 2 );
+	}
+	.cm-mw-template2-ext3-ground {
+		.ground( @template: 1, @ext: 3 );
+	}
+	.cm-mw-template2-link-ground {
+		.ground( @template: 1, @link: 1 );
+	}
+	.cm-mw-template2-ext-link-ground {
+		.ground( @template: 1, @ext: 1, @link: 1 );
+	}
+	.cm-mw-template2-ext2-link-ground {
+		.ground( @template: 1, @ext: 2, @link: 1 );
+	}
+	.cm-mw-template2-ext3-link-ground {
+		.ground( @template: 1, @ext: 3, @link: 1 );
+	}
+
+	.cm-mw-template3-ext-ground {
+		.ground( @template: 2, @ext: 1 );
+	}
+	.cm-mw-template3-ext2-ground {
+		.ground( @template: 2, @ext: 2 );
+	}
+	.cm-mw-template3-ext3-ground {
+		.ground( @template: 2, @ext: 3 );
+	}
+	.cm-mw-template3-link-ground {
+		.ground( @template: 2, @link: 1 );
+	}
+	.cm-mw-template3-ext-link-ground {
+		.ground( @template: 2, @ext: 1, @link: 1 );
+	}
+	.cm-mw-template3-ext2-link-ground {
+		.ground( @template: 2, @ext: 2, @link: 1 );
+	}
+	.cm-mw-template3-ext3-link-ground {
+		.ground( @template: 2, @ext: 3, @link: 1 );
+	}
+
+	.cm-mw-error {
+		color: @error-color;
+	}
 }
 
 .cm-mw-open-links[ data-open-links ] {

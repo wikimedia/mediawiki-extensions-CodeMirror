@@ -34,7 +34,6 @@ const {
 	keymap,
 	lineNumbers,
 	linter,
-	oneDark,
 	rectangularSelection,
 	searchPanelOpen,
 	syntaxHighlighting
@@ -46,6 +45,7 @@ const CodeMirrorGotoLine = require( './codemirror.gotoLine.js' );
 const CodeMirrorSortLines = require( './codemirror.sortLines.js' );
 const CodeMirrorPreferences = require( './codemirror.preferences.js' );
 const CodeMirrorKeymap = require( './codemirror.keymap.js' );
+const CodeMirrorThemes = require( './themes/codemirror.themes.js' );
 const CodeMirrorExtensionRegistry = require( './codemirror.extensionRegistry.js' );
 const bracketMatching = require( './codemirror.matchbrackets.js' );
 const indentGuides = require( './codemirror.indentGuides.js' );
@@ -247,6 +247,12 @@ class CodeMirror {
 		 * @type {CodeMirrorSearch}
 		 */
 		this.search = new CodeMirrorSearch( this.keymap );
+		/**
+		 * The CodeMirror themes manager.
+		 *
+		 * @type {CodeMirrorThemes}
+		 */
+		this.themes = new CodeMirrorThemes( this.preferences );
 		/**
 		 * The go-to line panel.
 		 *
@@ -618,15 +624,6 @@ class CodeMirror {
 			classList.push( fontClass );
 		}
 
-		// Add colorblind mode if preference is set.
-		// This currently is only to be used for the MediaWiki markup language.
-		if (
-			mw.user.options.get( 'usecodemirror-colorblind' ) &&
-			this.mode === 'mediawiki'
-		) {
-			classList.push( 'cm-mw-colorblind-colors' );
-		}
-
 		return EditorView.contentAttributes.of( {
 			// T259347: Use accesskey of the original textbox
 			accesskey: this.textarea.accessKey,
@@ -898,13 +895,15 @@ class CodeMirror {
 			// the Tab key does not move focus by default in non-wikitext.
 			this.keymap.registerKeyBindingHelp( 'accessibility', 'tabEscape', { key: 'Escape' } );
 			this.keymap.registerKeyBindingHelp( 'accessibility', 'tabMode', { key: 'Ctrl-m', mac: 'Shift-Alt-m' } );
-
-			this.addDarkModeMutationObserver();
 		}
 
 		if ( this.lintSource || this.lintApi ) {
 			this.preferences.registerExtension( 'lint', this.lintExtension, this.view );
 		}
+
+		// Enable the preferred theme, giving CodeMirrorThemes a reference
+		// to the view so it can keep things in sync such as dark mode changes.
+		this.themes.registerFromValueMap( this.view );
 
 		/**
 		 * Called just after CodeMirror is initialized.
@@ -914,36 +913,6 @@ class CodeMirror {
 		 * @stable to use
 		 */
 		mw.hook( 'ext.CodeMirror.ready' ).fire( this );
-	}
-
-	/**
-	 * Use a MutationObserver to watch for CSS class changes to the <html> element,
-	 * and update the CodeMirror editor's theme accordingly. This is ony necessary
-	 * for non-wikitext, where we don't use our own CSS classes during tokenization.
-	 */
-	addDarkModeMutationObserver() {
-		const doc = document.documentElement;
-		const matchMediaQuery = window.matchMedia( '(prefers-color-scheme: dark)' );
-		const setDarkTheme = () => {
-			const isDark = doc.classList.contains( 'skin-theme-clientpref-night' ) || (
-				doc.classList.contains( 'skin-theme-clientpref-os' ) && matchMediaQuery.matches
-			);
-			this.extensionRegistry.register( 'darkMode', oneDark, this.view, isDark );
-		};
-		const observer = new MutationObserver( ( mutations ) => {
-			for ( const mutation of mutations ) {
-				if ( mutation.type === 'attributes' && mutation.attributeName === 'class' ) {
-					setDarkTheme();
-				}
-			}
-		} );
-		observer.observe( doc, {
-			attributes: true,
-			childList: false,
-			subtree: false
-		} );
-		matchMediaQuery.addEventListener( 'change', setDarkTheme );
-		setDarkTheme();
 	}
 
 	/**

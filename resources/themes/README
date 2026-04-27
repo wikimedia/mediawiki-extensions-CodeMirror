@@ -1,0 +1,24 @@
+codemirror.theme.*.js files are forked from https://github.com/fsegurai/codemirror-themes/ (MIT)
+and modified to fit the needs of this extension.
+
+The following styles are removed:
+- Panels
+- Line numbering
+- Gutter elements
+- Diff/merge view styles
+- Deleted/removed content styles
+- Focus outline
+- Lint points
+- Selections:
+  - `z-index` on .cm-selectionLayer
+  - `color` on .cm-selectionBackground
+- max-height on .cm-tooltip-autocomplete (Tokyo Night, VSCode)
+
+Note that following these changes, some color variables become unused and so are removed.
+
+The following styles are modified:
+- Matching brackets: targets `.cm-matchingBracket, &.cm-focused .cm-matchingBracket`
+  instead of just `.cm-matchingBracket`, and same for `.cm-nonmatchingBracket`.
+- `invalid` tag:
+  - Material: borderBottom is removed.
+  - All themes except Material: textDecoration is removed, borderBottom style changed to `dotted`.

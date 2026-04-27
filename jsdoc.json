@@ -12,8 +12,9 @@
 	],
 	"source": {
 		"include": [ "resources" ],
-		"exclude": [ "resources/legacy", "resources/lib" ],
-		"includePattern": ".+\\.js$"
+		"exclude": [ "resources/lib" ],
+		"includePattern": ".+\\.js$",
+		"excludePattern": "codemirror\\.theme\\..+\\.js"
 	},
 	"tags": {},
 	"templates": {

@@ -376,7 +376,6 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		$hooks->onGetPreferences( $user, $preferences );
 		self::assertArrayHasKey( Hooks::OPTION_USE_CODEMIRROR, $preferences );
 		self::assertArrayHasKey( Hooks::OPTION_USE_CODEMIRROR_CODE, $preferences );
-		self::assertArrayHasKey( Hooks::OPTION_COLORBLIND, $preferences );
 		self::assertArrayHasKey( 'usecodemirror-summary', $preferences );
 		self::assertSame( 'toggle', $preferences[Hooks::OPTION_USE_CODEMIRROR]['type'] );
 		self::assertSame( 'toggle', $preferences[Hooks::OPTION_USE_CODEMIRROR_CODE]['type'] );
