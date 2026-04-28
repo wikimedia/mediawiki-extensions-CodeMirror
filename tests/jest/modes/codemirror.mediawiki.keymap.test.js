@@ -1,6 +1,7 @@
 /* eslint-disable-next-line n/no-missing-require */
 const { EditorView } = require( 'ext.CodeMirror.lib' );
 const CodeMirror = require( '../../../resources/codemirror.js' );
+const { mediawiki } = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.js' );
 const mwKeymap = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.keymap.js' );
 
 describe( 'CodeMirrorMediaWikiKeymap', () => {
@@ -144,5 +145,35 @@ describe( 'CodeMirrorMediaWikiKeymap', () => {
 		} ) );
 		expect( cm.textSelection.getContents() ).toBe( 'Metallica Rules!' );
 		expect( cm.textSelection.getSelection() ).toBe( 'Metal' );
+	} );
+
+	it( 'should keep the indentation when inserting a new line', () => {
+		textarea.value = '\t\tfoo';
+		cm = new CodeMirror( textarea, mediawiki() );
+		cm.initialize();
+
+		// Indent the new line with the same indentation as the previous line
+		cm.textSelection.setSelection( { start: 2 } );
+		cm.view.contentDOM.dispatchEvent( new KeyboardEvent( 'keydown', {
+			key: 'Enter'
+		} ) );
+		expect( cm.textSelection.getContents() ).toBe( '\t\t\n\t\tfoo' );
+		expect( cm.textSelection.getCaretPosition() ).toBe( 5 );
+
+		// Do not indent the new line if the cursor is before the indentation of the previous line
+		cm.textSelection.setSelection( { start: 0 } );
+		cm.view.contentDOM.dispatchEvent( new KeyboardEvent( 'keydown', {
+			key: 'Enter'
+		} ) );
+		expect( cm.textSelection.getContents() ).toBe( '\n\t\t\n\t\tfoo' );
+		expect( cm.textSelection.getCaretPosition() ).toBe( 1 );
+
+		// Partial indentation should be preserved
+		cm.textSelection.setSelection( { start: 2 } );
+		cm.view.contentDOM.dispatchEvent( new KeyboardEvent( 'keydown', {
+			key: 'Enter'
+		} ) );
+		expect( cm.textSelection.getContents() ).toBe( '\n\t\n\t\t\n\t\tfoo' );
+		expect( cm.textSelection.getCaretPosition() ).toBe( 4 );
 	} );
 } );

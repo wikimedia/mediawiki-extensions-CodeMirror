@@ -9,6 +9,7 @@ const {
 	LanguageSupport,
 	LintSource,
 	Prec,
+	StateCommand,
 	StateEffect,
 	ViewUpdate,
 	autocompletion,
@@ -30,7 +31,6 @@ const {
 	indentOnInput,
 	indentUnit,
 	insertTab,
-	insertNewlineKeepIndent,
 	keymap,
 	lineNumbers,
 	linter,
@@ -276,6 +276,27 @@ class CodeMirror {
 	}
 
 	/**
+	 * Corrected version of `insertNewlineKeepIndent` from the CodeMirror library.
+	 *
+	 * @type {StateCommand}
+	 * @private
+	 * @internal
+	 */
+	get insertNewlineKeepIndent() {
+		return ( { state, dispatch } ) => {
+			dispatch( state.update( state.changeByRange( ( range ) => {
+				const line = state.doc.lineAt( range.from ),
+					indent = /^\s*/.exec( line.text.slice( 0, range.from - line.from ) )[ 0 ];
+				return {
+					changes: { from: range.from, to: range.to, insert: state.lineBreak + indent },
+					range: EditorSelection.cursor( range.from + indent.length + 1 )
+				};
+			} ), { scrollIntoView: true, userEvent: 'input' } ) );
+			return true;
+		};
+	}
+
+	/**
 	 * The extended configuration for bracket matching.
 	 * Setting this will update the
 	 * {@link CodeMirror#bracketMatchingExtension bracket matching extension}
@@ -360,7 +381,7 @@ class CodeMirror {
 		if ( this.mode === 'mediawiki' ) {
 			extensions.push(
 				Prec.high( keymap.of( [
-					{ key: 'Enter', run: insertNewlineKeepIndent, shift: insertNewlineKeepIndent },
+					{ key: 'Enter', run: this.insertNewlineKeepIndent, shift: this.insertNewlineKeepIndent },
 					{ key: 'Backspace', run: deleteCharBackwardStrict, preventDefault: true }
 				] ) )
 			);
