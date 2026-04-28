@@ -11,6 +11,10 @@ const passCases = [
 	{
 		title: 'nowrap in a HTML th cell',
 		input: '<table><tr><th NOWRAP></th></tr></table>'
+	},
+	{
+		title: 'subst a parser function starting with "#"',
+		input: '{{subst:#invoke:foo|bar}}'
 	}
 ];
 

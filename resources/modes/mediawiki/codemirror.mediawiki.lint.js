@@ -11,7 +11,8 @@ worker.onload( async () => {
 		variableIDs,
 		functionHooks,
 		redirection,
-		imageKeywords
+		imageKeywords,
+		subst
 	} = mw.config.get( 'extCodeMirrorConfig' );
 	const insensitive = Object.assign( {}, functionSynonyms[ 0 ] ),
 		[ , sensitive ] = functionSynonyms,
@@ -33,7 +34,12 @@ worker.onload( async () => {
 		nsid: mw.config.get( 'wgNamespaceIds' ),
 		functionHook: functionHooks,
 		variable: variableIDs,
-		parserFunction: [ insensitive, sensitive, [], [] ],
+		parserFunction: [
+			insensitive,
+			sensitive,
+			[],
+			Object.keys( subst ).map( ( s ) => s.replace( /:$/, '' ).toLowerCase() )
+		],
 		doubleUnderscore: [
 			[],
 			[],
