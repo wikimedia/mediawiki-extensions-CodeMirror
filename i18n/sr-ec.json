@@ -11,7 +11,8 @@
 	},
 	"codemirror-desc": "Омогућава истицање синтаксе у уређивачу викитекста",
 	"codemirror-toggle-label": "Истицање синтаксе",
-	"codemirror-prefs-enable": "Омогући истицање синтаксе за викитекст",
+	"codemirror-toggle-label-short": "Синтакса",
+	"codemirror-prefs-enable": "Омогући истицање синтаксе",
 	"codemirror-find": "Пронађи",
 	"codemirror-next": "Пронађи следеће",
 	"codemirror-previous": "Пронађи претходно",
@@ -22,6 +23,9 @@
 	"codemirror-replace-placeholder": "Замени",
 	"codemirror-replace-all": "Замени све",
 	"codemirror-done": "Готово",
+	"codemirror-goto-line": "Иди на линију",
+	"codemirror-goto-line-go": "Иди",
+	"codemirror-control-character": "Контролни знак $1",
 	"prefs-accessibility": "Приступачност",
 	"prefs-syntax-highlighting": "Истицање синтаксе"
 }

@@ -17,7 +17,7 @@
 	"codemirror-toggle-label": "構文の強調",
 	"codemirror-toggle-label-short": "構文",
 	"codemirror-prefs-summary": "この機能の詳細については、[https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror ヘルプページ]を参照してください。",
-	"codemirror-prefs-enable": "ウィキテキストの構文強調表示を有効にする",
+	"codemirror-prefs-enable": "構文強調表示を有効にする",
 	"codemirror-v6-prefs-colorblind": "カラーブラインドに応じたスキームを使用",
 	"codemirror-prefs-colorblind": "ウィキテキストでの編集時にカラーブラインドに応じた配色を使用する",
 	"codemirror-prefs-colorblind-help": "構文強調表示のガジェットを使用している場合、この設定は機能しません。",

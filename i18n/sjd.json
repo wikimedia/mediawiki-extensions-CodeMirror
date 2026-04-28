@@ -7,8 +7,14 @@
 	"codemirror-toggle-label": "Синтаксесс тӯзхуввмушш",
 	"codemirror-find": "О̄дзэ",
 	"codemirror-next": "О̄дзэ пуэдтӭй",
+	"codemirror-previous": "О̄дзэ э̄ввтла",
+	"codemirror-all": "Пугк",
+	"codemirror-all-tooltip": "Воа̄лшэ пугк, мӣ ше̄һт",
 	"codemirror-match-case": "Мугка шэ регистрэнҍ",
 	"codemirror-regexp": "Регулярнэ выраженья",
 	"codemirror-replace": "Воа̄йхэ",
+	"codemirror-replace-placeholder": "Воа̄йхэ",
+	"codemirror-replace-all": "Пугк воа̄йхэ",
+	"codemirror-done": "Воа̄лмаш",
 	"codemirror-unfold": "ле̄вхэ"
 }

@@ -8,6 +8,7 @@
 	"codemirror-desc": "Забясьпечвае вылучэньне сынтаксысу ў рэдактары вікітэксту",
 	"codemirror-toggle-label": "Вылучэньне сынтаксысу",
 	"codemirror-toggle-label-short": "Сынтакс",
+	"codemirror-prefs-enable": "Уключыць падсьветку сынтаксу",
 	"codemirror-prefs-colorblind": "Уключыць прыдатную для дальтонікаў схему падсьвятленьня сынтаксу пры рэдагаваньні вікітэксту",
 	"codemirror-prefs-colorblind-help": "Калі вы карыстаецеся інструмэнтам падсьветкі сынтаксу, гэтая налада не працавацьме.",
 	"prefs-accessibility": "Даступнасьць"

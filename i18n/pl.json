@@ -13,7 +13,7 @@
 	"codemirror-toggle-label": "Podświetlanie składni",
 	"codemirror-toggle-label-short": "Składnia",
 	"codemirror-prefs-summary": "Więcej informacji o tej funkcji można znaleźć na [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror stronie pomocy].",
-	"codemirror-prefs-enable": "Włącz podświetlanie składni dla wikitekstu",
+	"codemirror-prefs-enable": "Włącz podświetlanie składni",
 	"codemirror-v6-prefs-colorblind": "Schemat koloru dla osób ze ślepotą barw",
 	"codemirror-prefs-colorblind": "Włącz schemat kolorystyczny podświetlania składni wikitekstu podczas edycji przyjazny osobom ze ślepotą barw",
 	"codemirror-prefs-colorblind-help": "Jeśli używasz gadżetu do podświetlania składni, ta preferencja nie zadziała.",

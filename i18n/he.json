@@ -2,14 +2,15 @@
 	"@metadata": {
 		"authors": [
 			"Amire80",
-			"Guycn2"
+			"Guycn2",
+			"YaronSh"
 		]
 	},
 	"codemirror-desc": "צביעת תחביר בעורך קוד ויקי",
 	"codemirror-toggle-label": "צביעת תחביר",
 	"codemirror-toggle-label-short": "תחביר",
 	"codemirror-prefs-summary": "אפשר ללמוד עוד על התכונה הזאת על־ידי קריאת [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror דף העזרה].",
-	"codemirror-prefs-enable": "הפעלת צביעת תחביר עבור קוד ויקי",
+	"codemirror-prefs-enable": "הפעלת צביעת תחביר",
 	"codemirror-v6-prefs-colorblind": "להשתמש בערכת צבעים ידידותית לעיוורי צבעים",
 	"codemirror-prefs-colorblind": "להפעיל ערכת צבעים ידידותית לעיוורי־צבעים בצביעת קוד בעריכת קוד ויקי",
 	"codemirror-prefs-colorblind-help": "אם מופעל אצלך גאדג'ט לצביעת קוד, ההעדפה הזאת לא תעבוד",

@@ -8,14 +8,15 @@
 			"Cigaryno",
 			"علاء",
 			"Lolekek",
-			"Meno25"
+			"Meno25",
+			"Mohammed Qays"
 		]
 	},
 	"codemirror-desc": "يوفر إبراز التركيب في محرر نص الويكي",
 	"codemirror-toggle-label": "إبراز التركيب",
 	"codemirror-toggle-label-short": "تركيب",
 	"codemirror-prefs-summary": "يمكنك معرفة المزيد عن هذه الميزة عبر قراءة [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror صفحة المساعدة].",
-	"codemirror-prefs-enable": "فعّل إبراز التركيب لنص الويكي",
+	"codemirror-prefs-enable": "تمكين تمييز بناء الجملة",
 	"codemirror-v6-prefs-colorblind": "استخدم مخططًا صديقًا لعمى الألوان",
 	"codemirror-prefs-colorblind": "فعّل مخططًا متوافقًا مع عمى الألوان لإبراز التركيب عند تعديل نص ويكي.",
 	"codemirror-prefs-colorblind-help": "لن يعمل هذا التفضيل إذا كنت تستخدم إضافةً لإبراز التركيب.",

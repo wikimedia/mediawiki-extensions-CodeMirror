@@ -10,7 +10,7 @@
 	"codemirror-toggle-label": "Resaltado de sintaxe",
 	"codemirror-toggle-label-short": "Sintaxe",
 	"codemirror-prefs-summary": "Podes obter máis información sobre esta función lendo a [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror páxina de axuda].",
-	"codemirror-prefs-enable": "Activa o resaltado de sintaxe para o texto wiki",
+	"codemirror-prefs-enable": "Activar o resaltado de sintaxe para o texto wiki",
 	"codemirror-v6-prefs-colorblind": "Usar un esquema axeitado para as persoas daltónicas",
 	"codemirror-prefs-colorblind": "Activar o esquema para as persoas daltónicas que resalta a sintaxe ao editar o texto wiki",
 	"codemirror-prefs-colorblind-help": "Se usas un trebello para o resaltado de sintaxe, esta preferencia non funcionará.",

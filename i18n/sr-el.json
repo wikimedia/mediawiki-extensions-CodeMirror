@@ -6,6 +6,7 @@
 	},
 	"codemirror-desc": "Omogućava isticanje sintakse u uređivaču vikiteksta",
 	"codemirror-toggle-label": "Isticanje sintakse",
+	"codemirror-prefs-enable": "Omogući isticanje sintakse",
 	"codemirror-find": "Pronađi",
 	"codemirror-next": "Pronađi sledeće",
 	"codemirror-previous": "Pronađi prethodno",

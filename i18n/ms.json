@@ -9,7 +9,7 @@
 	"codemirror-toggle-label": "Penyerlahan sintaks",
 	"codemirror-toggle-label-short": "Sintaks",
 	"codemirror-prefs-summary": "Anda boleh mengetahui lebih lanjut tentang ciri ini dengan membaca [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror laman bantuan ini].",
-	"codemirror-prefs-enable": "Dayakan penyerlahan sintaks untuk teks wiki",
+	"codemirror-prefs-enable": "Dayakan penyerlahan sintaks",
 	"codemirror-v6-prefs-colorblind": "Gunakan skema mesra buta warna",
 	"codemirror-prefs-colorblind": "Dayakan skema mesra buta warna untuk penyerlahan sintaks semasa menyunting wikiteks",
 	"codemirror-prefs-colorblind-help": "Jika anda menggunakan gajet untuk menyerlahkan sintaks, pilihan ini tidak akan berfungsi.",

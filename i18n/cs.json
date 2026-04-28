@@ -9,6 +9,7 @@
 	"codemirror-toggle-label": "Zvýraznění syntaxe",
 	"codemirror-toggle-label-short": "Syntaxe",
 	"codemirror-prefs-summary": "Více informací o této funkci najdete na [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror stránce nápovědy].",
+	"codemirror-prefs-enable": "Zapnout zvýrazňování syntaxe",
 	"codemirror-prefs-colorblind": "Zapnout schéma pro barvoslepé u zvýrazňování syntaxe při editaci wikitextu",
 	"codemirror-prefs-colorblind-help": "Pokud používáte pro zvýrazňování syntaxe udělátko, nebude toto nastavení fungovat.",
 	"prefs-accessibility": "Přístupnost"

@@ -14,7 +14,7 @@
 	"codemirror-toggle-label": "문법 강조",
 	"codemirror-toggle-label-short": "문법",
 	"codemirror-prefs-summary": "아래 기능들에 관해 더 알아보려면 [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror 도움 문서]를 참고하십시오.",
-	"codemirror-prefs-enable": "위키텍스트에 대한 구문 강조 활성화",
+	"codemirror-prefs-enable": "구문 강조 활성화",
 	"codemirror-v6-prefs-colorblind": "색각 이상자 친화 스킴 사용",
 	"codemirror-prefs-colorblind": "위키텍스트 편집 시 색각 이상자에게 친숙한 문법 강조용 스킴 활성화하기",
 	"codemirror-prefs-colorblind-help": "문법 강조용 소도구를 사용하는 경우 이 환경 설정은 동작하지 않습니다.",
