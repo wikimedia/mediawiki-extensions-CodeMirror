@@ -1,7 +1,5 @@
 /**
  * Provides methods to create CSS-only Codex components.
- *
- * @todo Move HTML generation to Mustache templates.
  */
 class CodeMirrorCodex {
 	constructor() {
@@ -143,6 +141,95 @@ class CodeMirrorCodex {
 		labelWrapper.appendChild( labelElement );
 		wrapper.appendChild( labelWrapper );
 		return [ wrapper, input ];
+	}
+
+	/**
+	 * Get a CSS-only Codex Select. This only supports a flat list of options, not optgroups.
+	 *
+	 * @param {string} name
+	 * @param {string} label
+	 * @param {Array} options Array of [label, value] pairs.
+	 * @param {string} [selected]
+	 * @return {Array<HTMLElement>} [HTMLDivElement, HTMLSelectElement]
+	 */
+	getSelect( name, label, options, selected ) {
+		const id = `cm-mw__${ this.getRandomId() }`;
+		const wrapper = document.createElement( 'div' );
+		wrapper.className = 'cdx-field cm-mw-panel--select';
+		const labelWrapper = document.createElement( 'div' );
+		labelWrapper.className = 'cdx-label';
+		const labelElement = document.createElement( 'label' );
+		labelElement.className = 'cdx-label__label';
+		labelElement.htmlFor = id;
+		const innerSpan = document.createElement( 'span' );
+		innerSpan.className = 'cdx-label__label__text';
+		// eslint-disable-next-line mediawiki/msg-doc
+		innerSpan.textContent = mw.msg( label );
+		labelElement.appendChild( innerSpan );
+		labelWrapper.appendChild( labelElement );
+		wrapper.appendChild( labelWrapper );
+		const fieldControl = document.createElement( 'div' );
+		fieldControl.className = 'cdx-field__control';
+		wrapper.appendChild( fieldControl );
+		const select = document.createElement( 'select' );
+		select.className = 'cdx-select';
+		select.name = name;
+		select.id = id;
+		for ( const [ optionLabel, value ] of options ) {
+			const option = document.createElement( 'option' );
+			option.value = value;
+			// eslint-disable-next-line mediawiki/msg-doc
+			option.textContent = mw.msg( optionLabel );
+			if ( value === selected ) {
+				option.selected = true;
+			}
+			select.appendChild( option );
+		}
+		fieldControl.appendChild( select );
+		return [ wrapper, select ];
+	}
+
+	/**
+	 * @typedef {Object} CodeMirrorCodex~FormSpecifier
+	 * @description Specifier for form elements, in particular for {@link CodeMirrorPreferences},
+	 *   when the feature calls for a form element other than a simple checkbox.
+	 * @property {string} [type='checkbox'] Currently supported include:
+	 * - 'checkbox' (default)
+	 * - 'text'
+	 * - 'select'
+	 * @property {string} [label] Key for an i18n message that labels the form element.
+	 *   Required for the 'checkbox' and 'select' types, ignored for 'text' type.
+	 * @property {string} [placeholder] Key for an i18n message that serves as the placeholder text,
+	 *   for use by the 'text' type.
+	 * @property {Array} [options] Array of [label, value] pairs, for use by the 'select' type.
+	 *   The label should be a message key.
+	 * @property {Mixed} [default] The initial value of the field.
+	 */
+
+	/**
+	 * Generate a form field from a {@link FormSpecifier}.
+	 *
+	 * @param {string} name
+	 * @param {FormSpecifier} specifier
+	 * @return {Array<HTMLElement>} Array of [wrapper, input] elements, where `wrapper` is an HTML
+	 *   element that wraps the input and its label, and `input` is the actual form control element
+	 *   (e.g. `<input>`, `<select>`, etc.) that can be listened to for changes.
+	 * @internal
+	 */
+	getFormField( name, specifier ) {
+		specifier = Object.assign( { type: 'checkbox' }, specifier );
+		switch ( specifier.type ) {
+			case 'checkbox':
+				return this.getCheckbox( name, specifier.label, Boolean( specifier.default ) );
+			case 'text':
+				return this.getTextInput( name, specifier.default, specifier.placeholder );
+			case 'select':
+				return this.getSelect(
+					name, specifier.label, specifier.options, specifier.default
+				);
+			default:
+				throw new Error( `[CodeMirror] Unsupported form field type: ${ specifier.type }` );
+		}
 	}
 
 	/**

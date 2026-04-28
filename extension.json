@@ -151,6 +151,7 @@
 				"CdxDialog",
 				"CdxLabel",
 				"CdxField",
+				"CdxSelect",
 				"CdxTextInput",
 				"CdxToggleButton",
 				"CdxToggleButtonGroup"

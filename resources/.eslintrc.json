@@ -35,6 +35,7 @@
 				"CodeMirrorPreferences": "CodeMirrorPreferences",
 				"CodeMirrorPreferences.extension": "CodeMirrorPreferences.extension",
 				"CodeMirrorTextSelection": "CodeMirrorTextSelection",
+				"FormSpecifier": "FormSpecifier",
 				"Hook": "Hook",
 				"LanguageSupport": "LanguageSupport",
 				"PrefValue": "PrefValue"
