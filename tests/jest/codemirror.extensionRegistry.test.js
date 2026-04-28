@@ -82,6 +82,17 @@ describe( 'CodeMirrorExtensionRegistry', () => {
 		expect( console.warn ).not.toHaveBeenCalled();
 	} );
 
+	it( 'registerFromValueMap', () => {
+		const registry = getRegistry( {} );
+		registry.reconfigValueMap.set( 'tabSize', new Map( [
+			[ 'small', EditorState.tabSize.of( 5 ) ],
+			[ 'large', EditorState.tabSize.of( 10 ) ]
+		] ) );
+		const view = new EditorView();
+		registry.registerFromValueMap( 'tabSize', view, 'large' );
+		expect( registry.getCompartment( 'tabSize' ).get( view.state ).value ).toBe( 10 );
+	} );
+
 	it( 'reconfigure', () => {
 		const registry = getRegistry( {} );
 		const view = new EditorView();
@@ -120,5 +131,27 @@ describe( 'CodeMirrorExtensionRegistry', () => {
 		const view = new EditorView();
 		registry.register( 'precExtension', precExtension, view, true );
 		expect( registry.isEnabled( 'precExtension', view ) ).toBeTruthy();
+	} );
+
+	it( 'reconfigValueMap', () => {
+		const smallTabSize = EditorState.tabSize.of( 5 );
+		const largeTabSize = EditorState.tabSize.of( 10 );
+		const registry = getRegistry( {
+			tabSize: smallTabSize
+		} );
+		registry.reconfigValueMap.set( 'tabSize', new Map( [
+			[ 'small', smallTabSize ],
+			[ 'large', largeTabSize ]
+		] ) );
+		const view = new EditorView();
+		registry.register( 'tabSize', EditorState.tabSize.of( 5 ), view, true );
+		expect( registry.getCompartment( 'tabSize' ).get( view.state ).value ).toBe( 5 );
+		registry.reconfigureFromValueMap( 'tabSize', view, 'small' );
+		expect( registry.getCompartment( 'tabSize' ).get( view.state ).value ).toBe( 5 );
+		registry.reconfigureFromValueMap( 'tabSize', view, 'unknown' );
+		expect( registry.getCompartment( 'tabSize' ).get( view.state ).value ).toBe( 5 );
+		registry.reconfigureFromValueMap( 'tabSize', view, 'large' );
+		expect( registry.getCompartment( 'tabSize' ).get( view.state ).value ).toBe( 10 );
+		expect( console.warn ).not.toHaveBeenCalled();
 	} );
 } );

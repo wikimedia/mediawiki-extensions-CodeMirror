@@ -12,6 +12,10 @@ const CodeMirrorExtensionRegistry = require( './codemirror.extensionRegistry.js'
 require( './ext.CodeMirror.data.js' );
 
 /**
+ * @typedef {boolean|string} CodeMirrorPreferences~PrefValue
+ */
+
+/**
  * CodeMirrorPreferences is a panel that allows users to configure CodeMirror preferences.
  * It is toggled by pressing `Ctrl`-`Shift`-`,` (or `Command`-`Shift`-`,` on macOS).
  * Only the commonly used "primary" preferences with a visual effect are shown in the panel,
@@ -75,7 +79,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		/**
 		 * The user's CodeMirror preferences.
 		 *
-		 * @type {Object<string, boolean>}
+		 * @type {Object<string, PrefValue>}
 		 */
 		this.preferences = this.fetchPreferences();
 
@@ -161,7 +165,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	}
 
 	/**
-	 * @return {Object<string, boolean|Array>}
+	 * @return {Object<string, PrefValue|Array>}
 	 * @private
 	 */
 	getMwConfigDefaults() {
@@ -194,7 +198,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * `$wgCodeMirrorDefaultPreferences` or `$wgCodeMirrorDefaultPreferencesCode`
 	 * depending on the current mode.
 	 *
-	 * @return {Object<string, boolean>}
+	 * @return {Object<string, PrefValue>}
 	 */
 	getDefaultPreferences() {
 		if ( this.defaultPreferences ) {
@@ -205,8 +209,9 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		const newDefaults = {};
 
 		for ( const prefName in this.getMwConfigDefaults() ) {
-			const prefValue = this.getMwConfigDefaults()[ prefName ] || false;
-			if ( typeof prefValue === 'boolean' ) {
+			const defaultValue = this.getMwConfigDefaults()[ prefName ];
+			const prefValue = defaultValue === undefined ? false : defaultValue;
+			if ( typeof prefValue === 'boolean' || typeof prefValue === 'string' ) {
 				newDefaults[ prefName ] = prefValue;
 				continue;
 			}
@@ -217,7 +222,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		}
 
 		/**
-		 * @type {Object<string, boolean>}
+		 * @type {Object<string, PrefValue>}
 		 * @private
 		 */
 		this.defaultPreferences = newDefaults;
@@ -229,7 +234,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * Fetch the user's CodeMirror preferences from the user options API,
 	 * or clientside storage for unnamed users.
 	 *
-	 * @return {Object<string, boolean>}
+	 * @return {Object<string, PrefValue>}
 	 * @internal
 	 */
 	fetchPreferences() {
@@ -250,14 +255,14 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 				prefValue = this.mode !== 'mediawiki';
 			}
 
-			preferences[ prefName ] = !!prefValue;
+			preferences[ prefName ] = typeof prefValue === 'string' ? prefValue : !!prefValue;
 		}
 
 		return preferences;
 	}
 
 	/**
-	 * @return {Object<string, number>}
+	 * @return {Object<string, number|string>}
 	 * @internal
 	 * @private
 	 */
@@ -279,8 +284,12 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * or clientside storage for unnamed users. Preferences remain "sticky" only for
 	 * the mediawiki (wikitext) mode, or to all non-mediawiki modes.
 	 *
+	 * The `value` is either a boolean (enabled or disabled), or a string. The string can
+	 * be of any form, such serialized JSON. Each individual feature is responsible for
+	 * decoding or normalizing the value, if necessary.
+	 *
 	 * @param {string} key
-	 * @param {boolean} value
+	 * @param {PrefValue} value A string value indicates enabled but with the given value.
 	 * @internal
 	 */
 	setPreference( key, value ) {
@@ -308,8 +317,10 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		// and use a binary representation for storage.
 		let storageObj = {};
 		for ( const prefName in this.preferences ) {
-			if ( !!this.preferences[ prefName ] !== !!this.getDefaultPreferences()[ prefName ] ) {
-				storageObj[ prefName ] = this.preferences[ prefName ] ? 1 : 0;
+			if ( this.preferences[ prefName ] !== this.getDefaultPreferences()[ prefName ] ) {
+				storageObj[ prefName ] = typeof this.preferences[ prefName ] === 'string' ?
+					this.preferences[ prefName ] :
+					Number( !!this.preferences[ prefName ] );
 			}
 		}
 
@@ -368,7 +379,8 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 *
 	 * @param {string} prefName
 	 * @param {EditorView} [view]
-	 * @param {boolean} [force=false] Force the extension to be enabled or disabled.
+	 * @param {PrefValue} [force=false] Force the extension to be enabled or
+	 *   disabled (boolean), or enabled with a given value (string).
 	 * @stable to call
 	 */
 	lockPreference( prefName, view, force = false ) {
@@ -382,7 +394,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 
 	/**
 	 * @param {string} prefName
-	 * @param {boolean} [value]
+	 * @param {PrefValue} [value]
 	 * @fires CodeMirror~'ext.CodeMirror.preferences.apply'
 	 * @internal
 	 */
@@ -393,7 +405,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		 *
 		 * @event CodeMirror~'ext.CodeMirror.preferences.apply'
 		 * @param {string} prefName
-		 * @param {boolean} prefValue
+		 * @param {PrefValue} prefValue
 		 */
 		mw.hook( 'ext.CodeMirror.preferences.apply' ).fire(
 			prefName,
@@ -405,7 +417,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * Get the value of the given CodeMirror preference.
 	 *
 	 * @param {string} prefName
-	 * @return {boolean}
+	 * @return {PrefValue}
 	 * @stable to call
 	 */
 	getPreference( prefName ) {
@@ -429,7 +441,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 */
 	hasNonDefaultPreferences() {
 		for ( const prefName in this.preferences ) {
-			if ( !!this.preferences[ prefName ] !== !!this.getDefaultPreferences()[ prefName ] ) {
+			if ( this.preferences[ prefName ] !== this.getDefaultPreferences()[ prefName ] ) {
 				return true;
 			}
 		}
@@ -448,11 +460,39 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * @internal
 	 */
 	registerExtension( name, extension, view, slow = false ) {
-		this.extensionRegistry.register( name, extension, view, this.getPreference( name ) );
+		this.extensionRegistry.register( name, extension, view, !!this.getPreference( name ) );
 		if ( slow ) {
 			this.slowPreferences.add( name );
 		}
 		this.firePreferencesApplyHook( name );
+	}
+
+	/**
+	 * Register and enable an {@link Extension} with {@link CodeMirrorExtensionRegistry}
+	 * from a {@link CodeMirrorExtensionRegistry#reconfigValueMap reconfiguration value}
+	 * retrieved from the preference value.
+	 *
+	 * This can be used for initially registering features that use non-boolean values.
+	 *
+	 * @param {string} name
+	 * @param {EditorView} view
+	 * @param {boolean} [slow=false] Setting to true will indicate that
+	 *   the feature is "potentially slow" in the preferences dialog.
+	 * @internal
+	 */
+	registerExtensionFromValueMap( name, view, slow = false ) {
+		const prefValue = this.getPreference( name );
+		if ( typeof prefValue !== 'string' ) {
+			throw new Error(
+				`[CodeMirror] Registering "${ name }" from reconfig ` +
+				'value map with a non-string value'
+			);
+		}
+		this.extensionRegistry.registerFromValueMap( name, view, prefValue );
+		if ( slow ) {
+			this.slowPreferences.add( name );
+		}
+		this.firePreferencesApplyHook( name, prefValue );
 	}
 
 	/**
@@ -488,6 +528,10 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * @internal
 	 */
 	toggleExtension( name, view ) {
+		const prefValue = this.getPreference( name );
+		if ( typeof prefValue !== 'boolean' ) {
+			throw new Error( `[CodeMirror] Toggling the non-boolean preference "${ prefValue }"` );
+		}
 		const toEnable = !this.getPreference( name );
 		this.extensionRegistry.toggle( name, view, toEnable );
 		this.setPreference( name, toEnable );

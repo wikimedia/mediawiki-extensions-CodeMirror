@@ -36,7 +36,8 @@
 				"CodeMirrorPreferences.extension": "CodeMirrorPreferences.extension",
 				"CodeMirrorTextSelection": "CodeMirrorTextSelection",
 				"Hook": "Hook",
-				"LanguageSupport": "LanguageSupport"
+				"LanguageSupport": "LanguageSupport",
+				"PrefValue": "PrefValue"
 			}
 		}
 	},

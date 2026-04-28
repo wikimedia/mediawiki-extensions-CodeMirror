@@ -3152,7 +3152,7 @@ class Chunk {
         }
     }
     between(offset, from, to, f) {
-        for (let i = this.findIndex(from, -1000000000 /* C.Far */, true), e = this.findIndex(to, 1000000000 /* C.Far */, false, i); i < e; i++)
+        for (let i = this.findIndex(from, -1e9 /* C.Far */, true), e = this.findIndex(to, 1000000000 /* C.Far */, false, i); i < e; i++)
             if (f(this.from[i] + offset, this.to[i] + offset, this.value[i]) === false)
                 return false;
     }
@@ -3507,8 +3507,8 @@ class RangeSetBuilder {
         this.chunkPos = [];
         this.chunkStart = -1;
         this.last = null;
-        this.lastFrom = -1000000000 /* C.Far */;
-        this.lastTo = -1000000000 /* C.Far */;
+        this.lastFrom = -1e9 /* C.Far */;
+        this.lastTo = -1e9 /* C.Far */;
         this.from = [];
         this.to = [];
         this.value = [];
@@ -3607,7 +3607,7 @@ class LayerCursor {
     }
     get startSide() { return this.value ? this.value.startSide : 0; }
     get endSide() { return this.value ? this.value.endSide : 0; }
-    goto(pos, side = -1000000000 /* C.Far */) {
+    goto(pos, side = -1e9 /* C.Far */) {
         this.chunkIndex = this.rangeIndex = 0;
         this.gotoInner(pos, side, false);
         return this;
@@ -3690,7 +3690,7 @@ class HeapCursor {
         return heap.length == 1 ? heap[0] : new HeapCursor(heap);
     }
     get startSide() { return this.value ? this.value.startSide : 0; }
-    goto(pos, side = -1000000000 /* C.Far */) {
+    goto(pos, side = -1e9 /* C.Far */) {
         for (let cur of this.heap)
             cur.goto(pos, side);
         for (let i = this.heap.length >> 1; i >= 0; i--)
@@ -3752,14 +3752,14 @@ class SpanCursor {
         this.point = null;
         this.pointFrom = 0;
         this.pointRank = 0;
-        this.to = -1000000000 /* C.Far */;
+        this.to = -1e9 /* C.Far */;
         this.endSide = 0;
         // The amount of open active ranges at the start of the iterator.
         // Not including points.
         this.openStart = -1;
         this.cursor = HeapCursor.from(sets, skip, minPoint);
     }
-    goto(pos, side = -1000000000 /* C.Far */) {
+    goto(pos, side = -1e9 /* C.Far */) {
         this.cursor.goto(pos, side);
         this.active.length = this.activeTo.length = this.activeRank.length = 0;
         this.minActive = -1;
@@ -4681,7 +4681,7 @@ class ContentView {
                             child.reuseDOM(next);
                     }
                     child.sync(view, track);
-                    child.flags &= ~7 /* ViewFlag.Dirty */;
+                    child.flags &= -8 /* ViewFlag.Dirty */;
                 }
                 next = prev ? prev.nextSibling : parent.firstChild;
                 if (track && !track.written && track.node == parent && next != child.dom)
@@ -4705,7 +4705,7 @@ class ContentView {
             for (let child of this.children)
                 if (child.flags & 7 /* ViewFlag.Dirty */) {
                     child.sync(view, track);
-                    child.flags &= ~7 /* ViewFlag.Dirty */;
+                    child.flags &= -8 /* ViewFlag.Dirty */;
                 }
         }
     }
@@ -4994,7 +4994,6 @@ var browser = {
     chrome_version: chrome ? +chrome[1] : 0,
     ios,
     android: /*@__PURE__*//Android\b/.test(nav.userAgent),
-    webkit,
     safari,
     webkit_version: webkit ? +(/*@__PURE__*//\bAppleWebKit\/(\d+)/.exec(nav.userAgent) || [0, 0])[1] : 0,
     tabSize: doc.documentElement.style.tabSize != null ? "tab-size" : "-moz-tab-size"
@@ -5559,10 +5558,10 @@ class Decoration extends RangeValue {
     given position.
     */
     static widget(spec) {
-        let side = Math.max(-10000, Math.min(10000, spec.side || 0)), block = !!spec.block;
+        let side = Math.max(-1e4, Math.min(10000, spec.side || 0)), block = !!spec.block;
         side += (block && !spec.inlineOrder)
-            ? (side > 0 ? 300000000 /* Side.BlockAfter */ : -400000000 /* Side.BlockBefore */)
-            : (side > 0 ? 100000000 /* Side.InlineAfter */ : -100000000 /* Side.InlineBefore */);
+            ? (side > 0 ? 300000000 /* Side.BlockAfter */ : -4e8 /* Side.BlockBefore */)
+            : (side > 0 ? 100000000 /* Side.InlineAfter */ : -1e8 /* Side.InlineBefore */);
         return new PointDecoration(spec, side, side, block, spec.widget || null, false);
     }
     /**
@@ -5572,13 +5571,13 @@ class Decoration extends RangeValue {
     static replace(spec) {
         let block = !!spec.block, startSide, endSide;
         if (spec.isBlockGap) {
-            startSide = -500000000 /* Side.GapStart */;
+            startSide = -5e8 /* Side.GapStart */;
             endSide = 400000000 /* Side.GapEnd */;
         }
         else {
             let { start, end } = getInclusive(spec, block);
-            startSide = (start ? (block ? -300000000 /* Side.BlockIncStart */ : -1 /* Side.InlineIncStart */) : 500000000 /* Side.NonIncStart */) - 1;
-            endSide = (end ? (block ? 200000000 /* Side.BlockIncEnd */ : 1 /* Side.InlineIncEnd */) : -600000000 /* Side.NonIncEnd */) + 1;
+            startSide = (start ? (block ? -3e8 /* Side.BlockIncStart */ : -1 /* Side.InlineIncStart */) : 500000000 /* Side.NonIncStart */) - 1;
+            endSide = (end ? (block ? 200000000 /* Side.BlockIncEnd */ : 1 /* Side.InlineIncEnd */) : -6e8 /* Side.NonIncEnd */) + 1;
         }
         return new PointDecoration(spec, startSide, endSide, block, spec.widget || null, true);
     }
@@ -5609,7 +5608,7 @@ Decoration.none = RangeSet.empty;
 class MarkDecoration extends Decoration {
     constructor(spec) {
         let { start, end } = getInclusive(spec);
-        super(start ? -1 /* Side.InlineIncStart */ : 500000000 /* Side.NonIncStart */, end ? 1 /* Side.InlineIncEnd */ : -600000000 /* Side.NonIncEnd */, null, spec);
+        super(start ? -1 /* Side.InlineIncStart */ : 500000000 /* Side.NonIncStart */, end ? 1 /* Side.InlineIncEnd */ : -6e8 /* Side.NonIncEnd */, null, spec);
         this.tagName = spec.tagName || "span";
         this.class = spec.class || "";
         this.attrs = spec.attributes || null;
@@ -5631,7 +5630,7 @@ class MarkDecoration extends Decoration {
 MarkDecoration.prototype.point = false;
 class LineDecoration extends Decoration {
     constructor(spec) {
-        super(-200000000 /* Side.Line */, -200000000 /* Side.Line */, null, spec);
+        super(-2e8 /* Side.Line */, -2e8 /* Side.Line */, null, spec);
     }
     eq(other) {
         return other instanceof LineDecoration &&
@@ -7096,12 +7095,12 @@ class DocView extends ContentView {
             // to detect that situation.
             let track = browser.chrome || browser.ios ? { node: observer.selectionRange.focusNode, written: false } : undefined;
             this.sync(this.view, track);
-            this.flags &= ~7 /* ViewFlag.Dirty */;
+            this.flags &= -8 /* ViewFlag.Dirty */;
             if (track && (track.written || observer.selectionRange.focusNode != track.node))
                 this.forceSelection = true;
             this.dom.style.height = "";
         });
-        this.markedForComposition.forEach(cView => cView.flags &= ~8 /* ViewFlag.Composition */);
+        this.markedForComposition.forEach(cView => cView.flags &= -9 /* ViewFlag.Composition */);
         let gaps = [];
         if (this.view.viewport.from || this.view.viewport.to < this.view.state.doc.length)
             for (let child of this.children)
@@ -9456,7 +9455,7 @@ class HeightMap {
         this.flags = flags;
     }
     get outdated() { return (this.flags & 2 /* Flag.Outdated */) > 0; }
-    set outdated(value) { this.flags = (value ? 2 /* Flag.Outdated */ : 0) | (this.flags & ~2 /* Flag.Outdated */); }
+    set outdated(value) { this.flags = (value ? 2 /* Flag.Outdated */ : 0) | (this.flags & -3 /* Flag.Outdated */); }
     setHeight(height) {
         if (this.height != height) {
             if (Math.abs(this.height - height) > Epsilon)

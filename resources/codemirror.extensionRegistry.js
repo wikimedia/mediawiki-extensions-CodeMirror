@@ -88,6 +88,21 @@ class CodeMirrorExtensionRegistry {
 			'lineNumbering'
 		];
 
+		/**
+		 * Map of reconfiguration values and the {@link Extension extensions} that should be
+		 * applied when a compartmentalized extension is reconfigured with that value.
+		 *
+		 * Keyed by extension name, then by 'reconfig value' and then the implementing Extension.
+		 *
+		 * This is used when we need to pass around the CodeMirrorExtensionRegistry but keep
+		 * track of the Extension values elsewhere.
+		 *
+		 * @see CodeMirrorExtensionRegistry#reconfigure
+		 * @type {Map<string, Map>}
+		 * @internal
+		 */
+		this.reconfigValueMap = new Map();
+
 		// Create a compartment for each extension.
 		for ( const extName of this.names ) {
 			// Skip if the extension is not supported by VE.
@@ -170,6 +185,19 @@ class CodeMirrorExtensionRegistry {
 	}
 
 	/**
+	 * Register an extension with an initial value from the
+	 * {@link #reconfigValueMap reconfiguration value map}.
+	 *
+	 * @param {string} name
+	 * @param {EditorView} view
+	 * @param {string} reconfigValue
+	 * @internal
+	 */
+	registerFromValueMap( name, view, reconfigValue ) {
+		this.register( name, this.reconfigValueMap.get( name ).get( reconfigValue ), view, true );
+	}
+
+	/**
 	 * Reconfigure a compartmentalized extension with a new {@link Extension}.
 	 *
 	 * @example
@@ -194,19 +222,38 @@ class CodeMirrorExtensionRegistry {
 	}
 
 	/**
+	 * Reconfigure a compartmentalized extension with a value from the
+	 * {@link #reconfigValueMap reconfiguration value map}.
+	 *
+	 * @param {string} name
+	 * @param {EditorView} view
+	 * @param {string} reconfigValue
+	 * @internal
+	 */
+	reconfigureFromValueMap( name, view, reconfigValue ) {
+		this.reconfigure( name, view, this.reconfigValueMap.get( name ).get( reconfigValue ) );
+	}
+
+	/**
 	 * Toggle on or off an extension.
 	 *
 	 * @param {string} name
 	 * @param {EditorView} view
-	 * @param {boolean} [force] `true` to enable, `false` to disable, `undefined` to toggle.
+	 * @param {PrefValue} [force] `true` to enable, `false` to disable, `undefined` to toggle,
+	 *   or a string value to force-enable with the given value from the
+	 *   {@link #reconfigValueMap reconfiguration value map}.
 	 */
 	toggle( name, view, force ) {
 		if ( !this.isRegistered( name, view ) ) {
 			mw.log.warn( `[CodeMirror] Extension "${ name }" is not registered.` );
 			return;
 		}
-		const toEnable = force === undefined ? !this.isEnabled( name, view ) : force;
-		this.reconfigure( name, view, toEnable ? this.extensions[ name ] : [] );
+		if ( typeof force === 'string' ) {
+			this.reconfigureFromValueMap( name, view, force );
+		} else {
+			const toEnable = force === undefined ? !this.isEnabled( name, view ) : force;
+			this.reconfigure( name, view, toEnable ? this.extensions[ name ] : [] );
+		}
 	}
 
 	/**

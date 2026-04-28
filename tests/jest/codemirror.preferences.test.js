@@ -48,11 +48,13 @@ describe( 'CodeMirrorPreferences', () => {
 	} );
 
 	it( 'fetchPreferences', () => {
+		// bazExtension has no default (say it's for non-mediawiki mode, and we're editing MW)
 		mockDefaultPreferences();
-		mockUserPreferences( { fooExtension: 1 } );
+		mockUserPreferences( { fooExtension: 1, bazExtension: 'default' } );
 		const preferences = getCodeMirrorPreferences();
 		expect( preferences.fetchPreferences() ).toStrictEqual( {
 			fooExtension: true,
+			bazExtension: 'default',
 			barExtension: true
 		} );
 	} );
@@ -126,12 +128,27 @@ describe( 'CodeMirrorPreferences', () => {
 			.toHaveBeenCalledWith( 'codemirror-preferences', '{"lineNumbering":0}' );
 	} );
 
+	it( 'setPreference (non-boolean)', () => {
+		mockDefaultPreferences( { bazExtension: true, theme: 'default' } );
+		mockUserPreferences( { theme: 'abyss' } );
+		const preferences = getCodeMirrorPreferences( {
+			bazExtension: EditorView.theme(),
+			theme: EditorView.theme()
+		} );
+		expect( preferences.preferences.bazExtension ).toStrictEqual( true );
+		expect( preferences.preferences.theme ).toStrictEqual( 'abyss' );
+		preferences.setPreference( 'theme', 'light' );
+		expect( mw.user.options.set )
+			.toHaveBeenCalledWith( 'codemirror-preferences', '{"theme":"light"}' );
+	} );
+
 	it( 'getPreference', () => {
-		mockDefaultPreferences();
-		mockUserPreferences( { barExtension: 0 } );
+		mockDefaultPreferences( { fooExtension: false, barExtension: true, bazExtension: 'default' } );
+		mockUserPreferences( { barExtension: 0, bazExtension: 'abyss' } );
 		const preferences = getCodeMirrorPreferences();
 		expect( preferences.getPreference( 'fooExtension' ) ).toStrictEqual( false );
 		expect( preferences.getPreference( 'barExtension' ) ).toStrictEqual( false );
+		expect( preferences.getPreference( 'bazExtension' ) ).toStrictEqual( 'abyss' );
 	} );
 
 	it( 'getPreference (from old mode ID format)', () => {
@@ -159,10 +176,11 @@ describe( 'CodeMirrorPreferences', () => {
 		mockDefaultPreferences();
 		mockUserPreferences( null );
 		expect( getCodeMirrorPreferences().hasNonDefaultPreferences() ).toBeFalsy();
-		mockUserPreferences( { fooExtension: 1 } );
+		mockDefaultPreferences( { fooExtension: 'default' } );
+		mockUserPreferences( { fooExtension: 'custom' } );
 		const preferences = getCodeMirrorPreferences();
 		expect( preferences.hasNonDefaultPreferences() ).toBeTruthy();
-		preferences.setPreference( 'fooExtension', false );
+		preferences.setPreference( 'fooExtension', 'default' );
 		expect( preferences.hasNonDefaultPreferences() ).toBeFalsy();
 	} );
 
@@ -178,18 +196,42 @@ describe( 'CodeMirrorPreferences', () => {
 		expect( preferences.extensionRegistry.isRegistered( 'bazExtension', view ) ).toBeTruthy();
 	} );
 
+	it( 'registerExtensionFromValueMap', () => {
+		mockDefaultPreferences( { fooExtension: false, bazExtension: 'default' } );
+		mockUserPreferences( { fooExtension: true, bazExtension: 'custom' } );
+		const preferences = getCodeMirrorPreferences();
+		const customExt = EditorView.theme();
+		preferences.extensionRegistry.reconfigValueMap.set( 'bazExtension',
+			new Map( [
+				[ 'default', EditorView.theme() ],
+				[ 'custom', customExt ]
+			] )
+		);
+		const view = new EditorView();
+		preferences.registerExtensionFromValueMap( 'bazExtension', view );
+		expect( preferences.extensionRegistry.get( 'bazExtension' ).inner ).toBe( customExt );
+		expect( () => preferences.registerExtensionFromValueMap( 'fooExtension', view ) )
+			.toThrow( '[CodeMirror] Registering "fooExtension" ' +
+				'from reconfig value map with a non-string value' );
+	} );
+
 	it( 'toggleExtension', () => {
-		mockDefaultPreferences();
+		mockDefaultPreferences( { fooExtension: false, barExtension: true, bazExtension: 'default' } );
 		mockUserPreferences( { fooExtension: 1, barExtension: 1 } );
 		const preferences = getCodeMirrorPreferences();
 		const view = new EditorView();
 		preferences.registerExtension( 'fooExtension', EditorView.theme(), view );
 		preferences.registerExtension( 'barExtension', EditorView.theme(), view );
+		preferences.registerExtension( 'bazExtension', EditorView.theme(), view );
 		preferences.toggleExtension( 'fooExtension', view );
 		expect( preferences.extensionRegistry.isEnabled( 'fooExtension', view ) ).toBeFalsy();
 		expect( preferences.extensionRegistry.isEnabled( 'barExtension', view ) ).toBeTruthy();
+		expect( preferences.extensionRegistry.isEnabled( 'bazExtension', view ) ).toBeTruthy();
 		preferences.toggleExtension( 'barExtension', view );
 		expect( preferences.extensionRegistry.isEnabled( 'barExtension', view ) ).toBeFalsy();
+		expect( () => preferences.toggleExtension( 'bazExtension', view ) )
+			.toThrow( '[CodeMirror] Toggling the non-boolean preference "default"' );
+		expect( preferences.extensionRegistry.isEnabled( 'bazExtension', view ) ).toBeTruthy();
 	} );
 
 	it( 'extension', () => {
