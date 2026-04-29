@@ -7,7 +7,8 @@
 			"PerfektesChaos",
 			"TMg",
 			"TomatoCake",
-			"Inkowik"
+			"Inkowik",
+			"Brettchenweber"
 		]
 	},
 	"codemirror-desc": "Ermöglicht Syntaxhervorhebungen im Wikitext-Editor",
@@ -104,7 +105,7 @@
 	"codemirror-keymap-heading-n": "Überschrift $1",
 	"codemirror-keymap-search": "Suchen",
 	"codemirror-keymap-find": "Suchen und Ersetzen",
-	"codemirror-keymap-selectnext": "Nächstes Treffer auswählen",
+	"codemirror-keymap-selectnext": "Nächsten Treffer auswählen",
 	"codemirror-keymap-insert": "Einfügen",
 	"codemirror-keymap-blankline": "Leere Zeile",
 	"codemirror-keymap-reference": "Einzelnachweis",
