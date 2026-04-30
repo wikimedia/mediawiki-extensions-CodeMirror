@@ -349,6 +349,7 @@ class CodeMirror {
 			this.dirExtension,
 			this.searchExtension,
 			this.domEventHandlersExtension,
+			this.columnGuideExtension,
 			this.preferences.extension,
 			this.keymap.extension,
 			EditorState.readOnly.of( this.readOnly ),
@@ -757,6 +758,29 @@ class CodeMirror {
 			).extension,
 			this.customLinters
 		];
+	}
+
+	/**
+	 * This extension adds a vertical column guide to the editor at column 80.
+	 *
+	 * @type {Extension}
+	 * @protected
+	 * @stable to call
+	 */
+	get columnGuideExtension() {
+		if ( this.mode === 'mediawiki' ) {
+			return [];
+		}
+		const color = 'var(--border-color-subtle)';
+		return EditorView.theme( {
+			'.cm-content': {
+				backgroundImage: `linear-gradient(${ color },${ color })`,
+				// 6px is the line padding.
+				backgroundPosition: 'calc(80ch + 6px) 0',
+				backgroundRepeat: 'no-repeat',
+				backgroundSize: '1px 100%'
+			}
+		} );
 	}
 
 	/* eslint-disable max-len */
