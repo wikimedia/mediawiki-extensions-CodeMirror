@@ -26,6 +26,7 @@ const {
 	highlightTrailingWhitespace,
 	highlightWhitespace,
 	history,
+	indentLess,
 	indentOnInput,
 	indentUnit,
 	insertTab,
@@ -371,7 +372,7 @@ class CodeMirror {
 				indentOnInput(),
 				// Make the [Tab] key inserts a tab character when no text is selected,
 				// or indent the selected lines for languages other than MediaWiki.
-				keymap.of( [ { key: 'Tab', run: insertTab } ] ),
+				keymap.of( [ { key: 'Tab', run: insertTab, shift: indentLess } ] ),
 				keymap.of( foldKeymap )
 			);
 		}
