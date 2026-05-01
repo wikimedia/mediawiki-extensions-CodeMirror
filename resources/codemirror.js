@@ -47,6 +47,7 @@ const CodeMirrorPreferences = require( './codemirror.preferences.js' );
 const CodeMirrorKeymap = require( './codemirror.keymap.js' );
 const CodeMirrorExtensionRegistry = require( './codemirror.extensionRegistry.js' );
 const bracketMatching = require( './codemirror.matchbrackets.js' );
+const indentGuides = require( './codemirror.indentGuides.js' );
 require( './ext.CodeMirror.data.js' );
 
 /**
@@ -350,6 +351,7 @@ class CodeMirror {
 			this.searchExtension,
 			this.domEventHandlersExtension,
 			this.columnGuideExtension,
+			this.indentGuidesExtension,
 			this.preferences.extension,
 			this.keymap.extension,
 			EditorState.readOnly.of( this.readOnly ),
@@ -505,6 +507,15 @@ class CodeMirror {
 	}
 
 	/**
+	 * This extension adds indent guides to the CodeMirror editor.
+	 *
+	 * @type {Extension}
+	 */
+	get indentGuidesExtension() {
+		return this.mode === 'mediawiki' ? [] : indentGuides( this.fontClass );
+	}
+
+	/**
 	 * This extension adds bracket matching to the CodeMirror editor.
 	 *
 	 * @type {Extension}
@@ -564,6 +575,22 @@ class CodeMirror {
 	}
 
 	/**
+	 * Text editor font preferences for the MediaWiki mode, or monospace font for other modes.
+	 *
+	 * @type {string|undefined}
+	 * @private
+	 * @ignore
+	 */
+	get fontClass() {
+		const fontClass = Array.from( this.textarea.classList )
+			.find( ( style ) => style.startsWith( 'mw-editfont-' ) );
+		if ( fontClass ) {
+			return this.mode === 'mediawiki' ? fontClass : 'mw-editfont-monospace';
+		}
+		return undefined;
+	}
+
+	/**
 	 * This specifies which attributes get added to the CodeMirror contenteditable `.cm-content`.
 	 * Subclasses are safe to override this method, but attributes here are considered vital.
 	 *
@@ -576,10 +603,9 @@ class CodeMirror {
 		const classList = [];
 
 		// T245568: Sync text editor font preferences with CodeMirror.
-		const fontClass = Array.from( this.textarea.classList )
-			.find( ( style ) => style.startsWith( 'mw-editfont-' ) );
+		const { fontClass } = this;
 		if ( fontClass ) {
-			classList.push( this.mode === 'mediawiki' ? fontClass : 'mw-editfont-monospace' );
+			classList.push( fontClass );
 		}
 
 		// Add colorblind mode if preference is set.

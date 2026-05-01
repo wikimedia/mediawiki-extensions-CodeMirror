@@ -134,6 +134,7 @@
 				"codemirror.codex.js",
 				"codemirror.child.js",
 				"codemirror.matchbrackets.js",
+				"codemirror.indentGuides.js",
 				{
 					"name": "ext.CodeMirror.data.js",
 					"callback": "MediaWiki\\Extension\\CodeMirror\\DataScript::makeScript"
