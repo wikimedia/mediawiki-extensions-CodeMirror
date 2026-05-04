@@ -5,6 +5,7 @@
 			"Diyapazon",
 			"LisafBia",
 			"SaldırganSincap",
+			"ToprakM",
 			"Vito Genovese"
 		]
 	},
@@ -23,5 +24,6 @@
 	"codemirror-replace-placeholder": "Değiştir",
 	"codemirror-replace-all": "Hepsini değiştir",
 	"codemirror-done": "Bitti",
-	"prefs-accessibility": "Erişilebilirlik"
+	"prefs-accessibility": "Erişilebilirlik",
+	"codemirror-wikilint-decode": "deşifre"
 }
