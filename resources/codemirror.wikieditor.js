@@ -109,7 +109,10 @@ class CodeMirrorWikiEditor extends CodeMirror {
 									framed: false,
 									classes: [ 'tool', 'cm-mw-toggle-wikieditor' ]
 								} );
-								button.on( 'change', () => this.toggle() );
+								button.on( 'change', () => {
+									this.toggle();
+									this.setCodeMirrorPreference( this.isActive );
+								} );
 								return button.$element;
 							}
 						}
@@ -182,7 +185,6 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	activate() {
 		super.activate();
 
-		this.setCodeMirrorPreference( true );
 		this.addRealtimePreviewHandler();
 
 		// Hijack the search button to open the CodeMirror search panel
@@ -216,8 +218,6 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	 */
 	deactivate() {
 		super.deactivate();
-
-		this.setCodeMirrorPreference( false );
 
 		if ( this.mode === 'mediawiki' ) {
 			// Restore original search button.
