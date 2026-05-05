@@ -13,7 +13,7 @@
 	"codemirror-toggle-label": "Syntaxis accentueren",
 	"codemirror-toggle-label-short": "Syntaxis",
 	"codemirror-prefs-summary": "Op de [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror hulppagina] kunt u meer over deze functie lezen.",
-	"codemirror-prefs-enable": "Syntaxiskleuring inschakelen",
+	"codemirror-prefs-enable": "Syntaxiskleuring voor wikitekst inschakelen",
 	"codemirror-v6-prefs-colorblind": "Kleurenblindvriendelijk schema gebruiken",
 	"codemirror-prefs-colorblind": "Schakel een kleurenblindvriendelijk schema in voor syntaxisaccentuering bij het bewerken van wikitekst",
 	"codemirror-prefs-colorblind-help": "Als u een gadget gebruikt voor syntaxis-accentuering, werkt deze voorkeur niet.",

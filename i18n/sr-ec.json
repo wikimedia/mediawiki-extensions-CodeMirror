@@ -12,7 +12,7 @@
 	"codemirror-desc": "Омогућава истицање синтаксе у уређивачу викитекста",
 	"codemirror-toggle-label": "Истицање синтаксе",
 	"codemirror-toggle-label-short": "Синтакса",
-	"codemirror-prefs-enable": "Омогући истицање синтаксе",
+	"codemirror-prefs-enable": "Омогући истицање синтаксе за викитекст",
 	"codemirror-find": "Пронађи",
 	"codemirror-next": "Пронађи следеће",
 	"codemirror-previous": "Пронађи претходно",
