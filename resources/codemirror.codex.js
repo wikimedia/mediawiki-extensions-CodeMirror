@@ -163,7 +163,7 @@ class CodeMirrorCodex {
 		labelElement.htmlFor = id;
 		const innerSpan = document.createElement( 'span' );
 		innerSpan.className = 'cdx-label__label__text';
-		// eslint-disable-next-line mediawiki/msg-doc
+
 		innerSpan.textContent = mw.msg( label );
 		labelElement.appendChild( innerSpan );
 		labelWrapper.appendChild( labelElement );
@@ -178,7 +178,7 @@ class CodeMirrorCodex {
 		for ( const [ optionLabel, value ] of options ) {
 			const option = document.createElement( 'option' );
 			option.value = value;
-			// eslint-disable-next-line mediawiki/msg-doc
+
 			option.textContent = mw.msg( optionLabel );
 			if ( value === selected ) {
 				option.selected = true;

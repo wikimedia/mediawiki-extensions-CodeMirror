@@ -115,7 +115,7 @@ class CodeMirrorCss extends CodeMirrorMode {
 					renderMessage() {
 						tmp.set( '', this.message );
 						const span = document.createElement( 'span' );
-						// eslint-disable-next-line mediawiki/msg-doc
+
 						span.innerHTML = new mw.Message( tmp, '' ).parse();
 						return span;
 					},

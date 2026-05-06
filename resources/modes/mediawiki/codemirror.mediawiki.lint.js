@@ -211,7 +211,7 @@ const lintApi = async ( { state: { doc } } ) => {
 			return {
 				severity: 'info',
 				source: 'Parsoid',
-				// eslint-disable-next-line mediawiki/msg-doc
+
 				message: mw.messages.exists( msgKey ) ? mw.msg( msgKey ) : type,
 				from,
 				to

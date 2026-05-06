@@ -146,10 +146,10 @@ class CodeMirrorLint extends CodeMirrorPanel {
 		// * cm-mw-panel--status-warning
 		// * cm-mw-panel--status-info
 		const marker = document.createElement( 'div' );
-		// eslint-disable-next-line mediawiki/class-doc
+
 		marker.className = `cm-mw-panel--status-${ severity }`;
 		const icon = document.createElement( 'div' );
-		// eslint-disable-next-line mediawiki/class-doc
+
 		icon.className = `cm-lint-marker-${ severity }`;
 		const count = document.createElement( 'div' );
 		count.textContent = '0';
