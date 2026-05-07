@@ -15,6 +15,7 @@ const optionName = mode === 'mediawiki' ? 'usecodemirror' : 'usecodemirror-code'
 const useCodeMirror = mw.user.options.get( optionName ) > 0;
 const resourceLoaderModules = mw.config.get( 'cmRLModules' );
 const useWikiEditor = resourceLoaderModules.includes( 'ext.CodeMirror.WikiEditor' );
+const cmTextarea = mw.config.get( 'cmTextarea', null );
 
 /**
  * Get a LanguageSupport instance for the current mode.
@@ -55,7 +56,6 @@ async function init() {
 			initChildren( cm );
 		} );
 	} else {
-		const cmTextarea = mw.config.get( 'cmTextarea' );
 		const textarea = cmTextarea ?
 			document.querySelector( cmTextarea ) :
 			// This textarea is never added to the DOM.
@@ -90,14 +90,20 @@ function initChildren( primaryInstance ) {
 	} );
 }
 
-// Only add the 'Syntax' toolbar button to WikiEditor if CodeMirror is disabled.
-if ( useWikiEditor && !useCodeMirror ) {
+/**
+ * Add a 'Syntax' toggle button to the WikiEditor toolbar.
+ *
+ * NOTE: This code is duplicated in CodeMirrorWikiEditor#initialize().
+ * This minor sacrifice is made to avoid loading all the modules when the user may have
+ * no intention of using CodeMirror.
+ *
+ * @private
+ */
+function addCodeMirrorButton() {
 	// We don't need to use `using()` since 'wikiEditor.toolbarReady'
 	// will only fire after ext.wikiEditor is loaded.
 	mw.loader.load( 'ext.wikiEditor' );
-	// NOTE: This code is duplicated in CodeMirrorWikiEditor#initialize().
-	// This minor sacrifice is made to avoid loading all the modules when the user may have
-	// no intention of using CodeMirror.
+
 	mw.hook( 'wikiEditor.toolbarReady' ).add( ( $textarea ) => {
 		$textarea.wikiEditor( 'addToToolbar', { section: 'main', groups: {
 			codemirror: {
@@ -125,8 +131,7 @@ if ( useWikiEditor && !useCodeMirror ) {
 
 		// Hide non-applicable buttons until WikiEditor better supports a read-only mode (T188817).
 		if ( mw.config.get( 'cmReadOnly' ) ) {
-			// eslint-disable-next-line no-jquery/no-global-selector
-			$( '#wpTextbox1' ).data( 'wikiEditor-context' ).$ui.addClass( 'ext-codemirror-readonly' );
+			$textarea.data( 'wikiEditor-context' ).$ui.addClass( 'ext-codemirror-readonly' );
 		}
 		// Similarly hide non-applicable buttons for non-wikitext.
 		// CSS classes used here may include but are not limited to:
@@ -134,10 +139,18 @@ if ( useWikiEditor && !useCodeMirror ) {
 		// * ext-codemirror-javascript
 		// * ext-codemirror-css
 		// * ext-codemirror-json
-		// eslint-disable-next-line no-jquery/no-global-selector
-		$( '#wpTextbox1' ).data( 'wikiEditor-context' ).$ui.addClass( `ext-codemirror-${ mode }` );
+		$textarea.data( 'wikiEditor-context' ).$ui.addClass( `ext-codemirror-${ mode }` );
 	} );
-} else {
-	// Otherwise load all the modules and initialize CodeMirror.
-	init();
+}
+
+// Value of 0 means there intentionally is no primary textarea (i.e. Special:SecurePoll/translate).
+// Guard against there being no textarea, i.e. "Section editing not supported" error (T424877).
+if ( cmTextarea === 0 || document.querySelector( cmTextarea ) ) {
+	// Only add the 'Syntax' toolbar button to WikiEditor if CodeMirror is disabled.
+	if ( useWikiEditor && !useCodeMirror ) {
+		addCodeMirrorButton();
+	} else {
+		// Otherwise load all the modules and initialize CodeMirror.
+		init();
+	}
 }
