@@ -25,6 +25,7 @@
 	"codemirror-prefs-autocomplete": "Ota käyttöön automaattinen täydennys",
 	"codemirror-prefs-bidiisolation": "Eristä kaksisuuntainen teksti",
 	"codemirror-prefs-bracketmatching": "Ota käyttöön sulkeiden täsmäys",
+	"codemirror-prefs-keymap": "pikanäppäimet",
 	"codemirror-prefs-linenumbering": "Näytä rivinumerot",
 	"codemirror-prefs-linewrapping": "Rivitys",
 	"codemirror-prefs-activeline": "Korosta aktiivinen rivi",

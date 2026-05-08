@@ -9,6 +9,9 @@
 	"codemirror-toggle-label-short": "Syntaxe",
 	"codemirror-prefs-summary": "Tu pote leger plus sur iste function sur le [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror pagina de adjuta].",
 	"codemirror-prefs-enable": "Activar le coloration syntactic pro wikitexto",
+	"codemirror-prefs-enable-help": "Se applica al modification de paginas de contento e de patronos.",
+	"codemirror-prefs-enable-code": "Activar le coloration syntactic pro codice",
+	"codemirror-prefs-enable-code-help": "Se applica al modification de codice como JavaScript, CSS o modulos Lua.",
 	"codemirror-prefs-title": "Preferentias de coloration syntactic",
 	"codemirror-prefs-help": "adjuta",
 	"codemirror-prefs-panel-full": "preferentias complete",
@@ -24,6 +27,7 @@
 	"codemirror-prefs-bidiisolation": "Isolar texto bidirectional",
 	"codemirror-prefs-bracketmatching": "Mitter in evidentia le parentheses correspondente",
 	"codemirror-prefs-closebrackets": "Clauder automaticamente le parentheses",
+	"codemirror-prefs-keymap": "claves accelerator",
 	"codemirror-prefs-linenumbering": "Monstrar numeros de linea",
 	"codemirror-prefs-linewrapping": "Ruptura de lineas",
 	"codemirror-prefs-lint": "Applicar Lint al codice",
@@ -208,5 +212,7 @@
 	"codemirror-wikilint-vertical-alignment": "alineamento vertical",
 	"codemirror-wikilint-whitespace": "inserer un spatio",
 	"codemirror-potentially-slow": "pote esser lente",
-	"codemirror-validate-js-syntaxerror": "Error de syntaxe al columna $1 sur le linea $2: $3"
+	"codemirror-validate-js-syntaxerror": "Error de syntaxe al columna $1 sur le linea $2: $3",
+	"codemirror-ve-limit-exceeded": "Le documento es troppo grande pro le coloration syntactic e ha essite disactivate.",
+	"codemirror-ve-limit-exceeded-info": "Plus information"
 }
