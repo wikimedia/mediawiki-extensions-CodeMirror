@@ -30,7 +30,7 @@
 	"codemirror-match-case": "Зачитане на регистъра",
 	"codemirror-regexp": "Регулярен израз",
 	"codemirror-regexp-invalid": "Неправилен регулярен израз",
-	"codemirror-by-word": "По дума",
+	"codemirror-by-word": "По цяла дума",
 	"codemirror-replace": "Замяна",
 	"codemirror-replace-placeholder": "Замяна",
 	"codemirror-replace-all": "Замяна на всички",
