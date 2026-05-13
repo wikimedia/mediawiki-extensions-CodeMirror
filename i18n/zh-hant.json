@@ -11,7 +11,8 @@
 			"Winston Sung",
 			"Xiplus",
 			"沈澄心",
-			"Cookai1205"
+			"Cookai1205",
+			"Kelly Hsueh"
 		]
 	},
 	"codemirror-desc": "提供 wikitext 編輯器語法醒目標示",
@@ -32,8 +33,8 @@
 	"codemirror-prefs-activeline": "突顯游標所在行",
 	"codemirror-prefs-specialchars": "顯示特殊字元",
 	"codemirror-prefs-whitespace": "突顯空白字元",
-	"codemirror-prefs-colorblind": "編輯wikitext時，啟用對色盲用戶友好的語法高亮配色方案",
-	"codemirror-prefs-colorblind-help": "如果您的語法高亮功能由小工具提供，本設置將不起作用。",
+	"codemirror-prefs-colorblind": "編輯wikitext時，啟用對色盲用戶友好的語法醒目標示配色方案",
+	"codemirror-prefs-colorblind-help": "如果您的語法醒目標示功能由小工具提供，本設置將不起作用。",
 	"codemirror-close": "關閉",
 	"codemirror-find": "尋找",
 	"codemirror-next": "尋找下一個",
@@ -131,7 +132,7 @@
 	"codemirror-keymap-crosshair": "按住 $1 並拖曳來進行矩形選擇。",
 	"codemirror-keymap-openlinks": "按住 $1 並點擊頁面標題與 URL 來在新分頁開啟。",
 	"prefs-accessibility": "無障礙",
-	"prefs-syntax-highlighting": "語法突顯",
+	"prefs-syntax-highlighting": "語法醒目標示",
 	"codemirror-beta-feature-title": "增強版語法醒目標示",
 	"codemirror-beta-feature-description": "提前使用新的語法醒目與編輯功能，例如代碼折疊和自動完成。"
 }

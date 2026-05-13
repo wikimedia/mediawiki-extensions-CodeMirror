@@ -56,6 +56,8 @@
 	"codemirror-special-char-escape": "Caractere de escape",
 	"codemirror-special-char-nbsp": "Espaço não-separável",
 	"codemirror-special-char-zero-width-space": "Espaço de largura zero",
+	"codemirror-special-char-zero-width-non-joiner": "Não-conector de largura zero",
+	"codemirror-special-char-zero-width-joiner": "Conector de largura zero",
 	"codemirror-special-char-left-to-right-mark": "Marca da esquerda para a direita",
 	"codemirror-special-char-right-to-left-mark": "Marca da direita para a esquerda",
 	"codemirror-special-char-line-separator": "Separador de linha",
