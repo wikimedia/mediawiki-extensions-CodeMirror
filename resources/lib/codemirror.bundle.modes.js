@@ -6344,7 +6344,7 @@ function readBracket(stream) {
 function normal(stream, state) {
   var ch = stream.next();
   if (ch == "-" && stream.eat("-")) {
-    if (stream.eat("[") && stream.eat("["))
+    if (stream.eat("[") && /[\[=]/.test(stream.peek()))
       return (state.cur = bracketed(readBracket(stream), "comment"))(stream, state);
     stream.skipToEnd();
     return "comment";
