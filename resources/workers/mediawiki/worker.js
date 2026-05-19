@@ -14,6 +14,8 @@ const infoRules = [
 ];
 
 const rules = {
+	'arg-in-ext': 0,
+	'blank-alt': 0,
 	'fostered-content': [
 		1,
 		{ transclusion: 0 }
@@ -28,6 +30,7 @@ const rules = {
 		}
 	],
 	'insecure-style': 0,
+	'invalid-url': 0,
 	'lonely-apos': [
 		1,
 		{
@@ -51,6 +54,8 @@ const rules = {
 			unknownImageParameter: 0
 		}
 	],
+	'required-attr': 0,
+	'syntax-like': 0,
 	'unmatched-tag': 0
 };
 
@@ -98,10 +103,7 @@ const lint = ( wikitext ) => {
 	if ( last.wikitext === wikitext ) {
 		return last.diagnostics;
 	}
-	const diagnostics = Parser.parse( wikitext ).lint()
-		// Temporarily filter out "nowrap" attribute which is valid but obsolete
-		.filter( ( { rule, startIndex, endIndex } ) => rule !== 'illegal-attr' ||
-			wikitext.slice( startIndex, endIndex ).toLowerCase() !== 'nowrap' )
+	const diagnostics = Parser.lint( wikitext )
 		.map( ( diag ) => {
 			if ( infoRules.includes( diag.rule ) && diag.severity === 'warning' ) {
 				diag.severity = 'info';

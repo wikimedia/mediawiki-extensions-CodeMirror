@@ -5,16 +5,12 @@ require( '../../../resources/workers/mediawiki/worker.min.js' );
 
 const passCases = [
 	{
-		title: 'nowrap in a wikitext td cell',
-		input: '{|\n|nowrap|\n|}'
-	},
-	{
-		title: 'nowrap in a HTML th cell',
-		input: '<table><tr><th NOWRAP></th></tr></table>'
-	},
-	{
 		title: 'subst a parser function starting with "#"',
 		input: '{{subst:#invoke:foo|bar}}'
+	},
+	{
+		title: 'leading spaces in <inputbox>',
+		input: '<inputbox>\n type=create\n</inputbox>'
 	}
 ];
 
@@ -66,6 +62,28 @@ const testCases = [
 		actions: [ 'insert a namespace prefix' ]
 	},
 	{
+		title: 'invalid image parameter (invalid-gallery)',
+		input: '[[File:Foo.jpg|frame|100px]]',
+		severity: 'warning',
+		actions: [ 'remove' ]
+	},
+	{
+		title: 'missing file extension (invalid-gallery)',
+		input: '[[File:Foo]]',
+		severity: 'error'
+	},
+	{
+		title: 'invalid link in a gallery image (invalid-gallery)',
+		input: '<gallery>Foo.jpg|link=http://foo| bar</gallery>',
+		severity: 'error',
+		actions: [ 'insert a space' ]
+	},
+	{
+		title: 'invalid thumbnail filename (invalid-gallery)',
+		input: '[[File:Foo.jpg|thumb=Foo]]',
+		severity: 'error'
+	},
+	{
 		title: 'imagemap without an image (invalid-imagemap)',
 		input: '<imagemap>foo</imagemap>',
 		severity: 'error'
@@ -110,6 +128,11 @@ bar
 		input: '[https://example.com [[foo]]]',
 		severity: 'error',
 		actions: [ 'delink' ]
+	},
+	{
+		title: 'ref tag in an internal or external link (nested-link)',
+		input: '[[foo|<ref>bar</ref>baz]]',
+		severity: 'error'
 	},
 	{
 		title: 'duplicate id attribute (no-duplicate)',
@@ -215,8 +238,13 @@ bar
 		actions: [ 'remove', 'comment out' ]
 	},
 	{
+		title: 'invalid category name (no-ignored)',
+		input: '<categorytree>Foo<!-- --></categorytree>',
+		severity: 'error'
+	},
+	{
 		title: 'obsolete attribute (obsolete-attr)',
-		input: '<br clear=left>',
+		input: '<td nowrap></td>',
 		severity: 'warning'
 	},
 	{
@@ -354,16 +382,25 @@ id=a | b
 ];
 
 worker.setConfig( {
-	ext: [ 'imagemap', 'ref', 'references', 'gallery', 'inputbox', 'templatestyles' ],
-	doubleUnderscore: [ [], [] ],
+	ext: [ 'imagemap', 'ref', 'references', 'gallery', 'inputbox', 'templatestyles', 'categorytree' ],
+	doubleUnderscore: [ [], [], {}, {} ],
 	img: {
 		framed: 'framed',
 		frame: 'framed',
 		left: 'left',
-		none: 'none'
+		none: 'none',
+		'link=$1': 'link',
+		'thumb=$1': 'manualthumb',
+		$1px: 'width'
 	},
 	functionHook: [ 'invoke' ],
-	variants: [ 'foo', 'bar' ]
+	variants: [ 'foo', 'bar' ],
+	parserFunction: [
+		{ '#invoke': 'invoke' },
+		{ '!': '!', '=': '=' },
+		[],
+		[ 'subst', 'safesubst' ]
+	]
 } );
 
 const lint = ( code ) => lintSource( { state: { doc: Text.of( code.split( '\n' ) ) } } );
