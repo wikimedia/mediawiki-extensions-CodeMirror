@@ -8,6 +8,7 @@
 	"codemirror-desc": "Omogućava isticanje sintakse u uređivaču wikiteksta",
 	"codemirror-toggle-label": "Isticanje sintakse",
 	"codemirror-toggle-label-short": "Sintaksa",
+	"codemirror-prefs-summary": "Detalje o mogućnosti možete pronaći na [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror stranici pomoći].",
 	"codemirror-prefs-title": "Postavke isticanja sintakse",
 	"codemirror-prefs-help": "pomoć",
 	"codemirror-prefs-codefolding": "Uključi sklapanje koda",
