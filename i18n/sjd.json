@@ -34,7 +34,9 @@
 	"codemirror-keymap-indent": "Кугкьнэ туммплаһтҍмуж",
 	"codemirror-keymap-outdent": "Оанҍхэ туммплаһтҍмуж",
 	"codemirror-keymap-preformatted": "Э̄ввтформаһтлаһтма",
+	"codemirror-keymap-search": "О̄дзэ",
 	"codemirror-keymap-find": "Коа̄ввнэ я воа̄йхэ",
 	"codemirror-keymap-help": "Пуалэ э̄ххтътэмуж",
-	"codemirror-keymap-cursor-modifiers": "Курсэр модификатэр"
+	"codemirror-keymap-cursor-modifiers": "Курсэр модификатэр",
+	"prefs-syntax-highlighting": "Синтаксисс тӯзнэ"
 }
