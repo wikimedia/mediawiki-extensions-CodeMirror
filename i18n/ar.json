@@ -16,7 +16,7 @@
 	"codemirror-toggle-label": "إبراز التركيب",
 	"codemirror-toggle-label-short": "تركيب",
 	"codemirror-prefs-summary": "يمكنك معرفة المزيد عن هذه الميزة عبر قراءة [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror صفحة المساعدة].",
-	"codemirror-prefs-enable": "تمكين تمييز بناء الجملة",
+	"codemirror-prefs-enable": "تمكين إضفاء الضوء على النصوص النصية للويكيتكس",
 	"codemirror-prefs-title": "تفضيلات إبراز التركيب",
 	"codemirror-prefs-help": "مساعدة",
 	"codemirror-prefs-panel-full": "التفضيلات الكاملة",
