@@ -4,6 +4,8 @@
 			"AhmedG612"
 		]
 	},
+	"codemirror-keymap-lint": "Qalad kormeeraha",
+	"codemirror-keymap-next-diagnostic": "Dooro ogaanshaha xiga",
 	"codemirror-ve-limit-exceeded": "Dukumeentigu aad buu u weyn yahay, sidaas darteed iftiiminta habdhiska waa la joojiyay.",
 	"codemirror-ve-limit-exceeded-info": "Macluumaad dheeraad ah"
 }

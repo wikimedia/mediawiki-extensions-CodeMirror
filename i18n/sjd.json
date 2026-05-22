@@ -5,6 +5,7 @@
 		]
 	},
 	"codemirror-toggle-label": "Синтаксесс тӯзхуввмушш",
+	"codemirror-prefs-enable": "Ключчье викитекстэсьт синтаксисс тӯзхуввмуж",
 	"codemirror-prefs-section-references": "Тӣһтса̄нҍ",
 	"codemirror-close": "Ка̄һтӭ",
 	"codemirror-find": "О̄дзэ",
@@ -35,6 +36,7 @@
 	"codemirror-keymap-indent": "Кугкьнэ туммплаһтҍмуж",
 	"codemirror-keymap-outdent": "Оанҍхэ туммплаһтҍмуж",
 	"codemirror-keymap-preformatted": "Э̄ввтформаһтлаһтма",
+	"codemirror-keymap-search": "О̄дзэ",
 	"codemirror-keymap-find": "Коа̄ввнэ я воа̄йхэ",
 	"codemirror-keymap-help": "Пуалэ э̄ххтътэмуж",
 	"codemirror-keymap-cursor-modifiers": "Курсэр модификатэр",

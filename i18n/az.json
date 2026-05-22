@@ -3,7 +3,8 @@
 		"authors": [
 			"NMW03",
 			"Nemoralis",
-			"Toghrul Rahimli"
+			"Toghrul Rahimli",
+			"Əkrəm"
 		]
 	},
 	"codemirror-desc": "Vikimətn redaktorunda kodun rəngli olmasını təmin edir",
@@ -11,6 +12,8 @@
 	"codemirror-toggle-label-short": "Sintaksis",
 	"codemirror-prefs-summary": "Siz [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror yardım səhifəsini] oxumaqla bu funksiya haqqında ətraflı öyrənə bilərsiniz.",
 	"codemirror-prefs-enable": "Sintaksis vurğulanmasını aktivləşdir",
+	"codemirror-prefs-enable-code": "Kodlar üçün sintaktik vurğulamanı aktivləşdir",
+	"codemirror-prefs-enable-code-help": "\"JavaScript\", \"CSS\", yaxud \"Lua\" modulları kimi kod səhifələrinə şamil olunur.",
 	"codemirror-prefs-title": "Sintaksis vurğulama nizamlamaları",
 	"codemirror-prefs-help": "kömək",
 	"codemirror-prefs-section-lines": "Sətirlər",
