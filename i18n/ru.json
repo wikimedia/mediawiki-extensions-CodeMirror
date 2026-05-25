@@ -7,6 +7,7 @@
 			"Kareyac",
 			"MidnightLG",
 			"Okras",
+			"Shabe",
 			"Stjn",
 			"WindEwriX"
 		]
@@ -16,6 +17,8 @@
 	"codemirror-toggle-label-short": "Синтаксис",
 	"codemirror-prefs-summary": "Вы можете узнать больше об этой функции, прочитав [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror справочную страницу].",
 	"codemirror-prefs-enable": "Включить подсветку синтаксиса",
+	"codemirror-prefs-enable-code": "Включить подсветку синтаксиса кода",
+	"codemirror-prefs-enable-code-help": "Применяется при редактировании такого кода, как JavaScript, CSS и модули Lua.",
 	"codemirror-prefs-title": "Настройки подсветки синтаксиса",
 	"codemirror-prefs-help": "справка",
 	"codemirror-prefs-panel-full": "полные настройки",
@@ -27,6 +30,7 @@
 	"codemirror-prefs-codefolding": "Включить сворачивание кода",
 	"codemirror-prefs-autocomplete": "Включить автодополнение",
 	"codemirror-prefs-openlinks": "Открывать ссылки по клику с нажатой клавишей-модификатором (Ctrl/Cmd)",
+	"codemirror-prefs-closetags": "Включить автозакрытие тегов HTML",
 	"codemirror-prefs-bidiisolation": "Изолировать двунаправленный текст",
 	"codemirror-prefs-bracketmatching": "Включить согласование скобок",
 	"codemirror-prefs-closebrackets": "Включить автозакрытие скобок",
@@ -36,6 +40,7 @@
 	"codemirror-prefs-activeline": "Выделять активную строку",
 	"codemirror-prefs-specialchars": "Показывать специальные символы",
 	"codemirror-prefs-whitespace": "Выделять пробелы",
+	"codemirror-prefs-trailingwhitespace": "Выделить пробелы в конце строк",
 	"codemirror-prefs-autofocus": "Поместить курсор на редакторе при загрузке",
 	"codemirror-prefs-highlightrefs": "Подсветить содержимое тегов <ref>",
 	"codemirror-prefs-foldallrefs": "Свернуть все теги <ref> по умолчанию",
@@ -148,5 +153,6 @@
 	"codemirror-wikilint-bold-apostrophes": "полужирные апострофы",
 	"codemirror-wikilint-bold-in-header": "полужирный текст в заголовке раздела",
 	"codemirror-wikilint-close": "закрыть",
-	"codemirror-wikilint-comment": "закомментировать"
+	"codemirror-wikilint-comment": "закомментировать",
+	"codemirror-potentially-slow": "может работать медленно"
 }
