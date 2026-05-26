@@ -8,6 +8,8 @@
 	"codemirror-desc": "Omogućava isticanje sintakse u uređivaču wikiteksta",
 	"codemirror-toggle-label": "Isticanje sintakse",
 	"codemirror-toggle-label-short": "Sintaksa",
+	"codemirror-prefs-summary": "Detalje o mogućnosti možete pronaći na [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror stranici pomoći].",
+	"codemirror-prefs-enable": "Uključi isticanje sintakse za wikitekst",
 	"codemirror-prefs-colorblind": "Uključi temu za isticanje sintakse prilagođenu osobama koje imaju poteškoće s prepoznavanjem boja",
 	"codemirror-find": "Pronađi",
 	"codemirror-next": "Pronađi sljedeće",
