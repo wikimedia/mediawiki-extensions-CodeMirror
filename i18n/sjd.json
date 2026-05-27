@@ -5,6 +5,9 @@
 		]
 	},
 	"codemirror-toggle-label": "Синтаксесс тӯзхуввмушш",
+	"codemirror-toggle-label-short": "Синтаксесс",
+	"codemirror-prefs-title": "Синтаксез тӯссэм оа̄ссмуж",
+	"codemirror-prefs-help": "ве̄һкь",
 	"codemirror-close": "Ка̄һтӭ",
 	"codemirror-find": "О̄дзэ",
 	"codemirror-next": "О̄дзэ пуэдтӭй",
@@ -36,6 +39,7 @@
 	"codemirror-keymap-preformatted": "Э̄ввтформаһтлаһтма",
 	"codemirror-keymap-search": "О̄дзэ",
 	"codemirror-keymap-find": "Коа̄ввнэ я воа̄йхэ",
+	"codemirror-keymap-preferences": "Синтаксез тӯссэм оа̄ссмуж",
 	"codemirror-keymap-help": "Пуалэ э̄ххтътэмуж",
 	"codemirror-keymap-cursor-modifiers": "Курсэр модификатэр",
 	"prefs-syntax-highlighting": "Синтаксисс тӯзнэ"
