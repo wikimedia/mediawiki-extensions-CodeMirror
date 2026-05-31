@@ -240,7 +240,7 @@ class Hooks implements
 			$out->addModules( 'ext.CodeMirror.init' );
 		}
 
-		if ( $useCodeMirror && $useWikiEditor && $mode !== self::MODE_MEDIAWIKI && $this->isEditPage ) {
+		if ( $useWikiEditor && $mode !== self::MODE_MEDIAWIKI && $this->isEditPage ) {
 			$this->addStyleModule( $out );
 		}
 
@@ -282,6 +282,13 @@ class Hooks implements
 	private function addStyleModule( OutputPage $out ): void {
 		$out->addBodyClasses( 'cm-mw-wikieditor-loading' );
 		$out->addModuleStyles( 'ext.CodeMirror.styles' );
+
+		// Add a class to expose Realtime Preview in WikiEditor, if applicable for the current content model.
+		$rtpContentModels = ExtensionRegistry::getInstance()->getAttribute( 'WikiEditorRealtimePreviewContentModels' );
+		$contentModel = $out->getTitle()->getContentModel();
+		if ( $rtpContentModels && in_array( $contentModel, $rtpContentModels, true ) ) {
+			$out->addBodyClasses( 'cm-mw-wikieditor-realtime-preview' );
+		}
 	}
 
 	/**

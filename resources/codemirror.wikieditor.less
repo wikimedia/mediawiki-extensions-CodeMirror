@@ -85,4 +85,14 @@
 			display: none;
 		}
 	}
+
+	.cm-mw-wikieditor-realtime-preview &:not( .ext-codemirror-mediawiki ) .section-secondary .group-default {
+		/* stylelint-disable-next-line declaration-no-important */
+		display: flex !important;
+
+		// Hide duplicated search button.
+		.tool-cm-search {
+			display: none;
+		}
+	}
 }

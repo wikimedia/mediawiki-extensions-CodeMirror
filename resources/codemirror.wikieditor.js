@@ -437,7 +437,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 					icon: icon || name,
 					value: false,
 					framed: false,
-					classes: [ 'tool' ],
+					classes: [ 'tool', `tool-cm-${ name }` ],
 					title: this.keymap.getTitleWithShortcut( keyBinding, label ),
 					label,
 					invisibleLabel: true
