@@ -241,7 +241,7 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 		mw.hook( 'ext.CodeMirror.preferences.display' ).add( ( container ) => {
 			if ( container && !container.dataset.kbdHelpListener ) {
 				container.dataset.kbdHelpListener = '1';
-				container.querySelector( '.cm-mw-panel--kbd-help' ).addEventListener( 'click',
+				container.querySelector( '.cm-mw-panel__kbd-help' ).addEventListener( 'click',
 					() => this.showHelpDialog()
 				);
 			}

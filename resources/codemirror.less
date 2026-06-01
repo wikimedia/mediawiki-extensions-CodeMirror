@@ -168,24 +168,24 @@
 		position: relative;
 	}
 
-	.cm-mw-panel--help {
+	.cm-mw-panel__help {
 		font-weight: @font-weight-normal;
 	}
 
-	.cm-mw-panel--fieldset legend {
+	.cm-mw-panel__fieldset legend {
 		margin-bottom: @spacing-50;
 	}
 
-	.cm-mw-panel--text-input {
+	.cm-mw-panel__text-input {
 		flex-basis: 0;
 		flex-grow: 1;
 	}
 
-	.cm-mw-panel--checkbox {
+	.cm-mw-panel__checkbox {
 		margin-bottom: @spacing-25;
 	}
 
-	.cm-mw-panel--row {
+	.cm-mw-panel__row {
 		align-items: center;
 		column-gap: @spacing-50;
 		display: flex;
@@ -195,11 +195,11 @@
 		}
 	}
 
-	.cm-mw-panel--button {
+	.cm-mw-panel__button {
 		margin-bottom: 0;
 	}
 
-	.cm-mw-panel--toggle-button.cdx-toggle-button--toggled-on {
+	.cm-mw-panel__toggle-button.cdx-toggle-button--toggled-on {
 		&:enabled:active {
 			background-color: @color-progressive--active;
 		}
@@ -217,7 +217,7 @@
 }
 
 // Remove top margin on nested fields
-.cm-mw-panel--fieldset .cdx-field:first-of-type {
+.cm-mw-panel__fieldset .cdx-field:first-of-type {
 	margin-top: 0;
 }
 
@@ -254,24 +254,24 @@
 
 // Find and replace
 
-.cm-editor .cm-panels .cm-mw-panel--search-panel {
+.cm-editor .cm-panels .cm-mw-panel__search-panel {
 	container-type: inline-size;
 
-	.cm-mw-panel--text-input {
+	.cm-mw-panel__text-input {
 		min-width: auto;
 	}
 	// Responsive design (T386777)
 	@container ( max-width: 400px ) {
 		// NOTE: We can't use & here yet, see https://github.com/wikimedia/less.php/issues/91
-		.cm-editor .cm-panels .cm-mw-panel--row {
+		.cm-editor .cm-panels .cm-mw-panel__row {
 			flex-wrap: wrap;
 			row-gap: @spacing-50;
 
-			.cm-mw-panel--text-input {
+			.cm-mw-panel__text-input {
 				flex-basis: 100%;
 			}
 
-			.cm-mw-panel--button {
+			.cm-mw-panel__button {
 				flex-grow: 1;
 			}
 		}
@@ -316,46 +316,46 @@
 	.cdx-mixin-css-icon( @cdx-icon-close, @color-base, @size-icon-medium, true );
 }
 
-.cm-mw-panel--status-worker,
-.cm-mw-panel--status-message,
-.cm-mw-panel--status-line {
+.cm-mw-panel__status-worker,
+.cm-mw-panel__status-message,
+.cm-mw-panel__status-line {
 	padding: 0 0.3em;
 	display: table-cell;
 }
 
-.cm-mw-panel--status-worker {
+.cm-mw-panel__status-worker {
 	user-select: none;
 	cursor: pointer;
 }
 
-.cm-mw-panel--status-worker > * {
+.cm-mw-panel__status-worker > * {
 	display: table-cell;
 	white-space: nowrap;
 	padding-right: 8px;
 }
 
-.cm-mw-panel--status-worker > * > div {
+.cm-mw-panel__status-worker > * > div {
 	display: inline-block;
 	vertical-align: middle;
 }
 
-.cm-mw-panel--status-worker > * > div:first-child {
+.cm-mw-panel__status-worker > * > div:first-child {
 	margin-right: 4px;
 	height: 1em;
 }
 
-.cm-mw-panel--status-message {
+.cm-mw-panel__status-message {
 	border-left: @border-subtle;
 	border-right: @border-subtle;
 	width: 100%;
 }
 
-.cm-mw-panel--status-message .cm-diagnosticAction {
+.cm-mw-panel__status-message .cm-diagnosticAction {
 	padding-top: 0;
 	padding-bottom: 0;
 }
 
-.cm-mw-panel--status-line {
+.cm-mw-panel__status-line {
 	cursor: pointer;
 	text-align: right;
 	white-space: nowrap;

@@ -46,78 +46,78 @@ describe( 'CodeMirrorSearch', () => {
 
 	it( 'should open the search panel with Ctrl+F', () => {
 		const cm = getCmWithSearchOpen();
-		expect( cm.view.dom.querySelector( '.cm-mw-panel--search-panel' ) ).toBeTruthy();
+		expect( cm.view.dom.querySelector( '.cm-mw-panel__search-panel' ) ).toBeTruthy();
 	} );
 
 	it( 'should select all occurrences with the All button', () => {
 		const cm = getCmWithSearchOpen( 'foo bar baz foo bar foo' );
-		const panel = cm.view.dom.querySelector( '.cm-mw-panel--search-panel' );
+		const panel = cm.view.dom.querySelector( '.cm-mw-panel__search-panel' );
 		const input = panel.querySelector( '[name=cm-search]' );
 		input.value = 'foo';
 		input.dispatchEvent( new Event( 'change' ) );
-		panel.querySelector( '.cm-mw-panel--search__all' ).click();
+		panel.querySelector( '.cm-mw-panel__search-all' ).click();
 		expect( cm.view.state.selection.ranges ).toHaveLength( 3 );
 	} );
 
 	it( 'should replace the first occurrence with the Replace button', () => {
 		const cm = getCmWithSearchOpen( 'foo bar baz foo bar foo' );
-		const panel = cm.view.dom.querySelector( '.cm-mw-panel--search-panel' );
+		const panel = cm.view.dom.querySelector( '.cm-mw-panel__search-panel' );
 		const searchInput = panel.querySelector( '[name=cm-search]' );
 		searchInput.value = 'foo';
 		searchInput.dispatchEvent( new Event( 'change' ) );
 		const replaceInput = panel.querySelector( '[name=replace]' );
 		replaceInput.value = 'bar';
 		replaceInput.dispatchEvent( new Event( 'change' ) );
-		panel.querySelector( '.cm-mw-panel--search__replace' ).click();
+		panel.querySelector( '.cm-mw-panel__search-replace' ).click();
 		// Requires two clicks to first put focus on the editor.
-		panel.querySelector( '.cm-mw-panel--search__replace' ).click();
+		panel.querySelector( '.cm-mw-panel__search-replace' ).click();
 		expect( cm.textSelection.getContents() ).toStrictEqual( 'bar bar baz foo bar foo' );
 	} );
 
 	it( 'should replace all occurrences with the Replace all button', () => {
 		const cm = getCmWithSearchOpen( 'foo bar baz foo bar foo' );
-		const panel = cm.view.dom.querySelector( '.cm-mw-panel--search-panel' );
+		const panel = cm.view.dom.querySelector( '.cm-mw-panel__search-panel' );
 		const searchInput = panel.querySelector( '[name=cm-search]' );
 		searchInput.value = 'foo';
 		searchInput.dispatchEvent( new Event( 'change' ) );
 		const replaceInput = panel.querySelector( '[name=replace]' );
 		replaceInput.value = 'bar';
 		replaceInput.dispatchEvent( new Event( 'change' ) );
-		panel.querySelector( '.cm-mw-panel--search__replace-all' ).click();
+		panel.querySelector( '.cm-mw-panel__search-replace-all' ).click();
 		expect( cm.textSelection.getContents() ).toStrictEqual( 'bar bar baz bar bar bar' );
 	} );
 
 	it( 'should maintain the search query across different searches', () => {
 		const cm = getCmWithSearchOpen( 'foo bar baz foo bar foo' );
-		const panel = cm.view.dom.querySelector( '.cm-mw-panel--search-panel' );
+		const panel = cm.view.dom.querySelector( '.cm-mw-panel__search-panel' );
 		const searchInput = panel.querySelector( '[name=cm-search]' );
 		searchInput.value = 'foo';
 		searchInput.dispatchEvent( new Event( 'change' ) );
 		const replaceInput = panel.querySelector( '[name=replace]' );
 		replaceInput.value = 'bar';
 		replaceInput.dispatchEvent( new Event( 'change' ) );
-		panel.querySelector( '.cm-mw-panel--search__replace' ).click();
+		panel.querySelector( '.cm-mw-panel__search-replace' ).click();
 		// Requires two clicks to first put focus on the editor.
-		panel.querySelector( '.cm-mw-panel--search__replace' ).click();
+		panel.querySelector( '.cm-mw-panel__search-replace' ).click();
 		// Close the search panel.
-		panel.querySelector( '.cm-mw-panel--search__done' ).click();
+		panel.querySelector( '.cm-mw-panel__search-done' ).click();
 		expect( cm.textSelection.getContents() ).toBe( 'bar bar baz foo bar foo' );
-		expect( cm.view.dom.querySelector( '.cm-mw-panel--search-panel' ) ).toBeFalsy();
+		expect( cm.view.dom.querySelector( '.cm-mw-panel__search-panel' ) ).toBeFalsy();
 		// Reopen the search panel.
 		cm.view.contentDOM.dispatchEvent(
 			new KeyboardEvent( 'keydown', { key: 'f', ctrlKey: true } )
 		);
-		const newPanel = cm.view.dom.querySelector( '.cm-mw-panel--search-panel' );
+		const newPanel = cm.view.dom.querySelector( '.cm-mw-panel__search-panel' );
 		expect( newPanel.querySelector( '[name=cm-search]' ).value ).toBe( 'foo' );
 		expect( newPanel.querySelector( '[name=replace]' ).value ).toBe( 'bar' );
 		// Replace again.
-		newPanel.querySelector( '.cm-mw-panel--search__replace' ).click();
+		newPanel.querySelector( '.cm-mw-panel__search-replace' ).click();
 		expect( cm.textSelection.getContents() ).toBe( 'bar bar baz bar bar foo' );
 	} );
 
 	it( 'should update the searchQuery when toggle buttons are used', () => {
 		const cm = getCmWithSearchOpen( 'FOO bar baz foo bar foo' );
-		const panel = cm.view.dom.querySelector( '.cm-mw-panel--search-panel' );
+		const panel = cm.view.dom.querySelector( '.cm-mw-panel__search-panel' );
 		const searchInput = panel.querySelector( '[name=cm-search]' );
 		searchInput.value = 'foo';
 		searchInput.dispatchEvent( new Event( 'change' ) );

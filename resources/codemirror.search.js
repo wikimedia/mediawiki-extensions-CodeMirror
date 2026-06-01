@@ -226,11 +226,11 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 	 */
 	get panel() {
 		const container = document.createElement( 'div' );
-		container.className = 'cm-mw-panel cm-mw-panel--search-panel';
+		container.className = 'cm-mw-panel cm-mw-panel__search-panel';
 		container.addEventListener( 'keydown', this.onKeydown.bind( this ) );
 
 		const firstRow = document.createElement( 'div' );
-		firstRow.className = 'cm-mw-panel--row';
+		firstRow.className = 'cm-mw-panel__row';
 		container.appendChild( firstRow );
 
 		// Search input.
@@ -404,7 +404,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 	appendSecondRow( container ) {
 		const shouldBeDisabled = this.view.state.readOnly;
 		const row = document.createElement( 'div' );
-		row.className = 'cm-mw-panel--row';
+		row.className = 'cm-mw-panel__row';
 		container.appendChild( row );
 
 		// Replace input.
@@ -488,7 +488,7 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 				// Tabbing from the "Whole word" button should focus the editor,
 				// or the next focusable panel if there is one.
 				event.preventDefault();
-				const el = this.view.dom.querySelector( '.cm-mw-panel--search-panel' );
+				const el = this.view.dom.querySelector( '.cm-mw-panel__search-panel' );
 				if ( el && el.nextElementSibling && el.nextElementSibling.classList.contains( 'cm-panel' ) ) {
 					const input = el.nextElementSibling.querySelector( 'input' );
 					( input || el.nextElementSibling ).focus();
@@ -613,11 +613,11 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 	getButton( label, icon = null, iconOnly = false ) {
 		const button = super.getButton( label, icon, iconOnly );
 		// The following CSS classes may be used here:
-		// * cm-mw-panel--search__all
-		// * cm-mw-panel--search__replace
-		// * cm-mw-panel--search__replace-all
-		// * cm-mw-panel--search__done
-		button.classList.add( `cm-mw-panel--search__${ label.replace( 'codemirror-', '' ) }` );
+		// * cm-mw-panel__search-all
+		// * cm-mw-panel__search-replace
+		// * cm-mw-panel__search-replace-all
+		// * cm-mw-panel__search-done
+		button.classList.add( `cm-mw-panel__search-${ label.replace( 'codemirror-', '' ) }` );
 		return button;
 	}
 

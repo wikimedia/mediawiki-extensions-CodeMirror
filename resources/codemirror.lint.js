@@ -99,9 +99,9 @@ class CodeMirrorLint extends CodeMirrorPanel {
 
 	get panel() {
 		const dom = document.createElement( 'div' );
-		dom.className = 'cm-mw-panel--status';
+		dom.className = 'cm-mw-panel__status';
 		const worker = document.createElement( 'div' );
-		worker.className = 'cm-mw-panel--status-worker';
+		worker.className = 'cm-mw-panel__status-worker';
 		worker.addEventListener( 'click', () => {
 			nextDiagnostic( this.view );
 			this.view.focus();
@@ -111,9 +111,9 @@ class CodeMirrorLint extends CodeMirrorPanel {
 		const [ info, infoText ] = this.getLintMarker( 'info' );
 		worker.append( error, warning, info );
 		const message = document.createElement( 'div' );
-		message.className = 'cm-mw-panel--status-message';
+		message.className = 'cm-mw-panel__status-message';
 		const position = document.createElement( 'div' );
-		position.className = 'cm-mw-panel--status-line';
+		position.className = 'cm-mw-panel__status-line';
 		this.updatePosition( this.view.state, position );
 		position.addEventListener( 'click', () => this.gotoLine.openPanel( this.view ) );
 		dom.append( worker, message, position );
@@ -142,12 +142,12 @@ class CodeMirrorLint extends CodeMirrorPanel {
 
 	getLintMarker( severity ) {
 		// CSS class names known to be used here include:
-		// * cm-mw-panel--status-error
-		// * cm-mw-panel--status-warning
-		// * cm-mw-panel--status-info
+		// * cm-mw-panel__status--error
+		// * cm-mw-panel__status--warning
+		// * cm-mw-panel__status--info
 		const marker = document.createElement( 'div' );
 
-		marker.className = `cm-mw-panel--status-${ severity }`;
+		marker.className = `cm-mw-panel__status--${ severity }`;
 		const icon = document.createElement( 'div' );
 
 		icon.className = `cm-lint-marker-${ severity }`;

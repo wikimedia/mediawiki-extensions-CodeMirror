@@ -490,7 +490,7 @@ describe( 'CodeMirrorPreferences', () => {
 		// Show the full dialog.
 		preferences.showPreferencesDialog( view );
 		const dialog = preferences.dialog.querySelector( '.cm-mw-preferences-dialog' );
-		const fieldsets = dialog.querySelectorAll( '.cm-mw-panel--fieldset' );
+		const fieldsets = dialog.querySelectorAll( '.cm-mw-panel__fieldset' );
 		expect( fieldsets.length ).toBe( 3 );
 		expect( fieldsets[ 0 ].querySelector( 'legend' ).textContent )
 			.toBe( 'codemirror-prefs-section-lines' );

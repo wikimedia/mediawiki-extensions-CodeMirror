@@ -7,7 +7,7 @@ const cmCodex = new CodeMirrorCodex();
 describe( 'CodeMirrorCodex', () => {
 	it( 'should create a Codex TextInput', () => {
 		const [ inputWrapper, input ] = cmCodex.getTextInput( 'foo', 'bar', 'codemirror-find' );
-		expect( inputWrapper.className ).toBe( 'cdx-text-input cm-mw-panel--text-input' );
+		expect( inputWrapper.className ).toBe( 'cdx-text-input cm-mw-panel__text-input' );
 		expect( input.className ).toBe( 'cdx-text-input__input' );
 		expect( input.type ).toBe( 'text' );
 		expect( input.name ).toBe( 'foo' );
@@ -20,7 +20,7 @@ describe( 'CodeMirrorCodex', () => {
 		const buttonNoIcon = cmCodex.getButton( 'foo' );
 		expect( buttonNoIcon.tagName ).toBe( 'BUTTON' );
 		expect( buttonNoIcon.className ).toBe(
-			'cdx-button cm-mw-panel--button cdx-button--action-default cdx-button--weight-normal'
+			'cdx-button cm-mw-panel__button cdx-button--action-default cdx-button--weight-normal'
 		);
 		expect( buttonNoIcon.type ).toBe( 'button' );
 		expect( buttonNoIcon.children.length ).toBe( 0 );
@@ -30,7 +30,7 @@ describe( 'CodeMirrorCodex', () => {
 		const buttonWithIcon = cmCodex.getButton( 'foo', { icon: 'bar' } );
 		expect( buttonWithIcon.tagName ).toBe( 'BUTTON' );
 		expect( buttonWithIcon.className ).toBe(
-			'cdx-button cm-mw-panel--button cdx-button--action-default cdx-button--weight-normal'
+			'cdx-button cm-mw-panel__button cdx-button--action-default cdx-button--weight-normal'
 		);
 		expect( buttonWithIcon.type ).toBe( 'button' );
 		expect( buttonWithIcon.children.length ).toBe( 1 );
@@ -46,7 +46,7 @@ describe( 'CodeMirrorCodex', () => {
 		const buttonIconOnly = cmCodex.getButton( 'foo', { icon: 'bar', iconOnly: true } );
 		expect( buttonIconOnly.tagName ).toBe( 'BUTTON' );
 		expect( buttonIconOnly.className ).toBe(
-			'cdx-button cm-mw-panel--button cdx-button--action-default ' +
+			'cdx-button cm-mw-panel__button cdx-button--action-default ' +
 			'cdx-button--weight-normal cdx-button--icon-only'
 		);
 		expect( buttonIconOnly.type ).toBe( 'button' );
@@ -63,14 +63,14 @@ describe( 'CodeMirrorCodex', () => {
 		const buttonDestructive = cmCodex.getButton( 'foo', { action: 'destructive', weight: 'quiet' } );
 		expect( buttonDestructive.tagName ).toBe( 'BUTTON' );
 		expect( buttonDestructive.className ).toBe(
-			'cdx-button cm-mw-panel--button cdx-button--action-destructive cdx-button--weight-quiet'
+			'cdx-button cm-mw-panel__button cdx-button--action-destructive cdx-button--weight-quiet'
 		);
 		expect( buttonDestructive.type ).toBe( 'button' );
 	} );
 
 	it( 'should create a Codex Checkbox', () => {
 		const [ checkboxWrapper, checkbox ] = cmCodex.getCheckbox( 'foo', 'bar', true );
-		expect( checkboxWrapper.className ).toBe( 'cdx-checkbox cdx-checkbox--inline cm-mw-panel--checkbox' );
+		expect( checkboxWrapper.className ).toBe( 'cdx-checkbox cdx-checkbox--inline cm-mw-panel__checkbox' );
 		expect( checkboxWrapper.children.length ).toBe( 3 );
 		const labelWrapper = checkboxWrapper.children[ 2 ];
 		expect( labelWrapper.tagName ).toBe( 'DIV' );
@@ -89,7 +89,7 @@ describe( 'CodeMirrorCodex', () => {
 		const toggleButtonOn = cmCodex.getToggleButton( 'foo', 'bar', 'baz', true );
 		expect( toggleButtonOn.tagName ).toBe( 'BUTTON' );
 		expect( toggleButtonOn.className ).toBe(
-			'cdx-toggle-button cdx-toggle-button--framed cdx-toggle-button--toggled-on cm-mw-panel--toggle-button'
+			'cdx-toggle-button cdx-toggle-button--framed cdx-toggle-button--toggled-on cm-mw-panel__toggle-button'
 		);
 		expect( toggleButtonOn.type ).toBe( 'button' );
 		expect( toggleButtonOn.dataset.checked ).toBe( 'true' );
@@ -103,7 +103,7 @@ describe( 'CodeMirrorCodex', () => {
 
 		const toggleButtonOff = cmCodex.getToggleButton( 'foo', 'bar', 'baz', false );
 		expect( toggleButtonOff.className ).toBe(
-			'cdx-toggle-button cdx-toggle-button--framed cdx-toggle-button--toggled-off cm-mw-panel--toggle-button'
+			'cdx-toggle-button cdx-toggle-button--framed cdx-toggle-button--toggled-off cm-mw-panel__toggle-button'
 		);
 		expect( toggleButtonOff.type ).toBe( 'button' );
 		expect( toggleButtonOff.dataset.checked ).toBe( 'false' );
@@ -115,7 +115,7 @@ describe( 'CodeMirrorCodex', () => {
 		const field2 = document.createElement( 'p' );
 		const fieldset = cmCodex.getFieldset( 'legend text', field1, field2 );
 		expect( fieldset.tagName ).toBe( 'FIELDSET' );
-		expect( fieldset.className ).toBe( 'cm-mw-panel--fieldset cdx-field' );
+		expect( fieldset.className ).toBe( 'cm-mw-panel__fieldset cdx-field' );
 		expect( fieldset.children.length ).toBe( 3 );
 		const legend = fieldset.children[ 0 ];
 		expect( legend.tagName ).toBe( 'LEGEND' );
@@ -174,7 +174,7 @@ describe( 'CodeMirrorCodex', () => {
 			spec: { type: 'checkbox', label: 'bar', default: true },
 			expected: {
 				tagName: 'INPUT',
-				className: 'cdx-checkbox cdx-checkbox--inline cm-mw-panel--checkbox',
+				className: 'cdx-checkbox cdx-checkbox--inline cm-mw-panel__checkbox',
 				label: 'bar',
 				checked: true,
 				value: 'on',
@@ -185,14 +185,14 @@ describe( 'CodeMirrorCodex', () => {
 			spec: { type: 'text', default: 'baz', placeholder: 'placeholder text' },
 			expected: {
 				tagName: 'INPUT',
-				className: 'cdx-text-input cm-mw-panel--text-input',
+				className: 'cdx-text-input cm-mw-panel__text-input',
 				label: '',
 				value: 'baz',
 				checked: false,
 				placeholder: 'placeholder text'
 			}
 		}, {
-			title: 'select',
+			title: 'select-test',
 			spec: {
 				type: 'select',
 				label: 'bar',
@@ -204,7 +204,7 @@ describe( 'CodeMirrorCodex', () => {
 			},
 			expected: {
 				tagName: 'SELECT',
-				className: 'cdx-field cm-mw-panel--select',
+				className: 'cdx-field cm-mw-panel__select cm-mw-panel__select--select-test',
 				label: 'bar',
 				checked: undefined,
 				options: [

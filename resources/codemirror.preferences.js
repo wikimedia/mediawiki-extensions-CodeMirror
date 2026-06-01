@@ -615,14 +615,14 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 */
 	getHelpLinks() {
 		const helpSpan = document.createElement( 'span' );
-		helpSpan.className = 'cm-mw-panel--help';
+		helpSpan.className = 'cm-mw-panel__help';
 		const helpLink = document.createElement( 'a' );
 		helpLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror';
 		helpLink.target = '_blank';
 		helpLink.textContent = mw.msg( 'codemirror-prefs-help' );
 		// Click listener added in CodeMirrorKeymap since we don't have a CodeMirror instance here.
 		const shortcutLink = document.createElement( 'a' );
-		shortcutLink.className = 'cm-mw-panel--kbd-help';
+		shortcutLink.className = 'cm-mw-panel__kbd-help';
 		shortcutLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror#Keyboard_shortcuts';
 		shortcutLink.textContent = mw.msg( 'codemirror-prefs-keymap' );
 		shortcutLink.onclick = ( e ) => e.preventDefault();

@@ -21,7 +21,7 @@ class CodeMirrorCodex {
 	 */
 	getTextInput( name, value = '', placeholder = '' ) {
 		const wrapper = document.createElement( 'div' );
-		wrapper.className = 'cdx-text-input cm-mw-panel--text-input';
+		wrapper.className = 'cdx-text-input cm-mw-panel__text-input';
 		const input = document.createElement( 'input' );
 		input.className = 'cdx-text-input__input';
 		input.type = 'text';
@@ -53,7 +53,7 @@ class CodeMirrorCodex {
 			opts
 		);
 		const button = document.createElement( 'button' );
-		button.className = 'cdx-button cm-mw-panel--button';
+		button.className = 'cdx-button cm-mw-panel__button';
 		// The following CSS classes may be used here:
 		// * cdx-button--action-default
 		// * cdx-button--action-progressive
@@ -114,7 +114,7 @@ class CodeMirrorCodex {
 	 */
 	getCheckbox( name, label, checked = false ) {
 		const wrapper = document.createElement( 'span' );
-		wrapper.className = 'cdx-checkbox cdx-checkbox--inline cm-mw-panel--checkbox';
+		wrapper.className = 'cdx-checkbox cdx-checkbox--inline cm-mw-panel__checkbox';
 		const input = document.createElement( 'input' );
 		input.className = 'cdx-checkbox__input';
 		input.id = `cm-mw__${ this.getRandomId() }`;
@@ -155,7 +155,7 @@ class CodeMirrorCodex {
 	getSelect( name, label, options, selected ) {
 		const id = `cm-mw__${ this.getRandomId() }`;
 		const wrapper = document.createElement( 'div' );
-		wrapper.className = 'cdx-field cm-mw-panel--select';
+		wrapper.className = `cdx-field cm-mw-panel__select cm-mw-panel__select--${ name }`;
 		const labelWrapper = document.createElement( 'div' );
 		labelWrapper.className = 'cdx-label';
 		const labelElement = document.createElement( 'label' );
@@ -264,7 +264,7 @@ class CodeMirrorCodex {
 		// * cdx-toggle-button--toggled-on
 		// * cdx-toggle-button--toggled-off
 		btn.className = 'cdx-toggle-button cdx-toggle-button--framed ' +
-			`cdx-toggle-button--toggled-${ checked ? 'on' : 'off' } cm-mw-panel--toggle-button`;
+			`cdx-toggle-button--toggled-${ checked ? 'on' : 'off' } cm-mw-panel__toggle-button`;
 		btn.type = 'button';
 		btn.dataset.checked = String( checked );
 		btn.setAttribute( 'aria-pressed', checked );
@@ -308,7 +308,7 @@ class CodeMirrorCodex {
 	 */
 	getFieldset( legendText, ...fields ) {
 		const fieldset = document.createElement( 'fieldset' );
-		fieldset.className = 'cm-mw-panel--fieldset cdx-field';
+		fieldset.className = 'cm-mw-panel__fieldset cdx-field';
 
 		const legend = document.createElement( 'legend' );
 		legend.className = 'cdx-label';

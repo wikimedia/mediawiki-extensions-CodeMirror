@@ -78,7 +78,7 @@ class CodeMirrorGotoLine extends CodeMirrorPanel {
 	 */
 	get panel() {
 		const container = document.createElement( 'div' );
-		container.className = 'cm-mw-goto-line-panel cm-mw-panel cm-mw-panel--row';
+		container.className = 'cm-mw-goto-line-panel cm-mw-panel cm-mw-panel__row';
 		container.addEventListener( 'keydown', this.onKeydown.bind( this ) );
 
 		// Line input.

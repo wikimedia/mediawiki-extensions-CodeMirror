@@ -58,23 +58,23 @@ describe( 'CodeMirrorLint', () => {
 
 	it( 'should contain 3 parts', () => {
 		expect( dom.childElementCount ).toEqual( 3 );
-		expect( dom.firstChild.className ).toEqual( 'cm-mw-panel--status-worker' );
+		expect( dom.firstChild.className ).toEqual( 'cm-mw-panel__status-worker' );
 		expect( dom.firstChild.childElementCount ).toEqual( 3 );
-		expect( dom.firstChild.firstChild.className ).toEqual( 'cm-mw-panel--status-error' );
+		expect( dom.firstChild.firstChild.className ).toEqual( 'cm-mw-panel__status--error' );
 		expect( dom.firstChild.firstChild.lastChild.textContent ).toEqual( '0' );
-		expect( dom.firstChild.children[ 1 ].className ).toEqual( 'cm-mw-panel--status-warning' );
+		expect( dom.firstChild.children[ 1 ].className ).toEqual( 'cm-mw-panel__status--warning' );
 		expect( dom.firstChild.children[ 1 ].lastChild.textContent ).toEqual( '0' );
-		expect( dom.firstChild.lastChild.className ).toEqual( 'cm-mw-panel--status-info' );
+		expect( dom.firstChild.lastChild.className ).toEqual( 'cm-mw-panel__status--info' );
 		expect( dom.firstChild.lastChild.lastChild.textContent ).toEqual( '0' );
-		expect( dom.children[ 1 ].className ).toEqual( 'cm-mw-panel--status-message' );
-		expect( dom.lastChild.className ).toEqual( 'cm-mw-panel--status-line' );
+		expect( dom.children[ 1 ].className ).toEqual( 'cm-mw-panel__status-message' );
+		expect( dom.lastChild.className ).toEqual( 'cm-mw-panel__status-line' );
 		expect( dom.lastChild.textContent ).toEqual( '1:0' );
 	} );
 
 	it( 'should update the diagnostics count', () => {
-		const errorText = dom.querySelector( '.cm-mw-panel--status-error' ).lastChild;
-		const warningText = dom.querySelector( '.cm-mw-panel--status-warning' ).lastChild;
-		const infoText = dom.querySelector( '.cm-mw-panel--status-info' ).lastChild;
+		const errorText = dom.querySelector( '.cm-mw-panel__status--error' ).lastChild;
+		const warningText = dom.querySelector( '.cm-mw-panel__status--warning' ).lastChild;
+		const infoText = dom.querySelector( '.cm-mw-panel__status--info' ).lastChild;
 		cmLint.updateDiagnosticsCount( 'error', errorText );
 		cmLint.updateDiagnosticsCount( 'warning', warningText );
 		cmLint.updateDiagnosticsCount( 'info', infoText );
@@ -84,7 +84,7 @@ describe( 'CodeMirrorLint', () => {
 	} );
 
 	it( 'should update the diagnostic message', () => {
-		const message = dom.querySelector( '.cm-mw-panel--status-message' );
+		const message = dom.querySelector( '.cm-mw-panel__status-message' );
 		cmLint.updateDiagnosticMessage( 0, message );
 		expect( message.textContent ).toEqual( 'Error messageFixSuggestion' );
 		expect( message.querySelector( '.cm-diagnosticText-clickable' ) ).toBeNull();
@@ -122,7 +122,7 @@ describe( 'CodeMirrorLint', () => {
 				]
 			}
 		], true );
-		const message = dom.querySelector( '.cm-mw-panel--status-message' );
+		const message = dom.querySelector( '.cm-mw-panel__status-message' );
 		cmLint.updateDiagnosticMessage( 1, message );
 		expect( message.textContent ).toEqual( 'Error message' );
 		expect( message.querySelector( '.cm-diagnosticText-clickable' ) ).toBeNull();
@@ -144,7 +144,7 @@ describe( 'CodeMirrorLint', () => {
 		cmLint.gotoLine = gotoLine;
 		cmLint.view = new EditorView();
 		expect( gotoLine.input ).toBeUndefined();
-		dom.querySelector( '.cm-mw-panel--status-line' ).click();
+		dom.querySelector( '.cm-mw-panel__status-line' ).click();
 		expect( gotoLine.input ).toBeDefined();
 		expect( gotoLine.view.state.field( gotoLine.panelStateField ) ).toBeDefined();
 	} );
