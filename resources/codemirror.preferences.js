@@ -8,7 +8,6 @@ const {
 	showPanel
 } = require( 'ext.CodeMirror.lib' );
 const CodeMirrorPanel = require( './codemirror.panel.js' );
-const CodeMirrorExtensionRegistry = require( './codemirror.extensionRegistry.js' );
 require( './ext.CodeMirror.data.js' );
 
 /**
@@ -109,6 +108,15 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		 * @type {Set<string>}
 		 */
 		this.slowPreferences = new Set();
+
+		/**
+		 * If any feature calls for a form element that's not just a checkbox,
+		 * it needs to be listed here. Key is the preference name, and the value
+		 * is a {@link FormSpecifier form specifier}.
+		 *
+		 * @type {Map<string, FormSpecifier>}
+		 */
+		this.formSpecification = new Map();
 
 		/**
 		 * Fired just before {@link CodeMirrorPreferences} has been instantiated.
@@ -314,7 +322,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		}
 
 		// Only save the preferences that differ from the defaults,
-		// and use a binary representation for storage.
+		// and use a binary representation for booleans.
 		let storageObj = {};
 		for ( const prefName in this.preferences ) {
 			if ( this.preferences[ prefName ] !== this.getDefaultPreferences()[ prefName ] ) {
@@ -572,7 +580,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		heading.textContent = mw.msg( 'codemirror-prefs-title' );
 		heading.appendChild( this.getHelpLinks() );
 		container.appendChild(
-			this.getCheckboxesFieldset(
+			this.getFieldsetWithFields(
 				this.primaryPreferences,
 				heading
 			)
@@ -645,14 +653,14 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	}
 
 	/**
-	 * Get a fieldset containing checkboxes for the given preferences.
+	 * Get a fieldset containing form fields (namely checkboxes) for the given preferences.
 	 *
 	 * @param {string[]} prefNames Names of preferences to include.
 	 * @param {string|HTMLElement} [title] Title of the fieldset.
 	 * @return {HTMLFieldSetElement}
 	 * @private
 	 */
-	getCheckboxesFieldset(
+	getFieldsetWithFields(
 		prefNames,
 		title = mw.msg( 'codemirror-prefs-title' )
 	) {
@@ -663,11 +671,17 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		);
 		const wrappers = [];
 		for ( const prefName of prefNames ) {
-			const [ wrapper, input ] = this.getCheckbox(
-				prefName,
-				`codemirror-prefs-${ prefName.toLowerCase() }`,
-				this.getPreference( prefName )
-			);
+			let wrapper, input;
+			const formSpecifier = this.formSpecification.get( prefName );
+			if ( formSpecifier ) {
+				[ wrapper, input ] = this.getFormField( prefName, formSpecifier );
+			} else {
+				[ wrapper, input ] = this.getCheckbox(
+					prefName,
+					`codemirror-prefs-${ prefName.toLowerCase() }`,
+					this.getPreference( prefName )
+				);
+			}
 			if ( this.disabledPreferences.has( prefName ) ) {
 				input.disabled = true;
 			}
@@ -761,9 +775,10 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		const sectionPrefs = [];
 		for ( const [ section, prefs ] of Object.entries( this.dialogConfig ) ) {
 			sectionPrefs.push( ...prefs );
-			const fieldset = this.getCheckboxesFieldset(
+			const fieldset = this.getFieldsetWithFields(
 				prefs,
 				// Message here may include but are not limited to:
+				// * codemirror-prefs-section-appearance
 				// * codemirror-prefs-section-lines
 				// * codemirror-prefs-section-characters
 				// * codemirror-prefs-section-code-assistance
@@ -782,7 +797,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		);
 		if ( otherPrefs.length > 0 ) {
 			fieldsets.push(
-				this.getCheckboxesFieldset(
+				this.getFieldsetWithFields(
 					otherPrefs,
 					mw.msg( 'codemirror-prefs-section-other' )
 				)
@@ -830,6 +845,24 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 			}
 		} );
 		return [ wrapper, input ];
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	getSelect( name, label, options, selected ) {
+		const [ wrapper, select ] = super.getSelect( name, label, options, selected );
+		select.addEventListener( 'change', () => {
+			this.extensionRegistry.reconfigureFromValueMap( name, this.view, select.value );
+			this.setPreference( name, select.value );
+		} );
+		// Update the selected value when the preference is changed.
+		mw.hook( 'ext.CodeMirror.preferences.apply' ).add( ( pref, value ) => {
+			if ( pref === name ) {
+				select.value = value;
+			}
+		} );
+		return [ wrapper, select ];
 	}
 }
 

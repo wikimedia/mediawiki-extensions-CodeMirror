@@ -451,11 +451,11 @@ describe( 'CodeMirrorPreferences', () => {
 		);
 	} );
 
-	it( 'getCheckboxesFieldset', () => {
+	it( 'getFieldsetWithFields', () => {
 		mockDefaultPreferences();
 		mockUserPreferences( { fooExtension: 1, barExtension: 1 } );
 		const preferences = getCodeMirrorPreferences();
-		const fieldset = preferences.getCheckboxesFieldset(
+		const fieldset = preferences.getFieldsetWithFields(
 			[ 'fooExtension', 'barExtension', 'doesNotExistExtension' ]
 		);
 		const checkboxes = fieldset.querySelectorAll( '.cdx-checkbox__label' );

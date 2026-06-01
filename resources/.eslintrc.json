@@ -29,6 +29,7 @@
 				"CodeMirror.textarea": "CodeMirror.textarea",
 				"CodeMirror.view": "CodeMirror.view",
 				"CodeMirrorChild": "CodeMirrorChild",
+				"CodeMirrorExtensionRegistry": "CodeMirrorExtensionRegistry",
 				"CodeMirrorKeyBinding": "CodeMirrorKeyBinding",
 				"CodeMirrorKeymap": "CodeMirrorKeymap",
 				"CodeMirrorMediaWiki": "CodeMirrorMediaWiki",
