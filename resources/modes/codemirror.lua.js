@@ -570,7 +570,7 @@ class CodeMirrorLua extends CodeMirrorMode {
 	/** @inheritDoc */
 	get support() {
 		return [
-			this.theme,
+			this.docTagExtension,
 			syntaxHighlighting( HighlightStyle.define(
 				[
 					// Include default highlight styles for other tokens

@@ -240,7 +240,7 @@ class CodeMirrorJavaScript extends CodeMirrorMode {
 	/** @inheritDoc */
 	get support() {
 		return [
-			this.theme,
+			this.docTagExtension,
 			javascript().support,
 			javascriptLanguage.data.of( { autocomplete: scopeCompletionSource( window ) } ),
 			getViewPlugin( markGlobals )

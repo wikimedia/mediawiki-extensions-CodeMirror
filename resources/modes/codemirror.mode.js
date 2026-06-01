@@ -115,13 +115,13 @@ class CodeMirrorMode {
 	}
 
 	/**
-	 * This extension adds extra highlighting styles for JavaScript/Lua.
+	 * This extension adds extra highlighting styles for doc tags in JavaScript/Lua.
 	 *
 	 * @type {Extension}
 	 * @protected
 	 * @internal
 	 */
-	get theme() {
+	get docTagExtension() {
 		const getColor = ( style, target ) => style.specs.find(
 			( { tag } ) => tag === target || Array.isArray( tag ) && tag.includes( target )
 		).color;
