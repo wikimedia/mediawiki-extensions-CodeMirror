@@ -6,36 +6,35 @@ jest.mock( 'ext.CodeMirror', () => mockCodeMirror, { virtual: true } );
 jest.mock( '../../resources/ext.CodeMirror.data.js', () => jest.fn(), { virtual: true } );
 global.mw = require( '@wikimedia/mw-node-qunit/src/mockMediaWiki.js' )();
 mw.user = Object.assign( mw.user, {
-	options: {
-		get: jest.fn().mockImplementation( ( key ) => {
-			switch ( key ) {
-				case 'codemirror-preferences':
-				case 'codemirror-preferences-code':
-					// Use default preferences.
-					return null;
-				case 'usecodemirror':
-				case 'usecodemirror-code':
-					return '1';
-				case 'usecodemirror-colorblind':
-					return '0';
-				case 'editfont':
-					return 'monospace';
-				default:
-					mw.log.warn( `Unmocked mw.user.options.get() for key: ${ key }` );
-					return null;
-			}
-		} ),
-		set: jest.fn()
-	},
+	options: { set: jest.fn() },
 	sessionId: jest.fn().mockReturnValue( 'abc' ),
 	getId: jest.fn().mockReturnValue( 123 ),
 	isNamed: jest.fn().mockReturnValue( true )
 } );
 /**
+ * Mock mw.user.options.get() to return the provided key/value pairs,
+ * merged into the shared defaults for all tests.
+ *
+ * @param {Object} [options]
+ */
+global.mockUserOptionsGet = ( options = {} ) => {
+	const mockOptions = Object.assign( {
+		// `null` uses the default preferences.
+		'codemirror-preferences': null,
+		'codemirror-preferences-code': null,
+		usecodemirror: '1',
+		'usecodemirror-code': '1',
+		'usecodemirror-colorblind': '0',
+		editfont: 'monospace'
+	}, options );
+	mw.user.options.get = jest.fn().mockImplementation( ( key ) => mockOptions[ key ] );
+};
+mockUserOptionsGet();
+/**
  * Mock mw.config.get() to return the provided config,
  * merged into an abridged version of the actual config.
  *
- * @param {Object} config
+ * @param {Object} [config]
  */
 global.mockMwConfigGet = ( config = {} ) => {
 	const mockConfig = Object.assign( {

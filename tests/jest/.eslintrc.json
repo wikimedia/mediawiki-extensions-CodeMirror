@@ -8,7 +8,8 @@
 		"sourceType": "module"
 	},
 	"globals": {
-		"mockMwConfigGet": true
+		"mockMwConfigGet": true,
+		"mockUserOptionsGet": true
 	},
 	"env": {
 		"browser": true,

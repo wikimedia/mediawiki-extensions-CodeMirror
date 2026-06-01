@@ -15,7 +15,7 @@ describe( 'CodeMirrorPreferences', () => {
 			mw.config.get = jest.fn().mockReturnValue( { defaultPreferences, primaryPreferences } );
 		};
 		mockUserPreferences = ( preferences = {} ) => {
-			mw.user.options.get = jest.fn().mockReturnValue( JSON.stringify( preferences ) );
+			mockUserOptionsGet( { 'codemirror-preferences': JSON.stringify( preferences ) } );
 		};
 		getCodeMirrorPreferences = (
 			extConfig = {
@@ -36,6 +36,7 @@ describe( 'CodeMirrorPreferences', () => {
 
 	afterEach( () => {
 		mw.hook.mockHooks = {};
+		jest.restoreAllMocks();
 	} );
 
 	it( 'defaultPreferences', () => {

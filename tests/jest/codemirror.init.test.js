@@ -12,13 +12,10 @@ describe( 'CodeMirror.init.js', () => {
 		const textarea = document.createElement( 'textarea' );
 		textarea.id = 'wpTextbox1';
 		document.body.appendChild( textarea );
-		mw.user.options.get = jest.fn().mockImplementation( ( key ) => {
-			if ( key === 'usecodemirror' ) {
-				return 0;
-			}
-		} );
+		mockUserOptionsGet( { usecodemirror: '0', 'usecodemirror-code': '0' } );
 		const spy = jest.spyOn( mw.loader, 'load' );
 		require( '../../resources/codemirror.init.js' );
 		expect( spy ).toHaveBeenCalledWith( 'ext.wikiEditor' );
+		jest.restoreAllMocks();
 	} );
 } );
