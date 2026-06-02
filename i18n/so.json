@@ -6,6 +6,10 @@
 	},
 	"codemirror-keymap-lint": "Qalad kormeeraha",
 	"codemirror-keymap-next-diagnostic": "Dooro ogaanshaha xiga",
+	"codemirror-wikilint-invalid-category": "Magac qaybta aan sax ahayn",
+	"codemirror-wikilint-invalid-gallery-link": "Xiriiriye aan sax ahayn oo ku jira sawir gallery ah",
+	"codemirror-wikilint-invalid-thumb": "magaca faylka yar ee aan sax ahayn",
+	"codemirror-wikilint-ref-in-link": "Calaamada ref  ku jira xiriiriye gudaha ama dibadda ah",
 	"codemirror-ve-limit-exceeded": "Dukumeentigu aad buu u weyn yahay, sidaas darteed iftiiminta habdhiska waa la joojiyay.",
 	"codemirror-ve-limit-exceeded-info": "Macluumaad dheeraad ah"
 }

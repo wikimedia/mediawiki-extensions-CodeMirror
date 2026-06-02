@@ -34,6 +34,7 @@
 	"codemirror-prefs-bidiisolation": "Изолировать двунаправленный текст",
 	"codemirror-prefs-bracketmatching": "Включить согласование скобок",
 	"codemirror-prefs-closebrackets": "Включить автозакрытие скобок",
+	"codemirror-prefs-keymap": "сочетания клавиш",
 	"codemirror-prefs-linenumbering": "Показывать номера строк",
 	"codemirror-prefs-linewrapping": "Переносить строки",
 	"codemirror-prefs-lint": "Проверять код на ошибки",
