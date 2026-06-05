@@ -11,14 +11,15 @@
 			"Sean0115",
 			"Stang",
 			"Tranve",
-			"沈澄心"
+			"沈澄心",
+			"Peterxy"
 		]
 	},
 	"codemirror-desc": "在wikitext编辑器中提供语法高亮显示",
 	"codemirror-toggle-label": "语法高亮",
 	"codemirror-toggle-label-short": "语法",
 	"codemirror-prefs-summary": "您可阅读[https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror 帮助页面]了解有关此功能的更多信息。",
-	"codemirror-prefs-enable": "启用语法高亮",
+	"codemirror-prefs-enable": "启用wikitext语法高亮",
 	"codemirror-prefs-enable-help": "适用于编辑内容页面与模板时",
 	"codemirror-prefs-enable-code": "启用代码语法高亮",
 	"codemirror-prefs-enable-code-help": "适用于编辑代码时，例如JavaScript、CSS或Lua模块",
@@ -37,6 +38,7 @@
 	"codemirror-prefs-bidiisolation": "隔离双向文本",
 	"codemirror-prefs-bracketmatching": "启用括号匹配",
 	"codemirror-prefs-closebrackets": "启用自动闭合括号",
+	"codemirror-prefs-keymap": "键盘快捷键",
 	"codemirror-prefs-linenumbering": "显示行号",
 	"codemirror-prefs-linewrapping": "换行",
 	"codemirror-prefs-lint": "检查代码",
