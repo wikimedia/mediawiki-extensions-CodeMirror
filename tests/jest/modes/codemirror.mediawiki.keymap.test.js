@@ -1,5 +1,4 @@
 /* eslint-disable-next-line n/no-missing-require */
-const { EditorView } = require( 'ext.CodeMirror.lib' );
 const CodeMirror = require( '../../../resources/codemirror.js' );
 const { mediawiki } = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.js' );
 const mwKeymap = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.keymap.js' );
@@ -12,7 +11,7 @@ describe( 'CodeMirrorMediaWikiKeymap', () => {
 		const form = document.createElement( 'form' );
 		form.appendChild( textarea );
 		mockMwConfigGet( { wgCiteResponsiveReferences: true } );
-		cm = new CodeMirror( textarea );
+		cm = new CodeMirror( textarea, mediawiki() );
 		cm.initialize();
 		mwKeymap( cm );
 	} );
@@ -119,22 +118,27 @@ describe( 'CodeMirrorMediaWikiKeymap', () => {
 	} );
 
 	it( 'should hide the section of the help dialog when the preference is disabled', () => {
-		// Setup; Not relevant to the accuracy of the test.
-		cm.keymap.preferences = cm.preferences;
-		cm.keymap.preferences.registerExtension( 'codeFolding', EditorView.theme(), cm.view );
+		// Sanity checks.
+		expect( cm.preferences.getPreference( 'codeFolding' ) ).toBeTruthy();
+		expect( cm.extensionRegistry.get( 'codeFolding' ) ).toBeDefined();
 		// Test
 		cm.keymap.showHelpDialog();
-		expect( document.querySelector( '.cm-mw-keymap-section--codefolding' ).style.display )
+		expect( cm.keymap.dialog.querySelector( '.cm-mw-keymap-section--codefolding' ).style.display )
 			.toBe( '' );
+		// Close and disable codeFolding.
+		cm.keymap.animateDialog( false );
 		cm.preferences.setPreference( 'codeFolding', false );
-		expect( document.querySelector( '.cm-mw-keymap-section--codefolding' ).style.display )
+		expect( cm.keymap.dialog ).toBeNull();
+		// Show again and assert the codeFolding section is hidden.
+		cm.keymap.showHelpDialog();
+		expect( cm.keymap.dialog.querySelector( '.cm-mw-keymap-section--codefolding' ).style.display )
 			.toBe( 'none' );
 	} );
 
 	it( 'should prevent shortcuts from changing content in readonly mode', () => {
 		textarea.readOnly = true;
 		textarea.value = 'Metallica Rules!';
-		cm = new CodeMirror( textarea );
+		cm = new CodeMirror( textarea, mediawiki() );
 		cm.initialize();
 		mwKeymap( cm );
 		expect( cm.view.state.readOnly ).toBe( true );

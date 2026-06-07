@@ -104,6 +104,10 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 		 * each mapping (command) we want to show, keyed by tool. The value for each is
 		 * a {@link CodeMirrorKeyBinding} object, or an array of them.
 		 *
+		 * Note that the key names given for each section, as well as individual items/commands,
+		 * may be the same as a preference name. In such cases, the item or section will
+		 * be shown or hidden based on if the corresponding preference/extension is enabled.
+		 *
 		 * @type {Object<Object<CodeMirrorKeyBinding>>|Object<Object<CodeMirrorKeyBinding[]>>}
 		 * @property {Object<CodeMirrorKeyBinding>|Object<CodeMirrorKeyBinding[]>} textStyling
 		 * @property {Object<CodeMirrorKeyBinding>|Object<CodeMirrorKeyBinding[]>} history
@@ -245,6 +249,11 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 					() => this.showHelpDialog()
 				);
 			}
+		} );
+
+		// Clear the help dialog when preferences change (T424173).
+		mw.hook( 'ext.CodeMirror.preferences.apply' ).add( () => {
+			this.dialog = null;
 		} );
 	}
 
@@ -428,8 +437,10 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 	}
 
 	/**
-	 * Set the display of an HTMLElement based on a preference. This uses the
-	 * `ext.CodeMirror.preferences.apply` hook to update the display when the preference changes.
+	 * Set the display of an HTMLElement based on a preference, if applicable. This gets called
+	 * for every item in `this.keymapHelpRegistry`. When the `ext.CodeMirror.preferences.apply`
+	 * hook is fired, `this.dialog` is reset to `null`, and this method gets called again for
+	 * each item as the new help dialog is built.
 	 *
 	 * @param {string} prefName
 	 * @param {HTMLElement} el
@@ -437,22 +448,17 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 	 * @private
 	 */
 	setDisplayFromPreference( prefName, el ) {
-		if ( !this.preferences ) {
-			// Can happen in Jest tests.
+		// this.preferrences may not be set in some Jest tests.
+		if ( !this.preferences ||
+			// Short-circuit if there's no extension for this preference.
+			this.preferences.extensionRegistry.get( prefName ) === undefined
+		) {
 			return;
 		}
 		// We don't have an EditorView, so directly check against the extension registry.
 		const isRegistered = !!this.preferences.extensionRegistry.compartments[ prefName ];
 		const shouldDisplay = !isRegistered || this.preferences.getPreference( prefName );
 		el.style.display = shouldDisplay ? '' : 'none';
-
-		if ( shouldDisplay ) {
-			mw.hook( 'ext.CodeMirror.preferences.apply' ).add( ( pref, enabled ) => {
-				if ( pref === prefName ) {
-					el.style.display = enabled ? '' : 'none';
-				}
-			} );
-		}
 	}
 
 	/**

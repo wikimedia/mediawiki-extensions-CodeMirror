@@ -2,6 +2,7 @@
 const { EditorView } = require( 'ext.CodeMirror.lib' );
 const CodeMirror = require( '../../resources/codemirror.js' );
 const CodeMirrorKeymap = require( '../../resources/codemirror.keymap.js' );
+const { css } = require( '../../resources/modes/codemirror.mode.exporter.js' );
 
 describe( 'CodeMirrorKeymap', () => {
 	const shortcutTestCases = [
@@ -133,5 +134,28 @@ describe( 'CodeMirrorKeymap (integration)', () => {
 		expect( spy ).toHaveBeenCalledWith( 'keymap' );
 		expect( document.querySelector( '.cm-mw-keymap-dialog' ) ).not.toBeNull();
 		expect( document.querySelectorAll( 'dl.cm-mw-keymap-list dt' ).length ).toStrictEqual( 24 );
+	} );
+
+	it( 'should reset the help dialog when preferences are changed', () => {
+		const cm = new CodeMirror( textarea, css() );
+		cm.initialize();
+		// Sanity checks.
+		expect( cm.preferences.getPreference( 'autocomplete' ) ).toBeTruthy();
+		expect( cm.extensionRegistry.get( 'autocomplete' ) ).toBeDefined();
+		// Disable autocomplete.
+		cm.preferences.setPreference( 'autocomplete', false );
+		expect( cm.keymap.dialog ).toBeNull();
+		// Show dialog and assert the autocomplete section is hidden.
+		cm.keymap.showHelpDialog();
+		expect( cm.keymap.dialog.querySelector( '.cm-mw-keymap-section--autocomplete' ).style.display )
+			.toBe( 'none' );
+		// Close dialog and re-enable autocomplete.
+		cm.keymap.animateDialog( false );
+		cm.preferences.setPreference( 'autocomplete', true );
+		expect( cm.keymap.dialog ).toBeNull();
+		// Show dialog and assert the autocomplete section is visible again.
+		cm.keymap.showHelpDialog();
+		expect( cm.keymap.dialog.querySelector( '.cm-mw-keymap-section--autocomplete' ).style.display )
+			.toBe( '' );
 	} );
 } );
