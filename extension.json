@@ -448,7 +448,7 @@
 		"EditPage::showEditForm:initial": "main",
 		"EditPage::showReadOnlyForm:initial": "main",
 		"UploadForm:initial": "main",
-		"SpecialPageBeforeExecute": "main",
+		"SpecialPageAfterExecute": "main",
 		"GetPreferences": "main"
 	},
 	"HookHandlers": {

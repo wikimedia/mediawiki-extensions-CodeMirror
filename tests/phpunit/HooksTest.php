@@ -12,13 +12,16 @@ use MediaWiki\Extension\Gadgets\GadgetRepo;
 use MediaWiki\Language\Language;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Registration\ExtensionRegistry;
+use MediaWiki\Request\FauxRequest;
 use MediaWiki\Request\WebRequest;
 use MediaWiki\Specials\SpecialExpandTemplates;
+use MediaWiki\Specials\SpecialUndelete;
 use MediaWiki\Specials\SpecialUpload;
 use MediaWiki\Title\Title;
 use MediaWiki\User\Options\UserOptionsManager;
 use MediaWikiIntegrationTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Skin;
 
 /**
  * @group CodeMirror
@@ -133,12 +136,35 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 				$this->assertEquals( '#wpUploadDescription', $jsConfigVars['cmTextarea'] );
 			}
 		} elseif ( $conds['method'] === 'expandTemplates' ) {
-			$expandTemplatesMock = $this->createMock( SpecialExpandTemplates::class );
-			$expandTemplatesMock->method( 'getName' )->willReturn( 'ExpandTemplates' );
-			$expandTemplatesMock->method( 'getOutput' )->willReturn( $out );
-			$hooks->onSpecialPageBeforeExecute( $expandTemplatesMock, '' );
+			$expandTemplatesMock = $this->createNoOpMock( SpecialExpandTemplates::class, [
+				'getName', 'getOutput',
+			] );
+			$expandTemplatesMock->expects( $this->once() )
+				->method( 'getName' )
+				->willReturn( 'ExpandTemplates' );
+			$expandTemplatesMock->expects( $this->once() )
+				->method( 'getOutput' )
+				->willReturn( $out );
+			$hooks->onSpecialPageAfterExecute( $expandTemplatesMock, '' );
 			$this->assertEquals( '[name=wpInput]', $jsConfigVars['cmTextarea'] );
 			$this->assertArrayEquals( [ '#output' ], $jsConfigVars['cmChildTextareas'] );
+		} elseif ( $conds['method'] === 'undelete' ) {
+			$undeleteMock = $this->createNoOpMock( SpecialUndelete::class, [
+				'getName', 'getOutput', 'getRequest',
+			] );
+			$undeleteMock->expects( $this->atLeastOnce() )
+				->method( 'getName' )
+				->willReturn( 'Undelete' );
+			$undeleteMock->expects( $this->once() )
+				->method( 'getOutput' )
+				->willReturn( $out );
+			$undeleteMock->expects( $this->once() )
+				->method( 'getRequest' )
+				->willReturn( $this->createConfiguredMock( FauxRequest::class, [
+					'getRawVal' => '20100101125959',
+				] ) );
+			$hooks->onSpecialPageAfterExecute( $undeleteMock, '' );
+			$this->assertEquals( '.mw-undelete-textarea', $jsConfigVars['cmTextarea'] );
 		} else {
 			$method = $conds['method'] === 'readOnly' ?
 				'onEditPage__showReadOnlyForm_initial' :
@@ -264,6 +290,10 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			[ 'method' => 'expandTemplates' ],
 			[ ...$cmDefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
+		yield 'Special:Undelete' => [
+			[ 'method' => 'undelete' ],
+			[ ...$cmDefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
+		];
 		yield 'page language zh with conversion disabled' => [
 			[ 'pageLang' => 'zh', 'disableLangConversion' => true ],
 			[ ...$cmDefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
@@ -351,7 +381,9 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 		$title = $this->createMock( Title::class );
 		$title->method( 'getContentModel' )->willReturn( $contentModel );
 		$title->method( 'getPageLanguage' )->willReturn( $langFactory->getLanguage( $lang ) );
-		$out->method( 'getTitle' )->willReturn( $title );
+		$out->method( 'getSkin' )->willReturn( $this->createConfiguredMock( Skin::class, [
+			'getRelevantTitle' => $title
+		] ) );
 		$request = $this->createMock( WebRequest::class );
 		$request->method( 'getRawVal' )->willReturn( null );
 		$out->method( 'getRequest' )->willReturn( $request );
