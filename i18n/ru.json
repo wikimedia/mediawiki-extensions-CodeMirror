@@ -155,5 +155,6 @@
 	"codemirror-wikilint-bold-in-header": "полужирный текст в заголовке раздела",
 	"codemirror-wikilint-close": "закрыть",
 	"codemirror-wikilint-comment": "закомментировать",
+	"codemirror-wikilint-obsolete-attribute": "устаревший атрибут",
 	"codemirror-potentially-slow": "может работать медленно"
 }
