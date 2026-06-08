@@ -957,6 +957,34 @@ class CodeMirror {
 	}
 
 	/**
+	 * Remove handlers registered with {@link #addMwHook} for the given {@link Hook},
+	 * or remove all handlers if no hook is specified.
+	 *
+	 * @param {string} [hook]
+	 * @param {Function} [fn] If specified, only this handler will be removed for the given hook.
+	 * @protected
+	 */
+	removeMwHooks( hook, fn ) {
+		let hooksToRemove = this.hooks;
+		if ( hook ) {
+			if ( !this.hooks[ hook ] ) {
+				// Ignore, probably was already removed.
+				return;
+			}
+			hooksToRemove = { [ hook ]: fn ? [ fn ] : this.hooks[ hook ] };
+		}
+		for ( const hookName in hooksToRemove ) {
+			for ( const f of hooksToRemove[ hookName ] ) {
+				this.hooks[ hookName ].delete( f );
+				mw.hook( hookName ).remove( f );
+			}
+			if ( !this.hooks[ hookName ].size ) {
+				delete this.hooks[ hookName ];
+			}
+		}
+	}
+
+	/**
 	 * Set a new edit recovery handler.
 	 *
 	 * @protected
@@ -1202,10 +1230,22 @@ class CodeMirror {
 		const { selectionStart, selectionEnd, scrollTop } = this.preInitSelection || this.textarea;
 		// Clear the pre-init selection since it's no longer valid after the first activation.
 		this.preInitSelection = null;
-		const hasFocus = document.activeElement === this.textarea || (
-			this.constructor.name !== 'CodeMirrorChild' &&
-			this.preferences.getPreference( 'autofocus' )
-		);
+
+		// Autofocus the editor when applicable.
+		const autofocusEnabled = this.constructor.name !== 'CodeMirrorChild' &&
+			this.preferences.getPreference( 'autofocus' );
+		const hasFocus = document.activeElement === this.textarea || autofocusEnabled;
+		if ( autofocusEnabled ) {
+			const focusFn = this.focus.bind( this );
+			// Autofocus after live preview.
+			this.addMwHook( 'wikipage.editform', focusFn );
+			// Remove the wikipage.editform hook if autocomplete is disabled.
+			this.addMwHook( 'ext.CodeMirror.preferences.apply', ( prefName, prefValue ) => {
+				if ( prefName === 'autofocus' && !prefValue ) {
+					this.removeMwHooks( 'wikipage.editform', focusFn );
+				}
+			} );
+		}
 
 		if ( this.view ) {
 			// We're re-enabling, so we want to sync contents from the textarea.
@@ -1293,11 +1333,7 @@ class CodeMirror {
 			this.$textarea.removeClass( 'noime' );
 		}
 
-		// Remove hook handlers.
-		Object.keys( this.hooks ).forEach( ( hook ) => {
-			this.hooks[ hook ].forEach( ( fn ) => mw.hook( hook ).remove( fn ) );
-			delete this.hooks[ hook ];
-		} );
+		this.removeMwHooks();
 
 		// Hide the view. We use a CSS class on the wrapper since CodeMirror
 		// adds high-specificity styles to .cm-editor that we can't easily override.

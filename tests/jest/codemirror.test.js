@@ -10,7 +10,6 @@ const { javascript } = require( '../../resources/modes/codemirror.mode.exporter.
 let textarea, cm, form;
 
 beforeEach( () => {
-	mw.hook.mockHooks = {};
 	form = document.createElement( 'form' );
 	textarea = document.createElement( 'textarea' );
 	textarea.value = 'Metallica';
@@ -22,11 +21,13 @@ beforeEach( () => {
 	jest.spyOn( cm, 'requestAnimationFrame' ).mockImplementation( ( cb ) => cb() );
 	// Suppress console warning about re-initialization, etc.
 	jest.spyOn( console, 'warn' ).mockImplementation( () => {} );
+	mw.hook.mockHooks = {};
 } );
 
 afterEach( () => {
 	document.body.innerHTML = '';
 	jest.restoreAllMocks();
+	mw.hook.mockHooks = {};
 } );
 
 describe( 'initialize', () => {
@@ -299,6 +300,18 @@ describe( 'toggle', () => {
 		expect( document.activeElement ).not.toBe( cm.view.contentDOM );
 		cm.requestAnimationFrame.mockRestore();
 	} );
+
+	it( 'should put focus on the editor after using Live Preview', () => {
+		cm.initialize();
+		expect( document.activeElement ).toBe( cm.view.contentDOM );
+		document.activeElement.blur();
+		mw.hook( 'wikipage.editform' ).fire();
+		expect( document.activeElement ).toBe( cm.view.contentDOM );
+		document.activeElement.blur();
+		cm.preferences.setPreference( 'autofocus', false );
+		mw.hook( 'wikipage.editform' ).fire();
+		expect( document.activeElement ).not.toBe( cm.view.contentDOM );
+	} );
 } );
 
 describe( 'activate', () => {
@@ -464,6 +477,58 @@ describe( 'addMwHook', () => {
 		cm.deactivate();
 		expect( mw.hook.mockHooks[ 'ext.CodeMirror.ready' ] ).not.toContain( fn1 );
 		expect( mw.hook.mockHooks[ 'ext.CodeMirror.preferences.ready' ] ).not.toContain( fn2 );
+	} );
+} );
+
+describe( 'removeMwHooks', () => {
+	it( 'should remove all hooks handlers when called with no argument', () => {
+		cm.addMwHook( 'ext.CodeMirror.ready', () => {} );
+		cm.addMwHook( 'ext.CodeMirror.ready', () => {} );
+		cm.addMwHook( 'ext.CodeMirror.preferences.apply', () => {} );
+		expect( Object.keys( cm.hooks ).length ).toBe( 2 );
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.ready' ].length ).toBe( 2 );
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.preferences.apply' ].length ).toBe( 1 );
+		cm.removeMwHooks();
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.ready' ].length ).toBe( 0 );
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.preferences.apply' ].length ).toBe( 0 );
+		expect( Object.keys( cm.hooks ).length ).toBe( 0 );
+	} );
+
+	it( 'should remove handlers for a specific hook', () => {
+		cm.addMwHook( 'ext.CodeMirror.ready', () => {} );
+		cm.addMwHook( 'ext.CodeMirror.ready', () => {} );
+		cm.addMwHook( 'ext.CodeMirror.preferences.apply', () => {} );
+		expect( Object.keys( cm.hooks ).length ).toBe( 2 );
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.ready' ].length ).toBe( 2 );
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.preferences.apply' ].length ).toBe( 1 );
+		cm.removeMwHooks( 'ext.CodeMirror.ready' );
+		expect( cm.hooks[ 'ext.CodeMirror.ready' ] ).toBeUndefined();
+		expect( cm.hooks[ 'ext.CodeMirror.preferences.apply' ].size ).toBe( 1 );
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.ready' ].length ).toBe( 0 );
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.preferences.apply' ].length ).toBe( 1 );
+	} );
+
+	it( 'should remove a specific handler for a specific hook', () => {
+		const fn1 = () => {};
+		const fn2 = () => {};
+		cm.addMwHook( 'ext.CodeMirror.ready', fn1 );
+		cm.addMwHook( 'ext.CodeMirror.preferences.apply', fn1 );
+		cm.addMwHook( 'ext.CodeMirror.preferences.apply', fn2 );
+		expect( Array.from( cm.hooks[ 'ext.CodeMirror.ready' ].values() ) )
+			.toStrictEqual( [ fn1 ] );
+		expect( Array.from( cm.hooks[ 'ext.CodeMirror.preferences.apply' ].values() ) )
+			.toStrictEqual( [ fn1, fn2 ] );
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.ready' ] ).toContain( fn1 );
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.preferences.apply' ] ).toContain( fn1 );
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.preferences.apply' ] ).toContain( fn2 );
+		cm.removeMwHooks( 'ext.CodeMirror.preferences.apply', fn1 );
+		expect( Array.from( cm.hooks[ 'ext.CodeMirror.ready' ].values() ) )
+			.toStrictEqual( [ fn1 ] );
+		expect( Array.from( cm.hooks[ 'ext.CodeMirror.preferences.apply' ].values() ) )
+			.toStrictEqual( [ fn2 ] );
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.ready' ] ).toContain( fn1 );
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.preferences.apply' ] ).not.toContain( fn1 );
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.preferences.apply' ] ).toContain( fn2 );
 	} );
 } );
 
