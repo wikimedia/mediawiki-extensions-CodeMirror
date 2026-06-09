@@ -1,9 +1,13 @@
 {
 	"@metadata": {
 		"authors": [
+			"Movses",
 			"Repakr"
 		]
 	},
+	"apihelp-codemirror-validate-summary": "Перевірте помилки валідації у наданому контенті",
+	"apihelp-codemirror-validate-param-content": "Текстовий вміст для перевірки",
 	"apihelp-codemirror-validate-param-contentmodel": "Модель вмісту",
-	"apihelp-codemirror-validate-param-title": "Назва сторінки, до якої належить вміст."
+	"apihelp-codemirror-validate-param-title": "Назва сторінки, до якої належить вміст.",
+	"apihelp-codemirror-validate-example": "Перевірте, чи <code>h2 {color: red}</code> є дійсним для sanitized-css"
 }

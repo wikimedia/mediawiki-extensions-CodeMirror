@@ -103,6 +103,9 @@
 	"prefs-accessibility": "Saavutettavuus",
 	"prefs-syntax-highlighting": "Syntaksin korostus",
 	"codemirror-wikilint-close": "sulje",
+	"codemirror-wikilint-invalid-category": "virheellinen luokan nimi",
+	"codemirror-wikilint-invalid-gallery-link": "virheellinen linkki galleriakuvassa",
+	"codemirror-wikilint-invalid-thumb": "virheellinen pikkukuvan tiedostonimi",
 	"codemirror-wikilint-remove": "poista",
 	"codemirror-ve-limit-exceeded": "Asiakirja on liian suuri syntaksin korostamiseen, joten toiminto on otettu pois käytöstä.",
 	"codemirror-ve-limit-exceeded-info": "Lisätietoja"
