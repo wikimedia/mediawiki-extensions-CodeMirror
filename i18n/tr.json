@@ -6,7 +6,8 @@
 			"SaldırganSincap",
 			"Vito Genovese",
 			"LisafBia",
-			"ToprakM"
+			"ToprakM",
+			"HakanIST"
 		]
 	},
 	"codemirror-desc": "Vikimetin düzenleyicide sözdizim vurgulaması sağlar",
@@ -16,6 +17,7 @@
 	"codemirror-find": "Bul",
 	"codemirror-next": "Sonrakini bul",
 	"codemirror-previous": "Öncekini bul",
+	"codemirror-all": "Tümü",
 	"codemirror-all-tooltip": "Tüm eşleşmeleri bul",
 	"codemirror-match-case": "Büyük/küçük harf duyarlı",
 	"codemirror-regexp": "Düzenli ifade",
