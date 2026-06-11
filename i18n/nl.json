@@ -166,7 +166,7 @@
 	"codemirror-wikilint-illegal-attribute-value": "onjuiste attribuutwaarde",
 	"codemirror-wikilint-illegal-module": "onjuiste Scribunto-modulenaam",
 	"codemirror-wikilint-imagemap-without-image": "imagemap zonder afbeelding",
-	"codemirror-wikilint-in-url": "$1 in URL",
+	"codemirror-wikilint-in-url": "$1 in url",
 	"codemirror-wikilint-inconsistent-table": "inconsequente tabelindeling",
 	"codemirror-wikilint-invalid-attribute": "element met een onjuiste attribuutnaam",
 	"codemirror-wikilint-invalid-content": "onjuiste inhoud in $1",

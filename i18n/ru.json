@@ -148,6 +148,7 @@
 	"codemirror-wikilint-bold-in-header": "полужирный текст в заголовке раздела",
 	"codemirror-wikilint-close": "закрыть",
 	"codemirror-wikilint-comment": "закомментировать",
+	"codemirror-wikilint-obsolete-attribute": "устаревший атрибут",
 	"codemirror-beta-feature-title": "Улучшенная подсветка синтаксиса",
 	"codemirror-beta-feature-description": "Получите ранний доступ к улучшенной подсветке синтаксиса и таким функциям редактора, как сворачивание кода и автодополнение."
 }
