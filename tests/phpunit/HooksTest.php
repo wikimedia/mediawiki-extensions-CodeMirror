@@ -10,6 +10,7 @@ use MediaWiki\Extension\Gadgets\Gadget;
 use MediaWiki\Extension\Gadgets\GadgetRepo;
 use MediaWiki\Language\Language;
 use MediaWiki\Output\OutputPage;
+use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\Request\WebRequest;
 use MediaWiki\Specials\SpecialExpandTemplates;
 use MediaWiki\Specials\SpecialUpload;
@@ -137,6 +138,15 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 				$this->assertEquals( '#wpTextbox1', $jsConfigVars['cmTextarea'] );
 			}
 		}
+
+		// If Extension:Translate is installed, we also expect ext.translate.codemirror
+		// wherever ext.CodeMirror is loaded.
+		if ( in_array( 'ext.CodeMirror', $expectedModules ) &&
+			ExtensionRegistry::getInstance()->isLoaded( 'Translate' )
+		) {
+			$expectedModules[] = 'ext.translate.codemirror';
+		}
+
 		$this->assertArrayEquals( $expectedModules, $modulesLoaded );
 		$this->assertEquals( $expectedMode, $jsConfigVars['cmMode'] ?? 'mediawiki' );
 		if (
@@ -156,105 +166,105 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 	 * @return Generator
 	 */
 	public static function provideOnEditPageShowEditFormInitial(): Generator {
-		$cm6DefaultModules = [ 'ext.CodeMirror', 'ext.CodeMirror.lib', 'ext.CodeMirror.init' ];
-		yield 'CM6' => [
+		$cmDefaultModules = [ 'ext.CodeMirror', 'ext.CodeMirror.lib', 'ext.CodeMirror.init' ];
+		yield 'default' => [
 			[],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
+			[ ...$cmDefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
-		yield 'CM6, read-only' => [
+		yield 'read-only' => [
 			[ 'method' => 'readOnly' ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
+			[ ...$cmDefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
-		yield 'CM6 + WikiEditor' => [
+		yield 'WikiEditor' => [
 			[ Hooks::OPTION_USE_WIKIEDITOR => true ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki', 'ext.CodeMirror.WikiEditor' ]
+			[ ...$cmDefaultModules, 'ext.CodeMirror.mode.mediawiki', 'ext.CodeMirror.WikiEditor' ]
 		];
-		yield 'CM6 + WikiEditor, read-only' => [
+		yield 'WikiEditor, read-only' => [
 			[ Hooks::OPTION_USE_WIKIEDITOR => true, 'method' => 'readOnly' ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki', 'ext.CodeMirror.WikiEditor' ]
+			[ ...$cmDefaultModules, 'ext.CodeMirror.mode.mediawiki', 'ext.CodeMirror.WikiEditor' ]
 		];
-		yield 'CM6, RTL' => [
+		yield 'RTL' => [
 			[ 'isRTL' => true, 'lang' => 'ar' ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
+			[ ...$cmDefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
-		yield 'CM6, contentModel CSS' => [
+		yield 'contentModel CSS' => [
 			[ 'contentModel' => CONTENT_MODEL_CSS, 'allowedModes' => [ Hooks::MODE_CSS => true ] ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.modes' ],
+			[ ...$cmDefaultModules, 'ext.CodeMirror.modes' ],
 			'css'
 		];
-		yield 'CM6 + WikiEditor, contentModel JavaScript' => [
+		yield 'WikiEditor, contentModel JavaScript' => [
 			[
 				'contentModel' => CONTENT_MODEL_JAVASCRIPT,
 				'allowedModes' => [ CONTENT_MODEL_JAVASCRIPT => true ],
 				Hooks::OPTION_USE_WIKIEDITOR => true,
 			],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.modes',
+			[ ...$cmDefaultModules, 'ext.CodeMirror.modes',
 				'ext.CodeMirror.styles', 'ext.CodeMirror.WikiEditor' ],
 			'javascript'
 		];
-		yield 'CM6, contentModel JSON' => [
+		yield 'contentModel JSON' => [
 			[ 'contentModel' => CONTENT_MODEL_JSON, 'allowedModes' => [ Hooks::MODE_JSON => true ] ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.modes' ],
+			[ ...$cmDefaultModules, 'ext.CodeMirror.modes' ],
 			'json'
 		];
-		yield 'CM6 + WikiEditor, contentModel JavaScript, read-only' => [
+		yield 'WikiEditor, contentModel JavaScript, read-only' => [
 			[
 				'contentModel' => CONTENT_MODEL_JAVASCRIPT,
 				'allowedModes' => [ CONTENT_MODEL_JAVASCRIPT => true ],
 				'method' => 'readOnly',
 				Hooks::OPTION_USE_WIKIEDITOR => true,
 			],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.modes',
+			[ ...$cmDefaultModules, 'ext.CodeMirror.modes',
 				'ext.CodeMirror.styles', 'ext.CodeMirror.WikiEditor' ],
 			'javascript'
 		];
-		yield 'CM6, contentModel CSS, CSS not allowed' => [
+		yield 'contentModel CSS, CSS not allowed' => [
 			[ 'contentModel' => CONTENT_MODEL_CSS, 'allowedModes' => [ Hooks::MODE_CSS => false ] ],
 			[]
 		];
-		yield 'CM6, preference false' => [
+		yield 'preference false' => [
 			[ Hooks::OPTION_USE_CODEMIRROR => false ],
 			[]
 		];
-		yield 'CM6 + WikiEditor, WikEd enabled' => [
+		yield 'WikiEditor, WikEd enabled' => [
 			[ Hooks::OPTION_USE_WIKIEDITOR => true, 'gadget' => 'wikEd' ],
 			[]
 		];
-		yield 'CM6, preference false, WikiEditor' => [
+		yield 'preference false, WikiEditor' => [
 			[ Hooks::OPTION_USE_WIKIEDITOR => true, Hooks::OPTION_USE_CODEMIRROR => false ],
 			[ 'ext.CodeMirror.init' ]
 		];
-		yield 'CM6, Special:Upload' => [
+		yield 'Special:Upload' => [
 			[ 'method' => 'upload' ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
+			[ ...$cmDefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
-		yield 'CM6, Special:Upload, reupload' => [
+		yield 'Special:Upload, reupload' => [
 			[ 'method' => 'upload', 'reupload' => true ],
 			[]
 		];
-		yield 'CM6 + WikiEditor, Special:Upload' => [
+		yield 'WikiEditor, Special:Upload' => [
 			[ Hooks::OPTION_USE_WIKIEDITOR => true, 'method' => 'upload' ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
+			[ ...$cmDefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
-		yield 'CM6, page language zh' => [
+		yield 'page language zh' => [
 			[ 'pageLang' => 'zh' ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
+			[ ...$cmDefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
-		yield 'CM6, Special:ExpandTemplates' => [
+		yield 'Special:ExpandTemplates' => [
 			[ 'method' => 'expandTemplates' ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
+			[ ...$cmDefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
-		yield 'CM6, page language zh with conversion disabled' => [
+		yield 'page language zh with conversion disabled' => [
 			[ 'pageLang' => 'zh', 'disableLangConversion' => true ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
+			[ ...$cmDefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
-		yield 'CM6, page language wuu with all variants disabled' => [
+		yield 'page language wuu with all variants disabled' => [
 			[ 'pageLang' => 'wuu', 'disabledVariants' => [ 'wuu-hans', 'wuu-hant' ] ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
+			[ ...$cmDefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
-		yield 'CM6, page language en with Pig Latin variant disabled' => [
+		yield 'page language en with Pig Latin variant disabled' => [
 			[ 'pageLang' => 'en', 'usePigLatinVariant' => false ],
-			[ ...$cm6DefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
+			[ ...$cmDefaultModules, 'ext.CodeMirror.mode.mediawiki' ]
 		];
 	}
 
