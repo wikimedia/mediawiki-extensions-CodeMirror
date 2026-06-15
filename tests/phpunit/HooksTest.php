@@ -261,7 +261,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 	public function testPreferenceRegistered() {
 		$user = self::getTestUser()->getUser();
 		$context = RequestContext::getMain();
-		$context->setTitle( Title::newFromText( __METHOD__ ) );
+		$context->setTitle( Title::makeTitle( NS_MAIN, 'PreferenceRegistered' ) );
 		$kinds = $this->getServiceContainer()->getPreferencesFactory()
 			->getResetKinds( $user, $context, [ Hooks::OPTION_USE_CODEMIRROR => 1 ] );
 		self::assertEquals( 'registered', $kinds[Hooks::OPTION_USE_CODEMIRROR] );

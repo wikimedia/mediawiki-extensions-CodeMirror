@@ -37,18 +37,18 @@ class JavaScriptValidatorTest extends MediaWikiIntegrationTestCase {
 	/**
 	 * @dataProvider provideTitles
 	 */
-	public function testRequiresValidation( $pageName, $expected ) {
-		$this->assertEquals( $expected, $this->validator->requiresValidation( Title::newFromText( $pageName ) ) );
+	public function testRequiresValidation( $ns, $pageName, $expected ) {
+		$this->assertEquals( $expected, $this->validator->requiresValidation( Title::makeTitle( $ns, $pageName ) ) );
 	}
 
 	public static function provideTitles() {
 		return [
-			[ 'MediaWiki:Common.js', true ],
-			[ 'MediaWiki:Group-sysop.js', true ],
-			[ 'User:Example/common.js', true ],
-			[ 'User:Example/vector.js', true ],
-			[ 'Project:Script.js', false ],
-			[ 'MediaWiki:Test.js', true ],
+			[ NS_MEDIAWIKI, 'Common.js', true ],
+			[ NS_MEDIAWIKI, 'Group-sysop.js', true ],
+			[ NS_USER, 'Example/common.js', true ],
+			[ NS_USER, 'Example/vector.js', true ],
+			[ NS_PROJECT, 'Script.js', false ],
+			[ NS_MEDIAWIKI, 'Test.js', true ],
 		];
 	}
 }
