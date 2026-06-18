@@ -104,14 +104,16 @@ class CodeMirrorWikiEditor extends CodeMirror {
 								const button = new OO.ui.ToggleButtonWidget( {
 									label: mw.msg( 'codemirror-toggle-label-short' ),
 									title: mw.msg( 'codemirror-toggle-label' ),
-									icon: 'syntax-highlight',
+									icon: 'highlight',
 									value: !this.isActive,
 									framed: false,
-									classes: [ 'tool', 'cm-mw-toggle-wikieditor' ]
+									classes: [ 'tool', 'cm-mw-toggle-wikieditor' ],
+									flags: { progressive: !this.isActive }
 								} );
 								button.on( 'change', () => {
 									this.toggle();
 									this.setCodeMirrorPreference( this.isActive );
+									button.setFlags( { progressive: this.isActive } );
 								} );
 								return button.$element;
 							}

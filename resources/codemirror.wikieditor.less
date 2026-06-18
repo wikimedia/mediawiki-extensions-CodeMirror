@@ -27,25 +27,13 @@
 }
 
 .cm-mw-toggle-wikieditor {
-	.oo-ui-icon-syntax-highlight {
-		background-color: @color-base-fixed;
-		// The SVG is just barely over 300 bytes, and is also only temporary
-		// until an official icon has been established in Codex/OOUI (T174145).
-		.embed-img( 'icon' );
-	}
 
 	&:hover {
 		background-color: @background-color-interactive;
 	}
 
-	&.oo-ui-toggleWidget-on {
-		.oo-ui-labelElement-label {
-			color: @color-progressive;
-		}
-
-		.oo-ui-icon-syntax-highlight {
-			background-color: @color-progressive;
-		}
+	&.oo-ui-toggleWidget-on .oo-ui-labelElement-label {
+		color: @color-progressive;
 	}
 
 	&.oo-ui-buttonElement-frameless.oo-ui-labelElement.oo-ui-iconElement:first-child {

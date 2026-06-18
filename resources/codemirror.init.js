@@ -115,7 +115,7 @@ function addCodeMirrorButton() {
 							const button = new OO.ui.ToggleButtonWidget( {
 								label: mw.msg( 'codemirror-toggle-label-short' ),
 								title: mw.msg( 'codemirror-toggle-label' ),
-								icon: 'syntax-highlight',
+								icon: 'highlight',
 								value: false,
 								framed: false,
 								classes: [ 'tool', 'cm-mw-toggle-wikieditor' ]
