@@ -222,6 +222,7 @@
 	"codemirror-wikilint-variable-anchor": "змінний якір у заголовку розділу",
 	"codemirror-wikilint-vertical-alignment": "вертикальне вирівнювання",
 	"codemirror-wikilint-whitespace": "вставити пробіл",
+	"codemirror-potentially-slow": "можливе уповільнення",
 	"codemirror-validate-js-syntaxerror": "Помилка синтаксису у стовпчику $1 у рядку $2: $3",
 	"codemirror-ve-limit-exceeded": "Документ надто великий для підсвучування синтаксису, а тому його було вимкнуто.",
 	"codemirror-ve-limit-exceeded-info": "Більше інформації"
