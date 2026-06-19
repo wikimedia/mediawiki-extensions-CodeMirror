@@ -9,7 +9,8 @@
 			"Okras",
 			"Stjn",
 			"WindEwriX",
-			"Shabe"
+			"Shabe",
+			"Merrahtar"
 		]
 	},
 	"codemirror-desc": "Обеспечивает подсветку синтаксиса в редакторе вики-текста.",
@@ -17,6 +18,7 @@
 	"codemirror-toggle-label-short": "Синтаксис",
 	"codemirror-prefs-summary": "Вы можете узнать больше об этой функции, прочитав [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror справочную страницу].",
 	"codemirror-prefs-enable": "Включить подсветку синтаксиса",
+	"codemirror-prefs-enable-help": "Применяется при редактировании страниц с содержимым и шаблонов.",
 	"codemirror-prefs-enable-code": "Включить подсветку синтаксиса кода",
 	"codemirror-prefs-enable-code-help": "Применяется при редактировании такого кода, как JavaScript, CSS и модули Lua.",
 	"codemirror-prefs-title": "Настройки подсветки синтаксиса",

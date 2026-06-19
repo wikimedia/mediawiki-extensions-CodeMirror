@@ -1,8 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Njardarlogar"
+			"Njardarlogar",
+			"Ranveig"
 		]
 	},
-	"codemirror-toggle-label": "Syntaksframheving"
+	"codemirror-toggle-label": "Syntaksframheving",
+	"codemirror-wikilint-invalid-attribute": "element som inneheld eit ugyldig attributnamn"
 }
