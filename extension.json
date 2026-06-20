@@ -484,6 +484,15 @@
 				"indicator": "mediawiki"
 			}
 		},
+		"GlobalPreferences": {
+			"AutoPrefs": [
+				"usecodemirror",
+				"usecodemirror-code",
+				"usecodemirror-colorblind",
+				"codemirror-preferences",
+				"codemirror-preferences-code"
+			]
+		},
 		"VisualEditor": {
 			"PluginModules": [
 				"ext.CodeMirror.visualEditor.init"

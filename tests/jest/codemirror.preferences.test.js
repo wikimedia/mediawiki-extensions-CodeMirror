@@ -67,35 +67,12 @@ describe( 'CodeMirrorPreferences', () => {
 		preferences.setPreference( 'fooExtension', true );
 		expect( preferences.preferences.fooExtension ).toStrictEqual( true );
 		expect( mw.user.options.set ).toHaveBeenCalledWith( 'codemirror-preferences', '{"fooExtension":1}' );
-		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledWith( 'codemirror-preferences', '{"fooExtension":1}' );
+		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledWith(
+			'codemirror-preferences', '{"fooExtension":1}', { global: 'update' }
+		);
 		// Set again, and verify we do not call saveOption again.
 		preferences.setPreference( 'fooExtension', true );
 		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledTimes( 1 );
-	} );
-
-	it( 'setPreference (with GlobalPreferences)', () => {
-		mockUserPreferences( { fooExtension: 0 } );
-		mockMwConfigGet( {
-			extCodeMirrorConfig: {
-				defaultPreferences: { fooExtension: false, barExtension: true },
-				primaryPreferences: { fooExtension: true, barExtension: true },
-				hasGlobalPreferences: true
-			}
-		} );
-		const preferences = getCodeMirrorPreferences();
-		preferences.setPreference( 'fooExtension', true );
-		expect( preferences.preferences.fooExtension ).toStrictEqual( true );
-		expect( mw.user.options.set ).toHaveBeenCalledWith( 'codemirror-preferences', '{"fooExtension":1}' );
-		expect( mw.Api.prototype.postWithToken ).toHaveBeenCalledWith(
-			'csrf',
-			{
-				action: 'globalpreferences',
-				change: 'codemirror-preferences={"fooExtension":1}'
-			}
-		);
-		// Set again, and verify we do not submit to the API again.
-		preferences.setPreference( 'fooExtension', true );
-		expect( mw.Api.prototype.postWithToken ).toHaveBeenCalledTimes( 1 );
 	} );
 
 	it( 'setPreference (non-mediawiki)', () => {
@@ -107,10 +84,10 @@ describe( 'CodeMirrorPreferences', () => {
 		preferences.setPreference( 'fooExtension', true );
 		expect( preferences.preferences.fooExtension ).toStrictEqual( true );
 		expect( preferences.getOptionName() ).toStrictEqual( 'codemirror-preferences-code' );
-		expect( mw.user.options.set )
-			.toHaveBeenCalledWith( 'codemirror-preferences-code', '{"fooExtension":1}' );
-		expect( mw.Api.prototype.saveOption )
-			.toHaveBeenCalledWith( 'codemirror-preferences-code', '{"fooExtension":1}' );
+		expect( mw.user.options.set ).toHaveBeenCalledWith( 'codemirror-preferences-code', '{"fooExtension":1}' );
+		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledWith(
+			'codemirror-preferences-code', '{"fooExtension":1}', { global: 'update' }
+		);
 	} );
 
 	it( 'setPreference (from old mode ID format)', () => {

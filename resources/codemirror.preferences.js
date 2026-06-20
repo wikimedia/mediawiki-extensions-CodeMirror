@@ -357,24 +357,16 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	}
 
 	/**
-	 * Save the given user option with GlobalPreferences if it is installed,
-	 * otherwise save locally. Also update the mw.user.options Map.
+	 * Update the given user option, overriding the global user option if applicable.
+	 * All CodeMirror user options should also be listed in "GlobalPreferencesAutoPrefs"
+	 * in extension.json so that they are auto-globals (T428887).
 	 *
 	 * @param {string} optionname
 	 * @param {string|number|null} optionvalue
 	 * @internal
 	 */
 	saveUserOptionInternal( optionname, optionvalue ) {
-		if ( mw.config.get( 'extCodeMirrorConfig' ).hasGlobalPreferences ) {
-			this.api.postWithToken( 'csrf', {
-				action: 'globalpreferences',
-				change: optionname +
-					// Omitting =value will delete the row
-					( optionvalue !== null ? `=${ optionvalue }` : '' )
-			} );
-		} else {
-			this.api.saveOption( optionname, optionvalue );
-		}
+		this.api.saveOption( optionname, optionvalue, { global: 'update' } );
 		mw.user.options.set( optionname, optionvalue || null );
 	}
 

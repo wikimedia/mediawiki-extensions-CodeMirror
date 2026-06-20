@@ -473,7 +473,7 @@ describe( 'setCodeMirrorPreference', () => {
 		mockUserOptionsGet( { usecodemirror: '0' } );
 		cm.initialize();
 		cm.setCodeMirrorPreference( true );
-		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledWith( 'usecodemirror', 1 );
+		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledWith( 'usecodemirror', 1, { global: 'update' } );
 		expect( mw.user.options.set ).toHaveBeenCalledWith( 'usecodemirror', 1 );
 	} );
 
@@ -491,7 +491,7 @@ describe( 'setCodeMirrorPreference', () => {
 		mockUserOptionsGet( { usecodemirror: '0' } );
 		cm.initialize();
 		cm.setCodeMirrorPreference( true );
-		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledWith( 'usecodemirror', 1 );
+		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledWith( 'usecodemirror', 1, { global: 'update' } );
 		expect( mw.user.options.set ).toHaveBeenCalledWith( 'usecodemirror', 1 );
 		mockUserOptionsGet( { usecodemirror: '1' } );
 		cm.setCodeMirrorPreference( true );

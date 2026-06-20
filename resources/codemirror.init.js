@@ -20,11 +20,10 @@ const cmTextarea = mw.config.get( 'cmTextarea', null );
 /**
  * Get a LanguageSupport instance for the current mode.
  *
- * @param {Function} require
  * @return {LanguageSupport}
  * @private
  */
-function getLanguageSupport( require ) {
+function getLanguageSupport() {
 	if ( mode !== 'mediawiki' ) {
 		return require( 'ext.CodeMirror.modes' )[ mode ]();
 	}
@@ -43,26 +42,27 @@ function getLanguageSupport( require ) {
  * @private
  */
 async function init() {
-	const require = await mw.loader.using( resourceLoaderModules );
+	await mw.loader.using( resourceLoaderModules );
 	// eslint-disable-next-line security/detect-non-literal-require
 	const CodeMirror = require( `ext.CodeMirror${ useWikiEditor ? '.WikiEditor' : '' }` );
-	const langSupport = getLanguageSupport( require );
+	const langSupport = getLanguageSupport();
 	let cm;
 
+	const doInit = ( textarea ) => {
+		cm = new CodeMirror( textarea, langSupport );
+		cm.initialize();
+		initChildren( cm );
+		cm.setCodeMirrorPreference( true );
+	};
+
 	if ( useWikiEditor ) {
-		mw.hook( 'wikiEditor.toolbarReady' ).add( ( $textarea ) => {
-			cm = new CodeMirror( $textarea, langSupport );
-			cm.initialize();
-			initChildren( cm );
-		} );
+		mw.hook( 'wikiEditor.toolbarReady' ).add( ( $textarea ) => doInit( $textarea ) );
 	} else {
 		const textarea = cmTextarea ?
 			document.querySelector( cmTextarea ) :
 			// This textarea is never added to the DOM.
 			document.createElement( 'textarea' );
-		cm = new CodeMirror( textarea, langSupport );
-		cm.initialize();
-		initChildren( cm );
+		doInit( textarea );
 	}
 
 	if ( mw.config.get( 'cmDebug' ) ) {

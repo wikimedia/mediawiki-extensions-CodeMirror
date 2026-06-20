@@ -71,7 +71,6 @@ class DataScript {
 			'subst' => [],
 			'urlProtocols' => $parser->getUrlProtocols(),
 			'linkTrailCharacters' => $lang->linkTrail(),
-			'hasGlobalPreferences' => $registry->isLoaded( 'GlobalPreferences' ),
 		];
 
 		$imageKeywords = [
