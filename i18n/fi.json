@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"01miki10",
+			"Jack Phoenix",
 			"Nike",
 			"Pyscowicz",
 			"Samoasambia",
@@ -13,7 +14,10 @@
 	"codemirror-toggle-label": "Syntaksin korostus",
 	"codemirror-toggle-label-short": "Syntaksi",
 	"codemirror-prefs-summary": "Lisätietoja tästä ominaisuudesta löytyy [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror ohjesivulta].",
-	"codemirror-prefs-enable": "Ota käyttöön syntaksin korostus",
+	"codemirror-prefs-enable": "Ota käyttöön syntaksin korostus wikitekstille",
+	"codemirror-prefs-enable-help": "Koskee sisältösivujen ja mallineiden muokkaamista.",
+	"codemirror-prefs-enable-code": "Ota käyttöön syntaksin korostus koodille",
+	"codemirror-prefs-enable-code-help": "Koskee esim. JavaScript- ja CSS-koodin sekä Lua-moduulien muokkaamista.",
 	"codemirror-prefs-title": "Syntaksin korostuksen asetukset",
 	"codemirror-prefs-help": "ohje",
 	"codemirror-prefs-section-lines": "Rivit",
