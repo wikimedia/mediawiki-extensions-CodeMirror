@@ -6,14 +6,15 @@
 			"Pyscowicz",
 			"Samoasambia",
 			"Yupik",
-			"Wikipeedikko"
+			"Wikipeedikko",
+			"Jack Phoenix"
 		]
 	},
 	"codemirror-desc": "Lisää syntaksin korostuksen wikitekstin muokkaimeen",
 	"codemirror-toggle-label": "Syntaksin korostus",
 	"codemirror-toggle-label-short": "Syntaksi",
 	"codemirror-prefs-summary": "Lisätietoja tästä ominaisuudesta löytyy [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror ohjesivulta].",
-	"codemirror-prefs-enable": "Ota käyttöön syntaksin korostus",
+	"codemirror-prefs-enable": "Ota käyttöön syntaksin korostus wikitekstille",
 	"codemirror-v6-prefs-colorblind": "Käytä värisokeille sopivaa väripalettia",
 	"codemirror-prefs-colorblind": "Käytä värisokeille sopivaa väripalettia syntaksin korostuksessa wikitekstiä muokattaessa",
 	"codemirror-prefs-colorblind-help": "Jos käytät pienoisohjelmaa syntaksin korostamiseen, tämä asetus ei toimi.",
