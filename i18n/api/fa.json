@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"Jeeputer"
+		]
+	},
+	"apihelp-codemirror-validate-summary": "بررسی خطاهای اعتبارسنجی در محتوای داده‌شده",
+	"apihelp-codemirror-validate-param-content": "محتوای متنی برای اعتبارسنجی",
+	"apihelp-codemirror-validate-param-contentmodel": "مدل محتوا",
+	"apihelp-codemirror-validate-param-title": "عنوان صفحه‌ای که محتوا متعلق به آن است."
+}
