@@ -7,7 +7,8 @@
 			"Markingdots",
 			"Ykhwong",
 			"YeBoy371",
-			"Tensama0415"
+			"Tensama0415",
+			"解浪"
 		]
 	},
 	"codemirror-desc": "위키텍스트 편집기에서 구문 강조 기능을 제공합니다",
@@ -204,7 +205,7 @@
 	"codemirror-wikilint-useless-attribute": "쓸모없는 속성",
 	"codemirror-wikilint-useless-fragment": "쓸모없는 프래그먼트",
 	"codemirror-wikilint-useless-link-text": "쓸모없는 링크 텍스트",
-	"codemirror-wikilint-variable-anchor": "문단 머리글에 포함된 매개변수 앵커",
+	"codemirror-wikilint-variable-anchor": "문단 머리글에 포함된 변수 앵커",
 	"codemirror-wikilint-vertical-alignment": "수직 정렬",
 	"codemirror-wikilint-whitespace": "공백 삽입",
 	"codemirror-beta-feature-title": "개선된 구문 강조",

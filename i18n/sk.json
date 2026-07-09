@@ -2,11 +2,13 @@
 	"@metadata": {
 		"authors": [
 			"Luky001",
-			"TomášPolonec"
+			"TomášPolonec",
+			"Teslaton"
 		]
 	},
 	"codemirror-desc": "Poskytuje zvýraznenie syntaxe v textovom editore",
 	"codemirror-toggle-label": "Zvýraznenie syntaxe",
+	"codemirror-toggle-label-short": "Syntax",
 	"codemirror-prefs-colorblind": "Povoliť schému pre farboslepých na zvýraznenie syntaxe pri úprave wikitextu",
 	"prefs-accessibility": "Dostupnosť",
 	"codemirror-beta-feature-title": "Vylepšené zvýrazňovanie syntaxe",
