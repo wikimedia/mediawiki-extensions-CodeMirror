@@ -3,6 +3,7 @@
 		"authors": [
 			"Chrumps",
 			"Msz2001",
+			"PanWor",
 			"Rail",
 			"Railfail536",
 			"Woytecr",
@@ -28,6 +29,7 @@
 	"codemirror-prefs-bidiisolation": "Izoluj tekst dwukierunkowy",
 	"codemirror-prefs-bracketmatching": "Włącz domykanie nawiasów",
 	"codemirror-prefs-closebrackets": "Włącz automatyczne domykanie nawiasów",
+	"codemirror-prefs-keymap": "skróty klawiaturowe",
 	"codemirror-prefs-linenumbering": "Pokaż numery linii",
 	"codemirror-prefs-linewrapping": "Zawijanie linii",
 	"codemirror-prefs-lint": "Linter kodu",
