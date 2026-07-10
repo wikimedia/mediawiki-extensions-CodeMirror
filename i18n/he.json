@@ -10,7 +10,10 @@
 	"codemirror-toggle-label": "צביעת תחביר",
 	"codemirror-toggle-label-short": "תחביר",
 	"codemirror-prefs-summary": "אפשר ללמוד עוד על התכונה הזאת על־ידי קריאת [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror דף העזרה].",
-	"codemirror-prefs-enable": "הפעלת צביעת תחביר",
+	"codemirror-prefs-enable": "הפעלת צביעת תחביר בקוד ויקי",
+	"codemirror-prefs-enable-help": "מופעל בעריכת דפי תוכן ותבניות.",
+	"codemirror-prefs-enable-code": "הפעלת צביעת תחביר בקוד תכנותי",
+	"codemirror-prefs-enable-code-help": "מופעל בעריכת קוד בשפות כמו JavaScript‏, CSS ויחידות Lua.",
 	"codemirror-prefs-title": "העדפות צביעת תחביר",
 	"codemirror-prefs-help": "עזרה",
 	"codemirror-prefs-panel-full": "העדפות מלאות",
@@ -22,9 +25,11 @@
 	"codemirror-prefs-codefolding": "הפעלת קיפול קוד",
 	"codemirror-prefs-autocomplete": "הפעלת השלמה אוטומטית",
 	"codemirror-prefs-openlinks": "פתיחת קישורים בלחיצה על מקש שינוי ולחיצת עכבר",
+	"codemirror-prefs-closetags": "הפעלת סגירה אוטומטית של תגי HTML",
 	"codemirror-prefs-bidiisolation": "בידוד טקסט דו־כיווני",
 	"codemirror-prefs-bracketmatching": "הפעלת התאמת סוגריים",
 	"codemirror-prefs-closebrackets": "הפעלת סגירה אוטומטית של סוגריים",
+	"codemirror-prefs-keymap": "קיצורי מקשים",
 	"codemirror-prefs-linenumbering": "הצגת מספרי שורות",
 	"codemirror-prefs-linewrapping": "גלישת שורות",
 	"codemirror-prefs-lint": "ניקוי קוד",
@@ -209,5 +214,7 @@
 	"codemirror-wikilint-vertical-alignment": "יישור אנכי",
 	"codemirror-wikilint-whitespace": "הכנסת רווח",
 	"codemirror-potentially-slow": "זה יכול להיות איטי",
-	"codemirror-validate-js-syntaxerror": "במיקום $1 בשורה $2 יש שגיאת תחביר: $3"
+	"codemirror-validate-js-syntaxerror": "במיקום $1 בשורה $2 יש שגיאת תחביר: $3",
+	"codemirror-ve-limit-exceeded": "המסמך גדול מדי לצביעת תחביר והיא הושבתה.",
+	"codemirror-ve-limit-exceeded-info": "מידע נוסף"
 }
