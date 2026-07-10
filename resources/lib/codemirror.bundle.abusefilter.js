@@ -4059,7 +4059,6 @@ const Rel = 1,
   GlobalVar = 7,
   Num = 8;
 
-// analyzer/ParserException.ts
 var conditionKeywords = /* @__PURE__ */ new Set(["if", "then", "else", "end"]);
 
 const data = {
@@ -4068,6 +4067,7 @@ const data = {
     deprecated: [],
     disabled: [],
     keywords: [],
+    hoverInfo: new Map(),
 };
 const ch = {
     Space: 32,
@@ -4170,11 +4170,15 @@ const parser = LRParser.deserialize({
   tokenPrec: 1097
 });
 
+const getCompletionWithInfo = (words, type, withInfo = true) => words.map((label) => {
+    const info = withInfo && data.hoverInfo.get(label);
+    return Object.assign({ label, type }, info && { info });
+});
 const getVarAndFunc = () => [
-    ...data.variables.map((label) => ({ label, type: 'constant' })),
-    ...data.functions.map((label) => ({ label, type: 'function' })),
+    ...getCompletionWithInfo(data.variables, 'constant'),
+    ...getCompletionWithInfo(data.functions, 'function'),
 ];
-const getKeywords = (words) => words.map((label) => ({ label, type: 'keyword' }));
+const getKeywords = (words) => getCompletionWithInfo(words, 'keyword');
 const constants = getKeywords([...startKeywords]), keywords = new Set(['if', 'then', 'else']);
 const cache = new WeakMap();
 const getScope = (doc, scope) => {
@@ -4201,6 +4205,92 @@ const getScope = (doc, scope) => {
     cache.set(scope, completions);
     return completions;
 };
+const autocomplete = ({ state, pos }) => {
+    var _a;
+    const tree = ext_CodeMirror_lib.syntaxTree(state), inner = tree.resolveInner(pos, -1);
+    switch (inner.name) {
+        case 'Bool':
+        case 'null':
+        case 'Num':
+        case 'VarName':
+        case 'DeprecatedVar':
+        case 'DisabledVar':
+        case 'GlobalVar':
+        case 'Func':
+        case 'Callee':
+            return {
+                from: inner.from,
+                options: [
+                    ...constants,
+                    ...getVarAndFunc(),
+                    ...getCompletionWithInfo([...getScope(state.doc, tree.topNode)], 'variable', false),
+                ],
+                validFor: /^\w*$/u,
+            };
+        case 'Rel':
+        case '⚠': {
+            let controls = [];
+            if (((_a = inner.parent) === null || _a === void 0 ? void 0 : _a.name) === 'IfStatement') {
+                let { prevSibling } = inner;
+                while (prevSibling && !keywords.has(prevSibling.name)) {
+                    ({ prevSibling } = prevSibling);
+                }
+                switch (prevSibling === null || prevSibling === void 0 ? void 0 : prevSibling.name) {
+                    case 'if':
+                        controls = getKeywords(['then']);
+                        break;
+                    case 'then':
+                        controls = getKeywords(['else', 'end']);
+                        break;
+                    case 'else':
+                        controls = getKeywords(['end']);
+                    // no default
+                }
+            }
+            return {
+                from: inner.from,
+                options: [
+                    ...controls,
+                    ...getKeywords(data.keywords),
+                ],
+                validFor: /^\w*$/u,
+            };
+        }
+        default:
+            return null;
+    }
+};
+
+const hoverTokens = new Set(['VarName', 'GlobalVar', 'Func', 'Rel']);
+/**
+ * Get hover tooltip extension for AbuseFilter.
+ * @param hoverInfo Map of built-in keywords, variables and functions to their descriptions
+ * @param className Optional class name for the tooltip DOM element
+ */
+const getHoverTooltip = (hoverInfo, className) => {
+    return data.hoverInfo.size === 0
+        ? []
+        : ext_CodeMirror_lib.hoverTooltip(({ state }, pos, side) => {
+            const { name: n, from, to } = ext_CodeMirror_lib.syntaxTree(state).resolveInner(pos, side);
+            if (!hoverTokens.has(n)) {
+                return null;
+            }
+            const info = data.hoverInfo.get(state.sliceDoc(from, to));
+            return info
+                ? {
+                    pos,
+                    end: to,
+                    create() {
+                        const dom = document.createElement('div');
+                        dom.textContent = info;
+                        return { dom };
+                    },
+                }
+                : null;
+        });
+};
+
+/** LR language for AbuseFilter. */
 const abusefilterLanguage = ext_CodeMirror_lib.LRLanguage.define({
     name: 'abusefilter',
     parser: parser.configure({
@@ -4255,68 +4345,17 @@ const abusefilterLanguage = ext_CodeMirror_lib.LRLanguage.define({
         indentOnInput: /^\s*(?:[)\]]|then|else|end)$/u,
     },
 });
+/**
+ * Get language support for AbuseFilter.
+ * An optional argument can be used to provide information about built-in keywords, variables and functions.
+ * @param dialect Site-specific information about built-in keywords, variables and functions
+ */
 const abusefilter = (dialect) => {
     updateData(dialect);
-    return new ext_CodeMirror_lib.LanguageSupport(abusefilterLanguage, abusefilterLanguage.data.of({
-        autocomplete({ state, pos }) {
-            var _a;
-            const tree = ext_CodeMirror_lib.syntaxTree(state), inner = tree.resolveInner(pos, -1);
-            switch (inner.name) {
-                case 'Bool':
-                case 'null':
-                case 'Num':
-                case 'VarName':
-                case 'DeprecatedVar':
-                case 'DisabledVar':
-                case 'GlobalVar':
-                case 'Func':
-                case 'Callee':
-                    return {
-                        from: inner.from,
-                        options: [
-                            ...constants,
-                            ...getVarAndFunc(),
-                            ...[...getScope(state.doc, tree.topNode)].map((label) => ({
-                                label,
-                                type: 'variable',
-                            })),
-                        ],
-                        validFor: /^\w*$/u,
-                    };
-                case 'Rel':
-                case '⚠': {
-                    let controls = [];
-                    if (((_a = inner.parent) === null || _a === void 0 ? void 0 : _a.name) === 'IfStatement') {
-                        let { prevSibling } = inner;
-                        while (prevSibling && !keywords.has(prevSibling.name)) {
-                            ({ prevSibling } = prevSibling);
-                        }
-                        switch (prevSibling === null || prevSibling === void 0 ? void 0 : prevSibling.name) {
-                            case 'if':
-                                controls = getKeywords(['then']);
-                                break;
-                            case 'then':
-                                controls = getKeywords(['else', 'end']);
-                                break;
-                            case 'else':
-                                controls = getKeywords(['end']);
-                            // no default
-                        }
-                    }
-                    return {
-                        from: inner.from,
-                        options: [
-                            ...controls,
-                            ...getKeywords(data.keywords),
-                        ],
-                        validFor: /^\w*$/u,
-                    };
-                }
-                default:
-                    return null;
-            }
-        },
-    }));
+    return new ext_CodeMirror_lib.LanguageSupport(abusefilterLanguage, [
+        abusefilterLanguage.data.of({ autocomplete }),
+        getHoverTooltip(),
+    ]);
 };
 
 exports.ContextTracker = ContextTracker;

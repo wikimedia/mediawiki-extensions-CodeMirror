@@ -76,15 +76,26 @@ class CodeMirrorAbuseFilter extends CodeMirrorMode {
 
 	/** @inheritDoc */
 	get support() {
-		const { deprecated, disabled, functions, keywords, variables } =
+		const { deprecated, disabled, functions, keywords, variables, dropdownOptions } =
 			mw.config.get( 'abuseFilterHighlighterConfig', mw.config.get( 'aceConfig' ) );
+		const hoverInfo = new Map();
+		for ( const category in dropdownOptions ) {
+			const words = dropdownOptions[ category ];
+			for ( const desc in words ) {
+				const word = /^\w*/.exec( words[ desc ] )[ 0 ];
+				if ( word ) {
+					hoverInfo.set( word, desc );
+				}
+			}
+		}
 		return [
 			abusefilter( {
 				deprecated: deprecated.split( '|' ),
 				disabled: disabled.split( '|' ),
 				functions: functions.split( '|' ),
 				keywords: keywords.split( '|' ),
-				variables: variables.split( '|' )
+				variables: variables.split( '|' ),
+				hoverInfo
 			} ).support
 		];
 	}

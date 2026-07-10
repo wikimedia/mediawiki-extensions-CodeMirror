@@ -1,4 +1,3 @@
-/* eslint-disable-next-line n/no-missing-require */
 const CodeMirror = require( '../../../resources/codemirror.js' );
 const { mediawiki } = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.js' );
 const mwKeymap = require( '../../../resources/modes/mediawiki/codemirror.mediawiki.keymap.js' );
