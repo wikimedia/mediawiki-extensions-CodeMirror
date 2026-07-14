@@ -178,12 +178,14 @@ const lintApi = async ( { state: { doc } } ) => {
 	if ( hasExtLinter && errors.length ) {
 		await api.loadMessagesIfMissing( errors.map( ( { type } ) => getMsgKey( type ) ) );
 	}
-	return errors.reduce( ( acc, cur ) => {
-		if ( !acc.some( ( err ) => isEqualError( err, cur ) ) ) {
-			acc.push( cur );
-		}
-		return acc;
-	}, [] )
+	return errors
+		.filter( ( { dsr: [ from, to ] } ) => from <= to )
+		.reduce( ( acc, cur ) => {
+			if ( !acc.some( ( err ) => isEqualError( err, cur ) ) ) {
+				acc.push( cur );
+			}
+			return acc;
+		}, [] )
 		.map( ( { type, dsr: [ from, to ] } ) => {
 			const msgKey = getMsgKey( type );
 			return {
