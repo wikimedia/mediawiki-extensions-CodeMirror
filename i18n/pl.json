@@ -10,7 +10,7 @@
 			"YeBoy371"
 		]
 	},
-	"codemirror-desc": "Dostarcza podświetlanie składni w edytorze wikitekstu",
+	"codemirror-desc": "Dostarcza podświetlanie składni w edytorze wikikodu",
 	"codemirror-toggle-label": "Podświetlanie składni",
 	"codemirror-toggle-label-short": "Składnia",
 	"codemirror-prefs-summary": "Więcej informacji o tej funkcji można znaleźć na [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror stronie pomocy].",
@@ -41,7 +41,7 @@
 	"codemirror-prefs-highlightrefs": "Koloruj zawartość znacznika <ref>",
 	"codemirror-prefs-foldallrefs": "Domyślnie zwijaj wszystkie znaczniki <ref>",
 	"codemirror-prefs-reset": "Przywróć ustawienia domyślne",
-	"codemirror-prefs-colorblind": "Włącz schemat kolorystyczny podświetlania składni wikitekstu podczas edycji przyjazny osobom ze ślepotą barw",
+	"codemirror-prefs-colorblind": "Włącz schemat kolorystyczny podświetlania składni wikikodu podczas edycji przyjazny osobom ze ślepotą barw",
 	"codemirror-prefs-colorblind-help": "Jeśli używasz gadżetu do podświetlania składni, ta preferencja nie zadziała.",
 	"codemirror-close": "Zamknij",
 	"codemirror-find": "Znajdź",
