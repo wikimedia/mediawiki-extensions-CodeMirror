@@ -1,5 +1,10 @@
 const {
+	ensureSyntaxTree,
+	Decoration,
 	EditorState,
+	EditorView,
+	MatchResult,
+	StateField,
 	SyntaxNode
 } = require( 'ext.CodeMirror.lib' );
 const mwModeConfig = require( './codemirror.mediawiki.config.js' );
@@ -12,6 +17,14 @@ const isTag = ( { name } ) => {
 		'htmlTagName',
 		'extTagAttribute',
 		'extTagAttributeValue',
+		'extTagName'
+	]
+		.some( ( type ) => names.includes( mwModeConfig.tags[ type ] ) );
+};
+const isTagName = ( { name } ) => {
+	const names = name.split( '_' );
+	return [
+		'htmlTagName',
 		'extTagName'
 	]
 		.some( ( type ) => names.includes( mwModeConfig.tags[ type ] ) );
@@ -72,6 +85,11 @@ class Tag {
 	get to() {
 		const { last: { from, to }, state } = this;
 		return from + state.sliceDoc( from, to ).indexOf( '>' ) + 1;
+	}
+
+	get tag() {
+		const from = this.from + ( this.closing ? 2 : 1 );
+		return { from, to: from + this.name.length };
 	}
 
 	/**
@@ -154,4 +172,68 @@ const searchTag = ( state, origin ) => {
 	return null;
 };
 
-module.exports = { getTag, searchTag };
+/**
+ * Match a tag at a given position
+ *
+ * @param {EditorState} state
+ * @param {number} pos
+ * @return {MatchResult|null}
+ * @private
+ */
+const matchTag = ( state, pos ) => {
+	const tree = ensureSyntaxTree( state, pos );
+	if ( !tree ) {
+		return null;
+	}
+	let node = tree.resolveInner( pos, -1 );
+	if ( node.to === pos && !isTagName( node ) ) {
+		node = tree.resolveInner( pos, 1 );
+	}
+	if ( !isTagName( node ) ) {
+		return null;
+	}
+	const start = getTag( state, node );
+	if ( !start ) {
+		return null;
+	} else if ( start.selfClosing ) {
+		return { matched: true, start: start.tag };
+	}
+	const end = searchTag( state, start );
+	return end ?
+		{ matched: true, start: start.tag, end: end.tag } :
+		{ matched: false, start: start.tag };
+};
+
+const matchingTag = Decoration.mark( { class: 'cm-matchingBracket' } ),
+	nonmatchingTag = Decoration.mark( { class: 'cm-nonmatchingBracket' } );
+
+const tagMatching = StateField.define( {
+	create() {
+		return Decoration.none;
+	},
+	update( deco, { docChanged, selection, state } ) {
+		if ( !docChanged && !selection ) {
+			return deco;
+		}
+		const decorations = [];
+		for ( const range of state.selection.ranges ) {
+			if ( range.empty ) {
+				const match = matchTag( state, range.head );
+				if ( match ) {
+					const mark = match.matched ? matchingTag : nonmatchingTag,
+						{ start, end } = match;
+					decorations.push( mark.range( start.from, start.to ) );
+					if ( end ) {
+						decorations.push( mark.range( end.from, end.to ) );
+					}
+				}
+			}
+		}
+		return Decoration.set( decorations, true );
+	},
+	provide( f ) {
+		return EditorView.decorations.from( f );
+	}
+} );
+
+module.exports = { getTag, searchTag, matchTag, tagMatching };

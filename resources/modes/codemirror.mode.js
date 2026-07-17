@@ -106,6 +106,15 @@ class CodeMirrorMode {
 	}
 
 	/**
+	 * The extra extension for bracket matching.
+	 *
+	 * @type {Extension}
+	 */
+	get bracketMatchingExtension() {
+		return [];
+	}
+
+	/**
 	 * Supporting extensions.
 	 *
 	 * @type {Extension}

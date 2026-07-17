@@ -18,6 +18,7 @@ const { codeFoldingExtension, foldAllRefs } = require( './codemirror.mediawiki.c
 const { autocompleteExtension, completionSource } = require( './codemirror.mediawiki.autocomplete.js' );
 const openLinksExtension = require( './codemirror.mediawiki.openLinks.js' );
 const closeTagsExtension = require( './codemirror.mediawiki.closeTags.js' );
+const { tagMatching } = require( './codemirror.mediawiki.matchTag.js' );
 const mwKeymap = require( './codemirror.mediawiki.keymap.js' );
 const { lintSource, lintApi } = require( './codemirror.mediawiki.lint.js' );
 
@@ -164,6 +165,11 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 			// This is only for wikitext as it can be confusing in programming languages.
 			brackets: '()[]{}（）【】［］｛｝'
 		};
+	}
+
+	/** @inheritDoc */
+	get bracketMatchingExtension() {
+		return tagMatching;
 	}
 
 	/** @inheritDoc */

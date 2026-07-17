@@ -521,7 +521,10 @@ class CodeMirror {
 	 * @type {Extension}
 	 */
 	get bracketMatchingExtension() {
-		return bracketMatching( this.bracketMatchingConfig );
+		return [
+			bracketMatching( this.bracketMatchingConfig ),
+			this.langExtension.bracketMatchingExtension || []
+		];
 	}
 
 	/**

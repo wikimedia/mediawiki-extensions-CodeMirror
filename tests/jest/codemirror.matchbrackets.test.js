@@ -52,12 +52,12 @@ describe( 'CodeMirrorBracketMatching for StreamLanguage', () => {
 	} );
 
 	it( 'should update the extension with a new config', () => {
-		cm.textSelection.setContents( '<div>[http://example.org]' );
+		cm.textSelection.setContents( '</div>[http://example.org]' );
 		// Should not highlight angle brackets.
 		cm.textSelection.setSelection( { start: 2 } );
 		expect( cm.view.contentDOM.querySelectorAll( selector ).length ).toEqual( 0 );
 		// Should highlight square brackets.
-		cm.textSelection.setSelection( { start: 6 } );
+		cm.textSelection.setSelection( { start: 7 } );
 		expect( cm.view.contentDOM.querySelectorAll( '.cm-matchingBracket' ).length ).toEqual( 2 );
 
 		cm.bracketMatchingConfig = { brackets: '<>' };
@@ -65,8 +65,24 @@ describe( 'CodeMirrorBracketMatching for StreamLanguage', () => {
 		cm.textSelection.setSelection( { start: 2 } );
 		expect( cm.view.contentDOM.querySelectorAll( '.cm-matchingBracket' ).length ).toEqual( 2 );
 		// Should not highlight square brackets.
-		cm.textSelection.setSelection( { start: 6 } );
+		cm.textSelection.setSelection( { start: 7 } );
 		expect( cm.view.contentDOM.querySelectorAll( selector ).length ).toEqual( 0 );
+	} );
+
+	it( 'should highlight extension tags', () => {
+		cm.textSelection.setContents( '<ref name="a">a</ref>' );
+		cm.textSelection.setSelection( { start: 2 } );
+		expect( cm.view.contentDOM.querySelectorAll( '.cm-matchingBracket' ).length ).toEqual( 2 );
+		cm.textSelection.setSelection( { start: 18 } );
+		expect( cm.view.contentDOM.querySelectorAll( '.cm-matchingBracket' ).length ).toEqual( 2 );
+	} );
+
+	it( 'should highlight HTML tags', () => {
+		cm.textSelection.setContents( '<span id="a">a</span>' );
+		cm.textSelection.setSelection( { start: 2 } );
+		expect( cm.view.contentDOM.querySelectorAll( '.cm-matchingBracket' ).length ).toEqual( 2 );
+		cm.textSelection.setSelection( { start: 17 } );
+		expect( cm.view.contentDOM.querySelectorAll( '.cm-matchingBracket' ).length ).toEqual( 2 );
 	} );
 } );
 
