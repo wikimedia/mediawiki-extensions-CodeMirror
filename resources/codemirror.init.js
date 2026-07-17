@@ -16,6 +16,7 @@ const useCodeMirror = mw.user.options.get( optionName ) > 0;
 const resourceLoaderModules = mw.config.get( 'cmRLModules' );
 const useWikiEditor = resourceLoaderModules.includes( 'ext.CodeMirror.WikiEditor' );
 const cmTextarea = mw.config.get( 'cmTextarea', null );
+const action = mw.config.get( 'wgAction' );
 
 /**
  * Get a LanguageSupport instance for the current mode.
@@ -143,14 +144,23 @@ function addCodeMirrorButton() {
 	} );
 }
 
-// Value of 0 means there intentionally is no primary textarea (i.e. Special:SecurePoll/translate).
-// Guard against there being no textarea, i.e. "Section editing not supported" error (T424877).
-if ( cmTextarea === 0 || document.querySelector( cmTextarea ) ) {
-	// Only add the 'Syntax' toolbar button to WikiEditor if CodeMirror is disabled.
-	if ( useWikiEditor && !useCodeMirror ) {
-		addCodeMirrorButton();
-	} else {
-		// Otherwise load all the modules and initialize CodeMirror.
-		init();
+function addCodeMirrorButtonOrInit() {
+	// Value of 0 means there intentionally is no primary textarea
+	// (i.e. Special:SecurePoll/translate).
+	// Guard against there being no textarea, i.e. "Section editing not supported" error (T424877).
+	if ( cmTextarea === 0 || document.querySelector( cmTextarea ) ) {
+		// Only add the 'Syntax' toolbar button to WikiEditor if CodeMirror is disabled.
+		if ( useWikiEditor && !useCodeMirror ) {
+			addCodeMirrorButton();
+		} else {
+			// Otherwise load all the modules and initialize CodeMirror.
+			init();
+		}
 	}
+}
+
+if ( action === 'edit' || action === 'submit' ) {
+	mw.hook( 'wikipage.editform' ).add( addCodeMirrorButtonOrInit );
+} else {
+	addCodeMirrorButtonOrInit();
 }
