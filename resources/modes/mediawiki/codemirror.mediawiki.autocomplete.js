@@ -34,7 +34,8 @@ const hasTag = ( types, names ) => ( Array.isArray( names ) ? names : [ names ] 
 
 const api = new mw.Api( { parameters: { formatversion: 2 } } ),
 	title = mw.config.get( 'wgPageName' );
-let promise;
+let promise,
+	last;
 
 /**
  * Get suggestions for wiki links.
@@ -45,11 +46,13 @@ let promise;
  * @return {Promise<string[]>}
  * @private
  */
-const linkSuggestFactory = ( search, namespace = 0, subpage = false ) => {
-	if ( subpage ) {
-		search = title + search;
-	}
-	if ( !promise ) {
+const linkSuggestFactory = async ( search, namespace = 0, subpage = false ) => {
+	if ( promise ) {
+		last = [ search, namespace, subpage ];
+	} else {
+		if ( subpage ) {
+			search = title + search;
+		}
 		api.abort();
 		promise = api.get( { action: 'opensearch', search, namespace, limit: 'max' } )
 			.then( ( [ , pages ] ) => {
@@ -69,7 +72,14 @@ const linkSuggestFactory = ( search, namespace = 0, subpage = false ) => {
 				return result;
 			} );
 	}
-	return promise;
+	const ret = await promise;
+	if ( last ) {
+		const args = last;
+		last = null;
+		promise = null;
+		return linkSuggestFactory( ...args );
+	}
+	return ret;
 };
 
 /**
