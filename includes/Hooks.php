@@ -241,7 +241,17 @@ class Hooks implements
 		}
 
 		if ( $useWikiEditor && $mode !== self::MODE_MEDIAWIKI && $this->isEditPage ) {
-			$this->addStyleModule( $out );
+			if ( $useCodeMirror ) {
+				$this->addStyleModule( $out );
+			}
+
+			// Add a class to expose Realtime Preview in WikiEditor, if applicable for the current content model.
+			$rtpContentModels = ExtensionRegistry::getInstance()
+				->getAttribute( 'WikiEditorRealtimePreviewContentModels' );
+			$contentModel = $out->getTitle()?->getContentModel();
+			if ( $rtpContentModels && in_array( $contentModel, $rtpContentModels, true ) ) {
+				$out->addBodyClasses( 'cm-mw-wikieditor-realtime-preview' );
+			}
 		}
 
 		$mainTextarea = $textareas[0];
@@ -283,13 +293,6 @@ class Hooks implements
 	private function addStyleModule( OutputPage $out ): void {
 		$out->addBodyClasses( 'cm-mw-wikieditor-loading' );
 		$out->addModuleStyles( 'ext.CodeMirror.styles' );
-
-		// Add a class to expose Realtime Preview in WikiEditor, if applicable for the current content model.
-		$rtpContentModels = ExtensionRegistry::getInstance()->getAttribute( 'WikiEditorRealtimePreviewContentModels' );
-		$contentModel = $out->getTitle()?->getContentModel();
-		if ( $rtpContentModels && in_array( $contentModel, $rtpContentModels, true ) ) {
-			$out->addBodyClasses( 'cm-mw-wikieditor-realtime-preview' );
-		}
 	}
 
 	/**

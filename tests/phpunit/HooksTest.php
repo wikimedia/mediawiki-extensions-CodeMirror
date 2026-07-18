@@ -36,7 +36,7 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 	 * @param string $expectedMode
 	 * @dataProvider provideOnEditPageShowEditFormInitial
 	 */
-	public function testOnEditPageShowEditFormInitial(
+	public function testEditPage(
 		array $conds,
 		array $expectedModules,
 		string $expectedMode = 'mediawiki'
@@ -317,6 +317,16 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 				'ext.CodeMirror.styles', 'ext.CodeMirror.WikiEditor' ],
 			'json'
 		];
+		yield 'code preference false, WikiEditor, contentModel JSON' => [
+			[
+				Hooks::OPTION_USE_WIKIEDITOR => true,
+				Hooks::OPTION_USE_CODEMIRROR_CODE => false,
+				'contentModel' => CONTENT_MODEL_JSON,
+				'allowedModes' => [ Hooks::MODE_JSON => true ],
+			],
+			[ 'ext.CodeMirror.init' ],
+			'json'
+		];
 		yield 'preference false, WikiEditor, contentModel Chart.JsonConifg' => [
 			[
 				Hooks::OPTION_USE_WIKIEDITOR => true,
@@ -327,6 +337,17 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 			],
 			[ ...$cmDefaultModules, 'ext.CodeMirror.modes',
 				'ext.CodeMirror.styles', 'ext.CodeMirror.WikiEditor' ],
+			'json'
+		];
+		yield 'code preference false, WikiEditor, contentModel Chart.JsonConifg' => [
+			[
+				Hooks::OPTION_USE_WIKIEDITOR => true,
+				Hooks::OPTION_USE_CODEMIRROR_CODE => false,
+				'contentModel' => 'Chart.JsonConfig',
+				'contentModelAfterHook' => CONTENT_MODEL_JSON,
+				'allowedModes' => [ Hooks::MODE_JSON => true ],
+			],
+			[ 'ext.CodeMirror.init' ],
 			'json'
 		];
 	}
