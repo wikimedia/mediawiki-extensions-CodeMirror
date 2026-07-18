@@ -22,16 +22,7 @@ const { tagMatching, matchTag } = require( './codemirror.mediawiki.matchTag.js' 
 const mwKeymap = require( './codemirror.mediawiki.keymap.js' );
 const { lintSource, lintApi } = require( './codemirror.mediawiki.lint.js' );
 
-const specialParserFunctions = {
-		ifexist: 0,
-		lst: 0,
-		lstx: 0,
-		lsth: 0,
-		filepath: 6,
-		int: 8,
-		invoke: 828
-	},
-	nsIds = mw.config.get( 'wgNamespaceIds' ),
+const nsIds = mw.config.get( 'wgNamespaceIds' ),
 	fileNsRegex = new RegExp( `^(?:${
 		Object.entries( nsIds ).filter( ( [ , id ] ) => id === 6 ).map( ( [ ns ] ) => ns ).join( '|' )
 	})\\s*:`, 'i' );
@@ -103,8 +94,8 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 		this.tokenTable = mwModeConfig.tokenTable;
 		this.registerGroundTokens();
 
-		for ( const k in specialParserFunctions ) {
-			mwModeConfig.addFunction( specialParserFunctions[ k ] );
+		for ( const k in config.parserFunctionNsIds ) {
+			mwModeConfig.addFunction( config.parserFunctionNsIds[ k ] );
 		}
 		// Dynamically register any tags that aren't already in CodeMirrorMediaWikiConfig
 		Object.keys( config.tags ).forEach( ( tag ) => mwModeConfig.addTag( tag ) );
@@ -437,8 +428,10 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 			const mt = stream.match( /^#?[^:}{~]+/ );
 			if ( mt ) {
 				const name = this.config.functionSynonyms[ 0 ][ mt[ 0 ].trim().toLowerCase() ];
-				if ( name in specialParserFunctions ) {
-					state.tokenize = this.inParserFunctionName( specialParserFunctions[ name ] );
+				if ( name in this.config.parserFunctionNsIds ) {
+					state.tokenize = this.inParserFunctionName(
+						this.config.parserFunctionNsIds[ name ]
+					);
 				}
 				return this.makeLocalStyle( mwModeConfig.tags.parserFunctionName, state );
 			}

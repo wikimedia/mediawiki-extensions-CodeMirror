@@ -91,6 +91,15 @@ global.mockMwConfigGet = ( config = {} ) => {
 				'link=$1': 'link',
 				sub: 'sub',
 				thumb: 'thumbnail'
+			},
+			parserFunctionNsIds: {
+				ifexist: 0,
+				lst: 0,
+				lstx: 0,
+				lsth: 0,
+				filepath: 6,
+				int: 8,
+				invoke: 828
 			}
 		},
 		wgMFMode: null,

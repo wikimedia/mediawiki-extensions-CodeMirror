@@ -18,6 +18,7 @@ class DataScriptTest extends MediaWikiIntegrationTestCase {
 		$script = DataScript::makeScript( $context );
 		$this->assertStringContainsString( '"extCodeMirrorConfig":', $script );
 		$this->assertStringContainsString( '"pluginModules":', $script );
+		$this->assertStringContainsString( '"parserFunctionNsIds":', $script );
 		$this->assertStringContainsString( '"tagModes":', $script );
 		$this->assertStringContainsString( '"tags":', $script );
 		$this->assertStringContainsString( '"doubleUnderscore":', $script );

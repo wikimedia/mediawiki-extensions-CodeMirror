@@ -494,7 +494,16 @@ const mwConfig = {
 		'pendingchangelevel',
 		'noexternallanglinks',
 		'wbreponame'
-	]
+	],
+	parserFunctionNsIds: {
+		ifexist: 0,
+		lst: 0,
+		lstx: 0,
+		lsth: 0,
+		filepath: 6,
+		int: 8,
+		invoke: 828
+	}
 };
 const { parser } = new CodeMirrorMediaWiki( mwConfig ).language;
 

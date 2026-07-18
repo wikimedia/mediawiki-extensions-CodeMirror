@@ -62,6 +62,7 @@ class DataScript {
 			'defaultPreferencesCode' => $mwConfig->get( 'CodeMirrorDefaultPreferencesCode' ),
 			'primaryPreferences' => $mwConfig->get( 'CodeMirrorPrimaryPreferences' ),
 			'pluginModules' => $registry->getAttribute( 'CodeMirrorPluginModules' ),
+			'parserFunctionNsIds' => $registry->getAttribute( 'CodeMirrorParserFunctionNsIds' ),
 			'tagModes' => $tagModes,
 			'tags' => array_fill_keys( $tagNames, true ),
 			'doubleUnderscore' => [ [], [] ],

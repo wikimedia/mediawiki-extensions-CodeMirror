@@ -535,6 +535,10 @@
 	],
 	"attributes": {
 		"CodeMirror": {
+			"ParserFunctionNsIds": {
+				"filepath": 6,
+				"int": 8
+			},
 			"TagModes": {
 				"pre": "mw-tag-pre",
 				"nowiki": "mw-tag-nowiki",
