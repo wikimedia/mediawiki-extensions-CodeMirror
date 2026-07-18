@@ -1405,17 +1405,17 @@ class SelectionRange {
     /**
     Extend this range to cover at least `from` to `to`.
     */
-    extend(from, to = from) {
+    extend(from, to = from, assoc = 0) {
         if (from <= this.anchor && to >= this.anchor)
-            return EditorSelection.range(from, to);
+            return EditorSelection.range(from, to, undefined, undefined, assoc);
         let head = Math.abs(from - this.anchor) > Math.abs(to - this.anchor) ? from : to;
-        return EditorSelection.range(this.anchor, head);
+        return EditorSelection.range(this.anchor, head, undefined, undefined, assoc);
     }
     /**
     Compare this range to another range.
     */
     eq(other, includeAssoc = false) {
-        return this.anchor == other.anchor && this.head == other.head &&
+        return this.anchor == other.anchor && this.head == other.head && this.goalColumn == other.goalColumn &&
             (!includeAssoc || !this.empty || this.assoc == other.assoc);
     }
     /**
@@ -1556,11 +1556,13 @@ class EditorSelection {
     /**
     Create a selection range.
     */
-    static range(anchor, head, goalColumn, bidiLevel) {
+    static range(anchor, head, goalColumn, bidiLevel, assoc) {
         let flags = ((goalColumn !== null && goalColumn !== void 0 ? goalColumn : 16777215 /* RangeFlag.NoGoalColumn */) << 6 /* RangeFlag.GoalColumnOffset */) |
             (bidiLevel == null ? 7 : Math.min(6, bidiLevel));
+        if (!assoc && anchor != head)
+            assoc = head < anchor ? 1 : -1;
         return head < anchor ? SelectionRange.create(head, anchor, 32 /* RangeFlag.Inverted */ | 16 /* RangeFlag.AssocAfter */ | flags)
-            : SelectionRange.create(anchor, head, (head > anchor ? 8 /* RangeFlag.AssocBefore */ : 0) | flags);
+            : SelectionRange.create(anchor, head, (!assoc ? 0 : assoc < 0 ? 8 /* RangeFlag.AssocBefore */ : 16 /* RangeFlag.AssocAfter */) | flags);
     }
     /**
     @internal
@@ -2904,7 +2906,8 @@ class EditorState {
      - Other (anything else)
     */
     charCategorizer(at) {
-        return makeCategorizer(this.languageDataAt("wordChars", at).join(""));
+        let chars = this.languageDataAt("wordChars", at);
+        return makeCategorizer(chars.length ? chars[0] : "");
     }
     /**
     Find the word at the given position, meaning the range
@@ -3090,6 +3093,9 @@ class RangeValue {
 RangeValue.prototype.startSide = RangeValue.prototype.endSide = 0;
 RangeValue.prototype.point = false;
 RangeValue.prototype.mapMode = exports.MapMode.TrackDel;
+function cmpVal(a, b) {
+    return a == b || a.constructor == b.constructor && a.eq(b);
+}
 /**
 A range associates a value with a range of positions.
 */
@@ -3396,7 +3402,7 @@ class RangeSet {
         for (;;) {
             if (sideA.to != sideB.to ||
                 !sameValues(sideA.active, sideB.active) ||
-                sideA.point && (!sideB.point || !sideA.point.eq(sideB.point)))
+                sideA.point && (!sideB.point || !cmpVal(sideA.point, sideB.point)))
                 return false;
             if (sideA.to > to)
                 return true;
@@ -3871,22 +3877,27 @@ function compare(a, startA, b, startB, length, comparator) {
     b.goto(startB);
     let endB = startB + length;
     let pos = startB, dPos = startB - startA;
-    for (;;) {
+    let bounds = !!comparator.boundChange;
+    for (let boundChange = false;;) {
         let dEnd = (a.to + dPos) - b.to, diff = dEnd || a.endSide - b.endSide;
         let end = diff < 0 ? a.to + dPos : b.to, clipEnd = Math.min(end, endB);
-        if (a.point || b.point) {
-            if (!(a.point && b.point && (a.point == b.point || a.point.eq(b.point)) &&
+        let point = a.point || b.point;
+        if (point) {
+            if (!(a.point && b.point && cmpVal(a.point, b.point) &&
                 sameValues(a.activeForPoint(a.to), b.activeForPoint(b.to))))
                 comparator.comparePoint(pos, clipEnd, a.point, b.point);
+            boundChange = false;
         }
         else {
+            if (boundChange)
+                comparator.boundChange(pos);
             if (clipEnd > pos && !sameValues(a.active, b.active))
                 comparator.compareRange(pos, clipEnd, a.active, b.active);
+            if (bounds && clipEnd < endB && (dEnd || a.openEnd(end) != b.openEnd(end)))
+                boundChange = true;
         }
         if (end > endB)
             break;
-        if ((dEnd || a.openEnd != b.openEnd) && comparator.boundChange)
-            comparator.boundChange(end);
         pos = end;
         if (diff <= 0)
             a.next();
@@ -3898,7 +3909,7 @@ function sameValues(a, b) {
     if (a.length != b.length)
         return false;
     for (let i = 0; i < a.length; i++)
-        if (a[i] != b[i] && !a[i].eq(b[i]))
+        if (a[i] != b[i] && !cmpVal(a[i], b[i]))
             return false;
     return true;
 }
@@ -23644,7 +23655,7 @@ const selectMatchingBracket = ({ state, dispatch }) => toMatchingBracket(state, 
 function extendSel(target, how) {
     let selection = updateSel(target.state.selection, range => {
         let head = how(range);
-        return EditorSelection.range(range.anchor, head.head, head.goalColumn, head.bidiLevel || undefined);
+        return EditorSelection.range(range.anchor, head.head, head.goalColumn, head.bidiLevel || undefined, head.assoc);
     });
     if (selection.eq(target.state.selection))
         return false;
