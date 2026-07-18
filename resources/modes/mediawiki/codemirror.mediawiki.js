@@ -115,7 +115,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 				.map( ( label ) => ( { type: 'constant', label } ) )
 		];
 		this.doubleUnderscore = [
-			...Object.keys( config.doubleUnderscore[ 0 ] ),
+			...Object.keys( config.doubleUnderscore[ 0 ] ).map( ( label ) => label.toUpperCase() ),
 			...Object.keys( config.doubleUnderscore[ 1 ] )
 		].map( ( label ) => ( { type: 'constant', label } ) );
 		const extTags = Object.keys( config.tags );

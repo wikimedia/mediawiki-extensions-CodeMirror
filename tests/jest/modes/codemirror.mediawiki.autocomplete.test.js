@@ -74,7 +74,7 @@ describe( 'MediaWiki autocomplete', () => {
 		} );
 		expect( source( createCompletionContext() ) ).toEqual( {
 			from: 0,
-			options: [ { label: '__notoc__', type: 'constant' } ],
+			options: [ { label: '__NOTOC__', type: 'constant' } ],
 			validFor: /^[^\s<>[\]{}|#]*$/
 		} );
 	} );
