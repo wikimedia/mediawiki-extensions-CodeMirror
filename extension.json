@@ -394,7 +394,7 @@
 				"modes/codemirror.doctag.js",
 				"modes/codemirror.javascript.js",
 				"modes/codemirror.json.js",
-				"modes/json/codemirror.json.lint.js",
+				"modes/codemirror.jsonc.js",
 				"modes/codemirror.css.js",
 				"modes/codemirror.lua.js",
 				"modes/codemirror.vue.js",

@@ -1,5 +1,5 @@
 /* eslint-disable jest/expect-expect */
-const jsonLint = require( '../../../resources/modes/json/codemirror.json.lint.js' );
+const { jsonLinter } = require( '../../../resources/lib/codemirror.bundle.modes.js' );
 
 const lintJSONNative = ( str ) => {
 	if ( str.trim() ) {
@@ -13,27 +13,13 @@ const lintJSONNative = ( str ) => {
 	}
 };
 
-const lintJSON = ( str ) => {
-	try {
-		jsonLint( str );
-		return [];
-	} catch ( e ) {
-		if ( e instanceof Error ) {
-			throw e;
-		}
-		const { warnings } = e;
-		if ( e.message ) {
-			warnings.push( e );
-		}
-		return warnings;
-	}
-};
+const lintJSON = ( str ) => jsonLinter( { state: { doc: str } } );
 
 const isValid = ( data ) => {
 	expect( lintJSON( data ) ).toHaveLength( 0 );
 };
 
-const isInvalid = ( data, s = 'error', n = 1 ) => {
+const isInvalid = ( data, s = 'error', offset = 0, n = 1 ) => {
 	let m;
 	if ( s === 'error' ) {
 		throw new RangeError( 'Missing error message' );
@@ -43,12 +29,12 @@ const isInvalid = ( data, s = 'error', n = 1 ) => {
 	}
 	const result = lintJSON( data );
 	expect( result ).toHaveLength( n );
-	const [ { severity, message, position } ] = result;
+	const [ { severity, message, from } ] = result;
 	expect( severity ).toBe( s );
 	if ( s === 'error' ) {
 		const e = lintJSONNative( data );
 		if ( e ) {
-			expect( e ).toBe( position );
+			expect( e ).toBe( from + offset );
 		}
 	}
 	if ( m ) {
@@ -57,7 +43,7 @@ const isInvalid = ( data, s = 'error', n = 1 ) => {
 		expect( typeof message ).toBe( 'string' );
 		expect( message.length ).toBeGreaterThan( 0 );
 	}
-	expect( position > 0 || message === 'Unexpected "/"' ).toBeTruthy();
+	expect( from > 0 || message === 'Unexpected "/"' ).toBeTruthy();
 };
 
 describe( 'JSON Lint', () => {
@@ -69,15 +55,15 @@ describe( 'JSON Lint', () => {
 		isInvalid( '[   , "<-- missing value"]', 'Unexpected ","' );
 		isInvalid( '["Comma after the close"],', 'Syntax error' );
 		isInvalid( '["Extra close"]]', 'Syntax error' );
-		isInvalid( '{"Extra comma": true,}', 'Trailing comma in object' );
+		isInvalid( '{"Extra comma": true,}', 'Trailing comma in object', 1 );
 		isInvalid( '{"Extra value after close": true} "misplaced quoted value"', 'Syntax error' );
 		isInvalid( '{"Illegal expression": 1 + 2}', 'Expected "," or "}" instead of "+"' );
 		isInvalid( '{"Illegal invocation": alert()}', 'Unexpected "a"' );
 		isInvalid( '{"Numbers cannot have leading zeroes": 013}', 'Bad number' );
 		isInvalid( '{"Numbers cannot be hex": 0x14}', 'Expected "," or "}" instead of "x"' );
-		isInvalid( String.raw`["Illegal backslash escape: \x15"]`, 'Bad escaped character' );
+		isInvalid( String.raw`["Illegal backslash escape: \x15"]`, 'Bad escaped character', 1 );
 		isInvalid( String.raw`[\naked]`, String.raw`Unexpected "\\"` );
-		isInvalid( String.raw`["Illegal backslash escape: \017"]`, 'Bad escaped character' );
+		isInvalid( String.raw`["Illegal backslash escape: \017"]`, 'Bad escaped character', 1 );
 		isInvalid( '{"Missing colon" null}', 'Expected ":" instead of "n"' );
 		isInvalid( '{"Double colon":: null}', 'Unexpected ":"' );
 		isInvalid( '{"Comma instead of colon", null}', 'Expected ":" instead of ","' );
@@ -86,12 +72,13 @@ describe( 'JSON Lint', () => {
 		isInvalid( "['single quote']", 'Unexpected "\'"' );
 		// eslint-disable-next-line no-tabs
 		isInvalid( '["	tab	character	in	string	"]', 'Bad control character' );
-		isInvalid( String.raw`["tab\   character\   in\  string\  "]`, 'Bad escaped character' );
+		isInvalid( String.raw`["tab\   character\   in\  string\  "]`, 'Bad escaped character', 1 );
 		isInvalid( '["line\nbreak"]', 'Bad control character' );
 		isInvalid(
 			String.raw`["line\
 break"]`,
-			'Bad escaped character'
+			'Bad escaped character',
+			1
 		);
 		isInvalid( '[0e]', 'Bad number' );
 		isInvalid( '[0e+]', 'Bad number' );
@@ -126,7 +113,7 @@ describe( 'vscode-json-languageservice invalid cases', () => {
 		isInvalid( "{'key': 3}", 'Expected \'"\' instead of "\'"' );
 		isInvalid( '{"key" 3}', 'Expected ":" instead of "3"' );
 		isInvalid( '{"key":3 "key2": 4}', 'Expected "," or "}" instead of \'"\'' );
-		isInvalid( '{"key":42, }', 'Trailing comma in object' );
+		isInvalid( '{"key":42, }', 'Trailing comma in object', 2 );
 		isInvalid( '{"key:42', 'Unterminated string' );
 	} );
 
@@ -150,10 +137,10 @@ describe( 'vscode-json-languageservice invalid cases', () => {
 		isValid( String.raw`["\\"]` );
 		isInvalid( '["', 'Unterminated string' );
 		isInvalid( '["]', 'Unterminated string' );
-		isInvalid( String.raw`["\z"]`, 'Bad escaped character' );
-		isInvalid( String.raw`["\u"]`, 'Bad unicode escape' );
-		isInvalid( String.raw`["\u123"]`, 'Bad unicode escape' );
-		isInvalid( String.raw`["\u123Z"]`, 'Bad unicode escape' );
+		isInvalid( String.raw`["\z"]`, 'Bad escaped character', 1 );
+		isInvalid( String.raw`["\u"]`, 'Bad unicode escape', 2 );
+		isInvalid( String.raw`["\u123"]`, 'Bad unicode escape', 5 );
+		isInvalid( String.raw`["\u123Z"]`, 'Bad unicode escape', 5 );
 		isInvalid( "['string']", 'Unexpected "\'"' );
 		isInvalid( '"\tabc"', 'Bad control character' );
 	} );
@@ -217,7 +204,7 @@ describe( 'vscode-json-languageservice invalid cases', () => {
 	it( 'Duplicate keys', () => {
 		isInvalid( '{"a": 1, "a": 2}', 'warning' );
 		isInvalid( '{"a": { "a": 2, "a": 3}}', 'warning' );
-		isInvalid( '[{ "a": 2, "a": 3, "a": 7}]', 'warning', 2 );
+		isInvalid( '[{ "a": 2, "a": 3, "a": 7}]', 'warning', 0, 2 );
 	} );
 
 	it( 'Strings with spaces', () => {

@@ -332,23 +332,23 @@ class HooksTest extends MediaWikiIntegrationTestCase {
 				Hooks::OPTION_USE_WIKIEDITOR => true,
 				Hooks::OPTION_USE_CODEMIRROR => false,
 				'contentModel' => 'Chart.JsonConfig',
-				'contentModelAfterHook' => CONTENT_MODEL_JSON,
-				'allowedModes' => [ Hooks::MODE_JSON => true ],
+				'contentModelAfterHook' => 'jsonc',
+				'allowedModes' => [ Hooks::MODE_JSONC => true ],
 			],
 			[ ...$cmDefaultModules, 'ext.CodeMirror.modes',
 				'ext.CodeMirror.styles', 'ext.CodeMirror.WikiEditor' ],
-			'json'
+			'jsonc'
 		];
 		yield 'code preference false, WikiEditor, contentModel Chart.JsonConifg' => [
 			[
 				Hooks::OPTION_USE_WIKIEDITOR => true,
 				Hooks::OPTION_USE_CODEMIRROR_CODE => false,
 				'contentModel' => 'Chart.JsonConfig',
-				'contentModelAfterHook' => CONTENT_MODEL_JSON,
-				'allowedModes' => [ Hooks::MODE_JSON => true ],
+				'contentModelAfterHook' => 'jsonc',
+				'allowedModes' => [ Hooks::MODE_JSONC => true ],
 			],
 			[ 'ext.CodeMirror.init' ],
-			'json'
+			'jsonc'
 		];
 	}
 

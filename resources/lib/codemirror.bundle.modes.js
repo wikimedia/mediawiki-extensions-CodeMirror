@@ -4097,7 +4097,7 @@ const noSemi = 316,
   questionDot = 3,
   JSXStartTag = 4,
   insertSemi = 318,
-  spaces = 320,
+  spaces$1 = 320,
   newline$1 = 321,
   LineComment = 5,
   BlockComment = 6,
@@ -4115,7 +4115,7 @@ const braceR = 125, semicolon = 59, slash$1 = 47, star = 42, plus = 43, minus = 
 const trackNewline = new ContextTracker({
   start: false,
   shift(context, term) {
-    return term == LineComment || term == BlockComment || term == spaces ? context : term == newline$1
+    return term == LineComment || term == BlockComment || term == spaces$1 ? context : term == newline$1
   },
   strict: false
 });
@@ -5148,98 +5148,591 @@ function css() {
     return new ext_CodeMirror_lib.LanguageSupport(cssLanguage, cssLanguage.data.of({ autocomplete: cssCompletionSource }));
 }
 
+// eslint-disable-next-line @stylistic/multiline-comment-style
+/*
+    json_parse.js
+    2016-05-02
+
+    Public Domain.
+
+    NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
+
+    This file creates a json_parse function.
+
+        json_parse(text)
+            This method parses a JSON text and throws a SyntaxError exception.
+
+    This is a reference implementation. You are free to copy, modify, or redistribute.
+
+    Original source:
+        https://github.com/douglascrockford/JSON-js/blob/107fc93c94aa3a9c7b48548631593ecf3aac60d2/json_parse.js
+
+    Modifications:
+        - Only returns errors and warnings instead of the parsed value.
+        - Better agreement with JSON specification.
+        - Warnings for duplicate object keys and unsafe integers.
+
+    This code should be minified before deployment.
+    See http://javascript.crockford.com/jsmin.html
+
+    USE YOUR OWN COPY. IT IS EXTREMELY UNWISE TO LOAD CODE FROM SERVERS YOU DO NOT CONTROL.
+*/
+const escapee = {
+    '"': '"',
+    '\\': '\\',
+    '/': '/',
+    b: '\b',
+    f: '\f',
+    n: '\n',
+    r: '\r',
+    t: '\t',
+};
+const spaces = new Set([' ', '\t', '\n', '\r']);
+const stringify = (c) => {
+    if (c === '') {
+        return 'end of input';
+    }
+    return c === '"' ? `'"'` : JSON.stringify(c);
+};
+const factory = (jsonc) => {
+    // This is a function that can parse a JSON text.
+    // It is a simple, recursive descent parser.
+    // It does not use eval or regular expressions,
+    // so it can be used as a model for implementing a JSON parser in other languages.
+    // We are defining the function inside of another function to avoid creating global variables.
+    let at; // The index of the current character
+    let ch; // The current character
+    let text;
+    let warnings;
+    const prepareError = (e, from, to) => {
+        if (from === undefined) {
+            e.from = at - 1;
+        }
+        else {
+            e.from = from;
+            e.to = to !== null && to !== void 0 ? to : at - 1;
+        }
+    };
+    const warn = (message, from, to) => {
+        // Log warning when something is wrong.
+        const warning = {
+            message,
+            severity: 'warning',
+        };
+        prepareError(warning, from, to);
+        warnings.push(warning);
+    };
+    const error = (message, from, to) => {
+        // Call error when something is wrong.
+        const e = {
+            warnings,
+            message,
+            severity: 'error',
+        };
+        prepareError(e, from, to);
+        throw e;
+    };
+    const next = (c) => {
+        // If a c parameter is provided, verify that it matches the current character.
+        if (c && c !== ch) {
+            error(`Expected ${stringify(c)} instead of ${stringify(ch)}`);
+        }
+        // Get the next character. When there are no more characters, return the empty string.
+        ch = text.charAt(at);
+        at++;
+        return ch;
+    };
+    const number = () => {
+        // Parse a number value.
+        let string = '';
+        const from = at - 1;
+        if (ch === '-') {
+            string = '-';
+            next();
+        }
+        if (ch === '0') {
+            string += ch;
+            next();
+            if (ch >= '0' && ch <= '9') {
+                error('Bad number');
+            }
+        }
+        else if (ch >= '1' && ch <= '9') {
+            while (ch >= '0' && ch <= '9') {
+                string += ch;
+                next();
+            }
+        }
+        else {
+            error('No number after minus sign');
+        }
+        if (ch !== '.' && ch !== 'e' && ch !== 'E') {
+            const value = Number(string);
+            if (!Number.isSafeInteger(value)) {
+                warn('Not a safe integer', from);
+            }
+            return;
+        }
+        if (ch === '.') {
+            string += '.';
+            next();
+            if (ch < '0' || ch > '9') {
+                error('Unterminated fractional number');
+            }
+            while (ch >= '0' && ch <= '9') {
+                string += ch;
+                next();
+            }
+        }
+        if (ch === 'e' || ch === 'E') { // eslint-disable-line unicorn/prefer-else-if
+            string += ch;
+            next();
+            // @ts-expect-error `ch` modified
+            if (ch === '-' || ch === '+') {
+                string += ch;
+                next();
+            }
+            while (ch >= '0' && ch <= '9') {
+                string += ch;
+                next();
+            }
+        }
+        const value = Number(string);
+        if (!Number.isFinite(value)) {
+            error('Bad number');
+        }
+    };
+    const string = () => {
+        // Parse a string value.
+        let value = '';
+        // When parsing for string values, we must look for " and \ characters.
+        if (ch === '"') {
+            while (next()) {
+                if (ch === '"') {
+                    next();
+                    return value;
+                }
+                const from = at - 1;
+                if (ch === '\\') {
+                    next();
+                    if (ch === 'u') {
+                        let i = 0;
+                        let uffff = 0;
+                        for (; i < 4; i++) {
+                            const hex = parseInt(next(), 16);
+                            if (!isFinite(hex)) {
+                                break;
+                            }
+                            uffff = uffff * 16 + hex;
+                        }
+                        if (i < 4) {
+                            error('Bad unicode escape', from);
+                        }
+                        value += String.fromCodePoint(uffff);
+                    }
+                    else if (typeof escapee[ch] === 'string') {
+                        value += escapee[ch];
+                    }
+                    else {
+                        error('Bad escaped character', from, at);
+                    }
+                }
+                else if (ch < ' ') {
+                    error('Bad control character', from, at);
+                }
+                else {
+                    value += ch;
+                }
+            }
+        }
+        else {
+            error(`Expected '"' instead of ${JSON.stringify(ch)}`);
+        }
+        return error('Unterminated string');
+    };
+    const white = () => {
+        // Skip whitespace and comments (JSONC).
+        while (ch) {
+            // Skip whitespace.
+            while (ch && spaces.has(ch)) {
+                next();
+            }
+            if (jsonc && ch === '/') {
+                const peek = text.charAt(at);
+                if (peek === '/') {
+                    // Skip single-line comments.
+                    next(); // skip /
+                    next(); // skip /
+                    // @ts-expect-error `ch` modified
+                    while (ch && ch !== '\n' && ch !== '\r') {
+                        next();
+                    }
+                    continue;
+                }
+                else if (peek === '*') {
+                    // Skip multi-line comments.
+                    next(); // skip /
+                    next(); // skip *
+                    // @ts-expect-error `ch` modified
+                    while (ch && (ch !== '*' || text.charAt(at) !== '/')) {
+                        next();
+                    }
+                    if (ch === '*') {
+                        next(); // skip *
+                        next(); // skip /
+                    }
+                    continue;
+                }
+            }
+            break;
+        }
+    };
+    const word = () => {
+        // true, false, or null.
+        switch (ch) {
+            case 't':
+                next();
+                next('r');
+                next('u');
+                next('e');
+                return;
+            case 'f':
+                next();
+                next('a');
+                next('l');
+                next('s');
+                next('e');
+                return;
+            case 'n':
+                next();
+                next('u');
+                next('l');
+                next('l');
+                return;
+            default:
+                error(`Unexpected ${JSON.stringify(ch)}`);
+        }
+    };
+    const array = () => {
+        // Parse an array value.
+        next();
+        white();
+        if (ch === ']') {
+            next();
+            return; // empty array
+        }
+        else if (jsonc && ch === ',') {
+            next();
+            white();
+            next(']');
+            return;
+        }
+        let from;
+        while (ch) {
+            if (ch === ']') {
+                if (jsonc) {
+                    next();
+                    return;
+                }
+                error('Trailing comma in array', from, from + 1);
+            }
+            value();
+            white();
+            if (ch === ']') {
+                next();
+                return;
+            }
+            else if (ch === ',') {
+                from = at - 1;
+                next();
+                white();
+            }
+            else {
+                error(`Expected "," or "]" instead of ${stringify(ch)}`);
+            }
+        }
+        error('Unterminated array');
+    };
+    const object = () => {
+        // Parse an object value.
+        const keys = new Set();
+        next();
+        white();
+        if (ch === '}') {
+            next();
+            return; // empty object
+        }
+        else if (jsonc && ch === ',') {
+            next();
+            white();
+            next('}');
+            return;
+        }
+        let from;
+        while (ch) {
+            if (ch === '}') {
+                if (jsonc) {
+                    next();
+                    return;
+                }
+                error('Trailing comma in object', from, from + 1);
+            }
+            from = at;
+            const key = string();
+            const to = at - 2;
+            white();
+            next(':');
+            if (keys.has(key)) {
+                warn(`Duplicate key ${stringify(key)}`, from, to);
+            }
+            else {
+                keys.add(key);
+            }
+            value();
+            white();
+            if (ch === '}') {
+                next();
+                return;
+            }
+            else if (ch === ',') {
+                from = at - 1;
+                next();
+                white();
+            }
+            else {
+                error(`Expected "," or "}" instead of ${stringify(ch)}`);
+            }
+        }
+        error(`Expected '"'`);
+    };
+    const value = () => {
+        // Parse a JSON value. It could be an object, an array, a string, a number,
+        // or a word.
+        white();
+        switch (ch) {
+            case '':
+                break;
+            case '{':
+                object();
+                break;
+            case '[':
+                array();
+                break;
+            case '"':
+                return string();
+            case '-':
+                number();
+                break;
+            default:
+                (ch >= '0' && ch <= '9' ? number : word)();
+        }
+        return undefined;
+    };
+    // Return the json_parse function. It will have access to all of the above
+    // functions and variables.
+    return (source) => {
+        text = source;
+        warnings = [];
+        at = 0;
+        ch = ' ';
+        value();
+        white();
+        if (ch) {
+            error('Syntax error');
+        }
+        else if (warnings.length > 0) {
+            throw { warnings };
+        }
+    };
+};
+const json_parse = /* #__PURE__ */ factory(), jsonc_parse = /* #__PURE__ */ factory(true);
+
+var __rest = (undefined && undefined.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
+/**
+ * 按行分割字符串并记录每行的起止位置
+ * @param str 字符串
+ */
+const splitLines = (str) => {
+    const lines = [];
+    let start = 0;
+    for (const line of str.split('\n')) {
+        const end = start + line.length;
+        lines.push([line, start, end]);
+        start = end + 1;
+    }
+    return lines;
+};
+const mt2num = (mt) => mt && Number(mt[1]);
+const formatJsonError = (str, errors) => {
+    var _a;
+    let lines;
+    const offsetToPosition = (offset) => {
+        lines !== null && lines !== void 0 ? lines : (lines = splitLines(str));
+        const line = lines.findIndex(([, , end]) => offset <= end) + 1;
+        return {
+            line,
+            column: offset - lines[line - 1][1] + 1,
+        };
+    };
+    for (const error of errors) {
+        const { line, column, from, to } = error;
+        if (from === null || from === undefined) {
+            if (line) {
+                lines !== null && lines !== void 0 ? lines : (lines = splitLines(str));
+                (_a = error.column) !== null && _a !== void 0 ? _a : (error.column = 1);
+                error.from = lines[line - 1][1] + (error.column - 1);
+            }
+            else {
+                error.from = 0;
+                error.line = 1;
+                error.column = 1;
+            }
+        }
+        else if (!line || !column) {
+            Object.assign(error, offsetToPosition(from));
+        }
+        if (to !== undefined) {
+            ({ line: error.endLine, column: error.endColumn } = offsetToPosition(to));
+        }
+        error.position = error.from;
+    }
+    return errors;
+};
+/**
+ * 使用`JSON.parse()`诊断JSON字符串中的语法错误
+ * @param str JSON字符串
+ * @param force 是否强制诊断
+ */
+const lintJSONNative = (str, force) => {
+    if (str.trim()) {
+        try {
+            JSON.parse(str);
+        }
+        catch (e) {
+            const { message } = e, line = mt2num(/\bline (\d+)/u.exec(message)), column = mt2num(/\bcolumn (\d+)/u.exec(message)), from = mt2num(/\bposition (\d+)/u.exec(message));
+            return formatJsonError(str, [{ message, line, column, from, severity: 'error' }]);
+        }
+    }
+    return [];
+};
+const lintJSONBase = (str, parse) => {
+    try {
+        parse(str);
+    }
+    catch (e) {
+        if (!(e instanceof Error)) {
+            const _a = e, { warnings } = _a, error = __rest(_a, ["warnings"]);
+            if (error.message) {
+                warnings.push(error);
+            }
+            return formatJsonError(str, warnings);
+        }
+    }
+    return [];
+};
+/**
+ * 诊断JSON字符串中的语法错误
+ * @param str JSON字符串
+ */
+const lintJSON = (str) => {
+    var _a;
+    if (!str.trim()) {
+        return [];
+    }
+    const errors = lintJSONBase(str, json_parse);
+    // eslint-disable-next-line unicorn/prefer-at
+    return ((_a = errors[errors.length - 1]) === null || _a === void 0 ? void 0 : _a.severity) === 'error' ? errors : [...errors, ...lintJSONNative(str)];
+};
+/**
+ * 诊断JSONC字符串中的语法错误
+ * @param str JSONC字符串
+ */
+const lintJSONC = (str) => str.trim() ? lintJSONBase(str, jsonc_parse) : [];
+
 const jsonHighlighting = ext_CodeMirror_lib.styleTags({
-  String: ext_CodeMirror_lib.tags.string,
-  Number: ext_CodeMirror_lib.tags.number,
-  "True False": ext_CodeMirror_lib.tags.bool,
-  PropertyName: ext_CodeMirror_lib.tags.propertyName,
-  Null: ext_CodeMirror_lib.tags.null,
-  ", :": ext_CodeMirror_lib.tags.separator,
-  "[ ]": ext_CodeMirror_lib.tags.squareBracket,
-  "{ }": ext_CodeMirror_lib.tags.brace
+    LineComment: ext_CodeMirror_lib.tags.lineComment,
+    BlockComment: ext_CodeMirror_lib.tags.blockComment,
+    String: ext_CodeMirror_lib.tags.string,
+    Number: ext_CodeMirror_lib.tags.number,
+    'True False': ext_CodeMirror_lib.tags.bool,
+    PropertyName: ext_CodeMirror_lib.tags.propertyName,
+    Null: ext_CodeMirror_lib.tags.null,
+    ', :': ext_CodeMirror_lib.tags.separator,
+    '[ ]': ext_CodeMirror_lib.tags.squareBracket,
+    '{ }': ext_CodeMirror_lib.tags.brace,
 });
 
 // This file was generated by lezer-generator. You probably shouldn't edit it.
 const parser$2 = LRParser.deserialize({
   version: 14,
-  states: "$bOVQPOOOOQO'#Cb'#CbOnQPO'#CeOvQPO'#ClOOQO'#Cr'#CrQOQPOOOOQO'#Cg'#CgO}QPO'#CfO!SQPO'#CtOOQO,59P,59PO![QPO,59PO!aQPO'#CuOOQO,59W,59WO!iQPO,59WOVQPO,59QOqQPO'#CmO!nQPO,59`OOQO1G.k1G.kOVQPO'#CnO!vQPO,59aOOQO1G.r1G.rOOQO1G.l1G.lOOQO,59X,59XOOQO-E6k-E6kOOQO,59Y,59YOOQO-E6l-E6l",
-  stateData: "#O~OeOS~OQSORSOSSOTSOWQO_ROgPO~OVXOgUO~O^[O~PVO[^O~O]_OVhX~OVaO~O]bO^iX~O^dO~O]_OVha~O]bO^ia~O",
-  goto: "!kjPPPPPPkPPkqwPPPPk{!RPPP!XP!e!hXSOR^bQWQRf_TVQ_Q`WRg`QcZRicQTOQZRQe^RhbRYQR]R",
-  nodeNames: "⚠ JsonText True False Null Number String } { Object Property PropertyName : , ] [ Array",
-  maxTerm: 25,
+  states: "&YO]QPOOPtOPOOOOQO'#Cd'#CdOyQPO'#CgO!UQPO'#CoOOQO'#Cy'#CyQOQPOOP!`OSO'#C^POOO)C>j)C>jOOQO'#Ci'#CiO!hQPO'#ChO!mQQO'#C{OOQO'#C{'#C{OOQO,59R,59RO!uQPO,59RO!zQQO'#C|OOQO'#C|'#C|OOQO,59Z,59ZO#SQPO,59ZPOOO'#Cp'#CpP#XOSO,58xPOOO,58x,58xO]QPO,59SO#aQPO,59gO#iQQO,59gOOQO1G.m1G.mO#qQPO,59hO#xQQO,59hOOQO1G.u1G.uPOOO-E6n-E6nPOOO1G.d1G.dOOQO1G.n1G.nOOQO,59],59]O$QQPO1G/ROOQO-E6o-E6oOOQO,59^,59^O$YQPO1G/SOOQO-E6p-E6pP!PQPO'#CqP]QPO'#Cr",
+  stateData: "$e~OiOSPOSjPQ~OSTOTTOUTOVTOYRObSOnQO~OjVO~OX]O`[OnXO~O``OaaO~P]OkcOleO~O^fO~O_gOXoX~OXiO~O_jOapX~OalO~OkcOlnO~OnXOXoa~O_qOXoa~Oapa~P]O_tOapa~OnXOXoi~Oapi~P]OPj`~",
+  goto: "#TqPPrPPPPPuPPu}!VPPPPPu!]!c!iPPPPPP!oP!}#QRWP]TOSfjtwQZRVpgqvXYRgqvQdVRmdQhZRrhQk_RukQUOQ_SQofVsjtwR^RRbS",
+  nodeNames: "⚠ LineComment BlockComment JsonText True False Null Number String } { Object Property PropertyName : , , ] [ Array",
+  maxTerm: 32,
   nodeProps: [
-    ["isolate", -2,6,11,""],
-    ["openedBy", 7,"{",14,"["],
-    ["closedBy", 8,"}",15,"]"]
+    ["isolate", -2,8,13,""],
+    ["openedBy", 9,"{",17,"["],
+    ["closedBy", 10,"}",18,"]"]
   ],
   propSources: [jsonHighlighting],
-  skippedNodes: [0],
-  repeatNodeCount: 2,
-  tokenData: "(|~RaXY!WYZ!W]^!Wpq!Wrs!]|}$u}!O$z!Q!R%T!R![&c![!]&t!}#O&y#P#Q'O#Y#Z'T#b#c'r#h#i(Z#o#p(r#q#r(w~!]Oe~~!`Wpq!]qr!]rs!xs#O!]#O#P!}#P;'S!];'S;=`$o<%lO!]~!}Og~~#QXrs!]!P!Q!]#O#P!]#U#V!]#Y#Z!]#b#c!]#f#g!]#h#i!]#i#j#m~#pR!Q![#y!c!i#y#T#Z#y~#|R!Q![$V!c!i$V#T#Z$V~$YR!Q![$c!c!i$c#T#Z$c~$fR!Q![!]!c!i!]#T#Z!]~$rP;=`<%l!]~$zO]~~$}Q!Q!R%T!R![&c~%YRT~!O!P%c!g!h%w#X#Y%w~%fP!Q![%i~%nRT~!Q![%i!g!h%w#X#Y%w~%zR{|&T}!O&T!Q![&Z~&WP!Q![&Z~&`PT~!Q![&Z~&hST~!O!P%c!Q![&c!g!h%w#X#Y%w~&yO[~~'OO_~~'TO^~~'WP#T#U'Z~'^P#`#a'a~'dP#g#h'g~'jP#X#Y'm~'rOR~~'uP#i#j'x~'{P#`#a(O~(RP#`#a(U~(ZOS~~(^P#f#g(a~(dP#i#j(g~(jP#X#Y(m~(rOQ~~(wOW~~(|OV~",
-  tokenizers: [0],
-  topRules: {"JsonText":[0,1]},
+  skippedNodes: [0,1,2,20],
+  repeatNodeCount: 3,
+  tokenData: ")x~RbXY!ZYZ!Z]^!Zpq!Zrs!`|}$x}!O%P!P!Q&y!Q!R%Y!R![&h![!]'p!}#O'u#P#Q'z#Y#Z(P#b#c(n#h#i)V#o#p)n#q#r)s~!`Oi~~!cWpq!`qr!`rs!{s#O!`#O#P#Q#P;'S!`;'S;=`$r<%lO!`~#QOn~~#TXrs!`!P!Q!`#O#P!`#U#V!`#Y#Z!`#b#c!`#f#g!`#h#i!`#i#j#p~#sR!Q![#|!c!i#|#T#Z#|~$PR!Q![$Y!c!i$Y#T#Z$Y~$]R!Q![$f!c!i$f#T#Z$f~$iR!Q![!`!c!i!`#T#Z!`~$uP;=`<%l!`U%PO_S`Q~%SQ!Q!R%Y!R![&h~%_RV~!O!P%h!g!h%|#X#Y%|~%kP!Q![%n~%sRV~!Q![%n!g!h%|#X#Y%|~&PR{|&Y}!O&Y!Q![&`~&]P!Q![&`~&ePV~!Q![&`~&mSV~!O!P%h!Q![&h!g!h%|#X#Y%|~&|Qz{'S!P!Q'X~'XOj~~'^SP~OY'XZ;'S'X;'S;=`'j<%lO'X~'mP;=`<%l'X~'uO^~~'zOb~~(POa~~(SP#T#U(V~(YP#`#a(]~(`P#g#h(c~(fP#X#Y(i~(nOT~~(qP#i#j(t~(wP#`#a(z~(}P#`#a)Q~)VOU~~)YP#f#g)]~)`P#i#j)c~)fP#X#Y)i~)nOS~~)sOY~~)xOX~",
+  tokenizers: [1, 2, new LocalTokenGroup("b~RPz{U~XP!P!Q[~aOl~~", 17, 27)],
+  topRules: {"JsonText":[0,3]},
+  dialects: {jsonc: 155},
   tokenPrec: 0
 });
 
-/**
-Calls
-[`JSON.parse`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse)
-on the document and, if that throws an error, reports it as a
-single diagnostic.
-*/
-const jsonParseLinter = () => (view) => {
-    try {
-        JSON.parse(view.state.doc.toString());
-    }
-    catch (e) {
-        if (!(e instanceof SyntaxError))
-            throw e;
-        const pos = getErrorPosition(e, view.state.doc);
-        return [{
-                from: pos,
-                message: e.message,
-                severity: 'error',
-                to: pos
-            }];
-    }
-    return [];
-};
-function getErrorPosition(error, doc) {
-    let m;
-    if (m = error.message.match(/at position (\d+)/))
-        return Math.min(+m[1], doc.length);
-    if (m = error.message.match(/at line (\d+) column (\d+)/))
-        return Math.min(doc.line(+m[1]).from + (+m[2]) - 1, doc.length);
-    return 0;
-}
-
-/**
-A language provider that provides JSON parsing.
-*/
-const jsonLanguage = /*@__PURE__*/ext_CodeMirror_lib.LRLanguage.define({
-    name: "json",
-    parser: /*@__PURE__*/parser$2.configure({
-        props: [
-            /*@__PURE__*/ext_CodeMirror_lib.indentNodeProp.add({
-                Object: /*@__PURE__*/ext_CodeMirror_lib.continuedIndent({ except: /^\s*\}/ }),
-                Array: /*@__PURE__*/ext_CodeMirror_lib.continuedIndent({ except: /^\s*\]/ })
-            }),
-            /*@__PURE__*/ext_CodeMirror_lib.foldNodeProp.add({
-                "Object Array": ext_CodeMirror_lib.foldInside
-            })
-        ]
+const props = [
+    ext_CodeMirror_lib.indentNodeProp.add({
+        Object: ext_CodeMirror_lib.continuedIndent({ except: /^\s*\}/u }),
+        Array: ext_CodeMirror_lib.continuedIndent({ except: /^\s*\]/u }),
     }),
-    languageData: {
-        closeBrackets: { brackets: ["[", "{", '"'] },
-        indentOnInput: /^\s*[\}\]]$/
-    }
+    ext_CodeMirror_lib.foldNodeProp.add({
+        'Object Array': ext_CodeMirror_lib.foldInside,
+    }),
+], languageData = {
+    closeBrackets: { brackts: ['[', '{', '"'] },
+    indentOnInput: /^\s*[}\]]$/u,
+};
+/** LR language for JSON. */
+const jsonLanguage = ext_CodeMirror_lib.LRLanguage.define({
+    name: 'json',
+    parser: parser$2.configure({ props }),
+    languageData,
+});
+/** LR language for JSONC. */
+const jsoncLanguage = ext_CodeMirror_lib.LRLanguage.define({
+    name: 'jsonc',
+    parser: parser$2.configure({ props, dialect: 'jsonc' }),
+    languageData: Object.assign(Object.assign({}, languageData), { commentTokens: {
+            line: '//',
+            block: { open: '/*', close: '*/' },
+        } }),
 });
 /**
-JSON language support.
-*/
-function json() {
-    return new ext_CodeMirror_lib.LanguageSupport(jsonLanguage);
-}
+ * Get language support for JSON or JSONC.
+ * @param dialect The dialect to use, either omitted or `'jsonc'` for JSON with comments.
+ */
+const json = (dialect) => new ext_CodeMirror_lib.LanguageSupport(dialect === 'jsonc' ? jsoncLanguage : jsonLanguage);
+const getLintSource = (lint) => ({ state: { doc } }) => lint(doc.toString())
+    .map(({ message, from, to = from, severity }) => ({ message, severity, from, to }));
+/** Lint source for JSON */
+const jsonLinter = /* #__PURE__ */ getLintSource(lintJSON);
+/** Lint source for JSONC */
+const jsoncLinter = /* #__PURE__ */ getLintSource(lintJSONC);
 
 // This file was generated by lezer-generator. You probably shouldn't edit it.
 const scriptText = 55,
@@ -6494,7 +6987,9 @@ exports.javascript = javascript;
 exports.javascriptLanguage = javascriptLanguage;
 exports.json = json;
 exports.jsonLanguage = jsonLanguage;
-exports.jsonParseLinter = jsonParseLinter;
+exports.jsonLinter = jsonLinter;
+exports.jsoncLanguage = jsoncLanguage;
+exports.jsoncLinter = jsoncLinter;
 exports.jsxLanguage = jsxLanguage;
 exports.localCompletionSource = localCompletionSource;
 exports.lua = lua;

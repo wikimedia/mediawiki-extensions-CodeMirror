@@ -1,35 +1,35 @@
-const { jsonLanguage, jsonLinter } = require( '../lib/codemirror.bundle.modes.js' );
+const { jsoncLanguage, jsoncLinter } = require( '../lib/codemirror.bundle.modes.js' );
 const CodeMirrorMode = require( './codemirror.mode.js' );
 
 /**
- * JSON language support for CodeMirror.
+ * JSONC language support for CodeMirror.
  *
  * @example
  * const require = await mw.loader.using( [ 'ext.CodeMirror', 'ext.CodeMirror.modes' ] );
  * const CodeMirror = require( 'ext.CodeMirror' );
- * const { json } = require( 'ext.CodeMirror.modes' );
- * const cm = new CodeMirror( myTextarea, json() );
+ * const { jsonc } = require( 'ext.CodeMirror.modes' );
+ * const cm = new CodeMirror( myTextarea, jsonc() );
  * cm.initialize();
  * @extends CodeMirrorMode
  * @hideconstructor
  */
-class CodeMirrorJson extends CodeMirrorMode {
+class CodeMirrorJsonc extends CodeMirrorMode {
 
 	/** @inheritDoc */
 	get language() {
-		return jsonLanguage;
+		return jsoncLanguage;
 	}
 
 	/** @inheritDoc */
 	get lintSource() {
-		return jsonLinter;
+		return jsoncLinter;
 	}
 
 	/** @inheritDoc */
 	get hasWorker() {
-		// JSON linting is done in the main thread.
+		// JSONC linting is done in the main thread.
 		return false;
 	}
 }
 
-module.exports = CodeMirrorJson;
+module.exports = CodeMirrorJsonc;

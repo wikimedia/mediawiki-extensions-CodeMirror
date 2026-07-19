@@ -43,7 +43,7 @@ module.exports = [
 					'@codemirror/lang-html',
 					'@codemirror/lang-javascript',
 					'@codemirror/lang-css',
-					'@codemirror/lang-json',
+					'@bhsd/lezer-json',
 					'@codemirror/lang-vue',
 					'@codemirror/legacy-modes',
 					'@lezer/html',
@@ -51,7 +51,8 @@ module.exports = [
 					'@lezer/css',
 					'@lezer/json',
 					'@lezer/common',
-					'@lezer/lr'
+					'@lezer/lr',
+					'@bhsd/common'
 				]
 			} )
 		]
