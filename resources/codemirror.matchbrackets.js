@@ -6,73 +6,10 @@ const {
 	EditorView,
 	Extension,
 	Facet,
-	MatchResult,
-	SyntaxNode,
 	bracketMatching,
-	matchBrackets,
-	syntaxTree
+	matchBrackets
 } = require( 'ext.CodeMirror.lib' );
-
-/**
- * Find surrounding brackets in the syntax tree.
- *
- * @param {SyntaxNode|null} node
- * @param {number} pos
- * @param {string} brackets
- * @return {MatchResult|undefined}
- * @internal
- * @private
- */
-const findSurroundingBrackets = ( node, pos, brackets ) => {
-	let parent = node;
-	while ( parent ) {
-		const { firstChild, lastChild } = parent;
-		if ( firstChild && lastChild ) {
-			const i = brackets.indexOf( firstChild.name ),
-				j = brackets.indexOf( lastChild.name );
-			if (
-				i !== -1 && j !== -1 && i % 2 === 0 && j % 2 === 1 &&
-				firstChild.from < pos && lastChild.to > pos
-			) {
-				return { start: firstChild, end: lastChild, matched: true };
-			}
-		}
-		( { parent } = parent );
-	}
-	return undefined;
-};
-
-/**
- * Find surrounding brackets in the plain text.
- *
- * @param {EditorState} state
- * @param {number} pos
- * @param {Config} config
- * @return {MatchResult|null}
- * @internal
- * @private
- */
-const findSurroundingPlainBrackets = ( state, pos, config ) => {
-	const { brackets, maxScanDistance } = config,
-		re = new RegExp(
-			`[${
-				[ ...brackets ].filter( ( _, i ) => i % 2 )
-					.map( ( c ) => c === ']' ? '\\]' : c )
-					.join( '' )
-			}]`,
-			'g'
-		),
-		str = state.sliceDoc( pos, pos + maxScanDistance );
-	let mt = re.exec( str );
-	while ( mt ) {
-		const result = matchBrackets( state, pos + mt.index + 1, -1, config );
-		if ( result && result.end && result.end.to <= pos ) {
-			return result;
-		}
-		mt = re.exec( str );
-	}
-	return null;
-};
+const { findBracketMatch, tryMatchBrackets } = require( './codemirror.matchbrackets.util.js' );
 
 /**
  * Try to select between matching brackets on one side of the position.
@@ -116,21 +53,6 @@ const selectMatchingBrackets = (
 	trySelectMatchingBrackets( state, pos, 1, config ) ||
 	trySelectMatchingBrackets( state, pos + 1, -1, config, true ) ||
 	trySelectMatchingBrackets( state, pos - 1, 1, config, true );
-
-/**
- * Find matching brackets in all possible directions.
- *
- * @param {EditorState} state
- * @param {number} pos
- * @param {Config} config
- * @return {MatchResult|false|null}
- * @internal
- * @private
- */
-const tryMatchBrackets = ( state, pos, config ) => matchBrackets( state, pos, -1, config ) ||
-	pos > 0 && matchBrackets( state, pos - 1, 1, config ) ||
-	matchBrackets( state, pos, 1, config ) ||
-	pos < state.doc.length && matchBrackets( state, pos + 1, -1, config );
 
 /**
  * Select the whole line block containing the matching brackets.
@@ -222,17 +144,12 @@ module.exports = ( configs ) => {
 			}
 			const decorations = [],
 				config = state.facet( facet ),
-				{ brackets, renderMatch, exclude } = config;
+				{ renderMatch } = config;
 			for ( const { empty, head } of state.selection.ranges ) {
 				if ( !empty ) {
 					continue;
 				}
-				const tree = syntaxTree( state ),
-					excluded = exclude && exclude( state, head ),
-					match = !excluded && tryMatchBrackets( state, head, config ) ||
-					findSurroundingBrackets( tree.resolveInner( head, -1 ), head, brackets ) ||
-					findSurroundingBrackets( tree.resolveInner( head, 1 ), head, brackets ) ||
-					!excluded && findSurroundingPlainBrackets( state, head, config );
+				const match = findBracketMatch( state, head, config );
 				if ( match ) {
 					decorations.push( ...renderMatch( match, state ) );
 				}
