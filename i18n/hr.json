@@ -4,6 +4,7 @@
 			"Bugoslav",
 			"Ivana",
 			"MaGa",
+			"Neptune, the Mystic",
 			"Ponor"
 		]
 	},
@@ -173,7 +174,7 @@
 	"codemirror-wikilint-missing-extension": "nedostaje ekstenzija u imenu datoteke",
 	"codemirror-wikilint-missing-function": "nedostaje ime funkcije Scribunto modula",
 	"codemirror-wikilint-newline": "umetni novi redak",
-	"codemirror-wikilint-obsolete-attribute": "zastarjel atribut",
+	"codemirror-wikilint-obsolete-attribute": "zastario atribut",
 	"codemirror-wikilint-obsolete-tag": "zastarjela HTML oznaka",
 	"codemirror-wikilint-open": "pretvori u otvarajuću oznaku",
 	"codemirror-wikilint-prefix": "umetni predmetak imenskog prostora",
