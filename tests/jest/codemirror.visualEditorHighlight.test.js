@@ -1,5 +1,5 @@
 const CodeMirrorVisualEditorHighlight = require( '../../resources/codemirror.visualEditorHighlight.js' );
-const { mediawiki } = require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
+const { mediawiki, matchTag } = require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
 
 /**
  * Build a mock ve.ui.Surface sufficient for the custom-highlight controller.
@@ -23,7 +23,11 @@ const getMockSurface = ( doc = '' ) => {
 		getRangeFromSourceOffsets: jest.fn().mockImplementation( ( from, to ) => ( { from, to } ) ),
 		getLinearFragment: jest.fn().mockImplementation( ( range ) => ( {
 			getSelection: jest.fn().mockReturnValue( { range } )
-		} ) )
+		} ) ),
+		// No cursor by default; setCursor() below installs one.
+		getSelection: jest.fn().mockReturnValue( null ),
+		on: jest.fn(),
+		off: jest.fn()
 	};
 	const selectionManager = {
 		drawSelections: jest.fn()
@@ -55,7 +59,13 @@ const getMockSurface = ( doc = '' ) => {
 		model: model,
 		documentModel: documentModel,
 		view: surfaceView,
-		selectionManager: selectionManager
+		selectionManager: selectionManager,
+		// Install a collapsed (or ranged) cursor for bracket-matching tests.
+		setCursor: ( start, collapsed = true ) => {
+			model.getSelection.mockReturnValue( {
+				getCoveringRange: () => ( { start, isCollapsed: () => collapsed } )
+			} );
+		}
 	};
 };
 
@@ -208,6 +218,159 @@ describe( 'destroy', () => {
 		controller.destroy();
 		expect( controller.isActive ).toBe( false );
 		expect( controller.tokenizer ).toBeNull();
+	} );
+} );
+
+describe( 'bracket matching', () => {
+	const bracketCalls = () => surface.selectionManager.drawSelections.mock.calls
+		.filter( ( call ) => /bracket/.test( call[ 0 ] ) );
+
+	it( 'should default to enabled and bind the select listener on activate', () => {
+		expect( controller.bracketMatchingEnabled ).toBe( true );
+		controller.activate();
+		expect( surface.model.on ).toHaveBeenCalledWith( 'select', expect.any( Function ) );
+	} );
+
+	it( 'should stay disabled and not bind select when the user preference is off', () => {
+		const origGet = mw.user.options.get;
+		mw.user.options.get = jest.fn().mockReturnValue( '{"bracketMatching":false}' );
+		try {
+			const disabled = new CodeMirrorVisualEditorHighlight( getMockSurface( '{{Foo}}' ), langSupport );
+			expect( disabled.bracketMatchingEnabled ).toBe( false );
+			disabled.activate();
+			const boundSelect = disabled.surface.getModel().on.mock.calls
+				.some( ( call ) => call[ 0 ] === 'select' );
+			expect( boundSelect ).toBe( false );
+		} finally {
+			mw.user.options.get = origGet;
+		}
+	} );
+
+	it( 'should highlight the bracket pair at a collapsed cursor', () => {
+		controller.activate();
+		surface.selectionManager.drawSelections.mockClear();
+		// Cursor just inside the opening braces of "{{Foo}}".
+		surface.setCursor( 2 );
+		controller.updateBracketMatch();
+		const calls = bracketCalls();
+		expect( calls.length ).toBe( 1 );
+		expect( calls[ 0 ][ 0 ] ).toBe( 'matching-bracket' );
+		expect( calls[ 0 ][ 2 ] ).toEqual( { showRects: false, showCustomHighlight: true } );
+		expect( controller.bracketGroups.has( 'matching-bracket' ) ).toBe( true );
+	} );
+
+	it( 'should clear the match when the cursor is not near a bracket', () => {
+		surface = getMockSurface( 'plain text here' );
+		controller = new CodeMirrorVisualEditorHighlight( surface, langSupport );
+		controller.activate();
+		surface.setCursor( 5 );
+		controller.updateBracketMatch();
+		expect( bracketCalls().length ).toBe( 0 );
+		expect( controller.bracketGroups.size ).toBe( 0 );
+	} );
+
+	it( 'should not match on a non-collapsed selection', () => {
+		controller.activate();
+		surface.selectionManager.drawSelections.mockClear();
+		surface.setCursor( 2, false );
+		controller.updateBracketMatch();
+		expect( bracketCalls().length ).toBe( 0 );
+	} );
+
+	it( 'should keep bracket groups separate from syntax groups across a refresh', () => {
+		controller.activate();
+		surface.setCursor( 2 );
+		controller.updateBracketMatch();
+		const drawn = new Set( controller.bracketGroups );
+		expect( drawn.size ).toBeGreaterThan( 0 );
+		controller.refresh();
+		expect( controller.bracketGroups ).toEqual( drawn );
+	} );
+
+	it( 'should unbind select and clear bracket groups on deactivate', () => {
+		controller.activate();
+		surface.setCursor( 2 );
+		controller.updateBracketMatch();
+		expect( controller.bracketGroups.size ).toBeGreaterThan( 0 );
+		controller.deactivate();
+		expect( surface.model.off ).toHaveBeenCalledWith( 'select', expect.any( Function ) );
+		expect( controller.bracketGroups.size ).toBe( 0 );
+	} );
+} );
+
+describe( 'tag matching', () => {
+	// The controller reuses the bracket groups for tags, so filter the same way.
+	const bracketCalls = ( s ) => s.selectionManager.drawSelections.mock.calls
+		.filter( ( call ) => /bracket/.test( call[ 0 ] ) );
+
+	it( 'should re-export the headless matchTag from the mediawiki mode', () => {
+		expect( typeof matchTag ).toBe( 'function' );
+	} );
+
+	it( 'should highlight a matched tag pair when the cursor is not on a bracket', () => {
+		// A bracket-free document, so findBracketMatch returns null and the tag matcher runs.
+		const mock = jest.fn().mockReturnValue( {
+			matched: true, start: { from: 0, to: 5 }, end: { from: 8, to: 14 }
+		} );
+		const s = getMockSurface( 'ref content' );
+		const c = new CodeMirrorVisualEditorHighlight( s, langSupport, mock );
+		c.activate();
+		s.selectionManager.drawSelections.mockClear();
+		s.setCursor( 2 );
+		c.updateBracketMatch();
+		expect( mock ).toHaveBeenCalled();
+		const calls = bracketCalls( s );
+		expect( calls.length ).toBe( 1 );
+		expect( calls[ 0 ][ 0 ] ).toBe( 'matching-bracket' );
+		expect( calls[ 0 ][ 1 ].length ).toBe( 2 );
+		expect( c.bracketGroups.has( 'matching-bracket' ) ).toBe( true );
+	} );
+
+	it( 'should paint a self-closing tag as a single matching selection', () => {
+		const mock = jest.fn().mockReturnValue( { matched: true, start: { from: 0, to: 3 } } );
+		const s = getMockSurface( 'ref content' );
+		const c = new CodeMirrorVisualEditorHighlight( s, langSupport, mock );
+		c.activate();
+		s.selectionManager.drawSelections.mockClear();
+		s.setCursor( 2 );
+		c.updateBracketMatch();
+		const calls = bracketCalls( s );
+		expect( calls.length ).toBe( 1 );
+		expect( calls[ 0 ][ 0 ] ).toBe( 'matching-bracket' );
+		expect( calls[ 0 ][ 1 ].length ).toBe( 1 );
+	} );
+
+	it( 'should paint an unmatched open tag as a nonmatching selection', () => {
+		const mock = jest.fn().mockReturnValue( { matched: false, start: { from: 0, to: 5 } } );
+		const s = getMockSurface( 'ref content' );
+		const c = new CodeMirrorVisualEditorHighlight( s, langSupport, mock );
+		c.activate();
+		s.selectionManager.drawSelections.mockClear();
+		s.setCursor( 2 );
+		c.updateBracketMatch();
+		const calls = bracketCalls( s );
+		expect( calls.length ).toBe( 1 );
+		expect( calls[ 0 ][ 0 ] ).toBe( 'nonmatching-bracket' );
+		expect( calls[ 0 ][ 1 ].length ).toBe( 1 );
+	} );
+
+	it( 'should paint bracket and tag matches independently', () => {
+		// A real bracket at the cursor plus a (mock) unmatched tag: both run and draw into their
+		// respective groups. A surrounding bracket no longer suppresses tag matching, so a tag
+		// nested inside brackets is still highlighted.
+		const mock = jest.fn().mockReturnValue( { matched: false, start: { from: 0, to: 5 } } );
+		const s = getMockSurface( '{{Foo}}' );
+		const c = new CodeMirrorVisualEditorHighlight( s, langSupport, mock );
+		c.activate();
+		s.selectionManager.drawSelections.mockClear();
+		s.setCursor( 2 );
+		c.updateBracketMatch();
+		expect( mock ).toHaveBeenCalled();
+		const groups = s.selectionManager.drawSelections.mock.calls
+			.filter( ( call ) => /bracket/.test( call[ 0 ] ) )
+			.map( ( call ) => call[ 0 ] );
+		expect( groups ).toContain( 'matching-bracket' );
+		expect( groups ).toContain( 'nonmatching-bracket' );
 	} );
 } );
 

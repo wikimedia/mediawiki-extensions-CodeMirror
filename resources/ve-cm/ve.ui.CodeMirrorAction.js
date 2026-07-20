@@ -46,7 +46,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 			mw.log( '[CodeMirror] VE mirror already initialized by another action.' );
 			return;
 		}
-		const { mediawiki } = require( 'ext.CodeMirror.mode.mediawiki' );
+		const { mediawiki, matchTag } = require( 'ext.CodeMirror.mode.mediawiki' );
 		const langSupport = mediawiki( {
 			bidiIsolation: false,
 			codeFolding: false,
@@ -56,7 +56,8 @@ ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 		const Controller = ve.ui.CodeMirrorTool.static.useCustomHighlight() ?
 			require( '../codemirror.visualEditorHighlight.js' ) :
 			require( '../codemirror.visualEditor.js' );
-		this.surface.mirror = new Controller( this.surface, langSupport );
+		// Only the custom-highlight controller uses matchTag; the other ignores the extra arg.
+		this.surface.mirror = new Controller( this.surface, langSupport, matchTag );
 		this.surface.mirror.initialize();
 		this.surface.mirror.setCodeMirrorPreference( true );
 	} else if ( this.surface.mirror ) {

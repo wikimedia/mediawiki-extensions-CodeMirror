@@ -222,6 +222,20 @@
 }
 
 /*
+ * Bracket matching. .cm-matchingBracket's outline and bold are beyond the Custom Highlight API,
+ * so the background carries the whole effect and has to be legible alone; the --subtle tokens
+ * are barely above the page background in either mode, so use --active. Both tokens flip
+ * themselves for dark mode.
+ */
+::highlight( visualeditor-matching-bracket ) {
+	background-color: @background-color-progressive-subtle--active;
+}
+
+::highlight( visualeditor-nonmatching-bracket ) {
+	background-color: @background-color-destructive-subtle--active;
+}
+
+/*
  * Colorblind theme. Mirrors codemirror.mediawiki.colorblind.less (keep in sync), which the
  * EditorView integration scopes with .cm-mw-colorblind-colors on .cm-content; there is no
  * .cm-content here, so the controller puts that class on the VE surface instead. The

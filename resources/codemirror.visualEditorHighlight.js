@@ -9,6 +9,7 @@ const {
 	CodeMirrorPreferences,
 	CodeMirrorThemes
 } = require( 'ext.CodeMirror' );
+const { findBracketMatch } = require( './codemirror.matchbrackets.util.js' );
 
 /**
  * Milliseconds allowed for {@link ensureSyntaxTree} to parse up to the end of the
@@ -63,8 +64,10 @@ class CodeMirrorVisualEditorHighlight {
 	 * @param {ve.ui.Surface} surface
 	 * @param {CodeMirrorMediaWiki} langSupport MediaWiki mode instance, exposing `language`,
 	 *   `parser` and `highlightStyle`.
+	 * @param {Function} [matchTag] Headless tag matcher `matchTag( state, pos )`, returning the
+	 *   same `{ matched, start, end }` shape as {@link findBracketMatch}. Omitted if unsupported.
 	 */
-	constructor( surface, langSupport ) {
+	constructor( surface, langSupport, matchTag ) {
 		/** @type {ve.ui.Surface} */
 		this.surface = surface;
 		/** @type {ve.ce.Surface} */
@@ -119,6 +122,41 @@ class CodeMirrorVisualEditorHighlight {
 		// offer it as a choice rather than a switch.
 		this.themes = new CodeMirrorThemes( this.preferences );
 		/**
+		 * Bracket-matching config (bracket set and scan distance), reused from the mode.
+		 *
+		 * @type {Object}
+		 */
+		this.bracketConfig = Object.assign(
+			{ brackets: '()[]{}', maxScanDistance: 10000 },
+			langSupport.bracketMatchingConfig
+		);
+		/**
+		 * Headless tag matcher, so tag pairs (e.g. `<ref>`/`</ref>`) match under the same
+		 * `bracketMatching` preference as brackets.
+		 *
+		 * @type {Function|null}
+		 */
+		this.matchTag = matchTag || null;
+		/**
+		 * Whether bracket matching is enabled, from the user's `bracketMatching` preference.
+		 *
+		 * @type {boolean}
+		 */
+		this.bracketMatchingEnabled = !!this.getPreference( 'bracketMatching' );
+		/**
+		 * Bracket highlight groups currently drawn, kept apart from the syntax groups so a
+		 * syntax refresh does not clear them.
+		 *
+		 * @type {Set<string>}
+		 */
+		this.bracketGroups = new Set();
+		/**
+		 * Pending requestAnimationFrame handle for coalescing bracket-match updates.
+		 *
+		 * @type {number|null}
+		 */
+		this.bracketFrameHandle = null;
+		/**
 		 * The `theme` preference: `default`, `colorblind` or `no-highlight` for this mode. Light
 		 * and dark variants are resolved in CSS, so only the base name matters here.
 		 *
@@ -142,6 +180,7 @@ class CodeMirrorVisualEditorHighlight {
 
 		this.onDocumentPrecommitBound = this.onDocumentPrecommit.bind( this );
 		this.scheduleRefreshBound = this.scheduleRefresh.bind( this );
+		this.scheduleBracketMatchBound = this.scheduleBracketMatch.bind( this );
 	}
 
 	/**
@@ -192,6 +231,7 @@ class CodeMirrorVisualEditorHighlight {
 		this.isActive = true;
 		this.logEditFeature( 'activated' );
 
+		// Bound regardless of theme: bracket matching needs the tokenizer kept in sync.
 		this.surface.getModel().getDocument().on( 'precommit', this.onDocumentPrecommitBound );
 		if ( this.theme === 'colorblind' ) {
 			this.surfaceView.$element.addClass( COLORBLIND_CLASS );
@@ -202,6 +242,11 @@ class CodeMirrorVisualEditorHighlight {
 		if ( this.syntaxHighlightingEnabled ) {
 			this.bindSyntaxListeners();
 			this.scheduleRefresh();
+		}
+		if ( this.bracketMatchingEnabled ) {
+			// Bracket matching depends on the cursor position, so it tracks 'select', not scroll.
+			this.surface.getModel().on( 'select', this.scheduleBracketMatchBound );
+			this.scheduleBracketMatch();
 		}
 	}
 
@@ -215,6 +260,7 @@ class CodeMirrorVisualEditorHighlight {
 
 		this.surface.getModel().getDocument().off( 'precommit', this.onDocumentPrecommitBound );
 		this.unbindSyntaxListeners();
+		this.surface.getModel().off( 'select', this.scheduleBracketMatchBound );
 		if ( this.theme === 'colorblind' ) {
 			this.surfaceView.$element.removeClass( COLORBLIND_CLASS );
 		}
@@ -224,8 +270,13 @@ class CodeMirrorVisualEditorHighlight {
 			cancelAnimationFrame( this.frameHandle );
 			this.frameHandle = null;
 		}
+		if ( this.bracketFrameHandle ) {
+			cancelAnimationFrame( this.bracketFrameHandle );
+			this.bracketFrameHandle = null;
+		}
 
 		this.clearAllHighlights();
+		this.clearBracketMatch();
 		this.tokenizer = null;
 		this.isActive = false;
 		this.logEditFeature( 'deactivated' );
@@ -322,7 +373,7 @@ class CodeMirrorVisualEditorHighlight {
 	 * @type {string[]}
 	 */
 	get supportedPreferences() {
-		return [ 'theme', 'highlightRefs' ];
+		return [ 'theme', 'highlightRefs', 'bracketMatching' ];
 	}
 
 	/**
@@ -351,6 +402,16 @@ class CodeMirrorVisualEditorHighlight {
 			case 'highlightRefs':
 				this.highlightRefsEnabled = !!value;
 				this.surfaceView.$element.toggleClass( REFS_CLASS, this.highlightRefsEnabled );
+				break;
+			case 'bracketMatching':
+				this.bracketMatchingEnabled = !!value;
+				this.surface.getModel().off( 'select', this.scheduleBracketMatchBound );
+				if ( value ) {
+					this.surface.getModel().on( 'select', this.scheduleBracketMatchBound );
+					this.scheduleBracketMatch();
+				} else {
+					this.clearBracketMatch();
+				}
 				break;
 		}
 	}
@@ -549,6 +610,98 @@ class CodeMirrorVisualEditorHighlight {
 		const selectionManager = this.surfaceView.getSelectionManager();
 		this.drawnGroups.forEach( ( name ) => selectionManager.drawSelections( name, [] ) );
 		this.drawnGroups = new Set();
+	}
+
+	/**
+	 * Coalesce bracket-match updates (fired on every cursor move) into one per animation frame.
+	 *
+	 * @private
+	 */
+	scheduleBracketMatch() {
+		if ( this.bracketFrameHandle ) {
+			return;
+		}
+		this.bracketFrameHandle = requestAnimationFrame( () => {
+			this.bracketFrameHandle = null;
+			this.updateBracketMatch();
+		} );
+	}
+
+	/**
+	 * Highlight the bracket and tag pairs around a collapsed cursor, painted as
+	 * `matching-bracket`/`nonmatching-bracket` groups.
+	 *
+	 * @private
+	 */
+	updateBracketMatch() {
+		if ( !this.isActive || !this.tokenizer || !this.bracketMatchingEnabled ) {
+			return;
+		}
+		const model = this.surface.getModel(),
+			selection = model.getSelection(),
+			range = selection && selection.getCoveringRange && selection.getCoveringRange();
+		// Only match at a collapsed cursor.
+		if ( !range || !range.isCollapsed() ) {
+			this.clearBracketMatch();
+			return;
+		}
+
+		let srcPos;
+		try {
+			srcPos = model.getSourceOffsetFromOffset( range.start );
+		} catch ( e ) {
+			this.clearBracketMatch();
+			return;
+		}
+		ensureSyntaxTree( this.tokenizer, srcPos, PARSE_BUDGET );
+		// Independent, as in CodeMirror, so a tag nested inside brackets still matches.
+		const matches = [
+			findBracketMatch( this.tokenizer, srcPos, this.bracketConfig ),
+			this.matchTag && this.matchTag( this.tokenizer, srcPos )
+		].filter( Boolean );
+
+		this.clearBracketMatch();
+
+		const matching = [],
+			nonmatching = [];
+		matches.forEach( ( match ) => {
+			const target = match.matched ? matching : nonmatching,
+				parts = match.end ? [ match.start, match.end ] : [ match.start ];
+			parts.forEach( ( part ) => {
+				let dmRange;
+				try {
+					dmRange = model.getRangeFromSourceOffsets( part.from, part.to );
+				} catch ( e ) {
+					return;
+				}
+				target.push( this.surfaceView.getSelection(
+					model.getLinearFragment( dmRange ).getSelection()
+				) );
+			} );
+		} );
+
+		const selectionManager = this.surfaceView.getSelectionManager();
+		[ [ 'matching-bracket', matching ], [ 'nonmatching-bracket', nonmatching ] ].forEach(
+			( [ name, selections ] ) => {
+				if ( selections.length ) {
+					selectionManager.drawSelections(
+						name, selections, { showRects: false, showCustomHighlight: true }
+					);
+					this.bracketGroups.add( name );
+				}
+			}
+		);
+	}
+
+	/**
+	 * Remove any drawn bracket-match highlight groups.
+	 *
+	 * @private
+	 */
+	clearBracketMatch() {
+		const selectionManager = this.surfaceView.getSelectionManager();
+		this.bracketGroups.forEach( ( name ) => selectionManager.drawSelections( name, [] ) );
+		this.bracketGroups.clear();
 	}
 
 	/**

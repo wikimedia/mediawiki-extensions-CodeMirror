@@ -453,7 +453,8 @@
 				"ve-cm/ve.ui.CodeMirrorPreferencesPage.js",
 				"ve-cm/ve.ui.CodeMirrorPreferencesTool.js",
 				"codemirror.visualEditor.js",
-				"codemirror.visualEditorHighlight.js"
+				"codemirror.visualEditorHighlight.js",
+				"codemirror.matchbrackets.util.js"
 			],
 			"styles": [
 				"ve-cm/ve.ui.CodeMirror.less",
