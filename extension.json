@@ -28,6 +28,10 @@
 			},
 			"description": "Temporary feature flag to control the rollout of CodeMirror to new content models."
 		},
+		"CodeMirrorVisualEditorCustomHighlight": {
+			"value": false,
+			"description": "Experimental: highlight wikitext in the 2017 wikitext editor by painting syntax colors onto VisualEditor's own text via the CSS Custom Highlight API, instead of overlaying a CodeMirror EditorView. Can be forced on per-request with ?cmhighlight=1."
+		},
 		"CodeMirrorConflictingGadgets": {
 			"value": [
 				"wikEd"
@@ -447,10 +451,12 @@
 				"ve-cm/ve.ui.CodeMirrorTool.js",
 				"ve-cm/ve.ui.CodeMirrorPreferencesPage.js",
 				"ve-cm/ve.ui.CodeMirrorPreferencesTool.js",
-				"codemirror.visualEditor.js"
+				"codemirror.visualEditor.js",
+				"codemirror.visualEditorHighlight.js"
 			],
 			"styles": [
-				"ve-cm/ve.ui.CodeMirror.less"
+				"ve-cm/ve.ui.CodeMirror.less",
+				"ve-cm/ve.ui.CodeMirror.highlight.less"
 			],
 			"skinStyles": {
 				"minerva": [

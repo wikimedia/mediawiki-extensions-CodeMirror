@@ -44,6 +44,18 @@ ve.ui.CodeMirrorTool.static.deactivateOnSelect = false;
 ve.ui.CodeMirrorTool.static.maxDocSize = 250000;
 
 /**
+ * Whether the CSS Custom Highlight API mode is in use. That controller highlights only the
+ * viewport, so it is exempt from the {@link ve.ui.CodeMirrorTool.maxDocSize} limit.
+ *
+ * @return {boolean}
+ */
+ve.ui.CodeMirrorTool.static.useCustomHighlight = function () {
+	const config = mw.config.get( 'extCodeMirrorConfig' ) || {};
+	return new URL( location.href ).searchParams.get( 'cmhighlight' ) === '1' ||
+		!!config.visualEditorCustomHighlight;
+};
+
+/**
  * @inheritdoc
  */
 ve.ui.CodeMirrorTool.prototype.onSelect = function () {
@@ -61,8 +73,10 @@ ve.ui.CodeMirrorTool.prototype.onSelect = function () {
  * @inheritdoc
  */
 ve.ui.CodeMirrorTool.prototype.onSurfaceChange = function ( oldSurface, newSurface ) {
-	// Disable CM on very large documents (T184857).
+	// Disable CM on very large documents (T184857), unless the viewport-bounded custom
+	// highlight mode is in use, which does not have the whole-document cost.
 	if ( newSurface.getMode() === 'source' &&
+		!this.constructor.static.useCustomHighlight() &&
 		newSurface.getModel().getDocument().getLength() > this.constructor.static.maxDocSize
 	) {
 		const messageElem = document.createElement( 'p' );

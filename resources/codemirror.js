@@ -1479,3 +1479,8 @@ class CodeMirror {
  * @see CodeMirror
  */
 module.exports = CodeMirror;
+// For consumers that resolve preferences without building an editor, e.g. the VisualEditor
+// custom-highlight controller.
+module.exports.CodeMirrorPreferences = CodeMirrorPreferences;
+module.exports.CodeMirrorExtensionRegistry = CodeMirrorExtensionRegistry;
+module.exports.CodeMirrorThemes = CodeMirrorThemes;

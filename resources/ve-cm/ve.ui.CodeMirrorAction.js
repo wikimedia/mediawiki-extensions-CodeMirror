@@ -46,17 +46,17 @@ ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 			mw.log( '[CodeMirror] VE mirror already initialized by another action.' );
 			return;
 		}
-		const CodeMirrorVisualEditor = require( '../codemirror.visualEditor.js' );
 		const { mediawiki } = require( 'ext.CodeMirror.mode.mediawiki' );
-		this.surface.mirror = new CodeMirrorVisualEditor(
-			this.surface,
-			mediawiki( {
-				bidiIsolation: false,
-				codeFolding: false,
-				autocomplete: false,
-				openLinks: false
-			} )
-		);
+		const langSupport = mediawiki( {
+			bidiIsolation: false,
+			codeFolding: false,
+			autocomplete: false,
+			openLinks: false
+		} );
+		const Controller = ve.ui.CodeMirrorTool.static.useCustomHighlight() ?
+			require( '../codemirror.visualEditorHighlight.js' ) :
+			require( '../codemirror.visualEditor.js' );
+		this.surface.mirror = new Controller( this.surface, langSupport );
 		this.surface.mirror.initialize();
 		this.surface.mirror.setCodeMirrorPreference( true );
 	} else if ( this.surface.mirror ) {

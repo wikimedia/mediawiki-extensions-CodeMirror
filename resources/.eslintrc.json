@@ -37,7 +37,10 @@
 				"CodeMirrorPreferences.extension": "CodeMirrorPreferences.extension",
 				"CodeMirrorSortLines": "CodeMirrorSortLines",
 				"CodeMirrorTextSelection": "CodeMirrorTextSelection",
+				"CodeMirrorThemes": "CodeMirrorThemes",
+				"CodeMirrorVisualEditor": "CodeMirrorVisualEditor",
 				"FormSpecifier": "FormSpecifier",
+				"HighlightStyle": "HighlightStyle",
 				"Hook": "Hook",
 				"LanguageSupport": "LanguageSupport",
 				"PrefValue": "PrefValue"

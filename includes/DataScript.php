@@ -57,6 +57,7 @@ class DataScript {
 
 		// initialize configuration
 		$config = [
+			'visualEditorCustomHighlight' => $mwConfig->get( 'CodeMirrorVisualEditorCustomHighlight' ),
 			'defaultPreferences' => $mwConfig->get( 'CodeMirrorDefaultPreferences' ),
 			'defaultPreferencesCode' => $mwConfig->get( 'CodeMirrorDefaultPreferencesCode' ),
 			'primaryPreferences' => $mwConfig->get( 'CodeMirrorPrimaryPreferences' ),

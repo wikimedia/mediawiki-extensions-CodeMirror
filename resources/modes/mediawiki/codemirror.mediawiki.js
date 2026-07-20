@@ -172,14 +172,26 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 		return tagMatching;
 	}
 
+	/**
+	 * The {@link HighlightStyle} mapping the mode's tags to CSS classes, exposed so consumers
+	 * can reuse it with `highlightTree` without instantiating an EditorView.
+	 *
+	 * @type {HighlightStyle}
+	 * @stable to call
+	 */
+	get highlightStyle() {
+		if ( !this.cachedHighlightStyle ) {
+			this.cachedHighlightStyle = HighlightStyle.define(
+				mwModeConfig.getTagStyles( this.parser )
+			);
+		}
+		return this.cachedHighlightStyle;
+	}
+
 	/** @inheritDoc */
 	get support() {
 		return [
-			syntaxHighlighting(
-				HighlightStyle.define(
-					mwModeConfig.getTagStyles( this.parser )
-				)
-			),
+			syntaxHighlighting( this.highlightStyle ),
 			// This only makes Wikitext "foldable".
 			// Given no fold service registered, this will actually takes no effect.
 			codeFolding( {

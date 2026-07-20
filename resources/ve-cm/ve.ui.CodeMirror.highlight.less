@@ -1,0 +1,322 @@
+@import 'mediawiki.skin.variables.less';
+@import '../codemirror.mixins.less';
+@import '../modes/mediawiki/codemirror.mediawiki.variables.less';
+
+/*
+ * Colors for the CodeMirrorVisualEditorHighlight controller. Each ::highlight() name is the CSS
+ * class the MediaWiki mode's HighlightStyle emits, prefixed with `visualeditor-syntax-`. The
+ * Custom Highlight API supports only color, background-color, text-decoration and text-shadow,
+ * so weight/style-only tokens are omitted; the colors themselves come from the shared file.
+ */
+
+::highlight( visualeditor-syntax-cm-mw-apostrophes ),
+::highlight( visualeditor-syntax-cm-mw-list ),
+::highlight( visualeditor-syntax-cm-mw-indenting ),
+::highlight( visualeditor-syntax-cm-mw-double-underscore ),
+::highlight( visualeditor-syntax-cm-mw-signature ),
+::highlight( visualeditor-syntax-cm-mw-hr ),
+::highlight( visualeditor-syntax-cm-mw-redirect ),
+::highlight( visualeditor-syntax-cm-mw-link ),
+::highlight( visualeditor-syntax-cm-mw-link-tosection ),
+::highlight( visualeditor-syntax-cm-mw-section-header ) {
+	color: @wikitext-formatting-color;
+	.darkmode( color, @wikitext-formatting-color-dark );
+}
+
+::highlight( visualeditor-syntax-cm-mw-comment ) {
+	color: @color-subtle;
+}
+
+::highlight( visualeditor-syntax-cm-mw-html-entity ),
+::highlight( visualeditor-syntax-cm-mw-htmltag-name ),
+::highlight( visualeditor-syntax-cm-mw-htmltag-bracket ),
+::highlight( visualeditor-syntax-cm-mw-htmltag-attribute ),
+::highlight( visualeditor-syntax-cm-mw-exttag-name ),
+::highlight( visualeditor-syntax-cm-mw-exttag-bracket ),
+::highlight( visualeditor-syntax-cm-mw-exttag-attribute ) {
+	color: @xml-tag-color;
+}
+
+::highlight( visualeditor-syntax-cm-mw-htmltag-attribute-value ),
+::highlight( visualeditor-syntax-cm-mw-exttag-attribute-value ),
+::highlight( visualeditor-syntax-cm-mw-table-definition-value ),
+::highlight( visualeditor-syntax-cm-mw-image-parameter ) {
+	color: @xml-tag-attribute-color;
+}
+
+::highlight( visualeditor-syntax-cm-mw-template-name ),
+::highlight( visualeditor-syntax-cm-mw-template-argument-name ),
+::highlight( visualeditor-syntax-cm-mw-template-delimiter ),
+::highlight( visualeditor-syntax-cm-mw-template-bracket ) {
+	color: @template-color;
+	.darkmode( color, @template-color-dark );
+}
+
+::highlight( visualeditor-syntax-cm-mw-templatevariable ),
+::highlight( visualeditor-syntax-cm-mw-templatevariable-bracket ),
+::highlight( visualeditor-syntax-cm-mw-templatevariable-name ),
+::highlight( visualeditor-syntax-cm-mw-templatevariable-delimiter ) {
+	color: @template-variable-color;
+}
+
+::highlight( visualeditor-syntax-cm-mw-parserfunction-name ),
+::highlight( visualeditor-syntax-cm-mw-parserfunction-bracket ),
+::highlight( visualeditor-syntax-cm-mw-parserfunction-delimiter ),
+::highlight( visualeditor-syntax-cm-mw-conversion-bracket ),
+::highlight( visualeditor-syntax-cm-mw-conversion-delimiter ),
+::highlight( visualeditor-syntax-cm-mw-conversion-flag ),
+::highlight( visualeditor-syntax-cm-mw-conversion-lang ) {
+	color: @parser-function-color;
+}
+
+::highlight( visualeditor-syntax-cm-mw-link-pagename ),
+::highlight( visualeditor-syntax-cm-mw-link-bracket ),
+::highlight( visualeditor-syntax-cm-mw-link-delimiter ),
+::highlight( visualeditor-syntax-cm-mw-extlink ),
+::highlight( visualeditor-syntax-cm-mw-extlink-protocol ),
+::highlight( visualeditor-syntax-cm-mw-extlink-bracket ),
+::highlight( visualeditor-syntax-cm-mw-free-extlink ),
+::highlight( visualeditor-syntax-cm-mw-free-extlink-protocol ) {
+	color: @link-color;
+}
+
+::highlight( visualeditor-syntax-cm-mw-table-bracket ),
+::highlight( visualeditor-syntax-cm-mw-table-delimiter ),
+::highlight( visualeditor-syntax-cm-mw-table-definition ) {
+	color: @table-color;
+	.darkmode( color, @table-color-dark );
+}
+
+::highlight( visualeditor-syntax-cm-mw-error ) {
+	color: @error-color;
+}
+
+::highlight( visualeditor-syntax-cm-mw-pagename ) {
+	text-decoration: @text-decoration-underline;
+}
+
+/*
+ * Background tints. The EditorView integration applies these via the .cm-mw-*-ground classes and
+ * the highlightRefs theme, neither of which has an equivalent without a view.
+ */
+::highlight( visualeditor-syntax-cm-mw-double-underscore ),
+::highlight( visualeditor-syntax-cm-mw-signature ),
+::highlight( visualeditor-syntax-cm-mw-hr ),
+::highlight( visualeditor-syntax-cm-mw-redirect ) {
+	background-color: rgba( 22, 44, 88, 0.09 );
+	.darkmode( background-color, rgba( 255, 255, 255, 0.09 ) );
+}
+
+::highlight( visualeditor-syntax-cm-mw-tag-pre ),
+::highlight( visualeditor-syntax-cm-mw-tag-nowiki ) {
+	background-color: rgba( 0, 0, 0, 0.04 );
+	.darkmode( background-color, rgba( 255, 255, 255, 0.06 ) );
+}
+
+.cm-mw-highlight-refs ::highlight( visualeditor-syntax-cm-mw-tag-ref ) {
+	background-color: @refs-background-color;
+	.darkmode( background-color, @refs-background-color-dark );
+}
+
+::highlight( visualeditor-syntax-cm-mw-template2-ground ) {
+	.ground( @template: 1 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-template3-ground ) {
+	.ground( @template: 2 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-ext-ground ),
+::highlight( visualeditor-syntax-cm-mw-template-ext-ground ) {
+	.ground( @ext: 1 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-ext2-ground ),
+::highlight( visualeditor-syntax-cm-mw-template-ext2-ground ) {
+	.ground( @ext: 2 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-ext3-ground ),
+::highlight( visualeditor-syntax-cm-mw-template-ext3-ground ) {
+	.ground( @ext: 3 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-link-ground ),
+::highlight( visualeditor-syntax-cm-mw-ext-link-ground ),
+::highlight( visualeditor-syntax-cm-mw-template-link-ground ) {
+	.ground( @link: 1 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-ext2-link-ground ),
+::highlight( visualeditor-syntax-cm-mw-template-ext-link-ground ) {
+	.ground( @ext: 1, @link: 1 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-ext3-link-ground ),
+::highlight( visualeditor-syntax-cm-mw-template-ext2-link-ground ) {
+	.ground( @ext: 2, @link: 1 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-template-ext3-link-ground ) {
+	.ground( @ext: 3, @link: 1 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-template2-ext-ground ) {
+	.ground( @template: 1, @ext: 1 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-template2-ext2-ground ) {
+	.ground( @template: 1, @ext: 2 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-template2-ext3-ground ) {
+	.ground( @template: 1, @ext: 3 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-template2-link-ground ) {
+	.ground( @template: 1, @link: 1 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-template2-ext-link-ground ) {
+	.ground( @template: 1, @ext: 1, @link: 1 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-template2-ext2-link-ground ) {
+	.ground( @template: 1, @ext: 2, @link: 1 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-template2-ext3-link-ground ) {
+	.ground( @template: 1, @ext: 3, @link: 1 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-template3-ext-ground ) {
+	.ground( @template: 2, @ext: 1 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-template3-ext2-ground ) {
+	.ground( @template: 2, @ext: 2 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-template3-ext3-ground ) {
+	.ground( @template: 2, @ext: 3 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-template3-link-ground ) {
+	.ground( @template: 2, @link: 1 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-template3-ext-link-ground ) {
+	.ground( @template: 2, @ext: 1, @link: 1 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-template3-ext2-link-ground ) {
+	.ground( @template: 2, @ext: 2, @link: 1 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-template3-ext3-link-ground ) {
+	.ground( @template: 2, @ext: 3, @link: 1 );
+}
+
+::highlight( visualeditor-syntax-cm-mw-skipformatting ) {
+	background-color: @skip-formatting-color;
+}
+
+/*
+ * Colorblind theme. Mirrors codemirror.mediawiki.colorblind.less (keep in sync), which the
+ * EditorView integration scopes with .cm-mw-colorblind-colors on .cm-content; there is no
+ * .cm-content here, so the controller puts that class on the VE surface instead. The
+ * 'no-highlight' theme is handled in JS, by not drawing at all.
+ */
+.cm-mw-colorblind-colors {
+	/* misc */
+	::highlight( visualeditor-syntax-cm-mw-section-header ),
+	::highlight( visualeditor-syntax-cm-mw-list ),
+	::highlight( visualeditor-syntax-cm-mw-double-underscore ),
+	::highlight( visualeditor-syntax-cm-mw-signature ),
+	::highlight( visualeditor-syntax-cm-mw-hr ),
+	::highlight( visualeditor-syntax-cm-mw-redirect ),
+	::highlight( visualeditor-syntax-cm-mw-indenting ),
+	::highlight( visualeditor-syntax-cm-mw-apostrophes ) {
+		color: @colorblind-misc-color;
+	}
+
+	/* tags */
+	::highlight( visualeditor-syntax-cm-mw-exttag-name ),
+	::highlight( visualeditor-syntax-cm-mw-exttag-bracket ),
+	::highlight( visualeditor-syntax-cm-mw-exttag-attribute ),
+	::highlight( visualeditor-syntax-cm-mw-exttag-attribute-value ),
+	::highlight( visualeditor-syntax-cm-mw-htmltag-name ),
+	::highlight( visualeditor-syntax-cm-mw-htmltag-bracket ),
+	::highlight( visualeditor-syntax-cm-mw-htmltag-attribute ),
+	::highlight( visualeditor-syntax-cm-mw-htmltag-attribute-value ) {
+		color: @colorblind-tag-color;
+	}
+
+	/* table */
+	::highlight( visualeditor-syntax-cm-mw-table-definition-value ) {
+		color: @table-color;
+		.darkmode( color, @table-color-dark );
+	}
+
+	/* templates */
+	::highlight( visualeditor-syntax-cm-mw-template ),
+	::highlight( visualeditor-syntax-cm-mw-template-name ),
+	::highlight( visualeditor-syntax-cm-mw-template-argument-name ),
+	::highlight( visualeditor-syntax-cm-mw-template-delimiter ),
+	::highlight( visualeditor-syntax-cm-mw-template-bracket ) {
+		color: @colorblind-template-color;
+	}
+
+	/* variables */
+	::highlight( visualeditor-syntax-cm-mw-templatevariable ),
+	::highlight( visualeditor-syntax-cm-mw-templatevariable-name ),
+	::highlight( visualeditor-syntax-cm-mw-templatevariable-bracket ),
+	::highlight( visualeditor-syntax-cm-mw-templatevariable-delimiter ) {
+		color: @colorblind-variable-color;
+	}
+
+	/*
+	 * Remove background colors. Only the tokens this stylesheet actually gives a background to;
+	 * the refs tint is left alone, matching the EditorView integration where colorblind mode
+	 * doesn't override --background-color-refs either.
+	 */
+	::highlight( visualeditor-syntax-cm-mw-skipformatting ),
+	::highlight( visualeditor-syntax-cm-mw-double-underscore ),
+	::highlight( visualeditor-syntax-cm-mw-signature ),
+	::highlight( visualeditor-syntax-cm-mw-hr ),
+	::highlight( visualeditor-syntax-cm-mw-redirect ),
+	::highlight( visualeditor-syntax-cm-mw-tag-pre ),
+	::highlight( visualeditor-syntax-cm-mw-tag-nowiki ),
+	::highlight( visualeditor-syntax-cm-mw-template2-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template3-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template-ext-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template-ext2-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template-ext3-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template-link-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template-ext-link-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template-ext2-link-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template-ext3-link-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template2-ext-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template2-ext2-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template2-ext3-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template2-link-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template2-ext-link-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template2-ext2-link-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template2-ext3-link-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template3-ext-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template3-ext2-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template3-ext3-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template3-link-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template3-ext-link-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template3-ext2-link-ground ),
+	::highlight( visualeditor-syntax-cm-mw-template3-ext3-link-ground ),
+	::highlight( visualeditor-syntax-cm-mw-ext-ground ),
+	::highlight( visualeditor-syntax-cm-mw-ext2-ground ),
+	::highlight( visualeditor-syntax-cm-mw-ext3-ground ),
+	::highlight( visualeditor-syntax-cm-mw-ext-link-ground ),
+	::highlight( visualeditor-syntax-cm-mw-ext2-link-ground ),
+	::highlight( visualeditor-syntax-cm-mw-ext3-link-ground ),
+	::highlight( visualeditor-syntax-cm-mw-link-ground ) {
+		background-color: transparent;
+	}
+}
