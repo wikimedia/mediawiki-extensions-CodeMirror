@@ -10,6 +10,7 @@ const {
 	CodeMirrorThemes
 } = require( 'ext.CodeMirror' );
 const { findBracketMatch } = require( './codemirror.matchbrackets.util.js' );
+const CodeMirrorLineNumberGutter = require( './codemirror.lineNumberGutter.js' );
 
 /**
  * Milliseconds allowed for {@link ensureSyntaxTree} to parse up to the end of the
@@ -233,6 +234,23 @@ class CodeMirrorVisualEditorHighlight {
 		 */
 		this.bracketFrameHandle = null;
 		/**
+		 * Whether the line-number gutter is on: the `lineNumbering` preference, but never in
+		 * DiscussionTools.
+		 *
+		 * @type {boolean}
+		 */
+		this.lineNumberingEnabled = !!this.getPreference( 'lineNumbering' ) &&
+			!this.isDiscussionTools();
+		/**
+		 * The line-number gutter. There is no EditorView to host CodeMirror's own, so this
+		 * draws numbers beside VisualEditor's paragraphs instead.
+		 *
+		 * @type {CodeMirrorLineNumberGutter}
+		 */
+		this.lineNumberGutter = new CodeMirrorLineNumberGutter(
+			this.surfaceView, this.formatLineNumber.bind( this )
+		);
+		/**
 		 * The `theme` preference: `default`, `colorblind` or `no-highlight` for this mode. Light
 		 * and dark variants are resolved in CSS, so only the base name matters here.
 		 *
@@ -390,6 +408,7 @@ class CodeMirrorVisualEditorHighlight {
 		if ( this.trailingWhitespaceEnabled ) {
 			this.scheduleTrailingWhitespace();
 		}
+		this.lineNumberGutter.setEnabled( this.lineNumberingEnabled );
 	}
 
 	/**
@@ -432,6 +451,7 @@ class CodeMirrorVisualEditorHighlight {
 		this.clearWhitespace();
 		this.clearTrailingWhitespace();
 		this.clearHeadings();
+		this.lineNumberGutter.setEnabled( false );
 		this.tokenizer = null;
 		this.isActive = false;
 		this.logEditFeature( 'deactivated' );
@@ -444,6 +464,8 @@ class CodeMirrorVisualEditorHighlight {
 	 */
 	destroy() {
 		this.deactivate();
+		// Owned outright, unlike everything else here, which only borrows VE's surface.
+		this.lineNumberGutter.destroy();
 	}
 
 	/**
@@ -474,6 +496,18 @@ class CodeMirrorVisualEditorHighlight {
 	 */
 	getPreference( prefName ) {
 		return this.preferences.getPreference( prefName );
+	}
+
+	/**
+	 * Whether this is a DiscussionTools surface, by the same check
+	 * {@link CodeMirrorVisualEditor} uses.
+	 *
+	 * @return {boolean}
+	 * @private
+	 */
+	isDiscussionTools() {
+		const target = this.surface.getTarget && this.surface.getTarget();
+		return !!target && target.constructor.name === 'CommentTarget';
 	}
 
 	/**
@@ -533,7 +567,7 @@ class CodeMirrorVisualEditorHighlight {
 	 */
 	get supportedPreferences() {
 		return [
-			'theme', 'highlightRefs', 'bracketMatching',
+			'theme', 'highlightRefs', 'bracketMatching', 'lineNumbering',
 			'activeLine', 'whitespace', 'trailingWhitespace'
 		];
 	}
@@ -611,6 +645,10 @@ class CodeMirrorVisualEditorHighlight {
 				} else {
 					this.clearTrailingWhitespace();
 				}
+				break;
+			case 'lineNumbering':
+				this.lineNumberingEnabled = !!value && !this.isDiscussionTools();
+				this.lineNumberGutter.setEnabled( this.lineNumberingEnabled );
 				break;
 		}
 	}
@@ -692,10 +730,11 @@ class CodeMirrorVisualEditorHighlight {
 
 		// Re-derive from scratch so nothing has to reason about how line numbers shifted when
 		// lines were added or removed; re-adding also repairs nodes VE has re-rendered.
-		this.clearHeadings();
-		// Source mode renders one paragraph per line, as getHighlightRange also relies on.
-		const lines = this.surfaceView.getDocument().getDocumentNode().children;
-		let lineNumber = 0;
+		const previous = this.clearHeadings(),
+			// Source mode renders one paragraph per line, as getHighlightRange also relies on.
+			lines = this.surfaceView.getDocument().getDocumentNode().children;
+		let lineNumber = 0,
+			changed = false;
 		for ( const text of this.tokenizer.doc.iterLines() ) {
 			lineNumber++;
 			// 61 is '=': skip the regex for the overwhelming majority of lines.
@@ -711,6 +750,14 @@ class CodeMirrorVisualEditorHighlight {
 			this.headingLines.set( lineNumber, level );
 			// eslint-disable-next-line mediawiki/class-doc
 			node.$element.addClass( SECTION_CLASS_PREFIX + level );
+			changed = changed || previous.get( lineNumber ) !== level;
+			previous.delete( lineNumber );
+		}
+
+		// Heading sizes change line heights, which the gutter measures, but a class change emits
+		// no 'position' event to prompt it. Anything left in `previous` stopped being a heading.
+		if ( changed || previous.size ) {
+			this.lineNumberGutter.update();
 		}
 	}
 
@@ -854,11 +901,13 @@ class CodeMirrorVisualEditorHighlight {
 	/**
 	 * Remove every heading class this controller has set.
 	 *
+	 * @return {Map<number,number>} The line numbers and levels that were cleared
 	 * @private
 	 */
 	clearHeadings() {
-		const lines = this.surfaceView.getDocument().getDocumentNode().children;
-		this.headingLines.forEach( ( level, lineNumber ) => {
+		const lines = this.surfaceView.getDocument().getDocumentNode().children,
+			cleared = this.headingLines;
+		cleared.forEach( ( level, lineNumber ) => {
 			const node = lines[ lineNumber - 1 ];
 			if ( node ) {
 				// eslint-disable-next-line mediawiki/class-doc
@@ -866,6 +915,7 @@ class CodeMirrorVisualEditorHighlight {
 			}
 		} );
 		this.headingLines = new Map();
+		return cleared;
 	}
 
 	/**
@@ -1108,6 +1158,24 @@ class CodeMirrorVisualEditorHighlight {
 		const selectionManager = this.surfaceView.getSelectionManager();
 		this.drawnGroups.forEach( ( name ) => selectionManager.drawSelections( name, [] ) );
 		this.drawnGroups = new Set();
+	}
+
+	/**
+	 * Format a line number for VisualEditor's gutter, applying the wiki's digit transform
+	 * (`wgTranslateNumerals`) like {@link CodeMirror#lineNumberingExtension}.
+	 *
+	 * @param {number} number
+	 * @return {string}
+	 * @private
+	 */
+	formatLineNumber( number ) {
+		const string = String( number ),
+			table = mw.language && mw.language.getDigitTransformTable &&
+				mw.language.getDigitTransformTable();
+		if ( !table || !mw.config.get( 'wgTranslateNumerals' ) ) {
+			return string;
+		}
+		return string.replace( /[0-9]/g, ( digit ) => table[ digit ] || digit );
 	}
 
 	/**

@@ -35,24 +35,45 @@ const getMockSurface = ( doc = '' ) => {
 	// One <p> per source line (matching ve.dm.SourceConverter), each a single text node, so
 	// getHighlightRange can resolve a token to its line's text node.
 	const lineNodes = doc.split( '\n' ).map( ( text ) => ( { $element: $( '<p>' ).text( text ) } ) );
+	// Parented, because the gutter inserts itself before the document node.
+	const documentNode = { children: lineNodes, $element: $( '<div>' ).appendTo( $( '<div>' ) ) };
 	const ceDocument = {
-		getDocumentNode: jest.fn().mockReturnValue( { children: lineNodes } )
+		getDocumentNode: jest.fn().mockReturnValue( documentNode ),
+		getDir: jest.fn().mockReturnValue( 'ltr' ),
+		// Identity offsets and one paragraph per line, so walk the lines to find the offset.
+		getBranchNodeFromOffset: jest.fn().mockImplementation( ( offset ) => {
+			let start = 0;
+			for ( const node of lineNodes ) {
+				const length = node.$element.text().length;
+				if ( offset <= start + length ) {
+					return node;
+				}
+				start += length + 1;
+			}
+			return lineNodes[ lineNodes.length - 1 ];
+		} )
 	};
 	const surfaceView = {
 		// The controller scopes the colorblind theme by adding a class here.
 		$element: $( '<div>' ),
 		on: jest.fn(),
 		off: jest.fn(),
+		// The gutter uses VE's own connect/disconnect for the 'position' event.
+		connect: jest.fn(),
+		disconnect: jest.fn(),
 		getViewportRange: jest.fn().mockReturnValue( { start: 0, end: doc.length } ),
 		getSelection: jest.fn().mockImplementation( ( selection ) => selection ),
 		getSelectionManager: jest.fn().mockReturnValue( selectionManager ),
 		getDocument: jest.fn().mockReturnValue( ceDocument )
 	};
-	return {
+	// A non-DiscussionTools target by default; setTarget() below swaps in a CommentTarget.
+	let target = { constructor: { name: 'ArticleTarget' } };
+	const mockSurface = {
 		getView: jest.fn().mockReturnValue( surfaceView ),
 		getModel: jest.fn().mockReturnValue( model ),
 		getMode: jest.fn().mockReturnValue( 'source' ),
 		getDom: jest.fn().mockReturnValue( doc ),
+		getTarget: jest.fn().mockImplementation( () => target ),
 		$scrollContainer: { on: jest.fn(), off: jest.fn() },
 		$scrollListener: { on: jest.fn(), off: jest.fn() },
 		// Exposed for assertions
@@ -60,6 +81,7 @@ const getMockSurface = ( doc = '' ) => {
 		documentModel: documentModel,
 		view: surfaceView,
 		lineNodes: lineNodes,
+		documentNode: documentNode,
 		selectionManager: selectionManager,
 		// Install a collapsed (or ranged) cursor for bracket-matching tests.
 		setCursor: ( start, collapsed = true, to = start ) => {
@@ -68,8 +90,15 @@ const getMockSurface = ( doc = '' ) => {
 					start, to, end: Math.max( start, to ), isCollapsed: () => collapsed
 				} )
 			} );
+		},
+		// Swap in a DiscussionTools (CommentTarget) target.
+		setTarget: ( name ) => {
+			target = { constructor: { name } };
 		}
 	};
+	// The gutter reaches the ve.ui.Surface back through the view, for the mode and scroller.
+	surfaceView.getSurface = jest.fn().mockReturnValue( mockSurface );
+	return mockSurface;
 };
 
 let controller, surface, langSupport;
@@ -107,6 +136,13 @@ beforeEach( () => {
 			ElementLinearData: jest.fn().mockImplementation( ( store, insert ) => ( {
 				getSourceText: () => ( Array.isArray( insert ) ? insert.join( '' ) : String( insert ) )
 			} ) )
+		},
+		// Synchronous stand-in for the gutter's debounced repaint, so tests need no timers.
+		// Keeps the guard, which is the part behaviour depends on.
+		debounceWithTest: ( test, func ) => ( ...args ) => {
+			if ( test( ...args ) ) {
+				return func( ...args );
+			}
 		}
 	};
 	// The CSS Custom Highlight API registry (absent from the shared jsdom setup).
@@ -377,6 +413,111 @@ describe( 'tag matching', () => {
 	} );
 } );
 
+describe( 'line numbering', () => {
+	it( 'should default to enabled from the lineNumbering preference', () => {
+		expect( controller.lineNumberingEnabled ).toBe( true );
+	} );
+
+	it( 'should enable the gutter on activate, with the controller\'s formatter', () => {
+		expect( controller.lineNumberGutter.formatNumber ).toEqual( expect.any( Function ) );
+		controller.activate();
+		expect( controller.lineNumberGutter.enabled ).toBe( true );
+	} );
+
+	it( 'should disable the gutter on deactivate', () => {
+		controller.activate();
+		controller.deactivate();
+		expect( controller.lineNumberGutter.enabled ).toBe( false );
+	} );
+
+	it( 'should attach the gutter beside the document node while enabled', () => {
+		controller.activate();
+		expect( surface.documentNode.$element.prev()[ 0 ] )
+			.toBe( controller.lineNumberGutter.$element[ 0 ] );
+		controller.deactivate();
+		expect( surface.documentNode.$element.prev().length ).toBe( 0 );
+	} );
+
+	it( 'should pass the preference through when line numbering is disabled', () => {
+		const origGet = mw.user.options.get;
+		mw.user.options.get = jest.fn().mockReturnValue( '{"lineNumbering":false}' );
+		try {
+			const disabled = new CodeMirrorVisualEditorHighlight( getMockSurface( 'x' ), langSupport );
+			expect( disabled.lineNumberingEnabled ).toBe( false );
+			disabled.activate();
+			expect( disabled.lineNumberGutter.enabled ).toBe( false );
+		} finally {
+			mw.user.options.get = origGet;
+		}
+	} );
+
+	it( 'should stay disabled in the DiscussionTools integration', () => {
+		const dtSurface = getMockSurface( 'x' );
+		dtSurface.setTarget( 'CommentTarget' );
+		const dt = new CodeMirrorVisualEditorHighlight( dtSurface, langSupport );
+		expect( dt.lineNumberingEnabled ).toBe( false );
+		dt.activate();
+		expect( dt.lineNumberGutter.enabled ).toBe( false );
+	} );
+
+	it( 'should stay independent of the no-highlight theme', () => {
+		// Bracket-match and line-number styles live outside the theme-scoped rules in
+		// codemirror.mediawiki.less, so 'no-highlight' must not switch them off here either.
+		const themed = newThemedController( 'no-highlight' );
+		themed.activate();
+		expect( themed.lineNumberGutter.enabled ).toBe( true );
+		expect( themed.surface.getModel().on )
+			.toHaveBeenCalledWith( 'select', expect.any( Function ) );
+	} );
+
+	it( 'should refuse to enable outside source mode', () => {
+		surface.getMode.mockReturnValue( 'visual' );
+		controller.lineNumberGutter.setEnabled( true );
+		expect( controller.lineNumberGutter.enabled ).toBe( false );
+	} );
+
+	it( 'should follow a direction change onto the other edge', () => {
+		controller.activate();
+		const gutter = controller.lineNumberGutter,
+			$documentNode = surface.documentNode.$element;
+		expect( gutter.side ).toBe( 'left' );
+		expect( $documentNode[ 0 ].style.paddingLeft ).not.toBe( '' );
+
+		surface.getView().getDocument().getDir.mockReturnValue( 'rtl' );
+		gutter.update();
+
+		expect( gutter.side ).toBe( 'right' );
+		expect( $documentNode[ 0 ].style.paddingRight ).not.toBe( '' );
+		// The edge it used to reserve is released, or the text stays indented on both sides.
+		expect( $documentNode[ 0 ].style.paddingLeft ).toBe( '' );
+		expect( gutter.$element[ 0 ].style.left ).toBe( '' );
+		expect( gutter.$element[ 0 ].style.right ).not.toBe( '' );
+	} );
+
+	it( 'should tear the gutter down on destroy', () => {
+		controller.activate();
+		controller.destroy();
+		expect( controller.lineNumberGutter.surfaceView ).toBeNull();
+	} );
+
+	it( 'should localise the number with the digit transform when enabled', () => {
+		const origTable = mw.language.getDigitTransformTable,
+			origConfigGet = mw.config.get;
+		mw.language.getDigitTransformTable = jest.fn().mockReturnValue( { 1: '١', 2: '٢', 3: '٣' } );
+		mw.config.get = jest.fn().mockImplementation( ( key ) => key === 'wgTranslateNumerals' );
+		try {
+			expect( controller.formatLineNumber( 123 ) ).toBe( '١٢٣' );
+		} finally {
+			mw.language.getDigitTransformTable = origTable;
+			mw.config.get = origConfigGet;
+		}
+	} );
+
+	it( 'should return plain digits when digit translation is off', () => {
+		expect( controller.formatLineNumber( 42 ) ).toBe( '42' );
+	} );
+} );
+
 describe( 'themes', () => {
 	it( 'should default to the default theme, with highlighting on', () => {
 		expect( controller.theme ).toBe( 'default' );
@@ -390,8 +531,10 @@ describe( 'themes', () => {
 		const themed = newThemedController( 'no-highlight', '{{Foo}} [[Bar]]' );
 		expect( themed.syntaxHighlightingEnabled ).toBe( false );
 		themed.activate();
-		// The refresh listeners are never bound...
-		expect( themed.surface.$scrollListener.on ).not.toHaveBeenCalled();
+		// The refresh listeners are never bound. Named specifically: the gutter binds its own
+		// scroll listener on the same object, under a different namespace.
+		expect( themed.surface.$scrollListener.on )
+			.not.toHaveBeenCalledWith( 'scroll.codeMirrorVeHighlight', expect.any( Function ) );
 		expect( themed.surface.getView().on )
 			.not.toHaveBeenCalledWith( 'position', expect.any( Function ) );
 		// ...and an explicit refresh draws nothing.
@@ -523,6 +666,25 @@ describe( 'headings', () => {
 		headed.updateHeadings();
 		expect( classes( headed.surface.lineNodes[ 0 ] ) ).toEqual( [ 'cm-mw-ve-section-2' ] );
 		expect( headed.headingLines.get( 1 ) ).toBe( 2 );
+	} );
+
+	it( 'should ask the line-number gutter to re-measure when headings change', () => {
+		// Applying a class emits no 'position' event, so the numbers would otherwise keep the
+		// line heights they were first rendered with.
+		const headed = newThemedController( 'default', '== two ==\nplain' );
+		headed.activate();
+		const spy = jest.spyOn( headed.lineNumberGutter, 'update' );
+		headed.updateHeadings();
+		expect( spy ).toHaveBeenCalledTimes( 1 );
+	} );
+
+	it( 'should not re-measure when the heading set is unchanged', () => {
+		const headed = newThemedController( 'default', '== two ==\nplain' );
+		headed.activate();
+		headed.updateHeadings();
+		const spy = jest.spyOn( headed.lineNumberGutter, 'update' );
+		headed.updateHeadings();
+		expect( spy ).not.toHaveBeenCalled();
 	} );
 
 	it( 'should schedule an update on document change, not on scroll', () => {

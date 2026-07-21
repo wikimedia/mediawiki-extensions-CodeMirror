@@ -454,7 +454,8 @@
 				"ve-cm/ve.ui.CodeMirrorPreferencesTool.js",
 				"codemirror.visualEditor.js",
 				"codemirror.visualEditorHighlight.js",
-				"codemirror.matchbrackets.util.js"
+				"codemirror.matchbrackets.util.js",
+				"codemirror.lineNumberGutter.js"
 			],
 			"styles": [
 				"ve-cm/ve.ui.CodeMirror.less",

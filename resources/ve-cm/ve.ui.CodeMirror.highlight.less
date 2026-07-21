@@ -285,6 +285,36 @@
 }
 
 /*
+ * Line-number gutter (CodeMirrorLineNumberGutter). The numbers are absolutely positioned
+ * within it, so the gutter itself has no height; keep them from being clipped and from
+ * catching pointer events meant for the surface.
+ */
+.cm-mw-ve-lineNumberGutter {
+	position: absolute;
+	top: 0;
+	overflow: visible;
+	pointer-events: none;
+	user-select: none;
+	color: @color-subtle;
+	font-variant-numeric: tabular-nums;
+}
+
+.cm-mw-ve-lineNumber {
+	position: absolute;
+	left: 0;
+	right: 0;
+	box-sizing: border-box;
+	/*
+	 * Gap between the number and the text, matching CodeMirror's own gutter. The gutter width
+	 * in CodeMirrorLineNumberGutter#updateWidth accounts for this plus a little slack on the
+	 * far side.
+	 */
+	/* @noflip */
+	padding-right: 11px;
+	text-align: end;
+}
+
+/*
  * Colorblind theme. Mirrors codemirror.mediawiki.colorblind.less (keep in sync), which the
  * EditorView integration scopes with .cm-mw-colorblind-colors on .cm-content; there is no
  * .cm-content here, so the controller puts that class on the VE surface instead. The
