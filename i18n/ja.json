@@ -32,8 +32,6 @@
 	"codemirror-prefs-whitespace": "空白を強調表示",
 	"codemirror-prefs-trailingwhitespace": "末尾の空白を強調表示",
 	"codemirror-prefs-reset": "初期状態にリセット",
-	"codemirror-prefs-colorblind": "ウィキテキストでの編集時にカラーブラインドに応じた配色を使用する",
-	"codemirror-prefs-colorblind-help": "構文強調表示のガジェットを使用している場合、この設定は機能しません。",
 	"codemirror-close": "閉じる",
 	"codemirror-find": "検索",
 	"codemirror-next": "次を検索",

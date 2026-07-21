@@ -21,8 +21,6 @@
 	"codemirror-prefs-linewrapping": "Спаструвај редови",
 	"codemirror-prefs-activeline": "Истакни го активниот ред",
 	"codemirror-prefs-specialchars": "Прикажи посебни знаци",
-	"codemirror-prefs-colorblind": "Овозможи истакнување на синтакса при уредување за далтонисти",
-	"codemirror-prefs-colorblind-help": "Ако користите алатка за истакнување на синтакса, оваа можност нема да работи.",
 	"codemirror-close": "Затвори",
 	"codemirror-find": "Најди",
 	"codemirror-next": "Најди следно",

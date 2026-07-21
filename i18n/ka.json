@@ -20,8 +20,6 @@
 	"codemirror-prefs-linewrapping": "სტრიქონის გადატანა",
 	"codemirror-prefs-activeline": "აქტიური სტრიქონის განათება",
 	"codemirror-prefs-specialchars": "სპეციალური სიმბოლოების ჩვენება",
-	"codemirror-prefs-colorblind": "ვიკიტექსტის რედაქტირებისას დალტონიზმზე ადაპტირებული სინტაქსის განათების ჩართვა",
-	"codemirror-prefs-colorblind-help": "თუკი სინტაქსის გასანათებლად გაჯეტს იყენებთ, ეს ფუნქცია არ იმუშავებს.",
 	"codemirror-close": "დახურვა",
 	"codemirror-find": "ძიება",
 	"codemirror-next": "შემდეგის მოძიება",

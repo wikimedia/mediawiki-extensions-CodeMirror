@@ -40,7 +40,6 @@
 	"codemirror-prefs-highlightrefs": "Istakni sadržaj unutar oznaka <ref>",
 	"codemirror-prefs-foldallrefs": "Sklopi sve oznake <ref>",
 	"codemirror-prefs-reset": "Vrati na predodređeno",
-	"codemirror-prefs-colorblind": "Uključi temu za isticanje sintakse prilagođenu osobama koje imaju poteškoće s prepoznavanjem boja",
 	"codemirror-close": "Zatvori",
 	"codemirror-find": "Pronađi",
 	"codemirror-next": "Pronađi sljedeće",

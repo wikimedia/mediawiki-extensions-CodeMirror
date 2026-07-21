@@ -40,8 +40,6 @@
 	"codemirror-prefs-highlightrefs": "Serlahkan isi kandungan tag <ref>",
 	"codemirror-prefs-foldallrefs": "Lipatkan semua tag <ref> secara lalai",
 	"codemirror-prefs-reset": "Tetapkan semula kepada lalai",
-	"codemirror-prefs-colorblind": "Dayakan skema mesra buta warna untuk penyerlahan sintaks semasa menyunting wikiteks",
-	"codemirror-prefs-colorblind-help": "Jika anda menggunakan gajet untuk menyerlahkan sintaks, pilihan ini tidak akan berfungsi.",
 	"codemirror-close": "Tutup",
 	"codemirror-find": "Cari",
 	"codemirror-next": "Cari seterusnya",

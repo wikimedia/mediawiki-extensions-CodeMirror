@@ -44,8 +44,6 @@
 	"codemirror-prefs-highlightrefs": "برجسته‌سازی محتوای برچسب‌های <ref>",
 	"codemirror-prefs-foldallrefs": "تا کردن تمام برچسب‌های <ref> به‌صورت پیش‌فرض",
 	"codemirror-prefs-reset": "بازنشانی پیش‌فرض‌ها",
-	"codemirror-prefs-colorblind": "فعال‌سازی طرح سازگار با کوررنگی برای برجسته‌سازی نحوی در زمان ویرایش ویکی‌متن",
-	"codemirror-prefs-colorblind-help": "اگر از یک ابزار برای برجسته‌سازی نحوی استفاده می‌کنید، این گزینه کاری انجام نخواهد داد.",
 	"codemirror-close": "بستن",
 	"codemirror-find": "یافتن",
 	"codemirror-next": "یافتن بعدی",

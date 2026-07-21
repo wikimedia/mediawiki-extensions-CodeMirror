@@ -39,8 +39,6 @@
 	"codemirror-prefs-highlightrefs": "Tõsta esile <ref>-sildi sisu",
 	"codemirror-prefs-foldallrefs": "Vaikimisi voldi kõik <ref>-sildid",
 	"codemirror-prefs-reset": "Lähtesta vaikeväärtused",
-	"codemirror-prefs-colorblind": "Kasuta vikiteksti redigeerimisel värvipimedale sobiva värviskeemiga süntaksi esiletõstu",
-	"codemirror-prefs-colorblind-help": "Kui kasutad süntaksi esiletõstu tööriista, siis see eelistus ei tööta.",
 	"codemirror-close": "Sule",
 	"codemirror-find": "Otsitav",
 	"codemirror-next": "Leia järgmine",

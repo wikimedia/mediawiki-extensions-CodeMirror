@@ -15,6 +15,7 @@
 	"codemirror-prefs-title": "Preferenze di evidenziazione della sintassi",
 	"codemirror-prefs-help": "aiuto",
 	"codemirror-prefs-panel-full": "preferenze complete",
+	"codemirror-prefs-section-appearance": "Aspetto",
 	"codemirror-prefs-section-references": "Riferimenti",
 	"codemirror-prefs-bidiisolation": "Isola il testo bidirezionale",
 	"codemirror-prefs-keymap": "scorciatoie da tastiera",
@@ -22,8 +23,10 @@
 	"codemirror-prefs-activeline": "Evidenzia la riga attiva",
 	"codemirror-prefs-specialchars": "Mostra caratteri speciali",
 	"codemirror-prefs-trailingwhitespace": "Evidenzia gli spazi vuoti finali",
-	"codemirror-prefs-colorblind": "Attiva una combinazione di colori per daltonici per l'evidenziazione della sintassi del wikitesto",
-	"codemirror-prefs-colorblind-help": "Questa preferenza non funziona se usi un accessorio per l'evidenziazione della sintassi.",
+	"codemirror-theme-default": "Predefinito",
+	"codemirror-theme-colorblind": "Adatto a chi soffre di daltonismo",
+	"codemirror-theme-github": "GitHub",
+	"codemirror-theme-high-contrast": "Contrasto elevato",
 	"codemirror-close": "Chiudi",
 	"codemirror-find": "Trova",
 	"codemirror-next": "Trova successivo",
@@ -65,6 +68,8 @@
 	"codemirror-keymap-blankline": "Riga vuota",
 	"codemirror-keymap-reference": "Riferimento",
 	"codemirror-keymap-comment": "Commento",
+	"codemirror-keymap-sortlines": "Ordina le righe selezionate",
+	"codemirror-keymap-sortlinesdescending": "Ordina le righe selezionate in ordine decrescente",
 	"codemirror-keymap-preferences": "Preferenze di evidenziazione della sintassi",
 	"codemirror-keymap-help": "Scorciatoie da tastiera",
 	"codemirror-keymap-multicursor": "Tieni premuto $1 e fai clic per creare più cursori.",
@@ -81,5 +86,6 @@
 	"codemirror-wikilint-newline": "inserisci una nuova riga",
 	"codemirror-wikilint-nothing-in": "non dovrebbe esserci nulla in $1",
 	"codemirror-wikilint-remove": "rimuovi",
-	"codemirror-wikilint-uppercase": "converti in maiuscolo"
+	"codemirror-wikilint-uppercase": "converti in maiuscolo",
+	"codemirror-we-group-sort": "Ordina"
 }

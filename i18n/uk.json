@@ -47,8 +47,6 @@
 	"codemirror-prefs-highlightrefs": "Виділити вміст тегів <ref>",
 	"codemirror-prefs-foldallrefs": "Згорнути усі теги <ref> за замовчуванням",
 	"codemirror-prefs-reset": "Повернутися до значень за замовчуванням",
-	"codemirror-prefs-colorblind": "Увімкнути зручну для дальтоніків схему підсвічування синтаксису під час редагування вікітексту",
-	"codemirror-prefs-colorblind-help": "Якщо Ви використовуєте додаток для підсвітки синтаксу, це налаштування не буде працювати.",
 	"codemirror-close": "Закрити",
 	"codemirror-find": "Знайти",
 	"codemirror-next": "Знайти наступне",

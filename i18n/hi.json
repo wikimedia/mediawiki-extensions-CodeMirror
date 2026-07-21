@@ -37,8 +37,6 @@
 	"codemirror-prefs-highlightrefs": "<ref> टैगों की सामग्री को हाइलाइट करें",
 	"codemirror-prefs-foldallrefs": "डिफ़ॉल्ट से सभी <ref> टैगों को तह करें",
 	"codemirror-prefs-reset": "डिफ़ॉल्ट पर रीसेट करें",
-	"codemirror-prefs-colorblind": "विकिटेक्स्ट सम्पादित करते समय सिनटैक्स हाइलाइटिंग के लिए वर्णांध-अनुकूल स्कीम सक्षम करें",
-	"codemirror-prefs-colorblind-help": "अगर आप सिनटैक्स हाइलाइटिंग के लिए किसी गैजेट का उपयोग कर रहे हैं तो यह वरीयता काम नहीं करेगी।",
 	"codemirror-close": "बंद करें",
 	"codemirror-find": "खोजें",
 	"codemirror-next": "अगला",

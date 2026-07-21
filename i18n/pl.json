@@ -41,8 +41,6 @@
 	"codemirror-prefs-highlightrefs": "Koloruj zawartość znacznika <ref>",
 	"codemirror-prefs-foldallrefs": "Domyślnie zwijaj wszystkie znaczniki <ref>",
 	"codemirror-prefs-reset": "Przywróć ustawienia domyślne",
-	"codemirror-prefs-colorblind": "Włącz schemat kolorystyczny podświetlania składni wikikodu podczas edycji przyjazny osobom ze ślepotą barw",
-	"codemirror-prefs-colorblind-help": "Jeśli używasz gadżetu do podświetlania składni, ta preferencja nie zadziała.",
 	"codemirror-close": "Zamknij",
 	"codemirror-find": "Znajdź",
 	"codemirror-next": "Znajdź następny",

@@ -25,8 +25,6 @@
 	"codemirror-prefs-specialchars": "Mostrar carateres especiais",
 	"codemirror-prefs-whitespace": "Destacar espaço em branco",
 	"codemirror-prefs-reset": "Reiniciar para predefinições",
-	"codemirror-prefs-colorblind": "Ativar esquema concebido para pessoas daltónicas para o destaque de sintaxe quando edita texto wiki",
-	"codemirror-prefs-colorblind-help": "Se utiliza um ''gadget'' para destacar a sintaxe, esta preferência não funcionará.",
 	"codemirror-close": "Fechar",
 	"codemirror-find": "Encontrar",
 	"codemirror-next": "Encontrar seguinte",

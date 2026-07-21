@@ -38,8 +38,6 @@
 	"codemirror-prefs-highlightrefs": "Làm nổi bật nội dung của thẻ <ref>",
 	"codemirror-prefs-foldallrefs": "Thu gọn tất cả thẻ <ref> theo mặc định",
 	"codemirror-prefs-reset": "Đặt lại về mặc định",
-	"codemirror-prefs-colorblind": "Áp dụng bảng màu dễ phân biệt cho người mù màu để làm nổi bật cú pháp khi soạn thảo mã wiki",
-	"codemirror-prefs-colorblind-help": "Nếu bạn dùng một tiện ích khác cũng có chức năng làm nổi bật cú pháp, tùy chọn này sẽ không có tác dụng.",
 	"codemirror-close": "Đóng",
 	"codemirror-find": "Tìm",
 	"codemirror-next": "Tìm tiếp",

@@ -47,8 +47,6 @@
 	"codemirror-prefs-highlightrefs": "تسليط الضوء على محتويات<ref> العلامات",
 	"codemirror-prefs-foldallrefs": "اطوِ الكل<ref> العلامات بشكل افتراضي",
 	"codemirror-prefs-reset": "إعادة التعيين إلى الإعدادات الافتراضية",
-	"codemirror-prefs-colorblind": "فعّل مخططًا متوافقًا مع عمى الألوان لإبراز التركيب عند تعديل نص ويكي.",
-	"codemirror-prefs-colorblind-help": "لن يعمل هذا التفضيل إذا كنت تستخدم إضافةً لإبراز التركيب.",
 	"codemirror-close": "أغلق",
 	"codemirror-find": "ابحث",
 	"codemirror-next": "ابحث عن التالي",

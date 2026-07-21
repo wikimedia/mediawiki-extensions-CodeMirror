@@ -44,8 +44,6 @@
 	"codemirror-prefs-highlightrefs": "Destacar contenido de etiquetas <ref>",
 	"codemirror-prefs-foldallrefs": "Cerrar todas las etiquetas <ref> por defecto",
 	"codemirror-prefs-reset": "Restaurar valores predeterminados",
-	"codemirror-prefs-colorblind": "Usar un esquema de colores accesible para daltónicos en el resaltador de sintaxis al editar código wiki",
-	"codemirror-prefs-colorblind-help": "Si utilizas un accesorio para el resaltado de sintaxis esta preferencia no funcionará.",
 	"codemirror-close": "Cerrar",
 	"codemirror-find": "Encontrar",
 	"codemirror-next": "Encontrar siguiente",

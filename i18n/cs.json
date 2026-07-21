@@ -12,7 +12,5 @@
 	"codemirror-prefs-enable": "Zapnout zvýrazňování syntaxe",
 	"codemirror-prefs-title": "Nastavení zvýrazňování syntaxe",
 	"codemirror-prefs-help": "nápověda",
-	"codemirror-prefs-colorblind": "Zapnout schéma pro barvoslepé u zvýrazňování syntaxe při editaci wikitextu",
-	"codemirror-prefs-colorblind-help": "Pokud používáte pro zvýrazňování syntaxe udělátko, nebude toto nastavení fungovat.",
 	"prefs-accessibility": "Přístupnost"
 }

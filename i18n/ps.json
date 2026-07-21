@@ -40,8 +40,6 @@
 	"codemirror-prefs-highlightrefs": "د <ref> نښلنونو منځپانگې روښانول",
 	"codemirror-prefs-foldallrefs": "ټول <ref> نښلنونه په تلواله ډول پوښل",
 	"codemirror-prefs-reset": "تلواليزه ته بېرته‌اوڼل",
-	"codemirror-prefs-colorblind": "د ويکي‌ليک سمولو پرمهال د غونډلپوهې روښانتيا لپاره رنگينه دوستانه سکيم چارنول",
-	"codemirror-prefs-colorblind-help": "که تاسو د غونډلپوهې روښانتيا لپاره ويښيارتوکی کاروئ؛ نو دا غوره‌توب به کار ونکړي.",
 	"codemirror-close": "تړل",
 	"codemirror-find": "موندل",
 	"codemirror-next": "بل موندل",

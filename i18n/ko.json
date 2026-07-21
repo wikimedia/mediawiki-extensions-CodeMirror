@@ -46,8 +46,6 @@
 	"codemirror-prefs-highlightrefs": "<ref> 태그의 내용물을 강조",
 	"codemirror-prefs-foldallrefs": "모든 <ref> 태그를 기본으로 접기",
 	"codemirror-prefs-reset": "기본값으로 재설정",
-	"codemirror-prefs-colorblind": "위키텍스트 편집 시 색각 이상자에게 친숙한 문법 강조용 스킴 활성화하기",
-	"codemirror-prefs-colorblind-help": "문법 강조용 소도구를 사용하는 경우 이 환경 설정은 동작하지 않습니다.",
 	"codemirror-close": "닫기",
 	"codemirror-find": "찾기",
 	"codemirror-next": "다음 찾기",

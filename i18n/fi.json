@@ -37,8 +37,6 @@
 	"codemirror-prefs-whitespace": "Korosta tulostumattomat merkit",
 	"codemirror-prefs-highlightrefs": "Korosta <ref>-merkkien sisältämä sisältö",
 	"codemirror-prefs-reset": "Palauta oletusarvoihin",
-	"codemirror-prefs-colorblind": "Käytä värisokeille sopivaa väripalettia syntaksin korostuksessa wikitekstiä muokattaessa",
-	"codemirror-prefs-colorblind-help": "Jos käytät pienoisohjelmaa syntaksin korostamiseen, tämä asetus ei toimi.",
 	"codemirror-close": "Sulje",
 	"codemirror-find": "Etsi",
 	"codemirror-next": "Etsi seuraava",

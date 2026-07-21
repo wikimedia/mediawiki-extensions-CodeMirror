@@ -42,8 +42,6 @@
 	"codemirror-prefs-highlightrefs": "A <ref> címkék tartalmának kiemelése",
 	"codemirror-prefs-foldallrefs": "A <ref> címkék automatikus összecsukása",
 	"codemirror-prefs-reset": "Alapértelmezések visszaállítása",
-	"codemirror-prefs-colorblind": "Színvakbarát színséma használata a wikiszöveges szintaxiskiemeléshez",
-	"codemirror-prefs-colorblind-help": "Ha egy segédeszközt használsz a szintaxiskiemelésre, arra nincs hatással ez a beállítás.",
 	"codemirror-close": "Bezár",
 	"codemirror-find": "Keresés",
 	"codemirror-next": "Következő keresése",

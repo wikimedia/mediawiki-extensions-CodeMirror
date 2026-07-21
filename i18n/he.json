@@ -41,8 +41,6 @@
 	"codemirror-prefs-highlightrefs": "להדגיש את התוכן של תגי <ref>",
 	"codemirror-prefs-foldallrefs": "לקבל את כל תגי <ref> לפי ברירת מחדל",
 	"codemirror-prefs-reset": "איפוס לברירות מחדל",
-	"codemirror-prefs-colorblind": "להפעיל ערכת צבעים ידידותית לעיוורי־צבעים בצביעת קוד בעריכת קוד ויקי",
-	"codemirror-prefs-colorblind-help": "אם מופעל אצלך גאדג'ט לצביעת קוד, ההעדפה הזאת לא תעבוד",
 	"codemirror-close": "סגירה",
 	"codemirror-find": "למצוא",
 	"codemirror-next": "למצוא את הבאה",

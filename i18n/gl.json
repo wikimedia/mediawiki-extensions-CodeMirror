@@ -41,8 +41,6 @@
 	"codemirror-prefs-highlightrefs": "Resaltar o contido das etiquetas <ref>",
 	"codemirror-prefs-foldallrefs": "Encartar todas as etiquetas <ref> por defecto",
 	"codemirror-prefs-reset": "Restablecer aos valores predeterminados",
-	"codemirror-prefs-colorblind": "Activar o esquema para as persoas daltónicas que resalta a sintaxe ao editar o texto wiki",
-	"codemirror-prefs-colorblind-help": "Se usas un trebello para o resaltado de sintaxe, esta preferencia non funcionará.",
 	"codemirror-close": "Pechar",
 	"codemirror-find": "Procurar",
 	"codemirror-next": "Atopar o seguinte",
