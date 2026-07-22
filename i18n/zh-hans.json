@@ -26,6 +26,7 @@
 	"codemirror-prefs-title": "语法高亮设置",
 	"codemirror-prefs-help": "帮助",
 	"codemirror-prefs-panel-full": "完整偏好设置",
+	"codemirror-prefs-section-appearance": "外观",
 	"codemirror-prefs-section-lines": "行",
 	"codemirror-prefs-section-characters": "字符",
 	"codemirror-prefs-section-code-assistance": "代码协助",
@@ -50,6 +51,12 @@
 	"codemirror-prefs-highlightrefs": "高亮<ref>标签的内容",
 	"codemirror-prefs-foldallrefs": "默认折叠全部<ref>标签",
 	"codemirror-prefs-reset": "重置为默认值",
+	"codemirror-prefs-theme": "编辑器主题",
+	"codemirror-theme-default": "默认",
+	"codemirror-theme-no-highlight": "无高亮显示",
+	"codemirror-theme-colorblind": "色盲友好",
+	"codemirror-theme-basic": "基本",
+	"codemirror-theme-high-contrast": "高对比度",
 	"codemirror-close": "关闭",
 	"codemirror-find": "查找",
 	"codemirror-next": "查找下一个",
@@ -140,6 +147,8 @@
 	"codemirror-keymap-other": "其他",
 	"codemirror-keymap-moveline": "将选中行向上或向下移动一行",
 	"codemirror-keymap-copyline": "将选中行复制到上面或下面一行",
+	"codemirror-keymap-sortlines": "对选中行排序",
+	"codemirror-keymap-sortlinesdescending": "对选中行降序排序",
 	"codemirror-keymap-direction": "更改书写方向",
 	"codemirror-keymap-preferences": "语法高亮设置",
 	"codemirror-keymap-full-preferences": "完整偏好设置对话框",
@@ -227,5 +236,6 @@
 	"codemirror-potentially-slow": "可能导致缓慢",
 	"codemirror-validate-js-syntaxerror": "第$2行的第$1列出现语法错误：$3",
 	"codemirror-ve-limit-exceeded": "文档过大，语法高亮无法显示，已被禁用。",
-	"codemirror-ve-limit-exceeded-info": "更多信息"
+	"codemirror-ve-limit-exceeded-info": "更多信息",
+	"codemirror-we-group-sort": "排序"
 }

@@ -22,6 +22,7 @@
 	"codemirror-prefs-title": "Einstellungen zur Syntaxhervorhebung",
 	"codemirror-prefs-help": "Hilfe",
 	"codemirror-prefs-panel-full": "vollständige Einstellungen",
+	"codemirror-prefs-section-appearance": "Erscheinungsbild",
 	"codemirror-prefs-section-lines": "Zeilen",
 	"codemirror-prefs-section-characters": "Zeichen",
 	"codemirror-prefs-section-code-assistance": "Code-Unterstützung",
@@ -46,6 +47,13 @@
 	"codemirror-prefs-highlightrefs": "Den Inhalt von <ref>-Tags markieren",
 	"codemirror-prefs-foldallrefs": "Alle <ref>-Tags standardmäßig einklappen",
 	"codemirror-prefs-reset": "Auf Standardwerte zurücksetzen",
+	"codemirror-theme-default": "Standard",
+	"codemirror-theme-no-highlight": "Keine Hervorhebung",
+	"codemirror-theme-colorblind": "Für Menschen mit Farbenblindheit geeignet",
+	"codemirror-theme-basic": "Einfach",
+	"codemirror-theme-high-contrast": "Hoher Kontrast",
+	"codemirror-theme-solarized": "Solarisiert",
+	"codemirror-theme-vscode": "VS-Code",
 	"codemirror-close": "Schließen",
 	"codemirror-find": "Suchen",
 	"codemirror-next": "Nächste finden",
@@ -136,6 +144,8 @@
 	"codemirror-keymap-other": "Andere",
 	"codemirror-keymap-moveline": "Ausgewählte Zeilen um eine Zeile nach oben oder unten verschieben",
 	"codemirror-keymap-copyline": "Ausgewählte Zeilen in die darüber- oder darunterliegende Zeile kopieren",
+	"codemirror-keymap-sortlines": "Ausgewählte Zeilen sortieren",
+	"codemirror-keymap-sortlinesdescending": "Ausgewählte Zeilen absteigend sortieren",
 	"codemirror-keymap-direction": "Ausrichtung ändern",
 	"codemirror-keymap-preferences": "Einstellungen zur Syntaxhervorhebung",
 	"codemirror-keymap-full-preferences": "Vollständiger Einstellungsdialog",
@@ -223,5 +233,6 @@
 	"codemirror-potentially-slow": "möglicherweise langsam",
 	"codemirror-validate-js-syntaxerror": "Syntaxfehler in Spalte $1 in Zeile $2: $3",
 	"codemirror-ve-limit-exceeded": "Das Dokument ist zu groß für die Syntaxhervorhebung und diese wurde daher deaktiviert.",
-	"codemirror-ve-limit-exceeded-info": "Weitere Informationen"
+	"codemirror-ve-limit-exceeded-info": "Weitere Informationen",
+	"codemirror-we-group-sort": "Sortieren"
 }
