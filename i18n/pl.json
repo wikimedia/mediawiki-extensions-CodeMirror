@@ -10,7 +10,7 @@
 			"PanWor"
 		]
 	},
-	"codemirror-desc": "Dostarcza podświetlanie składni w edytorze wikitekstu",
+	"codemirror-desc": "Dostarcza podświetlanie składni w edytorze wikikodu",
 	"codemirror-toggle-label": "Podświetlanie składni",
 	"codemirror-toggle-label-short": "Składnia",
 	"codemirror-prefs-summary": "Więcej informacji o tej funkcji można znaleźć na [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror stronie pomocy].",
