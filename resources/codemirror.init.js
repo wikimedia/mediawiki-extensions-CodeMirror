@@ -145,6 +145,7 @@ function addCodeMirrorButton() {
 }
 
 function addCodeMirrorButtonOrInit() {
+	mw.hook( 'wikipage.editform' ).remove( addCodeMirrorButtonOrInit );
 	// Value of 0 means there intentionally is no primary textarea
 	// (i.e. Special:SecurePoll/translate).
 	// Guard against there being no textarea, i.e. "Section editing not supported" error (T424877).
