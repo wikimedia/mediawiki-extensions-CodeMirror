@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"AhmedG612"
+		]
+	},
+	"apihelp-codemirror-validate-summary": "Hubi khaladaadka xaqiijinta ee ku jira nuxurka la bixiyay",
+	"apihelp-codemirror-validate-param-content": "Nuxurka qoraalka la xaqiijinayo",
+	"apihelp-codemirror-validate-param-contentmodel": "Qaabka nuxurka",
+	"apihelp-codemirror-validate-param-title": "Cinwaanka bogga uu nuxurku ka tirsan yahay.",
+	"apihelp-codemirror-validate-example": "Hubi in <code>h2 {color: red}</code> uu sax u yahay sanitized-css"
+}
