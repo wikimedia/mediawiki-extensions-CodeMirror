@@ -4,7 +4,8 @@
 			"Bugoslav",
 			"Ivana",
 			"MaGa",
-			"Ponor"
+			"Ponor",
+			"Neptune, the Mystic"
 		]
 	},
 	"codemirror-desc": "Omogućava isticanje sintakse u uređivaču wikiteksta",
@@ -170,7 +171,7 @@
 	"codemirror-wikilint-missing-extension": "nedostaje ekstenzija u imenu datoteke",
 	"codemirror-wikilint-missing-function": "nedostaje ime funkcije Scribunto modula",
 	"codemirror-wikilint-newline": "umetni novi redak",
-	"codemirror-wikilint-obsolete-attribute": "zastarjel atribut",
+	"codemirror-wikilint-obsolete-attribute": "zastario atribut",
 	"codemirror-wikilint-obsolete-tag": "zastarjela HTML oznaka",
 	"codemirror-wikilint-open": "pretvori u otvarajuću oznaku",
 	"codemirror-wikilint-prefix": "umetni predmetak imenskog prostora",
