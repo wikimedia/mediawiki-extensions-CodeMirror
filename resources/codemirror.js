@@ -1246,7 +1246,7 @@ class CodeMirror {
 			this.preferences.getPreference( 'autofocus' );
 		const hasFocus = document.activeElement === this.textarea || autofocusEnabled;
 		if ( autofocusEnabled ) {
-			const focusFn = this.focus.bind( this );
+			const focusFn = this.focusAfterPreview.bind( this );
 			// Autofocus after live preview.
 			this.addMwHook( 'wikipage.editform', focusFn );
 			// Remove the wikipage.editform hook if autocomplete is disabled.
@@ -1294,10 +1294,21 @@ class CodeMirror {
 					} );
 				}
 				if ( hasFocus ) {
-					this.view.focus();
+					this.focus();
 				}
 			} );
 		}
+	}
+
+	/**
+	 * Focus the CodeMirror editor after previewing.
+	 *
+	 * @protected
+	 * @internal
+	 * @ignore
+	 */
+	focusAfterPreview() {
+		this.focus();
 	}
 
 	/**
