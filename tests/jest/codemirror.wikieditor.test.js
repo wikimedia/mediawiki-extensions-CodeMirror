@@ -12,6 +12,9 @@ function getCodeMirrorWikiEditor( readOnly = false, langSupport = [] ) {
 	textarea.selectionStart = textarea.selectionEnd = 0;
 	const cmWe = new CodeMirrorWikiEditor( textarea, langSupport );
 
+	// Mock requestAnimationFrame to immediately call the callback, since JSDOM doesn't implement it
+	// and some tests rely on it to synchronously apply changes.
+	jest.spyOn( cmWe, 'requestAnimationFrame' ).mockImplementation( ( cb ) => cb() );
 	// Simulate the button that enables/disables CodeMirror as WikiEditor doesn't exist here.
 	cmWe.$textarea.wikiEditor = jest.fn();
 	const toolbar = document.createElement( 'div' );
@@ -191,6 +194,17 @@ describe( 'Hook handlers and event listeners', () => {
 	it( 'only 1 ext.CodeMirror.ready hook handler', () => {
 		[ ...Array( 3 ) ].forEach( () => mediawiki() );
 		expect( mw.hook.mockHooks[ 'ext.CodeMirror.ready' ].length ).toBe( 1 );
+	} );
+
+	it( 'should not put focus on the editor after previewing with RTP', () => {
+		const cmWe = getCodeMirrorWikiEditor();
+		// Autofocus is on by default.
+		cmWe.initialize();
+		expect( document.activeElement ).toBe( cmWe.view.contentDOM );
+		document.activeElement.blur();
+		cmWe.realtimePreviewHandler = jest.fn();
+		mw.hook( 'wikipage.editform' ).fire();
+		expect( document.activeElement ).toBe( document.body );
 	} );
 } );
 

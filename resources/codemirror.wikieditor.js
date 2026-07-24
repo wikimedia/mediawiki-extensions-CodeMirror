@@ -220,6 +220,16 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		}
 	}
 
+	/** @inheritDoc */
+	focusAfterPreview() {
+		// Realtime Preview fires the wikipage.editform hook, but in this case we don't
+		// want to autofocus back on the editor, say if the user has already moved on
+		// to typing the edit summary and the setTimeout for RTP hasn't fired yet.
+		if ( this.realtimePreviewHandler === null ) {
+			super.focusAfterPreview();
+		}
+	}
+
 	/**
 	 * @inheritDoc
 	 */
