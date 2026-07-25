@@ -33,7 +33,7 @@ class JavaScriptValidator extends BaseValidator {
 		}
 
 		try {
-			Peast::ES2017( $text )->parse();
+			Peast::ES2019( $text )->parse();
 			return [];
 
 		} catch ( PeastSyntaxException $e ) {
