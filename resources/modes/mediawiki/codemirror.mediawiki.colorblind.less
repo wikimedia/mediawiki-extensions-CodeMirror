@@ -3,10 +3,7 @@
  * with more colorblind-friendly colors.
  */
 @import '../../codemirror.mixins.less';
-
-/* copied from codemirror.mediawiki.less */
-@table-color: #d08;
-@table-color-dark: #ff5edd;
+@import 'codemirror.mediawiki.variables.less';
 
 .cm-mw-colorblind-colors {
 	/* misc */
@@ -18,7 +15,7 @@
 	.cm-mw-redirect,
 	.cm-mw-indenting,
 	.cm-mw-apostrophes {
-		color: #e4a400;
+		color: @colorblind-misc-color;
 	}
 
 	/* tags */
@@ -30,7 +27,7 @@
 	.cm-mw-htmltag-bracket,
 	.cm-mw-htmltag-attribute,
 	.cm-mw-htmltag-attribute-value {
-		color: #56b4e9;
+		color: @colorblind-tag-color;
 	}
 
 	/* table */
@@ -45,7 +42,7 @@
 	.cm-mw-template-argument-name,
 	.cm-mw-template-delimiter,
 	.cm-mw-template-bracket {
-		color: #9c3a00;
+		color: @colorblind-template-color;
 	}
 
 	/* variables */
@@ -53,7 +50,7 @@
 	.cm-mw-templatevariable-name,
 	.cm-mw-templatevariable-bracket,
 	.cm-mw-templatevariable-delimiter {
-		color: #009e73;
+		color: @colorblind-variable-color;
 	}
 
 	/* remove background colors */

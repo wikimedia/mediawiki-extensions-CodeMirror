@@ -1,0 +1,38 @@
+// Colors for the MediaWiki mode, shared by every style sheet that paints its tokens:
+// codemirror.mediawiki.less, its colorblind overrides, and the VisualEditor custom-highlight
+// controller, which paints the same tokens through the CSS Custom Highlight API. Variables and
+// mixins only, so importing emits nothing.
+@import 'mediawiki.skin.variables.less';
+
+@error-color: @color-destructive;
+@link-color: @color-progressive;
+@parser-function-color: @color-destructive;
+@table-color: #d08;
+@table-color-dark: #ff5edd;
+@template-color: #80c;
+@template-color-dark: #af84e6;
+@template-variable-color: #ac6600;
+@wikitext-formatting-color: @color-progressive--focus;
+@wikitext-formatting-color-dark: @color-progressive--hover;
+@xml-tag-color: @color-content-added;
+@xml-tag-attribute-color: @color-destructive--visited--active;
+@template-background-color: #a11;
+@ext-background-color: #eee;
+@link-background-color: #219;
+@skip-formatting-color: #adf;
+@refs-background-color: fade( #dff2eb, 50% );
+@refs-background-color-dark: fade( #29493e, 50% );
+
+// Colorblind theme (codemirror.mediawiki.colorblind.less).
+@colorblind-misc-color: #e4a400;
+@colorblind-tag-color: #56b4e9;
+@colorblind-template-color: #9c3a00;
+@colorblind-variable-color: #009e73;
+
+// Background tint for nested template/extension/link regions, blended by nesting depth.
+.ground( @template: 0, @ext: 0, @link: 0 ) {
+	@template-shade: fade( @template-background-color, 4% * @template );
+	@ext-shade: fade( @ext-background-color, 4% * @ext );
+	@link-shade: fade( @link-background-color, 4% * @link );
+	background-color: average( average( @template-shade, @ext-shade ), @link-shade );
+}
