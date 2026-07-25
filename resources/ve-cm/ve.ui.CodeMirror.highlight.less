@@ -236,6 +236,29 @@
 }
 
 /*
+ * Heading sizes, set on VE's paragraph node by CodeMirrorVisualEditorHighlight#updateHeadings
+ * because ::highlight() can't do font-size. Mirrors .cm-mw-section-* in
+ * codemirror.mediawiki.less. Only safe without an overlay to keep aligned (T432950) -- which is
+ * also why bold is available here, where it would change monospace glyph widths.
+ */
+.cm-mw-ve-section-1 {
+	font-size: 1.8em;
+	line-height: 1.2em;
+}
+
+.cm-mw-ve-section-2 {
+	font-size: 1.5em;
+	line-height: 1.2em;
+}
+
+.cm-mw-ve-section-3,
+.cm-mw-ve-section-4,
+.cm-mw-ve-section-5,
+.cm-mw-ve-section-6 {
+	font-weight: bold;
+}
+
+/*
  * Colorblind theme. Mirrors codemirror.mediawiki.colorblind.less (keep in sync), which the
  * EditorView integration scopes with .cm-mw-colorblind-colors on .cm-content; there is no
  * .cm-content here, so the controller puts that class on the VE surface instead. The

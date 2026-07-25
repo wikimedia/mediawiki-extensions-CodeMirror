@@ -48,6 +48,33 @@ const COLORBLIND_CLASS = 'cm-mw-colorblind-colors';
 const REFS_CLASS = 'cm-mw-highlight-refs';
 
 /**
+ * Matches a wikitext heading line; the `=` run's length is the level. Mirrors
+ * Parser::handleHeadings: the longest balanced pair wins, and needs content between.
+ *
+ * @type {RegExp}
+ * @private
+ */
+const HEADING_RE = /^(={1,6}).+?\1[ \t]*$/;
+
+/**
+ * Class prefix (plus the level) set on the VE paragraph node of a heading line. font-size is
+ * beyond the Custom Highlight API, and is safe here only because there's no overlay to keep
+ * aligned; the EditorView integration has to neutralise the same rules (T432950).
+ *
+ * The following classes are used here:
+ * * cm-mw-ve-section-1
+ * * cm-mw-ve-section-2
+ * * cm-mw-ve-section-3
+ * * cm-mw-ve-section-4
+ * * cm-mw-ve-section-5
+ * * cm-mw-ve-section-6
+ *
+ * @type {string}
+ * @private
+ */
+const SECTION_CLASS_PREFIX = 'cm-mw-ve-section-';
+
+/**
  * Syntax highlighter for the VisualEditor
  * {@link https://www.mediawiki.org/wiki/Special:MyLanguage/2017_wikitext_editor 2017 wikitext editor}
  * that renders nothing of its own. Unlike {@link CodeMirrorVisualEditor} it creates no
@@ -177,6 +204,18 @@ class CodeMirrorVisualEditorHighlight {
 		 * @type {boolean}
 		 */
 		this.highlightRefsEnabled = !!this.getPreference( 'highlightRefs' );
+		/**
+		 * Heading line numbers (1-based) to level, so the classes can be removed again.
+		 *
+		 * @type {Map<number,number>}
+		 */
+		this.headingLines = new Map();
+		/**
+		 * Pending requestAnimationFrame handle for heading updates.
+		 *
+		 * @type {number|null}
+		 */
+		this.headingFrameHandle = null;
 
 		this.onDocumentPrecommitBound = this.onDocumentPrecommit.bind( this );
 		this.scheduleRefreshBound = this.scheduleRefresh.bind( this );
@@ -242,6 +281,7 @@ class CodeMirrorVisualEditorHighlight {
 		if ( this.syntaxHighlightingEnabled ) {
 			this.bindSyntaxListeners();
 			this.scheduleRefresh();
+			this.scheduleHeadings();
 		}
 		if ( this.bracketMatchingEnabled ) {
 			// Bracket matching depends on the cursor position, so it tracks 'select', not scroll.
@@ -274,9 +314,14 @@ class CodeMirrorVisualEditorHighlight {
 			cancelAnimationFrame( this.bracketFrameHandle );
 			this.bracketFrameHandle = null;
 		}
+		if ( this.headingFrameHandle ) {
+			cancelAnimationFrame( this.headingFrameHandle );
+			this.headingFrameHandle = null;
+		}
 
 		this.clearAllHighlights();
 		this.clearBracketMatch();
+		this.clearHeadings();
 		this.tokenizer = null;
 		this.isActive = false;
 		this.logEditFeature( 'deactivated' );
@@ -364,6 +409,8 @@ class CodeMirrorVisualEditorHighlight {
 		}
 
 		this.scheduleRefresh();
+		// Headings track the document, not the viewport, so they only update on edits.
+		this.scheduleHeadings();
 	}
 
 	/**
@@ -394,9 +441,11 @@ class CodeMirrorVisualEditorHighlight {
 				if ( this.syntaxHighlightingEnabled ) {
 					this.bindSyntaxListeners();
 					this.scheduleRefresh();
+					this.scheduleHeadings();
 				} else {
 					this.unbindSyntaxListeners();
 					this.clearAllHighlights();
+					this.clearHeadings();
 				}
 				break;
 			case 'highlightRefs':
@@ -459,6 +508,77 @@ class CodeMirrorVisualEditorHighlight {
 			this.frameHandle = null;
 			this.refresh();
 		} );
+	}
+
+	/**
+	 * Coalesce heading updates into one per animation frame. Scheduled from precommit, so the
+	 * callback runs once VisualEditor has applied the transaction and re-rendered.
+	 *
+	 * @private
+	 */
+	scheduleHeadings() {
+		if ( this.headingFrameHandle || !this.syntaxHighlightingEnabled ) {
+			return;
+		}
+		this.headingFrameHandle = requestAnimationFrame( () => {
+			this.headingFrameHandle = null;
+			this.updateHeadings();
+		} );
+	}
+
+	/**
+	 * Set a heading-level class on the VisualEditor paragraph node of every heading line.
+	 *
+	 * Whole-document, unlike the viewport-bounded {@link refresh}: font-size affects layout, so
+	 * sizing only the visible lines would make content jump on scroll, and feed back into the
+	 * viewport range that triggered the pass.
+	 *
+	 * @private
+	 */
+	updateHeadings() {
+		if ( !this.isActive || !this.tokenizer || !this.syntaxHighlightingEnabled ) {
+			return;
+		}
+
+		// Re-derive from scratch so nothing has to reason about how line numbers shifted when
+		// lines were added or removed; re-adding also repairs nodes VE has re-rendered.
+		this.clearHeadings();
+		// Source mode renders one paragraph per line, as getHighlightRange also relies on.
+		const lines = this.surfaceView.getDocument().getDocumentNode().children;
+		let lineNumber = 0;
+		for ( const text of this.tokenizer.doc.iterLines() ) {
+			lineNumber++;
+			// 61 is '=': skip the regex for the overwhelming majority of lines.
+			if ( text.charCodeAt( 0 ) !== 61 ) {
+				continue;
+			}
+			const match = HEADING_RE.exec( text );
+			const node = match && lines[ lineNumber - 1 ];
+			if ( !node ) {
+				continue;
+			}
+			const level = match[ 1 ].length;
+			this.headingLines.set( lineNumber, level );
+			// eslint-disable-next-line mediawiki/class-doc
+			node.$element.addClass( SECTION_CLASS_PREFIX + level );
+		}
+	}
+
+	/**
+	 * Remove every heading class this controller has set.
+	 *
+	 * @private
+	 */
+	clearHeadings() {
+		const lines = this.surfaceView.getDocument().getDocumentNode().children;
+		this.headingLines.forEach( ( level, lineNumber ) => {
+			const node = lines[ lineNumber - 1 ];
+			if ( node ) {
+				// eslint-disable-next-line mediawiki/class-doc
+				node.$element.removeClass( SECTION_CLASS_PREFIX + level );
+			}
+		} );
+		this.headingLines = new Map();
 	}
 
 	/**

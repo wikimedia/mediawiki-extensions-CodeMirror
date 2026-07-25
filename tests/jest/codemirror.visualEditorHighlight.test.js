@@ -59,6 +59,7 @@ const getMockSurface = ( doc = '' ) => {
 		model: model,
 		documentModel: documentModel,
 		view: surfaceView,
+		lineNodes: lineNodes,
 		selectionManager: selectionManager,
 		// Install a collapsed (or ranged) cursor for bracket-matching tests.
 		setCursor: ( start, collapsed = true ) => {
@@ -430,6 +431,112 @@ describe( 'themes', () => {
 		} finally {
 			mw.user.options.get = origGet;
 		}
+	} );
+} );
+
+describe( 'headings', () => {
+	const classes = ( node ) => Array.from( node.$element[ 0 ].classList );
+
+	it( 'should set a level class on each heading line', () => {
+		const doc = '= one =\n== two ==\n====== six ======\nplain text';
+		const headed = newThemedController( 'default', doc );
+		headed.activate();
+		headed.updateHeadings();
+		const nodes = headed.surface.lineNodes;
+		expect( classes( nodes[ 0 ] ) ).toContain( 'cm-mw-ve-section-1' );
+		expect( classes( nodes[ 1 ] ) ).toContain( 'cm-mw-ve-section-2' );
+		expect( classes( nodes[ 2 ] ) ).toContain( 'cm-mw-ve-section-6' );
+		expect( classes( nodes[ 3 ] ) ).toEqual( [] );
+	} );
+
+	it( 'should not treat unbalanced or empty markers as headings', () => {
+		// '=' and '==' have no content between the markers; MediaWiki requires some.
+		const headed = newThemedController( 'default', '=\n==\nplain =' );
+		headed.activate();
+		headed.updateHeadings();
+		headed.surface.lineNodes.forEach(
+			( node ) => expect( classes( node ) ).toEqual( [] )
+		);
+		expect( headed.headingLines.size ).toBe( 0 );
+	} );
+
+	it( 'should drop the class when a line stops being a heading', () => {
+		const headed = newThemedController( 'default', '== two ==\nplain' );
+		headed.activate();
+		headed.updateHeadings();
+		const node = headed.surface.lineNodes[ 0 ];
+		expect( classes( node ) ).toContain( 'cm-mw-ve-section-2' );
+
+		headed.tokenizer = headed.tokenizer.update(
+			{ changes: { from: 0, to: 9, insert: 'nope' } }
+		).state;
+		headed.updateHeadings();
+		expect( classes( node ) ).toEqual( [] );
+		expect( headed.headingLines.size ).toBe( 0 );
+	} );
+
+	it( 'should swap the class when the heading level changes', () => {
+		const headed = newThemedController( 'default', '== two ==\nplain' );
+		headed.activate();
+		headed.updateHeadings();
+		headed.tokenizer = headed.tokenizer.update(
+			{ changes: { from: 0, to: 9, insert: '=== three ===' } }
+		).state;
+		headed.updateHeadings();
+		expect( classes( headed.surface.lineNodes[ 0 ] ) ).toEqual( [ 'cm-mw-ve-section-3' ] );
+	} );
+
+	it( 'should clear the classes on deactivate', () => {
+		const headed = newThemedController( 'default', '= one =\nplain' );
+		headed.activate();
+		headed.updateHeadings();
+		headed.deactivate();
+		expect( classes( headed.surface.lineNodes[ 0 ] ) ).toEqual( [] );
+		expect( headed.headingLines.size ).toBe( 0 );
+	} );
+
+	it( 'should not apply headings under the no-highlight theme', () => {
+		// The .cm-mw-section-* rules live inside the theme-scoped block upstream, so the
+		// no-highlight theme drops heading sizes there too.
+		const headed = newThemedController( 'no-highlight', '= one =\nplain' );
+		headed.activate();
+		headed.updateHeadings();
+		expect( classes( headed.surface.lineNodes[ 0 ] ) ).toEqual( [] );
+	} );
+
+	it( 'should coalesce passes and run one when the frame fires', () => {
+		const spy = jest.spyOn( controller, 'updateHeadings' );
+		controller.scheduleHeadings();
+		controller.scheduleHeadings();
+		expect( global.requestAnimationFrame ).toHaveBeenCalledTimes( 1 );
+		global.requestAnimationFrame.mock.calls[ 0 ][ 0 ]();
+		expect( spy ).toHaveBeenCalledTimes( 1 );
+		expect( controller.headingFrameHandle ).toBeNull();
+	} );
+
+	it( 'should leave an unchanged heading alone across passes', () => {
+		const headed = newThemedController( 'default', '== two ==\nplain' );
+		headed.activate();
+		headed.updateHeadings();
+		headed.updateHeadings();
+		expect( classes( headed.surface.lineNodes[ 0 ] ) ).toEqual( [ 'cm-mw-ve-section-2' ] );
+		expect( headed.headingLines.get( 1 ) ).toBe( 2 );
+	} );
+
+	it( 'should schedule an update on document change, not on scroll', () => {
+		controller.activate();
+		// activate() leaves both frames pending (the rAF mock never runs the callback).
+		controller.frameHandle = null;
+		controller.headingFrameHandle = null;
+
+		// The scroll/resize/position path refreshes the viewport only.
+		controller.scheduleRefresh();
+		expect( controller.frameHandle ).not.toBeNull();
+		expect( controller.headingFrameHandle ).toBeNull();
+
+		// An edit schedules a heading pass too.
+		controller.onDocumentPrecommit( { operations: [] } );
+		expect( controller.headingFrameHandle ).not.toBeNull();
 	} );
 } );
 
