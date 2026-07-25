@@ -346,8 +346,17 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 
 		// Only save the preferences that differ from the defaults,
 		// and use a binary representation for booleans.
+		const storedPreferences = this.fetchPreferencesInternal();
 		let storageObj = {};
 		for ( const prefName in this.preferences ) {
+			// A locked preference holds the forced value rather than the user's, so serializing
+			// it would overwrite what they set elsewhere. Carry the stored value through instead.
+			if ( this.disabledPreferences.has( prefName ) ) {
+				if ( storedPreferences[ prefName ] !== undefined ) {
+					storageObj[ prefName ] = storedPreferences[ prefName ];
+				}
+				continue;
+			}
 			if ( this.preferences[ prefName ] !== this.getDefaultPreferences()[ prefName ] ) {
 				storageObj[ prefName ] = typeof this.preferences[ prefName ] === 'string' ?
 					this.preferences[ prefName ] :
@@ -445,9 +454,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 */
 	getPreference( prefName ) {
 		// First check the preference explicitly set by the user.
-		// For now, we don't allow CodeMirror preferences to override
-		// config settings in the 2017 editor, since there's no UI to set them.
-		if ( !this.isVisualEditor && this.preferences[ prefName ] !== undefined ) {
+		if ( this.preferences[ prefName ] !== undefined ) {
 			return this.preferences[ prefName ];
 		}
 

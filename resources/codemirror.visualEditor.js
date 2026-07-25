@@ -104,6 +104,26 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	}
 
 	/**
+	 * Preferences this integration honours, for {@link ve.ui.CodeMirrorPreferencesPage}.
+	 *
+	 * @type {string[]}
+	 */
+	get supportedPreferences() {
+		return this.extensionRegistry.names;
+	}
+
+	/**
+	 * Apply a preference to the running editor. toggle() reconfigures from the value map when
+	 * given a string, so this covers both switches and choices.
+	 *
+	 * @param {string} name
+	 * @param {PrefValue} value
+	 */
+	applyPreference( name, value ) {
+		this.extensionRegistry.toggle( name, this.view, value );
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	initialize( extensions = this.defaultExtensions ) {
@@ -145,6 +165,10 @@ class CodeMirrorVisualEditor extends CodeMirror {
 		// Force infinite viewport in CodeMirror to prevent misalignment of
 		// the VE surface and the CodeMirror view. See T357482#10076432.
 		this.view.viewState.printing = true;
+
+		// Both layers must break lines in the same places, so wrapping is not the user's to
+		// turn off here.
+		this.preferences.lockPreference( 'lineWrapping', this.view, true );
 
 		const profile = $.client.profile();
 		const supportsTransparentText = 'WebkitTextFillColor' in document.body.style &&

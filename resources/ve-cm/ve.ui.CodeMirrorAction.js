@@ -3,6 +3,8 @@
  */
 
 require( './ve.ui.CodeMirrorTool.js' );
+require( './ve.ui.CodeMirrorPreferencesPage.js' );
+require( './ve.ui.CodeMirrorPreferencesTool.js' );
 
 /**
  * CodeMirror action
@@ -60,6 +62,11 @@ ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 	} else if ( this.surface.mirror ) {
 		this.surface.mirror.toggle( enable );
 		this.surface.mirror.setCodeMirrorPreference( this.surface.mirror.isActive );
+	}
+	if ( this.surface.mirror ) {
+		// Tools keyed on CodeMirror's state need telling: it loads asynchronously, and
+		// toggling it afterwards changes nothing else the toolbar watches.
+		this.surface.getModel().emitContextChange();
 	}
 };
 

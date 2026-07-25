@@ -318,6 +318,7 @@
 				"codemirror.wikieditor.less"
 			],
 			"messages": [
+				"codemirror-prefs-title",
 				"codemirror-toggle-label",
 				"codemirror-toggle-label-short"
 			]
@@ -444,6 +445,8 @@
 			"packageFiles": [
 				"ve-cm/ve.ui.CodeMirrorAction.js",
 				"ve-cm/ve.ui.CodeMirrorTool.js",
+				"ve-cm/ve.ui.CodeMirrorPreferencesPage.js",
+				"ve-cm/ve.ui.CodeMirrorPreferencesTool.js",
 				"codemirror.visualEditor.js"
 			],
 			"styles": [
@@ -455,6 +458,15 @@
 				]
 			},
 			"messages": [
+				"codemirror-prefs-bracketmatching",
+				"codemirror-prefs-highlightrefs",
+				"codemirror-prefs-linenumbering",
+				"codemirror-prefs-linewrapping",
+				"codemirror-prefs-theme",
+				"codemirror-prefs-title",
+				"codemirror-theme-colorblind",
+				"codemirror-theme-default",
+				"codemirror-theme-no-highlight",
 				"codemirror-toggle-label",
 				"codemirror-ve-limit-exceeded",
 				"codemirror-ve-limit-exceeded-info"

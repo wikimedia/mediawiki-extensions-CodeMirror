@@ -141,13 +141,16 @@ describe( 'CodeMirrorPreferences', () => {
 	} );
 
 	it( 'getPreference (VisualEditor)', () => {
+		// The 2017 editor has a UI for these now, so stored preferences apply there too.
 		mockDefaultPreferences( { fooExtension: true, bracketMatching: false } );
 		mockUserPreferences( { bracketMatching: 1 } );
 		const preferences = getCodeMirrorPreferences( {
 			fooExtension: EditorView.theme(),
 			bracketMatching: EditorView.theme()
 		}, 'mediawiki', new CodeMirrorKeymap(), true );
-		expect( preferences.getPreference( 'bracketMatching' ) ).toBeFalsy();
+		expect( preferences.getPreference( 'bracketMatching' ) ).toBeTruthy();
+		// Extensions VE doesn't support are still filtered out of the registry.
+		expect( preferences.extensionRegistry.names ).not.toContain( 'fooExtension' );
 	} );
 
 	it( 'hasNonDefaultPreferences', () => {
@@ -499,6 +502,23 @@ describe( 'CodeMirrorPreferences', () => {
 		expect( panel.dom.querySelector( 'input[name="fooExtension"]' ).disabled ).toBe( true );
 		expect( panel.dom.querySelector( 'input[name="fooExtension"]' ).checked ).toBe( false );
 		expect( hookSpy ).toHaveBeenCalledWith( 'fooExtension', false );
+	} );
+
+	it( 'lockPreference leaves the stored value alone', () => {
+		mockDefaultPreferences();
+		// barExtension defaults to true, and the user turned it off elsewhere.
+		mockUserPreferences( { barExtension: 0 } );
+		const preferences = getCodeMirrorPreferences();
+		// Locking forces the in-memory value back to the default, so serializing that
+		// would drop the user's choice from storage entirely.
+		preferences.lockPreference( 'barExtension', undefined, true );
+		expect( preferences.preferences.barExtension ).toBe( true );
+
+		preferences.setPreference( 'fooExtension', true );
+		expect( JSON.parse( mw.Api.prototype.saveOption.mock.calls[ 0 ][ 1 ] ) ).toStrictEqual( {
+			fooExtension: 1,
+			barExtension: 0
+		} );
 	} );
 
 	it( 'registerCallback', () => {

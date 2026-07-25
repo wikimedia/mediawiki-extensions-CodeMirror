@@ -75,9 +75,8 @@ class CodeMirrorExtensionRegistry {
 		/**
 		 * Allowlist of names of CodeMirror extensions supported by the 2017 wikitext editor.
 		 * Do *not* include Extensions that make changes to the document text, or visually
-		 * change the placement of text.
-		 *
-		 * Note also that there is no UI to toggle or reconfigure CodeMirror Extensions in VE.
+		 * change the placement of text. These are what the page menu's preferences tool
+		 * ({@link ve.ui.CodeMirrorPreferencesTool}) offers there.
 		 *
 		 * @type {string[]}
 		 */
