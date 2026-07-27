@@ -376,3 +376,10 @@
 	background-size: 4ch 100%;
 	background-repeat: repeat;
 }
+
+// Fully transparent ::selection style is broken in Firefox 153 (T433213)
+.cm-scroller .cm-line ::selection,
+.cm-scroller .cm-line::selection {
+	/* stylelint-disable-next-line declaration-no-important */
+	background-color: #ffffff01 !important;
+}
