@@ -32,7 +32,7 @@ describe( 'CodeMirror (enabled) - VisualEditor 2017 wikitext editor', () => {
 		await browser.execute( () => $( '#wpTextbox1' ).textSelection( 'setContents', 'foobar' ) );
 		expect(
 			await browser.execute( () => $( '.cm-editor' ).textSelection( 'getContents' ) )
-		).toBe( 'foobar\n' );
+		).toBe( 'foobar' );
 	} );
 
 	it( 'retains content when CodeMirror is disabled and maintains focus on VE surface', async () => {
@@ -40,7 +40,7 @@ describe( 'CodeMirror (enabled) - VisualEditor 2017 wikitext editor', () => {
 		await expect( EditPage.codeMirrorContentEditable ).not.toBeDisplayed();
 		expect(
 			await browser.execute( () => $( '#wpTextbox1' ).textSelection( 'getContents' ) )
-		).toBe( 'foobar\n' );
+		).toBe( 'foobar' );
 		expect(
 			await browser.execute(
 				() => document.activeElement.classList.contains( 've-ce-attachedRootNode' )
@@ -56,7 +56,7 @@ describe( 'CodeMirror (enabled) - VisualEditor 2017 wikitext editor', () => {
 		await expect( EditPage.codeMirrorContentEditable ).toBeDisplayed();
 		expect(
 			await browser.execute( () => $( '.cm-editor' ).textSelection( 'getContents' ) )
-		).toBe( 'baz\n' );
+		).toBe( 'baz' );
 	} );
 
 	it( 'adjusts gutter accordingly when pasting many lines of wrapping text', async () => {
