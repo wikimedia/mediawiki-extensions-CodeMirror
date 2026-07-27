@@ -115,6 +115,8 @@
 	"codemirror-keymap-other": "Ostalo",
 	"codemirror-keymap-moveline": "Premjesti izabrane redove gore ili dolje za jedan red",
 	"codemirror-keymap-copyline": "Kopiraj izabrane redove u gornji ili donji red",
+	"codemirror-keymap-sortlines": "Sortiraj izabrane redove",
+	"codemirror-keymap-sortlinesdescending": "Sortiraj izabrane redove po opadajućem redoslijedu",
 	"codemirror-keymap-direction": "Promijeni smjer teksta",
 	"codemirror-keymap-preferences": "Postavke isticanja sintakse",
 	"codemirror-keymap-full-preferences": "Dijaloški okvir sa svim postavkama",
@@ -148,5 +150,6 @@
 	"codemirror-wikilint-inconsistent-table": "nedosljedan raspored tabele",
 	"codemirror-potentially-slow": "može biti sporo",
 	"codemirror-ve-limit-exceeded": "Ugašeno je isticanje sintakse jer je dokument prevelik.",
-	"codemirror-ve-limit-exceeded-info": "Detaljnije"
+	"codemirror-ve-limit-exceeded-info": "Detaljnije",
+	"codemirror-we-group-sort": "Sortiranje"
 }
