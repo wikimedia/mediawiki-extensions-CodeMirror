@@ -166,10 +166,6 @@ class CodeMirrorVisualEditor extends CodeMirror {
 		// the VE surface and the CodeMirror view. See T357482#10076432.
 		this.view.viewState.printing = true;
 
-		// Both layers must break lines in the same places, so wrapping is not the user's to
-		// turn off here.
-		this.preferences.lockPreference( 'lineWrapping', this.view, true );
-
 		const profile = $.client.profile();
 		const supportsTransparentText = 'WebkitTextFillColor' in document.body.style &&
 			// Disable on Firefox+OSX (T175223)
@@ -311,22 +307,25 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	onSelect( selection ) {
 		const range = selection.getCoveringRange();
 
-		// Do not re-trigger bracket matching as long as something is selected
-		if ( !range || !range.isCollapsed() ) {
+		if ( !range ) {
 			return;
 		}
 
-		// T382769: the selection range from `textSelection( 'setContents' )`
-		// exceeds the document length.
-		const offset = Math.min(
-			this.surface.getModel().getSourceOffsetFromOffset( range.from ),
-			this.view.state.doc.length
-		);
+		const model = this.surface.getModel(),
+			// T382769: the selection range from `textSelection( 'setContents' )`
+			// exceeds the document length.
+			clamp = ( offset ) => Math.min(
+				model.getSourceOffsetFromOffset( offset ),
+				this.view.state.doc.length
+			);
 
+		// Mirror the whole selection, not just a collapsed cursor: highlightActiveLine marks
+		// the line at the head. Bracket matching skips non-empty ranges of its own accord, so
+		// it is unaffected.
 		this.view.dispatch( {
 			selection: {
-				anchor: offset,
-				head: offset
+				anchor: clamp( range.from ),
+				head: clamp( range.to )
 			}
 		} );
 	}

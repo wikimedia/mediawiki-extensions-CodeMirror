@@ -32,6 +32,18 @@ describe( 'CodeMirrorExtensionRegistry', () => {
 		expect( registry.compartments.codeFolding ).toBeUndefined();
 	} );
 
+	it( 'constructor (VisualEditor, background-only extensions)', () => {
+		// These paint backgrounds and nothing else, so they can't desync the two layers.
+		const registry = getRegistry( {
+			activeLine: EditorView.theme(),
+			trailingWhitespace: EditorView.theme(),
+			whitespace: EditorView.theme()
+		}, true );
+		expect( registry.compartments.activeLine ).toBeInstanceOf( Compartment );
+		expect( registry.compartments.trailingWhitespace ).toBeInstanceOf( Compartment );
+		expect( registry.compartments.whitespace ).toBeInstanceOf( Compartment );
+	} );
+
 	it( 'get', () => {
 		const bracketMatching = EditorView.theme();
 		const registry = getRegistry( { bracketMatching } );

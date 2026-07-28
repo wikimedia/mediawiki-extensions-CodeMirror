@@ -126,6 +126,51 @@ describe( 'deactivate', () => {
 	} );
 } );
 
+describe( 'onSelect', () => {
+	/**
+	 * @param {number} from
+	 * @param {number} to
+	 * @return {Object} A ve.dm selection exposing the given covering range
+	 */
+	const selectionOf = ( from, to ) => ( {
+		getCoveringRange: () => ( { from, to, isCollapsed: () => from === to } )
+	} );
+
+	beforeEach( () => {
+		surface = getMockSurface();
+		surface.getDom = jest.fn().mockReturnValue( 'one\ntwo\nthree' );
+		// Identity offset mapping, so DM offsets and source offsets are interchangeable.
+		const model = surface.getModel();
+		model.getSourceOffsetFromOffset = jest.fn().mockImplementation( ( offset ) => offset );
+		surface.getModel = () => model;
+		cmVe = new CodeMirrorVisualEditor( surface );
+		cmVe.initialize();
+	} );
+
+	it( 'should mirror a collapsed cursor', () => {
+		cmVe.onSelect( selectionOf( 5, 5 ) );
+		expect( cmVe.view.state.selection.main.anchor ).toBe( 5 );
+		expect( cmVe.view.state.selection.main.head ).toBe( 5 );
+	} );
+
+	it( 'should mirror a whole selection, so the head lands on the focused line', () => {
+		cmVe.onSelect( selectionOf( 1, 9 ) );
+		expect( cmVe.view.state.selection.main.anchor ).toBe( 1 );
+		expect( cmVe.view.state.selection.main.head ).toBe( 9 );
+	} );
+
+	it( 'should keep the head at the focus end of a backwards selection', () => {
+		cmVe.onSelect( selectionOf( 9, 1 ) );
+		expect( cmVe.view.state.selection.main.head ).toBe( 1 );
+	} );
+
+	it( 'should clamp offsets beyond the document (T382769)', () => {
+		const docLength = cmVe.view.state.doc.length;
+		cmVe.onSelect( selectionOf( 0, docLength + 50 ) );
+		expect( cmVe.view.state.selection.main.head ).toBe( docLength );
+	} );
+} );
+
 describe( 'logEditFeature', () => {
 	it( 'should only log the \'activated\' action', () => {
 		const spy = jest.spyOn( mw, 'track' );

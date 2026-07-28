@@ -81,11 +81,13 @@ class CodeMirrorExtensionRegistry {
 		 * @type {string[]}
 		 */
 		this.veSupportedExtensions = [
+			'activeLine',
 			'bracketMatching',
 			'highlightRefs',
-			'lineWrapping',
 			'lineNumbering',
-			'theme'
+			'theme',
+			'trailingWhitespace',
+			'whitespace'
 		];
 
 		/**
