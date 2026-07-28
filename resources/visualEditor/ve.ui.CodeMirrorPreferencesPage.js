@@ -16,7 +16,7 @@
  * buffered here and only written when the dialog is torn down with the 'done' action.
  *
  * @class
- * @extends OO.ui.PageLayout
+ * @extends ve.ui.MWMetaPage
  * @constructor
  * @param {string} name Unique symbolic name of page
  * @param {Object} [config] Configuration options
@@ -45,7 +45,7 @@ ve.ui.CodeMirrorPreferencesPage = function VeUiCodeMirrorPreferencesPage() {
 
 /* Inheritance */
 
-OO.inheritClass( ve.ui.CodeMirrorPreferencesPage, OO.ui.PageLayout );
+OO.inheritClass( ve.ui.CodeMirrorPreferencesPage, ve.ui.MWMetaPage );
 
 /* Static properties */
 
