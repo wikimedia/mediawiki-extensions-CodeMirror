@@ -75,6 +75,23 @@ const ACTIVE_LINE_CLASS = 'cm-mw-ve-activeLine';
 const TRAILING_WHITESPACE_RE = /\s+$/;
 
 /**
+ * Runs of spaces and tabs anywhere in a line, for the `whitespace` preference.
+ *
+ * @type {RegExp}
+ * @private
+ */
+const WHITESPACE_RE = /[ \t]+/g;
+
+/**
+ * Highlight group for whitespace. Unlike trailing whitespace this is viewport-bounded: nearly
+ * every line has some, so a whole-document pass would paint thousands of ranges.
+ *
+ * @type {string}
+ * @private
+ */
+const WHITESPACE_GROUP = 'cm-whitespace';
+
+/**
  * Highlight group for trailing whitespace. `cm-` prefixed like the syntax groups, which reach
  * `visualeditor-syntax-cm-*` through the mode's own class names: SelectionManager group names
  * share one document-wide namespace, so they want the same qualifier.
@@ -251,6 +268,18 @@ class CodeMirrorVisualEditorHighlight {
 		 */
 		this.$activeLineNode = null;
 		/**
+		 * Whether to mark spaces and tabs, from the `whitespace` preference.
+		 *
+		 * @type {boolean}
+		 */
+		this.whitespaceEnabled = !!this.getPreference( 'whitespace' );
+		/**
+		 * Whether the whitespace group is currently drawn.
+		 *
+		 * @type {boolean}
+		 */
+		this.whitespaceDrawn = false;
+		/**
 		 * Whether to mark trailing whitespace, from the `trailingWhitespace` preference.
 		 *
 		 * @type {boolean}
@@ -344,7 +373,7 @@ class CodeMirrorVisualEditorHighlight {
 		if ( this.highlightRefsEnabled ) {
 			this.surfaceView.$element.addClass( REFS_CLASS );
 		}
-		if ( this.syntaxHighlightingEnabled ) {
+		if ( this.viewportPassEnabled ) {
 			this.bindSyntaxListeners();
 			this.scheduleRefresh();
 			this.scheduleHeadings();
@@ -400,6 +429,7 @@ class CodeMirrorVisualEditorHighlight {
 		this.clearAllHighlights();
 		this.clearBracketMatch();
 		this.clearActiveLine();
+		this.clearWhitespace();
 		this.clearTrailingWhitespace();
 		this.clearHeadings();
 		this.tokenizer = null;
@@ -504,7 +534,7 @@ class CodeMirrorVisualEditorHighlight {
 	get supportedPreferences() {
 		return [
 			'theme', 'highlightRefs', 'bracketMatching',
-			'activeLine', 'trailingWhitespace'
+			'activeLine', 'whitespace', 'trailingWhitespace'
 		];
 	}
 
@@ -527,6 +557,11 @@ class CodeMirrorVisualEditorHighlight {
 					this.bindSyntaxListeners();
 					this.scheduleRefresh();
 					this.scheduleHeadings();
+				} else if ( this.viewportPassEnabled ) {
+					// Whitespace rides the same pass; keep it running without the colors.
+					this.scheduleRefresh();
+					this.clearAllHighlights();
+					this.clearHeadings();
 				} else {
 					this.unbindSyntaxListeners();
 					this.clearAllHighlights();
@@ -555,6 +590,18 @@ class CodeMirrorVisualEditorHighlight {
 					this.updateActiveLine();
 				} else {
 					this.clearActiveLine();
+				}
+				break;
+			case 'whitespace':
+				this.whitespaceEnabled = !!value;
+				if ( value ) {
+					this.bindSyntaxListeners();
+					this.scheduleRefresh();
+				} else {
+					this.clearWhitespace();
+					if ( !this.viewportPassEnabled ) {
+						this.unbindSyntaxListeners();
+					}
 				}
 				break;
 			case 'trailingWhitespace':
@@ -604,7 +651,7 @@ class CodeMirrorVisualEditorHighlight {
 	scheduleRefresh() {
 		// onDocumentPrecommit schedules on every transaction, so bail here rather than burn an
 		// animation frame per keystroke under the no-highlight theme.
-		if ( this.frameHandle || !this.syntaxHighlightingEnabled ) {
+		if ( this.frameHandle || !this.viewportPassEnabled ) {
 			return;
 		}
 		this.frameHandle = requestAnimationFrame( () => {
@@ -871,33 +918,124 @@ class CodeMirrorVisualEditorHighlight {
 	}
 
 	/**
+	 * Whether anything wants the viewport pass. Whitespace marks ride along with the syntax
+	 * colors, so the pass also runs under the `no-highlight` theme when they are on.
+	 *
+	 * @type {boolean}
+	 * @private
+	 */
+	get viewportPassEnabled() {
+		return this.syntaxHighlightingEnabled || this.whitespaceEnabled;
+	}
+
+	/**
+	 * The visible portion of the document, as source offsets.
+	 *
+	 * @return {Object|null} `{ from, to }`, or null if there is nothing to paint
+	 * @private
+	 */
+	getViewportSourceRange() {
+		const model = this.surface.getModel(),
+			viewportRange = this.surfaceView.getViewportRange( true, VIEWPORT_PADDING );
+		if ( !viewportRange ) {
+			return null;
+		}
+
+		const docLength = this.tokenizer.doc.length;
+		let from, to;
+		try {
+			from = Math.min( model.getSourceOffsetFromOffset( viewportRange.start ), docLength );
+			to = Math.min( model.getSourceOffsetFromOffset( viewportRange.end ), docLength );
+		} catch ( e ) {
+			return null;
+		}
+		return to > from ? { from, to } : null;
+	}
+
+	/**
+	 * Paint the spaces and tabs in the visible lines.
+	 *
+	 * CodeMirror draws these as a dotted glyph via background-image, which the Custom Highlight
+	 * API does not support; a dotted underline is the nearest thing it can express.
+	 *
+	 * @param {number} srcFrom
+	 * @param {number} srcTo
+	 * @private
+	 */
+	updateWhitespace( srcFrom, srcTo ) {
+		const model = this.surface.getModel(),
+			doc = this.tokenizer.doc,
+			selections = [],
+			lastLine = doc.lineAt( srcTo ).number;
+
+		for ( let number = doc.lineAt( srcFrom ).number; number <= lastLine; number++ ) {
+			const line = doc.line( number );
+			WHITESPACE_RE.lastIndex = 0;
+			let match;
+			while ( ( match = WHITESPACE_RE.exec( line.text ) ) !== null ) {
+				try {
+					const range = new ve.Range(
+						this.getSurfaceOffsetFromSourceOffset( line.from + match.index ),
+						this.getSurfaceOffsetFromSourceOffset(
+							line.from + match.index + match[ 0 ].length
+						)
+					);
+					selections.push( this.surfaceView.getSelection(
+						model.getLinearFragment( range ).getSelection()
+					) );
+				} catch ( e ) {
+					// Offsets outside the document; skip this run.
+				}
+			}
+		}
+
+		if ( !selections.length && !this.whitespaceDrawn ) {
+			return;
+		}
+		this.surfaceView.getSelectionManager().drawSelections(
+			WHITESPACE_GROUP, selections,
+			{ showRects: false, showCustomHighlight: true }
+		);
+		this.whitespaceDrawn = !!selections.length;
+	}
+
+	/**
+	 * Remove the whitespace highlights.
+	 *
+	 * @private
+	 */
+	clearWhitespace() {
+		if ( !this.whitespaceDrawn ) {
+			return;
+		}
+		this.surfaceView.getSelectionManager().drawSelections( WHITESPACE_GROUP, [] );
+		this.whitespaceDrawn = false;
+	}
+
+	/**
 	 * Tokenize the visible portion of the document and paint syntax colors onto the VE surface.
 	 *
 	 * @private
 	 */
 	refresh() {
-		if ( !this.isActive || !this.tokenizer || !this.syntaxHighlightingEnabled ) {
+		if ( !this.isActive || !this.tokenizer || !this.viewportPassEnabled ) {
 			return;
 		}
 
-		const model = this.surface.getModel(),
-			viewportRange = this.surfaceView.getViewportRange( true, VIEWPORT_PADDING );
-		if ( !viewportRange ) {
+		const sourceRange = this.getViewportSourceRange();
+		if ( !sourceRange ) {
+			return;
+		}
+		const { from: srcFrom, to: srcTo } = sourceRange;
+
+		if ( this.whitespaceEnabled ) {
+			this.updateWhitespace( srcFrom, srcTo );
+		}
+		if ( !this.syntaxHighlightingEnabled ) {
 			return;
 		}
 
-		const docLength = this.tokenizer.doc.length;
-		let srcFrom, srcTo;
-		try {
-			srcFrom = Math.min( model.getSourceOffsetFromOffset( viewportRange.start ), docLength );
-			srcTo = Math.min( model.getSourceOffsetFromOffset( viewportRange.end ), docLength );
-		} catch ( e ) {
-			return;
-		}
-		if ( srcTo <= srcFrom ) {
-			return;
-		}
-
+		const model = this.surface.getModel();
 		const tree = ensureSyntaxTree( this.tokenizer, srcTo, PARSE_BUDGET ) ||
 			syntaxTree( this.tokenizer );
 		if ( !tree ) {

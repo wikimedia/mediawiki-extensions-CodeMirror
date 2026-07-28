@@ -253,6 +253,15 @@
 }
 
 /*
+ * Whitespace. CodeMirror draws a centred dot per space via background-image, which the Custom
+ * Highlight API does not allow; a dotted underline is the closest it can get. Deliberately not
+ * a background: every space would then be a solid block, which is far louder than the dots.
+ */
+::highlight( visualeditor-cm-whitespace ) {
+	text-decoration: underline dotted @color-subtle;
+}
+
+/*
  * Heading sizes, set on VE's paragraph node by CodeMirrorVisualEditorHighlight#updateHeadings
  * because ::highlight() can't do font-size. Mirrors .cm-mw-section-* in
  * codemirror.mediawiki.less. Only safe without an overlay to keep aligned (T432950) -- which is

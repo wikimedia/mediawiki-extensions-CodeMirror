@@ -716,6 +716,95 @@ describe( 'trailing whitespace', () => {
 	} );
 } );
 
+describe( 'whitespace', () => {
+	/**
+	 * @param {string} doc
+	 * @param {Object} [prefs] Extra preferences to store alongside `whitespace`
+	 * @return {Object} Controller with the whitespace preference on
+	 */
+	const newWhitespaceController = ( doc, prefs = {} ) => {
+		const origGet = mw.user.options.get;
+		mw.user.options.get = jest.fn().mockImplementation( ( key ) => (
+			key === 'codemirror-preferences' ?
+				JSON.stringify( Object.assign( { whitespace: 1 }, prefs ) ) :
+				null
+		) );
+		try {
+			return new CodeMirrorVisualEditorHighlight( getMockSurface( doc ), langSupport );
+		} finally {
+			mw.user.options.get = origGet;
+		}
+	};
+
+	/**
+	 * @param {Object} ws Controller
+	 * @return {Array} Ranges drawn for the whitespace group
+	 */
+	const drawnRanges = ( ws ) => ws.surface.selectionManager.drawSelections.mock.calls
+		.filter( ( call ) => call[ 0 ] === 'cm-whitespace' )
+		.pop()[ 1 ]
+		.map( ( selection ) => ( { from: selection.range.from, to: selection.range.to } ) );
+
+	it( 'should highlight each run of spaces and tabs', () => {
+		const ws = newWhitespaceController( 'a bb\tc' );
+		ws.activate();
+		ws.refresh();
+		// Single line, so surface offsets are source offsets plus one.
+		expect( drawnRanges( ws ) ).toEqual( [
+			{ from: 2, to: 3 },
+			{ from: 5, to: 6 }
+		] );
+	} );
+
+	it( 'should treat a run of several spaces as one range', () => {
+		const ws = newWhitespaceController( 'a   b' );
+		ws.activate();
+		ws.refresh();
+		expect( drawnRanges( ws ) ).toEqual( [ { from: 2, to: 5 } ] );
+	} );
+
+	it( 'should draw nothing when there is no whitespace', () => {
+		const ws = newWhitespaceController( 'abc' );
+		ws.activate();
+		ws.refresh();
+		expect( ws.surface.selectionManager.drawSelections )
+			.not.toHaveBeenCalledWith( 'cm-whitespace', expect.anything(), expect.anything() );
+	} );
+
+	it( 'should keep running under the no-highlight theme', () => {
+		const ws = newWhitespaceController( 'a b', { theme: 'no-highlight' } );
+		expect( ws.syntaxHighlightingEnabled ).toBe( false );
+		expect( ws.viewportPassEnabled ).toBe( true );
+		ws.activate();
+		ws.refresh();
+		expect( drawnRanges( ws ) ).toEqual( [ { from: 2, to: 3 } ] );
+	} );
+
+	it( 'should stop the viewport pass when the last consumer is turned off', () => {
+		const ws = newWhitespaceController( 'a b', { theme: 'no-highlight' } );
+		ws.activate();
+		ws.applyPreference( 'whitespace', false );
+		expect( ws.viewportPassEnabled ).toBe( false );
+		expect( ws.surface.view.off ).toHaveBeenCalledWith( 'position', expect.any( Function ) );
+	} );
+
+	it( 'should do nothing when the preference is off', () => {
+		controller.activate();
+		controller.refresh();
+		expect( controller.surface.selectionManager.drawSelections )
+			.not.toHaveBeenCalledWith( 'cm-whitespace', expect.anything(), expect.anything() );
+	} );
+
+	it( 'should clear the group on deactivate', () => {
+		const ws = newWhitespaceController( 'a b' );
+		ws.activate();
+		ws.refresh();
+		ws.deactivate();
+		expect( ws.surface.selectionManager.drawSelections )
+			.toHaveBeenLastCalledWith( 'cm-whitespace', [] );
+	} );
+} );
+
 describe( 'toggle', () => {
 	it( 'should activate when forced on and deactivate when forced off', () => {
 		controller.toggle( true );
