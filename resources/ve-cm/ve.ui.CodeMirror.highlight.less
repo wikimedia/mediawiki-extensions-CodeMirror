@@ -236,6 +236,23 @@
 }
 
 /*
+ * Active line. A node class rather than a ::highlight(), because the background has to span
+ * the full line width and not just the glyphs. --subtle is enough over a whole line band,
+ * where it wasn't for the single character a bracket match paints.
+ */
+.cm-mw-ve-activeLine {
+	background-color: @background-color-progressive-subtle;
+}
+
+/*
+ * Trailing whitespace. A few characters wide, so it needs --active for the same reason
+ * bracket matching does.
+ */
+::highlight( visualeditor-cm-trailing-whitespace ) {
+	background-color: @background-color-destructive-subtle--active;
+}
+
+/*
  * Heading sizes, set on VE's paragraph node by CodeMirrorVisualEditorHighlight#updateHeadings
  * because ::highlight() can't do font-size. Mirrors .cm-mw-section-* in
  * codemirror.mediawiki.less. Only safe without an overlay to keep aligned (T432950) -- which is

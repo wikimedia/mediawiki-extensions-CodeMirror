@@ -62,9 +62,11 @@ const getMockSurface = ( doc = '' ) => {
 		lineNodes: lineNodes,
 		selectionManager: selectionManager,
 		// Install a collapsed (or ranged) cursor for bracket-matching tests.
-		setCursor: ( start, collapsed = true ) => {
+		setCursor: ( start, collapsed = true, to = start ) => {
 			model.getSelection.mockReturnValue( {
-				getCoveringRange: () => ( { start, isCollapsed: () => collapsed } )
+				getCoveringRange: () => ( {
+					start, to, end: Math.max( start, to ), isCollapsed: () => collapsed
+				} )
 			} );
 		}
 	};
@@ -537,6 +539,180 @@ describe( 'headings', () => {
 		// An edit schedules a heading pass too.
 		controller.onDocumentPrecommit( { operations: [] } );
 		expect( controller.headingFrameHandle ).not.toBeNull();
+	} );
+} );
+
+describe( 'active line', () => {
+	const classes = ( node ) => Array.from( node.$element[ 0 ].classList );
+
+	/**
+	 * @param {string} doc
+	 * @return {Object} Controller with the activeLine preference on
+	 */
+	const newActiveLineController = ( doc ) => {
+		const origGet = mw.user.options.get;
+		mw.user.options.get = jest.fn().mockImplementation( ( key ) => (
+			key === 'codemirror-preferences' ? JSON.stringify( { activeLine: 1 } ) : null
+		) );
+		try {
+			return new CodeMirrorVisualEditorHighlight( getMockSurface( doc ), langSupport );
+		} finally {
+			mw.user.options.get = origGet;
+		}
+	};
+
+	it( 'should mark the line holding the cursor', () => {
+		const active = newActiveLineController( 'one\ntwo\nthree' );
+		active.activate();
+		// Identity offset mapping, so offset 5 is on line 2.
+		active.surface.setCursor( 5 );
+		active.updateActiveLine();
+		const nodes = active.surface.lineNodes;
+		expect( classes( nodes[ 1 ] ) ).toContain( 'cm-mw-ve-activeLine' );
+		expect( classes( nodes[ 0 ] ) ).toEqual( [] );
+		expect( classes( nodes[ 2 ] ) ).toEqual( [] );
+	} );
+
+	it( 'should move the mark when the cursor changes line', () => {
+		const active = newActiveLineController( 'one\ntwo\nthree' );
+		active.activate();
+		active.surface.setCursor( 1 );
+		active.updateActiveLine();
+		active.surface.setCursor( 9 );
+		active.updateActiveLine();
+		const nodes = active.surface.lineNodes;
+		expect( classes( nodes[ 0 ] ) ).toEqual( [] );
+		expect( classes( nodes[ 2 ] ) ).toContain( 'cm-mw-ve-activeLine' );
+	} );
+
+	it( 'should follow the focus end of a selection, not its anchor', () => {
+		const active = newActiveLineController( 'one\ntwo\nthree' );
+		active.activate();
+		// Anchored on line 1, focus on line 3.
+		active.surface.setCursor( 1, false, 9 );
+		active.updateActiveLine();
+		expect( classes( active.surface.lineNodes[ 2 ] ) ).toContain( 'cm-mw-ve-activeLine' );
+	} );
+
+	it( 'should clear the mark it set after the line numbers shift beneath it', () => {
+		// An edit above the marked line moves it to a new index. Clearing by index would strip
+		// the class off whichever node moved into the old slot, stranding this one.
+		const active = newActiveLineController( 'one\ntwo\nthree' );
+		active.activate();
+		active.surface.setCursor( 5 );
+		active.updateActiveLine();
+		const marked = active.surface.lineNodes[ 1 ];
+		expect( classes( marked ) ).toContain( 'cm-mw-ve-activeLine' );
+
+		// Everything shifts down one, then the cursor moves to the new first line.
+		active.surface.lineNodes.unshift( { $element: $( '<p>' ).text( 'inserted' ) } );
+		active.surface.setCursor( 1 );
+		active.updateActiveLine();
+
+		expect( classes( marked ) ).toEqual( [] );
+		expect( active.surface.lineNodes.filter(
+			( node ) => classes( node ).includes( 'cm-mw-ve-activeLine' )
+		).length ).toBe( 1 );
+	} );
+
+	it( 'should clear the mark when there is no selection', () => {
+		const active = newActiveLineController( 'one\ntwo' );
+		active.activate();
+		active.surface.setCursor( 5 );
+		active.updateActiveLine();
+		active.surface.model.getSelection.mockReturnValue( null );
+		active.updateActiveLine();
+		expect( classes( active.surface.lineNodes[ 1 ] ) ).toEqual( [] );
+	} );
+
+	it( 'should do nothing when the preference is off', () => {
+		controller.activate();
+		surface.setCursor( 1 );
+		controller.updateActiveLine();
+		expect( classes( surface.lineNodes[ 0 ] ) ).toEqual( [] );
+	} );
+
+	it( 'should clear the mark on deactivate', () => {
+		const active = newActiveLineController( 'one\ntwo' );
+		active.activate();
+		active.surface.setCursor( 5 );
+		active.updateActiveLine();
+		active.deactivate();
+		expect( classes( active.surface.lineNodes[ 1 ] ) ).toEqual( [] );
+	} );
+} );
+
+describe( 'trailing whitespace', () => {
+	/**
+	 * @param {string} doc
+	 * @return {Object} Controller with the trailingWhitespace preference on
+	 */
+	const newTrailingController = ( doc ) => {
+		const origGet = mw.user.options.get;
+		mw.user.options.get = jest.fn().mockImplementation( ( key ) => (
+			key === 'codemirror-preferences' ? JSON.stringify( { trailingWhitespace: 1 } ) : null
+		) );
+		try {
+			return new CodeMirrorVisualEditorHighlight( getMockSurface( doc ), langSupport );
+		} finally {
+			mw.user.options.get = origGet;
+		}
+	};
+
+	/**
+	 * @param {Object} trailing Controller
+	 * @return {Array} Ranges drawn for the trailing-whitespace group
+	 */
+	const drawnRanges = ( trailing ) => trailing.surface.selectionManager.drawSelections.mock.calls
+		.filter( ( call ) => call[ 0 ] === 'cm-trailing-whitespace' )
+		.pop()[ 1 ]
+		.map( ( selection ) => ( {
+			from: selection.range.from,
+			to: selection.range.to
+		} ) );
+
+	it( 'should highlight trailing spaces and tabs', () => {
+		// Line 1 ends in two spaces, line 3 in a tab; line 2 is clean.
+		const trailing = newTrailingController( 'one  \ntwo\nthree\t' );
+		trailing.activate();
+		trailing.updateTrailingWhitespace();
+		// Identity offset mapping plus one per preceding line boundary: source 3-5 on line 1,
+		// source 15-16 on line 3.
+		expect( drawnRanges( trailing ) ).toEqual( [
+			{ from: 4, to: 6 },
+			{ from: 18, to: 19 }
+		] );
+	} );
+
+	it( 'should draw nothing when every line is clean', () => {
+		const trailing = newTrailingController( 'one\ntwo' );
+		trailing.activate();
+		trailing.updateTrailingWhitespace();
+		expect( trailing.surface.selectionManager.drawSelections )
+			.not.toHaveBeenCalledWith( 'cm-trailing-whitespace', expect.anything(), expect.anything() );
+	} );
+
+	it( 'should treat a whitespace-only line as trailing', () => {
+		const trailing = newTrailingController( 'one\n   \ntwo' );
+		trailing.activate();
+		trailing.updateTrailingWhitespace();
+		expect( drawnRanges( trailing ) ).toEqual( [ { from: 6, to: 9 } ] );
+	} );
+
+	it( 'should do nothing when the preference is off', () => {
+		controller.activate();
+		controller.updateTrailingWhitespace();
+		expect( controller.surface.selectionManager.drawSelections )
+			.not.toHaveBeenCalledWith( 'cm-trailing-whitespace', expect.anything(), expect.anything() );
+	} );
+
+	it( 'should clear the group on deactivate', () => {
+		const trailing = newTrailingController( 'one  ' );
+		trailing.activate();
+		trailing.updateTrailingWhitespace();
+		trailing.deactivate();
+		expect( trailing.surface.selectionManager.drawSelections )
+			.toHaveBeenLastCalledWith( 'cm-trailing-whitespace', [] );
 	} );
 } );
 

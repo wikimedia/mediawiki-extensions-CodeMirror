@@ -57,6 +57,38 @@ const REFS_CLASS = 'cm-mw-highlight-refs';
 const HEADING_RE = /^(={1,6}).+?\1[ \t]*$/;
 
 /**
+ * Class set on the VE paragraph node of the line holding the cursor. CodeMirror's
+ * .cm-activeLine is a line decoration; ::highlight() paints only behind glyphs, so a
+ * full-width background has to come from the node.
+ *
+ * @type {string}
+ * @private
+ */
+const ACTIVE_LINE_CLASS = 'cm-mw-ve-activeLine';
+
+/**
+ * Trailing whitespace on a line, as highlightTrailingWhitespace matches it.
+ *
+ * @type {RegExp}
+ * @private
+ */
+const TRAILING_WHITESPACE_RE = /\s+$/;
+
+/**
+ * Highlight group for trailing whitespace. `cm-` prefixed like the syntax groups, which reach
+ * `visualeditor-syntax-cm-*` through the mode's own class names: SelectionManager group names
+ * share one document-wide namespace, so they want the same qualifier.
+ *
+ * Drawn whole-document rather than viewport-bounded: matches are rare, and VisualEditor's
+ * SelectionManager then maintains the group itself across re-renders and scrolls, so only edits
+ * need to recompute it.
+ *
+ * @type {string}
+ * @private
+ */
+const TRAILING_WHITESPACE_GROUP = 'cm-trailing-whitespace';
+
+/**
  * Class prefix (plus the level) set on the VE paragraph node of a heading line. font-size is
  * beyond the Custom Highlight API, and is safe here only because there's no overlay to keep
  * aligned; the EditorView integration has to neutralise the same rules (T432950).
@@ -205,6 +237,39 @@ class CodeMirrorVisualEditorHighlight {
 		 */
 		this.highlightRefsEnabled = !!this.getPreference( 'highlightRefs' );
 		/**
+		 * Whether to mark the line holding the cursor, from the `activeLine` preference.
+		 *
+		 * @type {boolean}
+		 */
+		this.activeLineEnabled = !!this.getPreference( 'activeLine' );
+		/**
+		 * Node currently carrying {@link ACTIVE_LINE_CLASS}. Held as the element rather than a
+		 * line number: an edit elsewhere shifts line numbers, and clearing by index would then
+		 * strip the class off whichever node had moved into that slot, stranding this one.
+		 *
+		 * @type {jQuery|null}
+		 */
+		this.$activeLineNode = null;
+		/**
+		 * Whether to mark trailing whitespace, from the `trailingWhitespace` preference.
+		 *
+		 * @type {boolean}
+		 */
+		this.trailingWhitespaceEnabled = !!this.getPreference( 'trailingWhitespace' );
+		/**
+		 * Pending requestAnimationFrame handle for trailing-whitespace updates.
+		 *
+		 * @type {number|null}
+		 */
+		this.trailingWhitespaceFrameHandle = null;
+		/**
+		 * Whether the trailing-whitespace group is currently drawn, so clearing it is a no-op
+		 * when it never was.
+		 *
+		 * @type {boolean}
+		 */
+		this.trailingWhitespaceDrawn = false;
+		/**
 		 * Heading line numbers (1-based) to level, so the classes can be removed again.
 		 *
 		 * @type {Map<number,number>}
@@ -220,6 +285,7 @@ class CodeMirrorVisualEditorHighlight {
 		this.onDocumentPrecommitBound = this.onDocumentPrecommit.bind( this );
 		this.scheduleRefreshBound = this.scheduleRefresh.bind( this );
 		this.scheduleBracketMatchBound = this.scheduleBracketMatch.bind( this );
+		this.updateActiveLineBound = this.updateActiveLine.bind( this );
 	}
 
 	/**
@@ -288,6 +354,13 @@ class CodeMirrorVisualEditorHighlight {
 			this.surface.getModel().on( 'select', this.scheduleBracketMatchBound );
 			this.scheduleBracketMatch();
 		}
+		if ( this.activeLineEnabled ) {
+			this.surface.getModel().on( 'select', this.updateActiveLineBound );
+			this.updateActiveLine();
+		}
+		if ( this.trailingWhitespaceEnabled ) {
+			this.scheduleTrailingWhitespace();
+		}
 	}
 
 	/**
@@ -301,6 +374,7 @@ class CodeMirrorVisualEditorHighlight {
 		this.surface.getModel().getDocument().off( 'precommit', this.onDocumentPrecommitBound );
 		this.unbindSyntaxListeners();
 		this.surface.getModel().off( 'select', this.scheduleBracketMatchBound );
+		this.surface.getModel().off( 'select', this.updateActiveLineBound );
 		if ( this.theme === 'colorblind' ) {
 			this.surfaceView.$element.removeClass( COLORBLIND_CLASS );
 		}
@@ -318,9 +392,15 @@ class CodeMirrorVisualEditorHighlight {
 			cancelAnimationFrame( this.headingFrameHandle );
 			this.headingFrameHandle = null;
 		}
+		if ( this.trailingWhitespaceFrameHandle ) {
+			cancelAnimationFrame( this.trailingWhitespaceFrameHandle );
+			this.trailingWhitespaceFrameHandle = null;
+		}
 
 		this.clearAllHighlights();
 		this.clearBracketMatch();
+		this.clearActiveLine();
+		this.clearTrailingWhitespace();
 		this.clearHeadings();
 		this.tokenizer = null;
 		this.isActive = false;
@@ -409,8 +489,10 @@ class CodeMirrorVisualEditorHighlight {
 		}
 
 		this.scheduleRefresh();
-		// Headings track the document, not the viewport, so they only update on edits.
+		// Headings and trailing whitespace track the document, not the viewport, so they only
+		// update on edits.
 		this.scheduleHeadings();
+		this.scheduleTrailingWhitespace();
 	}
 
 	/**
@@ -420,7 +502,10 @@ class CodeMirrorVisualEditorHighlight {
 	 * @type {string[]}
 	 */
 	get supportedPreferences() {
-		return [ 'theme', 'highlightRefs', 'bracketMatching' ];
+		return [
+			'theme', 'highlightRefs', 'bracketMatching',
+			'activeLine', 'trailingWhitespace'
+		];
 	}
 
 	/**
@@ -460,6 +545,24 @@ class CodeMirrorVisualEditorHighlight {
 					this.scheduleBracketMatch();
 				} else {
 					this.clearBracketMatch();
+				}
+				break;
+			case 'activeLine':
+				this.activeLineEnabled = !!value;
+				this.surface.getModel().off( 'select', this.updateActiveLineBound );
+				if ( value ) {
+					this.surface.getModel().on( 'select', this.updateActiveLineBound );
+					this.updateActiveLine();
+				} else {
+					this.clearActiveLine();
+				}
+				break;
+			case 'trailingWhitespace':
+				this.trailingWhitespaceEnabled = !!value;
+				if ( value ) {
+					this.scheduleTrailingWhitespace();
+				} else {
+					this.clearTrailingWhitespace();
 				}
 				break;
 		}
@@ -562,6 +665,143 @@ class CodeMirrorVisualEditorHighlight {
 			// eslint-disable-next-line mediawiki/class-doc
 			node.$element.addClass( SECTION_CLASS_PREFIX + level );
 		}
+	}
+
+	/**
+	 * Move {@link ACTIVE_LINE_CLASS} to the line holding the cursor. Like CodeMirror's
+	 * highlightActiveLine this follows the selection's focus end, so it tracks a growing
+	 * selection rather than staying at its anchor.
+	 *
+	 * @private
+	 */
+	updateActiveLine() {
+		if ( !this.isActive || !this.tokenizer || !this.activeLineEnabled ) {
+			return;
+		}
+
+		const model = this.surface.getModel(),
+			selection = model.getSelection(),
+			range = selection && selection.getCoveringRange && selection.getCoveringRange();
+		if ( !range ) {
+			this.clearActiveLine();
+			return;
+		}
+
+		let lineNumber;
+		try {
+			// The focus end, so the mark follows a growing selection instead of staying at
+			// its anchor. Older ranges only expose the normalised end.
+			const offset = range.to === undefined ? range.end : range.to;
+			const sourceOffset = model.getSourceOffsetFromOffset( offset );
+			lineNumber = this.tokenizer.doc.lineAt(
+				Math.min( Math.max( sourceOffset, 0 ), this.tokenizer.doc.length )
+			).number;
+		} catch ( e ) {
+			this.clearActiveLine();
+			return;
+		}
+
+		const node = this.surfaceView.getDocument().getDocumentNode().children[ lineNumber - 1 ],
+			$node = node && node.$element;
+		// Compare nodes, not line numbers, so a re-rendered node is re-marked rather than
+		// skipped as unchanged.
+		if ( $node && this.$activeLineNode && this.$activeLineNode[ 0 ] === $node[ 0 ] ) {
+			return;
+		}
+		this.clearActiveLine();
+		if ( $node ) {
+			$node.addClass( ACTIVE_LINE_CLASS );
+			this.$activeLineNode = $node;
+		}
+	}
+
+	/**
+	 * Remove the active-line class, if it is set.
+	 *
+	 * @private
+	 */
+	clearActiveLine() {
+		if ( !this.$activeLineNode ) {
+			return;
+		}
+		this.$activeLineNode.removeClass( ACTIVE_LINE_CLASS );
+		this.$activeLineNode = null;
+	}
+
+	/**
+	 * Coalesce trailing-whitespace updates into the next animation frame, so a burst of
+	 * transactions repaints once.
+	 *
+	 * @private
+	 */
+	scheduleTrailingWhitespace() {
+		if ( this.trailingWhitespaceFrameHandle || !this.trailingWhitespaceEnabled ) {
+			return;
+		}
+		this.trailingWhitespaceFrameHandle = requestAnimationFrame( () => {
+			this.trailingWhitespaceFrameHandle = null;
+			this.updateTrailingWhitespace();
+		} );
+	}
+
+	/**
+	 * Paint the trailing whitespace of every line.
+	 *
+	 * No `customHighlightRanges`: the pre-resolved Ranges are keyed by selection, which
+	 * SelectionManager#redrawSelections replaces when it re-resolves the group, so they would
+	 * only serve this first paint. Letting it resolve its own keeps the group correct for free.
+	 *
+	 * @private
+	 */
+	updateTrailingWhitespace() {
+		if ( !this.isActive || !this.tokenizer || !this.trailingWhitespaceEnabled ) {
+			return;
+		}
+
+		const model = this.surface.getModel(),
+			selections = [];
+		// Track the line start rather than asking the tokenizer per line: iterLines() yields
+		// the text without its newline, so each line starts one past the previous line's end.
+		let lineStart = 0;
+		for ( const text of this.tokenizer.doc.iterLines() ) {
+			const match = TRAILING_WHITESPACE_RE.exec( text );
+			if ( match ) {
+				try {
+					const range = new ve.Range(
+						this.getSurfaceOffsetFromSourceOffset( lineStart + match.index ),
+						this.getSurfaceOffsetFromSourceOffset( lineStart + text.length )
+					);
+					selections.push( this.surfaceView.getSelection(
+						model.getLinearFragment( range ).getSelection()
+					) );
+				} catch ( e ) {
+					// Offsets outside the document; skip this line.
+				}
+			}
+			lineStart += text.length + 1;
+		}
+
+		if ( !selections.length && !this.trailingWhitespaceDrawn ) {
+			return;
+		}
+		this.surfaceView.getSelectionManager().drawSelections(
+			TRAILING_WHITESPACE_GROUP, selections,
+			{ showRects: false, showCustomHighlight: true }
+		);
+		this.trailingWhitespaceDrawn = !!selections.length;
+	}
+
+	/**
+	 * Remove the trailing-whitespace highlights.
+	 *
+	 * @private
+	 */
+	clearTrailingWhitespace() {
+		if ( !this.trailingWhitespaceDrawn ) {
+			return;
+		}
+		this.surfaceView.getSelectionManager().drawSelections( TRAILING_WHITESPACE_GROUP, [] );
+		this.trailingWhitespaceDrawn = false;
 	}
 
 	/**
