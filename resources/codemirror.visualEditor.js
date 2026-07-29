@@ -232,7 +232,6 @@ class CodeMirrorVisualEditor extends CodeMirror {
 			'margin-right': ''
 		};
 		this.surfaceView.$documentNode.css( margins );
-		this.surfaceView.$element.prevAll( '.ve-ui-surface-placeholder' ).css( margins );
 
 		this.surface.getModel().getDocument().off( 'precommit', this.transactionListener );
 		this.surface.getModel().off( 'select', this.selectListener );
@@ -274,7 +273,6 @@ class CodeMirrorVisualEditor extends CodeMirror {
 			'margin-right': dir === 'rtl' ? guttersWidth : 0
 		};
 		this.surfaceView.$documentNode.css( margins );
-		this.surfaceView.$element.prevAll( '.ve-ui-surface-placeholder' ).css( margins );
 		// Also update width of .cm-content due to apparent Chromium bug.
 		this.view.contentDOM.style.width = 'calc(100% - ' + guttersWidth + 'px)';
 	}
