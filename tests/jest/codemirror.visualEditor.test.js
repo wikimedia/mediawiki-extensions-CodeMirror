@@ -126,6 +126,36 @@ describe( 'deactivate', () => {
 	} );
 } );
 
+describe( 'updateGutterWidth', () => {
+	it( 'should clear the offsets when there is no gutter', () => {
+		cmVe.initialize();
+		// The state a removed gutter leaves behind.
+		cmVe.surfaceView.$documentNode.css( { 'margin-left': '30px' } );
+		cmVe.view.contentDOM.style.width = 'calc(100% - 30px)';
+		jest.spyOn( cmVe.view.dom, 'querySelector' ).mockReturnValue( null );
+		cmVe.updateGutterWidth( 'ltr' );
+		jest.restoreAllMocks();
+		expect( cmVe.surfaceView.$documentNode[ 0 ].style.marginLeft ).toBe( '0px' );
+		expect( cmVe.view.contentDOM.style.width ).toBe( '' );
+	} );
+} );
+
+describe( 'applyPreference', () => {
+	it( 'should re-measure the gutter when line numbering is toggled', () => {
+		cmVe.initialize();
+		const spy = jest.spyOn( cmVe, 'updateGutterWidth' );
+		cmVe.applyPreference( 'lineNumbering', false );
+		expect( spy ).toHaveBeenCalledWith( 'ltr' );
+	} );
+
+	it( 'should not re-measure it for other preferences', () => {
+		cmVe.initialize();
+		const spy = jest.spyOn( cmVe, 'updateGutterWidth' );
+		cmVe.applyPreference( 'bracketMatching', false );
+		expect( spy ).not.toHaveBeenCalled();
+	} );
+} );
+
 describe( 'onSelect', () => {
 	/**
 	 * @param {number} from

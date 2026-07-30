@@ -121,6 +121,10 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	 */
 	applyPreference( name, value ) {
 		this.extensionRegistry.toggle( name, this.view, value );
+		// Adding or removing the gutter moves where CodeMirror's text starts.
+		if ( name === 'lineNumbering' && this.isActive ) {
+			this.updateGutterWidth( this.surfaceView.getDocument().getDir() );
+		}
 	}
 
 	/**
@@ -263,18 +267,18 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	 */
 	updateGutterWidth( dir ) {
 		const gutter = this.view.dom.querySelector( '.cm-gutters' );
-		if ( !gutter ) {
-			// Line numbering is disabled.
-			return;
-		}
-		const guttersWidth = gutter.getBoundingClientRect().width;
+		// Zero when line numbering is disabled: the offsets have to be cleared rather than
+		// left alone, or the surface stays indented by a gutter that is no longer there.
+		const guttersWidth = gutter ? gutter.getBoundingClientRect().width : 0;
 		const margins = {
 			'margin-left': dir === 'rtl' ? 0 : guttersWidth,
 			'margin-right': dir === 'rtl' ? guttersWidth : 0
 		};
 		this.surfaceView.$documentNode.css( margins );
 		// Also update width of .cm-content due to apparent Chromium bug.
-		this.view.contentDOM.style.width = 'calc(100% - ' + guttersWidth + 'px)';
+		this.view.contentDOM.style.width = guttersWidth ?
+			'calc(100% - ' + guttersWidth + 'px)' :
+			'';
 	}
 
 	/**
