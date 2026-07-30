@@ -9,6 +9,8 @@
 	"codemirror-prefs-section-appearance": "شکل و صورت",
 	"codemirror-prefs-section-lines": "سطراں",
 	"codemirror-prefs-section-other": "ٻیا",
+	"codemirror-theme-default": "پہلے کنوں طے تھیا",
+	"codemirror-theme-basic": "بنیادی",
 	"codemirror-theme-github": "گِٹ ہب",
 	"codemirror-close": "بند کرو",
 	"codemirror-next": "اڳلا لبھو",
@@ -43,5 +45,6 @@
 	"prefs-accessibility": "رسائیت",
 	"codemirror-wikilint-close": "بند کرو",
 	"codemirror-wikilint-escape": "ایسکیپ",
-	"codemirror-wikilint-open": "کھولو"
+	"codemirror-wikilint-open": "کھولو",
+	"codemirror-we-group-sort": "چھانٹ"
 }
