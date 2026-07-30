@@ -172,6 +172,7 @@
 	"codemirror-wikilint-inconsistent-table": "непослідовний макет таблиці",
 	"codemirror-wikilint-invalid-attribute": "елемент містить недійсну назву атрибуту",
 	"codemirror-wikilint-invalid-content": "недійсний вміст у $1",
+	"codemirror-wikilint-invalid-conversion-flag": "недійсний прапор перетворення",
 	"codemirror-wikilint-invalid-gallery": "недійсне зображення галереї",
 	"codemirror-wikilint-invalid-image-parameter": "недійсний параметр зображення",
 	"codemirror-wikilint-invalid-imagemap-link": "недійсне посилання в imagemap",

@@ -7,11 +7,13 @@
 			"SaldırganSincap",
 			"Vito Genovese",
 			"ToprakM",
-			"HakanIST"
+			"HakanIST",
+			"Rapsar"
 		]
 	},
 	"codemirror-desc": "Vikimetin düzenleyicide sözdizim vurgulaması sağlar",
 	"codemirror-toggle-label": "Sözdizim vurgulama",
+	"codemirror-prefs-summary": "Bu özellik hakkında daha fazla bilgi edinmek için [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror yardım sayfasını] okuyabilirsiniz.",
 	"codemirror-prefs-section-other": "Diğer",
 	"codemirror-prefs-colorblind": "Vikimetni düzenlerken sözdizimi vurgulaması için renk körü dostu düzeni etkinleştir",
 	"codemirror-prefs-colorblind-help": "Sözdizimi vurgulaması için bir küçük aracı kullanıyorsanız, bu tercih çalışmayacaktır.",
@@ -34,5 +36,6 @@
 	"codemirror-keymap-redo": "Yinele",
 	"codemirror-keymap-other": "Diğer",
 	"prefs-accessibility": "Erişilebilirlik",
+	"prefs-syntax-highlighting": "Sözdizimi vurgulama",
 	"codemirror-wikilint-decode": "deşifre"
 }
