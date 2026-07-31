@@ -118,7 +118,8 @@ describe( 'addDarkModeMutationObserver', () => {
 		window.matchMedia = jest.fn().mockImplementation( ( query ) => ( {
 			'(prefers-color-scheme: dark)': { matches: true, addEventListener: jest.fn() },
 			print: matchMedia( 'print' )
-		}[ query ] ) );
+			// Defer any other query, so that adding one elsewhere cannot break this mock.
+		}[ query ] || matchMedia( query ) ) );
 		cm2.initialize();
 		expect( cm2.extensionRegistry.isEnabled( 'darkMode', cm2.view ) ).toBeTruthy();
 		document.documentElement.classList.remove( 'skin-theme-clientpref-os' );
