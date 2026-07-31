@@ -804,7 +804,7 @@ class CodeMirror {
 		if ( this.mode === 'mediawiki' ) {
 			return [];
 		}
-		const color = 'var(--border-color-subtle)';
+		const color = 'var(--border-color-subtle, #c8ccd1)';
 		return EditorView.theme( {
 			'.cm-content': {
 				backgroundImage: `linear-gradient(${ color },${ color })`,
