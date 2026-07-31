@@ -451,8 +451,10 @@ class CodeMirrorCodex {
 		document.activeElement.blur();
 		// Must be unhidden in order to animate.
 		this.dialog.classList.remove( 'cm-mw-dialog--hidden' );
-		// When the transition ends, hide or show the dialog.
-		this.dialog.addEventListener( 'transitionend', () => {
+		// Hide or show the dialog after the fade. This must run even if the fade does not: it
+		// restores the hidden class and the page scroll lock, and an invisible backdrop that
+		// stays above the page absorbs all clicks.
+		this.waitForTransition( this.dialog, () => {
 			this.dialog.classList.toggle( 'cm-mw-dialog--hidden', !open );
 			if ( open ) {
 				this.dialog.querySelector( '[tabindex="0"]' ).focus();
@@ -469,7 +471,7 @@ class CodeMirrorCodex {
 			}
 			// Toggle a class on <body> to prevent scrolling
 			document.body.classList.toggle( 'cdx-dialog-open', open );
-		}, { once: true } );
+		} );
 		// Animates the dialog in or out.
 		// Use setTimeout() with slight delay to allow rendering threads to catch up.
 		setTimeout( () => {
@@ -488,6 +490,43 @@ class CodeMirrorCodex {
 			document.body.removeEventListener( 'keydown', this.keydownListener );
 			this.keydownListener = null;
 		}
+	}
+
+	/**
+	 * Wait for a transitionend on an element
+	 *
+	 * Some style overrides can make `transitionend` not fire, so wait a short time.
+	 *
+	 * @param {HTMLElement} element
+	 * @param {Function} callback
+	 * @param {number} [timeout=500] Milliseconds to wait before the callback runs anyway
+	 * @protected
+	 */
+	waitForTransition( element, callback, timeout = 500 ) {
+		if ( window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ) {
+			// Core sets `transition-duration: 0ms`, which fires no transitionend.
+			callback();
+			return;
+		}
+		let settled = false;
+		const listener = ( event ) => {
+			// transitionend bubbles, so ignore the transitions of descendants.
+			if ( settled || event.target !== element ) {
+				return;
+			}
+			settled = true;
+			element.removeEventListener( 'transitionend', listener );
+			callback();
+		};
+		element.addEventListener( 'transitionend', listener );
+		setTimeout( () => {
+			if ( settled ) {
+				return;
+			}
+			settled = true;
+			element.removeEventListener( 'transitionend', listener );
+			callback();
+		}, timeout );
 	}
 }
 

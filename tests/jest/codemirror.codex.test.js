@@ -5,6 +5,17 @@ const CodeMirrorCodex = require( '../../resources/codemirror.codex.js' );
 const cmCodex = new CodeMirrorCodex();
 
 describe( 'CodeMirrorCodex', () => {
+	// Fake timers throughout. The fallback timer in #waitForTransition would otherwise stay
+	// pending after a test that opens the dialog, and change the shared dialog or <body> during
+	// a later test.
+	beforeEach( () => {
+		jest.useFakeTimers();
+	} );
+
+	afterEach( () => {
+		jest.useRealTimers();
+	} );
+
 	it( 'should create a Codex TextInput', () => {
 		const [ inputWrapper, input ] = cmCodex.getTextInput( 'foo', 'bar', 'codemirror-find' );
 		expect( inputWrapper.className ).toBe( 'cdx-text-input cm-mw-panel__text-input' );
@@ -158,6 +169,42 @@ describe( 'CodeMirrorCodex', () => {
 		cmCodex.dialog.dispatchEvent( new Event( 'transitionend' ) );
 		expect( document.activeElement ).toBe( input );
 		document.body.removeChild( input );
+	} );
+
+	it( 'should hide the dialog even if the fade transition never ends', () => {
+		cmCodex.showDialog( 'Dialog Title', 'example', document.createElement( 'p' ) );
+		jest.runOnlyPendingTimers();
+		cmCodex.animateDialog( false );
+		// Send no transitionend, as happens when a transition-duration is 0s.
+		jest.advanceTimersByTime( 500 );
+		expect( cmCodex.dialog.classList.contains( 'cm-mw-dialog--hidden' ) ).toBe( true );
+		expect( document.body.classList.contains( 'cdx-dialog-open' ) ).toBe( false );
+	} );
+
+	it( 'should not wait for a transition when the user prefers reduced motion', () => {
+		const matchMedia = window.matchMedia;
+		window.matchMedia = jest.fn().mockReturnValue( { matches: true } );
+		try {
+			cmCodex.showDialog( 'Dialog Title', 'example', document.createElement( 'p' ) );
+			cmCodex.animateDialog( false );
+			// Core sets transition-duration to 0ms, so no transitionend arrives and no timer runs.
+			expect( cmCodex.dialog.classList.contains( 'cm-mw-dialog--hidden' ) ).toBe( true );
+		} finally {
+			window.matchMedia = matchMedia;
+		}
+	} );
+
+	it( 'should ignore transitionend from elements inside the dialog', () => {
+		cmCodex.showDialog( 'Dialog Title', 'example', document.createElement( 'p' ) );
+		jest.runOnlyPendingTimers();
+		cmCodex.animateDialog( false );
+		// A Codex widget in the dialog body can end a transition of its own, which bubbles.
+		const child = cmCodex.dialog.querySelector( '.cdx-dialog__body' );
+		child.dispatchEvent( new Event( 'transitionend', { bubbles: true } ) );
+		expect( cmCodex.dialog.classList.contains( 'cm-mw-dialog--hidden' ) ).toBe( false );
+		// The backdrop's own fade still closes it.
+		cmCodex.dialog.dispatchEvent( new Event( 'transitionend' ) );
+		expect( cmCodex.dialog.classList.contains( 'cm-mw-dialog--hidden' ) ).toBe( true );
 	} );
 
 	it( 'should use random IDs for checkboxes', () => {

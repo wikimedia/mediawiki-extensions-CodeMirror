@@ -35,7 +35,8 @@ describe( 'CodeMirrorThemes', () => {
 		window.matchMedia = jest.fn().mockImplementation( ( query ) => ( {
 			'(prefers-color-scheme: dark)': { matches: true, addEventListener: jest.fn() },
 			print: matchMedia( 'print' )
-		}[ query ] ) );
+			// Defer any other query, so that adding one elsewhere cannot break this mock.
+		}[ query ] || matchMedia( query ) ) );
 		const themes2 = new CodeMirrorThemes( preferences );
 		// Sanity check.
 		expect( view.state.facet( EditorView.darkTheme ) ).toBeFalsy();
