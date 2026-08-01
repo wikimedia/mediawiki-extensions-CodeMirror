@@ -146,6 +146,7 @@ const map = {
 				contentNamespaces: 3,
 				subjectNamespaces: 3,
 				talkNamespaces: 3,
+				interwikiMap: 2,
 				stats: {
 					pages: 1,
 					articles: 1,
@@ -408,7 +409,8 @@ class CodeMirrorLua extends CodeMirrorMode {
 						fields: {
 							site: {
 								fields: {
-									wikiId: {}
+									wikiId: {},
+									interwikiMap: {}
 								}
 							}
 						}
