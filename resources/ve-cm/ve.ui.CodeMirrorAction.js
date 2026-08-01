@@ -50,6 +50,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 		const langSupport = mediawiki( {
 			bidiIsolation: false,
 			codeFolding: false,
+			foldAllRefs: false,
 			autocomplete: false,
 			openLinks: false
 		} );
