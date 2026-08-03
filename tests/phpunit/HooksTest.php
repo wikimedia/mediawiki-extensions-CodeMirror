@@ -14,6 +14,7 @@ use MediaWiki\Output\OutputPage;
 use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\Request\FauxRequest;
 use MediaWiki\Request\WebRequest;
+use MediaWiki\Skin\Skin;
 use MediaWiki\Specials\SpecialExpandTemplates;
 use MediaWiki\Specials\SpecialUndelete;
 use MediaWiki\Specials\SpecialUpload;
@@ -21,7 +22,6 @@ use MediaWiki\Title\Title;
 use MediaWiki\User\Options\UserOptionsManager;
 use MediaWikiIntegrationTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Skin;
 
 /**
  * @group CodeMirror
