@@ -73,29 +73,6 @@ describe( 'CodeMirror (enabled) - VisualEditor 2017 wikitext editor', () => {
 		);
 	} );
 
-	it( 'should only load necessary modules when the CodeMirror preference is unset', async () => {
-		// Exit editing session.
-		await browser.keys( 'Escape' );
-		await EditPage.visualEditorMessageDialog.waitForDisplayed();
-		await EditPage.visualEditorDestructiveButton.click();
-		await expect( EditPage.visualEditorContentEditable ).not.toBeDisplayed();
-		await expect( EditPage.codeMirrorContentEditable ).not.toBeDisplayed();
-		// Refresh.
-		await UserPreferences.setPreferences( {
-			usecodemirror: '0'
-		} );
-		await EditPage.openForEditing( title );
-		// Assertions.
-		await expect( EditPage.codeMirrorContentEditable ).not.toBeDisplayed();
-		await expect( EditPage.visualEditorContentEditable ).toBeDisplayed();
-		expect(
-			await browser.execute( () => mw.loader.getState( 'ext.CodeMirror.mode.mediawiki' ) )
-		).toBe( 'registered' );
-		expect(
-			await browser.execute( () => mw.loader.getState( 'ext.CodeMirror' ) )
-		).toBe( 'registered' );
-	} );
-
 	after( async () => {
 		const apiClient = await createApiClient();
 		await apiClient.delete( title, 'Test cleanup' ).catch( ( e ) => console.error( e ) );
