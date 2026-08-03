@@ -2,8 +2,8 @@
 
 namespace MediaWiki\Extension\CodeMirror\Tests;
 
+use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\CodeMirror\JavaScriptValidator;
-use MediaWiki\Language\MessageLocalizer;
 use MediaWiki\ResourceLoader\WikiModule;
 use MediaWiki\Title\Title;
 use MediaWikiIntegrationTestCase;
@@ -17,7 +17,7 @@ class JavaScriptValidatorTest extends MediaWikiIntegrationTestCase {
 
 	public function setUp(): void {
 		$this->validator = new JavaScriptValidator(
-			$this->createMock( MessageLocalizer::class ),
+			RequestContext::getMain(),
 			$this->getServiceContainer()->getResourceLoader(),
 			$this->getServiceContainer()->getMainWANObjectCache(),
 			$this->getServiceContainer()->getSkinFactory(),

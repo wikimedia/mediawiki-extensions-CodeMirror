@@ -2,8 +2,7 @@
 
 namespace MediaWiki\Extension\CodeMirror;
 
-use MediaWiki\Context\RequestContext;
-use MediaWiki\Language\MessageLocalizer;
+use MediaWiki\Context\IContextSource;
 use MediaWiki\Linker\LinkTarget;
 use MediaWiki\ResourceLoader as RL;
 use MediaWiki\Skin\SkinFactory;
@@ -18,13 +17,13 @@ class JavaScriptValidator extends BaseValidator {
 	public const PAGES_CACHE_KEY = 'codemirror-js-pagelist';
 
 	public function __construct(
-		MessageLocalizer $localizer,
+		private readonly IContextSource $context,
 		private readonly RL\ResourceLoader $resourceLoader,
 		private readonly WANObjectCache $wanCache,
 		private readonly SkinFactory $skinFactory,
 		private readonly UserGroupManager $userGroupManager,
 	) {
-		parent::__construct( $localizer );
+		parent::__construct( $context );
 	}
 
 	public function validate( string $text, LinkTarget $title ): array {
@@ -88,7 +87,7 @@ class JavaScriptValidator extends BaseValidator {
 	private function fetchPagesRequiringValidation(): array {
 		$pages = [];
 
-		$rlContext = new RL\Context( $this->resourceLoader, RequestContext::getMain()->getRequest() );
+		$rlContext = new RL\Context( $this->resourceLoader, $this->context->getRequest() );
 		$moduleNames = $this->resourceLoader->getModuleNames();
 
 		foreach ( $moduleNames as $moduleName ) {
