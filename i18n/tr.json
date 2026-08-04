@@ -7,11 +7,14 @@
 			"Vito Genovese",
 			"LisafBia",
 			"ToprakM",
-			"HakanIST"
+			"HakanIST",
+			"Rapsar"
 		]
 	},
 	"codemirror-desc": "Vikimetin düzenleyicide sözdizim vurgulaması sağlar",
 	"codemirror-toggle-label": "Sözdizim vurgulama",
+	"codemirror-prefs-summary": "Bu özellik hakkında daha fazla bilgi edinmek için [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror yardım sayfasını] okuyabilirsiniz.",
+	"codemirror-prefs-enable": "Vikimetin için sözdizimi vurgulamasını etkinleştir",
 	"codemirror-prefs-colorblind": "Vikimetni düzenlerken sözdizimi vurgulaması için renk körü dostu düzeni etkinleştir",
 	"codemirror-prefs-colorblind-help": "Sözdizimi vurgulaması için bir küçük aracı kullanıyorsanız, bu tercih çalışmayacaktır.",
 	"codemirror-find": "Bul",
@@ -25,5 +28,6 @@
 	"codemirror-replace-placeholder": "Değiştir",
 	"codemirror-replace-all": "Hepsini değiştir",
 	"codemirror-done": "Bitti",
-	"prefs-accessibility": "Erişilebilirlik"
+	"prefs-accessibility": "Erişilebilirlik",
+	"prefs-syntax-highlighting": "Sözdizimi vurgulama"
 }
