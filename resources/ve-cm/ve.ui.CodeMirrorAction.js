@@ -69,6 +69,8 @@ ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 		// Tools keyed on CodeMirror's state need telling: it loads asynchronously, and
 		// toggling it afterwards changes nothing else the toolbar watches.
 		this.surface.getModel().emitContextChange();
+		// For debugging purposes.
+		ve.cm = this.surface.mirror;
 	}
 };
 
