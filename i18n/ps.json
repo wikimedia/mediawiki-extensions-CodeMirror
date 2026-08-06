@@ -147,6 +147,10 @@
 	"codemirror-wikilint-duplicate-attribute": "$1 ځانگړی‌کونگ غبرگول",
 	"codemirror-wikilint-duplicate-category": "غبرگوتې وېشنيزه",
 	"codemirror-wikilint-duplicate-id": "غبرگونی اېچ‌ټي‌اېم‌اېل پېژند",
+	"codemirror-wikilint-duplicate-image-parameter": "دوه‌گوني انځور $1 ارزښت",
+	"codemirror-wikilint-duplicate-parameter": "دوه‌گوني کينډۍ ارزښت",
+	"codemirror-wikilint-unclosed-table": "ناتړلی لښتيال",
+	"codemirror-wikilint-whitespace": "تشيال ورټومبل",
 	"codemirror-beta-feature-title": "سمې‌شوې غونډلپوهې روښانه‌کول",
 	"codemirror-beta-feature-description": "د نوې غونډلپوهې روښانه‌کولو او سمون ځانگړنو لکه کوډ غبرگول او خپلکاره‌بشپړولو ته ژر لاسرسی ومومئ."
 }
