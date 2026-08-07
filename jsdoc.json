@@ -71,7 +71,9 @@
 				"ve.dm.Transaction": "https://doc.wikimedia.org/visualeditor-standalone/master/ve.dm.Transaction.html",
 				"ve.ui.Action": "https://doc.wikimedia.org/visualeditor-standalone/master/ve.ui.Action.html",
 				"ve.ui.Surface": "https://doc.wikimedia.org/visualeditor-standalone/master/ve.ui.Surface.html",
-				"ve.ui.Tool": "https://doc.wikimedia.org/visualeditor-standalone/master/ve.ui.Tool.html"
+				"ve.dm.SurfaceFragment": "https://doc.wikimedia.org/visualeditor-standalone/master/ve.dm.SurfaceFragment.html",
+				"ve.ui.Tool": "https://doc.wikimedia.org/visualeditor-standalone/master/ve.ui.Tool.html",
+				"ve.ui.WindowTool": "https://doc.wikimedia.org/visualeditor-standalone/master/ve.ui.WindowTool.html"
 			}
 		}
 	}

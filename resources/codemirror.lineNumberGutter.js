@@ -23,20 +23,38 @@ class CodeMirrorLineNumberGutter {
 	 */
 	constructor( surfaceView, formatNumber ) {
 		/**
-		 * @type {ve.ce.Surface|null} Null once destroyed
+		 * Null once destroyed.
+		 *
+		 * @type {ve.ce.Surface|null}
 		 */
 		this.surfaceView = surfaceView;
 		/** @type {boolean} */
 		this.enabled = false;
 		/** @type {Function} */
 		this.formatNumber = formatNumber || String;
-		/** @type {jQuery|null} Cached while enabled */
+		/**
+		 * Cached while enabled.
+		 *
+		 * @type {jQuery|null}
+		 */
 		this.$documentNode = null;
-		/** @type {string|null} 'left' or 'right'; null until applySide() settles it */
+		/**
+		 * 'left' or 'right'; null until applySide() settles it.
+		 *
+		 * @type {string|null}
+		 */
 		this.side = 'left';
-		/** @type {number} The document node's own edge padding, which the gutter sits in */
+		/**
+		 * The document node's own edge padding, which the gutter sits in.
+		 *
+		 * @type {number}
+		 */
 		this.contentPadding = 0;
-		/** @type {number} Digit count the width was last sized for */
+		/**
+		 * Digit count the width was last sized for.
+		 *
+		 * @type {number}
+		 */
 		this.digitCount = 0;
 
 		const teardownCheck = () => !!this.surfaceView && this.enabled;

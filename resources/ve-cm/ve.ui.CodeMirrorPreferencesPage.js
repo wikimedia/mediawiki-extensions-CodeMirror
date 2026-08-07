@@ -27,7 +27,7 @@ ve.ui.CodeMirrorPreferencesPage = function VeUiCodeMirrorPreferencesPage() {
 	/**
 	 * Preference values changed since the dialog opened, written on 'done'.
 	 *
-	 * @type {Object<string, boolean|string>}
+	 * @type {Object<string, PrefValue>}
 	 */
 	this.changes = {};
 	/** @type {CodeMirrorPreferences|null} */
