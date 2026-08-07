@@ -170,6 +170,7 @@ mw.log = jest.fn();
 mw.log.warn = jest.fn().mockImplementation( ( ...args ) => {
 	console.warn( ...args );
 } );
+mw.log.error = jest.fn();
 global.CSS = {
 	supports: ( css ) => /^\s*top\s*:\s*(?:inherit|initial)\s*$/i.test( css )
 };

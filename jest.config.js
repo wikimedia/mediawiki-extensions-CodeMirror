@@ -10,7 +10,8 @@ module.exports = {
 	// An array of glob patterns indicating a set of files fo
 	//  which coverage information should be collected
 	collectCoverageFrom: [
-		'resources/**/*.js'
+		'resources/**/*.js',
+		'resources/**/*.vue'
 	],
 
 	// The directory where Jest should output its coverage files
@@ -38,8 +39,15 @@ module.exports = {
 	// An array of file extensions your modules use
 	moduleFileExtensions: [
 		'js',
-		'json'
+		'json',
+		'vue'
 	],
+
+	// Setting this replaces Jest's default, so babel-jest must be listed too.
+	transform: {
+		'^.+\\.js$': 'babel-jest',
+		'^.+\\.vue$': '@vue/vue3-jest'
+	},
 
 	// The paths to modules that run some code to configure or
 	// set up the testing environment before each test
@@ -49,6 +57,12 @@ module.exports = {
 
 	// Simulates a real browser environment.
 	testEnvironment: 'jsdom',
+
+	// jsdom otherwise resolves the 'browser' build of packages such as
+	// @vue/test-utils, which expects Vue to be a global.
+	testEnvironmentOptions: {
+		customExportConditions: [ 'node' ]
+	},
 
 	// Ignore these directories when locating tests to run.
 	testPathIgnorePatterns: [

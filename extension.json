@@ -410,6 +410,16 @@
 				"ext.CodeMirror.lib"
 			]
 		},
+		"ext.CodeMirror.VueComponent": {
+			"dependencies": [
+				"vue"
+			],
+			"packageFiles": [
+				"vue/codemirror.editor.js",
+				"vue/CodeMirrorEditor.vue",
+				"vue/codemirror.modeLoader.js"
+			]
+		},
 		"ext.CodeMirror.WikiEditor": {
 			"dependencies": [
 				"ext.wikiEditor",

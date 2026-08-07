@@ -9,8 +9,8 @@
 		"build:wikilint": "esbuild resources/workers/mediawiki/worker.js --charset=utf8 --bundle --minify --target=es2017 --format=iife --outfile=resources/workers/mediawiki/worker.min.js",
 		"test": "npm run test:lint && npm run test:unit && npm run check-built-assets",
 		"test:lint": "npm run test:lint:styles && npm run test:lint:js && npm run test:lint:i18n",
-		"test:lint:js": "ESLINT_USE_FLAT_CONFIG=false eslint --cache .",
-		"test:lint:styles": "stylelint --cache \"resources/**/*.less\"",
+		"test:lint:js": "ESLINT_USE_FLAT_CONFIG=false eslint --cache --ext .js,.vue .",
+		"test:lint:styles": "stylelint --cache \"resources/**/*.{less,vue}\"",
 		"test:lint:i18n": "banana-checker i18n/",
 		"test:unit": "jest",
 		"update-parser-tests": "UPDATE_PARSER_TESTS=1 jest --coverage=false --silent tests/jest/modes/codemirror.mediawiki.parser.test.js 2>/dev/null",
@@ -27,6 +27,8 @@
 		}
 	},
 	"devDependencies": {
+		"@babel/core": "7.28.4",
+		"@babel/preset-env": "7.28.3",
 		"@bhsd/codemirror-css-color-picker": "9.0.0",
 		"@bhsd/common": "4.1.0",
 		"@bhsd/eslint-browserify": "8.57.1",
@@ -71,6 +73,8 @@
 		"@replit/codemirror-lang-nix": "6.0.1",
 		"@rollup/plugin-alias": "5.1.1",
 		"@rollup/plugin-node-resolve": "15.2.3",
+		"@vue/test-utils": "2.4.6",
+		"@vue/vue3-jest": "29.2.6",
 		"@wdio/cli": "9.23.2",
 		"@wdio/junit-reporter": "9.23.2",
 		"@wdio/local-runner": "9.23.2",
@@ -94,6 +98,7 @@
 		"rollup": "4.59.0",
 		"stylelint-config-wikimedia": "0.18.0",
 		"svgo": "4.0.2",
+		"vue": "3.5.13",
 		"wdio-mediawiki": "6.5.0",
 		"wikiparser-node": "1.40.0"
 	}
