@@ -2,7 +2,7 @@
 	"name": "codemirror",
 	"private": true,
 	"scripts": {
-		"build": "rollup -c && npm run build:stylelint && npm run build:eslint && npm run build:luacheck && npm run build:wikilint",
+		"build": "rollup -c && npm run build:stylelint && npm run build:eslint && npm run build:luacheck && npm run build:wikilint && npm run minify-svg",
 		"build:stylelint": "esbuild resources/workers/css/worker.js --charset=utf8 --bundle --minify --target=es2017 --format=iife --outfile=resources/workers/css/worker.min.js",
 		"build:eslint": "esbuild resources/workers/javascript/worker.js --charset=utf8 --bundle --minify --target=es2017 --format=iife --outfile=resources/workers/javascript/worker.min.js",
 		"build:luacheck": "esbuild resources/workers/lua/worker.js --charset=utf8 --bundle --minify --target=es2017 --format=iife --outfile=resources/workers/lua/worker.min.js",
@@ -18,7 +18,8 @@
 		"check-built-assets": "{ git status resources/lib/ | grep \"nothing to commit, working tree clean\"; } && { echo 'CHECKING BUILD SOURCES ARE COMMITTED' && npm run build && git status resources/lib/ | grep \"nothing to commit, working tree clean\" || { npm run node-debug; false; }; }",
 		"node-debug": "node -v && npm -v && echo 'ERROR: Please ensure that production assets have been built with `npm run build` and committed. For the recommended Node.js version, see .nvmrc.'",
 		"selenium-test": "wdio tests/selenium/wdio.conf.js",
-		"doc": "jsdoc -c jsdoc.json"
+		"doc": "jsdoc -c jsdoc.json",
+		"minify-svg": "svgo --config=.svgo.config.js -q -r -f resources/images/"
 	},
 	"overrides": {
 		"eslint-plugin-wdio": {
@@ -90,6 +91,7 @@
 		"luacheck-browserify": "0.10.0",
 		"rollup": "4.59.0",
 		"stylelint-config-wikimedia": "0.18.0",
+		"svgo": "4.0.2",
 		"wdio-mediawiki": "6.5.0",
 		"wikiparser-node": "1.40.0"
 	}
