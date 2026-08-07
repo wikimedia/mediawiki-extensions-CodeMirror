@@ -15460,6 +15460,7 @@ class NodeProp {
         this.deserialize = config.deserialize || (() => {
             throw new Error("This node type doesn't define a deserialize function");
         });
+        this.combine = config.combine || null;
     }
     /**
     This is meant to be used with
@@ -15559,10 +15560,17 @@ class MountedTree {
     /**
     The parser used to create this subtree.
     */
-    parser) {
+    parser, 
+    /**
+    [Indicates](#common.IterMode.EnterBracketed) that the nested
+    content is delineated with some kind
+    of bracket token.
+    */
+    bracketed = false) {
         this.tree = tree;
         this.overlay = overlay;
         this.parser = parser;
+        this.bracketed = bracketed;
     }
     /**
     @internal
@@ -15724,7 +15732,10 @@ class NodeSet {
                 if (add) {
                     if (!newProps)
                         newProps = Object.assign({}, type.props);
-                    newProps[add[0].id] = add[1];
+                    let value = add[1], prop = add[0];
+                    if (prop.combine && prop.id in newProps)
+                        value = prop.combine(newProps[prop.id], value);
+                    newProps[prop.id] = value;
                 }
             }
             newTypes.push(newProps ? new NodeType(type.name, newProps, type.id, type.flags) : type);
@@ -15764,6 +15775,13 @@ var IterMode;
     position.
     */
     IterMode[IterMode["IgnoreOverlays"] = 8] = "IgnoreOverlays";
+    /**
+    When set, positions on the boundary of a mounted overlay tree
+    that has its [`bracketed`](#common.NestedParse.bracketed) flag
+    set will enter that tree regardless of side. Only supported in
+    [`enter`](#common.SyntaxNode.enter), not in cursors.
+    */
+    IterMode[IterMode["EnterBracketed"] = 16] = "EnterBracketed";
 })(IterMode || (IterMode = {}));
 /**
 A piece of syntax tree. There are two ways to approach these
@@ -16163,8 +16181,11 @@ class TreeNode extends BaseNode {
     nextChild(i, dir, pos, side, mode = 0) {
         for (let parent = this;;) {
             for (let { children, positions } = parent._tree, e = dir > 0 ? children.length : -1; i != e; i += dir) {
-                let next = children[i], start = positions[i] + parent.from;
-                if (!checkSide(side, pos, start, start + next.length))
+                let next = children[i], start = positions[i] + parent.from, mounted;
+                if (!((mode & IterMode.EnterBracketed) && next instanceof Tree &&
+                    (mounted = MountedTree.get(next)) && !mounted.overlay && mounted.bracketed &&
+                    pos >= start && pos <= start + next.length) &&
+                    !checkSide(side, pos, start, start + next.length))
                     continue;
                 if (next instanceof TreeBuffer) {
                     if (mode & IterMode.ExcludeBuffers)
@@ -16179,7 +16200,7 @@ class TreeNode extends BaseNode {
                         return new TreeNode(mounted.tree, start, i, parent);
                     let inner = new TreeNode(next, start, i, parent);
                     return (mode & IterMode.IncludeAnonymous) || !inner.type.isAnonymous ? inner
-                        : inner.nextChild(dir < 0 ? next.children.length - 1 : 0, dir, pos, side);
+                        : inner.nextChild(dir < 0 ? next.children.length - 1 : 0, dir, pos, side, mode);
                 }
             }
             if ((mode & IterMode.IncludeAnonymous) || !parent.type.isAnonymous)
@@ -16197,13 +16218,14 @@ class TreeNode extends BaseNode {
     get lastChild() { return this.nextChild(this._tree.children.length - 1, -1, 0, 4 /* Side.DontCare */); }
     childAfter(pos) { return this.nextChild(0, 1, pos, 2 /* Side.After */); }
     childBefore(pos) { return this.nextChild(this._tree.children.length - 1, -1, pos, -2 /* Side.Before */); }
+    prop(prop) { return this._tree.prop(prop); }
     enter(pos, side, mode = 0) {
         let mounted;
         if (!(mode & IterMode.IgnoreOverlays) && (mounted = MountedTree.get(this._tree)) && mounted.overlay) {
-            let rPos = pos - this.from;
+            let rPos = pos - this.from, enterBracketed = (mode & IterMode.EnterBracketed) && mounted.bracketed;
             for (let { from, to } of mounted.overlay) {
-                if ((side > 0 ? from <= rPos : from < rPos) &&
-                    (side < 0 ? to >= rPos : to > rPos))
+                if ((side > 0 || enterBracketed ? from <= rPos : from < rPos) &&
+                    (side < 0 || enterBracketed ? to >= rPos : to > rPos))
                     return new TreeNode(mounted.tree, mounted.overlay[0].from + this.from, -1, this);
             }
         }
@@ -16290,6 +16312,7 @@ class BufferNode extends BaseNode {
     get lastChild() { return this.child(-1, 0, 4 /* Side.DontCare */); }
     childAfter(pos) { return this.child(1, pos, 2 /* Side.After */); }
     childBefore(pos) { return this.child(-1, pos, -2 /* Side.Before */); }
+    prop(prop) { return this.type.prop(prop); }
     enter(pos, side, mode = 0) {
         if (mode & IterMode.ExcludeBuffers)
             return null;
@@ -16391,12 +16414,7 @@ class TreeCursor {
     /**
     @internal
     */
-    constructor(node, 
-    /**
-    @internal
-    */
-    mode = 0) {
-        this.mode = mode;
+    constructor(node, mode = 0) {
         /**
         @internal
         */
@@ -16407,6 +16425,7 @@ class TreeCursor {
         */
         this.index = 0;
         this.bufferNode = null;
+        this.mode = mode & ~IterMode.EnterBracketed;
         if (node instanceof TreeNode) {
             this.yieldNode(node);
         }
@@ -16707,7 +16726,7 @@ function buildTree(data) {
     function takeNode(parentStart, minPos, children, positions, inRepeat, depth) {
         let { id, start, end, size } = cursor;
         let lookAheadAtStart = lookAhead, contextAtStart = contextHash;
-        while (size < 0) {
+        if (size < 0) {
             cursor.next();
             if (size == -1 /* SpecialRecord.Reuse */) {
                 let node = reused[id];
@@ -16871,7 +16890,7 @@ function buildTree(data) {
             fork.next();
             while (fork.pos > startPos) {
                 if (fork.size < 0) {
-                    if (fork.size == -3 /* SpecialRecord.ContextChange */)
+                    if (fork.size == -3 /* SpecialRecord.ContextChange */ || fork.size == -4 /* SpecialRecord.LookAhead */)
                         localSkipped += 4;
                     else
                         break scan;
