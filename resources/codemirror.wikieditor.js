@@ -567,13 +567,13 @@ class CodeMirrorWikiEditor extends CodeMirror {
 					'sortLines',
 					() => this.sortLines.sortAscending( this.view ),
 					this.keymap.keymapHelpRegistry.other.sortLines,
-					'arrowDown'
+					'sortAscending'
 				),
 				sortLinesDescending: this.getTool(
 					'sortLinesDescending',
 					() => this.sortLines.sortDescending( this.view ),
 					this.keymap.keymapHelpRegistry.other.sortLinesDescending,
-					'arrowUp'
+					'sortDescending'
 				)
 			}
 		};

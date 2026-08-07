@@ -432,8 +432,7 @@
 		"ext.CodeMirror.WikiEditor": {
 			"dependencies": [
 				"ext.wikiEditor",
-				"ext.CodeMirror",
-				"oojs-ui.styles.icons-movement"
+				"ext.CodeMirror"
 			],
 			"packageFiles": [
 				"codemirror.wikieditor.js"
