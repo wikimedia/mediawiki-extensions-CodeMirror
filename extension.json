@@ -398,9 +398,19 @@
 				"modes/codemirror.css.js",
 				"modes/codemirror.lua.js",
 				"modes/codemirror.vue.js",
+				"modes/codemirror.html.js",
 				"codemirror.validator.js",
 				"workers/codemirror.worker.js",
 				"lib/codemirror.bundle.modes.js"
+			],
+			"dependencies": [
+				"ext.CodeMirror.lib"
+			]
+		},
+		"ext.CodeMirror.modes.extended": {
+			"packageFiles": [
+				"modes/codemirror.mode.extended.exporter.js",
+				"lib/codemirror.bundle.modes.extended.js"
 			],
 			"dependencies": [
 				"ext.CodeMirror.lib"

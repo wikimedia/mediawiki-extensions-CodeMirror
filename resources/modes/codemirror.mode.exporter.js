@@ -3,7 +3,8 @@ module.exports = {};
 /**
  * @module ext.CodeMirror.modes
  * @description
- * This module provides syntax highlighting for JavaScript, JSON, CSS, Lua, and Vue in CodeMirror.
+ * This module provides syntax highlighting for JavaScript, JSON, CSS, Lua, Vue and HTML
+ * in CodeMirror.
  * Each mode is exposed as a method that returns a {@link LanguageSupport}-compatible instance
  * that can be used with the {@link CodeMirror} constructor.
  *
@@ -40,9 +41,13 @@ module.exports = {};
  * @method vue
  * @return {CodeMirrorVue|LanguageSupport} LanguageSupport for the Vue mode.
  */
+/**
+ * @method html
+ * @return {CodeMirrorHtml|LanguageSupport} LanguageSupport for the HTML mode.
+ */
 /* eslint-enable jsdoc/no-undefined-types */
 
-for ( const mode of [ 'javascript', 'json', 'css', 'lua', 'vue' ] ) {
+for ( const mode of [ 'javascript', 'json', 'css', 'lua', 'vue', 'html' ] ) {
 	module.exports[ mode ] = function () {
 		// eslint-disable-next-line security/detect-non-literal-require
 		const ModeClass = require( `./codemirror.${ mode }.js` );
