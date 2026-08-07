@@ -16,14 +16,18 @@
 			"Thibaut120094",
 			"Trizek (WMF)",
 			"Verdy p",
-			"Wladek92"
+			"Wladek92",
+			"NClara"
 		]
 	},
 	"codemirror-desc": "Fournit une mise en évidence de la syntaxe dans l’éditeur de wikicode",
 	"codemirror-toggle-label": "Mise en évidence de la syntaxe",
 	"codemirror-toggle-label-short": "Syntaxe",
 	"codemirror-prefs-summary": "Vous pouvez en savoir plus sur cette fonctionnalité en lisant la [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror page d'aide].",
-	"codemirror-prefs-enable": "Activer la coloration syntaxique",
+	"codemirror-prefs-enable": "Activer la coloration syntaxique du wikicode",
+	"codemirror-prefs-enable-help": "S'applique lors de la modification d'articles et de modèles.",
+	"codemirror-prefs-enable-code": "Activer la coloration syntaxique du code",
+	"codemirror-prefs-enable-code-help": "S'applique lors de la modification de code tel que des modules Lua, du JavaScript ou du CSS.",
 	"codemirror-prefs-title": "Préférences de mise en évidence de la syntaxe",
 	"codemirror-prefs-help": "aide",
 	"codemirror-prefs-panel-full": "préférences complètes",
