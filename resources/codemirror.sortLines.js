@@ -1,4 +1,4 @@
-const { EditorState, EditorView } = require( 'ext.CodeMirror.lib' );
+const { EditorSelection, EditorState, EditorView } = require( 'ext.CodeMirror.lib' );
 
 /**
  * Provides line sorting functionality for CodeMirror.
@@ -78,11 +78,12 @@ class CodeMirrorSortLines {
 	}
 
 	/**
-	 * Build the document changes needed to sort selected lines.
+	 * Build the document changes needed to sort selected lines,
+	 * along with a selection covering the sorted lines.
 	 *
 	 * @param {EditorState} state
 	 * @param {boolean} [descending=false]
-	 * @return {Array<{from:number,to:number,insert:string}>}
+	 * @return {{changes: Array<{from:number,to:number,insert:string}>, selection: EditorSelection}}
 	 * @private
 	 */
 	getSortChanges( state, descending = false ) {
@@ -90,16 +91,22 @@ class CodeMirrorSortLines {
 
 		// Do nothing if no lines are selected.
 		if ( ranges.every( ( range ) => range.empty ) ) {
-			return [];
+			return { changes: [], selection: state.selection };
 		}
 
 		const collator = new Intl.Collator( undefined, this.options );
 
 		/** @type {Array<{from:number,to:number,insert:string}>} */
 		const changes = [];
+		const newRanges = [];
+		let mainIndex = 0;
 		let lastTo = -1;
 		for ( const range of ranges ) {
+			if ( range === state.selection.main ) {
+				mainIndex = newRanges.length;
+			}
 			if ( range.empty ) {
+				newRanges.push( range );
 				continue;
 			}
 
@@ -115,6 +122,12 @@ class CodeMirrorSortLines {
 			const { from } = startLine;
 			const { to } = endLine;
 
+			// Sorting preserves the chunk's length, so these offsets stay valid post-change.
+			newRanges.push( range.anchor <= range.head ?
+				EditorSelection.range( from, to ) :
+				EditorSelection.range( to, from )
+			);
+
 			if ( from <= lastTo ) {
 				continue;
 			}
@@ -128,7 +141,7 @@ class CodeMirrorSortLines {
 			lastTo = to;
 		}
 
-		return changes;
+		return { changes, selection: EditorSelection.create( newRanges, mainIndex ) };
 	}
 
 	/**
@@ -141,11 +154,11 @@ class CodeMirrorSortLines {
 	 */
 	sort( view, descending = false ) {
 		const { state, dispatch } = view;
-		const changes = this.getSortChanges( state, descending );
+		const { changes, selection } = this.getSortChanges( state, descending );
 		if ( !changes.length ) {
 			return false;
 		}
-		dispatch( { changes } );
+		dispatch( { changes, selection } );
 		return true;
 	}
 

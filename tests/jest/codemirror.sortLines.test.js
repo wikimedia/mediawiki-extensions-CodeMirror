@@ -36,6 +36,27 @@ describe( 'codemirror.sortLines', () => {
 			.toBe( 'zebra\nApple\nbanana\ncherry\nkiwi' );
 	} );
 
+	it( 'keeps the sorted lines selected when the selection starts or ends mid-line', () => {
+		const doc = 'zebra\nbanana\nApple\ncherry\nkiwi';
+		// Starts mid-'banana', ends mid-'cherry'.
+		const selection = EditorSelection.single( 9, 22 );
+		expect( runCommand( doc, true, selection ) )
+			.toBe( 'zebra\nApple\nbanana\ncherry\nkiwi' );
+		const { main } = mockView.state.selection;
+		expect( main.anchor ).toBe( 6 );
+		expect( main.head ).toBe( 25 );
+	} );
+
+	it( 'preserves the direction of a backwards selection', () => {
+		const doc = 'zebra\nbanana\nApple\ncherry\nkiwi';
+		const selection = EditorSelection.single( 22, 9 );
+		expect( runCommand( doc, true, selection ) )
+			.toBe( 'zebra\nApple\nbanana\ncherry\nkiwi' );
+		const { main } = mockView.state.selection;
+		expect( main.anchor ).toBe( 25 );
+		expect( main.head ).toBe( 6 );
+	} );
+
 	it( 'puts newlines first when sorting ascending, except the trailing newline', () => {
 		const doc = 'banana\nApple\ncherry\n\n\n';
 		const selection = EditorSelection.single( 0, doc.length );
