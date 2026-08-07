@@ -55,6 +55,20 @@ class CodeMirrorThemes {
 		 * @type {MediaQueryList}
 		 */
 		this.matchMediaQuery = window.matchMedia( '(prefers-color-scheme: dark)' );
+		/**
+		 * Watches the <html> element for dark mode changes.
+		 *
+		 * @type {MutationObserver|null}
+		 * @private
+		 */
+		this.darkModeObserver = null;
+		/**
+		 * The listener for OS-level color scheme changes.
+		 *
+		 * @type {Function|null}
+		 * @private
+		 */
+		this.matchMediaListener = null;
 
 		// Initialization
 		this.addFormSpec();
@@ -171,19 +185,36 @@ class CodeMirrorThemes {
 	 * @private
 	 */
 	addDarkModeMutationObserver() {
-		const observer = new MutationObserver( ( mutations ) => {
+		this.darkModeObserver = new MutationObserver( ( mutations ) => {
 			for ( const mutation of mutations ) {
 				if ( mutation.type === 'attributes' && mutation.attributeName === 'class' ) {
 					this.setLightOrDarkMode();
 				}
 			}
 		} );
-		observer.observe( this.docElement, {
+		this.darkModeObserver.observe( this.docElement, {
 			attributes: true,
 			childList: false,
 			subtree: false
 		} );
-		this.matchMediaQuery.addEventListener( 'change', () => this.setLightOrDarkMode() );
+		this.matchMediaListener = () => this.setLightOrDarkMode();
+		this.matchMediaQuery.addEventListener( 'change', this.matchMediaListener );
+	}
+
+	/**
+	 * Stop watching for dark mode changes.
+	 *
+	 * @internal
+	 */
+	destroy() {
+		if ( this.darkModeObserver ) {
+			this.darkModeObserver.disconnect();
+			this.darkModeObserver = null;
+		}
+		if ( this.matchMediaListener ) {
+			this.matchMediaQuery.removeEventListener( 'change', this.matchMediaListener );
+			this.matchMediaListener = null;
+		}
 	}
 
 	/**

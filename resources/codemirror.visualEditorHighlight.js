@@ -466,6 +466,7 @@ class CodeMirrorVisualEditorHighlight {
 		this.deactivate();
 		// Owned outright, unlike everything else here, which only borrows VE's surface.
 		this.lineNumberGutter.destroy();
+		this.themes.destroy();
 	}
 
 	/**

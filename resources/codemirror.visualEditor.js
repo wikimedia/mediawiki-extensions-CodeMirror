@@ -141,7 +141,7 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	/**
 	 * @inheritDoc
 	 */
-	addEditRecoveredHandler() {}
+	addEditRecoveryHandler() {}
 
 	/**
 	 * @inheritDoc

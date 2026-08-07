@@ -883,7 +883,7 @@ class CodeMirror {
 		// Use toggle() instead of activate() directly so that the toggle hook is fired.
 		this.toggle();
 
-		this.addEditRecoveredHandler();
+		this.addEditRecoveryHandler();
 		this.addTextAreaJQueryHook();
 		this.addFormSubmitHandler();
 
@@ -968,8 +968,14 @@ class CodeMirror {
 	 *
 	 * @protected
 	 */
-	addEditRecoveredHandler() {
-		mw.hook( 'editRecovery.loadEnd' ).add( ( data ) => {
+	addEditRecoveryHandler() {
+		/**
+		 * The 'editRecovery.loadEnd' handler, kept so it can be removed on destroy.
+		 *
+		 * @type {Function|null}
+		 * @private
+		 */
+		this.editRecoveryLoadEndHandler = ( data ) => {
 			/**
 			 * The edit recovery handler.
 			 *
@@ -978,7 +984,8 @@ class CodeMirror {
 			 * @private
 			 */
 			this.editRecoveryHandler = data.fieldChangeHandler;
-		} );
+		};
+		mw.hook( 'editRecovery.loadEnd' ).add( this.editRecoveryLoadEndHandler );
 	}
 
 	/**
@@ -989,7 +996,20 @@ class CodeMirror {
 	 */
 	addTextAreaJQueryHook() {
 		const jQueryValHooks = $.valHooks.textarea;
-		$.valHooks.textarea = {
+		/**
+		 * The .val() hook in place before ours, restored on destroy.
+		 *
+		 * @type {Object|undefined}
+		 * @private
+		 */
+		this.priorValHooks = jQueryValHooks;
+		/**
+		 * Our own .val() hook, kept so we only restore one we still own.
+		 *
+		 * @type {Object|null}
+		 * @private
+		 */
+		this.valHooks = {
 			get: ( elem ) => {
 				if ( elem === this.textarea && this.isActive ) {
 					return this.cmTextSelection.getContents();
@@ -1007,6 +1027,7 @@ class CodeMirror {
 				elem.value = value;
 			}
 		};
+		$.valHooks.textarea = this.valHooks;
 	}
 
 	/**
@@ -1251,9 +1272,19 @@ class CodeMirror {
 
 			// Sync scroll position, selections, and focus state.
 			this.requestAnimationFrame( () => {
+				// The editor may have been destroyed before the frame ran.
+				if ( !this.view ) {
+					return;
+				}
 				this.view.scrollDOM.scrollTop = scrollTop;
 				if ( selectionStart !== 0 || selectionEnd !== 0 ) {
-					const range = EditorSelection.range( selectionStart, selectionEnd ),
+					// The contents may have changed since the frame was requested,
+					// and a selection past the end of the document would throw.
+					const docLength = this.view.state.doc.length,
+						range = EditorSelection.range(
+							Math.min( selectionStart, docLength ),
+							Math.min( selectionEnd, docLength )
+						),
 						scrollEffect = EditorView.scrollIntoView( range );
 					// Restore scroll position when previewing (T254962).
 					scrollEffect.value.isSnapshot = true;
@@ -1362,6 +1393,17 @@ class CodeMirror {
 			this.textarea.form.removeEventListener( 'submit', this.formSubmitEventHandler );
 			this.formSubmitEventHandler = null;
 		}
+		if ( this.editRecoveryLoadEndHandler ) {
+			mw.hook( 'editRecovery.loadEnd' ).remove( this.editRecoveryLoadEndHandler );
+			this.editRecoveryLoadEndHandler = null;
+		}
+		// Only restore the prior hook if nothing else has chained onto ours since.
+		if ( this.valHooks && $.valHooks.textarea === this.valHooks ) {
+			$.valHooks.textarea = this.priorValHooks;
+		}
+		this.valHooks = null;
+		this.priorValHooks = null;
+		this.themes.destroy();
 
 		/**
 		 * Called just after CodeMirror is destroyed and the original textarea is restored.

@@ -365,6 +365,76 @@ describe( 'destroy', () => {
 		expect( cm.formSubmitEventHandler ).toBeNull();
 		expect( events.submit ).toBeUndefined();
 	} );
+
+	it( 'should restore the jQuery valHooks it replaced', () => {
+		const priorHooks = $.valHooks.textarea;
+		cm.initialize();
+		expect( $.valHooks.textarea ).not.toBe( priorHooks );
+		cm.destroy();
+		expect( $.valHooks.textarea ).toBe( priorHooks );
+	} );
+
+	it( 'should leave a valHooks chain alone if another instance chained onto it', () => {
+		const priorHooks = $.valHooks.textarea;
+		cm.initialize();
+		const ourHooks = $.valHooks.textarea;
+		const laterHooks = { get: jest.fn(), set: jest.fn() };
+		$.valHooks.textarea = laterHooks;
+		cm.destroy();
+		expect( $.valHooks.textarea ).toBe( laterHooks );
+		$.valHooks.textarea = priorHooks;
+		expect( ourHooks ).not.toBe( priorHooks );
+	} );
+
+	it( 'should remove the edit recovery handler', () => {
+		cm.initialize();
+		const handler = cm.editRecoveryLoadEndHandler;
+		expect( typeof handler ).toBe( 'function' );
+		expect( mw.hook.mockHooks[ 'editRecovery.loadEnd' ] ).toContain( handler );
+		cm.destroy();
+		expect( cm.editRecoveryLoadEndHandler ).toBeNull();
+		expect( mw.hook.mockHooks[ 'editRecovery.loadEnd' ] ).not.toContain( handler );
+	} );
+
+	it( 'should not restore the selection after being destroyed', () => {
+		let frameCallback;
+		cm.requestAnimationFrame.mockImplementation( ( cb ) => {
+			frameCallback = cb;
+		} );
+		textarea.value = 'Metallica';
+		textarea.selectionStart = 4;
+		textarea.selectionEnd = 9;
+		cm.initialize();
+		cm.destroy();
+		expect( () => frameCallback() ).not.toThrow();
+	} );
+
+	it( 'should clamp a stale selection to the current contents', () => {
+		let frameCallback;
+		cm.requestAnimationFrame.mockImplementation( ( cb ) => {
+			frameCallback = cb;
+		} );
+		textarea.value = 'Metallica';
+		textarea.selectionStart = 4;
+		textarea.selectionEnd = 9;
+		cm.initialize();
+		// The contents shrank between requesting the frame and it running.
+		cm.view.dispatch( { changes: { from: 0, to: 9, insert: 'A' } } );
+		expect( () => frameCallback() ).not.toThrow();
+		expect( cm.view.state.selection.main.to ).toBe( 1 );
+	} );
+
+	it( 'should stop watching for dark mode changes', () => {
+		cm.initialize();
+		const observer = cm.themes.darkModeObserver;
+		const disconnect = jest.spyOn( observer, 'disconnect' );
+		const removeListener = jest.spyOn( cm.themes.matchMediaQuery, 'removeEventListener' );
+		cm.destroy();
+		expect( disconnect ).toHaveBeenCalled();
+		expect( removeListener ).toHaveBeenCalled();
+		expect( cm.themes.darkModeObserver ).toBeNull();
+		expect( cm.themes.matchMediaListener ).toBeNull();
+	} );
 } );
 
 describe( 'form submission', () => {
