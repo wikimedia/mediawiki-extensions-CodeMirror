@@ -22,6 +22,7 @@
 	"codemirror-prefs-title": "구문 강조 환경 설정",
 	"codemirror-prefs-help": "도움말",
 	"codemirror-prefs-panel-full": "전체 설정",
+	"codemirror-prefs-section-appearance": "외관",
 	"codemirror-prefs-section-lines": "줄",
 	"codemirror-prefs-section-characters": "문자",
 	"codemirror-prefs-section-code-assistance": "코드 보조",
@@ -46,6 +47,9 @@
 	"codemirror-prefs-highlightrefs": "<ref> 태그의 내용물을 강조",
 	"codemirror-prefs-foldallrefs": "모든 <ref> 태그를 기본으로 접기",
 	"codemirror-prefs-reset": "기본값으로 재설정",
+	"codemirror-prefs-theme": "편집기 테마",
+	"codemirror-theme-default": "기본값",
+	"codemirror-theme-no-highlight": "강조 표시 안 함",
 	"codemirror-close": "닫기",
 	"codemirror-find": "찾기",
 	"codemirror-next": "다음 찾기",
@@ -223,5 +227,6 @@
 	"codemirror-potentially-slow": "잠재적으로 느림",
 	"codemirror-validate-js-syntaxerror": "$1열 $2번째 줄에서 구문 오류 발생: $3",
 	"codemirror-ve-limit-exceeded": "문서 크기가 너무 커서 구문 강조 표시가 비활성화되었습니다.",
-	"codemirror-ve-limit-exceeded-info": "추가 정보"
+	"codemirror-ve-limit-exceeded-info": "추가 정보",
+	"codemirror-we-group-sort": "정렬"
 }
