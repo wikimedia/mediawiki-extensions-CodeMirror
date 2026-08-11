@@ -458,8 +458,7 @@
 				"codemirror.lineNumberGutter.js"
 			],
 			"styles": [
-				"ve-cm/ve.ui.CodeMirror.less",
-				"ve-cm/ve.ui.CodeMirror.highlight.less"
+				"ve-cm/ve.ui.CodeMirror.less"
 			],
 			"skinStyles": {
 				"minerva": [
@@ -479,6 +478,11 @@
 				"codemirror-toggle-label",
 				"codemirror-ve-limit-exceeded",
 				"codemirror-ve-limit-exceeded-info"
+			]
+		},
+		"ext.CodeMirror.visualEditor.highlight": {
+			"styles": [
+				"ve-cm/ve.ui.CodeMirror.highlight.less"
 			]
 		},
 		"ext.CodeMirror.visualEditor.init": {

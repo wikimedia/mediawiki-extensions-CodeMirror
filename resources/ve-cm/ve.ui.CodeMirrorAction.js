@@ -41,7 +41,15 @@ ve.ui.CodeMirrorAction.static.methods = [ 'toggle' ];
  */
 ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 	if ( !this.surface.mirror && ( enable || enable === undefined ) ) {
-		await mw.loader.using( [ 'ext.CodeMirror.mode.mediawiki', 'jquery.client' ] );
+		const useCustomHighlight = ve.ui.CodeMirrorTool.static.useCustomHighlight();
+		const modules = [ 'ext.CodeMirror.mode.mediawiki', 'jquery.client' ];
+		if ( useCustomHighlight ) {
+			// Load the ::highlight() rules only for the controller that draws them. The browser
+			// matches them against the whole document on each style recalculation, which costs
+			// seconds on a long article, so VisualEditor must not carry them by default.
+			modules.push( 'ext.CodeMirror.visualEditor.highlight' );
+		}
+		await mw.loader.using( modules );
 		if ( this.surface.mirror ) {
 			mw.log( '[CodeMirror] VE mirror already initialized by another action.' );
 			return;
@@ -54,7 +62,7 @@ ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 			autocomplete: false,
 			openLinks: false
 		} );
-		const Controller = ve.ui.CodeMirrorTool.static.useCustomHighlight() ?
+		const Controller = useCustomHighlight ?
 			require( '../codemirror.visualEditorHighlight.js' ) :
 			require( '../codemirror.visualEditor.js' );
 		// Only the custom-highlight controller uses matchTag; the other ignores the extra arg.
