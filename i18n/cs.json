@@ -2,15 +2,31 @@
 	"@metadata": {
 		"authors": [
 			"Meliganai",
-			"Mormegil"
+			"Mormegil",
+			"Henryk Siuda"
 		]
 	},
 	"codemirror-desc": "Poskytuje zvýrazňování syntaxe v editoru wikitextu",
 	"codemirror-toggle-label": "Zvýraznění syntaxe",
 	"codemirror-toggle-label-short": "Syntaxe",
 	"codemirror-prefs-summary": "Více informací o této funkci najdete na [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror stránce nápovědy].",
-	"codemirror-prefs-enable": "Zapnout zvýrazňování syntaxe",
+	"codemirror-prefs-enable": "Zapnout zvýrazňování syntaxe pro wikitext",
 	"codemirror-prefs-colorblind": "Zapnout schéma pro barvoslepé u zvýrazňování syntaxe při editaci wikitextu",
 	"codemirror-prefs-colorblind-help": "Pokud používáte pro zvýrazňování syntaxe udělátko, nebude toto nastavení fungovat.",
+	"codemirror-find": "Najít",
+	"codemirror-next": "Najít další",
+	"codemirror-previous": "Najít předchozí",
+	"codemirror-all": "Vše",
+	"codemirror-all-tooltip": "Vybrat všechny shody",
+	"codemirror-match-case": "Rozlišovat velikost písmen",
+	"codemirror-regexp": "Regulární výraz",
+	"codemirror-replace": "Nahradit",
+	"codemirror-replace-placeholder": "Nahradit",
+	"codemirror-replace-all": "Nahradit vše",
+	"codemirror-done": "Hotovo",
+	"codemirror-goto-line": "Přejít na řádek",
+	"codemirror-goto-line-go": "Přejít",
+	"codemirror-unfold": "rozbalit",
+	"codemirror-folded-code": "sbalený kód",
 	"prefs-accessibility": "Přístupnost"
 }
