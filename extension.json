@@ -457,21 +457,21 @@
 				"user.options"
 			],
 			"packageFiles": [
-				"ve-cm/ve.ui.CodeMirrorAction.js",
-				"ve-cm/ve.ui.CodeMirrorTool.js",
-				"ve-cm/ve.ui.CodeMirrorPreferencesPage.js",
-				"ve-cm/ve.ui.CodeMirrorPreferencesTool.js",
-				"codemirror.visualEditor.js",
-				"codemirror.visualEditorHighlight.js",
-				"codemirror.matchbrackets.util.js",
-				"codemirror.lineNumberGutter.js"
+				"visualEditor/ve.ui.CodeMirrorAction.js",
+				"visualEditor/ve.ui.CodeMirrorTool.js",
+				"visualEditor/ve.ui.CodeMirrorPreferencesPage.js",
+				"visualEditor/ve.ui.CodeMirrorPreferencesTool.js",
+				"visualEditor/codemirror.visualEditor.js",
+				"visualEditor/codemirror.visualEditorHighlight.js",
+				"visualEditor/codemirror.visualEditorHighlight.lineNumbering.js",
+				"codemirror.matchbrackets.util.js"
 			],
 			"styles": [
-				"ve-cm/ve.ui.CodeMirror.less"
+				"visualEditor/codemirror.visualEditor.less"
 			],
 			"skinStyles": {
 				"minerva": [
-					"ve-cm/ve.ui.CodeMirror.minerva.less"
+					"visualEditor/ve.ui.CodeMirror.minerva.less"
 				]
 			},
 			"messages": [
@@ -491,12 +491,12 @@
 		},
 		"ext.CodeMirror.visualEditor.highlight": {
 			"styles": [
-				"ve-cm/ve.ui.CodeMirror.highlight.less"
+				"visualEditor/codemirror.visualEditorHighlight.less"
 			]
 		},
 		"ext.CodeMirror.visualEditor.init": {
 			"packageFiles": [
-				"ve-cm/ve.ui.CodeMirror.init.js",
+				"visualEditor/ve.ui.CodeMirror.init.js",
 				{
 					"name": "ext.CodeMirror.data.js",
 					"callback": "MediaWiki\\Extension\\CodeMirror\\DataScript::makeScript"

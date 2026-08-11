@@ -63,8 +63,8 @@ ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 			openLinks: false
 		} );
 		const Controller = useCustomHighlight ?
-			require( '../codemirror.visualEditorHighlight.js' ) :
-			require( '../codemirror.visualEditor.js' );
+			require( './codemirror.visualEditorHighlight.js' ) :
+			require( './codemirror.visualEditor.js' );
 		// Only the custom-highlight controller uses matchTag; the other ignores the extra arg.
 		this.surface.mirror = new Controller( this.surface, langSupport, matchTag );
 		this.surface.mirror.initialize();

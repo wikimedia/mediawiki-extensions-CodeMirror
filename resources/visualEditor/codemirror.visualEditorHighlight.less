@@ -285,9 +285,9 @@
 }
 
 /*
- * Line-number gutter (CodeMirrorLineNumberGutter). The numbers are absolutely positioned
- * within it, so the gutter itself has no height; keep them from being clipped and from
- * catching pointer events meant for the surface.
+ * Line-number gutter (CodeMirrorVisualEditorHighlightLineNumbering). The numbers are
+ * absolutely positioned within it, so the gutter itself has no height; keep them from
+ * being clipped and from catching pointer events meant for the surface.
  */
 .cm-mw-ve-lineNumberGutter {
 	position: absolute;
@@ -306,8 +306,8 @@
 	box-sizing: border-box;
 	/*
 	 * Gap between the number and the text, matching CodeMirror's own gutter. The gutter width
-	 * in CodeMirrorLineNumberGutter#updateWidth accounts for this plus a little slack on the
-	 * far side.
+	 * in CodeMirrorVisualEditorHighlightLineNumbering#updateWidth accounts for this plus a
+	 * little slack on the far side.
 	 */
 	/* @noflip */
 	padding-right: 11px;

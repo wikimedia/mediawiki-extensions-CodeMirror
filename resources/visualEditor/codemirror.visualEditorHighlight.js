@@ -9,8 +9,8 @@ const {
 	CodeMirrorPreferences,
 	CodeMirrorThemes
 } = require( 'ext.CodeMirror' );
-const { findBracketMatch } = require( './codemirror.matchbrackets.util.js' );
-const CodeMirrorLineNumberGutter = require( './codemirror.lineNumberGutter.js' );
+const { findBracketMatch } = require( '../codemirror.matchbrackets.util.js' );
+const CodeMirrorVisualEditorHighlightLineNumbering = require( './codemirror.visualEditorHighlight.lineNumbering.js' );
 
 /**
  * Milliseconds allowed for {@link ensureSyntaxTree} to parse up to the end of the
@@ -245,9 +245,9 @@ class CodeMirrorVisualEditorHighlight {
 		 * The line-number gutter. There is no EditorView to host CodeMirror's own, so this
 		 * draws numbers beside VisualEditor's paragraphs instead.
 		 *
-		 * @type {CodeMirrorLineNumberGutter}
+		 * @type {CodeMirrorVisualEditorHighlightLineNumbering}
 		 */
-		this.lineNumberGutter = new CodeMirrorLineNumberGutter(
+		this.lineNumberGutter = new CodeMirrorVisualEditorHighlightLineNumbering(
 			this.surfaceView, this.formatLineNumber.bind( this )
 		);
 		/**

@@ -1,4 +1,4 @@
-const CodeMirrorVisualEditorHighlight = require( '../../resources/codemirror.visualEditorHighlight.js' );
+const CodeMirrorVisualEditorHighlight = require( '../../resources/visualEditor/codemirror.visualEditorHighlight.js' );
 const { mediawiki, matchTag } = require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
 
 /**

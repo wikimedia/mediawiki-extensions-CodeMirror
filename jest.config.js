@@ -21,7 +21,7 @@ module.exports = {
 		'/node_modules/',
 		'/resources/legacy/',
 		'/resources/lib/',
-		'/resources/ve-cm/',
+		'/resources/visualEditor/ve\\.ui\\.',
 		'/resources/workers/'
 	],
 

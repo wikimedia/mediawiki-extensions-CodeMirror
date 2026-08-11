@@ -14,9 +14,9 @@ const VIEWPORT_PADDING = 100;
  * In source mode each line is its own paragraph (ve.dm.SourceConverter), so a line's number is
  * its index in the document node. Bounded to the viewport, so long documents stay cheap.
  *
- * Inert until {@link CodeMirrorLineNumberGutter#setEnabled} is called.
+ * Inert until {@link CodeMirrorVisualEditorHighlightLineNumbering#setEnabled} is called.
  */
-class CodeMirrorLineNumberGutter {
+class CodeMirrorVisualEditorHighlightLineNumbering {
 	/**
 	 * @param {ve.ce.Surface} surfaceView
 	 * @param {Function} [formatNumber] ( number ) => string, e.g. for localised digits
@@ -237,4 +237,4 @@ class CodeMirrorLineNumberGutter {
 	}
 }
 
-module.exports = CodeMirrorLineNumberGutter;
+module.exports = CodeMirrorVisualEditorHighlightLineNumbering;

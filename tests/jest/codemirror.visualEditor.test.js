@@ -1,4 +1,4 @@
-const CodeMirrorVisualEditor = require( '../../resources/codemirror.visualEditor.js' );
+const CodeMirrorVisualEditor = require( '../../resources/visualEditor/codemirror.visualEditor.js' );
 
 const getMockSurface = ( readOnly = false, targetName = 'article' ) => ( {
 	getView: () => ( {
