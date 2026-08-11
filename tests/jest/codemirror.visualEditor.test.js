@@ -1,7 +1,21 @@
+/* eslint-disable-next-line n/no-missing-require */
+const { EditorState, EditorView } = require( 'ext.CodeMirror.lib' );
 const CodeMirrorVisualEditor = require( '../../resources/visualEditor/codemirror.visualEditor.js' );
 
-const getMockSurface = ( readOnly = false, targetName = 'article' ) => ( {
-	getView: () => ( {
+/**
+ * Build a mock ve.ui.Surface. getView() and getModel() return stable objects, so that
+ * listeners bound during activate() are the same ones deactivate() detaches, and so
+ * tests can assert on identity.
+ *
+ * Source-offset mapping is stubbed as the identity function, making DM offsets and
+ * source offsets interchangeable.
+ *
+ * @param {boolean} [readOnly]
+ * @param {string} [targetName] Constructor name of the VE target, e.g. 'CommentTarget'
+ * @return {Object}
+ */
+const getMockSurface = ( readOnly = false, targetName = 'article' ) => {
+	const surfaceView = {
 		$attachedRootNode: $( '<div>' ).css( 'padding', '10px' ),
 		$documentNode: $( '<div>' ),
 		$element: $( '<div>' ),
@@ -12,21 +26,29 @@ const getMockSurface = ( readOnly = false, targetName = 'article' ) => ( {
 		isFocused: jest.fn().mockReturnValue( true ),
 		on: jest.fn(),
 		off: jest.fn()
-	} ),
-	getModel: () => ( {
+	};
+	const model = {
 		isReadOnly: jest.fn().mockReturnValue( readOnly ),
-		getDocument: jest.fn().mockImplementation( () => ( {
+		getDocument: jest.fn().mockReturnValue( {
 			on: jest.fn(),
-			off: jest.fn()
-		} ) ),
+			off: jest.fn(),
+			getStore: jest.fn().mockReturnValue( {} )
+		} ),
 		on: jest.fn(),
 		off: jest.fn(),
-		getSourceOffsetFromOffset: jest.fn()
-	} ),
-	getMode: () => 'source',
-	getDom: jest.fn().mockReturnValue( '' ),
-	getTarget: jest.fn().mockReturnValue( { constructor: { name: targetName } } )
-} );
+		getSourceOffsetFromOffset: jest.fn().mockImplementation( ( offset ) => offset )
+	};
+	return {
+		getView: jest.fn().mockReturnValue( surfaceView ),
+		getModel: jest.fn().mockReturnValue( model ),
+		getMode: jest.fn().mockReturnValue( 'source' ),
+		getDom: jest.fn().mockReturnValue( '' ),
+		getTarget: jest.fn().mockReturnValue( {
+			constructor: { name: targetName },
+			$element: $( '<div>' ).addClass( 'ext-codemirror-wrapper' )
+		} )
+	};
+};
 let cmVe, surface;
 
 beforeEach( () => {
@@ -41,10 +63,11 @@ afterEach( () => {
 } );
 
 describe( 'constructor', () => {
-	it( 'should set the surface with the attached root node as a mimicked textarea', () => {
-		cmVe.initialize();
-		expect( cmVe.surface ).toStrictEqual( surface );
-		expect( cmVe.textarea ).toStrictEqual( surface.getView().$attachedRootNode[ 0 ] );
+	it( 'should bind to the ve.ui.Surface, aliased as both textarea and surface', () => {
+		expect( cmVe.surface ).toBe( surface );
+		expect( cmVe.textarea ).toBe( surface );
+		expect( cmVe.$textarea[ 0 ] ).toBe( surface );
+		expect( cmVe.surfaceView ).toBe( surface.getView() );
 	} );
 
 	it( 'should go by the VE model for the read-only state', () => {
@@ -53,6 +76,107 @@ describe( 'constructor', () => {
 		expect( cmVe.readOnly ).toStrictEqual( true );
 		cmVe.initialize();
 		expect( cmVe.view.state.readOnly ).toStrictEqual( true );
+	} );
+
+	it( 'should only seed the registry with VE-supported extensions', () => {
+		expect( Object.keys( cmVe.extensionRegistryDefaults ) ).toStrictEqual( [
+			'activeLine',
+			'bracketMatching',
+			'lineNumbering',
+			'trailingWhitespace',
+			'whitespace'
+		] );
+	} );
+} );
+
+describe( 'supportedPreferences', () => {
+	it( 'should be the registry contents, before and after initialization', () => {
+		expect( cmVe.supportedPreferences ).toStrictEqual( [
+			'activeLine',
+			'bracketMatching',
+			'lineNumbering',
+			'trailingWhitespace',
+			'whitespace'
+		] );
+		cmVe.initialize();
+		// initialize() adds the theme, which CodeMirrorThemes registers once there's a view.
+		expect( cmVe.supportedPreferences ).toStrictEqual( [
+			'activeLine',
+			'bracketMatching',
+			'lineNumbering',
+			'trailingWhitespace',
+			'whitespace',
+			'theme'
+		] );
+	} );
+
+	it( 'should not gain the preferences disabled by the VE language support config', () => {
+		const { mediawiki } = require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
+		// The same config ve.ui.CodeMirrorAction passes.
+		const langSupport = mediawiki( {
+			bidiIsolation: false,
+			codeFolding: false,
+			foldAllRefs: false,
+			autocomplete: false,
+			openLinks: false,
+			closeTags: false,
+			lint: false
+		} );
+		cmVe = new CodeMirrorVisualEditor( getMockSurface(), langSupport );
+		cmVe.initialize();
+		// highlightRefs is registered by the mediawiki mode's ready handler, and is wanted.
+		expect( cmVe.supportedPreferences ).toContain( 'highlightRefs' );
+		// These would otherwise be registered after construction, bypassing the defaults.
+		for ( const name of [
+			'lint', 'closeTags', 'codeFolding', 'autocomplete', 'openLinks',
+			'bidiIsolation', 'foldAllRefs', 'autofocus', 'closeBrackets',
+			'lineWrapping', 'specialChars'
+		] ) {
+			expect( cmVe.supportedPreferences ).not.toContain( name );
+		}
+	} );
+} );
+
+describe( 'supportedExtensions', () => {
+	beforeEach( () => {
+		jest.spyOn( console, 'warn' ).mockImplementation( () => {} );
+	} );
+
+	afterEach( jest.restoreAllMocks );
+
+	it( 'should be the extensions that can underlay the VE surface', () => {
+		expect( cmVe.supportedExtensions ).toStrictEqual( [
+			'activeLine',
+			'bracketMatching',
+			'highlightRefs',
+			'lineNumbering',
+			'theme',
+			'trailingWhitespace',
+			'whitespace'
+		] );
+	} );
+
+	it( 'should refuse extensions registered after initialization', () => {
+		cmVe.initialize();
+		// A gadget registering directly, and through CodeMirrorPreferences.
+		cmVe.extensionRegistry.register(
+			'gadgetThing', EditorState.tabSize.of( 5 ), cmVe.view, true
+		);
+		cmVe.preferences.registerExtension( 'gadgetPref', EditorView.theme(), cmVe.view );
+		// A gadget adding a linter, which registers 'lint' whatever the mode config says.
+		cmVe.applyLinter( /foo/g, () => ( { severity: 'error', message: 'nope' } ) );
+
+		for ( const name of [ 'gadgetThing', 'gadgetPref', 'lint' ] ) {
+			expect( cmVe.extensionRegistry.isRegistered( name, cmVe.view ) ).toBeFalsy();
+			expect( cmVe.supportedPreferences ).not.toContain( name );
+		}
+	} );
+
+	it( 'should still accept the extensions registered by the language pack', () => {
+		cmVe.initialize();
+		cmVe.preferences.registerExtension( 'highlightRefs', EditorView.theme(), cmVe.view );
+		expect( cmVe.extensionRegistry.isRegistered( 'highlightRefs', cmVe.view ) ).toBe( true );
+		expect( console.warn ).not.toHaveBeenCalled();
 	} );
 } );
 
@@ -66,10 +190,12 @@ describe( 'initialize', () => {
 		expect( initArg ).toStrictEqual( surface );
 	} );
 
-	it( 'should not use line numbering in DiscussionTools', () => {
+	it( 'should not offer line numbering in DiscussionTools', () => {
 		surface = getMockSurface( false, 'CommentTarget' );
 		cmVe = new CodeMirrorVisualEditor( surface );
-		expect( cmVe.extensionRegistry.lineNumber ).toBeUndefined();
+		// Absent from the registry entirely, so the preferences tool won't list it.
+		expect( cmVe.extensionRegistryDefaults.lineNumbering ).toBeUndefined();
+		expect( cmVe.supportedPreferences ).not.toContain( 'lineNumbering' );
 		cmVe.initialize();
 		expect( cmVe.extensionRegistry.isEnabled( 'lineNumbering', cmVe.view ) ).toBe( false );
 	} );
@@ -91,6 +217,72 @@ describe( 'initialize', () => {
 		document.activeElement.blur();
 		const spy = jest.spyOn( cmVe.surfaceView, 'focus' );
 		cmVe.initialize();
+		expect( spy ).not.toHaveBeenCalled();
+	} );
+
+	it( 'should bail in non-source mode', () => {
+		const spy = jest.spyOn( mw.log, 'warn' ).mockImplementation( () => {} );
+		surface.getMode.mockReturnValue( 'visual' );
+		cmVe = new CodeMirrorVisualEditor( surface );
+		cmVe.initialize();
+		expect( cmVe.view ).toBeNull();
+		expect( spy ).toHaveBeenCalledWith(
+			'[CodeMirror] Attempted to initialize CodeMirrorVisualEditor in non-source mode.'
+		);
+	} );
+} );
+
+describe( 'addToDOM', () => {
+	it( 'should use the VE target as the container and attach the view to the document node', () => {
+		cmVe.initialize();
+		expect( cmVe.container ).toBe( surface.getTarget().$element[ 0 ] );
+		expect( cmVe.surfaceView.$documentNode[ 0 ].contains( cmVe.view.dom ) ).toBe( true );
+	} );
+} );
+
+describe( 'getSourceContents', () => {
+	it( 'should read the document from the surface', () => {
+		surface.getDom.mockReturnValue( 'foo bar' );
+		expect( cmVe.getSourceContents() ).toBe( 'foo bar' );
+		cmVe.initialize();
+		expect( cmVe.view.state.doc.toString() ).toBe( 'foo bar' );
+	} );
+} );
+
+describe( 'hasFocus', () => {
+	it( 'should defer to the VE surface, as a getter and not a method', () => {
+		cmVe.surfaceView.isFocused.mockReturnValue( true );
+		expect( cmVe.hasFocus ).toBe( true );
+		cmVe.surfaceView.isFocused.mockReturnValue( false );
+		expect( cmVe.hasFocus ).toBe( false );
+	} );
+
+	it( 'should not restore focus on deactivation when the surface is unfocused', () => {
+		cmVe.initialize();
+		cmVe.surfaceView.isFocused.mockReturnValue( false );
+		const spy = jest.spyOn( cmVe, 'focus' );
+		cmVe.deactivate();
+		expect( spy ).not.toHaveBeenCalled();
+	} );
+} );
+
+describe( 'source syncing', () => {
+	it( 'should leave the surface untouched, as VE owns the document', () => {
+		cmVe.initialize();
+		const model = surface.getModel();
+		expect( cmVe.syncEditorContentsToSource() ).toBeUndefined();
+		expect( cmVe.syncSelectionAndScrollPosition( 0, 1, 0 ) ).toBeUndefined();
+		// Deactivation must not write back to the surface either.
+		cmVe.deactivate();
+		expect( model.getDocument().on ).toHaveBeenCalledWith( 'precommit', expect.any( Function ) );
+		expect( surface.getDom ).not.toHaveBeenCalledWith( expect.anything() );
+	} );
+
+	it( 'should not restore a selection or scroll position, which VE owns', () => {
+		const spy = jest.spyOn( cmVe, 'requestAnimationFrame' );
+		cmVe.initialize();
+		expect( cmVe.restoreSelectionAndScrollPosition( 1, 2, 3, true ) ).toBeUndefined();
+		// The base class schedules the restoration on a frame; VE never does.
 		expect( spy ).not.toHaveBeenCalled();
 	} );
 } );
@@ -169,10 +361,6 @@ describe( 'onSelect', () => {
 	beforeEach( () => {
 		surface = getMockSurface();
 		surface.getDom = jest.fn().mockReturnValue( 'one\ntwo\nthree' );
-		// Identity offset mapping, so DM offsets and source offsets are interchangeable.
-		const model = surface.getModel();
-		model.getSourceOffsetFromOffset = jest.fn().mockImplementation( ( offset ) => offset );
-		surface.getModel = () => model;
 		cmVe = new CodeMirrorVisualEditor( surface );
 		cmVe.initialize();
 	} );

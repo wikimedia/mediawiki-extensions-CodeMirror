@@ -327,6 +327,19 @@ describe( 'activate', () => {
 		expect( head ).toBe( 70 );
 		expect( cm.view.scrollDOM.scrollTop ).toBe( 100 );
 	} );
+
+	it( 'should hand the textarea state to the editor through an overridable method', () => {
+		textarea.selectionStart = 3;
+		textarea.selectionEnd = 7;
+		textarea.scrollTop = 25;
+		cm = new CodeMirror( textarea );
+		const spy = jest.spyOn( cm, 'restoreSelectionAndScrollPosition' );
+		cm.initialize();
+		// The final argument is the focus state, which the autofocus preference forces on.
+		expect( spy ).toHaveBeenCalledWith( 3, 7, 25, true );
+		// IME is disabled on the hidden textarea, since CodeMirror handles input now.
+		expect( cm.textarea.classList.contains( 'noime' ) ).toBe( true );
+	} );
 } );
 
 describe( 'deactivate', () => {
@@ -661,4 +674,95 @@ describe( 'domEventHandlersExtension', () => {
 			expect.assertions( assertions );
 		}
 	);
+} );
+
+describe( 'extensionRegistryDefaults', () => {
+	it( 'should seed the registry with the preference-backed extensions', () => {
+		expect( Object.keys( cm.extensionRegistryDefaults ) ).toStrictEqual( [
+			'activeLine',
+			'autofocus',
+			'bracketMatching',
+			'closeBrackets',
+			'lineNumbering',
+			'lineWrapping',
+			'specialChars',
+			'trailingWhitespace',
+			'whitespace'
+		] );
+		expect( cm.extensionRegistry.names ).toStrictEqual(
+			Object.keys( cm.extensionRegistryDefaults )
+		);
+	} );
+} );
+
+describe( 'supportedExtensions', () => {
+	it( 'should place no restriction on what the registry accepts', () => {
+		expect( cm.supportedExtensions ).toBeNull();
+		cm.initialize();
+		cm.extensionRegistry.register( 'gadgetThing', EditorView.theme(), cm.view, true );
+		expect( cm.extensionRegistry.isRegistered( 'gadgetThing', cm.view ) ).toBe( true );
+	} );
+} );
+
+describe( 'state', () => {
+	it( 'should be undefined until there is a view', () => {
+		expect( cm.state ).toBeUndefined();
+		cm.initialize();
+		expect( cm.state ).toBe( cm.view.state );
+	} );
+} );
+
+describe( 'getSourceContents', () => {
+	it( 'should read the value of the textarea', () => {
+		expect( cm.getSourceContents() ).toStrictEqual( 'Metallica' );
+		textarea.value = 'Soundgarden';
+		expect( cm.getSourceContents() ).toStrictEqual( 'Soundgarden' );
+	} );
+} );
+
+describe( 'getNewEditorState', () => {
+	it( 'should build a state from the source contents and given extensions', () => {
+		textarea.value = 'foo\nbar';
+		const state = cm.getNewEditorState( EditorView.editable.of( false ) );
+		expect( state.doc.toString() ).toStrictEqual( 'foo\nbar' );
+		expect( state.doc.lines ).toBe( 2 );
+	} );
+} );
+
+describe( 'addToDOM', () => {
+	it( 'should wrap the textarea and add the view to the container', () => {
+		cm.addToDOM( cm.defaultExtensions );
+		expect( cm.container.className ).toStrictEqual( 'ext-codemirror-wrapper' );
+		expect( textarea.parentElement ).toBe( cm.container );
+		expect( cm.view.dom.parentElement ).toBe( cm.container );
+	} );
+} );
+
+describe( 'hasFocus', () => {
+	it( 'should report the focus state of the view', () => {
+		cm.initialize();
+		expect( cm.hasFocus ).toStrictEqual( cm.view.hasFocus );
+	} );
+} );
+
+describe( 'syncEditorContentsToSource', () => {
+	it( 'should write the document back to the textarea', () => {
+		cm.initialize();
+		cm.view.dispatch( {
+			changes: { from: 0, to: cm.view.state.doc.length, insert: 'Soundgarden' }
+		} );
+		textarea.value = 'stale';
+		cm.syncEditorContentsToSource();
+		expect( textarea.value ).toStrictEqual( 'Soundgarden' );
+	} );
+} );
+
+describe( 'syncSelectionAndScrollPosition', () => {
+	it( 'should copy the selection and scroll position to the textarea', () => {
+		cm.initialize();
+		cm.syncSelectionAndScrollPosition( 5, 2, 40 );
+		expect( textarea.selectionStart ).toBe( 2 );
+		expect( textarea.selectionEnd ).toBe( 5 );
+		expect( textarea.scrollTop ).toBe( 40 );
+	} );
 } );

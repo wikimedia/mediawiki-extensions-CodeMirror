@@ -22,13 +22,11 @@ describe( 'CodeMirrorPreferences', () => {
 				fooExtension: EditorView.theme(),
 				barExtension: EditorView.theme()
 			},
-			mode = 'mediawiki',
-			isVisualEditor = false
+			mode = 'mediawiki'
 		) => new CodeMirrorPreferences(
-			new CodeMirrorExtensionRegistry( extConfig, isVisualEditor ),
+			new CodeMirrorExtensionRegistry( extConfig ),
 			mode,
-			new CodeMirrorKeymap(),
-			isVisualEditor
+			new CodeMirrorKeymap()
 		);
 
 		mw.user.isNamed = jest.fn().mockReturnValue( true );
@@ -140,17 +138,15 @@ describe( 'CodeMirrorPreferences', () => {
 		expect( preferences.getPreference( 'autocompletion' ) ).toBeFalsy();
 	} );
 
-	it( 'getPreference (VisualEditor)', () => {
-		// The 2017 editor has a UI for these now, so stored preferences apply there too.
+	it( 'getPreference (stored value overrides the default)', () => {
 		mockDefaultPreferences( { fooExtension: true, bracketMatching: false } );
 		mockUserPreferences( { bracketMatching: 1 } );
 		const preferences = getCodeMirrorPreferences( {
 			fooExtension: EditorView.theme(),
 			bracketMatching: EditorView.theme()
-		}, 'mediawiki', new CodeMirrorKeymap(), true );
+		} );
 		expect( preferences.getPreference( 'bracketMatching' ) ).toBeTruthy();
-		// Extensions VE doesn't support are still filtered out of the registry.
-		expect( preferences.extensionRegistry.names ).not.toContain( 'fooExtension' );
+		expect( preferences.getPreference( 'fooExtension' ) ).toBeTruthy();
 	} );
 
 	it( 'hasNonDefaultPreferences', () => {

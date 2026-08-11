@@ -18,33 +18,73 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	 * @param {LanguageSupport} langSupport
 	 */
 	constructor( surface, langSupport = [] ) {
-		// Let the content editable mimic the textarea.
-		super( surface.getView().$attachedRootNode[ 0 ], langSupport );
+		super( surface, langSupport );
 
-		/**
-		 * @inheritDoc
-		 * @override
-		 */
-		this.surface = surface;
 		/**
 		 * The ContentEditable surface.
 		 *
 		 * @type {ve.ce.Surface}
 		 */
-		this.surfaceView = surface.getView();
-		/**
-		 * @inheritDoc
-		 * @override
-		 */
-		this.readOnly = this.surface.getModel().isReadOnly();
-		// TODO: lineNumbering override doesn't work because it's ran before the constructor.
-		//   To be revisited once CodeMirrorVisualEditor has its own CodeMirrorPreferences
-		//   implementation (it should use lockPreference() to disable line numbering).
-		// Disable line numbering in DiscussionTools.
+		this.surfaceView = this.surface.getView();
+	}
+
+	/**
+	 * The VisualEditor surface.
+	 *
+	 * @type {ve.ui.Surface}
+	 */
+	get surface() {
+		return this.textarea;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	get readOnly() {
+		return this.surface.getModel().isReadOnly();
+	}
+
+	/**
+	 * Extensions supported by the 2017 wikitext editor.
+	 * Do *not* include Extensions that make changes to the document text, or visually
+	 * change the placement of text. These are what the page menu's preferences tool
+	 * ({@link ve.ui.CodeMirrorPreferencesTool}) offers there.
+	 *
+	 * @inheritDoc
+	 */
+	get extensionRegistryDefaults() {
+		const extensions = {
+			activeLine: this.activeLineExtension,
+			bracketMatching: this.bracketMatchingExtension,
+			lineNumbering: this.lineNumberingExtension,
+			trailingWhitespace: this.trailingWhitespaceExtension,
+			whitespace: this.whitespaceExtension
+		};
+		// DiscussionTools has no line numbers, so don't offer the preference there either.
 		if ( this.surface.getTarget().constructor.name === 'CommentTarget' ) {
-			delete this.extensionRegistry.extensions.lineNumbering;
-			delete this.extensionRegistry.compartments.lineNumbering;
+			delete extensions.lineNumbering;
 		}
+		return extensions;
+	}
+
+	/**
+	 * The same constraint as {@link CodeMirrorVisualEditor#extensionRegistryDefaults}, applied
+	 * to anything registered after construction. `highlightRefs` and `theme` are permitted but
+	 * not seeded there, as the language pack and {@link CodeMirrorThemes} register those once
+	 * there is a view.
+	 *
+	 * @inheritDoc
+	 */
+	get supportedExtensions() {
+		return [
+			'activeLine',
+			'bracketMatching',
+			'highlightRefs',
+			'lineNumbering',
+			'theme',
+			'trailingWhitespace',
+			'whitespace'
+		];
 	}
 
 	/**
@@ -130,6 +170,25 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	/**
 	 * @inheritDoc
 	 */
+	getSourceContents() {
+		return this.surface.getDom();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	addToDOM( extensions ) {
+		this.container = this.surface.getTarget().$element[ 0 ];
+		// Create the EditorState of CodeMirror with contents of the original textarea.
+		const state = this.getNewEditorState( extensions );
+		// Instantiate the view, adding it to the DOM
+		this.view = new EditorView( { state, parent: this.container } );
+		this.surfaceView.$documentNode.append( this.view.dom );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	initialize( extensions = this.defaultExtensions ) {
 		if ( this.surface.getMode() !== 'source' ) {
 			mw.log.warn( '[CodeMirror] Attempted to initialize CodeMirrorVisualEditor in non-source mode.' );
@@ -154,10 +213,19 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	addFormSubmitHandler() {}
 
 	/**
+	 * Focus is always given to the VE surface, which relays it to CodeMirror.
+	 *
 	 * @inheritDoc
 	 */
 	focus() {
 		this.surfaceView.focus();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	get hasFocus() {
+		return this.surfaceView.isFocused();
 	}
 
 	/**
@@ -214,6 +282,23 @@ class CodeMirrorVisualEditor extends CodeMirror {
 		// Sync document directionality changes to CodeMirror.
 		this.onPosition();
 	}
+
+	/**
+	 * There is no hidden textarea, and VE owns the selection and scroll position.
+	 *
+	 * @inheritDoc
+	 */
+	restoreSelectionAndScrollPosition() {}
+
+	/**
+	 * @inheritDoc
+	 */
+	syncEditorContentsToSource() {}
+
+	/**
+	 * @inheritDoc
+	 */
+	syncSelectionAndScrollPosition() {}
 
 	/**
 	 * @inheritDoc

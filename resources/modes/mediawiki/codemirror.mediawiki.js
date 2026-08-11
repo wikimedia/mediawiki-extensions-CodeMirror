@@ -141,12 +141,12 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 
 	/** @inheritDoc */
 	get lintSource() {
-		return lintSource;
+		return this.lint === false ? undefined : lintSource;
 	}
 
 	/** @inheritDoc */
 	get lintApi() {
-		return lintApi;
+		return this.lint === false ? undefined : lintApi;
 	}
 
 	/** @inheritDoc */
@@ -1698,6 +1698,7 @@ let handler;
  * @param {boolean} [config.codeFolding=true] Enable code folding.
  * @param {boolean} [config.foldAllRefs=false] Fold all references on initial load.
  * @param {boolean} [config.highlightRefs=true] Highlight references.
+ * @param {boolean} [config.lint=true] Enable linting.
  * @param {boolean} [config.openLinks=true] Enable opening of links.
  * @param {string[]} [config.languageVariants] Language variants that should be supported.
  * @return {CodeMirrorMediaWiki|LanguageSupport}
@@ -1776,7 +1777,9 @@ const mediawiki = ( config = { bidiIsolation: false } ) => {
 	};
 	mw.hook( 'ext.CodeMirror.ready' ).add( handler );
 
-	return new CodeMirrorMediaWiki( mwConfig );
+	const langSupport = new CodeMirrorMediaWiki( mwConfig );
+	langSupport.lint = config.lint !== false;
+	return langSupport;
 };
 
 module.exports = mediawiki;

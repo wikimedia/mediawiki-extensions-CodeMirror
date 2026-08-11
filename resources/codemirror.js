@@ -82,30 +82,26 @@ class CodeMirror {
 	/**
 	 * Instantiate a new CodeMirror instance.
 	 *
-	 * @param {HTMLTextAreaElement|jQuery|string} textarea Textarea to add syntax highlighting to.
-	 * @param {LanguageSupport} [langSupport] Language support and its extension(s).
+	 * @param {HTMLTextAreaElement|jQuery|string|ve.ui.Surface} textarea
+	 *   Textarea or VisualEditor surface to add syntax highlighting to.
+	 * @param {CodeMirrorMode|LanguageSupport} [langSupport] Language support and its extension(s).
 	 * @constructor
 	 * @stable to call and extend
 	 */
 	constructor( textarea, langSupport = [] ) {
 		/**
-		 * The textarea that CodeMirror is bound to.
+		 * The textarea or VE surface that CodeMirror is bound to.
 		 *
-		 * @type {HTMLTextAreaElement}
+		 * @type {HTMLTextAreaElement|ve.ui.Surface}
+		 * @stable to call
 		 */
 		this.textarea = $( textarea )[ 0 ];
 		/**
-		 * jQuery instance of the textarea for use with WikiEditor and jQuery plugins.
+		 * jQuery instance of the textarea or VE surface for use with jQuery plugins.
 		 *
-		 * @type {jQuery}
+		 * @type {jQuery<HTMLTextAreaElement|ve.ui.Surface>}
 		 */
 		this.$textarea = $( this.textarea );
-		/**
-		 * The VisualEditor surface CodeMirror is bound to.
-		 *
-		 * @type {ve.ui.Surface|null}
-		 */
-		this.surface = null;
 		/**
 		 * The function to lint the code in the editor using a web worker.
 		 * It can be disabled by setting `this.lintSource.disabled = true`.
@@ -169,12 +165,6 @@ class CodeMirror {
 		 */
 		this.container = null;
 		/**
-		 * Whether the textarea is read-only.
-		 *
-		 * @type {boolean}
-		 */
-		this.readOnly = this.textarea.readOnly;
-		/**
 		 * The CodeMirror "mode" (language).
 		 *
 		 * @type {string}
@@ -182,13 +172,6 @@ class CodeMirror {
 		this.mode = langSupport && langSupport.language ?
 			langSupport.language.name :
 			'mediawiki';
-		/**
-		 * The form `submit` event handler.
-		 *
-		 * @type {Function|null}
-		 * @private
-		 */
-		this.formSubmitEventHandler = null;
 		/**
 		 * jQuery.textSelection overrides for CodeMirror.
 		 *
@@ -212,18 +195,10 @@ class CodeMirror {
 		 *
 		 * @type {CodeMirrorExtensionRegistry}
 		 */
-		this.extensionRegistry = new CodeMirrorExtensionRegistry( {
-			activeLine: this.activeLineExtension,
-			// Empty extension; We just want the toggleable preference.
-			autofocus: [],
-			bracketMatching: this.bracketMatchingExtension,
-			closeBrackets: this.closeBracketsExtension,
-			lineNumbering: this.lineNumberingExtension,
-			lineWrapping: this.lineWrappingExtension,
-			specialChars: this.specialCharsExtension,
-			trailingWhitespace: this.trailingWhitespaceExtension,
-			whitespace: this.whitespaceExtension
-		}, this.constructor.name === 'CodeMirrorVisualEditor' );
+		this.extensionRegistry = new CodeMirrorExtensionRegistry(
+			this.extensionRegistryDefaults,
+			this.supportedExtensions
+		);
 		/**
 		 * Compartment to control the direction of the editor.
 		 *
@@ -238,8 +213,7 @@ class CodeMirror {
 		this.preferences = new CodeMirrorPreferences(
 			this.extensionRegistry,
 			this.mode,
-			this.keymap,
-			this.constructor.name === 'CodeMirrorVisualEditor'
+			this.keymap
 		);
 		/**
 		 * The CodeMirror search panel.
@@ -287,6 +261,61 @@ class CodeMirror {
 			selectionEnd: null,
 			scrollTop: null
 		};
+	}
+
+	/**
+	 * Whether the textarea is read-only.
+	 *
+	 * @type {boolean}
+	 * @stable to call and override
+	 */
+	get readOnly() {
+		return this.textarea.readOnly;
+	}
+
+	/**
+	 * The {@link Extension Extensions} to register with the
+	 * {@link CodeMirrorExtensionRegistry} at construction, keyed by preference name.
+	 * Subclasses may override this to restrict or extend which preference-backed
+	 * extensions are available in their integration.
+	 *
+	 * NOTE: This is called by the {@link CodeMirror} constructor, so overrides must not
+	 * reference instance properties that are only set after `super()` has been called.
+	 *
+	 * @type {Object<Extension>}
+	 * @protected
+	 * @stable to override
+	 */
+	get extensionRegistryDefaults() {
+		return {
+			activeLine: this.activeLineExtension,
+			// Empty extension; We just want the toggleable preference.
+			autofocus: [],
+			bracketMatching: this.bracketMatchingExtension,
+			closeBrackets: this.closeBracketsExtension,
+			lineNumbering: this.lineNumberingExtension,
+			lineWrapping: this.lineWrappingExtension,
+			specialChars: this.specialCharsExtension,
+			trailingWhitespace: this.trailingWhitespaceExtension,
+			whitespace: this.whitespaceExtension
+		};
+	}
+
+	/**
+	 * Names that {@link CodeMirrorExtensionRegistry#register} will accept, or `null` to accept
+	 * any name. Subclasses that can only support some extensions should override this, so that
+	 * extensions registered later — by a gadget, or by
+	 * {@link CodeMirror#applyLinter applyLinter()} — are refused as well.
+	 *
+	 * NOTE: This is called by the {@link CodeMirror} constructor, so overrides must not
+	 * reference instance properties that are only set after `super()` has been called.
+	 *
+	 * @type {string[]|null}
+	 * @protected
+	 * @stable to override
+	 */
+	get supportedExtensions() {
+		return null;
 	}
 
 	/**
@@ -350,7 +379,7 @@ class CodeMirror {
 	 * to be reconfigured (such as toggling on and off).
 	 *
 	 * @see https://codemirror.net/docs/ref/#state.Extension
-	 * @type {Extension|Extension[]}
+	 * @type {Extension}
 	 * @stable to call and override
 	 */
 	get defaultExtensions() {
@@ -428,6 +457,7 @@ class CodeMirror {
 	 *
 	 * @type {Extension}
 	 * @protected
+	 * @stable to call and override
 	 */
 	get domEventHandlersExtension() {
 		return EditorView.domEventHandlers( {
@@ -816,7 +846,66 @@ class CodeMirror {
 		} );
 	}
 
-	/* eslint-disable max-len */
+	/**
+	 * The current {@link EditorState} of the CodeMirror editor.
+	 * This is given by the {@link EditorView} instance, which is only available
+	 * after initialization.
+	 *
+	 * @type {EditorState|undefined}
+	 * @stable to call and override
+	 */
+	get state() {
+		return this.view ? this.view.state : undefined;
+	}
+
+	/**
+	 * Get the contents of the element that CodeMirror is bound to. This is used to
+	 * populate the initial document, and to re-sync the contents when re-activating.
+	 *
+	 * @return {string}
+	 * @protected
+	 * @stable to call and override
+	 */
+	getSourceContents() {
+		return this.textarea.value;
+	}
+
+	/**
+	 * Create a new {@link EditorState} with the given extensions and the contents
+	 * of the element that CodeMirror is bound to.
+	 *
+	 * @param {Extension} extensions
+	 * @return {EditorState}
+	 * @protected
+	 * @stable to call and override
+	 */
+	getNewEditorState( extensions ) {
+		return EditorState.create( { doc: this.getSourceContents(), extensions } );
+	}
+
+	/**
+	 * Add the CodeMirror {@link EditorView} to the DOM, wrapping the textarea in the
+	 * {@link CodeMirror#container container} element. Integrations that attach CodeMirror
+	 * to something other than a textarea should override this.
+	 *
+	 * @param {Extension} extensions
+	 * @protected
+	 * @stable to call and override
+	 */
+	addToDOM( extensions ) {
+		this.container = document.createElement( 'div' );
+		// Wrap the textarea with .ext-codemirror-wrapper, hiding the original textarea.
+		this.container.className = 'ext-codemirror-wrapper';
+		this.textarea.before( this.container );
+		this.container.appendChild( this.textarea );
+
+		// Create the EditorState of CodeMirror with contents of the original textarea.
+		const state = this.getNewEditorState( extensions );
+
+		// Instantiate the view, adding it to the DOM
+		this.view = new EditorView( { state, parent: this.container } );
+	}
+
 	/**
 	 * Setup CodeMirror and add it to the DOM. This will hide the original textarea.
 	 *
@@ -825,14 +914,13 @@ class CodeMirror {
 	 * to enable or disable the same CodeMirror instance programmatically, and restore or hide
 	 * the original textarea.
 	 *
-	 * @param {Extension|Extension[]} [extensions={@link CodeMirror#defaultExtensions this.defaultExtensions}]
+	 * @param {Extension} [extensions={@link CodeMirror#defaultExtensions this.defaultExtensions}]
 	 *   Extensions to use.
 	 * @fires CodeMirror~'ext.CodeMirror.initialize'
 	 * @fires CodeMirror~'ext.CodeMirror.ready'
 	 * @stable to call and override
 	 */
 	initialize( extensions = this.defaultExtensions ) {
-		/* eslint-enable max-len */
 		if ( this.view ) {
 			mw.log.warn( '[CodeMirror] CodeMirror instance already initialized.' );
 			return;
@@ -848,35 +936,18 @@ class CodeMirror {
 		 *   VisualEditor surface that CodeMirror is bound to.
 		 * @stable to use
 		 */
-		mw.hook( 'ext.CodeMirror.initialize' ).fire( this.surface || this.textarea );
+		mw.hook( 'ext.CodeMirror.initialize' ).fire( this.textarea );
 
 		// Make note of the focus state, scroll and selection before we hide the textarea.
-		const hasFocus = document.activeElement === this.textarea,
+		// Selection and scroll positions are undefined for VE integrations and silently ignored.
+		const hadFocus = document.activeElement === this.textarea,
 			{ selectionStart, selectionEnd, scrollTop } = this.textarea;
 		this.preInitSelection = { selectionStart, selectionEnd, scrollTop };
-		// Remove required attribute, which can otherwise cause the valueMissing constraint
-		// to fail ("invalid form control … is not focusable") on submission.
-		// For now, CodeMirror clients are expected to handle validation by other means.
-		// TODO: Listen to validate event and use a panel to display errors.
-		this.textarea.removeAttribute( 'required' );
 
-		// Wrap the textarea with .ext-codemirror-wrapper, hiding the original textarea.
-		this.container = document.createElement( 'div' );
-		this.container.className = 'ext-codemirror-wrapper';
-		this.textarea.before( this.container );
-		this.container.appendChild( this.textarea );
-
-		// Create the EditorState of CodeMirror with contents of the original textarea.
-		const state = EditorState.create( {
-			doc: this.surface ? this.surface.getDom() : this.textarea.value,
-			extensions
-		} );
-
-		// Instantiate the view, adding it to the DOM
-		this.view = new EditorView( { state, parent: this.container } );
+		this.addToDOM( extensions );
 
 		// Restore focus state.
-		if ( hasFocus ) {
+		if ( hadFocus ) {
 			this.focus( true );
 		}
 
@@ -1040,11 +1111,23 @@ class CodeMirror {
 			return;
 		}
 
+		// Remove required attribute, which can otherwise cause the valueMissing constraint
+		// to fail ("invalid form control … is not focusable") on submission.
+		// For now, CodeMirror clients are expected to handle validation by other means.
+		// TODO: Listen to validate event and use a panel to display errors.
+		this.textarea.removeAttribute( 'required' );
+
+		/**
+		 * The form `submit` event handler.
+		 *
+		 * @type {Function|null}
+		 * @private
+		 */
 		this.formSubmitEventHandler = () => {
 			if ( !this.isActive ) {
 				return;
 			}
-			this.textarea.value = this.view.state.doc.toString();
+			this.textarea.value = this.state.doc.toString();
 			const scrollTop = document.getElementById( 'wpScrolltop' );
 			if ( scrollTop ) {
 				scrollTop.value = this.view.scrollDOM.scrollTop;
@@ -1172,6 +1255,16 @@ class CodeMirror {
 	}
 
 	/**
+	 * Whether the editor has focus.
+	 *
+	 * @type {boolean}
+	 * @stable to call and override
+	 */
+	get hasFocus() {
+		return this.view.hasFocus;
+	}
+
+	/**
 	 * Toggle CodeMirror on or off from the textarea.
 	 * This will call {@link CodeMirror#initialize initialize} if CodeMirror
 	 * is being enabled for the first time.
@@ -1202,7 +1295,7 @@ class CodeMirror {
 			 * @event CodeMirror~'ext.CodeMirror.toggle'
 			 * @param {boolean} enabled `true` if CodeMirror is now enabled, `false` if disabled.
 			 * @param {CodeMirror} cm The CodeMirror instance.
-			 * @param {HTMLTextAreaElement} textarea The original textarea.
+			 * @param {HTMLTextAreaElement|ve.ui.Surface} textarea The original textarea.
 			 * @stable to use
 			 */
 			mw.hook( 'ext.CodeMirror.toggle' ).fire( this.isActive, this, this.textarea );
@@ -1234,7 +1327,7 @@ class CodeMirror {
 		// Autofocus the editor when applicable.
 		const autofocusEnabled = this.constructor.name !== 'CodeMirrorChild' &&
 			this.preferences.getPreference( 'autofocus' );
-		const hasFocus = document.activeElement === this.textarea || autofocusEnabled;
+		const hadFocus = document.activeElement === this.textarea || autofocusEnabled;
 		if ( autofocusEnabled ) {
 			const focusFn = this.focusAfterPreview.bind( this );
 			// Autofocus after live preview.
@@ -1249,9 +1342,7 @@ class CodeMirror {
 
 		if ( this.view ) {
 			// We're re-enabling, so we want to sync contents from the textarea.
-			this.cmTextSelection.setContents(
-				this.surface ? this.surface.getDom() : this.textarea.value
-			);
+			this.cmTextSelection.setContents( this.getSourceContents() );
 		}
 
 		// Re-show the view, should it be hidden.
@@ -1263,41 +1354,62 @@ class CodeMirror {
 		// Register $.textSelection() on the .cm-editor element.
 		$( this.view.dom ).textSelection( 'register', this.cmTextSelection );
 
-		if ( !this.surface ) {
-			// Override textSelection() functions for the "real" hidden textarea to route to
-			// CodeMirror. We unregister this in this.deactivate().
-			this.$textarea.textSelection( 'register', this.cmTextSelection );
-			// Disable IME on the hidden textarea to avoid conflicts.
-			this.$textarea.addClass( 'noime' ).off( '.ime' ).removeData( [ 'ime', 'imeselector' ] );
+		// Override textSelection() functions for the "real" hidden textarea to route to
+		// CodeMirror. We unregister this in this.deactivate().
+		this.$textarea.textSelection( 'register', this.cmTextSelection );
 
-			// Sync scroll position, selections, and focus state.
-			this.requestAnimationFrame( () => {
-				// The editor may have been destroyed before the frame ran.
-				if ( !this.view ) {
-					return;
-				}
-				this.view.scrollDOM.scrollTop = scrollTop;
-				if ( selectionStart !== 0 || selectionEnd !== 0 ) {
-					// The contents may have changed since the frame was requested,
-					// and a selection past the end of the document would throw.
-					const docLength = this.view.state.doc.length,
-						range = EditorSelection.range(
-							Math.min( selectionStart, docLength ),
-							Math.min( selectionEnd, docLength )
-						),
-						scrollEffect = EditorView.scrollIntoView( range );
-					// Restore scroll position when previewing (T254962).
-					scrollEffect.value.isSnapshot = true;
-					this.view.dispatch( {
-						selection: EditorSelection.create( [ range ] ),
-						effects: scrollEffect
-					} );
-				}
-				if ( hasFocus ) {
-					this.focus();
-				}
-			} );
-		}
+		this.restoreSelectionAndScrollPosition(
+			selectionStart, selectionEnd, scrollTop, hadFocus
+		);
+	}
+
+	/**
+	 * Hand the hidden textarea's state over to the editor: disable IME on the textarea so
+	 * it can't conflict with CodeMirror, then restore the selection, scroll position and
+	 * focus state that were captured before the textarea was hidden.
+	 *
+	 * This is the {@link CodeMirror#activate activate} counterpart to
+	 * {@link CodeMirror#syncSelectionAndScrollPosition syncSelectionAndScrollPosition()}.
+	 * Integrations that aren't bound to a textarea should override it as a no-op.
+	 *
+	 * @param {number} selectionStart
+	 * @param {number} selectionEnd
+	 * @param {number} scrollTop
+	 * @param {boolean} hadFocus
+	 * @protected
+	 * @stable to override
+	 */
+	restoreSelectionAndScrollPosition( selectionStart, selectionEnd, scrollTop, hadFocus ) {
+		// Disable IME on the hidden textarea to avoid conflicts.
+		this.$textarea.addClass( 'noime' ).off( '.ime' ).removeData( [ 'ime', 'imeselector' ] );
+
+		// Sync scroll position, selections, and focus state.
+		this.requestAnimationFrame( () => {
+			// The editor may have been destroyed before the frame ran.
+			if ( !this.view ) {
+				return;
+			}
+			this.view.scrollDOM.scrollTop = scrollTop;
+			if ( selectionStart !== 0 || selectionEnd !== 0 ) {
+				// The contents may have changed since the frame was requested,
+				// and a selection past the end of the document would throw.
+				const docLength = this.view.state.doc.length,
+					range = EditorSelection.range(
+						Math.min( selectionStart, docLength ),
+						Math.min( selectionEnd, docLength )
+					),
+					scrollEffect = EditorView.scrollIntoView( range );
+				// Restore scroll position when previewing (T254962).
+				scrollEffect.value.isSnapshot = true;
+				this.view.dispatch( {
+					selection: EditorSelection.create( [ range ] ),
+					effects: scrollEffect
+				} );
+			}
+			if ( hadFocus ) {
+				this.focus();
+			}
+		} );
 	}
 
 	/**
@@ -1324,6 +1436,31 @@ class CodeMirror {
 	}
 
 	/**
+	 * Sync the CodeMirror editor contents to the original textarea.
+	 *
+	 * @protected
+	 * @stable to override
+	 */
+	syncEditorContentsToSource() {
+		this.textarea.value = this.state.doc.toString();
+	}
+
+	/**
+	 * Sync the selection and scroll position to the original textarea.
+	 *
+	 * @param {number} from
+	 * @param {number} to
+	 * @param {number} scrollTop
+	 * @protected
+	 * @stable to override
+	 */
+	syncSelectionAndScrollPosition( from, to, scrollTop ) {
+		this.textarea.selectionStart = Math.min( from, to );
+		this.textarea.selectionEnd = Math.max( from, to );
+		this.textarea.scrollTop = scrollTop;
+	}
+
+	/**
 	 * Deactivate CodeMirror on the {@link CodeMirror#textarea textarea}, restoring the original
 	 * textarea and hiding the editor. This life-cycle method should retain the
 	 * {@link CodeMirror#view view}.
@@ -1339,23 +1476,19 @@ class CodeMirror {
 
 		// Store what we need before we destroy the state or make DOM changes.
 		const scrollTop = this.view.scrollDOM.scrollTop;
-		const hasFocus = this.surface ? this.surface.getView().isFocused() : this.view.hasFocus;
-		const { from, to } = this.view.state.selection.ranges[ 0 ];
+		const hadFocus = this.hasFocus;
+		const { from, to } = this.state.selection.ranges[ 0 ];
 
 		// Unregister textSelection() on the CodeMirror view.
 		$( this.view.dom ).textSelection( 'unregister' );
 
-		if ( !this.surface ) {
-			// Sync contents to the original textarea.
-			this.textarea.value = this.view.state.doc.toString();
-			// Unregister textSelection() on the hidden textarea.
-			this.$textarea.textSelection( 'unregister' );
-			// Re-enable IME on the hidden textarea.
-			this.$textarea.removeClass( 'noime' );
-		}
-
+		this.syncEditorContentsToSource();
 		this.removeMwHooks();
 
+		// Unregister textSelection() on the hidden textarea.
+		this.$textarea.textSelection( 'unregister' );
+		// Re-enable IME on the hidden textarea.
+		this.$textarea.removeClass( 'noime' );
 		// Hide the view. We use a CSS class on the wrapper since CodeMirror
 		// adds high-specificity styles to .cm-editor that we can't easily override.
 		this.container.classList.add( 'ext-codemirror-wrapper--hidden' );
@@ -1364,14 +1497,11 @@ class CodeMirror {
 		this.logEditFeature( 'deactivated' );
 
 		// Sync focus state, selections and scroll position.
-		if ( hasFocus ) {
+		if ( hadFocus ) {
 			this.focus();
 		}
-		if ( !this.surface ) {
-			this.textarea.selectionStart = Math.min( from, to );
-			this.textarea.selectionEnd = Math.max( from, to );
-			this.textarea.scrollTop = scrollTop;
-		}
+
+		this.syncSelectionAndScrollPosition( from, to, scrollTop );
 	}
 
 	/**
@@ -1409,7 +1539,7 @@ class CodeMirror {
 		 * Called just after CodeMirror is destroyed and the original textarea is restored.
 		 *
 		 * @event CodeMirror~'ext.CodeMirror.destroy'
-		 * @param {HTMLTextAreaElement} textarea The original textarea.
+		 * @param {HTMLTextAreaElement|ve.ui.Surface} textarea The original textarea.
 		 * @stable to use
 		 */
 		mw.hook( 'ext.CodeMirror.destroy' ).fire( this.textarea );
@@ -1440,12 +1570,12 @@ class CodeMirror {
 			}
 		} );
 		this.addMwHook( 'ext.CodeMirror.preferences.display', () => {
-			if ( this.view.state.field( this.preferences.panelStateField ) ) {
+			if ( this.state.field( this.preferences.panelStateField ) ) {
 				this.logEditFeature( 'prefs-display' );
 			}
 		} );
 		this.addMwHook( 'ext.CodeMirror.search', () => {
-			if ( searchPanelOpen( this.view.state ) ) {
+			if ( searchPanelOpen( this.state ) ) {
 				this.logEditFeature( 'search' );
 			}
 		} );

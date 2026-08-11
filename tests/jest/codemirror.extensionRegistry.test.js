@@ -10,8 +10,8 @@ describe( 'CodeMirrorExtensionRegistry', () => {
 
 	afterEach( jest.restoreAllMocks );
 
-	function getRegistry( extensions, isVisualEditor = false ) {
-		return new CodeMirrorExtensionRegistry( extensions, isVisualEditor );
+	function getRegistry( extensions, supportedExtensions ) {
+		return new CodeMirrorExtensionRegistry( extensions, supportedExtensions );
 	}
 
 	it( 'constructor', () => {
@@ -23,41 +23,11 @@ describe( 'CodeMirrorExtensionRegistry', () => {
 		expect( registry.compartments.lineWrapping ).toBeInstanceOf( Compartment );
 	} );
 
-	it( 'constructor (VisualEditor)', () => {
-		const registry = getRegistry( {
-			bracketMatching: EditorView.theme(),
-			codeFolding: EditorView.theme()
-		}, true );
-		expect( registry.compartments.bracketMatching ).toBeInstanceOf( Compartment );
-		expect( registry.compartments.codeFolding ).toBeUndefined();
-	} );
-
-	it( 'constructor (VisualEditor, background-only extensions)', () => {
-		// These paint backgrounds and nothing else, so they can't desync the two layers.
-		const registry = getRegistry( {
-			activeLine: EditorView.theme(),
-			trailingWhitespace: EditorView.theme(),
-			whitespace: EditorView.theme()
-		}, true );
-		expect( registry.compartments.activeLine ).toBeInstanceOf( Compartment );
-		expect( registry.compartments.trailingWhitespace ).toBeInstanceOf( Compartment );
-		expect( registry.compartments.whitespace ).toBeInstanceOf( Compartment );
-	} );
-
 	it( 'get', () => {
 		const bracketMatching = EditorView.theme();
 		const registry = getRegistry( { bracketMatching } );
 		expect( registry.get( 'bracketMatching' ).constructor.name ).toBe( 'CompartmentInstance' );
 		expect( registry.get( 'doesntExist' ) ).toBeUndefined();
-	} );
-
-	it( 'get (VisualEditor)', () => {
-		const registry = getRegistry( {
-			bracketMatching: EditorView.theme(),
-			codeFolding: EditorView.theme()
-		}, true );
-		expect( registry.get( 'bracketMatching' ).constructor.name ).toBe( 'CompartmentInstance' );
-		expect( registry.get( 'codeFolding' ) ).toBeUndefined();
 	} );
 
 	it( 'getCompartment', () => {
@@ -92,6 +62,43 @@ describe( 'CodeMirrorExtensionRegistry', () => {
 		expect( registry.get( 'bracketMatching' ).compartment.get( view.state ) ).toBe( extension );
 		expect( registry.isEnabled( 'bracketMatching', view ) ).toBeTruthy();
 		expect( console.warn ).not.toHaveBeenCalled();
+	} );
+
+	describe( 'supportedExtensions', () => {
+		it( 'should accept any name when unrestricted', () => {
+			const registry = getRegistry( {} );
+			const view = new EditorView();
+			registry.register( 'tabSize', EditorState.tabSize.of( 5 ), view, true );
+			expect( registry.isRegistered( 'tabSize', view ) ).toBeTruthy();
+			expect( console.warn ).not.toHaveBeenCalled();
+		} );
+
+		it( 'should refuse names outside the allowlist', () => {
+			const registry = getRegistry( {}, [ 'bracketMatching' ] );
+			const view = new EditorView();
+			registry.register( 'tabSize', EditorState.tabSize.of( 5 ), view, true );
+			expect( registry.isRegistered( 'tabSize', view ) ).toBeFalsy();
+			expect( registry.isEnabled( 'tabSize', view ) ).toBeFalsy();
+			expect( registry.names ).toStrictEqual( [] );
+			expect( console.warn ).toHaveBeenCalledWith(
+				'[CodeMirror] Extension "tabSize" is not supported by this editor.'
+			);
+		} );
+
+		it( 'should still accept names within the allowlist', () => {
+			const registry = getRegistry( {}, [ 'bracketMatching' ] );
+			const view = new EditorView();
+			registry.register( 'bracketMatching', EditorView.theme(), view, true );
+			expect( registry.isRegistered( 'bracketMatching', view ) ).toBeTruthy();
+			expect( registry.isEnabled( 'bracketMatching', view ) ).toBeTruthy();
+			expect( console.warn ).not.toHaveBeenCalled();
+		} );
+
+		it( 'should not apply to the extensions given at construction', () => {
+			const registry = getRegistry( { lineWrapping: EditorView.theme() }, [ 'theme' ] );
+			expect( registry.names ).toStrictEqual( [ 'lineWrapping' ] );
+			expect( registry.getCompartment( 'lineWrapping' ) ).toBeInstanceOf( Compartment );
+		} );
 	} );
 
 	it( 'registerFromValueMap', () => {

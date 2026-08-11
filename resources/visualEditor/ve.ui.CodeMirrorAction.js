@@ -60,7 +60,9 @@ ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 			codeFolding: false,
 			foldAllRefs: false,
 			autocomplete: false,
-			openLinks: false
+			openLinks: false,
+			closeTags: false,
+			lint: false
 		} );
 		const Controller = useCustomHighlight ?
 			require( './codemirror.visualEditorHighlight.js' ) :

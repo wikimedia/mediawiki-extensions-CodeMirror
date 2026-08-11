@@ -186,14 +186,13 @@ class CodeMirrorVisualEditorHighlight {
 		 */
 		this.supported = !!( window.CSS && window.CSS.highlights );
 		/**
-		 * Preference resolution. `isVisualEditor` is false because that flag means the
-		 * EditorView overlay: it gates the extension allowlist, and makes getPreference ignore
-		 * stored values because the overlay has no UI to set them. Neither applies here.
+		 * Preference resolution. The registry is empty because this controller registers no
+		 * CodeMirror extensions of its own; it applies each preference by hand.
 		 *
 		 * @type {CodeMirrorPreferences}
 		 */
 		this.preferences = new CodeMirrorPreferences(
-			new CodeMirrorExtensionRegistry( {}, false ), this.mode, {}, false
+			new CodeMirrorExtensionRegistry( {} ), this.mode, {}
 		);
 		// Registers the theme preference's form specification, so the preferences page can
 		// offer it as a choice rather than a switch.

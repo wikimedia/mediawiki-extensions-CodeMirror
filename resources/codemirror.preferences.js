@@ -31,10 +31,9 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * @param {CodeMirrorExtensionRegistry} extensionRegistry
 	 * @param {string} mode The CodeMirror mode being used, e.g. 'mediawiki', 'javascript', etc.
 	 * @param {CodeMirrorKeymap} cmKeymap Reference to the keymap instance.
-	 * @param {boolean} [isVisualEditor=false] Whether the VE 2017 editor is being used.
 	 * @fires CodeMirror~'ext.CodeMirror.preferences.ready'
 	 */
-	constructor( extensionRegistry, mode, cmKeymap, isVisualEditor = false ) {
+	constructor( extensionRegistry, mode, cmKeymap ) {
 		super();
 
 		/** @type {CodeMirrorExtensionRegistry} */
@@ -45,9 +44,6 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 
 		/** @type {CodeMirrorKeymap} */
 		this.keymap = cmKeymap;
-
-		/** @type {boolean} */
-		this.isVisualEditor = isVisualEditor;
 
 		/** @type {mw.Api} */
 		this.api = new mw.Api();

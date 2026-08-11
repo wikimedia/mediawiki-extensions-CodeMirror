@@ -455,3 +455,30 @@ describe( 'CodeMirrorMediaWiki', () => {
 		] );
 	} );
 } );
+
+describe( 'mediawiki() lint config', () => {
+	it( 'should expose the linters by default', () => {
+		const langSupport = mediawiki();
+		expect( langSupport.lintSource ).toBeInstanceOf( Function );
+		expect( langSupport.lintApi ).toBeInstanceOf( Function );
+	} );
+
+	it( 'should withhold the linters when disabled', () => {
+		const langSupport = mediawiki( { lint: false } );
+		expect( langSupport.lintSource ).toBeUndefined();
+		expect( langSupport.lintApi ).toBeUndefined();
+	} );
+
+	it( 'should not register the lint preference when disabled', () => {
+		const withLint = new CodeMirror( document.createElement( 'textarea' ), mediawiki() );
+		withLint.initialize();
+		expect( withLint.extensionRegistry.names ).toContain( 'lint' );
+
+		const withoutLint = new CodeMirror(
+			document.createElement( 'textarea' ),
+			mediawiki( { lint: false } )
+		);
+		withoutLint.initialize();
+		expect( withoutLint.extensionRegistry.names ).not.toContain( 'lint' );
+	} );
+} );

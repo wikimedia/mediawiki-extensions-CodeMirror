@@ -17,6 +17,7 @@
 			"preferredTypes": {
 				"CodeMirror": "CodeMirror",
 				"CodeMirror.applyExtension": "CodeMirror.applyExtension",
+				"CodeMirror.container": "CodeMirror.container",
 				"CodeMirror.ext.CodeMirror.destroy": "CodeMirror.ext.CodeMirror.destroy",
 				"CodeMirror.ext.CodeMirror.initialize": "CodeMirror.ext.CodeMirror.initialize",
 				"CodeMirror.ext.CodeMirror.input": "CodeMirror.ext.CodeMirror.input",
@@ -33,6 +34,7 @@
 				"CodeMirrorKeyBinding": "CodeMirrorKeyBinding",
 				"CodeMirrorKeymap": "CodeMirrorKeymap",
 				"CodeMirrorMediaWiki": "CodeMirrorMediaWiki",
+				"CodeMirrorMode": "CodeMirrorMode",
 				"CodeMirrorPreferences": "CodeMirrorPreferences",
 				"CodeMirrorPreferences.extension": "CodeMirrorPreferences.extension",
 				"CodeMirrorSortLines": "CodeMirrorSortLines",

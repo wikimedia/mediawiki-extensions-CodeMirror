@@ -44,11 +44,13 @@ class CodeMirrorExtensionRegistry {
 	 * @param {Object<Extension>} extensions Keyed by a unique string identifier.
 	 *   These extensions will be included in the configuration during CodeMirror
 	 *   initialization via {@link CodeMirrorPreferences}.
-	 * @param {boolean} [isVisualEditor=false] Whether the VE 2017 editor is being used.
+	 * @param {string[]|null} [supportedExtensions] Names that
+	 *   {@link CodeMirrorExtensionRegistry#register register()} will accept, or `null` to
+	 *   accept any name. Comes from {@link CodeMirror#supportedExtensions}.
 	 * @hideconstructor
 	 * @internal
 	 */
-	constructor( extensions = {}, isVisualEditor = false ) {
+	constructor( extensions = {}, supportedExtensions = null ) {
 		/**
 		 * Registry of CodeMirror Extensions, keyed by a unique string identifier.
 		 *
@@ -58,10 +60,13 @@ class CodeMirrorExtensionRegistry {
 		this.extensions = extensions;
 
 		/**
-		 * @type {boolean}
+		 * Names that {@link CodeMirrorExtensionRegistry#register register()} will accept,
+		 * or `null` to accept any name.
+		 *
+		 * @type {string[]|null}
 		 * @private
 		 */
-		this.isVisualEditor = isVisualEditor;
+		this.supportedExtensions = supportedExtensions;
 
 		/**
 		 * Registry of CodeMirror Compartments for each Extension,
@@ -71,24 +76,6 @@ class CodeMirrorExtensionRegistry {
 		 * @private
 		 */
 		this.compartments = {};
-
-		/**
-		 * Allowlist of names of CodeMirror extensions supported by the 2017 wikitext editor.
-		 * Do *not* include Extensions that make changes to the document text, or visually
-		 * change the placement of text. These are what the page menu's preferences tool
-		 * ({@link ve.ui.CodeMirrorPreferencesTool}) offers there.
-		 *
-		 * @type {string[]}
-		 */
-		this.veSupportedExtensions = [
-			'activeLine',
-			'bracketMatching',
-			'highlightRefs',
-			'lineNumbering',
-			'theme',
-			'trailingWhitespace',
-			'whitespace'
-		];
 
 		/**
 		 * Map of reconfiguration values and the {@link Extension extensions} that should be
@@ -107,11 +94,6 @@ class CodeMirrorExtensionRegistry {
 
 		// Create a compartment for each extension.
 		for ( const extName of this.names ) {
-			// Skip if the extension is not supported by VE.
-			if ( this.isVisualEditor && !this.veSupportedExtensions.includes( extName ) ) {
-				delete this.extensions[ extName ];
-				continue;
-			}
 			// The compartmentalized extensions here are included during
 			// CodeMirror initialization via CodeMirrorPreferences#extension.
 			this.compartments[ extName ] = new Compartment();
@@ -159,16 +141,20 @@ class CodeMirrorExtensionRegistry {
 	 * The Extension can then be {@link CodeMirrorExtensionRegistry#reconfigure reconfigured}
 	 * such as {@link CodeMirrorExtensionRegistry#toggle toggling} on and off.
 	 *
+	 * Integrations that can only support some extensions declare which through
+	 * {@link CodeMirror#supportedExtensions}, and anything else is refused here.
+	 *
 	 * @param {string} name
 	 * @param {Extension} extension
 	 * @param {EditorView} view
 	 * @param {boolean} [enable] `true` to enable the extension immediately.
 	 */
 	register( name, extension, view, enable ) {
-		if ( !this.veSupportedExtensions.includes( name ) && this.isVisualEditor ) {
-			// Unsupported.
+		if ( this.supportedExtensions && !this.supportedExtensions.includes( name ) ) {
+			mw.log.warn( `[CodeMirror] Extension "${ name }" is not supported by this editor.` );
 			return;
 		}
+
 		if ( this.isRegistered( name, view ) ) {
 			// Already registered, so toggle accordingly.
 			if ( enable !== undefined ) {
