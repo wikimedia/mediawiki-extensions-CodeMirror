@@ -1,4 +1,14 @@
 {
+	"name": "mediawiki/code-mirror",
+	"type": "mediawiki-extension",
+	"description": "Provides syntax highlighting in wikitext editor",
+	"keywords": [
+		"wiki",
+		"MediaWiki",
+		"extension"
+	],
+	"homepage": "https://www.mediawiki.org/wiki/Special:MyLanguage/Extension:CodeMirror",
+	"license": "GPL-2.0-or-later",
 	"require-dev": {
 		"mediawiki/mediawiki-codesniffer": "52.0.0",
 		"mediawiki/mediawiki-phan-config": "0.20.0",
