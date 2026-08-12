@@ -1,5 +1,9 @@
 const { syntaxTree } = require( 'ext.CodeMirror.lib' );
-const { cssLanguage, cssCompletionSource } = require( '../lib/codemirror.bundle.modes.js' );
+const {
+	colorPicker,
+	cssCompletionSource,
+	cssLanguage
+} = require( '../lib/codemirror.bundle.modes.js' );
 const CodeMirrorMode = require( './codemirror.mode.js' );
 const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
 const CodeMirrorValidator = require( '../codemirror.validator.js' );
@@ -131,42 +135,45 @@ class CodeMirrorCss extends CodeMirrorMode {
 
 	/** @inheritDoc */
 	get support() {
-		return cssLanguage.data.of( {
-			autocomplete: ( context ) => {
-				const { state, pos: p } = context,
-					node = syntaxTree( state ).resolveInner( p, -1 ),
-					result = cssCompletionSource( context );
-				if ( result ) {
-					if ( node.name === 'ValueName' ) {
-						const options = [ { label: 'revert', type: 'keyword' }, ...result.options ];
-						let { prevSibling } = node;
-						while ( prevSibling && prevSibling.name !== 'PropertyName' ) {
-							( { prevSibling } = prevSibling );
-						}
-						if ( prevSibling ) {
-							for ( let i = 0; i < options.length; i++ ) {
-								const option = options[ i ];
-								if ( CSS.supports(
-									state.sliceDoc( prevSibling.from, node.from ) + option.label
-								) ) {
-									options.splice( i, 1, Object.assign( {}, option, {
-										boost: 50
-									} ) );
+		return [
+			cssLanguage.data.of( {
+				autocomplete: ( context ) => {
+					const { state, pos: p } = context,
+						node = syntaxTree( state ).resolveInner( p, -1 ),
+						result = cssCompletionSource( context );
+					if ( result ) {
+						if ( node.name === 'ValueName' ) {
+							const options = [ { label: 'revert', type: 'keyword' }, ...result.options ];
+							let { prevSibling } = node;
+							while ( prevSibling && prevSibling.name !== 'PropertyName' ) {
+								( { prevSibling } = prevSibling );
+							}
+							if ( prevSibling ) {
+								for ( let i = 0; i < options.length; i++ ) {
+									const option = options[ i ];
+									if ( CSS.supports(
+										state.sliceDoc( prevSibling.from, node.from ) + option.label
+									) ) {
+										options.splice( i, 1, Object.assign( {}, option, {
+											boost: 50
+										} ) );
+									}
 								}
 							}
+							result.options = options;
+						} else if ( this.dialect === 'sanitized-css' ) {
+							result.options = result.options.filter(
+								( { type, label } ) => type !== 'property' ||
+									!label.startsWith( '-' ) ||
+									label.endsWith( '-user-select' )
+							);
 						}
-						result.options = options;
-					} else if ( this.dialect === 'sanitized-css' ) {
-						result.options = result.options.filter(
-							( { type, label } ) => type !== 'property' ||
-								!label.startsWith( '-' ) ||
-								label.endsWith( '-user-select' )
-						);
 					}
+					return result;
 				}
-				return result;
-			}
-		} );
+			} ),
+			colorPicker
+		];
 	}
 }
 

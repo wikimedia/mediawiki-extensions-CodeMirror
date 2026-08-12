@@ -1,5 +1,10 @@
 const { syntaxTree } = require( 'ext.CodeMirror.lib' );
-const { javascriptLanguage, vue, vueLanguage } = require( '../lib/codemirror.bundle.modes.js' );
+const {
+	colorPicker,
+	javascriptLanguage,
+	vue,
+	vueLanguage
+} = require( '../lib/codemirror.bundle.modes.js' );
 const CodeMirrorMode = require( './codemirror.mode.js' );
 
 /**
@@ -22,7 +27,10 @@ class CodeMirrorVue extends CodeMirrorMode {
 
 	/** @inheritDoc */
 	get support() {
-		return vue().support;
+		return [
+			vue().support,
+			colorPicker
+		];
 	}
 
 	/** @inheritDoc */

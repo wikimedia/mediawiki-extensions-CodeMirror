@@ -1,4 +1,4 @@
-const { html, htmlLanguage } = require( '../lib/codemirror.bundle.modes.js' );
+const { colorPicker, html, htmlLanguage } = require( '../lib/codemirror.bundle.modes.js' );
 const CodeMirrorMode = require( './codemirror.mode.js' );
 
 /**
@@ -23,7 +23,10 @@ class CodeMirrorHtml extends CodeMirrorMode {
 
 	/** @inheritDoc */
 	get support() {
-		return html().support;
+		return [
+			html().support,
+			colorPicker
+		];
 	}
 
 	/** @inheritDoc */

@@ -40,19 +40,21 @@ module.exports = [
 			} ),
 			nodeResolve( {
 				resolveOnly: [
+					'@bhsd/browser',
+					'@bhsd/codemirror-css-color-picker',
+					'@bhsd/common',
+					'@bhsd/lezer-json',
+					'@codemirror/lang-css',
 					'@codemirror/lang-html',
 					'@codemirror/lang-javascript',
-					'@codemirror/lang-css',
-					'@bhsd/lezer-json',
 					'@codemirror/lang-vue',
 					'@codemirror/legacy-modes',
+					'@lezer/common',
+					'@lezer/css',
 					'@lezer/html',
 					'@lezer/javascript',
-					'@lezer/css',
 					'@lezer/json',
-					'@lezer/common',
-					'@lezer/lr',
-					'@bhsd/common'
+					'@lezer/lr'
 				]
 			} )
 		]

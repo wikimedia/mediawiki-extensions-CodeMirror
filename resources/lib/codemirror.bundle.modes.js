@@ -5547,17 +5547,17 @@ const factory = (jsonc) => {
 };
 const json_parse = /* #__PURE__ */ factory(), jsonc_parse = /* #__PURE__ */ factory(true);
 
-var __rest = (undefined && undefined.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-};
+/**
+ * 将0~255之间的整数转换为十六进制
+ * @param d 0~255之间的整数
+ * @param len 十六进制数的最小长度，默认为2
+ */
+const intToHex = (d, len = 2) => Math.round(d).toString(16).padStart(len, '0');
+/**
+ * 将0~1之间的数字转换为十六进制
+ * @param d 0~1之间的数字
+ */
+const numToHex = (d) => intToHex(d * 255);
 /**
  * 按行分割字符串并记录每行的起止位置
  * @param str 字符串
@@ -5631,7 +5631,7 @@ const lintJSONBase = (str, parse) => {
     }
     catch (e) {
         if (!(e instanceof Error)) {
-            const _a = e, { warnings } = _a, error = __rest(_a, ["warnings"]);
+            const { warnings, ...error } = e;
             if (error.message) {
                 warnings.push(error);
             }
@@ -5650,7 +5650,6 @@ const lintJSON = (str) => {
         return [];
     }
     const errors = lintJSONBase(str, json_parse);
-    // eslint-disable-next-line unicorn/prefer-at
     return ((_a = errors[errors.length - 1]) === null || _a === void 0 ? void 0 : _a.severity) === 'error' ? errors : [...errors, ...lintJSONNative(str)];
 };
 /**
@@ -5658,6 +5657,325 @@ const lintJSON = (str) => {
  * @param str JSONC字符串
  */
 const lintJSONC = (str) => str.trim() ? lintJSONBase(str, jsonc_parse) : [];
+
+/**
+ * Discovers colors in CSS code
+ * @implements
+ */
+const discoverColorsInCSS = (tree, { from, to, name: typeName }, doc) => {
+    var _a, _b;
+    switch (typeName) {
+        case 'UnquotedAttributeValue':
+        case 'AttributeValue': {
+            // CSS nested in an HTML attribute value
+            const overlayTree = (_b = (_a = tree.resolveInner(from, 0).tree) === null || _a === void 0 ? void 0 : _a.prop(NodeProp.mounted)) === null || _b === void 0 ? void 0 : _b.tree;
+            if ((overlayTree === null || overlayTree === void 0 ? void 0 : overlayTree.type.name) !== 'Styles') {
+                // Skip if the attribute value is not a style attribute, or if there is no mounted tree
+                return false;
+            }
+            const ret = [], 
+            // Account for the quotation mark in AttributeValue
+            offset = from + (typeName === 'AttributeValue' ? 1 : 0);
+            overlayTree.iterate({
+                from: 0,
+                to: overlayTree.length,
+                enter({ name, from: overlayFrom, to: overlayTo }) {
+                    const widgetOptions = discoverColorsInCSS(tree, {
+                        from: offset + overlayFrom,
+                        to: offset + overlayTo,
+                        name,
+                    });
+                    if (widgetOptions) {
+                        if (Array.isArray(widgetOptions)) {
+                            throw new Error('Unexpected nested overlays');
+                        }
+                        ret.push(widgetOptions);
+                    }
+                },
+            });
+            return ret;
+        }
+        case 'CallExpression':
+        case 'ColorLiteral':
+        case 'ValueName':
+            return { from, to };
+        default:
+            return undefined;
+    }
+};
+
+const transparent = /^(?:transparent|#0{4}|#0{8}|rgba?\(\s*0(?:(?:\s*,\s*0){3}|(?:\s+0){2}\s*\/\s*0)\s*\))$/iu, contextSettings = { alpha: true, willReadFrequently: true };
+let ctx;
+const rgba = (color) => {
+    if (ctx) ;
+    else if (typeof OffscreenCanvas === 'function') {
+        ctx = new OffscreenCanvas(1, 1).getContext('2d', contextSettings);
+    }
+    else {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1;
+        canvas.height = 1;
+        ctx = canvas.getContext('2d', contextSettings);
+    }
+    ctx.fillStyle = 'transparent';
+    ctx.fillStyle = color;
+    if (ctx.fillStyle === 'rgba(0, 0, 0, 0)' && !transparent.test(color)) {
+        return [];
+    }
+    ctx.clearRect(0, 0, 1, 1);
+    ctx.fillRect(0, 0, 1, 1);
+    const [r, g, b, a] = ctx.getImageData(0, 0, 1, 1).data;
+    return [r, g, b, a / 255];
+};
+
+const parse = (color) => {
+    const result = rgba(color);
+    return result.length === 4 && {
+        color: result.slice(0, 3),
+        alpha: result[3],
+    };
+};
+/**
+ * Parses a CSS color function call expression (such as `rgb()`)
+ * @param callExp the full text of the call expression, including function name and parentheses
+ */
+const parseCallExpression = (callExp) => {
+    const color = parse(callExp);
+    return color && {
+        ...color,
+        colorType: callExp.split('(', 1)[0].toLowerCase(),
+        legacy: callExp.includes(','),
+        spaced: /\s/u.test(callExp),
+    };
+};
+/**
+ * Parses a hex color literal (e.g. `#ff0000`, `#f00`, `#ff000080`, `#f008`)
+ * @param colorLiteral the hex color literal text
+ */
+const parseColorLiteral = (colorLiteral) => {
+    const color = parse(colorLiteral), { length } = colorLiteral;
+    return color && {
+        ...color,
+        colorType: 'hex',
+        legacy: length === 4 || length === 7,
+        spaced: false,
+    };
+};
+/**
+ * Parses a named color (e.g. `red`, `blue`, `rebeccapurple`)
+ * @param colorName the named color text
+ */
+const parseNamedColor = (colorName) => {
+    const color = parse(colorName);
+    return color && {
+        ...color,
+        colorType: 'named',
+        legacy: true,
+        spaced: false,
+    };
+};
+const getDelimiter = (legacy, spaced) => legacy ? `,${spaced ? ' ' : ''}` : ' ';
+const alphaToString = (alpha, legacy, spaced) => (legacy ? `,${spaced ? ' ' : ''}` : ' / ')
+    + String(alpha === 0 ? alpha : Number(alpha.toFixed(2)));
+const colorToString = ({ color, alpha, colorType, legacy, spaced }, value) => {
+    const currentColor = [1, 3, 5].map(i => parseInt(value.slice(i, i + 2), 16));
+    if (currentColor.every((c, i) => c === Math.round(color[i]))) {
+        return false;
+    }
+    const delimiter = getDelimiter(legacy, spaced), noAlpha = alpha === 1, rgbParams = `(${currentColor.join(delimiter)}${noAlpha ? '' : alphaToString(alpha, legacy, spaced)})`;
+    switch (colorType) {
+        case 'rgba':
+        case 'rgb':
+            return colorType + rgbParams;
+        case 'hex':
+            if (!noAlpha) {
+                return value + numToHex(alpha);
+            }
+        // fall through
+        default:
+            return noAlpha ? value : `rgba${rgbParams}`;
+    }
+};
+
+const wrapperClassName = 'cm-css-color-picker-wrapper';
+const pickerState = new WeakMap();
+class ColorPickerWidget extends ext_CodeMirror_lib.WidgetType {
+    /** @class */
+    constructor(state, readOnly) {
+        super();
+        this.state = state;
+        this.readonly = readOnly;
+    }
+    /** @override */
+    eq(other) {
+        return other.readonly === this.readonly
+            && other.state.from === this.state.from
+            && other.state.to === this.state.to
+            && other.state.colorType === this.state.colorType
+            && other.state.color === this.state.color
+            && other.state.alpha === this.state.alpha
+            && other.state.legacy === this.state.legacy
+            && other.state.spaced === this.state.spaced;
+    }
+    /** @override */
+    toDOM() {
+        const picker = document.createElement('input');
+        picker.type = 'color';
+        picker.value = `#${this.state.color.map(c => intToHex(c)).join('')}`;
+        picker.style.opacity = String(this.state.alpha);
+        if (this.readonly || this.state.colorType === 'unknown') {
+            picker.disabled = true;
+        }
+        pickerState.set(picker, this.state);
+        const wrapper = document.createElement('span');
+        wrapper.className = wrapperClassName;
+        wrapper.append(picker);
+        return wrapper;
+    }
+    /** @override */
+    ignoreEvent(e) {
+        return e.type !== 'change';
+    }
+}
+/**
+ * Compute color picker decorations
+ * @param view the editor view for which to compute decorations
+ * @param discoverColors the function to discover colors in a syntax node; return `false` to skip children
+ */
+const colorPickersDecorations = (view, discoverColors) => {
+    const widgets = [], { state, visibleRanges } = view, tree = ext_CodeMirror_lib.syntaxTree(state);
+    for (const { from, to } of visibleRanges) {
+        tree.iterate({
+            from,
+            to,
+            enter(node) {
+                const widgetOptions = discoverColors(tree, node, state.doc);
+                if (!widgetOptions) {
+                    return widgetOptions;
+                }
+                for (const wo of Array.isArray(widgetOptions) ? widgetOptions : [widgetOptions]) {
+                    if (wo.colorType !== 'unknown') {
+                        const value = state.sliceDoc(wo.from, wo.to);
+                        let data;
+                        if (value.includes('(')) {
+                            data = parseCallExpression(value);
+                        }
+                        else if (value.startsWith('#')) {
+                            data = parseColorLiteral(value);
+                        }
+                        else {
+                            data = parseNamedColor(value);
+                        }
+                        if (!data) {
+                            continue;
+                        }
+                        Object.assign(wo, data);
+                    }
+                    widgets.push(ext_CodeMirror_lib.Decoration.widget({
+                        widget: new ColorPickerWidget(wo, state.readOnly),
+                        side: 1,
+                    }).range(wo.from));
+                }
+                return undefined;
+            },
+        });
+    }
+    return ext_CodeMirror_lib.Decoration.set(widgets);
+};
+const getBgImage = (fg, bg) => `linear-gradient(45deg, ${fg} 25%, transparent 25%, transparent 75%, ${fg} 75%),
+linear-gradient(45deg, ${fg} 25%, ${bg} 25%, ${bg} 75%, ${fg} 75%)`;
+const colorPickerTheme = ext_CodeMirror_lib.EditorView.baseTheme({
+    [`.${wrapperClassName}`]: {
+        display: 'inline-block',
+        marginLeft: '0.6ch',
+        marginRight: '0.6ch',
+        height: '1em',
+        width: '1em',
+        outline: '1px solid #ddd',
+        position: 'relative',
+        transform: 'translateY(0.1em)',
+        backgroundSize: '0.4em 0.4em',
+        backgroundPosition: '0 0, 0.2em 0.2em',
+        '&>input[type="color"]': {
+            height: '100%',
+            width: '100%',
+            padding: 0,
+            appearance: 'none',
+            border: 'none',
+            borderRadius: 0,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            '&:enabled': {
+                cursor: 'pointer',
+            },
+            '&::-webkit-color-swatch-wrapper': {
+                padding: 0,
+            },
+            '&::-webkit-color-swatch': {
+                border: 'none',
+                borderRadius: 0,
+            },
+            '&::-moz-color-swatch': {
+                border: 'none',
+                borderRadius: 0,
+            },
+        },
+    },
+    [`&light .${wrapperClassName}`]: {
+        backgroundImage: getBgImage('#aaa', '#fff'),
+    },
+    [`&dark .${wrapperClassName}`]: {
+        backgroundImage: getBgImage('#888', '#000'),
+    },
+});
+/**
+ * Factory function to create a color picker plugin with the given options
+ * @param discoverColors the function to discover colors in a syntax node; return `false` to skip children
+ */
+const makeColorPicker = (discoverColors) => [
+    ext_CodeMirror_lib.ViewPlugin.fromClass(class ColorPickerViewPlugin {
+        /** @class */
+        constructor(view) {
+            this.readOnly = view.state.readOnly;
+            this.decorations = colorPickersDecorations(view, discoverColors);
+        }
+        /** @implements */
+        update({ docChanged, viewportChanged, view }) {
+            const { readOnly } = view.state;
+            if (docChanged || viewportChanged || readOnly !== this.readOnly) {
+                this.readOnly = readOnly;
+                this.decorations = colorPickersDecorations(view, discoverColors);
+            }
+        }
+    }, {
+        decorations(v) {
+            return v.decorations;
+        },
+        eventHandlers: {
+            change(e, view) {
+                var _a;
+                const target = e.target;
+                if (target.nodeName !== 'INPUT'
+                    || target.type !== 'color'
+                    || !((_a = target.parentElement) === null || _a === void 0 ? void 0 : _a.classList.contains(wrapperClassName))) {
+                    return false;
+                }
+                const state = pickerState.get(target), insert = colorToString(state, target.value);
+                if (insert) {
+                    const { from, to } = state;
+                    view.dispatch({
+                        changes: { from, to, insert },
+                    });
+                }
+                return true;
+            },
+        },
+    }),
+    colorPickerTheme,
+];
+/** Default color picker plugin for CSS and HTML */
+const colorPicker = /* #__PURE__ */ makeColorPicker(discoverColorsInCSS);
 
 const jsonHighlighting = ext_CodeMirror_lib.styleTags({
     LineComment: ext_CodeMirror_lib.tags.lineComment,
@@ -6972,6 +7290,7 @@ exports.Tree = Tree;
 exports.TreeBuffer = TreeBuffer;
 exports.TreeCursor = TreeCursor;
 exports.TreeFragment = TreeFragment;
+exports.colorPicker = colorPicker;
 exports.completionPath = completionPath;
 exports.css = css;
 exports.cssCompletionSource = cssCompletionSource;

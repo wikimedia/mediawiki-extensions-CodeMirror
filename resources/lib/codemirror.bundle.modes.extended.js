@@ -12327,159 +12327,6 @@ function sql(config = {}) {
 The standard SQL dialect.
 */
 const StandardSQL = /*@__PURE__*/SQLDialect.define({});
-/**
-Dialect for [PostgreSQL](https://www.postgresql.org).
-*/
-const PostgreSQL = /*@__PURE__*/SQLDialect.define({
-    charSetCasts: true,
-    doubleDollarQuotedStrings: true,
-    operatorChars: "+-*/<>=~!@#%^&|`?",
-    specialVar: "",
-    keywords: SQLKeywords + "abort abs absent access according ada admin aggregate alias also always analyse analyze array_agg array_max_cardinality asensitive assert assignment asymmetric atomic attach attribute attributes avg backward base64 begin_frame begin_partition bernoulli bit_length blocked bom cache called cardinality catalog_name ceil ceiling chain char_length character_length character_set_catalog character_set_name character_set_schema characteristics characters checkpoint class class_origin cluster coalesce cobol collation_catalog collation_name collation_schema collect column_name columns command_function command_function_code comment comments committed concurrently condition_number configuration conflict connection_name constant constraint_catalog constraint_name constraint_schema contains content control conversion convert copy corr cost covar_pop covar_samp csv cume_dist current_catalog current_row current_schema cursor_name database datalink datatype datetime_interval_code datetime_interval_precision db debug defaults defined definer degree delimiter delimiters dense_rank depends derived detach detail dictionary disable discard dispatch dlnewcopy dlpreviouscopy dlurlcomplete dlurlcompleteonly dlurlcompletewrite dlurlpath dlurlpathonly dlurlpathwrite dlurlscheme dlurlserver dlvalue document dump dynamic_function dynamic_function_code element elsif empty enable encoding encrypted end_frame end_partition endexec enforced enum errcode error event every exclude excluding exclusive exp explain expression extension extract family file filter final first_value flag floor following force foreach fortran forward frame_row freeze fs functions fusion generated granted greatest groups handler header hex hierarchy hint id ignore ilike immediately immutable implementation implicit import include including increment indent index indexes info inherit inherits inline insensitive instance instantiable instead integrity intersection invoker isnull key_member key_type label lag last_value lead leakproof least length library like_regex link listen ln load location lock locked log logged lower mapping matched materialized max max_cardinality maxvalue member merge message message_length message_octet_length message_text min minvalue mod mode more move multiset mumps name namespace nfc nfd nfkc nfkd nil normalize normalized nothing notice notify notnull nowait nth_value ntile nullable nullif nulls number occurrences_regex octet_length octets off offset oids operator options ordering others over overlay overriding owned owner parallel parameter_mode parameter_name parameter_ordinal_position parameter_specific_catalog parameter_specific_name parameter_specific_schema parser partition pascal passing passthrough password percent percent_rank percentile_cont percentile_disc perform period permission pg_context pg_datatype_name pg_exception_context pg_exception_detail pg_exception_hint placing plans pli policy portion position position_regex power precedes preceding prepared print_strict_params procedural procedures program publication query quote raise range rank reassign recheck recovery refresh regr_avgx regr_avgy regr_count regr_intercept regr_r2 regr_slope regr_sxx regr_sxy regr_syy reindex rename repeatable replace replica requiring reset respect restart restore result_oid returned_cardinality returned_length returned_octet_length returned_sqlstate returning reverse routine_catalog routine_name routine_schema routines row_count row_number rowtype rule scale schema_name schemas scope scope_catalog scope_name scope_schema security selective self sensitive sequence sequences serializable server server_name setof share show simple skip slice snapshot source specific_name sqlcode sqlerror sqrt stable stacked standalone statement statistics stddev_pop stddev_samp stdin stdout storage strict strip structure style subclass_origin submultiset subscription substring substring_regex succeeds sum symmetric sysid system system_time table_name tables tablesample tablespace temp template ties token top_level_count transaction_active transactions_committed transactions_rolled_back transform transforms translate translate_regex trigger_catalog trigger_name trigger_schema trim trim_array truncate trusted type types uescape unbounded uncommitted unencrypted unlink unlisten unlogged unnamed untyped upper uri use_column use_variable user_defined_type_catalog user_defined_type_code user_defined_type_name user_defined_type_schema vacuum valid validate validator value_of var_pop var_samp varbinary variable_conflict variadic verbose version versioning views volatile warning whitespace width_bucket window within wrapper xmlagg xmlattributes xmlbinary xmlcast xmlcomment xmlconcat xmldeclaration xmldocument xmlelement xmlexists xmlforest xmliterate xmlnamespaces xmlparse xmlpi xmlquery xmlroot xmlschema xmlserialize xmltable xmltext xmlvalidate yes",
-    types: SQLTypes + "bigint int8 bigserial serial8 varbit bool box bytea cidr circle precision float8 inet int4 json jsonb line lseg macaddr macaddr8 money numeric pg_lsn point polygon float4 int2 smallserial serial2 serial serial4 text timetz timestamptz tsquery tsvector txid_snapshot uuid xml"
-});
-const MySQLKeywords = "accessible algorithm analyze asensitive authors auto_increment autocommit avg avg_row_length binlog btree cache catalog_name chain change changed checkpoint checksum class_origin client_statistics coalesce code collations columns comment committed completion concurrent consistent contains contributors convert database databases day_hour day_microsecond day_minute day_second delay_key_write delayed delimiter des_key_file dev_pop dev_samp deviance directory disable discard distinctrow div dual dumpfile enable enclosed ends engine engines enum errors escaped even event events every explain extended fast field fields flush force found_rows fulltext grants handler hash high_priority hosts hour_microsecond hour_minute hour_second ignore ignore_server_ids import index index_statistics infile innodb insensitive insert_method install invoker iterate keys kill linear lines list load lock logs low_priority master master_heartbeat_period master_ssl_verify_server_cert masters max max_rows maxvalue message_text middleint migrate min min_rows minute_microsecond minute_second mod mode modify mutex mysql_errno no_write_to_binlog offline offset one online optimize optionally outfile pack_keys parser partition partitions password phase plugin plugins prev processlist profile profiles purge query quick range read_write rebuild recover regexp relaylog remove rename reorganize repair repeatable replace require resume rlike row_format rtree schedule schema_name schemas second_microsecond security sensitive separator serializable server share show slave slow snapshot soname spatial sql_big_result sql_buffer_result sql_cache sql_calc_found_rows sql_no_cache sql_small_result ssl starting starts std stddev stddev_pop stddev_samp storage straight_join subclass_origin sum suspend table_name table_statistics tables tablespace terminated triggers truncate uncommitted uninstall unlock upgrade use use_frm user_resources user_statistics utc_date utc_time utc_timestamp variables views warnings xa xor year_month zerofill";
-const MySQLTypes = SQLTypes + "bool blob long longblob longtext medium mediumblob mediumint mediumtext tinyblob tinyint tinytext text bigint int1 int2 int3 int4 int8 float4 float8 varbinary varcharacter precision datetime unsigned signed";
-const MySQLBuiltin = "charset clear edit ego help nopager notee nowarning pager print prompt quit rehash source status system tee";
-/**
-[MySQL](https://dev.mysql.com/) dialect.
-*/
-const MySQL = /*@__PURE__*/SQLDialect.define({
-    operatorChars: "*+-%<>!=&|^",
-    charSetCasts: true,
-    doubleQuotedStrings: true,
-    unquotedBitLiterals: true,
-    hashComments: true,
-    spaceAfterDashes: true,
-    specialVar: "@?",
-    identifierQuotes: "`",
-    keywords: SQLKeywords + "group_concat " + MySQLKeywords,
-    types: MySQLTypes,
-    builtin: MySQLBuiltin
-});
-/**
-Variant of [`MySQL`](https://codemirror.net/6/docs/ref/#lang-sql.MySQL) for
-[MariaDB](https://mariadb.org/).
-*/
-const MariaSQL = /*@__PURE__*/SQLDialect.define({
-    operatorChars: "*+-%<>!=&|^",
-    charSetCasts: true,
-    doubleQuotedStrings: true,
-    unquotedBitLiterals: true,
-    hashComments: true,
-    spaceAfterDashes: true,
-    specialVar: "@?",
-    identifierQuotes: "`",
-    keywords: SQLKeywords + "always generated groupby_concat hard persistent shutdown soft virtual " + MySQLKeywords,
-    types: MySQLTypes,
-    builtin: MySQLBuiltin
-});
-let MSSQLBuiltin = 
-// Aggregate https://msdn.microsoft.com/en-us/library/ms173454.aspx
-"approx_count_distinct approx_percentile_cont approx_percentile_disc avg checksum_agg count count_big grouping grouping_id max min product stdev stdevp sum var varp " +
-    // AI https://learn.microsoft.com/en-us/sql/t-sql/functions/ai-functions-transact-sql?view=sql-server-ver17
-    "ai_generate_embeddings ai_generate_chunks " +
-    // Analytic https://learn.microsoft.com/en-us/sql/t-sql/functions/analytic-functions-transact-sql?view=sql-server-ver17
-    "cume_dist first_value lag last_value lead percentile_cont percentile_disc percent_rank " +
-    // Bit Manipulation https://learn.microsoft.com/en-us/sql/t-sql/functions/bit-manipulation-functions-overview?view=sql-server-ver17
-    "left_shift right_shift bit_count get_bit set_bit " +
-    // Collation Functions https://learn.microsoft.com/en-us/sql/t-sql/functions/collation-functions-collationproperty-transact-sql?view=sql-server-ver17
-    "collationproperty tertiary_weights " +
-    // Configuration https://learn.microsoft.com/en-us/sql/t-sql/functions/configuration-functions-transact-sql?view=sql-server-ver17
-    "@@datefirst @@dbts @@langid @@language @@lock_timeout @@max_connections @@max_precision @@nestlevel @@options @@remserver @@servername @@servicename @@spid @@textsize @@version " +
-    // Conversion https://learn.microsoft.com/en-us/sql/t-sql/functions/conversion-functions-transact-sql?view=sql-server-ver17
-    "cast convert parse try_cast try_convert try_parse " +
-    // Cryptographic https://learn.microsoft.com/en-us/sql/t-sql/functions/cryptographic-functions-transact-sql?view=sql-server-ver17
-    "asymkey_id asymkeyproperty certproperty cert_id crypt_gen_random decryptbyasymkey decryptbycert decryptbykey decryptbykeyautoasymkey decryptbykeyautocert decryptbypassphrase encryptbyasymkey encryptbycert encryptbykey encryptbypassphrase hashbytes is_objectsigned key_guid key_id key_name signbyasymkey signbycert symkeyproperty verifysignedbycert verifysignedbyasymkey " +
-    // Cursor https://learn.microsoft.com/en-us/sql/t-sql/functions/cursor-functions-transact-sql?view=sql-server-ver17
-    "@@cursor_rows @@fetch_status cursor_status " +
-    // Data type https://learn.microsoft.com/en-us/sql/t-sql/functions/data-type-functions-transact-sql?view=sql-server-ver17
-    "datalength ident_current ident_incr ident_seed identity sql_variant_property " +
-    // Date & time https://learn.microsoft.com/en-us/sql/t-sql/functions/date-and-time-data-types-and-functions-transact-sql?view=sql-server-ver17
-    "@@datefirst current_timestamp current_timezone current_timezone_id date_bucket dateadd datediff datediff_big datefromparts datename datepart datetime2fromparts datetimefromparts datetimeoffsetfromparts datetrunc day eomonth getdate getutcdate isdate month smalldatetimefromparts switchoffset sysdatetime sysdatetimeoffset sysutcdatetime timefromparts todatetimeoffset year " +
-    // Fuzzy string match https://learn.microsoft.com/en-us/sql/t-sql/functions/edit-distance-transact-sql?view=sql-server-ver17
-    "edit_distance edit_distance_similarity jaro_winkler_distance jaro_winkler_similarity " +
-    // Graph https://learn.microsoft.com/en-us/sql/t-sql/functions/graph-functions-transact-sql?view=sql-server-ver17
-    "edge_id_from_parts graph_id_from_edge_id graph_id_from_node_id node_id_from_parts object_id_from_edge_id object_id_from_node_id " +
-    // JSON https://learn.microsoft.com/en-us/sql/t-sql/functions/json-functions-transact-sql?view=sql-server-ver17
-    "json isjson json_array json_contains json_modify json_object json_path_exists json_query json_value " +
-    // Regular Expressions https://learn.microsoft.com/en-us/sql/t-sql/functions/regular-expressions-functions-transact-sql?view=sql-server-ver17
-    "regexp_like regexp_replace regexp_substr regexp_instr regexp_count regexp_matches regexp_split_to_table " +
-    // Mathematical https://learn.microsoft.com/en-us/sql/t-sql/functions/mathematical-functions-transact-sql?view=sql-server-ver17
-    "abs acos asin atan atn2 ceiling cos cot degrees exp floor log log10 pi power radians rand round sign sin sqrt square tan " +
-    // Logical https://learn.microsoft.com/en-us/sql/t-sql/functions/logical-functions-choose-transact-sql?view=sql-server-ver17
-    "choose greatest iif least " +
-    // Metadata https://learn.microsoft.com/en-us/sql/t-sql/functions/metadata-functions-transact-sql?view=sql-server-ver17
-    "@@procid app_name applock_mode applock_test assemblyproperty col_length col_name columnproperty databasepropertyex db_id db_name file_id file_idex file_name filegroup_id filegroup_name filegroupproperty fileproperty filepropertyex fulltextcatalogproperty fulltextserviceproperty index_col indexkey_property indexproperty next value for object_definition object_id object_name object_schema_name objectproperty objectpropertyex original_db_name parsename schema_id schema_name scope_identity serverproperty stats_date type_id type_name typeproperty " +
-    // Ranking https://learn.microsoft.com/en-us/sql/t-sql/functions/ranking-functions-transact-sql?view=sql-server-ver17
-    "dense_rank ntile rank row_number " +
-    // Replication https://learn.microsoft.com/en-us/sql/t-sql/functions/replication-functions-publishingservername?view=sql-server-ver17
-    "publishingservername " +
-    // Security https://learn.microsoft.com/en-us/sql/t-sql/functions/security-functions-transact-sql?view=sql-server-ver17
-    "certenclosed certprivatekey current_user database_principal_id has_dbaccess has_perms_by_name is_member is_rolemember is_srvrolemember loginproperty original_login permissions pwdencrypt pwdcompare session_user sessionproperty suser_id suser_name suser_sid suser_sname system_user user user_id user_name " +
-    // String https://learn.microsoft.com/en-us/sql/t-sql/functions/string-functions-transact-sql?view=sql-server-ver17
-    "ascii char charindex concat concat_ws difference format left len lower ltrim nchar patindex quotename replace replicate reverse right rtrim soundex space str string_agg string_escape stuff substring translate trim unicode upper " +
-    // System https://learn.microsoft.com/en-us/sql/t-sql/functions/system-functions-transact-sql?view=sql-server-ver17
-    "$partition @@error @@identity @@pack_received @@rowcount @@trancount binary_checksum checksum compress connectionproperty context_info current_request_id current_transaction_id decompress error_line error_message error_number error_procedure error_severity error_state formatmessage get_filestream_transaction_context getansinull host_id host_name isnull isnumeric min_active_rowversion newid newsequentialid rowcount_big session_context xact_state " +
-    // System Statistical https://learn.microsoft.com/en-us/sql/t-sql/functions/system-statistical-functions-transact-sql?view=sql-server-ver17
-    "@@connections @@cpu_busy @@idle @@io_busy @@pack_sent @@packet_errors @@timeticks @@total_errors @@total_read @@total_write " +
-    // Text & Image https://learn.microsoft.com/en-us/sql/t-sql/functions/text-and-image-functions-textptr-transact-sql?view=sql-server-ver17
-    "textptr textvalid " +
-    // Trigger https://learn.microsoft.com/en-us/sql/t-sql/functions/trigger-functions-transact-sql?view=sql-server-ver17
-    "columns_updated eventdata trigger_nestlevel " +
-    // Vectors https://learn.microsoft.com/en-us/sql/t-sql/functions/vector-functions-transact-sql?view=sql-server-ver17
-    "vector_distance vectorproperty vector_search " +
-    // Relational operators https://msdn.microsoft.com/en-us/library/ms187957.aspx
-    "generate_series opendatasource openjson openquery openrowset openxml predict string_split " +
-    // Other
-    "coalesce nullif apply catch filter force include keep keepfixed modify optimize parameterization parameters partition recompile sequence set";
-/**
-SQL dialect for Microsoft [SQL
-Server](https://www.microsoft.com/en-us/sql-server).
-*/
-const MSSQL = /*@__PURE__*/SQLDialect.define({
-    keywords: SQLKeywords +
-        // Reserved Keywords https://learn.microsoft.com/en-us/sql/t-sql/language-elements/reserved-keywords-transact-sql?view=sql-server-ver17
-        "add external procedure all fetch public alter file raiserror and fillfactor read any for readtext as foreign reconfigure asc freetext references authorization freetexttable replication backup from restore begin full restrict between function return break goto revert browse grant revoke bulk group right by having rollback cascade holdlock rowcount case identity rowguidcol check identity_insert rule checkpoint identitycol save close if schema clustered in securityaudit coalesce index select collate inner semantickeyphrasetable column insert semanticsimilaritydetailstable commit intersect semanticsimilaritytable compute into session_user constraint is set contains join setuser containstable key shutdown continue kill some convert left statistics create like system_user cross lineno table current load tablesample current_date merge textsize current_time national then current_timestamp nocheck to current_user nonclustered top cursor not tran database null transaction dbcc nullif trigger deallocate of truncate declare off try_convert default offsets tsequal delete on union deny open unique desc opendatasource unpivot disk openquery update distinct openrowset updatetext distributed openxml use double option user drop or values dump order varying else outer view end over waitfor errlvl percent when escape pivot where except plan while exec precision with execute primary within group exists print writetext exit proc " +
-        // table hints https://learn.microsoft.com/en-us/sql/t-sql/queries/hints-transact-sql-table?view=sql-server-ver17
-        "noexpand index forceseek forcescan holdlock nolock nowait paglock readcommitted readcommittedlock readpast readuncommitted repeatableread rowlock serializable snapshot spatial_window_max_cells tablock tablockx updlock xlock keepidentity keepdefaults ignore_constraints ignore_triggers",
-    types: SQLTypes + "smalldatetime datetimeoffset datetime2 datetime bigint smallint smallmoney tinyint money real text nvarchar ntext varbinary image hierarchyid uniqueidentifier sql_variant xml",
-    builtin: MSSQLBuiltin,
-    operatorChars: "*+-%<>!=^&|/",
-    specialVar: "@",
-    identifierQuotes: "\"["
-});
-/**
-[SQLite](https://sqlite.org/) dialect.
-*/
-const SQLite = /*@__PURE__*/SQLDialect.define({
-    keywords: SQLKeywords + "abort analyze attach autoincrement conflict database detach exclusive fail glob ignore index indexed instead isnull notnull offset plan pragma query raise regexp reindex rename replace temp vacuum virtual",
-    types: SQLTypes + "bool blob long longblob longtext medium mediumblob mediumint mediumtext tinyblob tinyint tinytext text bigint int2 int8 unsigned signed real",
-    builtin: "auth backup bail changes clone databases dbinfo dump echo eqp explain fullschema headers help import imposter indexes iotrace lint load log mode nullvalue once print prompt quit restore save scanstats separator shell show stats system tables testcase timeout timer trace vfsinfo vfslist vfsname width",
-    operatorChars: "*+-%<>!=&|/~",
-    identifierQuotes: "`\"",
-    specialVar: "@:?$"
-});
-/**
-Dialect for [Cassandra](https://cassandra.apache.org/)'s SQL-ish query language.
-*/
-const Cassandra = /*@__PURE__*/SQLDialect.define({
-    keywords: "add all allow alter and any apply as asc authorize batch begin by clustering columnfamily compact consistency count create custom delete desc distinct drop each_quorum exists filtering from grant if in index insert into key keyspace keyspaces level limit local_one local_quorum modify nan norecursive nosuperuser not of on one order password permission permissions primary quorum rename revoke schema select set storage superuser table three to token truncate ttl two type unlogged update use user users using values where with writetime infinity NaN",
-    types: SQLTypes + "ascii bigint blob counter frozen inet list map static text timeuuid tuple uuid varint",
-    slashComments: true
-});
-/**
-[PL/SQL](https://en.wikipedia.org/wiki/PL/SQL) dialect.
-*/
-const PLSQL = /*@__PURE__*/SQLDialect.define({
-    keywords: SQLKeywords + "abort accept access add all alter and any arraylen as asc assert assign at attributes audit authorization avg base_table begin between binary_integer body by case cast char_base check close cluster clusters colauth column comment commit compress connected constant constraint crash create current currval cursor data_base database dba deallocate debugoff debugon declare default definition delay delete desc digits dispose distinct do drop else elseif elsif enable end entry exception exception_init exchange exclusive exists external fast fetch file for force form from function generic goto grant group having identified if immediate in increment index indexes indicator initial initrans insert interface intersect into is key level library like limited local lock log logging loop master maxextents maxtrans member minextents minus mislabel mode modify multiset new next no noaudit nocompress nologging noparallel not nowait number_base of off offline on online only option or order out package parallel partition pctfree pctincrease pctused pls_integer positive positiven pragma primary prior private privileges procedure public raise range raw rebuild record ref references refresh rename replace resource restrict return returning returns reverse revoke rollback row rowid rowlabel rownum rows run savepoint schema segment select separate set share snapshot some space split sql start statement storage subtype successful synonym tabauth table tables tablespace task terminate then to trigger truncate type union unique unlimited unrecoverable unusable update use using validate value values variable view views when whenever where while with work",
-    builtin: "appinfo arraysize autocommit autoprint autorecovery autotrace blockterminator break btitle cmdsep colsep compatibility compute concat copycommit copytypecheck define echo editfile embedded feedback flagger flush heading headsep instance linesize lno loboffset logsource longchunksize markup native newpage numformat numwidth pagesize pause pno recsep recsepchar repfooter repheader serveroutput shiftinout show showmode spool sqlblanklines sqlcase sqlcode sqlcontinue sqlnumber sqlpluscompatibility sqlprefix sqlprompt sqlterminator suffix tab term termout timing trimout trimspool ttitle underline verify version wrap",
-    types: SQLTypes + "ascii bfile bfilename bigserial bit blob dec long number nvarchar nvarchar2 serial smallint string text uid varchar2 xml",
-    operatorChars: "*/+-%<>!=~",
-    doubleQuotedStrings: true,
-    charSetCasts: true,
-    plsqlQuotingMechanism: true
-});
 
 // This file was generated by lezer-generator. You probably shouldn't edit it.
 const spec_Keyword$1 = {__proto__:null,anyref:34, dataref:34, eqref:34, externref:34, i31ref:34, funcref:34, i8:34, i16:34, i32:34, i64:34, f32:34, f64:34};
@@ -13424,28 +13271,12 @@ Language support for YAML.
 function yaml() {
     return new autocomplete.LanguageSupport(yamlLanguage);
 }
-const frontmatterLanguage = /*@__PURE__*/autocomplete.LRLanguage.define({
+/*@__PURE__*/autocomplete.LRLanguage.define({
     name: "yaml-frontmatter",
     parser: /*@__PURE__*/parser$8.configure({
         props: [/*@__PURE__*/autocomplete.styleTags({ DashLine: autocomplete.tags.meta })]
     })
 });
-/**
-Returns language support for a document parsed as `config.content`
-with an optional YAML "frontmatter" delimited by lines that
-contain three dashes.
-*/
-function yamlFrontmatter(config) {
-    let { language, support } = config.content instanceof autocomplete.LanguageSupport ? config.content
-        : { language: config.content, support: [] };
-    return new autocomplete.LanguageSupport(frontmatterLanguage.configure({
-        wrap: parseMixed(node => {
-            return node.name == "FrontmatterContent" ? { parser: yamlLanguage.parser }
-                : node.name == "Body" ? { parser: language.parser }
-                    : null;
-        })
-    }), support);
-}
 
 // This file was generated by lezer-generator. You probably shouldn't edit it.
 const Content = 1,
@@ -16475,74 +16306,26 @@ function sparql() {
     return new autocomplete.LanguageSupport(SparqlLanguage);
 }
 
-exports.Cassandra = Cassandra;
-exports.MSSQL = MSSQL;
-exports.MariaSQL = MariaSQL;
-exports.MySQL = MySQL;
-exports.PLSQL = PLSQL;
-exports.PostgreSQL = PostgreSQL;
-exports.SQLDialect = SQLDialect;
-exports.SQLite = SQLite;
-exports.SparqlLanguage = SparqlLanguage;
-exports.StandardSQL = StandardSQL;
 exports.angular = angular;
-exports.angularLanguage = angularLanguage;
-exports.autoCloseTags = autoCloseTags;
-exports.closePercentBrace = closePercentBrace;
-exports.commonmarkLanguage = commonmarkLanguage;
-exports.completeFromSchema = completeFromSchema;
 exports.cpp = cpp;
-exports.cppLanguage = cppLanguage;
-exports.deleteMarkupBackward = deleteMarkupBackward;
 exports.elixir = elixir;
-exports.elixirLanguage = elixirLanguage;
-exports.globalCompletion = globalCompletion;
 exports.go = go;
-exports.goLanguage = goLanguage;
 exports.handlebarsLanguage = handlebarsLanguage;
-exports.insertNewlineContinueMarkup = insertNewlineContinueMarkup;
-exports.insertNewlineContinueMarkupCommand = insertNewlineContinueMarkupCommand;
 exports.java = java;
-exports.javaLanguage = javaLanguage;
 exports.julia = julia;
-exports.juliaLanguage = juliaLanguage;
-exports.keywordCompletion = keywordCompletion;
-exports.keywordCompletionSource = keywordCompletionSource;
 exports.less = less;
-exports.lessCompletionSource = lessCompletionSource;
-exports.lessLanguage = lessLanguage;
 exports.liquid = liquid;
-exports.liquidCompletionSource = liquidCompletionSource;
-exports.liquidLanguage = liquidLanguage;
 exports.markdown = markdown;
-exports.markdownKeymap = markdownKeymap;
-exports.markdownLanguage = markdownLanguage;
 exports.mustacheParser = parser$7;
 exports.nix = nix;
-exports.nixLanguage = nixLanguage;
-exports.parser = parser$5;
-exports.pasteURLAsLink = pasteURLAsLink;
 exports.php = php;
-exports.phpLanguage = phpLanguage;
 exports.pkl = pkl;
-exports.pklLanguage = pklLanguage;
 exports.python = python;
-exports.pythonLanguage = pythonLanguage;
 exports.r = r;
-exports.rLanguage = rLanguage;
 exports.rust = rust;
-exports.rustLanguage = rustLanguage;
 exports.sass = sass;
-exports.sassCompletionSource = sassCompletionSource;
-exports.sassLanguage = sassLanguage;
-exports.schemaCompletionSource = schemaCompletionSource;
-exports.snippets = snippets$2;
 exports.sparql = sparql;
 exports.sql = sql;
 exports.wast = wast;
-exports.wastLanguage = wastLanguage;
 exports.xml = xml;
-exports.xmlLanguage = xmlLanguage;
 exports.yaml = yaml;
-exports.yamlFrontmatter = yamlFrontmatter;
-exports.yamlLanguage = yamlLanguage;

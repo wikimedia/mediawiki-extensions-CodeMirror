@@ -203,3 +203,12 @@ global.postMessage = ( msg ) => {
 	}
 };
 Range.prototype.getClientRects = jest.fn().mockReturnValue( [] );
+
+HTMLCanvasElement.prototype.getContext = jest.fn().mockReturnValue( {
+	get fillStyle() {
+		return 'rgba(0, 0, 0, 0)';
+	},
+	set fillStyle( value ) {
+		// Skip
+	}
+} );
