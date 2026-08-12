@@ -32,6 +32,64 @@ ve.ui.CodeMirrorAction.static.name = 'codeMirror';
  */
 ve.ui.CodeMirrorAction.static.methods = [ 'toggle' ];
 
+/**
+ * Stylesheet of ext.CodeMirror.visualEditor.highlight, when it could be identified.
+ *
+ * @type {CSSStyleSheet|null}
+ * @private
+ */
+let highlightStyleSheet = null;
+
+/**
+ * Load the ::highlight() rules, and keep the stylesheet they arrive in.
+ *
+ * The module is loaded on its own. ResourceLoader gives one request a single <style>
+ * element, so a batched request would put these rules together with other modules'
+ * rules, and #setHighlightStylesEnabled could not then park them alone.
+ *
+ * A potential enhancement would be to split this module up further so that it
+ * contains only the ::highlight styles, so we can be confident there won't be
+ * any side-effects from disabling it.
+ *
+ * @return {Promise}
+ * @private
+ */
+async function loadHighlightStyles() {
+	// Only this load can tell which stylesheet is ours. If the module has already been
+	// requested, by a gadget or a user script, ResourceLoader adds nothing here and the
+	// sheet cannot be told apart. Leave the rules enabled: that is slower, but it is
+	// never wrong, and the other script decides how long they stay.
+	const ourLoad = mw.loader.getState( 'ext.CodeMirror.visualEditor.highlight' ) === 'registered';
+	const before = new Set( document.styleSheets );
+	await mw.loader.using( 'ext.CodeMirror.visualEditor.highlight' );
+	if ( ourLoad && !highlightStyleSheet ) {
+		const added = Array.prototype.filter.call(
+			document.styleSheets, ( sheet ) => !before.has( sheet )
+		);
+		// One <style> element holds one request, so a lone addition is this module. It
+		// also holds anything else queued in the same tick, which parks with it.
+		if ( added.length === 1 ) {
+			highlightStyleSheet = added[ 0 ];
+		}
+	}
+	ve.ui.CodeMirrorAction.static.setHighlightStylesEnabled( true );
+}
+
+/**
+ * Enable or park the ::highlight() styles.
+ *
+ * Browsers match these rules against the whole document on each style
+ * recalculation. In Chrome this costs seconds on a long article. Only the highlighter
+ * draws them, so park them while it does not draw.
+ *
+ * @param {boolean} enabled
+ */
+ve.ui.CodeMirrorAction.static.setHighlightStylesEnabled = function ( enabled ) {
+	if ( highlightStyleSheet ) {
+		highlightStyleSheet.disabled = !enabled;
+	}
+};
+
 /* Methods */
 
 /**
@@ -42,14 +100,13 @@ ve.ui.CodeMirrorAction.static.methods = [ 'toggle' ];
 ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 	if ( !this.surface.mirror && ( enable || enable === undefined ) ) {
 		const useCustomHighlight = ve.ui.CodeMirrorTool.static.useCustomHighlight();
-		const modules = [ 'ext.CodeMirror.mode.mediawiki', 'jquery.client' ];
+		await mw.loader.using( [ 'ext.CodeMirror.mode.mediawiki', 'jquery.client' ] );
 		if ( useCustomHighlight ) {
-			// Load the ::highlight() rules only for the controller that draws them. The browser
-			// matches them against the whole document on each style recalculation, which costs
-			// seconds on a long article, so VisualEditor must not carry them by default.
-			modules.push( 'ext.CodeMirror.visualEditor.highlight' );
+			// Only the controller that draws them needs the ::highlight() rules, so
+			// VisualEditor must not carry them by default. Loaded after the modules
+			// above, not with them; see #loadHighlightStyles.
+			await loadHighlightStyles();
 		}
-		await mw.loader.using( modules );
 		if ( this.surface.mirror ) {
 			mw.log( '[CodeMirror] VE mirror already initialized by another action.' );
 			return;

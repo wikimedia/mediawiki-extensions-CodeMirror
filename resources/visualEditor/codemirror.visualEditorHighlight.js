@@ -502,6 +502,7 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 			return;
 		}
 
+		ve.ui.CodeMirrorAction.static.setHighlightStylesEnabled( true );
 		// Re-sync with the surface, which may have moved on while we were off. The inherited
 		// initialize() has already been through here once, so this is a rebuild.
 		this.addToDOM( this.defaultExtensions );
@@ -591,6 +592,8 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 		// The tokenizer is kept, as the other integrations keep their view: toggle() goes by
 		// the state to tell a first activation from a later one. activate() re-syncs it.
 		this.isActive = false;
+		// After #clearAllHighlights, so nothing that the rules paint is still on screen.
+		ve.ui.CodeMirrorAction.static.setHighlightStylesEnabled( false );
 		this.logEditFeature( 'deactivated' );
 	}
 

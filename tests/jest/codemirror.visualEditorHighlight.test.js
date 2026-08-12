@@ -155,6 +155,12 @@ beforeEach( () => {
 				getSourceText: () => ( Array.isArray( insert ) ? insert.join( '' ) : String( insert ) )
 			} ) )
 		},
+		// The action owns the ::highlight() stylesheet; activate/deactivate park it.
+		ui: {
+			CodeMirrorAction: {
+				static: { setHighlightStylesEnabled: jest.fn() }
+			}
+		},
 		// Synchronous stand-in for the gutter's debounced repaint, so tests need no timers.
 		// Keeps the guard, which is the part behaviour depends on.
 		debounceWithTest: ( test, func ) => ( ...args ) => {
