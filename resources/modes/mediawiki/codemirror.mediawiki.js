@@ -1693,12 +1693,12 @@ let handler;
  * @param {Object} [config] Configuration options for the MediaWiki mode.
  * @param {boolean} [config.bidiIsolation=false] Enable bidi isolation around HTML tags.
  *   This should generally always be enabled on RTL pages, but it comes with a performance cost.
+ * @param {boolean} [config.autocomplete=true] Enable autocompletion.
+ * @param {boolean} [config.closeTags=true] Enable auto-closing of HTML tags.
  * @param {boolean} [config.codeFolding=true] Enable code folding.
  * @param {boolean} [config.foldAllRefs=false] Fold all references on initial load.
- * @param {boolean} [config.autocomplete=true] Enable autocompletion.
- * @param {boolean} [config.openLinks=true] Enable opening of links.
  * @param {boolean} [config.highlightRefs=true] Highlight references.
- * @param {boolean} [config.closeTags=true] Enable auto-closing of HTML tags.
+ * @param {boolean} [config.openLinks=true] Enable opening of links.
  * @param {string[]} [config.languageVariants] Language variants that should be supported.
  * @return {CodeMirrorMediaWiki|LanguageSupport}
  * @stable to call

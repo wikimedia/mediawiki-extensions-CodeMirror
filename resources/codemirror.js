@@ -213,16 +213,16 @@ class CodeMirror {
 		 * @type {CodeMirrorExtensionRegistry}
 		 */
 		this.extensionRegistry = new CodeMirrorExtensionRegistry( {
+			activeLine: this.activeLineExtension,
 			// Empty extension; We just want the toggleable preference.
 			autofocus: [],
 			bracketMatching: this.bracketMatchingExtension,
 			closeBrackets: this.closeBracketsExtension,
 			lineNumbering: this.lineNumberingExtension,
 			lineWrapping: this.lineWrappingExtension,
-			activeLine: this.activeLineExtension,
 			specialChars: this.specialCharsExtension,
-			whitespace: this.whitespaceExtension,
-			trailingWhitespace: this.trailingWhitespaceExtension
+			trailingWhitespace: this.trailingWhitespaceExtension,
+			whitespace: this.whitespaceExtension
 		}, this.constructor.name === 'CodeMirrorVisualEditor' );
 		/**
 		 * Compartment to control the direction of the editor.

@@ -41,59 +41,59 @@
 		"CodeMirrorDefaultPreferences": {
 			"value": {
 				"activeLine": false,
+				"autocomplete": true,
 				"autofocus": true,
 				"bidiIsolation": false,
 				"bracketMatching": true,
 				"closeBrackets": false,
 				"closeTags": false,
-				"highlightRefs": true,
+				"codeFolding": true,
 				"foldAllRefs": false,
+				"highlightRefs": true,
 				"lineNumbering": true,
 				"lineWrapping": true,
-				"specialChars": true,
-				"codeFolding": true,
-				"autocomplete": true,
-				"openLinks": true,
-				"whitespace": false,
-				"trailingWhitespace": false,
 				"lint": false,
-				"theme": "default"
+				"openLinks": true,
+				"specialChars": true,
+				"theme": "default",
+				"trailingWhitespace": false,
+				"whitespace": false
 			},
 			"description": "Defaults for CodeMirror user preferences for wikitext. See https://w.wiki/BwzZ for more information."
 		},
 		"CodeMirrorDefaultPreferencesCode": {
 			"value": {
 				"activeLine": true,
+				"autocomplete": true,
 				"autofocus": true,
 				"bidiIsolation": false,
 				"bracketMatching": true,
 				"closeBrackets": true,
 				"closeTags": false,
-				"highlightRefs": true,
+				"codeFolding": true,
 				"foldAllRefs": false,
+				"highlightRefs": true,
 				"lineNumbering": true,
 				"lineWrapping": true,
-				"specialChars": true,
-				"codeFolding": true,
-				"autocomplete": true,
-				"openLinks": true,
-				"whitespace": false,
-				"trailingWhitespace": false,
 				"lint": true,
-				"theme": "default"
+				"openLinks": true,
+				"specialChars": true,
+				"theme": "default",
+				"trailingWhitespace": false,
+				"whitespace": false
 			},
 			"description": "Defaults for CodeMirror user preferences for non-wikitext. See https://w.wiki/BwzZ for more information."
 		},
 		"CodeMirrorPrimaryPreferences": {
 			"value": {
+				"autocomplete": true,
 				"bidiIsolation": true,
 				"bracketMatching": true,
 				"lineNumbering": true,
 				"lineWrapping": true,
-				"whitespace": true,
+				"lint": true,
 				"specialChars": true,
-				"autocomplete": true,
-				"lint": true
+				"whitespace": true
 			},
 			"description": "Preferences advertised in the in-editor preferences panel. These should have a clear visual effect and be useful to most users. Preferences not listed here will be available in the full preferences dialog."
 		}
