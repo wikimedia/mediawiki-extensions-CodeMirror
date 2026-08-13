@@ -16,7 +16,10 @@ const mwModeConfig = require( './codemirror.mediawiki.config.js' );
 const bidiIsolationExtension = require( './codemirror.mediawiki.bidiIsolation.js' );
 const { codeFoldingExtension, foldAllRefs } = require( './codemirror.mediawiki.codeFolding.js' );
 const { autocompleteExtension, completionSource } = require( './codemirror.mediawiki.autocomplete.js' );
-const openLinksExtension = require( './codemirror.mediawiki.openLinks.js' );
+const {
+	openLinksExtension,
+	openLinksSupport
+} = require( './codemirror.mediawiki.openLinks.js' );
 const closeTagsExtension = require( './codemirror.mediawiki.closeTags.js' );
 const { tagMatching, matchTag } = require( './codemirror.mediawiki.matchTag.js' );
 const mwKeymap = require( './codemirror.mediawiki.keymap.js' );
@@ -161,6 +164,18 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 	/** @inheritDoc */
 	get bracketMatchingExtension() {
 		return tagMatching;
+	}
+
+	/**
+	 * Link resolution and the platform's modifier, for integrations that receive the mouse
+	 * events themselves instead of leaving them to CodeMirror. A mode that cannot resolve
+	 * links leaves this undefined, and the integration then offers no such feature.
+	 *
+	 * @type {Object}
+	 * @stable to call
+	 */
+	get openLinks() {
+		return openLinksSupport;
 	}
 
 	/**

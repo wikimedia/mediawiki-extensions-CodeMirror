@@ -98,6 +98,7 @@ describe( 'constructor', () => {
 
 describe( 'supportedPreferences', () => {
 	it( 'should be the registry contents, before and after initialization', () => {
+		// No language support here, so the mode cannot resolve links and openLinks is absent.
 		expect( cmVe.supportedPreferences ).toStrictEqual( [
 			'activeLine',
 			'bracketMatching',
@@ -133,9 +134,12 @@ describe( 'supportedPreferences', () => {
 		cmVe.initialize();
 		// highlightRefs is registered by the mediawiki mode's ready handler, and is wanted.
 		expect( cmVe.supportedPreferences ).toContain( 'highlightRefs' );
+		// openLinks is absent from this list on purpose: the mode's own extension is off, but
+		// this integration seeds a preference of the same name for its own mark.
+		expect( cmVe.supportedPreferences ).toContain( 'openLinks' );
 		// These would otherwise be registered after construction, bypassing the defaults.
 		for ( const name of [
-			'lint', 'closeTags', 'codeFolding', 'autocomplete', 'openLinks',
+			'lint', 'closeTags', 'codeFolding', 'autocomplete',
 			'bidiIsolation', 'foldAllRefs', 'autofocus', 'closeBrackets',
 			'lineWrapping', 'specialChars'
 		] ) {
@@ -157,6 +161,7 @@ describe( 'supportedExtensions', () => {
 			'bracketMatching',
 			'highlightRefs',
 			'lineNumbering',
+			'openLinks',
 			'theme',
 			'trailingWhitespace',
 			'whitespace'
@@ -441,6 +446,137 @@ describe( 'onSelect', () => {
 		const docLength = cmVe.view.state.doc.length;
 		cmVe.onSelect( selectionOf( 0, docLength + 50 ) );
 		expect( cmVe.view.state.selection.main.head ).toBe( docLength );
+	} );
+} );
+
+describe( 'openLinks', () => {
+	/**
+	 * The MediaWiki mode, which supplies openLinks. Its own extension is off, as
+	 * ve.ui.CodeMirrorAction turns it off: only the resolver is wanted here.
+	 *
+	 * @return {Object}
+	 */
+	const langSupportWithLinks = () => {
+		const { mediawiki } =
+			require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
+		return mediawiki( {
+			bidiIsolation: false, codeFolding: false, autocomplete: false, openLinks: false
+		} );
+	};
+
+	/**
+	 * A controller over a document with a link in it, at source offsets 2 to 5.
+	 *
+	 * @param {Object} [langSupport]
+	 * @return {CodeMirrorVisualEditor}
+	 */
+	const newController = ( langSupport = langSupportWithLinks() ) => {
+		const mockSurface = getMockSurface();
+		mockSurface.getDom = jest.fn().mockReturnValue( '[[Foo]]' );
+		return new CodeMirrorVisualEditor( mockSurface, langSupport );
+	};
+
+	it( 'should leave the handler unbuilt when the mode supplies no resolver', () => {
+		// The default mock passes no language support, so the mode cannot resolve links and
+		// the preference is not offered at all.
+		expect( cmVe.openLinks ).toBeNull();
+		expect( cmVe.openLinksEnabled ).toBe( false );
+	} );
+
+	it( 'should offer the preference once the resolver is supplied', () => {
+		const c = newController();
+		expect( c.openLinks ).not.toBeNull();
+		// On by default, as in the non-VE editor.
+		expect( c.openLinksEnabled ).toBe( true );
+		expect( c.supportedPreferences ).toContain( 'openLinks' );
+	} );
+
+	it( 'should honour a stored preference of off', () => {
+		mockUserOptionsGet( {
+			'codemirror-preferences': JSON.stringify( { openLinks: false } )
+		} );
+		expect( newController().openLinksEnabled ).toBe( false );
+		mockUserOptionsGet();
+	} );
+
+	it( 'should enable the handler on activate and disable it on deactivate', () => {
+		const c = newController();
+		const spy = jest.spyOn( c.openLinks, 'setEnabled' );
+		c.initialize();
+		expect( spy ).toHaveBeenCalledWith( true );
+		c.deactivate();
+		expect( spy ).toHaveBeenLastCalledWith( false );
+	} );
+
+	it( 'should toggle the mark through the registry and the handler alongside it', () => {
+		// The registry owns the decoration; opening a link is VisualEditor's own event, so
+		// the handler has to be told separately.
+		const c = newController();
+		c.initialize();
+		const handlerSpy = jest.spyOn( c.openLinks, 'setEnabled' );
+		c.applyPreference( 'openLinks', false );
+		expect( c.openLinksEnabled ).toBe( false );
+		expect( c.extensionRegistry.isEnabled( 'openLinks', c ) ).toBe( false );
+		expect( handlerSpy ).toHaveBeenCalledWith( false );
+
+		c.applyPreference( 'openLinks', true );
+		expect( c.extensionRegistry.isEnabled( 'openLinks', c ) ).toBe( true );
+		expect( handlerSpy ).toHaveBeenLastCalledWith( true );
+	} );
+
+	it( 'should mark the link as a decoration, and unmark it again', () => {
+		const c = newController();
+		c.initialize();
+		expect( c.drawOpenLink( 2, 5 ) ).toBe( true );
+		expect( c.view.dom.querySelector( '.cm-mw-ve-openLinkToken' ) ).not.toBeNull();
+		c.clearOpenLink();
+		expect( c.view.dom.querySelector( '.cm-mw-ve-openLinkToken' ) ).toBeNull();
+	} );
+
+	it( 'should nest the mark around the mode\'s token span, not merge into it', () => {
+		// ve.ui.CodeMirror.less depends on this: the token declares its own color, so an
+		// inherited one from the mark would lose and the rule has to reach the descendant.
+		const { mediawiki } =
+			require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
+		mw.Title.newFromText = jest.fn().mockReturnValue( { getUrl: () => '/wiki/Foo' } );
+		const mockSurface = getMockSurface();
+		mockSurface.getDom = jest.fn().mockReturnValue( '[[Foo]]' );
+		const langSupport = mediawiki( {
+			bidiIsolation: false, codeFolding: false, autocomplete: false, openLinks: false
+		} );
+		const c = new CodeMirrorVisualEditor( mockSurface, langSupport );
+		c.initialize();
+		const link = langSupport.openLinks.resolveLinkAt( c.view.state, 2 );
+		expect( c.drawOpenLink( link.from, link.to ) ).toBe( true );
+		const mark = c.view.dom.querySelector( '.cm-mw-ve-openLinkToken' );
+		const token = mark.querySelector( '.cm-mw-link-pagename' );
+		expect( token ).not.toBeNull();
+		// And the token carries .cm-mw-pagename, which the mode underlines regardless, so the
+		// color rather than the underline is what marks it.
+		expect( token.classList ).toContain( 'cm-mw-pagename' );
+	} );
+
+	it( 'should refuse to mark an empty range', () => {
+		const c = newController();
+		c.initialize();
+		expect( c.drawOpenLink( 5, 5 ) ).toBe( false );
+	} );
+
+	it( 'should draw nothing once the view is gone', () => {
+		const c = newController();
+		c.initialize();
+		c.destroy();
+		expect( c.drawOpenLink( 2, 5 ) ).toBe( false );
+		// Only asserting that it does not throw.
+		c.clearOpenLink();
+	} );
+
+	it( 'should destroy the handler with the controller', () => {
+		const c = newController();
+		c.initialize();
+		const spy = jest.spyOn( c.openLinks, 'destroy' );
+		c.destroy();
+		expect( spy ).toHaveBeenCalled();
 	} );
 } );
 

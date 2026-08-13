@@ -464,6 +464,7 @@
 				"visualEditor/codemirror.visualEditor.js",
 				"visualEditor/codemirror.visualEditorHighlight.js",
 				"visualEditor/codemirror.visualEditorHighlight.lineNumbering.js",
+				"visualEditor/codemirror.visualEditorOpenLinks.js",
 				"codemirror.matchbrackets.util.js"
 			],
 			"styles": [
@@ -479,6 +480,7 @@
 				"codemirror-prefs-highlightrefs",
 				"codemirror-prefs-linenumbering",
 				"codemirror-prefs-linewrapping",
+				"codemirror-prefs-openlinks",
 				"codemirror-prefs-theme",
 				"codemirror-prefs-title",
 				"codemirror-theme-colorblind",

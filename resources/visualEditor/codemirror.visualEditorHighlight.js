@@ -11,6 +11,7 @@ const {
 } = require( 'ext.CodeMirror' );
 const { findBracketMatch } = require( '../codemirror.matchbrackets.util.js' );
 const CodeMirrorVisualEditorHighlightLineNumbering = require( './codemirror.visualEditorHighlight.lineNumbering.js' );
+const CodeMirrorVisualEditorOpenLinks = require( './codemirror.visualEditorOpenLinks.js' );
 
 /**
  * Milliseconds allowed for {@link ensureSyntaxTree} to parse up to the end of the
@@ -105,6 +106,14 @@ const WHITESPACE_GROUP = 'cm-whitespace';
  * @private
  */
 const TRAILING_WHITESPACE_GROUP = 'cm-trailing-whitespace';
+
+/**
+ * Highlight group marking the link that a modifier-click would open.
+ *
+ * @type {string}
+ * @private
+ */
+const OPEN_LINK_GROUP = 'cm-open-link';
 
 /**
  * Class prefix (plus the level) set on the VE paragraph node of a heading line. font-size is
@@ -249,6 +258,27 @@ class CodeMirrorVisualEditorHighlight {
 		this.lineNumberGutter = new CodeMirrorVisualEditorHighlightLineNumbering(
 			this.surfaceView, this.formatLineNumber.bind( this )
 		);
+		/**
+		 * Whether modifier-clicking a link opens it, from the user's `openLinks` preference.
+		 *
+		 * @type {boolean}
+		 */
+		this.openLinksEnabled = !!langSupport.openLinks &&
+			!!this.getPreference( 'openLinks' );
+		/**
+		 * Modifier-click link opening, driven by VisualEditor's mouse events since there is no
+		 * EditorView to receive CodeMirror's own. Null if the mode did not supply the helpers.
+		 *
+		 * @type {CodeMirrorVisualEditorOpenLinks|null}
+		 */
+		this.openLinks = langSupport.openLinks ?
+			new CodeMirrorVisualEditorOpenLinks( surface, Object.assign( {
+				// Built regardless of theme, as bracket matching needs it kept in sync.
+				getState: () => this.tokenizer,
+				drawLink: this.drawOpenLink.bind( this ),
+				clearLink: this.clearOpenLink.bind( this )
+			}, langSupport.openLinks ) ) :
+			null;
 		/**
 		 * The `theme` preference: `default`, `colorblind` or `no-highlight` for this mode. Light
 		 * and dark variants are resolved in CSS, so only the base name matters here.
@@ -408,6 +438,9 @@ class CodeMirrorVisualEditorHighlight {
 			this.scheduleTrailingWhitespace();
 		}
 		this.lineNumberGutter.setEnabled( this.lineNumberingEnabled );
+		if ( this.openLinks ) {
+			this.openLinks.setEnabled( this.openLinksEnabled );
+		}
 	}
 
 	/**
@@ -451,6 +484,9 @@ class CodeMirrorVisualEditorHighlight {
 		this.clearTrailingWhitespace();
 		this.clearHeadings();
 		this.lineNumberGutter.setEnabled( false );
+		if ( this.openLinks ) {
+			this.openLinks.setEnabled( false );
+		}
 		this.tokenizer = null;
 		this.isActive = false;
 		this.logEditFeature( 'deactivated' );
@@ -465,6 +501,9 @@ class CodeMirrorVisualEditorHighlight {
 		this.deactivate();
 		// Owned outright, unlike everything else here, which only borrows VE's surface.
 		this.lineNumberGutter.destroy();
+		if ( this.openLinks ) {
+			this.openLinks.destroy();
+		}
 		this.themes.destroy();
 	}
 
@@ -568,7 +607,8 @@ class CodeMirrorVisualEditorHighlight {
 	get supportedPreferences() {
 		return [
 			'theme', 'highlightRefs', 'bracketMatching', 'lineNumbering',
-			'activeLine', 'whitespace', 'trailingWhitespace'
+			'activeLine', 'whitespace', 'trailingWhitespace',
+			...( this.openLinks ? [ 'openLinks' ] : [] )
 		];
 	}
 
@@ -614,6 +654,12 @@ class CodeMirrorVisualEditorHighlight {
 					this.scheduleBracketMatch();
 				} else {
 					this.clearBracketMatch();
+				}
+				break;
+			case 'openLinks':
+				this.openLinksEnabled = !!this.openLinks && !!value;
+				if ( this.openLinks ) {
+					this.openLinks.setEnabled( this.isActive && this.openLinksEnabled );
 				}
 				break;
 			case 'activeLine':
@@ -1268,6 +1314,48 @@ class CodeMirrorVisualEditorHighlight {
 		const selectionManager = this.surfaceView.getSelectionManager();
 		this.bracketGroups.forEach( ( name ) => selectionManager.drawSelections( name, [] ) );
 		this.bracketGroups.clear();
+	}
+
+	/**
+	 * Mark the link a modifier-click would open, as the `cm-open-link` group.
+	 *
+	 * @param {number} from Source offset
+	 * @param {number} to Source offset
+	 * @return {boolean} Whether the mark was drawn
+	 * @private
+	 */
+	drawOpenLink( from, to ) {
+		const model = this.surface.getModel();
+		let dmRange;
+		try {
+			dmRange = model.getRangeFromSourceOffsets( from, to );
+		} catch ( e ) {
+			return false;
+		}
+		this.surfaceView.getSelectionManager().drawSelections(
+			OPEN_LINK_GROUP,
+			[ this.surfaceView.getSelection(
+				model.getLinearFragment( dmRange ).getSelection()
+			) ],
+			{ showRects: false, showCustomHighlight: true }
+		);
+		// Raise the group above the syntax ones, whose priority is the default 0, so the
+		// open-link color wins over the token's. SelectionManager makes a new Highlight on each
+		// draw and takes no priority, so reach past it every time.
+		const highlight = window.CSS.highlights.get( 'visualeditor-' + OPEN_LINK_GROUP );
+		if ( highlight ) {
+			highlight.priority = 1;
+		}
+		return true;
+	}
+
+	/**
+	 * Remove the open-link mark.
+	 *
+	 * @private
+	 */
+	clearOpenLink() {
+		this.surfaceView.getSelectionManager().drawSelections( OPEN_LINK_GROUP, [] );
 	}
 
 	/**

@@ -1,10 +1,60 @@
 const {
+	Decoration,
 	Direction,
 	EditorState,
 	EditorView,
-	LanguageSupport
+	Extension,
+	LanguageSupport,
+	StateEffect,
+	StateEffectType,
+	StateField
 } = require( 'ext.CodeMirror.lib' );
 const CodeMirror = require( 'ext.CodeMirror' );
+const CodeMirrorVisualEditorOpenLinks = require( './codemirror.visualEditorOpenLinks.js' );
+
+/**
+ * Marks the link a modifier-click would open. CodeMirror nests this around the mode's own token
+ * span rather than merging the classes, so the stylesheet has to reach the descendant to beat
+ * the token's `color`.
+ *
+ * @type {Decoration}
+ * @private
+ */
+const openLinkDecoration = Decoration.mark( { class: 'cm-mw-ve-openLinkToken' } );
+
+/**
+ * Moves {@link openLinkDecoration} to a source range, or clears it when given null.
+ *
+ * @type {StateEffectType}
+ * @private
+ */
+const setOpenLink = StateEffect.define();
+
+/**
+ * Holds the open-link mark. A StateField updated by a StateEffect, rather than a Compartment
+ * reconfigured each time: the mark follows the pointer, and reconfiguring rebuilds the editor's
+ * configuration, which is meant for occasional changes. Measured at roughly twice the cost per
+ * update even without a browser's share of the work.
+ *
+ * @type {StateField}
+ * @private
+ */
+const openLinkField = StateField.define( {
+	create: () => Decoration.none,
+	update: ( marks, transaction ) => {
+		for ( const effect of transaction.effects ) {
+			if ( effect.is( setOpenLink ) ) {
+				return effect.value ?
+					Decoration.set( [
+						openLinkDecoration.range( effect.value.from, effect.value.to )
+					] ) :
+					Decoration.none;
+			}
+		}
+		return marks.map( transaction.changes );
+	},
+	provide: ( field ) => EditorView.decorations.from( field )
+} );
 
 /**
  * CodeMirror integration for the VisualEditor
@@ -26,6 +76,26 @@ class CodeMirrorVisualEditor extends CodeMirror {
 		 * @type {ve.ce.Surface}
 		 */
 		this.surfaceView = this.surface.getView();
+		/**
+		 * Whether modifier-clicking a link opens it, from the user's `openLinks` preference.
+		 *
+		 * @type {boolean}
+		 */
+		this.openLinksEnabled = !!this.langExtension.openLinks &&
+			!!this.preferences.getPreference( 'openLinks' );
+		/**
+		 * Modifier-click link opening, driven by VisualEditor's mouse events: the overlay is
+		 * `pointer-events: none`, so CodeMirror's own openLinks extension never fires here.
+		 *
+		 * @type {CodeMirrorVisualEditorOpenLinks|null}
+		 */
+		this.openLinks = this.langExtension.openLinks ?
+			new CodeMirrorVisualEditorOpenLinks( surface, Object.assign( {
+				getState: () => this.state,
+				drawLink: this.drawOpenLink.bind( this ),
+				clearLink: this.clearOpenLink.bind( this )
+			}, this.langExtension.openLinks ) ) :
+			null;
 	}
 
 	/**
@@ -60,6 +130,10 @@ class CodeMirrorVisualEditor extends CodeMirror {
 			trailingWhitespace: this.trailingWhitespaceExtension,
 			whitespace: this.whitespaceExtension
 		};
+		// Only offer to mark links if the mode can find them.
+		if ( this.langExtension.openLinks ) {
+			extensions.openLinks = this.openLinksExtension;
+		}
 		// DiscussionTools has no line numbers, so don't offer the preference there either.
 		if ( this.surface.getTarget().constructor.name === 'CommentTarget' ) {
 			delete extensions.lineNumbering;
@@ -81,10 +155,22 @@ class CodeMirrorVisualEditor extends CodeMirror {
 			'bracketMatching',
 			'highlightRefs',
 			'lineNumbering',
+			'openLinks',
 			'theme',
 			'trailingWhitespace',
 			'whitespace'
 		];
+	}
+
+	/**
+	 * Holds the mark for the link under the pointer. Registered like any other preference, so
+	 * the registry turns it on and off with `openLinks`; the range itself moves by effect.
+	 *
+	 * @type {Extension}
+	 * @protected
+	 */
+	get openLinksExtension() {
+		return openLinkField;
 	}
 
 	/**
@@ -160,10 +246,15 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	 * @param {PrefValue} value
 	 */
 	applyPreference( name, value ) {
-		this.extensionRegistry.toggle( name, this.view, value );
+		this.extensionRegistry.toggle( name, this, value );
 		// Adding or removing the gutter moves where CodeMirror's text starts.
 		if ( name === 'lineNumbering' && this.isActive ) {
 			this.updateGutterWidth( this.surfaceView.getDocument().getDir() );
+		}
+		// The registry only holds the mark. Opening a link is VisualEditor's own event.
+		if ( name === 'openLinks' && this.openLinks ) {
+			this.openLinksEnabled = !!value;
+			this.openLinks.setEnabled( this.isActive && this.openLinksEnabled );
 		}
 	}
 
@@ -278,6 +369,10 @@ class CodeMirrorVisualEditor extends CodeMirror {
 		this.positionListener = this.onPosition.bind( this );
 		this.surfaceView.on( 'position', this.positionListener );
 
+		if ( this.openLinks ) {
+			this.openLinks.setEnabled( this.openLinksEnabled );
+		}
+
 		// Sync document directionality changes to CodeMirror.
 		this.onPosition();
 	}
@@ -303,6 +398,11 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	 * @inheritDoc
 	 */
 	deactivate() {
+		// Before the parent hides the view, so the mark is cleared while it is still shown.
+		if ( this.openLinks ) {
+			this.openLinks.setEnabled( false );
+		}
+
 		super.deactivate();
 
 		this.surfaceView.$documentNode.removeClass(
@@ -342,6 +442,45 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	 * @inheritDoc
 	 */
 	setupFeatureLogging() {}
+
+	/**
+	 * @inheritDoc
+	 */
+	destroy() {
+		super.destroy();
+		if ( this.openLinks ) {
+			this.openLinks.destroy();
+		}
+	}
+
+	/**
+	 * Mark the link a modifier-click would open. The overlay carries the visible text, so this
+	 * is a CodeMirror decoration rather than one of VisualEditor's highlights.
+	 *
+	 * @param {number} from Source offset
+	 * @param {number} to Source offset
+	 * @return {boolean} Whether the mark was drawn
+	 * @private
+	 */
+	drawOpenLink( from, to ) {
+		if ( !this.view || from >= to ) {
+			return false;
+		}
+		this.dispatch( { effects: setOpenLink.of( { from, to } ) } );
+		return true;
+	}
+
+	/**
+	 * Remove the open-link mark.
+	 *
+	 * @private
+	 */
+	clearOpenLink() {
+		if ( !this.view ) {
+			return;
+		}
+		this.dispatch( { effects: setOpenLink.of( null ) } );
+	}
 
 	/**
 	 * Update margins to account for the CodeMirror gutter.

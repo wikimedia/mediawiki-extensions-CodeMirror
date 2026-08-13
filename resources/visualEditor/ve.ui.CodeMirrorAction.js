@@ -60,6 +60,9 @@ ve.ui.CodeMirrorAction.prototype.toggle = async function ( enable ) {
 			codeFolding: false,
 			foldAllRefs: false,
 			autocomplete: false,
+			// CodeMirror's own handler is a domEventHandlers entry, and it receives no mouse
+			// events in either integration. The controllers drive link opening from
+			// VisualEditor's events instead, reusing only resolveLinkAt.
 			openLinks: false,
 			closeTags: false,
 			lint: false

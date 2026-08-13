@@ -56,6 +56,9 @@ const getMockSurface = ( doc = '' ) => {
 	const surfaceView = {
 		// The controller scopes the colorblind theme by adding a class here.
 		$element: $( '<div>' ),
+		// The open-links handler binds to this, and marks it while a link is under the pointer.
+		$attachedRootNode: $( '<div>' ),
+		getOffsetFromEventCoords: jest.fn().mockImplementation( ( e ) => e.pageX ),
 		on: jest.fn(),
 		off: jest.fn(),
 		// The gutter uses VE's own connect/disconnect for the 'position' event.
@@ -1165,5 +1168,131 @@ describe( 'setCodeMirrorPreference', () => {
 		expect( mw.Api.prototype.saveOption )
 			.toHaveBeenCalledWith( 'usecodemirror', 1, { global: 'update' } );
 		expect( mw.user.options.set ).toHaveBeenCalledWith( 'usecodemirror', 1 );
+	} );
+} );
+
+describe( 'openLinks', () => {
+	/**
+	 * The MediaWiki mode's helpers, as the controller receives them.
+	 *
+	 * @return {Object}
+	 */
+	// langSupport is the real MediaWiki mode, which supplies openLinks, so a controller built
+	// with it has link opening; one built without any is the unavailable case.
+
+	/**
+	 * @param {Object} [support] Language support, defaulting to the MediaWiki mode
+	 * @return {Object}
+	 */
+	const newController = ( support = langSupport ) => new CodeMirrorVisualEditorHighlight(
+		getMockSurface( '{{Foo}} [[Bar]]' ), support
+	);
+
+	/**
+	 * The drawSelections calls for the open-link group.
+	 *
+	 * @param {Object} s Mock surface
+	 * @return {Array[]}
+	 */
+	const openLinkCalls = ( s ) => s.selectionManager.drawSelections.mock.calls
+		.filter( ( call ) => call[ 0 ] === 'cm-open-link' );
+
+	it( 'should stay unavailable when the mode supplies no resolver', () => {
+		// The mode with its openLinks shadowed away, as a mode without link resolution.
+		const noLinks = Object.create( langSupport, { openLinks: { value: undefined } } );
+		const c = newController( noLinks );
+		expect( c.openLinks ).toBeNull();
+		expect( c.openLinksEnabled ).toBe( false );
+		expect( c.supportedPreferences ).not.toContain( 'openLinks' );
+	} );
+
+	it( 'should offer the preference once the resolver is supplied', () => {
+		const c = newController();
+		expect( c.openLinks ).not.toBeNull();
+		// On by default, as in the non-VE editor.
+		expect( c.openLinksEnabled ).toBe( true );
+		expect( c.supportedPreferences ).toContain( 'openLinks' );
+	} );
+
+	it( 'should read the tokenizer state, which outlives the no-highlight theme', () => {
+		const c = newController();
+		c.activate();
+		expect( c.openLinks.config.getState() ).toBe( c.tokenizer );
+	} );
+
+	it( 'should enable the handler on activate and disable it on deactivate', () => {
+		const c = newController();
+		const spy = jest.spyOn( c.openLinks, 'setEnabled' );
+		c.activate();
+		expect( spy ).toHaveBeenCalledWith( true );
+		c.deactivate();
+		expect( spy ).toHaveBeenLastCalledWith( false );
+	} );
+
+	it( 'should apply the preference to the running handler', () => {
+		const c = newController();
+		c.activate();
+		const spy = jest.spyOn( c.openLinks, 'setEnabled' );
+		c.applyPreference( 'openLinks', false );
+		expect( c.openLinksEnabled ).toBe( false );
+		expect( spy ).toHaveBeenCalledWith( false );
+		c.applyPreference( 'openLinks', true );
+		expect( spy ).toHaveBeenLastCalledWith( true );
+	} );
+
+	it( 'should not enable the handler while inactive', () => {
+		const c = newController();
+		const spy = jest.spyOn( c.openLinks, 'setEnabled' );
+		c.applyPreference( 'openLinks', true );
+		expect( spy ).toHaveBeenCalledWith( false );
+	} );
+
+	it( 'should mark the link as its own highlight group, and unmark it again', () => {
+		const c = newController();
+		const s = c.surface;
+		c.activate();
+		s.selectionManager.drawSelections.mockClear();
+		expect( c.drawOpenLink( 2, 5 ) ).toBe( true );
+		const calls = openLinkCalls( s );
+		expect( calls.length ).toBe( 1 );
+		expect( calls[ 0 ][ 1 ].length ).toBe( 1 );
+		expect( calls[ 0 ][ 2 ] ).toEqual( { showRects: false, showCustomHighlight: true } );
+		s.selectionManager.drawSelections.mockClear();
+		c.clearOpenLink();
+		expect( openLinkCalls( s )[ 0 ][ 1 ] ).toEqual( [] );
+	} );
+
+	it( 'should raise the group above the syntax ones', () => {
+		const c = newController();
+		c.activate();
+		// Stand in for what SelectionManager registers, which the mock does not do.
+		const highlight = { priority: 0 };
+		CSS.highlights.set( 'visualeditor-cm-open-link', highlight );
+		c.drawOpenLink( 2, 5 );
+		expect( highlight.priority ).toBe( 1 );
+	} );
+
+	it( 'should not require the highlight to be registered', () => {
+		const c = newController();
+		c.activate();
+		// No CSS.highlights entry, e.g. where the range resolved to nothing to paint.
+		expect( c.drawOpenLink( 2, 5 ) ).toBe( true );
+	} );
+
+	it( 'should refuse to mark a range the model rejects', () => {
+		const c = newController();
+		c.activate();
+		c.surface.model.getRangeFromSourceOffsets.mockImplementation( () => {
+			throw new Error( 'Offset out of bounds' );
+		} );
+		expect( c.drawOpenLink( 2, 5 ) ).toBe( false );
+	} );
+
+	it( 'should destroy the handler with the controller', () => {
+		const c = newController();
+		c.activate();
+		const spy = jest.spyOn( c.openLinks, 'destroy' );
+		c.destroy();
+		expect( spy ).toHaveBeenCalled();
 	} );
 } );

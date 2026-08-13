@@ -262,6 +262,19 @@
 }
 
 /*
+ * The link under the pointer. Mirrors the `:hover` rule in codemirror.mediawiki.less. The color
+ * does the work: `visualeditor-syntax-cm-mw-pagename` above underlines every internal target
+ * anyway, so only external links gain an underline.
+ *
+ * Where two highlights paint the same character, priority then registration order decides, not
+ * specificity. CodeMirrorVisualEditorHighlight#drawOpenLink raises this one.
+ */
+::highlight( visualeditor-cm-open-link ) {
+	color: @color-progressive--hover;
+	text-decoration: @text-decoration-underline;
+}
+
+/*
  * Heading sizes, set on VE's paragraph node by CodeMirrorVisualEditorHighlight#updateHeadings
  * because ::highlight() can't do font-size. Mirrors .cm-mw-section-* in
  * codemirror.mediawiki.less. Only safe without an overlay to keep aligned (T432950) -- which is

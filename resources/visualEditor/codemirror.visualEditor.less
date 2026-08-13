@@ -1,3 +1,4 @@
+@import 'mediawiki.skin.variables.less';
 @import 'mediawiki.mixins.less';
 
 .ve-init-target {
@@ -112,4 +113,28 @@
 
 .ext-codemirror-wrapper .ve-ce-documentNode-codeEditor-webkit-hide {
 	-webkit-text-fill-color: transparent;
+}
+
+/*
+ * Modifier-click to open links. The cursor goes on VisualEditor's node because that is what the
+ * pointer is over; the overlay is `pointer-events: none`.
+ */
+.cm-mw-ve-openLink {
+	cursor: @cursor-base--hover;
+}
+
+/*
+ * The link under the pointer, marked as a CodeMirror decoration. Mirrors the `:hover` rule in
+ * codemirror.mediawiki.less. The color does the work: the mode underlines `.cm-mw-pagename`
+ * anyway, which every internal target carries, so only external links gain an underline.
+ *
+ * The descendant selector is necessary. CodeMirror nests the mark around the mode's token span
+ * instead of merging the classes, and the token sets its own color.
+ */
+.ve-init-target .cm-editor {
+	.cm-mw-ve-openLinkToken,
+	.cm-mw-ve-openLinkToken * {
+		color: @color-progressive--hover;
+		text-decoration: @text-decoration-underline;
+	}
 }
