@@ -467,6 +467,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 					invisibleLabel: true
 				} );
 				button.on( 'click', command.bind( this ) );
+				button.on( 'change', ( progressive ) => button.setFlags( { progressive } ) );
 				if ( callback ) {
 					callback( button );
 				}
@@ -523,7 +524,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 				closeSearchPanel( this.view ) :
 				openSearchPanel( this.view ),
 			mw.msg( 'codemirror-keymap-find' ),
-			'cm-search',
+			'articleSearch',
 			( button ) => {
 				mw.hook( 'ext.CodeMirror.search' ).add( () => {
 					button.setValue( searchPanelOpen( this.view.state ) );
@@ -544,7 +545,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 			'CodeMirrorPreferences',
 			() => this.preferences.toggle( this.view ),
 			mw.msg( 'codemirror-keymap-preferences' ),
-			'preferences',
+			'settings',
 			( button ) => {
 				mw.hook( 'ext.CodeMirror.preferences.display' ).add( () => {
 					button.setValue( this.view.state.field( this.preferences.panelStateField ) );
