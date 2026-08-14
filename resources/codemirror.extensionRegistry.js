@@ -17,6 +17,9 @@ const {
  *
  * The constructor is internal. The class can be accessed via {@link CodeMirror#extensionRegistry}.
  *
+ * Methods that read or change the configuration take an {@link Editor}, so integrations
+ * that have no {@link EditorView} can pass themselves instead.
+ *
  * @example
  * const require = await mw.loader.using( 'ext.CodeMirror' );
  * mw.hook( 'ext.CodeMirror.ready' ).add( ( cm ) => {
@@ -146,26 +149,26 @@ class CodeMirrorExtensionRegistry {
 	 *
 	 * @param {string} name
 	 * @param {Extension} extension
-	 * @param {EditorView} view
+	 * @param {Editor} editor
 	 * @param {boolean} [enable] `true` to enable the extension immediately.
 	 */
-	register( name, extension, view, enable ) {
+	register( name, extension, editor, enable ) {
 		if ( this.supportedExtensions && !this.supportedExtensions.includes( name ) ) {
 			mw.log.warn( `[CodeMirror] Extension "${ name }" is not supported by this editor.` );
 			return;
 		}
 
-		if ( this.isRegistered( name, view ) ) {
+		if ( this.isRegistered( name, editor ) ) {
 			// Already registered, so toggle accordingly.
 			if ( enable !== undefined ) {
-				this.toggle( name, view, enable );
+				this.toggle( name, editor, enable );
 			}
 			return;
 		}
 
 		this.extensions[ name ] = extension;
 		this.compartments[ name ] = new Compartment();
-		view.dispatch( {
+		editor.dispatch( {
 			effects: StateEffect.appendConfig.of(
 				this.compartments[ name ].of( enable ? extension : [] )
 			)
@@ -177,12 +180,12 @@ class CodeMirrorExtensionRegistry {
 	 * {@link #reconfigValueMap reconfiguration value map}.
 	 *
 	 * @param {string} name
-	 * @param {EditorView} view
+	 * @param {Editor} editor
 	 * @param {string} reconfigValue
 	 * @internal
 	 */
-	registerFromValueMap( name, view, reconfigValue ) {
-		this.register( name, this.reconfigValueMap.get( name ).get( reconfigValue ), view, true );
+	registerFromValueMap( name, editor, reconfigValue ) {
+		this.register( name, this.reconfigValueMap.get( name ).get( reconfigValue ), editor, true );
 	}
 
 	/**
@@ -196,15 +199,15 @@ class CodeMirrorExtensionRegistry {
 	 * cm.extensionRegistry.reconfigure( 'tabSize', cm.view, EditorState.tabSize.of( 10 ) );
 	 *
 	 * @param {string} name
-	 * @param {EditorView} view
+	 * @param {Editor} editor
 	 * @param {Extension} extension
 	 */
-	reconfigure( name, view, extension ) {
-		if ( !this.isRegistered( name, view ) ) {
+	reconfigure( name, editor, extension ) {
+		if ( !this.isRegistered( name, editor ) ) {
 			mw.log.warn( `[CodeMirror] Extension "${ name }" is not registered.` );
 			return;
 		}
-		view.dispatch( {
+		editor.dispatch( {
 			effects: this.getCompartment( name ).reconfigure( extension )
 		} );
 	}
@@ -214,33 +217,33 @@ class CodeMirrorExtensionRegistry {
 	 * {@link #reconfigValueMap reconfiguration value map}.
 	 *
 	 * @param {string} name
-	 * @param {EditorView} view
+	 * @param {Editor} editor
 	 * @param {string} reconfigValue
 	 * @internal
 	 */
-	reconfigureFromValueMap( name, view, reconfigValue ) {
-		this.reconfigure( name, view, this.reconfigValueMap.get( name ).get( reconfigValue ) );
+	reconfigureFromValueMap( name, editor, reconfigValue ) {
+		this.reconfigure( name, editor, this.reconfigValueMap.get( name ).get( reconfigValue ) );
 	}
 
 	/**
 	 * Toggle on or off an extension.
 	 *
 	 * @param {string} name
-	 * @param {EditorView} view
+	 * @param {Editor} editor
 	 * @param {PrefValue} [force] `true` to enable, `false` to disable, `undefined` to toggle,
 	 *   or a string value to force-enable with the given value from the
 	 *   {@link #reconfigValueMap reconfiguration value map}.
 	 */
-	toggle( name, view, force ) {
-		if ( !this.isRegistered( name, view ) ) {
+	toggle( name, editor, force ) {
+		if ( !this.isRegistered( name, editor ) ) {
 			mw.log.warn( `[CodeMirror] Extension "${ name }" is not registered.` );
 			return;
 		}
 		if ( typeof force === 'string' ) {
-			this.reconfigureFromValueMap( name, view, force );
+			this.reconfigureFromValueMap( name, editor, force );
 		} else {
-			const toEnable = force === undefined ? !this.isEnabled( name, view ) : force;
-			this.reconfigure( name, view, toEnable ? this.extensions[ name ] : [] );
+			const toEnable = force === undefined ? !this.isEnabled( name, editor ) : force;
+			this.reconfigure( name, editor, toEnable ? this.extensions[ name ] : [] );
 		}
 	}
 
@@ -248,16 +251,16 @@ class CodeMirrorExtensionRegistry {
 	 * Check if an extension is enabled.
 	 *
 	 * @param {string} name
-	 * @param {EditorView} view
+	 * @param {Editor} editor
 	 * @return {boolean}
 	 */
-	isEnabled( name, view ) {
-		if ( !this.isRegistered( name, view ) ) {
+	isEnabled( name, editor ) {
+		if ( !this.isRegistered( name, editor ) ) {
 			return false;
 		}
 		// An Extension can be of various types (FacetProvider, PrecExtension, etc.),
 		// but a "disabled" extension is always an empty array.
-		const contents = this.getCompartment( name ).get( view.state );
+		const contents = this.getCompartment( name ).get( editor.state );
 		return !Array.isArray( contents ) || !!contents.length;
 	}
 
@@ -267,12 +270,12 @@ class CodeMirrorExtensionRegistry {
 	 * that the extension has been "registered", but not necessarily enabled.
 	 *
 	 * @param {string} name
-	 * @param {EditorView} view
+	 * @param {Editor} editor
 	 * @return {boolean}
 	 */
-	isRegistered( name, view ) {
+	isRegistered( name, editor ) {
 		const compartment = this.compartments[ name ];
-		return compartment && !!compartment.get( view.state );
+		return compartment && !!compartment.get( editor.state );
 	}
 }
 

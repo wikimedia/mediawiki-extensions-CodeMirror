@@ -41,6 +41,7 @@
 				"CodeMirrorTextSelection": "CodeMirrorTextSelection",
 				"CodeMirrorThemes": "CodeMirrorThemes",
 				"CodeMirrorVisualEditor": "CodeMirrorVisualEditor",
+				"Editor": "Editor",
 				"FormSpecifier": "FormSpecifier",
 				"HighlightStyle": "HighlightStyle",
 				"Hook": "Hook",

@@ -174,3 +174,104 @@ describe( 'CodeMirrorExtensionRegistry', () => {
 		expect( console.warn ).not.toHaveBeenCalled();
 	} );
 } );
+
+describe( 'CodeMirrorExtensionRegistry (without an EditorView)', () => {
+	/**
+	 * A stand-in for an EditorView that owns nothing but an EditorState, mirroring what a
+	 * headless integration such as CodeMirrorVisualEditorHighlight provides. An EditorState
+	 * is immutable, so dispatch() has to store the state the transaction produces.
+	 *
+	 * @param {string} [doc]
+	 * @return {Object}
+	 */
+	const getHeadlessEditor = ( doc = 'foo' ) => ( {
+		state: EditorState.create( { doc } ),
+		dispatch( spec ) {
+			this.state = this.state.update( spec ).state;
+		}
+	} );
+
+	beforeEach( () => {
+		jest.spyOn( console, 'warn' ).mockImplementation( () => {} );
+	} );
+
+	afterEach( jest.restoreAllMocks );
+
+	it( 'should register an extension into a bare EditorState', () => {
+		const registry = new CodeMirrorExtensionRegistry( {} );
+		const editor = getHeadlessEditor();
+		expect( registry.isRegistered( 'tabSize', editor ) ).toBeFalsy();
+		registry.register( 'tabSize', EditorState.tabSize.of( 5 ), editor, true );
+		expect( registry.isRegistered( 'tabSize', editor ) ).toBe( true );
+		expect( registry.isEnabled( 'tabSize', editor ) ).toBe( true );
+		expect( editor.state.tabSize ).toBe( 5 );
+		expect( console.warn ).not.toHaveBeenCalled();
+	} );
+
+	it( 'should register the constructor extensions once the editor is known', () => {
+		const registry = new CodeMirrorExtensionRegistry( {
+			tabSize: EditorState.tabSize.of( 8 )
+		} );
+		const editor = getHeadlessEditor();
+		// Seeded extensions have a compartment, but are not in the state until included.
+		expect( registry.getCompartment( 'tabSize' ) ).toBeInstanceOf( Compartment );
+		expect( registry.isRegistered( 'tabSize', editor ) ).toBeFalsy();
+		editor.state = EditorState.create( {
+			doc: 'foo',
+			extensions: registry.get( 'tabSize' )
+		} );
+		expect( registry.isRegistered( 'tabSize', editor ) ).toBe( true );
+		expect( editor.state.tabSize ).toBe( 8 );
+	} );
+
+	it( 'should toggle an extension off and on', () => {
+		const registry = new CodeMirrorExtensionRegistry( {} );
+		const editor = getHeadlessEditor();
+		registry.register( 'readOnly', EditorState.readOnly.of( true ), editor, true );
+		expect( editor.state.readOnly ).toBe( true );
+
+		registry.toggle( 'readOnly', editor );
+		expect( registry.isEnabled( 'readOnly', editor ) ).toBe( false );
+		expect( editor.state.readOnly ).toBe( false );
+		// Still registered, so it can be turned back on.
+		expect( registry.isRegistered( 'readOnly', editor ) ).toBe( true );
+
+		registry.toggle( 'readOnly', editor, true );
+		expect( registry.isEnabled( 'readOnly', editor ) ).toBe( true );
+		expect( editor.state.readOnly ).toBe( true );
+		expect( console.warn ).not.toHaveBeenCalled();
+	} );
+
+	it( 'should reconfigure an extension', () => {
+		const registry = new CodeMirrorExtensionRegistry( {} );
+		const editor = getHeadlessEditor();
+		registry.register( 'tabSize', EditorState.tabSize.of( 5 ), editor, true );
+		registry.reconfigure( 'tabSize', editor, EditorState.tabSize.of( 10 ) );
+		expect( editor.state.tabSize ).toBe( 10 );
+	} );
+
+	it( 'should reconfigure from the value map', () => {
+		const registry = new CodeMirrorExtensionRegistry( {} );
+		const editor = getHeadlessEditor();
+		registry.reconfigValueMap.set( 'tabSize', new Map( [
+			[ 'small', EditorState.tabSize.of( 2 ) ],
+			[ 'large', EditorState.tabSize.of( 12 ) ]
+		] ) );
+		registry.registerFromValueMap( 'tabSize', editor, 'small' );
+		expect( editor.state.tabSize ).toBe( 2 );
+		registry.reconfigureFromValueMap( 'tabSize', editor, 'large' );
+		expect( editor.state.tabSize ).toBe( 12 );
+		// A string passed to toggle() also goes through the value map.
+		registry.toggle( 'tabSize', editor, 'small' );
+		expect( editor.state.tabSize ).toBe( 2 );
+	} );
+
+	it( 'should warn about an unregistered extension, as it does with a view', () => {
+		const registry = new CodeMirrorExtensionRegistry( {} );
+		const editor = getHeadlessEditor();
+		registry.toggle( 'doesntExist', editor, true );
+		expect( console.warn ).toHaveBeenCalledWith(
+			'[CodeMirror] Extension "doesntExist" is not registered.'
+		);
+	} );
+} );

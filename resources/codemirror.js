@@ -52,6 +52,20 @@ const indentGuides = require( './codemirror.indentGuides.js' );
 require( './ext.CodeMirror.data.js' );
 
 /**
+ * @typedef {EditorView|CodeMirror|Object} CodeMirror~Editor
+ * @description Anything that can hold an editor configuration: an {@link EditorView}, a
+ *   {@link CodeMirror} instance, or a plain object with the two members below. That pair is
+ *   all {@link CodeMirrorExtensionRegistry} and {@link CodeMirrorPreferences} need, so
+ *   integrations without an EditorView can qualify by overriding
+ *   {@link CodeMirror#state state} and {@link CodeMirror#dispatch dispatch()}.
+ * @property {EditorState} state The current state of the editor.
+ * @property {Function} dispatch Applies a
+ *   {@link https://codemirror.net/docs/ref/#state.TransactionSpec transaction} to the
+ *   editor. An EditorState is immutable, so implementations must store the state the
+ *   transaction produces.
+ */
+
+/**
  * Interface for the CodeMirror editor.
  *
  * This class is a wrapper around the {@link https://codemirror.net/ CodeMirror library},
@@ -77,6 +91,8 @@ require( './ext.CodeMirror.data.js' );
  * mw.hook( 'ext.CodeMirror.ready', ( cm ) => {
  *   cm.applyExtension( myExtension );
  * } );
+ *
+ * @implements {Editor}
  */
 class CodeMirror {
 	/**
@@ -859,6 +875,18 @@ class CodeMirror {
 	}
 
 	/**
+	 * Apply a {@link https://codemirror.net/docs/ref/#state.TransactionSpec transaction}
+	 * to the editor. Together with {@link CodeMirror#state state}, this is what makes a
+	 * CodeMirror instance an {@link Editor}.
+	 *
+	 * @param {Object} spec
+	 * @stable to call and override
+	 */
+	dispatch( spec ) {
+		this.view.dispatch( spec );
+	}
+
+	/**
 	 * Get the contents of the element that CodeMirror is bound to. This is used to
 	 * populate the initial document, and to re-sync the contents when re-activating.
 	 *
@@ -1160,7 +1188,7 @@ class CodeMirror {
 	 * @stable to call
 	 */
 	applyExtension( extension ) {
-		this.view.dispatch( {
+		this.dispatch( {
 			effects: StateEffect.appendConfig.of( extension )
 		} );
 	}
@@ -1393,7 +1421,7 @@ class CodeMirror {
 			if ( selectionStart !== 0 || selectionEnd !== 0 ) {
 				// The contents may have changed since the frame was requested,
 				// and a selection past the end of the document would throw.
-				const docLength = this.view.state.doc.length,
+				const docLength = this.state.doc.length,
 					range = EditorSelection.range(
 						Math.min( selectionStart, docLength ),
 						Math.min( selectionEnd, docLength )
@@ -1401,7 +1429,7 @@ class CodeMirror {
 					scrollEffect = EditorView.scrollIntoView( range );
 				// Restore scroll position when previewing (T254962).
 				scrollEffect.value.isSnapshot = true;
-				this.view.dispatch( {
+				this.dispatch( {
 					selection: EditorSelection.create( [ range ] ),
 					effects: scrollEffect
 				} );

@@ -1,4 +1,5 @@
 const {
+	EditorState,
 	diagnosticCount,
 	forEachDiagnostic,
 	EditorView,
@@ -764,5 +765,34 @@ describe( 'syncSelectionAndScrollPosition', () => {
 		expect( textarea.selectionStart ).toBe( 2 );
 		expect( textarea.selectionEnd ).toBe( 5 );
 		expect( textarea.scrollTop ).toBe( 40 );
+	} );
+} );
+
+describe( 'dispatch', () => {
+	it( 'should apply a transaction to the view', () => {
+		cm.initialize();
+		cm.dispatch( { changes: { from: 0, to: cm.state.doc.length, insert: 'Soundgarden' } } );
+		expect( cm.state.doc.toString() ).toStrictEqual( 'Soundgarden' );
+	} );
+
+	it( 'should let the instance stand in for an EditorView', () => {
+		cm.initialize();
+		// state and dispatch() are all the registry needs, so passing cm works
+		// wherever cm.view does.
+		cm.extensionRegistry.register( 'tabSize', EditorState.tabSize.of( 7 ), cm, true );
+		expect( cm.extensionRegistry.isEnabled( 'tabSize', cm ) ).toBe( true );
+		expect( cm.state.tabSize ).toBe( 7 );
+		cm.extensionRegistry.toggle( 'tabSize', cm, false );
+		expect( cm.extensionRegistry.isEnabled( 'tabSize', cm ) ).toBe( false );
+		expect( cm.state.tabSize ).toBe( 4 );
+	} );
+
+	it( 'should let preferences register extensions against the instance', () => {
+		cm.initialize();
+		const extension = EditorState.tabSize.of( 3 );
+		cm.preferences.setPreference( 'fooExtension', true );
+		cm.preferences.registerExtension( 'fooExtension', extension, cm );
+		expect( cm.extensionRegistry.isEnabled( 'fooExtension', cm ) ).toBe( true );
+		expect( cm.state.tabSize ).toBe( 3 );
 	} );
 } );

@@ -39,8 +39,12 @@ class CodeMirrorThemes {
 		this.preferences = preferences;
 		/** @type {CodeMirrorExtensionRegistry} */
 		this.extensionRegistry = preferences.extensionRegistry;
-		/** @type {EditorView} */
-		this.view = null;
+		/**
+		 * The editor the theme is applied to, once one is available.
+		 *
+		 * @type {Editor|null}
+		 */
+		this.editor = null;
 
 		/**
 		 * The <html> element, which is used to determine whether the skin is in dark mode.
@@ -230,9 +234,11 @@ class CodeMirrorThemes {
 				this.themes.get( `${ name }-${ this.isDark ? 'dark' : 'light' }` )
 			] )
 		) );
-		if ( this.view ) {
+		if ( this.editor ) {
 			// Reconfigure the currently enabled theme with the new theme.
-			this.extensionRegistry.reconfigureFromValueMap( 'theme', this.view, this.preferredTheme );
+			this.extensionRegistry.reconfigureFromValueMap(
+				'theme', this.editor, this.preferredTheme
+			);
 		}
 	}
 
@@ -250,15 +256,15 @@ class CodeMirrorThemes {
 	}
 
 	/**
-	 * To be called during CodeMirror initialization, once the EditorView is available.
+	 * To be called during CodeMirror initialization, once the editor is available.
 	 *
-	 * @param {EditorView} view
+	 * @param {Editor} editor
 	 * @internal
 	 * @private
 	 */
-	registerFromValueMap( view ) {
-		this.view = view;
-		this.extensionRegistry.registerFromValueMap( 'theme', this.view, this.preferredTheme );
+	registerFromValueMap( editor ) {
+		this.editor = editor;
+		this.extensionRegistry.registerFromValueMap( 'theme', this.editor, this.preferredTheme );
 	}
 }
 

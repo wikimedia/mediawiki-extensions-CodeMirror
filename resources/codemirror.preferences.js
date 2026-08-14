@@ -406,14 +406,14 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * This is useful for integrations that need to disable incompatible extensions.
 	 *
 	 * @param {string} prefName
-	 * @param {EditorView} [view]
+	 * @param {Editor} [editor]
 	 * @param {PrefValue} [force=false] Force the extension to be enabled or
 	 *   disabled (boolean), or enabled with a given value (string).
 	 * @stable to call
 	 */
-	lockPreference( prefName, view, force = false ) {
-		if ( view ) {
-			this.extensionRegistry.toggle( prefName, view, force );
+	lockPreference( prefName, editor, force = false ) {
+		if ( editor ) {
+			this.extensionRegistry.toggle( prefName, editor, force );
 		}
 		this.disabledPreferences.add( prefName );
 		this.setPreference( prefName, force );
@@ -480,13 +480,13 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 *
 	 * @param {string} name
 	 * @param {Extension} extension
-	 * @param {EditorView} view
+	 * @param {Editor} editor
 	 * @param {boolean} [slow=false] Setting to true will indicate that
 	 *   the feature is "potentially slow" in the preferences dialog.
 	 * @internal
 	 */
-	registerExtension( name, extension, view, slow = false ) {
-		this.extensionRegistry.register( name, extension, view, !!this.getPreference( name ) );
+	registerExtension( name, extension, editor, slow = false ) {
+		this.extensionRegistry.register( name, extension, editor, !!this.getPreference( name ) );
 		if ( slow ) {
 			this.slowPreferences.add( name );
 		}
@@ -501,12 +501,12 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * This can be used for initially registering features that use non-boolean values.
 	 *
 	 * @param {string} name
-	 * @param {EditorView} view
+	 * @param {Editor} editor
 	 * @param {boolean} [slow=false] Setting to true will indicate that
 	 *   the feature is "potentially slow" in the preferences dialog.
 	 * @internal
 	 */
-	registerExtensionFromValueMap( name, view, slow = false ) {
+	registerExtensionFromValueMap( name, editor, slow = false ) {
 		const prefValue = this.getPreference( name );
 		if ( typeof prefValue !== 'string' ) {
 			throw new Error(
@@ -514,7 +514,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 				'value map with a non-string value'
 			);
 		}
-		this.extensionRegistry.registerFromValueMap( name, view, prefValue );
+		this.extensionRegistry.registerFromValueMap( name, editor, prefValue );
 		if ( slow ) {
 			this.slowPreferences.add( name );
 		}
@@ -528,14 +528,14 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 *
 	 * @param {string} name
 	 * @param {Function} callback Function that takes the new preference value.
-	 * @param {EditorView} view
+	 * @param {Editor} editor
 	 * @param {boolean} [slow=false] Setting to true will indicate that
 	 *   the feature is "potentially slow" in the preferences dialog.
 	 * @internal
 	 */
-	registerCallback( name, callback, view, slow = false ) {
+	registerCallback( name, callback, editor, slow = false ) {
 		// Register a dummy extension.
-		this.extensionRegistry.register( name, [], view, this.getPreference( name ) );
+		this.extensionRegistry.register( name, [], editor, this.getPreference( name ) );
 		this.callbackPreferences.set( name, callback );
 		if ( this.getPreference( name ) ) {
 			callback( true );
@@ -550,16 +550,16 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	 * and update the preference.
 	 *
 	 * @param {string} name
-	 * @param {EditorView} view
+	 * @param {Editor} editor
 	 * @internal
 	 */
-	toggleExtension( name, view ) {
+	toggleExtension( name, editor ) {
 		const prefValue = this.getPreference( name );
 		if ( typeof prefValue !== 'boolean' ) {
 			throw new Error( `[CodeMirror] Toggling the non-boolean preference "${ prefValue }"` );
 		}
 		const toEnable = !this.getPreference( name );
-		this.extensionRegistry.toggle( name, view, toEnable );
+		this.extensionRegistry.toggle( name, editor, toEnable );
 		this.setPreference( name, toEnable );
 	}
 
