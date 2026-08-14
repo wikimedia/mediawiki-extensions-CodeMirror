@@ -912,25 +912,39 @@ class CodeMirror {
 	}
 
 	/**
-	 * Add the CodeMirror {@link EditorView} to the DOM, wrapping the textarea in the
-	 * {@link CodeMirror#container container} element. Integrations that attach CodeMirror
-	 * to something other than a textarea should override this.
+	 * The element that {@link CodeMirror#container container} is wrapped around, and which
+	 * the container hides. Integrations bound to something other than a textarea should
+	 * override this, so that the view is added beside the right element.
+	 *
+	 * @type {HTMLElement}
+	 * @protected
+	 * @stable to call and override
+	 */
+	get wrappedElement() {
+		return this.textarea;
+	}
+
+	/**
+	 * Add the CodeMirror {@link EditorView} to the DOM, wrapping
+	 * {@link CodeMirror#wrappedElement wrappedElement} in the
+	 * {@link CodeMirror#container container} element.
 	 *
 	 * @param {Extension} extensions
 	 * @protected
 	 * @stable to call and override
 	 */
 	addToDOM( extensions ) {
+		const wrapped = this.wrappedElement;
 		this.container = document.createElement( 'div' );
-		// Wrap the textarea with .ext-codemirror-wrapper, hiding the original textarea.
+		// Wrap the element with .ext-codemirror-wrapper, hiding the original.
 		this.container.className = 'ext-codemirror-wrapper';
-		this.textarea.before( this.container );
-		this.container.appendChild( this.textarea );
+		wrapped.before( this.container );
+		this.container.appendChild( wrapped );
 
-		// Create the EditorState of CodeMirror with contents of the original textarea.
+		// Create the EditorState of CodeMirror with the source contents.
 		const state = this.getNewEditorState( extensions );
 
-		// Instantiate the view, adding it to the DOM
+		// Instantiate the view, adding it to the DOM beside the wrapped element.
 		this.view = new EditorView( { state, parent: this.container } );
 	}
 
@@ -968,7 +982,9 @@ class CodeMirror {
 
 		// Make note of the focus state, scroll and selection before we hide the textarea.
 		// Selection and scroll positions are undefined for VE integrations and silently ignored.
-		const hadFocus = document.activeElement === this.textarea,
+		// The focus check goes by wrappedElement, since that is the element addToDOM() moves,
+		// and moving a focused element blurs it.
+		const hadFocus = document.activeElement === this.wrappedElement,
 			{ selectionStart, selectionEnd, scrollTop } = this.textarea;
 		this.preInitSelection = { selectionStart, selectionEnd, scrollTop };
 
@@ -1543,7 +1559,7 @@ class CodeMirror {
 		this.deactivate();
 		this.view.destroy();
 		this.view = null;
-		this.$textarea.unwrap( '.ext-codemirror-wrapper' );
+		$( this.wrappedElement ).unwrap( '.ext-codemirror-wrapper' );
 		this.container = null;
 		this.textSelection = null;
 		// Remove form submission listener.

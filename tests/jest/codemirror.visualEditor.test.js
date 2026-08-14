@@ -15,10 +15,15 @@ const CodeMirrorVisualEditor = require( '../../resources/visualEditor/codemirror
  * @return {Object}
  */
 const getMockSurface = ( readOnly = false, targetName = 'article' ) => {
+	// Parented, as VisualEditor builds it: addToDOM() wraps the attached root in place, so
+	// it needs somewhere to put the wrapper.
+	const $surface = $( '<div>' ).addClass( 've-ce-surface' );
+	const $attachedRootNode = $( '<div>' ).css( 'padding', '10px' ).appendTo( $surface );
 	const surfaceView = {
-		$attachedRootNode: $( '<div>' ).css( 'padding', '10px' ),
-		$documentNode: $( '<div>' ),
-		$element: $( '<div>' ),
+		$attachedRootNode: $attachedRootNode,
+		// VisualEditor's own deprecated alias for the same element.
+		$documentNode: $attachedRootNode,
+		$element: $surface,
 		getDocument: jest.fn().mockReturnValue( {
 			getDir: jest.fn().mockReturnValue( 'ltr' )
 		} ),
@@ -45,7 +50,9 @@ const getMockSurface = ( readOnly = false, targetName = 'article' ) => {
 		getDom: jest.fn().mockReturnValue( '' ),
 		getTarget: jest.fn().mockReturnValue( {
 			constructor: { name: targetName },
-			$element: $( '<div>' ).addClass( 'ext-codemirror-wrapper' )
+			// As VisualEditor builds it. The wrapper is a separate element addToDOM() makes,
+			// so a mock that puts that class here would hide whether it was ever created.
+			$element: $( '<div>' ).addClass( 've-init-target' )
 		} )
 	};
 };
@@ -220,6 +227,23 @@ describe( 'initialize', () => {
 		expect( spy ).not.toHaveBeenCalled();
 	} );
 
+	it( 'should refocus the attached root, which wrapping it blurs', () => {
+		// addToDOM() moves the attached root into the wrapper, and moving a focused element
+		// blurs it. The base restores focus, but only if it saw the element as focused, so
+		// it has to go by wrappedElement rather than the surface.
+		const attachedRoot = cmVe.surfaceView.$attachedRootNode[ 0 ];
+		attachedRoot.setAttribute( 'contenteditable', 'true' );
+		attachedRoot.tabIndex = 0;
+		document.body.appendChild( cmVe.surfaceView.$element[ 0 ] );
+		attachedRoot.focus();
+		expect( document.activeElement ).toBe( attachedRoot );
+
+		const spy = jest.spyOn( cmVe.surfaceView, 'focus' );
+		cmVe.initialize();
+		expect( document.activeElement ).not.toBe( attachedRoot );
+		expect( spy ).toHaveBeenCalled();
+	} );
+
 	it( 'should bail in non-source mode', () => {
 		const spy = jest.spyOn( mw.log, 'warn' ).mockImplementation( () => {} );
 		surface.getMode.mockReturnValue( 'visual' );
@@ -232,11 +256,42 @@ describe( 'initialize', () => {
 	} );
 } );
 
+describe( 'wrappedElement', () => {
+	it( 'should be the attached root, not the surface', () => {
+		expect( cmVe.wrappedElement ).toBe( cmVe.surfaceView.$attachedRootNode[ 0 ] );
+	} );
+} );
+
 describe( 'addToDOM', () => {
-	it( 'should use the VE target as the container and attach the view to the document node', () => {
+	it( 'should wrap the attached root, which becomes the container', () => {
+		const attachedRoot = cmVe.surfaceView.$attachedRootNode[ 0 ];
+		const parentBefore = attachedRoot.parentNode;
 		cmVe.initialize();
-		expect( cmVe.container ).toBe( surface.getTarget().$element[ 0 ] );
-		expect( cmVe.surfaceView.$documentNode[ 0 ].contains( cmVe.view.dom ) ).toBe( true );
+		expect( cmVe.container.classList ).toContain( 'ext-codemirror-wrapper' );
+		expect( attachedRoot.parentNode ).toBe( cmVe.container );
+		expect( cmVe.container.parentNode ).toBe( parentBefore );
+	} );
+
+	it( 'should put the view beside the attached root, never inside it', () => {
+		// Both halves matter. VisualEditor reconciles away foreign nodes in its own subtree,
+		// and codemirror.visualEditor.less hides that subtree's text, which would take the
+		// overlay with it: -webkit-text-fill-color inherits, and opacity cannot be undone
+		// on a descendant.
+		cmVe.initialize();
+		expect( cmVe.view.dom.parentNode ).toBe( cmVe.container );
+		expect( cmVe.surfaceView.$attachedRootNode[ 0 ].contains( cmVe.view.dom ) ).toBe( false );
+	} );
+} );
+
+describe( 'destroy', () => {
+	it( 'should take the wrapper back off the attached root', () => {
+		const attachedRoot = cmVe.surfaceView.$attachedRootNode[ 0 ];
+		const parentBefore = attachedRoot.parentNode;
+		cmVe.initialize();
+		expect( attachedRoot.parentNode ).not.toBe( parentBefore );
+		cmVe.destroy();
+		// Restored, so a second initialization does not nest another wrapper.
+		expect( attachedRoot.parentNode ).toBe( parentBefore );
 	} );
 } );
 

@@ -175,15 +175,14 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	}
 
 	/**
+	 * The surface's attached root, so the overlay is added beside VisualEditor's text and
+	 * not inside it. VisualEditor reconciles that subtree, and the stylesheets hide its
+	 * text, which would take the overlay with it.
+	 *
 	 * @inheritDoc
 	 */
-	addToDOM( extensions ) {
-		this.container = this.surface.getTarget().$element[ 0 ];
-		// Create the EditorState of CodeMirror with contents of the original textarea.
-		const state = this.getNewEditorState( extensions );
-		// Instantiate the view, adding it to the DOM
-		this.view = new EditorView( { state, parent: this.container } );
-		this.surfaceView.$documentNode.append( this.view.dom );
+	get wrappedElement() {
+		return this.surfaceView.$attachedRootNode[ 0 ];
 	}
 
 	/**
