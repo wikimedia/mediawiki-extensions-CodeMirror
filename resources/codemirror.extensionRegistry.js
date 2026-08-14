@@ -275,7 +275,11 @@ class CodeMirrorExtensionRegistry {
 	 */
 	isRegistered( name, editor ) {
 		const compartment = this.compartments[ name ];
-		return compartment && !!compartment.get( editor.state );
+		// An editor that has yet to be built, or has been torn down, holds no configuration.
+		if ( !compartment || !editor.state ) {
+			return false;
+		}
+		return !!compartment.get( editor.state );
 	}
 }
 

@@ -111,7 +111,16 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 		 * @private
 		 */
 		this.preferences = null;
-		mw.hook( 'ext.CodeMirror.preferences.ready' ).add( ( preferences ) => {
+		/**
+		 * Handlers this instance added to mw.hook, keyed by hook name. mw.hook holds a
+		 * reference to every handler for the life of the page, so
+		 * {@link CodeMirrorKeymap#destroy destroy()} has to take them off again.
+		 *
+		 * @type {Object<Function>}
+		 * @private
+		 */
+		this.hookHandlers = {};
+		this.addHook( 'ext.CodeMirror.preferences.ready', ( preferences ) => {
 			this.preferences = preferences;
 		} );
 
@@ -269,7 +278,7 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 		] );
 
 		// Use mw.hook to add only one click listener to the keymap help button.
-		mw.hook( 'ext.CodeMirror.preferences.display' ).add( ( container ) => {
+		this.addHook( 'ext.CodeMirror.preferences.display', ( container ) => {
 			if ( container && !container.dataset.kbdHelpListener ) {
 				container.dataset.kbdHelpListener = '1';
 				container.querySelector( '.cm-mw-panel__kbd-help' ).addEventListener( 'click',
@@ -279,9 +288,38 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 		} );
 
 		// Clear the help dialog when preferences change (T424173).
-		mw.hook( 'ext.CodeMirror.preferences.apply' ).add( () => {
+		this.addHook( 'ext.CodeMirror.preferences.apply', () => {
 			this.dialog = null;
 		} );
+	}
+
+	/**
+	 * Add a handler for the given {@link Hook}, keeping the reference that
+	 * {@link CodeMirrorKeymap#destroy destroy()} needs to remove it again.
+	 *
+	 * These outlive {@link CodeMirror#deactivate deactivation}, so they cannot go through
+	 * {@link CodeMirror#addMwHook}, which exists to drop its handlers on the way out.
+	 *
+	 * @param {string} hook
+	 * @param {Function} handler
+	 * @private
+	 */
+	addHook( hook, handler ) {
+		this.hookHandlers[ hook ] = handler;
+		mw.hook( hook ).add( handler );
+	}
+
+	/**
+	 * Detach from mw.hook. Called by {@link CodeMirror#destroy}, since an instance is otherwise
+	 * kept alive by the handlers it registered.
+	 *
+	 * @internal
+	 */
+	destroy() {
+		for ( const hook in this.hookHandlers ) {
+			mw.hook( hook ).remove( this.hookHandlers[ hook ] );
+		}
+		this.hookHandlers = {};
 	}
 
 	/**

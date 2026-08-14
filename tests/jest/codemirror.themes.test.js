@@ -54,9 +54,10 @@ describe( 'CodeMirrorThemes', () => {
 		themes.registerFromValueMap( view );
 		expect( themes.preferredTheme ).toBe( 'default' );
 		expect( themes.preferences.getPreference( 'theme' ) ).toBe( 'default' );
-		expect( themes.extensionRegistry.get( 'theme' ).compartment.get( view.state ) ).toStrictEqual(
-			themes.themes.get( 'default-light' )
-		);
+		// The styles, plus the facet naming the applied theme.
+		expect( themes.extensionRegistry.get( 'theme' ).compartment.get( view.state )[ 0 ] )
+			.toStrictEqual( themes.themes.get( 'default-light' ) );
+		expect( view.state.facet( CodeMirrorThemes.themeFacet ) ).toBe( 'default' );
 		expect( view.editorAttrs.class.includes( 'cm-mw-theme-default' ) ).toBeTruthy();
 		// Change to GitHub theme.
 		preferences.showPreferencesDialog( view );
@@ -64,18 +65,18 @@ describe( 'CodeMirrorThemes', () => {
 		select.value = 'github';
 		select.dispatchEvent( new Event( 'change' ) );
 		expect( themes.preferredTheme ).toBe( 'github' );
-		expect( themes.extensionRegistry.get( 'theme' ).compartment.get( view.state ) ).toStrictEqual(
-			themes.themes.get( 'github-light' )
-		);
+		expect( themes.extensionRegistry.get( 'theme' ).compartment.get( view.state )[ 0 ] )
+			.toStrictEqual( themes.themes.get( 'github-light' ) );
+		expect( view.state.facet( CodeMirrorThemes.themeFacet ) ).toBe( 'github' );
 		expect( view.editorAttrs.class.includes( 'cm-mw-theme-default' ) ).toBeFalsy();
 		expect( view.editorAttrs.class.includes( 'cm-mw-theme-github' ) ).toBeTruthy();
 		// Now switch to dark mode.
 		document.documentElement.classList.remove( 'skin-theme-clientpref-day' );
 		document.documentElement.classList.add( 'skin-theme-clientpref-night' );
 		await new Promise( process.nextTick );
-		expect( themes.extensionRegistry.get( 'theme' ).compartment.get( view.state ) ).toStrictEqual(
-			themes.themes.get( 'github-dark' )
-		);
+		expect( themes.extensionRegistry.get( 'theme' ).compartment.get( view.state )[ 0 ] )
+			.toStrictEqual( themes.themes.get( 'github-dark' ) );
+		expect( view.state.facet( CodeMirrorThemes.themeFacet ) ).toBe( 'github' );
 		expect( view.editorAttrs.class.includes( 'cm-mw-theme-github' ) ).toBeTruthy();
 	} );
 } );

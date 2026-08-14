@@ -1,17 +1,15 @@
 const {
 	EditorState,
+	Extension,
+	Facet,
 	ensureSyntaxTree,
 	highlightTree,
 	syntaxTree
 } = require( 'ext.CodeMirror.lib' );
-const {
-	CodeMirrorExtensionRegistry,
-	CodeMirrorPreferences,
-	CodeMirrorThemes
-} = require( 'ext.CodeMirror' );
+const { CodeMirrorThemes } = require( 'ext.CodeMirror' );
+const CodeMirrorVisualEditor = require( './codemirror.visualEditor.js' );
 const { findBracketMatch } = require( '../codemirror.matchbrackets.util.js' );
 const CodeMirrorVisualEditorHighlightLineNumbering = require( './codemirror.visualEditorHighlight.lineNumbering.js' );
-const CodeMirrorVisualEditorOpenLinks = require( './codemirror.visualEditorOpenLinks.js' );
 
 /**
  * Milliseconds allowed for {@link ensureSyntaxTree} to parse up to the end of the
@@ -67,6 +65,21 @@ const HEADING_RE = /^(={1,6}).+?\1[ \t]*$/;
  * @private
  */
 const ACTIVE_LINE_CLASS = 'cm-mw-ve-activeLine';
+
+/**
+ * Holds the function that starts and stops a hand-painted preference, standing in for the
+ * Extension it would be with an EditorView to render it. A CodeMirror ViewPlugin is the same
+ * idea — a facet-provided value whose setup and teardown run when the configuration changes —
+ * but it needs a view, and an EditorState offers no teardown of its own. So
+ * {@link CodeMirrorVisualEditorHighlight#dispatch dispatch()} compares this facet either side
+ * of a transaction and calls whatever came or went. Putting the toggle in the compartment is
+ * also what lets {@link CodeMirrorExtensionRegistry#isEnabled isEnabled()} answer for these
+ * preferences, since the registry represents a disabled Extension as an empty one.
+ *
+ * @type {Facet}
+ * @private
+ */
+const PREFERENCE_TOGGLE = Facet.define();
 
 /**
  * Trailing whitespace on a line, as highlightTrailingWhitespace matches it.
@@ -144,8 +157,15 @@ const SECTION_CLASS_PREFIX = 'cm-mw-ve-section-';
  *
  * With no second rendered layer there is nothing to keep aligned, and the cost is bounded by the
  * viewport rather than the document.
+ *
+ * It qualifies as an {@link Editor} by holding the tokenizer as its
+ * {@link CodeMirrorVisualEditorHighlight#state state} and applying transactions to it in
+ * {@link CodeMirrorVisualEditorHighlight#dispatch dispatch()}, which is what lets it share
+ * {@link CodeMirrorPreferences} and the {@link CodeMirrorExtensionRegistry} with its parent.
+ *
+ * @extends CodeMirrorVisualEditor
  */
-class CodeMirrorVisualEditorHighlight {
+class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 	/**
 	 * @param {ve.ui.Surface} surface
 	 * @param {CodeMirrorMediaWiki} langSupport MediaWiki mode instance, exposing `language`,
@@ -154,22 +174,10 @@ class CodeMirrorVisualEditorHighlight {
 	 *   same `{ matched, start, end }` shape as {@link findBracketMatch}. Omitted if unsupported.
 	 */
 	constructor( surface, langSupport, matchTag ) {
-		/** @type {ve.ui.Surface} */
-		this.surface = surface;
-		/** @type {ve.ce.Surface} */
-		this.surfaceView = surface.getView();
-		/** @type {CodeMirrorMediaWiki} */
-		this.langSupport = langSupport;
+		super( surface, langSupport );
+
 		/** @type {HighlightStyle} */
 		this.highlightStyle = langSupport.highlightStyle;
-		/**
-		 * Language name, used when persisting the user preference.
-		 *
-		 * @type {string}
-		 */
-		this.mode = langSupport.language && langSupport.language.name;
-		/** @type {boolean} */
-		this.isActive = false;
 		/**
 		 * Headless tokenizer state, driving CodeMirror's incremental parse without rendering.
 		 *
@@ -189,24 +197,6 @@ class CodeMirrorVisualEditorHighlight {
 		 */
 		this.drawnGroups = new Set();
 		/**
-		 * Whether the CSS Custom Highlight API is available.
-		 *
-		 * @type {boolean}
-		 */
-		this.supported = !!( window.CSS && window.CSS.highlights );
-		/**
-		 * Preference resolution. The registry is empty because this controller registers no
-		 * CodeMirror extensions of its own; it applies each preference by hand.
-		 *
-		 * @type {CodeMirrorPreferences}
-		 */
-		this.preferences = new CodeMirrorPreferences(
-			new CodeMirrorExtensionRegistry( {} ), this.mode, {}
-		);
-		// Registers the theme preference's form specification, so the preferences page can
-		// offer it as a choice rather than a switch.
-		this.themes = new CodeMirrorThemes( this.preferences );
-		/**
 		 * Bracket-matching config (bracket set and scan distance), reused from the mode.
 		 *
 		 * @type {Object}
@@ -223,12 +213,6 @@ class CodeMirrorVisualEditorHighlight {
 		 */
 		this.matchTag = matchTag || null;
 		/**
-		 * Whether bracket matching is enabled, from the user's `bracketMatching` preference.
-		 *
-		 * @type {boolean}
-		 */
-		this.bracketMatchingEnabled = !!this.getPreference( 'bracketMatching' );
-		/**
 		 * Bracket highlight groups currently drawn, kept apart from the syntax groups so a
 		 * syntax refresh does not clear them.
 		 *
@@ -242,14 +226,6 @@ class CodeMirrorVisualEditorHighlight {
 		 */
 		this.bracketFrameHandle = null;
 		/**
-		 * Whether the line-number gutter is on: the `lineNumbering` preference, but never in
-		 * DiscussionTools.
-		 *
-		 * @type {boolean}
-		 */
-		this.lineNumberingEnabled = !!this.getPreference( 'lineNumbering' ) &&
-			!this.isDiscussionTools();
-		/**
 		 * The line-number gutter. There is no EditorView to host CodeMirror's own, so this
 		 * draws numbers beside VisualEditor's paragraphs instead.
 		 *
@@ -259,54 +235,6 @@ class CodeMirrorVisualEditorHighlight {
 			this.surfaceView, this.formatLineNumber.bind( this )
 		);
 		/**
-		 * Whether modifier-clicking a link opens it, from the user's `openLinks` preference.
-		 *
-		 * @type {boolean}
-		 */
-		this.openLinksEnabled = !!langSupport.openLinks &&
-			!!this.getPreference( 'openLinks' );
-		/**
-		 * Modifier-click link opening, driven by VisualEditor's mouse events since there is no
-		 * EditorView to receive CodeMirror's own. Null if the mode did not supply the helpers.
-		 *
-		 * @type {CodeMirrorVisualEditorOpenLinks|null}
-		 */
-		this.openLinks = langSupport.openLinks ?
-			new CodeMirrorVisualEditorOpenLinks( surface, Object.assign( {
-				// Built regardless of theme, as bracket matching needs it kept in sync.
-				getState: () => this.tokenizer,
-				drawLink: this.drawOpenLink.bind( this ),
-				clearLink: this.clearOpenLink.bind( this )
-			}, langSupport.openLinks ) ) :
-			null;
-		/**
-		 * The `theme` preference: `default`, `colorblind` or `no-highlight` for this mode. Light
-		 * and dark variants are resolved in CSS, so only the base name matters here.
-		 *
-		 * @type {string}
-		 */
-		this.theme = this.getPreference( 'theme' ) || 'default';
-		/**
-		 * Whether to paint syntax colors: the `no-highlight` theme (T419339) turns them off.
-		 * Bracket matching and line numbering have their own preferences and are unaffected,
-		 * matching {@link CodeMirrorThemes}, where those styles sit outside the theme's rules.
-		 *
-		 * @type {boolean}
-		 */
-		this.syntaxHighlightingEnabled = this.theme !== 'no-highlight';
-		/**
-		 * Whether to tint the contents of <ref> tags.
-		 *
-		 * @type {boolean}
-		 */
-		this.highlightRefsEnabled = !!this.getPreference( 'highlightRefs' );
-		/**
-		 * Whether to mark the line holding the cursor, from the `activeLine` preference.
-		 *
-		 * @type {boolean}
-		 */
-		this.activeLineEnabled = !!this.getPreference( 'activeLine' );
-		/**
 		 * Node currently carrying {@link ACTIVE_LINE_CLASS}. Held as the element rather than a
 		 * line number: an edit elsewhere shifts line numbers, and clearing by index would then
 		 * strip the class off whichever node had moved into that slot, stranding this one.
@@ -315,23 +243,11 @@ class CodeMirrorVisualEditorHighlight {
 		 */
 		this.$activeLineNode = null;
 		/**
-		 * Whether to mark spaces and tabs, from the `whitespace` preference.
-		 *
-		 * @type {boolean}
-		 */
-		this.whitespaceEnabled = !!this.getPreference( 'whitespace' );
-		/**
 		 * Whether the whitespace group is currently drawn.
 		 *
 		 * @type {boolean}
 		 */
 		this.whitespaceDrawn = false;
-		/**
-		 * Whether to mark trailing whitespace, from the `trailingWhitespace` preference.
-		 *
-		 * @type {boolean}
-		 */
-		this.trailingWhitespaceEnabled = !!this.getPreference( 'trailingWhitespace' );
 		/**
 		 * Pending requestAnimationFrame handle for trailing-whitespace updates.
 		 *
@@ -365,32 +281,186 @@ class CodeMirrorVisualEditorHighlight {
 	}
 
 	/**
-	 * Initialize and activate the highlighter.
+	 * The headless tokenizer, which stands in for the EditorView's state.
 	 *
-	 * @stable to call
+	 * @inheritDoc
 	 */
-	initialize() {
-		if ( this.surface.getMode() !== 'source' ) {
-			mw.log.warn( '[CodeMirror] Attempted to initialize CodeMirrorVisualEditorHighlight in non-source mode.' );
-			return;
-		}
-		this.activate();
+	get state() {
+		return this.tokenizer;
 	}
 
 	/**
-	 * Toggle highlighting on or off.
+	 * An EditorState is immutable, so the state the transaction produces has to be kept.
 	 *
-	 * @param {boolean} [force] `true` to enable, `false` to disable. Inverts current state
-	 *   if undefined.
-	 * @stable to call
+	 * @inheritDoc
 	 */
-	toggle( force ) {
-		const toEnable = force === undefined ? !this.isActive : force;
-		if ( toEnable ) {
-			this.activate();
-		} else {
-			this.deactivate();
+	dispatch( spec ) {
+		if ( !this.state ) {
+			return;
 		}
+		const before = this.state.facet( PREFERENCE_TOGGLE ),
+			beforeTheme = this.theme;
+		this.tokenizer = this.tokenizer.update( spec ).state;
+		const after = this.state.facet( PREFERENCE_TOGGLE );
+		if ( !this.isActive ) {
+			return;
+		}
+		// The theme is a choice rather than a switch, so it goes by value.
+		if ( this.theme !== beforeTheme ) {
+			this.applyTheme();
+		}
+		// An unchanged configuration hands back the same array, so ordinary edits stop here.
+		if ( before === after ) {
+			return;
+		}
+		after.filter( ( toggle ) => !before.includes( toggle ) )
+			.forEach( ( toggle ) => toggle( true ) );
+		before.filter( ( toggle ) => !after.includes( toggle ) )
+			.forEach( ( toggle ) => toggle( false ) );
+	}
+
+	/**
+	 * The parent's set, whose Extensions are the getters overridden above, so each is the
+	 * toggle that paints the preference rather than something an EditorView would render.
+	 * `highlightRefs` is added because the mediawiki mode registers that as a CodeMirror theme,
+	 * which needs a view; here it has to be painted, so we need to override its Extension.
+	 * `theme` is absent from both, as {@link CodeMirrorThemes} registers it for every
+	 * integration.
+	 *
+	 * @inheritDoc
+	 */
+	get extensionRegistryDefaults() {
+		return Object.assign( super.extensionRegistryDefaults, {
+			highlightRefs: this.highlightRefsExtension
+		} );
+	}
+
+	/**
+	 * There is no EditorView to configure. The tokenizer is built from the language alone,
+	 * in {@link CodeMirrorVisualEditorHighlight#activate activate()}.
+	 *
+	 * @inheritDoc
+	 */
+	get defaultExtensions() {
+		return [
+			this.preferences.extension,
+			this.langExtension.language
+		];
+	}
+
+	/**
+	 * The {@link PREFERENCE_TOGGLE} Extension for a hand-painted preference, holding the named
+	 * method bound once, since dispatch() compares the toggles by identity.
+	 *
+	 * @param {string} method Name of the toggle method
+	 * @return {Extension}
+	 * @private
+	 */
+	preferenceToggle( method ) {
+		// Lazily, as the extension map is read while the base class is still constructing.
+		this.boundToggles = this.boundToggles || {};
+		this.boundToggles[ method ] = this.boundToggles[ method ] || this[ method ].bind( this );
+		return PREFERENCE_TOGGLE.of( this.boundToggles[ method ] );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	get activeLineExtension() {
+		return this.preferenceToggle( 'toggleActiveLine' );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	get whitespaceExtension() {
+		return this.preferenceToggle( 'toggleWhitespace' );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	get bracketMatchingExtension() {
+		return this.preferenceToggle( 'toggleBracketMatching' );
+	}
+
+	/**
+	 * The `highlightRefs` preference, which the mediawiki mode registers as a CodeMirror theme
+	 * where there is a view to apply one to.
+	 *
+	 * @type {Extension}
+	 * @protected
+	 */
+	get highlightRefsExtension() {
+		return this.preferenceToggle( 'toggleHighlightRefs' );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	get trailingWhitespaceExtension() {
+		return this.preferenceToggle( 'toggleTrailingWhitespace' );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	get lineNumberingExtension() {
+		return this.preferenceToggle( 'toggleLineNumbering' );
+	}
+
+	/**
+	 * The parent's mark is a Decoration, which needs a view to draw it. This paints the link
+	 * itself, through {@link CodeMirrorVisualEditorHighlight#drawOpenLink drawOpenLink()}.
+	 *
+	 * @inheritDoc
+	 */
+	get openLinksExtension() {
+		return this.preferenceToggle( 'toggleOpenLinks' );
+	}
+
+	/**
+	 * The applied theme: `default`, `colorblind` or `no-highlight` for this mode. Light and
+	 * dark variants are resolved in CSS, so only the base name matters here.
+	 * {@link CodeMirrorThemes} puts it in the state, since its own Extensions are styles for a
+	 * CodeMirror that does not exist here.
+	 *
+	 * @type {string}
+	 */
+	get theme() {
+		return this.state ? this.state.facet( CodeMirrorThemes.themeFacet ) : 'default';
+	}
+
+	/**
+	 * Whether to paint syntax colors: the `no-highlight` theme (T419339) turns them off.
+	 * Bracket matching and line numbering have their own preferences and are unaffected,
+	 * matching {@link CodeMirrorThemes}, where those styles sit outside the theme's rules.
+	 *
+	 * @type {boolean}
+	 */
+	get syntaxHighlightingEnabled() {
+		return this.theme !== 'no-highlight';
+	}
+
+	/**
+	 * Nothing is added to the DOM: the colors are painted onto VisualEditor's own text. What
+	 * stands in for the EditorView is the tokenizer, so this builds that instead.
+	 *
+	 * @inheritDoc
+	 */
+	addToDOM( extensions ) {
+		this.tokenizer = this.getNewEditorState( extensions );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	initialize( extensions = this.defaultExtensions ) {
+		if ( !( window.CSS && window.CSS.highlights ) ) {
+			mw.log.warn( '[CodeMirror] CSS Custom Highlight API is unavailable; VisualEditor highlighting is disabled.' );
+			return;
+		}
+		super.initialize( extensions );
 	}
 
 	/**
@@ -400,47 +470,31 @@ class CodeMirrorVisualEditorHighlight {
 		if ( this.isActive ) {
 			return;
 		}
-		if ( !this.supported ) {
-			mw.log.warn( '[CodeMirror] CSS Custom Highlight API is unavailable; VisualEditor highlighting is disabled.' );
-			return;
-		}
 
-		this.tokenizer = EditorState.create( {
-			doc: this.surface.getDom(),
-			extensions: this.langSupport.language
-		} );
+		// Re-sync with the surface, which may have moved on while we were off. The inherited
+		// initialize() has already been through here once, so this is a rebuild.
+		this.addToDOM( this.defaultExtensions );
 		this.isActive = true;
 		this.logEditFeature( 'activated' );
+		// CodeMirrorThemes registers this once it has an editor, which is after the inherited
+		// initialize() has been through here, so seed it from the same value map.
+		this.extensionRegistry.registerFromValueMap(
+			'theme', this, this.getPreference( 'theme' )
+		);
 
 		// Bound regardless of theme: bracket matching needs the tokenizer kept in sync.
 		this.surface.getModel().getDocument().on( 'precommit', this.onDocumentPrecommitBound );
 		if ( this.theme === 'colorblind' ) {
 			this.surfaceView.$element.addClass( COLORBLIND_CLASS );
 		}
-		if ( this.highlightRefsEnabled ) {
-			this.surfaceView.$element.addClass( REFS_CLASS );
-		}
 		if ( this.viewportPassEnabled ) {
 			this.bindSyntaxListeners();
 			this.scheduleRefresh();
 			this.scheduleHeadings();
 		}
-		if ( this.bracketMatchingEnabled ) {
-			// Bracket matching depends on the cursor position, so it tracks 'select', not scroll.
-			this.surface.getModel().on( 'select', this.scheduleBracketMatchBound );
-			this.scheduleBracketMatch();
-		}
-		if ( this.activeLineEnabled ) {
-			this.surface.getModel().on( 'select', this.updateActiveLineBound );
-			this.updateActiveLine();
-		}
-		if ( this.trailingWhitespaceEnabled ) {
-			this.scheduleTrailingWhitespace();
-		}
-		this.lineNumberGutter.setEnabled( this.lineNumberingEnabled );
-		if ( this.openLinks ) {
-			this.openLinks.setEnabled( this.openLinksEnabled );
-		}
+		// Preferences that are on from the start arrive with the compartment rather than as a
+		// transaction, so dispatch() never sees them appear.
+		this.state.facet( PREFERENCE_TOGGLE ).forEach( ( toggle ) => toggle( true ) );
 	}
 
 	/**
@@ -487,43 +541,21 @@ class CodeMirrorVisualEditorHighlight {
 		if ( this.openLinks ) {
 			this.openLinks.setEnabled( false );
 		}
-		this.tokenizer = null;
+		// The tokenizer is kept, as the other integrations keep their view: toggle() goes by
+		// the state to tell a first activation from a later one. activate() re-syncs it.
 		this.isActive = false;
 		this.logEditFeature( 'deactivated' );
 	}
 
 	/**
-	 * Tear down the controller. Called when the VE surface is destroyed.
-	 *
-	 * @stable to call
+	 * @inheritDoc
 	 */
 	destroy() {
-		this.deactivate();
+		super.destroy();
+		// As the parent drops its view. Only deactivating keeps it, for re-activation.
+		this.tokenizer = null;
 		// Owned outright, unlike everything else here, which only borrows VE's surface.
 		this.lineNumberGutter.destroy();
-		if ( this.openLinks ) {
-			this.openLinks.destroy();
-		}
-		this.themes.destroy();
-	}
-
-	/**
-	 * Persist the `usecodemirror` user preference. Mirrors
-	 * {@link CodeMirror#setCodeMirrorPreference}.
-	 *
-	 * @param {boolean} prefValue
-	 * @stable to call
-	 */
-	setCodeMirrorPreference( prefValue ) {
-		if ( !mw.user.isNamed() ) {
-			return;
-		}
-		const optionName = 'usecodemirror';
-		if ( mw.user.options.get( optionName ) > 0 && prefValue ) {
-			return;
-		}
-		new mw.Api().saveOption( optionName, prefValue ? 1 : 0, { global: 'update' } );
-		mw.user.options.set( optionName, prefValue ? 1 : 0 );
 	}
 
 	/**
@@ -535,18 +567,6 @@ class CodeMirrorVisualEditorHighlight {
 	 */
 	getPreference( prefName ) {
 		return this.preferences.getPreference( prefName );
-	}
-
-	/**
-	 * Whether this is a DiscussionTools surface, by the same check
-	 * {@link CodeMirrorVisualEditor} uses.
-	 *
-	 * @return {boolean}
-	 * @private
-	 */
-	isDiscussionTools() {
-		const target = this.surface.getTarget && this.surface.getTarget();
-		return !!target && target.constructor.name === 'CommentTarget';
 	}
 
 	/**
@@ -599,103 +619,29 @@ class CodeMirrorVisualEditorHighlight {
 	}
 
 	/**
-	 * Preferences this controller honours, for {@link ve.ui.CodeMirrorPreferencesPage}. It
-	 * registers no CodeMirror extensions, so its registry cannot answer this.
+	 * Repaint for the current {@link CodeMirrorVisualEditorHighlight#theme theme}. Called from
+	 * dispatch() when the theme's Extension has been reconfigured, since a CodeMirror theme is
+	 * styling that nothing here renders.
 	 *
-	 * @type {string[]}
+	 * @private
 	 */
-	get supportedPreferences() {
-		return [
-			'theme', 'highlightRefs', 'bracketMatching', 'lineNumbering',
-			'activeLine', 'whitespace', 'trailingWhitespace',
-			...( this.openLinks ? [ 'openLinks' ] : [] )
-		];
-	}
-
-	/**
-	 * Apply a preference to the running controller. There is no EditorView to reconfigure, so
-	 * each one is re-derived by hand.
-	 *
-	 * @param {string} name
-	 * @param {PrefValue} value
-	 */
-	applyPreference( name, value ) {
-		switch ( name ) {
-			case 'theme':
-				this.theme = value;
-				this.syntaxHighlightingEnabled = value !== 'no-highlight';
-				this.surfaceView.$element.toggleClass(
-					COLORBLIND_CLASS, value === 'colorblind'
-				);
-				if ( this.syntaxHighlightingEnabled ) {
-					this.bindSyntaxListeners();
-					this.scheduleRefresh();
-					this.scheduleHeadings();
-				} else if ( this.viewportPassEnabled ) {
-					// Whitespace rides the same pass; keep it running without the colors.
-					this.scheduleRefresh();
-					this.clearAllHighlights();
-					this.clearHeadings();
-				} else {
-					this.unbindSyntaxListeners();
-					this.clearAllHighlights();
-					this.clearHeadings();
-				}
-				break;
-			case 'highlightRefs':
-				this.highlightRefsEnabled = !!value;
-				this.surfaceView.$element.toggleClass( REFS_CLASS, this.highlightRefsEnabled );
-				break;
-			case 'bracketMatching':
-				this.bracketMatchingEnabled = !!value;
-				this.surface.getModel().off( 'select', this.scheduleBracketMatchBound );
-				if ( value ) {
-					this.surface.getModel().on( 'select', this.scheduleBracketMatchBound );
-					this.scheduleBracketMatch();
-				} else {
-					this.clearBracketMatch();
-				}
-				break;
-			case 'openLinks':
-				this.openLinksEnabled = !!this.openLinks && !!value;
-				if ( this.openLinks ) {
-					this.openLinks.setEnabled( this.isActive && this.openLinksEnabled );
-				}
-				break;
-			case 'activeLine':
-				this.activeLineEnabled = !!value;
-				this.surface.getModel().off( 'select', this.updateActiveLineBound );
-				if ( value ) {
-					this.surface.getModel().on( 'select', this.updateActiveLineBound );
-					this.updateActiveLine();
-				} else {
-					this.clearActiveLine();
-				}
-				break;
-			case 'whitespace':
-				this.whitespaceEnabled = !!value;
-				if ( value ) {
-					this.bindSyntaxListeners();
-					this.scheduleRefresh();
-				} else {
-					this.clearWhitespace();
-					if ( !this.viewportPassEnabled ) {
-						this.unbindSyntaxListeners();
-					}
-				}
-				break;
-			case 'trailingWhitespace':
-				this.trailingWhitespaceEnabled = !!value;
-				if ( value ) {
-					this.scheduleTrailingWhitespace();
-				} else {
-					this.clearTrailingWhitespace();
-				}
-				break;
-			case 'lineNumbering':
-				this.lineNumberingEnabled = !!value && !this.isDiscussionTools();
-				this.lineNumberGutter.setEnabled( this.lineNumberingEnabled );
-				break;
+	applyTheme() {
+		this.surfaceView.$element.toggleClass(
+			COLORBLIND_CLASS, this.theme === 'colorblind'
+		);
+		if ( this.syntaxHighlightingEnabled ) {
+			this.bindSyntaxListeners();
+			this.scheduleRefresh();
+			this.scheduleHeadings();
+		} else if ( this.viewportPassEnabled ) {
+			// Whitespace rides the same pass; keep it running without the colors.
+			this.scheduleRefresh();
+			this.clearAllHighlights();
+			this.clearHeadings();
+		} else {
+			this.unbindSyntaxListeners();
+			this.clearAllHighlights();
+			this.clearHeadings();
 		}
 	}
 
@@ -808,6 +754,114 @@ class CodeMirrorVisualEditorHighlight {
 	}
 
 	/**
+	 * Track the cursor and paint the active line, or stop and clear it.
+	 *
+	 * @param {boolean} enabled
+	 * @private
+	 */
+	toggleActiveLine( enabled ) {
+		// Unbound first either way, so that repainting can't double-bind.
+		this.surface.getModel().off( 'select', this.updateActiveLineBound );
+		if ( enabled ) {
+			this.surface.getModel().on( 'select', this.updateActiveLineBound );
+			this.updateActiveLine();
+		} else {
+			this.clearActiveLine();
+		}
+	}
+
+	/**
+	 * Start or stop marking spaces and tabs. This rides the viewport pass, which the theme
+	 * shares, so the listeners only come down when nothing else is using them.
+	 *
+	 * @param {boolean} enabled
+	 * @private
+	 */
+	toggleWhitespace( enabled ) {
+		if ( enabled ) {
+			this.bindSyntaxListeners();
+			this.scheduleRefresh();
+		} else {
+			this.clearWhitespace();
+			if ( !this.viewportPassEnabled ) {
+				this.unbindSyntaxListeners();
+			}
+		}
+	}
+
+	/**
+	 * Start or stop matching the bracket and tag pair around the cursor.
+	 *
+	 * @param {boolean} enabled
+	 * @private
+	 */
+	toggleBracketMatching( enabled ) {
+		// Bracket matching depends on the cursor position, so it tracks 'select', not scroll.
+		this.surface.getModel().off( 'select', this.scheduleBracketMatchBound );
+		if ( enabled ) {
+			this.surface.getModel().on( 'select', this.scheduleBracketMatchBound );
+			this.scheduleBracketMatch();
+		} else {
+			this.clearBracketMatch();
+		}
+	}
+
+	/**
+	 * Tint the contents of <ref> tags, or stop.
+	 *
+	 * @param {boolean} enabled
+	 * @private
+	 */
+	toggleHighlightRefs( enabled ) {
+		this.surfaceView.$element.toggleClass( REFS_CLASS, enabled );
+	}
+
+	/**
+	 * Start or stop marking trailing whitespace.
+	 *
+	 * @param {boolean} enabled
+	 * @private
+	 */
+	toggleTrailingWhitespace( enabled ) {
+		if ( enabled ) {
+			this.scheduleTrailingWhitespace();
+		} else {
+			this.clearTrailingWhitespace();
+		}
+	}
+
+	/**
+	 * Show or hide the line numbers. DiscussionTools has none, and leaves the preference out
+	 * of the registry entirely, so it never reaches this.
+	 *
+	 * @param {boolean} enabled
+	 * @private
+	 */
+	toggleLineNumbering( enabled ) {
+		this.lineNumberGutter.setEnabled( enabled );
+	}
+
+	/**
+	 * Start or stop watching for a modifier-click on a link. The parent builds the watcher,
+	 * which reaches back through drawOpenLink() and clearOpenLink().
+	 *
+	 * @param {boolean} enabled
+	 * @private
+	 */
+	toggleOpenLinks( enabled ) {
+		this.openLinks.setEnabled( enabled );
+	}
+
+	/**
+	 * The parent measures CodeMirror's own gutter to indent the surface by it. This gutter
+	 * sits beside VisualEditor's text and keeps its own layout, so there is nothing to do.
+	 *
+	 * @inheritDoc
+	 * @ignore
+	 */
+	updateGutterWidth() {}
+
+	/**
 	 * Move {@link ACTIVE_LINE_CLASS} to the line holding the cursor. Like CodeMirror's
 	 * highlightActiveLine this follows the selection's focus end, so it tracks a growing
 	 * selection rather than staying at its anchor.
@@ -815,7 +869,9 @@ class CodeMirrorVisualEditorHighlight {
 	 * @private
 	 */
 	updateActiveLine() {
-		if ( !this.isActive || !this.tokenizer || !this.activeLineEnabled ) {
+		if ( !this.isActive || !this.tokenizer ||
+			!this.extensionRegistry.isEnabled( 'activeLine', this )
+		) {
 			return;
 		}
 
@@ -875,7 +931,9 @@ class CodeMirrorVisualEditorHighlight {
 	 * @private
 	 */
 	scheduleTrailingWhitespace() {
-		if ( this.trailingWhitespaceFrameHandle || !this.trailingWhitespaceEnabled ) {
+		if ( this.trailingWhitespaceFrameHandle ||
+			!this.extensionRegistry.isEnabled( 'trailingWhitespace', this )
+		) {
 			return;
 		}
 		this.trailingWhitespaceFrameHandle = requestAnimationFrame( () => {
@@ -894,7 +952,9 @@ class CodeMirrorVisualEditorHighlight {
 	 * @private
 	 */
 	updateTrailingWhitespace() {
-		if ( !this.isActive || !this.tokenizer || !this.trailingWhitespaceEnabled ) {
+		if ( !this.isActive || !this.tokenizer ||
+			!this.extensionRegistry.isEnabled( 'trailingWhitespace', this )
+		) {
 			return;
 		}
 
@@ -1021,7 +1081,8 @@ class CodeMirrorVisualEditorHighlight {
 	 * @private
 	 */
 	get viewportPassEnabled() {
-		return this.syntaxHighlightingEnabled || this.whitespaceEnabled;
+		return this.syntaxHighlightingEnabled ||
+			this.extensionRegistry.isEnabled( 'whitespace', this );
 	}
 
 	/**
@@ -1124,7 +1185,7 @@ class CodeMirrorVisualEditorHighlight {
 		}
 		const { from: srcFrom, to: srcTo } = sourceRange;
 
-		if ( this.whitespaceEnabled ) {
+		if ( this.extensionRegistry.isEnabled( 'whitespace', this ) ) {
 			this.updateWhitespace( srcFrom, srcTo );
 		}
 		if ( !this.syntaxHighlightingEnabled ) {
@@ -1246,7 +1307,9 @@ class CodeMirrorVisualEditorHighlight {
 	 * @private
 	 */
 	updateBracketMatch() {
-		if ( !this.isActive || !this.tokenizer || !this.bracketMatchingEnabled ) {
+		if ( !this.isActive || !this.tokenizer ||
+			!this.extensionRegistry.isEnabled( 'bracketMatching', this )
+		) {
 			return;
 		}
 		const model = this.surface.getModel(),
@@ -1356,17 +1419,6 @@ class CodeMirrorVisualEditorHighlight {
 	 */
 	clearOpenLink() {
 		this.surfaceView.getSelectionManager().drawSelections( OPEN_LINK_GROUP, [] );
-	}
-
-	/**
-	 * Log usage of CodeMirror to the VisualEditorFeatureUse schema.
-	 *
-	 * @see https://phabricator.wikimedia.org/T373710
-	 * @param {string} action
-	 * @private
-	 */
-	logEditFeature( action ) {
-		mw.track( 'visualEditorFeatureUse', { feature: 'codemirror', action } );
 	}
 }
 

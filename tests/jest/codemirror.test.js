@@ -380,24 +380,25 @@ describe( 'destroy', () => {
 		expect( events.submit ).toBeUndefined();
 	} );
 
-	it( 'should restore the jQuery valHooks it replaced', () => {
-		const priorHooks = $.valHooks.textarea;
-		cm.initialize();
-		expect( $.valHooks.textarea ).not.toBe( priorHooks );
-		cm.destroy();
-		expect( $.valHooks.textarea ).toBe( priorHooks );
-	} );
+	it( 'should detach the keymap from mw.hook', () => {
+		// Constructed here because the shared instance predates the hook registry reset.
+		const cm2 = new CodeMirror( textarea );
+		const handlers = Object.values( cm2.keymap.hookHandlers );
+		expect( handlers.length ).toBe( 3 );
+		// mw.hook holds every handler for the life of the page, so one that stays registered
+		// keeps its instance alive with it.
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.preferences.ready' ] )
+			.toContain( cm2.keymap.hookHandlers[ 'ext.CodeMirror.preferences.ready' ] );
 
-	it( 'should leave a valHooks chain alone if another instance chained onto it', () => {
-		const priorHooks = $.valHooks.textarea;
-		cm.initialize();
-		const ourHooks = $.valHooks.textarea;
-		const laterHooks = { get: jest.fn(), set: jest.fn() };
-		$.valHooks.textarea = laterHooks;
-		cm.destroy();
-		expect( $.valHooks.textarea ).toBe( laterHooks );
-		$.valHooks.textarea = priorHooks;
-		expect( ourHooks ).not.toBe( priorHooks );
+		cm2.initialize();
+		cm2.destroy();
+
+		for ( const hook in mw.hook.mockHooks ) {
+			for ( const handler of handlers ) {
+				expect( mw.hook.mockHooks[ hook ] ).not.toContain( handler );
+			}
+		}
+		expect( cm2.keymap.hookHandlers ).toStrictEqual( {} );
 	} );
 
 	it( 'should remove the edit recovery handler', () => {

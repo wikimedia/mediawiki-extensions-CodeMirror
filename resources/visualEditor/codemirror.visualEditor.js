@@ -135,7 +135,7 @@ class CodeMirrorVisualEditor extends CodeMirror {
 			extensions.openLinks = this.openLinksExtension;
 		}
 		// DiscussionTools has no line numbers, so don't offer the preference there either.
-		if ( this.surface.getTarget().constructor.name === 'CommentTarget' ) {
+		if ( this.isDiscussionTools ) {
 			delete extensions.lineNumbering;
 		}
 		return extensions;
@@ -171,6 +171,17 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	 */
 	get openLinksExtension() {
 		return openLinkField;
+	}
+
+	/**
+	 * Whether the surface belongs to DiscussionTools, which reuses the 2017 editor for
+	 * replies and has no line numbers of its own.
+	 *
+	 * @type {boolean}
+	 */
+	get isDiscussionTools() {
+		const target = this.surface.getTarget && this.surface.getTarget();
+		return !!target && target.constructor.name === 'CommentTarget';
 	}
 
 	/**
@@ -281,7 +292,7 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	 */
 	initialize( extensions = this.defaultExtensions ) {
 		if ( this.surface.getMode() !== 'source' ) {
-			mw.log.warn( '[CodeMirror] Attempted to initialize CodeMirrorVisualEditor in non-source mode.' );
+			mw.log.warn( `[CodeMirror] Attempted to initialize ${ this.constructor.name } in non-source mode.` );
 			return;
 		}
 		super.initialize( extensions );

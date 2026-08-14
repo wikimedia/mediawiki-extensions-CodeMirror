@@ -1,4 +1,4 @@
-const { EditorView, Extension, oneDark } = require( 'ext.CodeMirror.lib' );
+const { EditorView, Extension, Facet, oneDark } = require( 'ext.CodeMirror.lib' );
 const basicLight = require( './codemirror.theme.basic-light.js' );
 const basicDark = require( './codemirror.theme.basic-dark.js' );
 const githubLight = require( './codemirror.theme.github-light.js' );
@@ -231,7 +231,12 @@ class CodeMirrorThemes {
 		this.extensionRegistry.reconfigValueMap.set( 'theme', new Map(
 			this.getOptions().map( ( [ , name ] ) => [
 				name,
-				this.themes.get( `${ name }-${ this.isDark ? 'dark' : 'light' }` )
+				[
+					this.themes.get( `${ name }-${ this.isDark ? 'dark' : 'light' }` ),
+					// So that the state says which theme is applied, for integrations that
+					// have to paint it themselves.
+					CodeMirrorThemes.themeFacet.of( name )
+				]
 			] )
 		) );
 		if ( this.editor ) {
@@ -260,12 +265,23 @@ class CodeMirrorThemes {
 	 *
 	 * @param {Editor} editor
 	 * @internal
-	 * @private
+	 * @ignore
 	 */
 	registerFromValueMap( editor ) {
 		this.editor = editor;
 		this.extensionRegistry.registerFromValueMap( 'theme', this.editor, this.preferredTheme );
 	}
 }
+
+/**
+ * The name of the applied theme, as {@link CodeMirrorThemes#setLightOrDarkMode} adds it to the
+ * theme's Extension. A theme is otherwise a set of styles, which say nothing to an integration
+ * that renders no CodeMirror of its own.
+ *
+ * @type {Facet}
+ */
+CodeMirrorThemes.themeFacet = Facet.define( {
+	combine: ( values ) => values[ 0 ] || 'default'
+} );
 
 module.exports = CodeMirrorThemes;

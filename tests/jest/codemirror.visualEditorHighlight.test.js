@@ -1,5 +1,10 @@
 const CodeMirrorVisualEditorHighlight = require( '../../resources/visualEditor/codemirror.visualEditorHighlight.js' );
 const { mediawiki, matchTag } = require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
+const CodeMirrorVisualEditor = require( '../../resources/visualEditor/codemirror.visualEditor.js' );
+/* eslint-disable-next-line n/no-missing-require */
+const { CodeMirrorPreferences, CodeMirrorThemes } = require( 'ext.CodeMirror' );
+/* eslint-disable-next-line n/no-missing-require */
+const { EditorState } = require( 'ext.CodeMirror.lib' );
 
 /**
  * Build a mock ve.ui.Surface sufficient for the custom-highlight controller.
@@ -56,7 +61,8 @@ const getMockSurface = ( doc = '' ) => {
 	const surfaceView = {
 		// The controller scopes the colorblind theme by adding a class here.
 		$element: $( '<div>' ),
-		// The open-links handler binds to this, and marks it while a link is under the pointer.
+		// The open-links handler binds to this and marks it while a link is under the pointer,
+		// and the inherited initialize() goes by it to restore focus.
 		$attachedRootNode: $( '<div>' ),
 		getOffsetFromEventCoords: jest.fn().mockImplementation( ( e ) => e.pageX ),
 		on: jest.fn(),
@@ -164,21 +170,6 @@ beforeEach( () => {
 	controller = new CodeMirrorVisualEditorHighlight( surface, langSupport );
 } );
 
-describe( 'constructor', () => {
-	it( 'should detect the CSS Custom Highlight API as supported when present', () => {
-		expect( controller.supported ).toBe( true );
-		expect( controller.isActive ).toBe( false );
-		expect( controller.mode ).toBe( langSupport.language.name );
-		expect( controller.highlightStyle ).toBe( langSupport.highlightStyle );
-	} );
-
-	it( 'should detect the API as unsupported when window.CSS.highlights is absent', () => {
-		delete global.CSS.highlights;
-		const unsupported = new CodeMirrorVisualEditorHighlight( surface, langSupport );
-		expect( unsupported.supported ).toBe( false );
-	} );
-} );
-
 describe( 'initialize', () => {
 	it( 'should activate when the surface is in source mode', () => {
 		const spy = jest.spyOn( controller, 'activate' );
@@ -221,19 +212,17 @@ describe( 'activate', () => {
 		expect( surface.documentModel.on ).not.toHaveBeenCalled();
 	} );
 
-	it( 'should warn and not activate when the API is unsupported', () => {
+	it( 'should warn and not activate when the Highlight API is unsupported', () => {
 		const warnSpy = jest.spyOn( console, 'warn' ).mockImplementation( () => {} );
 		delete global.CSS.highlights;
-		const unsupported = new CodeMirrorVisualEditorHighlight( surface, langSupport );
-		unsupported.activate();
-		expect( unsupported.isActive ).toBe( false );
+		controller.initialize();
 		expect( mw.log.warn ).toHaveBeenCalled();
 		warnSpy.mockRestore();
 	} );
 } );
 
 describe( 'deactivate', () => {
-	it( 'should unbind listeners, clear highlights and drop the tokenizer', () => {
+	it( 'should unbind listeners and clear highlights', () => {
 		controller.activate();
 		controller.drawnGroups.add( 'syntax-cm-mw-template-name' );
 		controller.deactivate();
@@ -244,13 +233,27 @@ describe( 'deactivate', () => {
 		expect( surface.selectionManager.drawSelections )
 			.toHaveBeenCalledWith( 'syntax-cm-mw-template-name', [] );
 		expect( controller.drawnGroups.size ).toBe( 0 );
-		expect( controller.tokenizer ).toBeNull();
 		expect( controller.isActive ).toBe( false );
+	} );
+
+	it( 'should keep the tokenizer, and re-sync it on re-activation', () => {
+		controller.initialize();
+		expect( controller.tokenizer ).not.toBeNull();
+		controller.deactivate();
+		// Kept, so that toggle() knows this is not a first activation.
+		expect( controller.tokenizer ).not.toBeNull();
+
+		surface.getDom.mockReturnValue( '{{Bar}}' );
+		controller.toggle( true );
+		expect( controller.isActive ).toBe( true );
+		expect( controller.state.doc.toString() ).toBe( '{{Bar}}' );
 	} );
 
 	it( 'should be a no-op when not active', () => {
 		controller.deactivate();
 		expect( surface.documentModel.off ).not.toHaveBeenCalled();
+		// Shouldn't error out.
+		controller.extensionRegistry.register( 'lineNumbering', EditorState.tabSize.of( 5 ), controller );
 	} );
 } );
 
@@ -261,6 +264,31 @@ describe( 'destroy', () => {
 		expect( controller.isActive ).toBe( false );
 		expect( controller.tokenizer ).toBeNull();
 	} );
+
+	it( 'should go through the inherited teardown', () => {
+		const themesSpy = jest.spyOn( controller.themes, 'destroy' );
+		const gutterSpy = jest.spyOn( controller.lineNumberGutter, 'destroy' );
+		let destroyArg;
+		mw.hook( 'ext.CodeMirror.destroy' ).add( ( arg ) => {
+			destroyArg = arg;
+		} );
+
+		controller.activate();
+		controller.destroy();
+
+		expect( themesSpy ).toHaveBeenCalled();
+		expect( gutterSpy ).toHaveBeenCalled();
+		// Fired for every integration, this one included.
+		expect( destroyArg ).toBe( surface );
+	} );
+
+	it( 'should leave the surface alone, having wrapped nothing', () => {
+		const $root = controller.surfaceView.$attachedRootNode;
+		const parent = $root.parent()[ 0 ];
+		controller.activate();
+		controller.destroy();
+		expect( controller.surfaceView.$attachedRootNode.parent()[ 0 ] ).toBe( parent );
+	} );
 } );
 
 describe( 'bracket matching', () => {
@@ -268,8 +296,9 @@ describe( 'bracket matching', () => {
 		.filter( ( call ) => /bracket/.test( call[ 0 ] ) );
 
 	it( 'should default to enabled and bind the select listener on activate', () => {
-		expect( controller.bracketMatchingEnabled ).toBe( true );
 		controller.activate();
+		expect( controller.extensionRegistry.isEnabled( 'bracketMatching', controller ) )
+			.toBe( true );
 		expect( surface.model.on ).toHaveBeenCalledWith( 'select', expect.any( Function ) );
 	} );
 
@@ -278,8 +307,9 @@ describe( 'bracket matching', () => {
 		mw.user.options.get = jest.fn().mockReturnValue( '{"bracketMatching":false}' );
 		try {
 			const disabled = new CodeMirrorVisualEditorHighlight( getMockSurface( '{{Foo}}' ), langSupport );
-			expect( disabled.bracketMatchingEnabled ).toBe( false );
 			disabled.activate();
+			expect( disabled.extensionRegistry.isEnabled( 'bracketMatching', disabled ) )
+				.toBe( false );
 			const boundSelect = disabled.surface.getModel().on.mock.calls
 				.some( ( call ) => call[ 0 ] === 'select' );
 			expect( boundSelect ).toBe( false );
@@ -337,6 +367,72 @@ describe( 'bracket matching', () => {
 		controller.deactivate();
 		expect( surface.model.off ).toHaveBeenCalledWith( 'select', expect.any( Function ) );
 		expect( controller.bracketGroups.size ).toBe( 0 );
+	} );
+
+	it( 'should clear the match when the preference is turned off', () => {
+		controller.activate();
+		surface.setCursor( 2 );
+		controller.updateBracketMatch();
+		expect( controller.bracketGroups.size ).toBeGreaterThan( 0 );
+
+		controller.applyPreference( 'bracketMatching', false );
+
+		expect( controller.extensionRegistry.isEnabled( 'bracketMatching', controller ) )
+			.toBe( false );
+		expect( surface.model.off ).toHaveBeenCalledWith( 'select', expect.any( Function ) );
+		expect( controller.bracketGroups.size ).toBe( 0 );
+	} );
+} );
+
+describe( 'highlightRefs', () => {
+	const hasRefsClass = ( cm ) => cm.surfaceView.$element[ 0 ].classList
+		.contains( 'cm-mw-highlight-refs' );
+
+	/**
+	 * @return {Object} Controller with the highlightRefs preference off
+	 */
+	const newUnrefsController = () => {
+		const origGet = mw.user.options.get;
+		mw.user.options.get = jest.fn().mockImplementation( ( key ) => (
+			key === 'codemirror-preferences' ?
+				JSON.stringify( { highlightRefs: false } ) :
+				null
+		) );
+		try {
+			return new CodeMirrorVisualEditorHighlight(
+				getMockSurface( '<ref>Foo</ref>' ), langSupport
+			);
+		} finally {
+			mw.user.options.get = origGet;
+		}
+	};
+
+	it( 'should scope the surface when the preference is on, as it is by default', () => {
+		controller.activate();
+		expect( hasRefsClass( controller ) ).toBe( true );
+	} );
+
+	it( 'should not scope the surface when the preference is off', () => {
+		const unrefs = newUnrefsController();
+		unrefs.activate();
+		expect( hasRefsClass( unrefs ) ).toBe( false );
+	} );
+
+	it( 'should unscope and scope again as the preference is toggled', () => {
+		controller.activate();
+		controller.applyPreference( 'highlightRefs', false );
+		expect( controller.extensionRegistry.isEnabled( 'highlightRefs', controller ) )
+			.toBe( false );
+		expect( hasRefsClass( controller ) ).toBe( false );
+
+		controller.applyPreference( 'highlightRefs', true );
+		expect( hasRefsClass( controller ) ).toBe( true );
+	} );
+
+	it( 'should unscope the surface on deactivate', () => {
+		controller.activate();
+		controller.deactivate();
+		expect( hasRefsClass( controller ) ).toBe( false );
 	} );
 } );
 
@@ -418,7 +514,9 @@ describe( 'tag matching', () => {
 
 describe( 'line numbering', () => {
 	it( 'should default to enabled from the lineNumbering preference', () => {
-		expect( controller.lineNumberingEnabled ).toBe( true );
+		controller.activate();
+		expect( controller.extensionRegistry.isEnabled( 'lineNumbering', controller ) )
+			.toBe( true );
 	} );
 
 	it( 'should enable the gutter on activate, with the controller\'s formatter', () => {
@@ -446,8 +544,9 @@ describe( 'line numbering', () => {
 		mw.user.options.get = jest.fn().mockReturnValue( '{"lineNumbering":false}' );
 		try {
 			const disabled = new CodeMirrorVisualEditorHighlight( getMockSurface( 'x' ), langSupport );
-			expect( disabled.lineNumberingEnabled ).toBe( false );
 			disabled.activate();
+			expect( disabled.extensionRegistry.isEnabled( 'lineNumbering', disabled ) )
+				.toBe( false );
 			expect( disabled.lineNumberGutter.enabled ).toBe( false );
 		} finally {
 			mw.user.options.get = origGet;
@@ -458,9 +557,23 @@ describe( 'line numbering', () => {
 		const dtSurface = getMockSurface( 'x' );
 		dtSurface.setTarget( 'CommentTarget' );
 		const dt = new CodeMirrorVisualEditorHighlight( dtSurface, langSupport );
-		expect( dt.lineNumberingEnabled ).toBe( false );
 		dt.activate();
+		// Left out of the registry entirely there, so it can never report as enabled.
+		expect( dt.extensionRegistry.isEnabled( 'lineNumbering', dt ) ).toBe( false );
 		expect( dt.lineNumberGutter.enabled ).toBe( false );
+	} );
+
+	it( 'should show and hide the gutter as the preference is toggled', () => {
+		controller.activate();
+		expect( controller.lineNumberGutter.enabled ).toBe( true );
+
+		controller.applyPreference( 'lineNumbering', false );
+		expect( controller.extensionRegistry.isEnabled( 'lineNumbering', controller ) )
+			.toBe( false );
+		expect( controller.lineNumberGutter.enabled ).toBe( false );
+
+		controller.applyPreference( 'lineNumbering', true );
+		expect( controller.lineNumberGutter.enabled ).toBe( true );
 	} );
 
 	it( 'should stay independent of the no-highlight theme', () => {
@@ -532,8 +645,8 @@ describe( 'themes', () => {
 
 	it( 'should not paint syntax colors under the no-highlight theme (T419339)', () => {
 		const themed = newThemedController( 'no-highlight', '{{Foo}} [[Bar]]' );
-		expect( themed.syntaxHighlightingEnabled ).toBe( false );
 		themed.activate();
+		expect( themed.syntaxHighlightingEnabled ).toBe( false );
 		// The refresh listeners are never bound. Named specifically: the gutter binds its own
 		// scroll listener on the same object, under a different namespace.
 		expect( themed.surface.$scrollListener.on )
@@ -565,6 +678,22 @@ describe( 'themes', () => {
 		expect( $element[ 0 ].classList.contains( 'cm-mw-colorblind-colors' ) ).toBe( false );
 	} );
 
+	it( 'should repaint when the theme is changed through the registry', () => {
+		const isColorblind = () => controller.surfaceView.$element[ 0 ].classList
+			.contains( 'cm-mw-colorblind-colors' );
+		controller.activate();
+		expect( controller.theme ).toBe( 'default' );
+		expect( isColorblind() ).toBe( false );
+
+		controller.applyPreference( 'theme', 'colorblind' );
+		expect( controller.theme ).toBe( 'colorblind' );
+		expect( isColorblind() ).toBe( true );
+
+		controller.applyPreference( 'theme', 'no-highlight' );
+		expect( controller.syntaxHighlightingEnabled ).toBe( false );
+		expect( isColorblind() ).toBe( false );
+	} );
+
 	it( 'should pick up a colorblind setting from the pre-themes user option', () => {
 		// CodeMirrorPreferences migrates usecodemirror-colorblind in its constructor.
 		const origGet = mw.user.options.get;
@@ -575,6 +704,7 @@ describe( 'themes', () => {
 			const themed = new CodeMirrorVisualEditorHighlight(
 				getMockSurface( 'x' ), langSupport
 			);
+			themed.activate();
 			expect( themed.theme ).toBe( 'colorblind' );
 		} finally {
 			mw.user.options.get = origGet;
@@ -805,6 +935,46 @@ describe( 'active line', () => {
 		active.deactivate();
 		expect( classes( active.surface.lineNodes[ 1 ] ) ).toEqual( [] );
 	} );
+
+	it( 'should take the preference from the registry, not a field', () => {
+		const active = newActiveLineController( 'one\ntwo' );
+		const isEnabled = ( cm ) => cm.extensionRegistry.isEnabled( 'activeLine', cm );
+		// Nothing is registered against a controller with no tokenizer yet.
+		expect( isEnabled( active ) ).toBe( false );
+		active.activate();
+		expect( isEnabled( active ) ).toBe( true );
+		controller.activate();
+		expect( isEnabled( controller ) ).toBe( false );
+	} );
+
+	it( 'should track the cursor once the preference is turned on', () => {
+		// The shared controller has the preference off, and one line to mark.
+		controller.activate();
+		surface.setCursor( 2 );
+		controller.updateActiveLine();
+		expect( classes( surface.lineNodes[ 0 ] ) ).toEqual( [] );
+
+		controller.applyPreference( 'activeLine', true );
+
+		// Reconfiguring the compartment both binds and paints, with no second call here.
+		expect( controller.extensionRegistry.isEnabled( 'activeLine', controller ) )
+			.toBe( true );
+		expect( classes( surface.lineNodes[ 0 ] ) ).toContain( 'cm-mw-ve-activeLine' );
+	} );
+
+	it( 'should stop tracking and clear the mark when turned off', () => {
+		const active = newActiveLineController( 'one\ntwo' );
+		active.activate();
+		active.surface.setCursor( 5 );
+		active.updateActiveLine();
+
+		active.applyPreference( 'activeLine', false );
+
+		expect( active.extensionRegistry.isEnabled( 'activeLine', active ) ).toBe( false );
+		expect( active.surface.model.off )
+			.toHaveBeenCalledWith( 'select', expect.any( Function ) );
+		expect( classes( active.surface.lineNodes[ 1 ] ) ).toEqual( [] );
+	} );
 } );
 
 describe( 'trailing whitespace', () => {
@@ -879,6 +1049,33 @@ describe( 'trailing whitespace', () => {
 		expect( trailing.surface.selectionManager.drawSelections )
 			.toHaveBeenLastCalledWith( 'cm-trailing-whitespace', [] );
 	} );
+
+	it( 'should clear the group when the preference is turned off', () => {
+		const trailing = newTrailingController( 'one  ' );
+		trailing.activate();
+		trailing.updateTrailingWhitespace();
+
+		trailing.applyPreference( 'trailingWhitespace', false );
+
+		expect( trailing.extensionRegistry.isEnabled( 'trailingWhitespace', trailing ) )
+			.toBe( false );
+		expect( trailing.surface.selectionManager.drawSelections )
+			.toHaveBeenLastCalledWith( 'cm-trailing-whitespace', [] );
+	} );
+
+	it( 'should start drawing once the preference is turned on', () => {
+		surface = getMockSurface( 'one  ' );
+		controller = new CodeMirrorVisualEditorHighlight( surface, langSupport );
+		controller.activate();
+		expect( surface.selectionManager.drawSelections )
+			.not.toHaveBeenCalledWith( 'cm-trailing-whitespace', expect.anything(), expect.anything() );
+
+		controller.applyPreference( 'trailingWhitespace', true );
+
+		// Reconfiguring schedules the pass, so only the frame is left to run.
+		controller.updateTrailingWhitespace();
+		expect( drawnRanges( controller ) ).toEqual( [ { from: 4, to: 6 } ] );
+	} );
 } );
 
 describe( 'whitespace', () => {
@@ -938,9 +1135,10 @@ describe( 'whitespace', () => {
 
 	it( 'should keep running under the no-highlight theme', () => {
 		const ws = newWhitespaceController( 'a b', { theme: 'no-highlight' } );
+		// The preference lives in the tokenizer, so it only counts once there is one.
+		ws.activate();
 		expect( ws.syntaxHighlightingEnabled ).toBe( false );
 		expect( ws.viewportPassEnabled ).toBe( true );
-		ws.activate();
 		ws.refresh();
 		expect( drawnRanges( ws ) ).toEqual( [ { from: 2, to: 3 } ] );
 	} );
@@ -968,6 +1166,32 @@ describe( 'whitespace', () => {
 		expect( ws.surface.selectionManager.drawSelections )
 			.toHaveBeenLastCalledWith( 'cm-whitespace', [] );
 	} );
+
+	it( 'should take the preference from the registry, not a field', () => {
+		const ws = newWhitespaceController( 'a b' );
+		const isEnabled = ( cm ) => cm.extensionRegistry.isEnabled( 'whitespace', cm );
+		// Nothing is registered against a controller with no tokenizer yet.
+		expect( isEnabled( ws ) ).toBe( false );
+		ws.activate();
+		expect( isEnabled( ws ) ).toBe( true );
+		controller.activate();
+		expect( isEnabled( controller ) ).toBe( false );
+	} );
+
+	it( 'should start drawing once the preference is turned on', () => {
+		controller.activate();
+		controller.refresh();
+		expect( controller.surface.selectionManager.drawSelections )
+			.not.toHaveBeenCalledWith( 'cm-whitespace', expect.anything(), expect.anything() );
+
+		controller.applyPreference( 'whitespace', true );
+
+		expect( controller.extensionRegistry.isEnabled( 'whitespace', controller ) )
+			.toBe( true );
+		// Reconfiguring the compartment schedules the pass, so only the frame is needed.
+		controller.refresh();
+		expect( drawnRanges( controller ) ).toEqual( [ { from: 8, to: 9 } ] );
+	} );
 } );
 
 describe( 'toggle', () => {
@@ -984,6 +1208,34 @@ describe( 'toggle', () => {
 		expect( controller.isActive ).toBe( true );
 		controller.toggle();
 		expect( controller.isActive ).toBe( false );
+	} );
+
+	it( 'should fire the toggle hook, as the other integrations do', () => {
+		controller.initialize();
+		const toggled = [];
+		mw.hook( 'ext.CodeMirror.toggle' ).add( ( enabled ) => {
+			toggled.push( enabled );
+		} );
+		controller.toggle( false );
+		controller.toggle( true );
+		// Only when the state actually changed, so the repeat is not reported.
+		controller.toggle( true );
+		expect( toggled ).toEqual( [ false, true ] );
+	} );
+
+	it( 'should go through initialize(), so the API check cannot be bypassed', () => {
+		delete global.CSS.highlights;
+		const warnSpy = jest.spyOn( console, 'warn' ).mockImplementation( () => {} );
+		const unsupported = new CodeMirrorVisualEditorHighlight( getMockSurface( 'x' ), langSupport );
+
+		unsupported.toggle( true );
+
+		expect( unsupported.isActive ).toBe( false );
+		expect( unsupported.tokenizer ).toBeNull();
+		expect( mw.log.warn ).toHaveBeenCalledWith(
+			'[CodeMirror] CSS Custom Highlight API is unavailable; VisualEditor highlighting is disabled.'
+		);
+		warnSpy.mockRestore();
 	} );
 } );
 
@@ -1241,10 +1493,13 @@ describe( 'openLinks', () => {
 	} );
 
 	it( 'should not enable the handler while inactive', () => {
+		// With no tokenizer there is nothing to reconfigure, so the registry says as much.
+		const warnSpy = jest.spyOn( console, 'warn' ).mockImplementation( () => {} );
 		const c = newController();
 		const spy = jest.spyOn( c.openLinks, 'setEnabled' );
 		c.applyPreference( 'openLinks', true );
 		expect( spy ).toHaveBeenCalledWith( false );
+		warnSpy.mockRestore();
 	} );
 
 	it( 'should mark the link as its own highlight group, and unmark it again', () => {
@@ -1294,5 +1549,105 @@ describe( 'openLinks', () => {
 		const spy = jest.spyOn( c.openLinks, 'destroy' );
 		c.destroy();
 		expect( spy ).toHaveBeenCalled();
+	} );
+} );
+
+describe( 'CodeMirrorVisualEditor inheritance', () => {
+	it( 'should be a CodeMirrorVisualEditor', () => {
+		expect( controller ).toBeInstanceOf( CodeMirrorVisualEditor );
+	} );
+
+	it( 'should share the surface and preference plumbing with the parent', () => {
+		expect( controller.surface ).toBe( surface );
+		expect( controller.surfaceView ).toBe( surface.getView() );
+		expect( controller.mode ).toBe( 'mediawiki' );
+		expect( controller.preferences ).toBeInstanceOf( CodeMirrorPreferences );
+		expect( controller.themes ).toBeInstanceOf( CodeMirrorThemes );
+		// There is no EditorView, and nothing should have created one.
+		expect( controller.view ).toBeNull();
+	} );
+
+	it( 'should detach the inherited keymap from mw.hook on destroy', () => {
+		expect( controller.preferences.keymap ).toBe( controller.keymap );
+		const handler = controller.keymap.hookHandlers[ 'ext.CodeMirror.preferences.ready' ];
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.preferences.ready' ] ).toContain( handler );
+
+		controller.destroy();
+
+		expect( mw.hook.mockHooks[ 'ext.CodeMirror.preferences.ready' ] )
+			.not.toContain( handler );
+	} );
+
+	describe( 'the Editor seam', () => {
+		it( 'should expose the tokenizer as its state', () => {
+			expect( controller.state ).toBeNull();
+			controller.activate();
+			expect( controller.state ).toBe( controller.tokenizer );
+			expect( controller.state.doc.toString() ).toBe( '{{Foo}} [[Bar]]' );
+		} );
+
+		it( 'should store what a dispatched transaction produces', () => {
+			controller.activate();
+			const before = controller.tokenizer;
+			controller.dispatch( {
+				changes: { from: 0, to: controller.state.doc.length, insert: 'baz' }
+			} );
+			expect( controller.state.doc.toString() ).toBe( 'baz' );
+			// A new state, not a mutation of the old one (T387253).
+			expect( controller.tokenizer ).not.toBe( before );
+			expect( before.doc.toString() ).toBe( '{{Foo}} [[Bar]]' );
+		} );
+
+		it( 'should let the extension registry work against it', () => {
+			controller.activate();
+			// The compartments ride into the tokenizer with preferences.extension, so
+			// reconfiguring one has to reach the state through dispatch(). The Extension is
+			// arbitrary; tabSize is simply the easiest to observe in a headless state.
+			expect( controller.extensionRegistry.isRegistered( 'whitespace', controller ) )
+				.toBe( true );
+			controller.extensionRegistry.reconfigure(
+				'whitespace', controller, EditorState.tabSize.of( 6 )
+			);
+			expect( controller.state.tabSize ).toBe( 6 );
+		} );
+	} );
+
+	describe( 'supportedPreferences', () => {
+		it( 'should come from the registry rather than a hardcoded list', () => {
+			expect( controller.supportedPreferences ).toStrictEqual(
+				Object.keys( controller.extensionRegistryDefaults )
+			);
+			// The theme joins the rest once CodeMirrorThemes' value map is registered.
+			controller.activate();
+			expect( controller.supportedPreferences.sort() ).toStrictEqual( [
+				'activeLine',
+				'bracketMatching',
+				'highlightRefs',
+				'lineNumbering',
+				// The mediawiki mode supplies the link helpers, so this is offered too.
+				'openLinks',
+				'theme',
+				'trailingWhitespace',
+				'whitespace'
+			] );
+		} );
+
+		it( 'should not gain preferences it cannot render on initialize', () => {
+			// The inherited initialize() registers extensions that need an EditorView,
+			// e.g. lint, which would otherwise show up in the preferences tool.
+			const before = controller.supportedPreferences.slice();
+			controller.initialize();
+			// Only the theme, which CodeMirrorThemes registers for every integration.
+			expect( controller.supportedPreferences ).toStrictEqual( before.concat( 'theme' ) );
+		} );
+
+		it( 'should not offer line numbering in DiscussionTools', () => {
+			surface = getMockSurface( '{{Foo}}' );
+			surface.setTarget( 'CommentTarget' );
+			controller = new CodeMirrorVisualEditorHighlight( surface, langSupport );
+			expect( controller.isDiscussionTools ).toBe( true );
+			expect( controller.supportedPreferences ).not.toContain( 'lineNumbering' );
+			expect( controller.extensionRegistryDefaults.lineNumbering ).toBeUndefined();
+		} );
 	} );
 } );

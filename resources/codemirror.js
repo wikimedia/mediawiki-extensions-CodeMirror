@@ -963,7 +963,8 @@ class CodeMirror {
 	 * @stable to call and override
 	 */
 	initialize( extensions = this.defaultExtensions ) {
-		if ( this.view ) {
+		// Not the view: an integration that renders none of its own still has a state.
+		if ( this.state ) {
 			mw.log.warn( '[CodeMirror] CodeMirror instance already initialized.' );
 			return;
 		}
@@ -1004,21 +1005,22 @@ class CodeMirror {
 
 		if ( this.mode !== 'mediawiki' ) {
 			// Register applicable extensions through CodeMirrorPreferences.
-			this.preferences.registerExtension( 'codeFolding', foldGutter(), this.view );
-			this.preferences.registerExtension( 'autocomplete', autocompletion(), this.view );
+			this.preferences.registerExtension( 'codeFolding', foldGutter(), this );
+			this.preferences.registerExtension( 'autocomplete', autocompletion(), this );
 			// Document accessibility key bindings in help dialog since
 			// the Tab key does not move focus by default in non-wikitext.
 			this.keymap.registerKeyBindingHelp( 'accessibility', 'tabEscape', { key: 'Escape' } );
 			this.keymap.registerKeyBindingHelp( 'accessibility', 'tabMode', { key: 'Ctrl-m', mac: 'Shift-Alt-m' } );
 		}
 
-		if ( this.lintSource || this.lintApi ) {
-			this.preferences.registerExtension( 'lint', this.lintExtension, this.view );
+		// Diagnostics are rendered by the EditorView, so skip linting without one.
+		if ( this.view && ( this.lintSource || this.lintApi ) ) {
+			this.preferences.registerExtension( 'lint', this.lintExtension, this );
 		}
 
-		// Enable the preferred theme, giving CodeMirrorThemes a reference
-		// to the view so it can keep things in sync such as dark mode changes.
-		this.themes.registerFromValueMap( this.view );
+		// Enable the preferred theme, giving CodeMirrorThemes a reference to the
+		// editor so it can keep things in sync such as dark mode changes.
+		this.themes.registerFromValueMap( this );
 
 		/**
 		 * Called just after CodeMirror is initialized.
@@ -1111,20 +1113,7 @@ class CodeMirror {
 	 */
 	addTextAreaJQueryHook() {
 		const jQueryValHooks = $.valHooks.textarea;
-		/**
-		 * The .val() hook in place before ours, restored on destroy.
-		 *
-		 * @type {Object|undefined}
-		 * @private
-		 */
-		this.priorValHooks = jQueryValHooks;
-		/**
-		 * Our own .val() hook, kept so we only restore one we still own.
-		 *
-		 * @type {Object|null}
-		 * @private
-		 */
-		this.valHooks = {
+		$.valHooks.textarea = {
 			get: ( elem ) => {
 				if ( elem === this.textarea && this.isActive ) {
 					return this.cmTextSelection.getContents();
@@ -1142,7 +1131,6 @@ class CodeMirror {
 				elem.value = value;
 			}
 		};
-		$.valHooks.textarea = this.valHooks;
 	}
 
 	/**
@@ -1323,7 +1311,7 @@ class CodeMirror {
 		const toEnable = force === undefined ? !this.isActive : force;
 		const wasActive = this.isActive;
 		if ( toEnable ) {
-			if ( !this.view ) {
+			if ( !this.state ) {
 				this.initialize();
 			} else {
 				this.activate();
@@ -1557,8 +1545,11 @@ class CodeMirror {
 	 */
 	destroy() {
 		this.deactivate();
-		this.view.destroy();
-		this.view = null;
+		// We want to support headless integrations without an EditorView or destroy() method.
+		if ( this.view ) {
+			this.view.destroy();
+			this.view = null;
+		}
 		$( this.wrappedElement ).unwrap( '.ext-codemirror-wrapper' );
 		this.container = null;
 		this.textSelection = null;
@@ -1571,13 +1562,8 @@ class CodeMirror {
 			mw.hook( 'editRecovery.loadEnd' ).remove( this.editRecoveryLoadEndHandler );
 			this.editRecoveryLoadEndHandler = null;
 		}
-		// Only restore the prior hook if nothing else has chained onto ours since.
-		if ( this.valHooks && $.valHooks.textarea === this.valHooks ) {
-			$.valHooks.textarea = this.priorValHooks;
-		}
-		this.valHooks = null;
-		this.priorValHooks = null;
 		this.themes.destroy();
+		this.keymap.destroy();
 
 		/**
 		 * Called just after CodeMirror is destroyed and the original textarea is restored.
