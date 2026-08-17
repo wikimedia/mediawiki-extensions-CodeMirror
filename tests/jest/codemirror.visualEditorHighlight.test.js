@@ -65,6 +65,9 @@ const getMockSurface = ( doc = '' ) => {
 		// and the inherited initialize() goes by it to restore focus.
 		$attachedRootNode: $( '<div>' ),
 		getOffsetFromEventCoords: jest.fn().mockImplementation( ( e ) => e.pageX ),
+		// The inherited lifecycle asks about, and restores, focus.
+		focus: jest.fn(),
+		isFocused: jest.fn().mockReturnValue( false ),
 		on: jest.fn(),
 		off: jest.fn(),
 		// The gutter uses VE's own connect/disconnect for the 'position' event.
@@ -183,6 +186,9 @@ beforeEach( () => {
 	} );
 	surface = getMockSurface( '{{Foo}} [[Bar]]' );
 	controller = new CodeMirrorVisualEditorHighlight( surface, langSupport );
+	// Suppress the printing side of mw.log.warn, which still records the call. The inherited
+	// lifecycle warns about deactivating when inactive, and about the unsupported API.
+	jest.spyOn( console, 'warn' ).mockImplementation( () => {} );
 } );
 
 describe( 'initialize', () => {
@@ -251,22 +257,37 @@ describe( 'deactivate', () => {
 		expect( controller.isActive ).toBe( false );
 	} );
 
-	it( 'should keep the tokenizer, and re-sync it on re-activation', () => {
-		controller.initialize();
-		expect( controller.tokenizer ).not.toBeNull();
+	it( 'should keep the tokenizer, as the parent keeps its view', () => {
+		controller.activate();
 		controller.deactivate();
-		// Kept, so that toggle() knows this is not a first activation.
+		// Dropped by removeFromDOM() instead, which destroy() reaches.
 		expect( controller.tokenizer ).not.toBeNull();
+		controller.removeFromDOM();
+		expect( controller.tokenizer ).toBeNull();
+	} );
 
+	it( 'should re-sync with the surface on re-activation', () => {
+		controller.initialize();
+		controller.deactivate();
 		surface.getDom.mockReturnValue( '{{Bar}}' );
+		// Through the inherited toggle(), which goes by the state.
 		controller.toggle( true );
 		expect( controller.isActive ).toBe( true );
 		expect( controller.state.doc.toString() ).toBe( '{{Bar}}' );
 	} );
 
+	it( 'should give focus back to the surface that had it', () => {
+		controller.activate();
+		surface.view.isFocused.mockReturnValue( true );
+		controller.deactivate();
+		expect( surface.view.focus ).toHaveBeenCalled();
+	} );
+
 	it( 'should be a no-op when not active', () => {
 		controller.deactivate();
 		expect( surface.documentModel.off ).not.toHaveBeenCalled();
+		expect( mw.log.warn )
+			.toHaveBeenCalledWith( '[CodeMirror] CodeMirror instance is not active.' );
 		// Shouldn't error out.
 		controller.extensionRegistry.register( 'lineNumbering', EditorState.tabSize.of( 5 ), controller );
 	} );

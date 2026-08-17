@@ -59,7 +59,15 @@ const getMockSurface = ( readOnly = false, targetName = 'article' ) => {
 let cmVe, surface;
 
 beforeEach( () => {
-	global.ve = { init: { target: { constructor: { name: 'article' } } } };
+	global.ve = {
+		init: { target: { constructor: { name: 'article' } } },
+		dm: {
+			// Source mode: op.insert is an array of characters.
+			ElementLinearData: jest.fn().mockImplementation( ( store, insert ) => ( {
+				getSourceText: () => ( Array.isArray( insert ) ? insert.join( '' ) : String( insert ) )
+			} ) )
+		}
+	};
 	mockMwConfigGet();
 	surface = getMockSurface();
 	cmVe = new CodeMirrorVisualEditor( surface );
@@ -309,6 +317,16 @@ describe( 'destroy', () => {
 		// Restored, so a second initialization does not nest another wrapper.
 		expect( attachedRoot.parentNode ).toBe( parentBefore );
 	} );
+
+	it( 'should do nothing after initialize() bailed', () => {
+		// initialize() can decline, but destroy() is stable to call: an integration
+		// that tears down what it could not build must not get an error.
+		jest.spyOn( mw.log, 'warn' ).mockImplementation( () => {} );
+		surface.getMode.mockReturnValue( 'visual' );
+		cmVe = new CodeMirrorVisualEditor( surface );
+		cmVe.initialize();
+		expect( () => cmVe.destroy() ).not.toThrow();
+	} );
 } );
 
 describe( 'getSourceContents', () => {
@@ -364,17 +382,18 @@ describe( 'activate', () => {
 		expect( cmVe.view.viewState.printing ).toStrictEqual( true );
 	} );
 
-	it( 'should sync the directionality', () => {
+	it( 'should sync the directionality, once per activation', () => {
 		const spy = jest.spyOn( cmVe, 'onPosition' );
 		cmVe.initialize();
+		// Something with the automocking prevents us from testing against cmVe.view.textDirection,
+		// but asserting that onPosition is called is sufficient.
 		expect( spy ).toHaveBeenCalledTimes( 1 );
 		// Suppress warning about re-activating.
 		jest.spyOn( console, 'warn' ).mockImplementation( () => {} );
+		// A declined activation binds nothing, so the surface is left as it stands.
 		cmVe.activate();
 		jest.restoreAllMocks();
-		// Something with the automocking prevents us from testing against cmVe.view.textDirection,
-		// but asserting that onPosition is called is sufficient.
-		expect( spy ).toHaveBeenCalledTimes( 2 );
+		expect( spy ).toHaveBeenCalledTimes( 1 );
 	} );
 } );
 
@@ -602,5 +621,84 @@ describe( 'logEditFeature', () => {
 		} );
 		expect( mw.hook.mockHooks[ 'ext.CodeMirror.search' ] ).toBeUndefined();
 		expect( mw.hook.mockHooks[ 'ext.CodeMirror.keymap' ] ).toBeUndefined();
+	} );
+} );
+
+describe( 'bindSurface / unbindSurface', () => {
+	it( 'should bind only once the parent has really activated', () => {
+		const spy = jest.spyOn( cmVe, 'bindSurface' );
+		cmVe.initialize();
+		expect( spy ).toHaveBeenCalledTimes( 1 );
+		// The parent declines a second activation, so this must not bind again.
+		jest.spyOn( console, 'warn' ).mockImplementation( () => {} );
+		cmVe.activate();
+		expect( spy ).toHaveBeenCalledTimes( 1 );
+	} );
+
+	it( 'should unbind only when it was active', () => {
+		const spy = jest.spyOn( cmVe, 'unbindSurface' );
+		jest.spyOn( console, 'warn' ).mockImplementation( () => {} );
+		cmVe.deactivate();
+		expect( spy ).not.toHaveBeenCalled();
+		cmVe.initialize();
+		cmVe.deactivate();
+		expect( spy ).toHaveBeenCalledTimes( 1 );
+	} );
+} );
+
+describe( 'onDocumentPrecommit', () => {
+	beforeEach( () => {
+		surface.getDom.mockReturnValue( '{{Foo}} [[Bar]]' );
+		cmVe = new CodeMirrorVisualEditor( surface );
+		cmVe.initialize();
+	} );
+
+	it( 'should mirror a plain replace into the editor', () => {
+		cmVe.onDocumentPrecommit( {
+			operations: [ { type: 'replace', remove: [ '{' ], insert: [ 'X' ] } ]
+		} );
+		expect( cmVe.state.doc.toString() ).toBe( 'X{Foo}} [[Bar]]' );
+	} );
+
+	it( 'should honour a leading retain when computing offsets', () => {
+		cmVe.onDocumentPrecommit( {
+			operations: [
+				{ type: 'retain', length: 2 },
+				{ type: 'replace', remove: [], insert: [ 'A', 'B' ] }
+			]
+		} );
+		expect( cmVe.state.doc.toString() ).toBe( '{{ABFoo}} [[Bar]]' );
+	} );
+
+	it( 'should trim the extra trailing newline from a setContents replace (T382769)', () => {
+		const docLength = cmVe.state.doc.length;
+		cmVe.onDocumentPrecommit( {
+			operations: [ {
+				type: 'replace',
+				// setContents overshoots the document by one character.
+				remove: new Array( docLength + 1 ).fill( 'x' ),
+				insert: [ 'o', 'n', 'e', '\n' ]
+			} ]
+		} );
+		expect( cmVe.state.doc.toString() ).toBe( 'one' );
+	} );
+
+	it( 'should apply every replacement in a single transaction', () => {
+		const spy = jest.spyOn( cmVe, 'dispatch' );
+		cmVe.onDocumentPrecommit( {
+			operations: [
+				{ type: 'replace', remove: [ '{' ], insert: [ 'X' ] },
+				{ type: 'retain', length: 4 },
+				{ type: 'replace', remove: [], insert: [ 'Y' ] }
+			]
+		} );
+		expect( spy ).toHaveBeenCalledTimes( 1 );
+		expect( spy.mock.calls[ 0 ][ 0 ].changes ).toHaveLength( 2 );
+	} );
+
+	it( 'should re-measure the gutter once the change is applied', () => {
+		const spy = jest.spyOn( cmVe, 'updateGutterWidth' );
+		cmVe.onDocumentPrecommit( { operations: [] } );
+		expect( spy ).toHaveBeenCalledWith( 'ltr' );
 	} );
 } );

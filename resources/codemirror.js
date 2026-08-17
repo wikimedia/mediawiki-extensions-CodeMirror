@@ -1032,6 +1032,67 @@ class CodeMirror {
 	}
 
 	/**
+	 * Reveal the editor and route {@link jQuery.textSelection} through it, as
+	 * {@link CodeMirror#activate activate()} does on the way in. Integrations that render no
+	 * editor of their own should override this.
+	 *
+	 * @protected
+	 * @stable to override
+	 */
+	showEditor() {
+		// Re-show the view, should it be hidden.
+		this.container.classList.remove( 'ext-codemirror-wrapper--hidden' );
+		// Register $.textSelection() on the .cm-editor element.
+		$( this.view.dom ).textSelection( 'register', this.cmTextSelection );
+		// Override textSelection() functions for the "real" hidden textarea to route to
+		// CodeMirror. We unregister this in this.deactivate().
+		this.$textarea.textSelection( 'register', this.cmTextSelection );
+	}
+
+	/**
+	 * Hide the editor and give {@link jQuery.textSelection} back to the textarea, as
+	 * {@link CodeMirror#deactivate deactivate()} does on the way out. Integrations that render
+	 * no editor of their own should override this.
+	 *
+	 * @protected
+	 * @stable to override
+	 */
+	hideEditor() {
+		if ( !this.view ) {
+			throw new Error( 'CodeMirror view is not initialized.' );
+		}
+		// Unregister textSelection() on the CodeMirror view.
+		$( this.view.dom ).textSelection( 'unregister' );
+		// Unregister textSelection() on the hidden textarea.
+		this.$textarea.textSelection( 'unregister' );
+		// Re-enable IME on the hidden textarea.
+		this.$textarea.removeClass( 'noime' );
+		// Hide the view. We use a CSS class on the wrapper since CodeMirror
+		// adds high-specificity styles to .cm-editor that we can't easily override.
+		this.container.classList.add( 'ext-codemirror-wrapper--hidden' );
+	}
+
+	/**
+	 * Remove the CodeMirror {@link EditorView} from the DOM, unwrapping the element it was
+	 * attached to, as the inverse of {@link CodeMirror#addToDOM addToDOM()}. Integrations that
+	 * attach CodeMirror to something other than a textarea should override this.
+	 *
+	 * @protected
+	 * @stable to override
+	 */
+	removeFromDOM() {
+		// Unlike hideEditor(), which only the active instance reaches, destroy() brings this
+		// one. An integration can decline to initialize, which leaves no view to remove.
+		if ( !this.view ) {
+			return;
+		}
+		this.view.destroy();
+		this.view = null;
+		$( this.wrappedElement ).unwrap( '.ext-codemirror-wrapper' );
+		this.container = null;
+	}
+
+	/**
 	 * Setup CodeMirror and add it to the DOM. This will hide the original textarea.
 	 *
 	 * This method should only be called once per instance. Use {@link CodeMirror#toggle toggle},
@@ -1473,18 +1534,10 @@ class CodeMirror {
 			this.cmTextSelection.setContents( this.getSourceContents() );
 		}
 
-		// Re-show the view, should it be hidden.
-		this.container.classList.remove( 'ext-codemirror-wrapper--hidden' );
+		this.showEditor();
 
 		this.isActive = true;
 		this.logEditFeature( 'activated' );
-
-		// Register $.textSelection() on the .cm-editor element.
-		$( this.view.dom ).textSelection( 'register', this.cmTextSelection );
-
-		// Override textSelection() functions for the "real" hidden textarea to route to
-		// CodeMirror. We unregister this in this.deactivate().
-		this.$textarea.textSelection( 'register', this.cmTextSelection );
 
 		this.restoreSelectionAndScrollPosition(
 			selectionStart, selectionEnd, scrollTop, hadFocus
@@ -1603,23 +1656,13 @@ class CodeMirror {
 		}
 
 		// Store what we need before we destroy the state or make DOM changes.
-		const scrollTop = this.view.scrollDOM.scrollTop;
+		const scrollTop = this.view ? this.view.scrollDOM.scrollTop : 0;
 		const hadFocus = this.hasFocus;
 		const { from, to } = this.state.selection.ranges[ 0 ];
 
-		// Unregister textSelection() on the CodeMirror view.
-		$( this.view.dom ).textSelection( 'unregister' );
-
 		this.syncEditorContentsToSource();
 		this.removeMwHooks();
-
-		// Unregister textSelection() on the hidden textarea.
-		this.$textarea.textSelection( 'unregister' );
-		// Re-enable IME on the hidden textarea.
-		this.$textarea.removeClass( 'noime' );
-		// Hide the view. We use a CSS class on the wrapper since CodeMirror
-		// adds high-specificity styles to .cm-editor that we can't easily override.
-		this.container.classList.add( 'ext-codemirror-wrapper--hidden' );
+		this.hideEditor();
 
 		this.isActive = false;
 		this.logEditFeature( 'deactivated' );
@@ -1641,13 +1684,7 @@ class CodeMirror {
 	 */
 	destroy() {
 		this.deactivate();
-		// We want to support headless integrations without an EditorView or destroy() method.
-		if ( this.view ) {
-			this.view.destroy();
-			this.view = null;
-		}
-		$( this.wrappedElement ).unwrap( '.ext-codemirror-wrapper' );
-		this.container = null;
+		this.removeFromDOM();
 		this.textSelection = null;
 		// Remove form submission listener.
 		if ( this.formSubmitEventHandler && this.textarea.form ) {

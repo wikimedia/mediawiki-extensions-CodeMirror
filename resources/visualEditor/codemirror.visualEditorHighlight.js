@@ -474,6 +474,19 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 	}
 
 	/**
+	 * There is no editor of our own to reveal or hide, and VisualEditor keeps
+	 * {@link jQuery.textSelection} to itself either way.
+	 *
+	 * @inheritDoc
+	 */
+	showEditor() {}
+
+	/**
+	 * @inheritDoc
+	 */
+	hideEditor() {}
+
+	/**
 	 * Nothing is added to the DOM: the colors are painted onto VisualEditor's own text. What
 	 * stands in for the EditorView is the tokenizer, so this builds that instead.
 	 *
@@ -481,6 +494,13 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 	 */
 	addToDOM( extensions ) {
 		this.tokenizer = this.getNewEditorState( extensions );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	removeFromDOM() {
+		this.tokenizer = null;
 	}
 
 	/**
@@ -495,7 +515,7 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 	}
 
 	/**
-	 * Activate highlighting: build the tokenizer and bind listeners.
+	 * @inheritDoc
 	 */
 	activate() {
 		if ( this.isActive ) {
@@ -506,14 +526,22 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 		// Re-sync with the surface, which may have moved on while we were off. The inherited
 		// initialize() has already been through here once, so this is a rebuild.
 		this.addToDOM( this.defaultExtensions );
-		this.isActive = true;
-		this.logEditFeature( 'activated' );
 		// CodeMirrorThemes registers this once it has an editor, which is after the inherited
-		// initialize() has been through here, so seed it from the same value map.
+		// initialize() has been through here, so seed it from the same value map. Before
+		// super(), so that bindSurface() sees the theme the user actually chose.
 		this.extensionRegistry.registerFromValueMap(
 			'theme', this, this.getPreference( 'theme' )
 		);
+		super.activate();
+	}
 
+	/**
+	 * The overlay styling of the parent has no counterpart here, so this binds only what the
+	 * highlighting needs and starts the first passes.
+	 *
+	 * @inheritDoc
+	 */
+	bindSurface() {
 		// Bound regardless of theme: bracket matching needs the tokenizer kept in sync.
 		this.surface.getModel().getDocument().on( 'precommit', this.onDocumentPrecommitBound );
 		// Only the modal manager is watched. Toolbar and sidebar dialogs leave the surface
@@ -543,13 +571,12 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 	}
 
 	/**
-	 * Deactivate highlighting: unbind listeners and clear all highlights.
+	 * Undo {@link CodeMirrorVisualEditorHighlight#bindSurface bindSurface()}, and clear every
+	 * highlight it painted.
+	 *
+	 * @inheritDoc
 	 */
-	deactivate() {
-		if ( !this.isActive ) {
-			return;
-		}
-
+	unbindSurface() {
 		this.surface.getModel().getDocument().off( 'precommit', this.onDocumentPrecommitBound );
 		this.surface.getDialogs().disconnect( this );
 		this.openWindows = 0;
@@ -586,15 +613,12 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 		this.clearTrailingWhitespace();
 		this.clearHeadings();
 		this.lineNumberGutter.setEnabled( false );
-		if ( this.openLinks ) {
-			this.openLinks.setEnabled( false );
-		}
-		// The tokenizer is kept, as the other integrations keep their view: toggle() goes by
-		// the state to tell a first activation from a later one. activate() re-syncs it.
-		this.isActive = false;
 		// After #clearAllHighlights, so nothing that the rules paint is still on screen.
 		ve.ui.CodeMirrorAction.static.setHighlightStylesEnabled( false );
-		this.logEditFeature( 'deactivated' );
+		// The open-link mark is cleared by the inherited deactivate(), before the parent hides
+		// what it marks. The tokenizer is kept, as the other integrations keep their view:
+		// toggle() goes by the state to tell a first activation from a later one, and
+		// removeFromDOM() is what finally drops it.
 	}
 
 	/**
@@ -620,47 +644,12 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 	}
 
 	/**
-	 * Apply a transaction's delta to the tokenizer. Precommit, so the document is still in the
-	 * old state that the tokenizer's contents match.
+	 * The highlights track the document rather than a rendered view, so they are recomputed
+	 * from here rather than from a scroll or resize.
 	 *
-	 * @param {ve.dm.Transaction} tx
-	 * @private
+	 * @inheritDoc
 	 */
-	onDocumentPrecommit( tx ) {
-		if ( !this.tokenizer ) {
-			return;
-		}
-
-		const model = this.surface.getModel(),
-			store = model.getDocument().getStore(),
-			docLength = this.tokenizer.doc.length,
-			changes = [];
-		let offset = 0;
-
-		tx.operations.forEach( ( op ) => {
-			if ( op.type === 'retain' ) {
-				offset += op.length;
-			} else if ( op.type === 'replace' ) {
-				const from = model.getSourceOffsetFromOffset( offset ),
-					to = model.getSourceOffsetFromOffset( offset + op.remove.length ),
-					insert = new ve.dm.ElementLinearData( store, op.insert ).getSourceText(),
-					// T382769: setContents' replacement range overshoots the doc by one
-					// and adds a trailing newline.
-					isSetContents = to === docLength + 1 && insert.endsWith( '\n' );
-				changes.push( {
-					from,
-					to: isSetContents ? to - 1 : to,
-					insert: isSetContents ? insert.slice( 0, -1 ) : insert
-				} );
-				offset += op.remove.length;
-			}
-		} );
-
-		if ( changes.length ) {
-			// Positions are in the pre-transaction document, so CodeMirror rebases them itself.
-			this.tokenizer = this.tokenizer.update( { changes } ).state;
-		}
-
+	onDocumentChanged() {
 		this.scheduleRefresh();
 		// Headings and trailing whitespace track the document, not the viewport, so they only
 		// update on edits.

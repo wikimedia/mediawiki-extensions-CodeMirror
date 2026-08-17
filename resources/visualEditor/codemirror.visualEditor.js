@@ -332,8 +332,24 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	 * @inheritDoc
 	 */
 	activate() {
+		const wasActive = this.isActive;
 		super.activate();
+		// The parent declines to activate when it already is, and leaves isActive alone, so
+		// only bind on the way from one state to the other.
+		if ( !wasActive && this.isActive ) {
+			this.bindSurface();
+		}
+	}
 
+	/**
+	 * Everything this integration does to VisualEditor's surface while it is active: the
+	 * overlay styling, and the listeners that keep CodeMirror in step with the surface. Undone
+	 * by {@link CodeMirrorVisualEditor#unbindSurface unbindSurface()}.
+	 *
+	 * @protected
+	 * @stable to call and override
+	 */
+	bindSurface() {
 		// Force infinite viewport in CodeMirror to prevent misalignment of
 		// the VE surface and the CodeMirror view. See T357482#10076432.
 		this.view.viewState.printing = true;
@@ -413,8 +429,21 @@ class CodeMirrorVisualEditor extends CodeMirror {
 			this.openLinks.setEnabled( false );
 		}
 
+		const wasActive = this.isActive;
 		super.deactivate();
+		if ( wasActive && !this.isActive ) {
+			this.unbindSurface();
+		}
+	}
 
+	/**
+	 * Undo {@link CodeMirrorVisualEditor#bindSurface bindSurface()}, leaving VisualEditor's
+	 * surface as it was found.
+	 *
+	 * @protected
+	 * @stable to call and override
+	 */
+	unbindSurface() {
 		this.surfaceView.$documentNode.removeClass(
 			've-ce-documentNode-codeEditor-webkit-hide ve-ce-documentNode-codeEditor-hide'
 		);
@@ -566,49 +595,62 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	}
 
 	/**
-	 * Handle precommit events from the document.
+	 * Handle precommit events from the document, mirroring the change into CodeMirror.
 	 *
-	 * The document is still in it's 'old' state before the transaction
-	 * has been applied at this point.
+	 * The document is still in its 'old' state before the transaction has been applied at this
+	 * point, so the offsets are those of the pre-transaction document. They go in one
+	 * transaction, which CodeMirror rebases internally, rather than one at a time in reverse.
 	 *
 	 * @param {ve.dm.Transaction} tx
-	 * @private
+	 * @protected
 	 */
 	onDocumentPrecommit( tx ) {
-		const replacements = [],
-			model = this.surface.getModel(),
-			store = model.getDocument().getStore();
+		if ( !this.state ) {
+			return;
+		}
+
+		const model = this.surface.getModel(),
+			store = model.getDocument().getStore(),
+			docLength = this.state.doc.length,
+			changes = [];
 		let offset = 0;
 
 		tx.operations.forEach( ( op ) => {
 			if ( op.type === 'retain' ) {
 				offset += op.length;
 			} else if ( op.type === 'replace' ) {
-				replacements.push( {
-					from: model.getSourceOffsetFromOffset( offset ),
-					to: model.getSourceOffsetFromOffset( offset + op.remove.length ),
-					insert: new ve.dm.ElementLinearData( store, op.insert ).getSourceText()
+				const from = model.getSourceOffsetFromOffset( offset ),
+					to = model.getSourceOffsetFromOffset( offset + op.remove.length ),
+					insert = new ve.dm.ElementLinearData( store, op.insert ).getSourceText(),
+					// T382769: the replacement range from `textSelection( 'setContents' )`
+					// overshoots the document by one and adds a trailing newline.
+					isSetContents = to === docLength + 1 && insert.endsWith( '\n' );
+				changes.push( {
+					from,
+					to: isSetContents ? to - 1 : to,
+					insert: isSetContents ? insert.slice( 0, -1 ) : insert
 				} );
 				offset += op.remove.length;
 			}
 		} );
 
-		// Apply replacements in reverse to avoid having to shift offsets
-		for ( let i = replacements.length - 1; i >= 0; i-- ) {
-			// T382769: the replacement range from `textSelection( 'setContents' )`
-			// exceeds the document length by one character and inserts an extra newline
-			const { from, to, insert } = replacements[ i ],
-				isSetContents = to === this.view.state.doc.length + 1 &&
-					insert.endsWith( '\n' );
-			this.view.dispatch( {
-				changes: {
-					from,
-					to: isSetContents ? to - 1 : to,
-					insert: isSetContents ? insert.slice( 0, -1 ) : insert
-				}
-			} );
+		if ( changes.length ) {
+			this.dispatch( { changes } );
 		}
 
+		this.onDocumentChanged();
+	}
+
+	/**
+	 * Update whatever tracks the document contents, once
+	 * {@link CodeMirrorVisualEditor#onDocumentPrecommit onDocumentPrecommit()} has mirrored a
+	 * change into CodeMirror.
+	 *
+	 * @protected
+	 * @stable to override
+	 */
+	onDocumentChanged() {
+		// Inserting or removing lines can change the width of the gutter.
 		this.updateGutterWidth( this.surfaceView.getDocument().getDir() );
 	}
 }
