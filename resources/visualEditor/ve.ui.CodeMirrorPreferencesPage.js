@@ -5,8 +5,9 @@
 /**
  * Page of VisualEditor's options dialog for CodeMirror's preferences.
  *
- * The fields come from the active controller's `supportedPreferences`, and changes are applied
- * through its `applyPreference()`, since what is honoured differs by controller. Preferences locked
+ * The fields come from the active controller's `supportedPreferences`, and changes go through
+ * {@link CodeMirrorPreferences#setPreference setPreference()}, which applies them to the
+ * controller as well as storing them. Preferences locked
  * with {@link CodeMirrorPreferences#lockPreference} are omitted rather than shown disabled,
  * since they are locked precisely because they can have no effect here.
  *
@@ -213,9 +214,7 @@ ve.ui.CodeMirrorPreferencesPage.prototype.teardown = function ( data = {} ) {
 	const mirror = this.getMirror();
 	if ( data.action === 'done' && mirror && this.preferences ) {
 		for ( const name in this.changes ) {
-			// setPreference only persists, so the controller applies it to the live editor.
-			mirror.applyPreference( name, this.changes[ name ] );
-			this.preferences.setPreference( name, this.changes[ name ] );
+			this.preferences.setPreference( name, this.changes[ name ], mirror );
 		}
 	}
 	this.changes = {};

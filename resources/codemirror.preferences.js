@@ -275,14 +275,24 @@ class CodeMirrorPreferences extends CodeMirrorCodex {
 	 *
 	 * @param {string} key
 	 * @param {PrefValue} value A string value indicates enabled but with the given value.
+	 * @param {Editor} [editor] Apply the preference to this editor as well as storing it.
+	 *   Integrations that cannot be reconfigured through the
+	 *   {@link CodeMirrorExtensionRegistry} should instead act on the
+	 *   {@link CodeMirror~'ext.CodeMirror.preferences.apply'} hook.
 	 * @internal
 	 */
-	setPreference( key, value ) {
+	setPreference( key, value, editor ) {
 		if ( this.getPreference( key ) === value ) {
 			// No change or pref is disabled, so do nothing.
 			return;
 		}
 		this.preferences[ key ] = value;
+
+		if ( editor ) {
+			// toggle() reconfigures from the value map when given a string, so this covers
+			// both switches and choices.
+			this.extensionRegistry.toggle( key, editor, value );
+		}
 
 		if ( this.disabledPreferences.has( key ) ) {
 			// Preference is locked, so do not update storage or fire hooks.
@@ -376,11 +386,8 @@ class CodeMirrorPreferences extends CodeMirrorCodex {
 	 * @stable to call
 	 */
 	lockPreference( prefName, editor, force = false ) {
-		if ( editor ) {
-			this.extensionRegistry.toggle( prefName, editor, force );
-		}
 		this.disabledPreferences.add( prefName );
-		this.setPreference( prefName, force );
+		this.setPreference( prefName, force, editor );
 		this.firePreferencesApplyHook( prefName, force );
 	}
 
@@ -523,8 +530,7 @@ class CodeMirrorPreferences extends CodeMirrorCodex {
 			throw new Error( `[CodeMirror] Toggling the non-boolean preference "${ prefValue }"` );
 		}
 		const toEnable = !this.getPreference( name );
-		this.extensionRegistry.toggle( name, editor, toEnable );
-		this.setPreference( name, toEnable );
+		this.setPreference( name, toEnable, editor );
 	}
 
 	/**
@@ -677,8 +683,7 @@ class CodeMirrorPreferences extends CodeMirrorCodex {
 					continue;
 				}
 				const defaultPref = this.getDefaultPreferences()[ prefName ];
-				this.setPreference( prefName, defaultPref );
-				this.extensionRegistry.toggle( prefName, view, defaultPref );
+				this.setPreference( prefName, defaultPref, view );
 			}
 		} );
 
@@ -714,8 +719,7 @@ class CodeMirrorPreferences extends CodeMirrorCodex {
 	getCheckbox( name, label, checked ) {
 		const [ wrapper, input ] = super.getCheckbox( name, label, checked );
 		input.addEventListener( 'change', () => {
-			this.extensionRegistry.toggle( name, this.view, input.checked );
-			this.setPreference( name, input.checked );
+			this.setPreference( name, input.checked, this.view );
 		} );
 		// Update the checked state when the preference is changed.
 		mw.hook( 'ext.CodeMirror.preferences.apply' ).add( ( pref, enabled ) => {
@@ -732,8 +736,7 @@ class CodeMirrorPreferences extends CodeMirrorCodex {
 	getSelect( name, label, options, selected ) {
 		const [ wrapper, select ] = super.getSelect( name, label, options, selected );
 		select.addEventListener( 'change', () => {
-			this.extensionRegistry.reconfigureFromValueMap( name, this.view, select.value );
-			this.setPreference( name, select.value );
+			this.setPreference( name, select.value, this.view );
 		} );
 		// Update the selected value when the preference is changed.
 		mw.hook( 'ext.CodeMirror.preferences.apply' ).add( ( pref, value ) => {

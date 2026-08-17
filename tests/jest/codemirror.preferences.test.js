@@ -1,5 +1,5 @@
 /* eslint-disable-next-line n/no-missing-require */
-const { EditorView } = require( 'ext.CodeMirror.lib' );
+const { EditorState, EditorView } = require( 'ext.CodeMirror.lib' );
 const CodeMirrorPreferences = require( '../../resources/codemirror.preferences.js' );
 const CodeMirrorKeymap = require( '../../resources/codemirror.keymap.js' );
 const CodeMirrorExtensionRegistry = require( '../../resources/codemirror.extensionRegistry.js' );
@@ -72,6 +72,35 @@ describe( 'CodeMirrorPreferences', () => {
 		// Set again, and verify we do not call saveOption again.
 		preferences.setPreference( 'fooExtension', true );
 		expect( mw.Api.prototype.saveOption ).toHaveBeenCalledTimes( 1 );
+	} );
+
+	it( 'setPreference (with an Editor, which applies it too)', () => {
+		mockDefaultPreferences();
+		mockUserPreferences( { fooExtension: 0 } );
+		const preferences = getCodeMirrorPreferences();
+		const view = new EditorView( { extensions: preferences.extension } );
+		expect( preferences.extensionRegistry.isEnabled( 'fooExtension', view ) ).toBe( false );
+
+		preferences.setPreference( 'fooExtension', true, view );
+
+		expect( preferences.extensionRegistry.isEnabled( 'fooExtension', view ) ).toBe( true );
+		expect( preferences.preferences.fooExtension ).toStrictEqual( true );
+	} );
+
+	it( 'setPreference (a choice reconfigures from the value map)', () => {
+		mockDefaultPreferences();
+		const preferences = getCodeMirrorPreferences();
+		preferences.extensionRegistry.reconfigValueMap.set( 'bazExtension', new Map( [
+			[ 'small', EditorState.tabSize.of( 5 ) ],
+			[ 'large', EditorState.tabSize.of( 10 ) ]
+		] ) );
+		const view = new EditorView();
+		preferences.extensionRegistry.registerFromValueMap( 'bazExtension', view, 'small' );
+		expect( view.state.tabSize ).toBe( 5 );
+
+		preferences.setPreference( 'bazExtension', 'large', view );
+
+		expect( view.state.tabSize ).toBe( 10 );
 	} );
 
 	it( 'setPreference (non-mediawiki)', () => {

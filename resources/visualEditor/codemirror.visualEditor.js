@@ -249,26 +249,6 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	}
 
 	/**
-	 * Apply a preference to the running editor. toggle() reconfigures from the value map when
-	 * given a string, so this covers both switches and choices.
-	 *
-	 * @param {string} name
-	 * @param {PrefValue} value
-	 */
-	applyPreference( name, value ) {
-		this.extensionRegistry.toggle( name, this, value );
-		// Adding or removing the gutter moves where CodeMirror's text starts.
-		if ( name === 'lineNumbering' && this.isActive ) {
-			this.updateGutterWidth( this.surfaceView.getDocument().getDir() );
-		}
-		// The registry only holds the mark. Opening a link is VisualEditor's own event.
-		if ( name === 'openLinks' && this.openLinks ) {
-			this.openLinksEnabled = !!value;
-			this.openLinks.setEnabled( this.isActive && this.openLinksEnabled );
-		}
-	}
-
-	/**
 	 * @inheritDoc
 	 */
 	getSourceContents() {
@@ -372,6 +352,19 @@ class CodeMirrorVisualEditor extends CodeMirror {
 
 		// Account for the gutter width in the margin.
 		this.updateGutterWidth( this.surfaceView.getDocument().getDir() );
+
+		// Adding or removing the gutter moves where CodeMirror's text starts, and the
+		// preference is now applied by CodeMirrorPreferences rather than here.
+		this.addMwHook( 'ext.CodeMirror.preferences.apply', ( prefName, prefValue ) => {
+			if ( prefName === 'lineNumbering' && this.isActive ) {
+				this.updateGutterWidth( this.surfaceView.getDocument().getDir() );
+			}
+			// The registry only holds the mark. Opening a link is VisualEditor's own event.
+			if ( prefName === 'openLinks' && this.openLinks ) {
+				this.openLinksEnabled = !!prefValue;
+				this.openLinks.setEnabled( this.isActive && this.openLinksEnabled );
+			}
+		} );
 
 		// As the action is regenerated each time,
 		// we need to track the listeners for later disconnection.

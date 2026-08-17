@@ -422,18 +422,33 @@ describe( 'updateGutterWidth', () => {
 	} );
 } );
 
-describe( 'applyPreference', () => {
+describe( 'applying a preference', () => {
+	it( 'should reconfigure the extension through the registry', () => {
+		cmVe.initialize();
+		expect( cmVe.extensionRegistry.isEnabled( 'bracketMatching', cmVe ) ).toBe( true );
+		cmVe.preferences.setPreference( 'bracketMatching', false, cmVe );
+		expect( cmVe.extensionRegistry.isEnabled( 'bracketMatching', cmVe ) ).toBe( false );
+	} );
+
 	it( 'should re-measure the gutter when line numbering is toggled', () => {
 		cmVe.initialize();
 		const spy = jest.spyOn( cmVe, 'updateGutterWidth' );
-		cmVe.applyPreference( 'lineNumbering', false );
+		cmVe.preferences.setPreference( 'lineNumbering', false, cmVe );
 		expect( spy ).toHaveBeenCalledWith( 'ltr' );
 	} );
 
 	it( 'should not re-measure it for other preferences', () => {
 		cmVe.initialize();
 		const spy = jest.spyOn( cmVe, 'updateGutterWidth' );
-		cmVe.applyPreference( 'bracketMatching', false );
+		cmVe.preferences.setPreference( 'bracketMatching', false, cmVe );
+		expect( spy ).not.toHaveBeenCalled();
+	} );
+
+	it( 'should stop re-measuring once deactivated', () => {
+		cmVe.initialize();
+		cmVe.deactivate();
+		const spy = jest.spyOn( cmVe, 'updateGutterWidth' );
+		cmVe.preferences.setPreference( 'lineNumbering', false, cmVe );
 		expect( spy ).not.toHaveBeenCalled();
 	} );
 } );
@@ -544,12 +559,12 @@ describe( 'openLinks', () => {
 		const c = newController();
 		c.initialize();
 		const handlerSpy = jest.spyOn( c.openLinks, 'setEnabled' );
-		c.applyPreference( 'openLinks', false );
+		c.preferences.setPreference( 'openLinks', false, c );
 		expect( c.openLinksEnabled ).toBe( false );
 		expect( c.extensionRegistry.isEnabled( 'openLinks', c ) ).toBe( false );
 		expect( handlerSpy ).toHaveBeenCalledWith( false );
 
-		c.applyPreference( 'openLinks', true );
+		c.preferences.setPreference( 'openLinks', true, c );
 		expect( c.extensionRegistry.isEnabled( 'openLinks', c ) ).toBe( true );
 		expect( handlerSpy ).toHaveBeenLastCalledWith( true );
 	} );

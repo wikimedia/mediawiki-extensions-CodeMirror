@@ -411,7 +411,7 @@ describe( 'bracket matching', () => {
 		controller.updateBracketMatch();
 		expect( controller.bracketGroups.size ).toBeGreaterThan( 0 );
 
-		controller.applyPreference( 'bracketMatching', false );
+		controller.preferences.setPreference( 'bracketMatching', false, controller );
 
 		expect( controller.extensionRegistry.isEnabled( 'bracketMatching', controller ) )
 			.toBe( false );
@@ -456,12 +456,12 @@ describe( 'highlightRefs', () => {
 
 	it( 'should unscope and scope again as the preference is toggled', () => {
 		controller.activate();
-		controller.applyPreference( 'highlightRefs', false );
+		controller.preferences.setPreference( 'highlightRefs', false, controller );
 		expect( controller.extensionRegistry.isEnabled( 'highlightRefs', controller ) )
 			.toBe( false );
 		expect( hasRefsClass( controller ) ).toBe( false );
 
-		controller.applyPreference( 'highlightRefs', true );
+		controller.preferences.setPreference( 'highlightRefs', true, controller );
 		expect( hasRefsClass( controller ) ).toBe( true );
 	} );
 
@@ -603,12 +603,12 @@ describe( 'line numbering', () => {
 		controller.activate();
 		expect( controller.lineNumberGutter.enabled ).toBe( true );
 
-		controller.applyPreference( 'lineNumbering', false );
+		controller.preferences.setPreference( 'lineNumbering', false, controller );
 		expect( controller.extensionRegistry.isEnabled( 'lineNumbering', controller ) )
 			.toBe( false );
 		expect( controller.lineNumberGutter.enabled ).toBe( false );
 
-		controller.applyPreference( 'lineNumbering', true );
+		controller.preferences.setPreference( 'lineNumbering', true, controller );
 		expect( controller.lineNumberGutter.enabled ).toBe( true );
 	} );
 
@@ -721,11 +721,11 @@ describe( 'themes', () => {
 		expect( controller.theme ).toBe( 'default' );
 		expect( isColorblind() ).toBe( false );
 
-		controller.applyPreference( 'theme', 'colorblind' );
+		controller.preferences.setPreference( 'theme', 'colorblind', controller );
 		expect( controller.theme ).toBe( 'colorblind' );
 		expect( isColorblind() ).toBe( true );
 
-		controller.applyPreference( 'theme', 'no-highlight' );
+		controller.preferences.setPreference( 'theme', 'no-highlight', controller );
 		expect( controller.syntaxHighlightingEnabled ).toBe( false );
 		expect( isColorblind() ).toBe( false );
 	} );
@@ -990,7 +990,7 @@ describe( 'active line', () => {
 		controller.updateActiveLine();
 		expect( classes( surface.lineNodes[ 0 ] ) ).toEqual( [] );
 
-		controller.applyPreference( 'activeLine', true );
+		controller.preferences.setPreference( 'activeLine', true, controller );
 
 		// Reconfiguring the compartment both binds and paints, with no second call here.
 		expect( controller.extensionRegistry.isEnabled( 'activeLine', controller ) )
@@ -1004,7 +1004,7 @@ describe( 'active line', () => {
 		active.surface.setCursor( 5 );
 		active.updateActiveLine();
 
-		active.applyPreference( 'activeLine', false );
+		active.preferences.setPreference( 'activeLine', false, active );
 
 		expect( active.extensionRegistry.isEnabled( 'activeLine', active ) ).toBe( false );
 		expect( active.surface.model.off )
@@ -1091,7 +1091,7 @@ describe( 'trailing whitespace', () => {
 		trailing.activate();
 		trailing.updateTrailingWhitespace();
 
-		trailing.applyPreference( 'trailingWhitespace', false );
+		trailing.preferences.setPreference( 'trailingWhitespace', false, trailing );
 
 		expect( trailing.extensionRegistry.isEnabled( 'trailingWhitespace', trailing ) )
 			.toBe( false );
@@ -1106,7 +1106,7 @@ describe( 'trailing whitespace', () => {
 		expect( surface.selectionManager.drawSelections )
 			.not.toHaveBeenCalledWith( 'cm-trailing-whitespace', expect.anything(), expect.anything() );
 
-		controller.applyPreference( 'trailingWhitespace', true );
+		controller.preferences.setPreference( 'trailingWhitespace', true, controller );
 
 		// Reconfiguring schedules the pass, so only the frame is left to run.
 		controller.updateTrailingWhitespace();
@@ -1182,7 +1182,7 @@ describe( 'whitespace', () => {
 	it( 'should stop the viewport pass when the last consumer is turned off', () => {
 		const ws = newWhitespaceController( 'a b', { theme: 'no-highlight' } );
 		ws.activate();
-		ws.applyPreference( 'whitespace', false );
+		ws.preferences.setPreference( 'whitespace', false, ws );
 		expect( ws.viewportPassEnabled ).toBe( false );
 		expect( ws.surface.view.off ).toHaveBeenCalledWith( 'position', expect.any( Function ) );
 	} );
@@ -1220,7 +1220,7 @@ describe( 'whitespace', () => {
 		expect( controller.surface.selectionManager.drawSelections )
 			.not.toHaveBeenCalledWith( 'cm-whitespace', expect.anything(), expect.anything() );
 
-		controller.applyPreference( 'whitespace', true );
+		controller.preferences.setPreference( 'whitespace', true, controller );
 
 		expect( controller.extensionRegistry.isEnabled( 'whitespace', controller ) )
 			.toBe( true );
@@ -1620,13 +1620,15 @@ describe( 'openLinks', () => {
 	} );
 
 	it( 'should apply the preference to the running handler', () => {
+		// Here openLinks is an Extension of its own, so the registry reaches the handler
+		// through toggleOpenLinks() rather than through the parent's cached state.
 		const c = newController();
 		c.activate();
 		const spy = jest.spyOn( c.openLinks, 'setEnabled' );
-		c.applyPreference( 'openLinks', false );
-		expect( c.openLinksEnabled ).toBe( false );
+		c.preferences.setPreference( 'openLinks', false, c );
+		expect( c.extensionRegistry.isEnabled( 'openLinks', c ) ).toBe( false );
 		expect( spy ).toHaveBeenCalledWith( false );
-		c.applyPreference( 'openLinks', true );
+		c.preferences.setPreference( 'openLinks', true, c );
 		expect( spy ).toHaveBeenLastCalledWith( true );
 	} );
 
@@ -1635,8 +1637,10 @@ describe( 'openLinks', () => {
 		const warnSpy = jest.spyOn( console, 'warn' ).mockImplementation( () => {} );
 		const c = newController();
 		const spy = jest.spyOn( c.openLinks, 'setEnabled' );
-		c.applyPreference( 'openLinks', true );
-		expect( spy ).toHaveBeenCalledWith( false );
+		// The preference is on by default, so turn it off and on again to make it move.
+		c.preferences.setPreference( 'openLinks', false, c );
+		c.preferences.setPreference( 'openLinks', true, c );
+		expect( spy ).not.toHaveBeenCalledWith( true );
 		warnSpy.mockRestore();
 	} );
 
