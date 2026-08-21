@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Wizzard"
+		]
+	},
+	"apihelp-codemirror-validate-summary": "Skontrolovať chyby overenia v zadanom obsahu",
+	"apihelp-codemirror-validate-param-content": "Textový obsah, ktorý sa má overiť",
+	"apihelp-codemirror-validate-param-contentmodel": "Model obsahu",
+	"apihelp-codemirror-validate-param-title": "Názov stránky, ku ktorej obsah patrí.",
+	"apihelp-codemirror-validate-example": "Skontrolovať, či je <code>h2 {color: red}</code> platné pre sanitized-css"
+}
