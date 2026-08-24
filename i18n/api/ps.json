@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"شاه زمان پټان"
+		]
+	},
+	"apihelp-codemirror-validate-summary": "ورکړل شوې منځپانگه کې د تاييد تېروتنو سم‌کتنه",
+	"apihelp-codemirror-validate-param-content": "تاييد لپاره د ليک منځپانگه",
+	"apihelp-codemirror-validate-param-contentmodel": "منځپانگيزه رغبېلگه",
+	"apihelp-codemirror-validate-param-title": "د هغه مخ سرليک چې منځپانگه ورپورې تړاو لري.",
+	"apihelp-codemirror-validate-example": "وگورئ چې ايا <code>h2 {color: red}</code> د سپاشوي سي‌اېس‌اېس لپاره اعتبار لري"
+}
