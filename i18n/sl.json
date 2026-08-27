@@ -7,6 +7,7 @@
 	"codemirror-desc": "Omogoča označevanje skladnje v urejevalniku vikibesedila",
 	"codemirror-toggle-label": "Označevanje skladnje",
 	"codemirror-toggle-label-short": "Skladnja",
+	"codemirror-prefs-summary": "Več o tej možnosti lahko izveste tako, da preberete [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror stran pomoči].",
 	"codemirror-prefs-enable": "Omogoči označevanje skladnje",
 	"codemirror-prefs-title": "Nastavitve označevanja skladnje",
 	"codemirror-prefs-section-lines": "Vrstice",
