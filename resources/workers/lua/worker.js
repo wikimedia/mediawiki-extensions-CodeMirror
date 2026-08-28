@@ -24,6 +24,6 @@ const setConfig = ( newConfig ) => {
 };
 const getConfig = () => config;
 const lint = async ( code ) => ( await Luacheck.queue( code ) )
-	.filter( ( { severity } ) => severity );
+	.filter( ( { severity, code: c, name } ) => severity && ( c !== '212' || name !== '...' ) );
 
 onmessage( setConfig, getConfig, lint );

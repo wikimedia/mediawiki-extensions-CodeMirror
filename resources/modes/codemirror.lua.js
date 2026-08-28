@@ -405,6 +405,7 @@ class CodeMirrorLua extends CodeMirrorMode {
 		this.worker.onload( () => {
 			this.worker.setConfig( {
 				read_globals: { // eslint-disable-line camelcase
+					arg: { other_fields: true }, // eslint-disable-line camelcase
 					mw: {
 						fields: {
 							site: {
