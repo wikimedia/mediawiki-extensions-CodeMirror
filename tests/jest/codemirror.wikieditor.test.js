@@ -75,7 +75,7 @@ describe( 'initialize', () => {
 } );
 
 describe( 'deactivate', () => {
-	it( 'should remove the button from the toolbar', () => {
+	it( 'should remove the Settings button but keep the Syntax toggle', () => {
 		const cmWe = getCodeMirrorWikiEditor();
 		cmWe.initialize();
 		cmWe.deactivate();
@@ -83,8 +83,9 @@ describe( 'deactivate', () => {
 		expect( cmWe.$textarea.wikiEditor ).toHaveBeenCalledWith(
 			'removeFromToolbar',
 			expect.objectContaining( {
-				section: 'advanced',
-				group: 'codemirror'
+				section: 'main',
+				group: 'codemirror',
+				tool: 'CodeMirrorPreferences'
 			} )
 		);
 	} );
@@ -97,8 +98,9 @@ describe( 'deactivate', () => {
 		expect( cmWe.$textarea.wikiEditor ).toHaveBeenCalledWith(
 			'removeFromToolbar',
 			expect.objectContaining( {
-				section: 'secondary',
-				group: 'codemirror'
+				section: 'main',
+				group: 'codemirror',
+				tool: 'CodeMirrorPreferences'
 			} )
 		);
 		expect( cmWe.$textarea.wikiEditor ).toHaveBeenCalledWith(
@@ -236,17 +238,30 @@ describe( 'logEditFeature', () => {
 		} );
 	} );
 
-	it( 'should show a Preferences button in the advanced section of the toolbar', () => {
+	it( 'should render the Preferences button as always-progressive', () => {
+		const cmWe = getCodeMirrorWikiEditor();
+		cmWe.initialize();
+		cmWe.preferencesTool.element();
+
+		// It only appears while highlighting is on, so it is never in an "off" state.
+		expect( OO.ui.ButtonWidget ).toHaveBeenCalledWith(
+			expect.objectContaining( {
+				icon: 'settings',
+				flags: { progressive: true }
+			} )
+		);
+	} );
+
+	it( 'should show a Preferences button beside the Syntax toggle', () => {
 		const cmWe = getCodeMirrorWikiEditor();
 		cmWe.initialize();
 
 		expect( cmWe.$textarea.wikiEditor ).toHaveBeenCalledWith(
 			'addToToolbar',
 			expect.objectContaining( {
-				section: 'advanced',
-				groups: { codemirror: { tools: {
-					CodeMirrorPreferences: expect.any( Object )
-				} } }
+				section: 'main',
+				group: 'codemirror',
+				tools: { CodeMirrorPreferences: expect.any( Object ) }
 			} )
 		);
 		expect( cmWe.$textarea.wikiEditor ).toHaveBeenCalledWith(

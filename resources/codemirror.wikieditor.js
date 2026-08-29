@@ -201,23 +201,21 @@ class CodeMirrorWikiEditor extends CodeMirror {
 				section: 'advanced',
 				groups: { 'codemirror-sort': this.sortGroup }
 			} );
-			// Add Settings button to Advanced.
-			this.$textarea.wikiEditor( 'addToToolbar', {
-				section: 'advanced',
-				groups: {
-					codemirror: {
-						tools: {
-							CodeMirrorPreferences: this.preferencesTool
-						}
-					}
-				}
-			} );
 		} else {
 			this.addCodeFormattingButtonsToToolbar();
 			// Remove CSS class used by style module.
 			// This should be kept in sync with Hooks::addStyleModule() in PHP.
 			document.body.classList.remove( 'cm-mw-wikieditor-loading' );
 		}
+
+		// Add the Settings button beside the Syntax toggle (T425739).
+		this.$textarea.wikiEditor( 'addToToolbar', {
+			section: 'main',
+			group: 'codemirror',
+			tools: {
+				CodeMirrorPreferences: this.preferencesTool
+			}
+		} );
 	}
 
 	/** @inheritDoc */
@@ -236,6 +234,13 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	deactivate() {
 		super.deactivate();
 
+		// Remove only the Settings button, leaving the Syntax toggle in its group.
+		this.$textarea.wikiEditor( 'removeFromToolbar', {
+			section: 'main',
+			group: 'codemirror',
+			tool: 'CodeMirrorPreferences'
+		} );
+
 		if ( this.mode === 'mediawiki' ) {
 			// Restore original search button.
 			this.$searchBtn.replaceWith( this.$oldSearchBtn );
@@ -245,18 +250,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 				section: 'advanced',
 				group: 'codemirror-sort'
 			} );
-
-			// Remove the CodeMirror preferences button from the advanced section.
-			this.$textarea.wikiEditor( 'removeFromToolbar', {
-				section: 'advanced',
-				group: 'codemirror'
-			} );
 		} else {
-			// Remove the CodeMirror preferences button from the secondary section.
-			this.$textarea.wikiEditor( 'removeFromToolbar', {
-				section: 'secondary',
-				group: 'codemirror'
-			} );
 			// Remove the main toolbar buttons that we added.
 			for ( const group of [ 'format', 'sort', 'preferences', 'search' ] ) {
 				this.$textarea.wikiEditor( 'removeFromToolbar', {
@@ -379,16 +373,6 @@ class CodeMirrorWikiEditor extends CodeMirror {
 				}
 			}
 		} } );
-		this.$textarea.wikiEditor( 'addToToolbar', {
-			section: 'secondary',
-			groups: {
-				codemirror: {
-					tools: {
-						CodeMirrorPreferences: this.preferencesTool
-					}
-				}
-			}
-		} );
 	}
 
 	/**
@@ -541,16 +525,28 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	 * @private
 	 */
 	get preferencesTool() {
+		const label = mw.msg( 'codemirror-keymap-preferences' );
 		return {
-			label: this.keymap.getTitleWithShortcut(
-				this.keymap.keymapHelpRegistry.other.preferences,
-				mw.msg( 'codemirror-keymap-preferences' )
-			),
-			type: 'button',
-			oouiIcon: 'settings',
-			action: {
-				type: 'callback',
-				execute: () => this.preferences.showPreferencesDialog( this.view )
+			label,
+			type: 'element',
+			element: () => {
+				// OOUI has already been loaded by WikiEditor.
+				const button = new OO.ui.ButtonWidget( {
+					icon: 'settings',
+					framed: false,
+					// The button is in the toolbar only while highlighting is on,
+					// so it always matches the enabled Syntax button.
+					flags: { progressive: true },
+					classes: [ 'tool', 'cm-mw-preferences-wikieditor' ],
+					title: this.keymap.getTitleWithShortcut(
+						this.keymap.keymapHelpRegistry.other.preferences,
+						label
+					),
+					label,
+					invisibleLabel: true
+				} );
+				button.on( 'click', () => this.preferences.showPreferencesDialog( this.view ) );
+				return button.$element;
 			}
 		};
 	}

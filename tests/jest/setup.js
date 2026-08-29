@@ -175,6 +175,10 @@ global.CSS = {
 };
 global.OO = {
 	ui: {
+		ButtonWidget: jest.fn().mockReturnValue( {
+			on: jest.fn(),
+			$element: $( '<button>' )
+		} ),
 		ToggleButtonWidget: jest.fn().mockReturnValue( {
 			on: jest.fn(),
 			$element: $( '<button>' ),
