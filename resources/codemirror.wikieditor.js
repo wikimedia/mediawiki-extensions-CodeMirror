@@ -541,18 +541,18 @@ class CodeMirrorWikiEditor extends CodeMirror {
 	 * @private
 	 */
 	get preferencesTool() {
-		return this.getToggleTool(
-			'CodeMirrorPreferences',
-			() => this.preferences.toggle( this.view ),
-			mw.msg( 'codemirror-keymap-preferences' ),
-			'settings',
-			( button ) => {
-				mw.hook( 'ext.CodeMirror.preferences.display' ).add( () => {
-					button.setValue( this.view.state.field( this.preferences.panelStateField ) );
-				} );
-			},
-			this.keymap.keymapHelpRegistry.other.preferences
-		);
+		return {
+			label: this.keymap.getTitleWithShortcut(
+				this.keymap.keymapHelpRegistry.other.preferences,
+				mw.msg( 'codemirror-keymap-preferences' )
+			),
+			type: 'button',
+			oouiIcon: 'settings',
+			action: {
+				type: 'callback',
+				execute: () => this.preferences.showPreferencesDialog( this.view )
+			}
+		};
 	}
 
 	/**

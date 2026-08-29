@@ -1,6 +1,7 @@
 /* eslint-disable-next-line n/no-missing-require */
 const { EditorView } = require( 'ext.CodeMirror.lib' );
 const CodeMirrorExtensionRegistry = require( '../../resources/codemirror.extensionRegistry.js' );
+const CodeMirrorKeymap = require( '../../resources/codemirror.keymap.js' );
 const CodeMirrorPreferences = require( '../../resources/codemirror.preferences.js' );
 const CodeMirrorThemes = require( '../../resources/themes/codemirror.themes.js' );
 
@@ -10,7 +11,8 @@ describe( 'CodeMirrorThemes', () => {
 	beforeEach( () => {
 		preferences = new CodeMirrorPreferences(
 			new CodeMirrorExtensionRegistry( {} ),
-			'javascript'
+			'javascript',
+			new CodeMirrorKeymap()
 		);
 		themes = new CodeMirrorThemes( preferences );
 		view = new EditorView();

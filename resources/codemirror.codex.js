@@ -397,7 +397,7 @@ class CodeMirrorCodex {
 			'cdx-dialog__header__close-button',
 			'cdx-dialog__header__close'
 		);
-		closeBtn.setAttribute( 'aria-label', mw.msg( 'codemirror-keymap-help-close' ) );
+		closeBtn.setAttribute( 'aria-label', mw.msg( 'codemirror-close' ) );
 		const cdxIcon = document.createElement( 'span' );
 		cdxIcon.classList.add( 'cdx-button__icon', 'cm-mw-icon--close' );
 		closeBtn.appendChild( cdxIcon );
@@ -461,16 +461,20 @@ class CodeMirrorCodex {
 				// Determine the width of the scrollbar and compensate for it if necessary
 				const scrollWidth = window.innerWidth - document.documentElement.clientWidth;
 				document.documentElement.style.setProperty( 'margin-right', `${ scrollWidth }px` );
+				// Toggle a class on <body> to prevent scrolling
+				document.body.classList.add( 'cdx-dialog-open' );
 			} else {
-				document.documentElement.style.removeProperty( 'margin-right' );
+				// A dialog stacked below this one needs the page to stay locked.
+				if ( !this.getOpenDialogs().length ) {
+					document.documentElement.style.removeProperty( 'margin-right' );
+					document.body.classList.remove( 'cdx-dialog-open' );
+				}
 				// Put focus back to wherever it was before opening the dialog.
 				if ( this.focusedElement ) {
 					this.focusedElement.focus();
 					this.focusedElement = null;
 				}
 			}
-			// Toggle a class on <body> to prevent scrolling
-			document.body.classList.toggle( 'cdx-dialog-open', open );
 		} );
 		// Animates the dialog in or out.
 		// Use setTimeout() with slight delay to allow rendering threads to catch up.
@@ -481,7 +485,9 @@ class CodeMirrorCodex {
 		// Add or remove the keydown listener.
 		if ( open && !this.keydownListener ) {
 			this.keydownListener = ( e ) => {
-				if ( e.key === 'Escape' && !this.dialog.classList.contains( 'cm-mw-dialog--hidden' ) ) {
+				const openDialogs = this.getOpenDialogs();
+				// Only the top-most dialog closes, so Escape doesn't dismiss a whole stack.
+				if ( e.key === 'Escape' && openDialogs[ openDialogs.length - 1 ] === this.dialog ) {
 					this.animateDialog( false );
 				}
 			};
@@ -490,6 +496,17 @@ class CodeMirrorCodex {
 			document.body.removeEventListener( 'keydown', this.keydownListener );
 			this.keydownListener = null;
 		}
+	}
+
+	/**
+	 * All open dialogs, in stacking order. They share a z-index,
+	 * so the last one in the DOM is the one on top.
+	 *
+	 * @return {NodeList}
+	 * @protected
+	 */
+	getOpenDialogs() {
+		return document.querySelectorAll( '.cm-mw-dialog-backdrop:not( .cm-mw-dialog--hidden )' );
 	}
 
 	/**

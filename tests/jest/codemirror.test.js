@@ -384,7 +384,7 @@ describe( 'destroy', () => {
 		// Constructed here because the shared instance predates the hook registry reset.
 		const cm2 = new CodeMirror( textarea );
 		const handlers = Object.values( cm2.keymap.hookHandlers );
-		expect( handlers.length ).toBe( 3 );
+		expect( handlers.length ).toBe( 2 );
 		// mw.hook holds every handler for the life of the page, so one that stays registered
 		// keeps its instance alive with it.
 		expect( mw.hook.mockHooks[ 'ext.CodeMirror.preferences.ready' ] )

@@ -49,7 +49,9 @@ class CodeMirrorChild extends CodeMirror {
 			Object.assign( {}, this.keymap.keymapHelpRegistry.other.preferences, {
 				prec: Prec.highest,
 				run: () => {
-					this.primaryInstance.preferences.toggle( this.primaryInstance.view, true );
+					this.primaryInstance.preferences.showPreferencesDialog(
+						this.primaryInstance.view
+					);
 					return true;
 				}
 			} ),

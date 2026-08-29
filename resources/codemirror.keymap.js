@@ -252,10 +252,6 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 					key: 'Mod-Shift-,',
 					msg: mw.msg( 'codemirror-keymap-preferences' )
 				},
-				fullPreferences: {
-					key: 'Alt-Shift-,',
-					msg: mw.msg( 'codemirror-keymap-full-preferences' )
-				},
 				help: {
 					key: 'Ctrl-Shift-/',
 					run: this.showHelpDialog.bind( this ),
@@ -276,16 +272,6 @@ class CodeMirrorKeymap extends CodeMirrorCodex {
 			[ 'multiCursor', mw.msg( 'codemirror-keymap-multicursor', this.getShortcutHtml( 'Mod' ).outerHTML ) ],
 			[ 'crosshair', mw.msg( 'codemirror-keymap-crosshair', this.getShortcutHtml( 'Alt' ).outerHTML ) ]
 		] );
-
-		// Use mw.hook to add only one click listener to the keymap help button.
-		this.addHook( 'ext.CodeMirror.preferences.display', ( container ) => {
-			if ( container && !container.dataset.kbdHelpListener ) {
-				container.dataset.kbdHelpListener = '1';
-				container.querySelector( '.cm-mw-panel__kbd-help' ).addEventListener( 'click',
-					() => this.showHelpDialog()
-				);
-			}
-		} );
 
 		// Clear the help dialog when preferences change (T424173).
 		this.addHook( 'ext.CodeMirror.preferences.apply', () => {

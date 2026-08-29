@@ -207,6 +207,32 @@ describe( 'CodeMirrorCodex', () => {
 		expect( cmCodex.dialog.classList.contains( 'cm-mw-dialog--hidden' ) ).toBe( true );
 	} );
 
+	it( 'should close only the top-most dialog on Escape', () => {
+		const lower = new CodeMirrorCodex();
+		const upper = new CodeMirrorCodex();
+		lower.showDialog( 'Lower', 'lower', document.createElement( 'p' ) );
+		upper.showDialog( 'Upper', 'upper', document.createElement( 'p' ) );
+		jest.runOnlyPendingTimers();
+
+		document.body.dispatchEvent( new KeyboardEvent( 'keydown', { key: 'Escape' } ) );
+		upper.dialog.dispatchEvent( new Event( 'transitionend' ) );
+		// Let any fade the lower dialog wrongly started run to completion.
+		jest.runOnlyPendingTimers();
+		expect( upper.dialog.classList.contains( 'cm-mw-dialog--hidden' ) ).toBe( true );
+		expect( lower.dialog.classList.contains( 'cm-mw-dialog--hidden' ) ).toBe( false );
+		// The page stays locked while the dialog underneath is still open.
+		expect( document.body.classList.contains( 'cdx-dialog-open' ) ).toBe( true );
+
+		// The lower dialog is now the top-most one.
+		document.body.dispatchEvent( new KeyboardEvent( 'keydown', { key: 'Escape' } ) );
+		lower.dialog.dispatchEvent( new Event( 'transitionend' ) );
+		expect( lower.dialog.classList.contains( 'cm-mw-dialog--hidden' ) ).toBe( true );
+		expect( document.body.classList.contains( 'cdx-dialog-open' ) ).toBe( false );
+
+		lower.dialog.remove();
+		upper.dialog.remove();
+	} );
+
 	it( 'should use random IDs for checkboxes', () => {
 		const [ , checkbox1 ] = cmCodex.getCheckbox( 'foo1', 'bar1', true );
 		const [ , checkbox2 ] = cmCodex.getCheckbox( 'foo2', 'bar2', false );

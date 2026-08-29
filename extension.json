@@ -83,19 +83,6 @@
 				"whitespace": false
 			},
 			"description": "Defaults for CodeMirror user preferences for non-wikitext. See https://w.wiki/BwzZ for more information."
-		},
-		"CodeMirrorPrimaryPreferences": {
-			"value": {
-				"autocomplete": true,
-				"bidiIsolation": true,
-				"bracketMatching": true,
-				"lineNumbering": true,
-				"lineWrapping": true,
-				"lint": true,
-				"specialChars": true,
-				"whitespace": true
-			},
-			"description": "Preferences advertised in the in-editor preferences panel. These should have a clear visual effect and be useful to most users. Preferences not listed here will be available in the full preferences dialog."
 		}
 	},
 	"MessagesDirs": {
@@ -207,9 +194,7 @@
 				"codemirror-keymap-fold",
 				"codemirror-keymap-foldall",
 				"codemirror-keymap-foldref",
-				"codemirror-keymap-full-preferences",
 				"codemirror-keymap-help",
-				"codemirror-keymap-help-close",
 				"codemirror-keymap-help-title",
 				"codemirror-keymap-history",
 				"codemirror-keymap-indent",
@@ -253,7 +238,6 @@
 				"codemirror-prefs-linenumbering",
 				"codemirror-prefs-linewrapping",
 				"codemirror-prefs-lint",
-				"codemirror-prefs-panel-full",
 				"codemirror-prefs-reset",
 				"codemirror-prefs-section-appearance",
 				"codemirror-prefs-section-characters",
@@ -306,9 +290,6 @@
 				"codemirror-theme-vscode",
 				"codemirror-unfold",
 				"codemirror-we-group-sort",
-				"parentheses-end",
-				"parentheses-start",
-				"pipe-separator",
 				"word-separator"
 			]
 		},

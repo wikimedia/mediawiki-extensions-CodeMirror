@@ -60,7 +60,6 @@ class DataScript {
 			'visualEditorCustomHighlight' => $mwConfig->get( 'CodeMirrorVisualEditorCustomHighlight' ),
 			'defaultPreferences' => $mwConfig->get( 'CodeMirrorDefaultPreferences' ),
 			'defaultPreferencesCode' => $mwConfig->get( 'CodeMirrorDefaultPreferencesCode' ),
-			'primaryPreferences' => $mwConfig->get( 'CodeMirrorPrimaryPreferences' ),
 			'pluginModules' => $registry->getAttribute( 'CodeMirrorPluginModules' ),
 			'parserFunctionNsIds' => $registry->getAttribute( 'CodeMirrorParserFunctionNsIds' ),
 			'tagModes' => $tagModes,

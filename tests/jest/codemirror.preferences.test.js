@@ -9,10 +9,9 @@ describe( 'CodeMirrorPreferences', () => {
 
 	beforeEach( () => {
 		mockDefaultPreferences = (
-			defaultPreferences = { fooExtension: false, barExtension: true },
-			primaryPreferences = { fooExtension: true, barExtension: true }
+			defaultPreferences = { fooExtension: false, barExtension: true }
 		) => {
-			mw.config.get = jest.fn().mockReturnValue( { defaultPreferences, primaryPreferences } );
+			mw.config.get = jest.fn().mockReturnValue( { defaultPreferences } );
 		};
 		mockUserPreferences = ( preferences = {} ) => {
 			mockUserOptionsGet( { 'codemirror-preferences': JSON.stringify( preferences ) } );
@@ -222,22 +221,9 @@ describe( 'CodeMirrorPreferences', () => {
 		expect( hookSpy ).toHaveBeenCalledTimes( 2 );
 	} );
 
-	it( 'panel', () => {
-		mockDefaultPreferences();
-		mockUserPreferences( { fooExtension: 1, barExtension: 0, inapplicableExtension: 1 } );
-		const preferences = getCodeMirrorPreferences();
-		const panel = preferences.panel;
-		expect( panel.dom.className ).toStrictEqual( 'cm-mw-preferences-panel cm-mw-panel' );
-		const checkboxes = panel.dom.querySelectorAll( '.cdx-checkbox__input' );
-		expect( checkboxes.length ).toStrictEqual( 2 );
-		expect( checkboxes[ 0 ].name ).toStrictEqual( 'fooExtension' );
-		expect( checkboxes[ 1 ].name ).toStrictEqual( 'barExtension' );
-	} );
-
 	it( 'overriding namespace and mode preferences', () => {
 		const extCodeMirrorConfig = {
-			defaultPreferences: { lineNumbering: true, autocomplete: [ 0 /* NS_MAIN */ ] },
-			primaryPreferences: { lineNumbering: true, autocomplete: true }
+			defaultPreferences: { lineNumbering: true, autocomplete: [ 0 /* NS_MAIN */ ] }
 		};
 		mockUserPreferences( {} );
 
@@ -341,20 +327,17 @@ describe( 'CodeMirrorPreferences', () => {
 		expect( mw.user.options.set ).toHaveBeenCalledWith( 'codemirror-preferences', null );
 	} );
 
-	it( 'should toggle the preference checkbox when the preferences panel is open', () => {
+	it( 'should toggle the preference checkbox when the preferences dialog is open', () => {
 		mockDefaultPreferences( { fooExtension: false, barExtension: false } );
 		mockUserPreferences( { fooExtension: 0, barExtension: 1 } );
 		const preferences = getCodeMirrorPreferences();
 		const view = new EditorView();
-		preferences.toggle( view );
-		expect(
-			preferences.panel.dom.querySelector( 'input[name="fooExtension"]' ).checked
-		).toBe( false );
 		preferences.registerExtension( 'fooExtension', EditorView.theme(), view );
+		preferences.showPreferencesDialog( view );
+		const checkbox = preferences.dialog.querySelector( 'input[name="fooExtension"]' );
+		expect( checkbox.checked ).toBe( false );
 		preferences.setPreference( 'fooExtension', true );
-		expect(
-			preferences.panel.dom.querySelector( 'input[name="fooExtension"]' ).checked
-		).toBe( true );
+		expect( checkbox.checked ).toBe( true );
 	} );
 
 	describe( 'default preferences', () => {
@@ -409,8 +392,7 @@ describe( 'CodeMirrorPreferences', () => {
 				mockMwConfigGet( {
 					extCodeMirrorConfig: {
 						defaultPreferences,
-						defaultPreferencesCode: defaultPreferences,
-						primaryPreferences: defaultPreferences
+						defaultPreferencesCode: defaultPreferences
 					},
 					wgNamespaceNumber: nsId
 				} );
@@ -440,11 +422,23 @@ describe( 'CodeMirrorPreferences', () => {
 		expect( checkboxes[ 1 ].textContent ).toBe( 'codemirror-prefs-barextension' );
 	} );
 
-	it( 'primary preferences - panel / showPreferencesDialog', () => {
-		const realPreferences = {
+	it( 'should put the help links first in the dialog footer', () => {
+		mockDefaultPreferences();
+		mockUserPreferences( {} );
+		const preferences = getCodeMirrorPreferences();
+		preferences.showPreferencesDialog( new EditorView() );
+		const footer = preferences.dialog.querySelector( '.cdx-dialog__footer' );
+		const help = footer.children[ 0 ];
+		expect( help.className ).toBe( 'cm-mw-dialog__help' );
+		// Source order is Help then shortcuts; CSS reverses it in RTL.
+		expect( help.children[ 0 ].textContent ).toBe( 'codemirror-prefs-help' );
+		expect( help.children[ 1 ].textContent ).toBe( 'codemirror-prefs-keymap' );
+	} );
+
+	it( 'showPreferencesDialog', () => {
+		mockDefaultPreferences( {
 			lineNumbering: true, bracketMatching: true, autocomplete: true, openLinks: true
-		};
-		mockDefaultPreferences( realPreferences, { lineNumbering: true, bracketMatching: true } );
+		} );
 		mockUserPreferences( {
 			lineNumbering: 1, bracketMatching: 1, autocomplete: 1, openLinks: 1
 		} );
@@ -458,12 +452,6 @@ describe( 'CodeMirrorPreferences', () => {
 		} );
 		// openLinks is MW-specific, so we'll need to register it separately here in the test.
 		preferences.registerExtension( 'openLinks', openLinks, view );
-		// Panel should only show lineNumbering and bracketMatching.
-		const panelCheckboxes = preferences.panel.dom.querySelectorAll( '.cdx-checkbox__label' );
-		expect( panelCheckboxes.length ).toBe( 2 );
-		expect( panelCheckboxes[ 0 ].textContent ).toBe( 'codemirror-prefs-linenumbering' );
-		expect( panelCheckboxes[ 1 ].textContent ).toBe( 'codemirror-prefs-bracketmatching' );
-		// Show the full dialog.
 		preferences.showPreferencesDialog( view );
 		const dialog = preferences.dialog.querySelector( '.cm-mw-preferences-dialog' );
 		const fieldsets = dialog.querySelectorAll( '.cm-mw-panel__fieldset' );
@@ -494,9 +482,10 @@ describe( 'CodeMirrorPreferences', () => {
 		const hookSpy = jest.spyOn( preferences, 'firePreferencesApplyHook' );
 		preferences.lockPreference( 'fooExtension', view, false );
 		expect( preferences.getPreference( 'fooExtension' ) ).toBe( false );
-		const panel = preferences.panel;
-		expect( panel.dom.querySelector( 'input[name="fooExtension"]' ).disabled ).toBe( true );
-		expect( panel.dom.querySelector( 'input[name="fooExtension"]' ).checked ).toBe( false );
+		preferences.showPreferencesDialog( view );
+		const input = preferences.dialog.querySelector( 'input[name="fooExtension"]' );
+		expect( input.disabled ).toBe( true );
+		expect( input.checked ).toBe( false );
 		expect( hookSpy ).toHaveBeenCalledWith( 'fooExtension', false );
 	} );
 

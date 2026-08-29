@@ -1,13 +1,9 @@
 const {
 	EditorView,
 	Extension,
-	StateEffect,
-	StateEffectType,
-	StateField,
-	keymap,
-	showPanel
+	keymap
 } = require( 'ext.CodeMirror.lib' );
-const CodeMirrorPanel = require( './codemirror.panel.js' );
+const CodeMirrorCodex = require( './codemirror.codex.js' );
 require( './ext.CodeMirror.data.js' );
 
 /**
@@ -15,17 +11,14 @@ require( './ext.CodeMirror.data.js' );
  */
 
 /**
- * CodeMirrorPreferences is a panel that allows users to configure CodeMirror preferences.
- * It is toggled by pressing `Ctrl`-`Shift`-`,` (or `Command`-`Shift`-`,` on macOS).
- * Only the commonly used "primary" preferences with a visual effect are shown in the panel,
- * in order to reduce in-editor clutter. A "Full preferences" link is provided to open a dialog
- * with all available preferences. This can also be opened by pressing `Alt`-`Shift`-`,`.
+ * CodeMirrorPreferences is a dialog that allows users to configure CodeMirror preferences.
+ * It is opened by pressing `Ctrl`-`Shift`-`,` (or `Command`-`Shift`-`,` on macOS).
  *
  * Note that this code, like MediaWiki Core, refers to the user's preferences as "options".
  * In this class, "preferences" refer to the user's preferences for CodeMirror, which
  * are stored as a single user 'option' in the database.
  */
-class CodeMirrorPreferences extends CodeMirrorPanel {
+class CodeMirrorPreferences extends CodeMirrorCodex {
 
 	/**
 	 * @param {CodeMirrorExtensionRegistry} extensionRegistry
@@ -48,28 +41,8 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		/** @type {mw.Api} */
 		this.api = new mw.Api();
 
-		/** @type {StateEffectType} */
-		this.prefsToggleEffect = StateEffect.define();
-
-		/** @type {StateField} */
-		this.panelStateField = StateField.define( {
-			create: () => true,
-			update: ( value, transaction ) => {
-				for ( const e of transaction.effects ) {
-					if ( e.is( this.prefsToggleEffect ) ) {
-						value = e.value;
-					}
-				}
-				return value;
-			},
-			// eslint-disable-next-line arrow-body-style
-			provide: ( stateField ) => {
-				// eslint-disable-next-line arrow-body-style
-				return showPanel.from( stateField, ( on ) => {
-					return on ? () => this.panel : null;
-				} );
-			}
-		} );
+		/** @type {EditorView} */
+		this.view = undefined;
 
 		/**
 		 * The user's CodeMirror preferences.
@@ -79,7 +52,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		this.preferences = this.fetchPreferences();
 
 		/**
-		 * Preferences that are disabled from being changed in the panel or dialog
+		 * Preferences that are disabled from being changed in the preferences dialog
 		 * when {@link CodeMirrorPreferences#lockPreference lockPreference()} is called.
 		 *
 		 * @type {Set<string>}
@@ -123,20 +96,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 		mw.hook( 'ext.CodeMirror.preferences.ready' ).fire( this );
 
 		/**
-		 * Preferences that are shown in the preferences panel, as defined by
-		 * `$wgCodeMirrorPrimaryPreferences`. These "primary" preferences should:
-		 * - Be commonly used,
-		 * - Be easy to understand,
-		 * - Have an immediate visual effect, and
-		 * - Limited to a small subset to avoid consuming too much in-editor space.
-		 *
-		 * @type {string[]}
-		 */
-		this.primaryPreferences = Object.keys( this.mwConfigPrimary )
-			.filter( ( prefName ) => !!this.mwConfigPrimary[ prefName ] );
-
-		/**
-		 * Configuration for the full preferences dialog.
+		 * Configuration for the preferences dialog.
 		 *
 		 * Each key is a section name having an i18n message key
 		 * of the form `codemirror-prefs-section-<section>`.
@@ -183,14 +143,6 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 			return mw.config.get( 'extCodeMirrorConfig' ).defaultPreferences;
 		}
 		return mw.config.get( 'extCodeMirrorConfig' ).defaultPreferencesCode;
-	}
-
-	/**
-	 * @type {Object<string, boolean>}
-	 * @private
-	 */
-	get mwConfigPrimary() {
-		return mw.config.get( 'extCodeMirrorConfig' ).primaryPreferences;
 	}
 
 	/**
@@ -400,7 +352,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 
 	/**
 	 * Lock a preference to the given value, disabling the option in
-	 * the preferences panel and dialog. The user option in the database
+	 * the preferences dialog. The user option in the database
 	 * is **not** changed.
 	 *
 	 * This is useful for integrations that need to disable incompatible extensions.
@@ -569,10 +521,7 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	get extension() {
 		return [
 			keymap.of( [
-				// Toggling the preferences panel.
-				{ key: 'Mod-Shift-,', run: ( view ) => this.toggle( view, true ) },
-				// Toggling the full preferences dialog.
-				{ key: 'Alt-Shift-,', run: ( view ) => this.showPreferencesDialog( view ) }
+				{ key: 'Mod-Shift-,', run: ( view ) => this.showPreferencesDialog( view ) }
 			] ),
 			// At this point the registry contains only extensions managed by CodeMirrorPreferences.
 			this.extensionRegistry.names.map( ( name ) => {
@@ -587,87 +536,28 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	}
 
 	/**
-	 * @inheritDoc
-	 */
-	get panel() {
-		const container = document.createElement( 'div' );
-		container.className = 'cm-mw-preferences-panel cm-mw-panel';
-		container.addEventListener( 'keydown', this.onKeydownPanel.bind( this ) );
-
-		const heading = document.createElement( 'div' );
-		heading.textContent = mw.msg( 'codemirror-prefs-title' );
-		heading.appendChild( this.getHelpLinks() );
-		container.appendChild(
-			this.getFieldsetWithFields(
-				this.primaryPreferences,
-				heading
-			)
-		);
-
-		const closeBtn = this.getButton( 'codemirror-close', { icon: 'close', iconOnly: true } );
-		closeBtn.classList.add( 'cdx-button--weight-quiet', 'cm-mw-panel-close' );
-		container.appendChild( closeBtn );
-		closeBtn.addEventListener( 'click', () => {
-			this.toggle( this.view, false );
-		} );
-
-		/**
-		 * Fired when the preferences panel is opened or closed.
-		 *
-		 * @event CodeMirror~'ext.CodeMirror.preferences.display'
-		 * @param {HTMLDivElement|null} container The preferences panel container,
-		 *   or null if the panel is being closed.
-		 * @internal
-		 */
-		mw.hook( 'ext.CodeMirror.preferences.display' ).fire( container );
-
-		return {
-			dom: container,
-			top: true
-		};
-	}
-
-	/**
-	 * @return {HTMLSpanElement}
+	 * @return {HTMLDivElement}
 	 * @private
 	 */
 	getHelpLinks() {
-		const helpSpan = document.createElement( 'span' );
-		helpSpan.className = 'cm-mw-panel__help';
+		const helpDiv = document.createElement( 'div' );
+		helpDiv.className = 'cm-mw-dialog__help';
 		const helpLink = document.createElement( 'a' );
 		helpLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror';
 		helpLink.target = '_blank';
 		helpLink.textContent = mw.msg( 'codemirror-prefs-help' );
-		// Click listener added in CodeMirrorKeymap since we don't have a CodeMirror instance here.
 		const shortcutLink = document.createElement( 'a' );
-		shortcutLink.className = 'cm-mw-panel__kbd-help';
 		shortcutLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror#Keyboard_shortcuts';
 		shortcutLink.textContent = mw.msg( 'codemirror-prefs-keymap' );
-		shortcutLink.onclick = ( e ) => e.preventDefault();
+		shortcutLink.onclick = ( e ) => {
+			e.preventDefault();
+			this.keymap.showHelpDialog();
+		};
 		shortcutLink.title = this.keymap.getTitleWithShortcut(
 			this.keymap.keymapHelpRegistry.other.help
 		);
-		const fullPrefsLink = document.createElement( 'a' );
-		fullPrefsLink.href = 'https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror#Features';
-		fullPrefsLink.textContent = mw.msg( 'codemirror-prefs-panel-full' );
-		fullPrefsLink.onclick = ( e ) => {
-			e.preventDefault();
-			this.showPreferencesDialog( this.view );
-		};
-		fullPrefsLink.title = this.keymap.getTitleWithShortcut(
-			this.keymap.keymapHelpRegistry.other.fullPreferences
-		);
-		helpSpan.append(
-			' ',
-			mw.msg( 'parentheses-start' ),
-			helpLink,
-			mw.msg( 'pipe-separator' ),
-			shortcutLink,
-			mw.msg( 'pipe-separator' ),
-			fullPrefsLink,
-			mw.msg( 'parentheses-end' )
-		);
-		return helpSpan;
+		helpDiv.append( helpLink, '·', shortcutLink );
+		return helpDiv;
 	}
 
 	/**
@@ -717,73 +607,16 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 	}
 
 	/**
-	 * Toggle display of the preferences panel.
-	 *
-	 * @param {EditorView} view
-	 * @param {boolean} [force] Force the panel to open or close.
-	 * @return {boolean}
-	 */
-	toggle( view, force ) {
-		this.view = view;
-
-		// If there is no primary CodeMirror instance (e.g. on Special:SecurePoll/translate).
-		if ( !view.dom.isConnected ) {
-			this.showPreferencesDialog( view );
-			return true;
-		}
-
-		const effects = [];
-		let bool;
-
-		// Add the panel state field to the state if it doesn't exist.
-		if ( !this.view.state.field( this.panelStateField, false ) ) {
-			effects.push( StateEffect.appendConfig.of( [ this.panelStateField ] ) );
-			bool = true;
-		} else {
-			bool = !this.view.state.field( this.panelStateField );
-		}
-		if ( typeof force === 'boolean' ) {
-			bool = force;
-		}
-		effects.push( this.prefsToggleEffect.of( bool ) );
-		this.view.dispatch( { effects } );
-
-		// If the panel is being opened, focus the first input.
-		if ( bool ) {
-			this.view.dom.querySelector(
-				'.cm-mw-preferences-panel input:first-child'
-			).focus();
-		} else {
-			mw.hook( 'ext.CodeMirror.preferences.display' ).fire( null );
-		}
-
-		return true;
-	}
-
-	/**
-	 * Handle keydown events on the preferences panel.
-	 *
-	 * @param {KeyboardEvent} event
-	 */
-	onKeydownPanel( event ) {
-		if ( event.key === 'Escape' ) {
-			event.preventDefault();
-			this.toggle( this.view, false );
-			this.view.focus();
-		} else if ( event.key === 'Enter' ) {
-			event.preventDefault();
-		}
-	}
-
-	/**
 	 * Show the dialog with all available preferences.
 	 *
 	 * @param {EditorView} view
+	 * @fires CodeMirror~'ext.CodeMirror.preferences.display'
 	 * @return {boolean}
 	 */
 	showPreferencesDialog( view ) {
 		if ( this.dialog ) {
 			this.animateDialog( true );
+			this.firePreferencesDisplayHook();
 			return true;
 		}
 
@@ -843,8 +676,24 @@ class CodeMirrorPreferences extends CodeMirrorPanel {
 			fieldsets,
 			resetButton
 		);
+		this.dialog.querySelector( '.cdx-dialog__footer' ).prepend( this.getHelpLinks() );
+		this.firePreferencesDisplayHook();
 
 		return true;
+	}
+
+	/**
+	 * @private
+	 */
+	firePreferencesDisplayHook() {
+		/**
+		 * Fired when the preferences dialog is opened.
+		 *
+		 * @event CodeMirror~'ext.CodeMirror.preferences.display'
+		 * @param {HTMLDivElement} dialog The preferences dialog backdrop.
+		 * @internal
+		 */
+		mw.hook( 'ext.CodeMirror.preferences.display' ).fire( this.dialog );
 	}
 
 	/**

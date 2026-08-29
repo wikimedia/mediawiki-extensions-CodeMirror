@@ -170,10 +170,6 @@
 		position: relative;
 	}
 
-	.cm-mw-panel__help {
-		font-weight: @font-weight-normal;
-	}
-
 	.cm-mw-panel__fieldset legend {
 		margin-bottom: @spacing-50;
 	}
@@ -210,12 +206,6 @@
 			background-color: @color-inverted;
 		}
 	}
-
-	.cm-mw-panel-close {
-		position: absolute;
-		right: @spacing-50;
-		top: @spacing-50;
-	}
 }
 
 // Remove top margin on nested fields
@@ -238,6 +228,22 @@
 }
 
 .cdx-dialog.cm-mw-dialog {
+	// Puts the help links flush left, with the footer actions to the right.
+	&.cm-mw-preferences-dialog .cdx-dialog__footer {
+		align-items: center;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+
+	// Flex rather than inline text, so the links reverse in RTL even when the
+	// messages themselves fall back to LTR English.
+	.cm-mw-dialog__help {
+		display: flex;
+		font-size: @font-size-small;
+		gap: @spacing-25;
+	}
+
 	.cm-mw-dialog--columns {
 		columns: 3 19.5em;
 		font-size: @font-size-small;

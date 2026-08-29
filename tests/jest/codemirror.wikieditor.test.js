@@ -293,12 +293,11 @@ describe( 'logEditFeature', () => {
 		// Other extensions are not used here because we aren't using the mediawiki language.
 	} );
 
-	it( 'should log when opening the preferences panel', () => {
+	it( 'should log when opening the preferences dialog', () => {
 		const cmWe = getCodeMirrorWikiEditor();
 		cmWe.initialize();
 		const spy = jest.spyOn( cmWe, 'logEditFeature' );
-		expect( cmWe.view.dom.isConnected ).toBe( true );
-		cmWe.preferences.toggle( cmWe.view, true );
+		cmWe.preferences.showPreferencesDialog( cmWe.view );
 		expect( spy ).toHaveBeenCalledWith( 'prefs-display' );
 	} );
 

@@ -222,7 +222,7 @@ class CodeMirror {
 		 */
 		this.dirCompartment = new Compartment();
 		/**
-		 * The CodeMirror preferences panel.
+		 * The CodeMirror preferences dialog.
 		 *
 		 * @type {CodeMirrorPreferences}
 		 */
@@ -1599,8 +1599,9 @@ class CodeMirror {
 				this.logEditFeature( `prefs-${ prefName }` );
 			}
 		} );
-		this.addMwHook( 'ext.CodeMirror.preferences.display', () => {
-			if ( this.state.field( this.preferences.panelStateField ) ) {
+		this.addMwHook( 'ext.CodeMirror.preferences.display', ( dialog ) => {
+			// The hook is global, so ignore dialogs belonging to other instances.
+			if ( dialog === this.preferences.dialog ) {
 				this.logEditFeature( 'prefs-display' );
 			}
 		} );
