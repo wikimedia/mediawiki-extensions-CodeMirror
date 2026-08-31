@@ -30,7 +30,7 @@ const nsIds = mw.config.get( 'wgNamespaceIds' ),
 		Object.entries( nsIds ).filter( ( [ , id ] ) => id === 6 ).map( ( [ ns ] ) => ns ).join( '|' )
 	})\\s*:`, 'i' );
 
-const startState = ( tokenize ) => ( {
+const startState = ( tokenize, tags ) => ( {
 	tokenize,
 	stack: [],
 	inHtmlTag: [],
@@ -46,6 +46,7 @@ const startState = ( tokenize ) => ( {
 	italic: false,
 	sof: true,
 	data: {
+		tags,
 		firstSingleLetterWord: null,
 		firstMultiLetterWord: null,
 		firstSpace: null,
@@ -139,7 +140,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 
 	/** @inheritDoc */
 	get language() {
-		return StreamLanguage.define( this.parser );
+		return StreamLanguage.define( this.getParser() );
 	}
 
 	/** @inheritDoc */
@@ -188,7 +189,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 	get highlightStyle() {
 		if ( !this.cachedHighlightStyle ) {
 			this.cachedHighlightStyle = HighlightStyle.define(
-				mwModeConfig.getTagStyles( this.parser )
+				mwModeConfig.getTagStyles( this.getParser() )
 			);
 		}
 		return this.cachedHighlightStyle;
@@ -836,6 +837,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 
 			if ( stream.eat( '>' ) ) {
 				state.extName = name;
+				const tags = state.data.tags.filter( ( tag ) => tag !== name );
 
 				// FIXME: remove nowiki and pre from TagModes in extension.json after CM6 upgrade
 				// leverage the tagModes system for <nowiki> and <pre>
@@ -849,11 +851,14 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 					};
 				} else if ( name === 'gallery' ) {
 					state.extMode = {
-						startState: () => startState( this.inGallery.bind( this ) ),
+						startState: () => startState( this.inGallery.bind( this ), tags ),
 						copyState,
 						token: ( stream2, state2 ) => {
 							if ( stream2.sol() ) {
-								Object.assign( state2, startState( this.inGallery.bind( this ) ) );
+								Object.assign(
+									state2,
+									startState( this.inGallery.bind( this ), tags )
+								);
 							}
 							return state2.tokenize( stream2, state2 );
 						}
@@ -862,7 +867,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 				} else if ( name in this.config.tagModes ) {
 					const mode = this.config.tagModes[ name ];
 					if ( mode === 'mediawiki' || mode === 'text/mediawiki' ) {
-						state.extMode = this.parser;
+						state.extMode = this.getParser( tags );
 						state.extState = state.extMode.startState();
 					}
 				}
@@ -1376,7 +1381,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 					tagname = stream.match( /^[a-z][^>/\s]*/i );
 					if ( tagname ) {
 						tagname = tagname[ 0 ].toLowerCase();
-						if ( tagname in this.config.tags ) {
+						if ( state.data.tags.includes( tagname ) ) {
 							// Parser function
 							if ( isCloseTag === true ) {
 								return mwModeConfig.tags.error;
@@ -1522,10 +1527,12 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 
 	/**
 	 * @see https://codemirror.net/docs/ref/#language.StreamParser
-	 * @type {StreamParser}
+	 *
+	 * @param {Array<string>} [tags] - Extension tags to be highlighted, defaults to all.
+	 * @return {StreamParser}
 	 * @private
 	 */
-	get parser() {
+	getParser( tags = Object.keys( this.config.tags ) ) {
 		return {
 			name: 'mediawiki',
 
@@ -1535,7 +1542,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 			 * @return {Object}
 			 * @private
 			 */
-			startState: () => startState( this.eatWikiText( '' ) ),
+			startState: () => startState( this.eatWikiText( '' ), tags ),
 
 			/**
 			 * Copies the given state.

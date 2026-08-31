@@ -65115,24 +65115,8 @@
 				"name": "mw-exttag-bracket mw-ext-ref"
 			},
 			{
-				"text": "foo ",
+				"text": "foo <ref>bar",
 				"name": "mw-tag-ref"
-			},
-			{
-				"text": "<",
-				"name": "mw-tag-ref mw-exttag-bracket mw-ext-ref"
-			},
-			{
-				"text": "ref",
-				"name": "mw-tag-ref mw-exttag-name mw-ext-ref"
-			},
-			{
-				"text": ">",
-				"name": "mw-tag-ref mw-exttag-bracket mw-ext-ref"
-			},
-			{
-				"text": "bar",
-				"name": "mw-tag-ref mw-tag-ref"
 			},
 			{
 				"text": "</",
