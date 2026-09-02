@@ -258,7 +258,9 @@
  * a background: every space would then be a solid block, which is far louder than the dots.
  */
 ::highlight( visualeditor-cm-whitespace ) {
-	text-decoration: underline dotted @color-subtle;
+	text-decoration: underline;
+	text-decoration-style: dotted;
+	text-decoration-color: @color-subtle;
 }
 
 /*
