@@ -147,6 +147,16 @@ const OPEN_LINK_GROUP = 'cm-open-link';
 const SECTION_CLASS_PREFIX = 'cm-mw-ve-section-';
 
 /**
+ * URL parameter that, set to `0`, keeps the highlights registered while a modal window is open.
+ * Only for reproducing the browser bug that
+ * {@link CodeMirrorVisualEditorHighlight#suspendWhileWindowOpen} works around.
+ *
+ * @type {string}
+ * @private
+ */
+const SUSPEND_PARAM = 'cmsuspend';
+
+/**
  * Syntax highlighter for the VisualEditor
  * {@link https://www.mediawiki.org/wiki/Special:MyLanguage/2017_wikitext_editor 2017 wikitext editor}
  * that renders nothing of its own. Unlike {@link CodeMirrorVisualEditor} it creates no
@@ -273,6 +283,27 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 		 * @type {number|null}
 		 */
 		this.headingFrameHandle = null;
+
+		/**
+		 * Number of modal windows open over the surface. The highlights are suspended while
+		 * any is; see {@link CodeMirrorVisualEditorHighlight#suspendWhileWindowOpen}.
+		 *
+		 * @type {number}
+		 */
+		this.openWindows = 0;
+		/**
+		 * Whether the highlights are currently suspended.
+		 *
+		 * @type {boolean}
+		 */
+		this.suspended = false;
+		/**
+		 * Backs {@link CodeMirrorVisualEditorHighlight#suspendWhileWindowOpen}.
+		 *
+		 * @type {boolean}
+		 */
+		this.suspendEnabled =
+			new URL( location.href ).searchParams.get( SUSPEND_PARAM ) !== '0';
 
 		this.onDocumentPrecommitBound = this.onDocumentPrecommit.bind( this );
 		this.scheduleRefreshBound = this.scheduleRefresh.bind( this );
@@ -484,6 +515,19 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 
 		// Bound regardless of theme: bracket matching needs the tokenizer kept in sync.
 		this.surface.getModel().getDocument().on( 'precommit', this.onDocumentPrecommitBound );
+		// Only the modal manager is watched. Toolbar and sidebar dialogs leave the surface
+		// in use, where the loss of color would show.
+		this.surface.getDialogs().connect( this, {
+			opening: 'onWindowOpening',
+			closing: 'onWindowClosing'
+		} );
+		// Highlighting can be switched on from inside a window: the preferences page is one of
+		// the meta dialog's own. Its 'opening' is long past, so check for it here.
+		if ( this.surface.getDialogs().getCurrentWindow() ) {
+			this.openWindows = 1;
+			// Before the viewport pass below, so it draws nothing until the window closes.
+			this.suspendHighlights();
+		}
 		if ( this.theme === 'colorblind' ) {
 			this.surfaceView.$element.addClass( COLORBLIND_CLASS );
 		}
@@ -506,6 +550,9 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 		}
 
 		this.surface.getModel().getDocument().off( 'precommit', this.onDocumentPrecommitBound );
+		this.surface.getDialogs().disconnect( this );
+		this.openWindows = 0;
+		this.suspended = false;
 		this.unbindSyntaxListeners();
 		this.surface.getModel().off( 'select', this.scheduleBracketMatchBound );
 		this.surface.getModel().off( 'select', this.updateActiveLineBound );
@@ -674,6 +721,109 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 	}
 
 	/**
+	 * Whether to suspend the highlights while a modal window is open.
+	 *
+	 * In Safari the cost to paint the highlights increases with the number of registered
+	 * ranges. The size of each range does not change it. A window repaints the whole viewport
+	 * when it opens, so on a long page the tab stops responding for more than a minute. See
+	 * {@link https://bugs.webkit.org/show_bug.cgi?id=323171 WebKit 323171}.
+	 *
+	 * Set this to false, or load the page with `cmsuspend=0`, to keep the highlights
+	 * registered and show the browser bug again.
+	 *
+	 * @type {boolean}
+	 * @stable to call
+	 */
+	get suspendWhileWindowOpen() {
+		return this.suspendEnabled;
+	}
+
+	set suspendWhileWindowOpen( enabled ) {
+		this.suspendEnabled = !!enabled;
+		if ( !this.suspendEnabled ) {
+			this.resumeHighlights();
+		} else if ( this.openWindows ) {
+			this.suspendHighlights();
+		}
+	}
+
+	/**
+	 * @private
+	 */
+	onWindowOpening() {
+		this.openWindows++;
+		this.suspendHighlights();
+	}
+
+	/**
+	 * @param {OO.ui.Window} win
+	 * @param {jQuery.Promise} closed Resolves once the window has finished closing
+	 * @private
+	 */
+	onWindowClosing( win, closed ) {
+		// Not on the event itself. The window stays on screen until the promise resolves,
+		// and a redraw before it has gone pays the cost this avoids.
+		closed.always( () => {
+			this.openWindows = Math.max( 0, this.openWindows - 1 );
+			if ( !this.openWindows ) {
+				this.resumeHighlights();
+			}
+		} );
+	}
+
+	/**
+	 * Clear every group that registers Ranges, but keep the listeners bound.
+	 *
+	 * The active line and the headings stay. They are classes on VisualEditor's nodes, not
+	 * Ranges, so they cost nothing here. To clear the heading sizes would also reflow the
+	 * document behind the window.
+	 *
+	 * @private
+	 */
+	suspendHighlights() {
+		if ( this.suspended || !this.suspendEnabled || !this.isActive ) {
+			return;
+		}
+		this.suspended = true;
+
+		if ( this.frameHandle ) {
+			cancelAnimationFrame( this.frameHandle );
+			this.frameHandle = null;
+		}
+		if ( this.bracketFrameHandle ) {
+			cancelAnimationFrame( this.bracketFrameHandle );
+			this.bracketFrameHandle = null;
+		}
+		if ( this.trailingWhitespaceFrameHandle ) {
+			cancelAnimationFrame( this.trailingWhitespaceFrameHandle );
+			this.trailingWhitespaceFrameHandle = null;
+		}
+
+		this.clearAllHighlights();
+		this.clearWhitespace();
+		this.clearTrailingWhitespace();
+		this.clearBracketMatch();
+	}
+
+	/**
+	 * Draw again what {@link CodeMirrorVisualEditorHighlight#suspendHighlights} cleared.
+	 *
+	 * @private
+	 */
+	resumeHighlights() {
+		if ( !this.suspended ) {
+			return;
+		}
+		this.suspended = false;
+		if ( !this.isActive ) {
+			return;
+		}
+		this.scheduleRefresh();
+		this.scheduleTrailingWhitespace();
+		this.scheduleBracketMatch();
+	}
+
+	/**
 	 * Coalesce scroll/position/edit/resize events into a single refresh per animation frame.
 	 *
 	 * @private
@@ -681,7 +831,7 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 	scheduleRefresh() {
 		// onDocumentPrecommit schedules on every transaction, so bail here rather than burn an
 		// animation frame per keystroke under the no-highlight theme.
-		if ( this.frameHandle || !this.viewportPassEnabled ) {
+		if ( this.frameHandle || this.suspended || !this.viewportPassEnabled ) {
 			return;
 		}
 		this.frameHandle = requestAnimationFrame( () => {
@@ -931,7 +1081,7 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 	 * @private
 	 */
 	scheduleTrailingWhitespace() {
-		if ( this.trailingWhitespaceFrameHandle ||
+		if ( this.trailingWhitespaceFrameHandle || this.suspended ||
 			!this.extensionRegistry.isEnabled( 'trailingWhitespace', this )
 		) {
 			return;
@@ -1291,7 +1441,7 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 	 * @private
 	 */
 	scheduleBracketMatch() {
-		if ( this.bracketFrameHandle ) {
+		if ( this.bracketFrameHandle || this.suspended ) {
 			return;
 		}
 		this.bracketFrameHandle = requestAnimationFrame( () => {

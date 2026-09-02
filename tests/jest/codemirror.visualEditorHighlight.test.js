@@ -77,6 +77,13 @@ const getMockSurface = ( doc = '' ) => {
 	};
 	// A non-DiscussionTools target by default; setTarget() below swaps in a CommentTarget.
 	let target = { constructor: { name: 'ArticleTarget' } };
+	// The modal window manager, which the controller watches so it can suspend the highlights
+	// while a window covers the surface.
+	const dialogs = {
+		connect: jest.fn(),
+		disconnect: jest.fn(),
+		getCurrentWindow: jest.fn().mockReturnValue( null )
+	};
 	const mockSurface = {
 		getView: jest.fn().mockReturnValue( surfaceView ),
 		getModel: jest.fn().mockReturnValue( model ),
@@ -85,7 +92,9 @@ const getMockSurface = ( doc = '' ) => {
 		getTarget: jest.fn().mockImplementation( () => target ),
 		$scrollContainer: { on: jest.fn(), off: jest.fn() },
 		$scrollListener: { on: jest.fn(), off: jest.fn() },
+		getDialogs: jest.fn().mockReturnValue( dialogs ),
 		// Exposed for assertions
+		dialogs: dialogs,
 		model: model,
 		documentModel: documentModel,
 		view: surfaceView,
@@ -1398,6 +1407,108 @@ describe( 'scheduleRefresh', () => {
 		frameCallback();
 		expect( refreshSpy ).toHaveBeenCalledTimes( 1 );
 		expect( controller.frameHandle ).toBeNull();
+	} );
+} );
+
+describe( 'suspending while a window is open', () => {
+	// OOUI passes the 'closing' handler a promise that resolves once the window has gone.
+	const closed = ( resolve = true ) => {
+		const callbacks = [];
+		return {
+			always: ( callback ) => {
+				callbacks.push( callback );
+				if ( resolve ) {
+					callback();
+				}
+			},
+			settle: () => callbacks.forEach( ( callback ) => callback() )
+		};
+	};
+
+	it( 'should watch the modal window manager while active', () => {
+		controller.activate();
+		expect( surface.dialogs.connect ).toHaveBeenCalledWith( controller, {
+			opening: 'onWindowOpening',
+			closing: 'onWindowClosing'
+		} );
+		controller.deactivate();
+		expect( surface.dialogs.disconnect ).toHaveBeenCalledWith( controller );
+	} );
+
+	it( 'should clear the range-drawing groups when a window opens', () => {
+		controller.activate();
+		controller.drawnGroups.add( 'syntax-cm-mw-template-name' );
+		controller.onWindowOpening();
+		expect( controller.suspended ).toBe( true );
+		expect( surface.selectionManager.drawSelections )
+			.toHaveBeenCalledWith( 'syntax-cm-mw-template-name', [] );
+		expect( controller.drawnGroups.size ).toBe( 0 );
+	} );
+
+	it( 'should not redraw while suspended', () => {
+		controller.activate();
+		controller.onWindowOpening();
+		global.requestAnimationFrame.mockClear();
+		controller.scheduleRefresh();
+		controller.scheduleBracketMatch();
+		controller.scheduleTrailingWhitespace();
+		expect( global.requestAnimationFrame ).not.toHaveBeenCalled();
+	} );
+
+	it( 'should redraw only once the window has finished closing', () => {
+		controller.activate();
+		controller.onWindowOpening();
+		const promise = closed( false );
+		controller.onWindowClosing( {}, promise );
+		// Still on screen, so still suspended.
+		expect( controller.suspended ).toBe( true );
+		promise.settle();
+		expect( controller.suspended ).toBe( false );
+	} );
+
+	it( 'should stay suspended until the last of several windows closes', () => {
+		controller.activate();
+		controller.onWindowOpening();
+		controller.onWindowOpening();
+		controller.onWindowClosing( {}, closed() );
+		expect( controller.suspended ).toBe( true );
+		controller.onWindowClosing( {}, closed() );
+		expect( controller.suspended ).toBe( false );
+	} );
+
+	it( 'should suspend when activated underneath an open window', () => {
+		surface.dialogs.getCurrentWindow.mockReturnValue( {} );
+		controller.activate();
+		expect( controller.suspended ).toBe( true );
+	} );
+
+	it( 'should resume as soon as suspendWhileWindowOpen is turned off', () => {
+		controller.activate();
+		controller.onWindowOpening();
+		expect( controller.suspended ).toBe( true );
+		controller.suspendWhileWindowOpen = false;
+		expect( controller.suspended ).toBe( false );
+		// And it stays drawn while the window is still open.
+		controller.onWindowOpening();
+		expect( controller.suspended ).toBe( false );
+	} );
+
+	it( 'should suspend on being turned back on under an open window', () => {
+		controller.activate();
+		controller.suspendWhileWindowOpen = false;
+		controller.onWindowOpening();
+		controller.suspendWhileWindowOpen = true;
+		expect( controller.suspendWhileWindowOpen ).toBe( true );
+		expect( controller.suspended ).toBe( true );
+	} );
+
+	it( 'should leave the headings and the active line alone', () => {
+		controller.activate();
+		const headingsSpy = jest.spyOn( controller, 'clearHeadings' );
+		const activeLineSpy = jest.spyOn( controller, 'clearActiveLine' );
+		controller.onWindowOpening();
+		expect( headingsSpy ).not.toHaveBeenCalled();
+		expect( activeLineSpy ).not.toHaveBeenCalled();
 	} );
 } );
 
