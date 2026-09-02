@@ -104,10 +104,11 @@ ve.ui.CodeMirrorPreferencesPage.prototype.setup = function () {
 	this.preferences = mirror ? mirror.preferences : null;
 	this.fieldset.clearItems();
 
-	// The dialog has already enabled or disabled the page for the current mode, so only ever
-	// tighten that: the preferences object exists once CodeMirror has been initialized, and
-	// turning highlighting on is what makes the page usable.
-	if ( !this.preferences ) {
+	// The dialog has already made the Page and enabled it. We now want to
+	// disable it if it won't be usable. The `mirror` controller exists if
+	// CodeMirror has been activated ever, but if it's currently not active
+	// then saving preferences won't stick (T436739).
+	if ( !( mirror && mirror.isActive && this.preferences ) ) {
 		this.outlineItem.setDisabled( true );
 		return;
 	}
