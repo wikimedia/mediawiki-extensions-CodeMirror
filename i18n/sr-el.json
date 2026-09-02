@@ -23,7 +23,6 @@
 	"codemirror-done": "Gotovo",
 	"codemirror-find-results": "$1 od $2",
 	"codemirror-keymap-help-title": "Tasterske prečice",
-	"codemirror-keymap-help-close": "Zatvori",
 	"codemirror-keymap-accessibility": "Pristupačnost",
 	"codemirror-keymap-textstyling": "Stil teksta",
 	"codemirror-keymap-bold": "Podebljano",

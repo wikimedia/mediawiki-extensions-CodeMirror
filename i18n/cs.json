@@ -16,7 +16,6 @@
 	"codemirror-prefs-enable-code-help": "Používá se při editování kódu jako např. JavaScriptu, CSS nebo modulů v Lua.",
 	"codemirror-prefs-title": "Nastavení zvýrazňování syntaxe",
 	"codemirror-prefs-help": "nápověda",
-	"codemirror-prefs-panel-full": "všechna nastavení",
 	"codemirror-prefs-section-appearance": "Vzhled",
 	"codemirror-prefs-section-lines": "Řádky",
 	"codemirror-prefs-section-characters": "Znaky",
@@ -63,7 +62,7 @@
 	"codemirror-unfold": "rozbalit",
 	"codemirror-folded-code": "sbalený kód",
 	"codemirror-keymap-help-title": "Klávesové zkratky",
-	"codemirror-keymap-help-close": "Zavřít",
 	"codemirror-keymap-accessibility": "Přístupnost",
-	"prefs-accessibility": "Přístupnost"
+	"prefs-accessibility": "Přístupnost",
+	"prefs-syntax-highlighting": "Zvýrazňování syntaxe"
 }

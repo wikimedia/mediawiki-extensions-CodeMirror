@@ -60,7 +60,6 @@
 	"codemirror-special-char-newline": "Rivinvaihto",
 	"codemirror-special-char-nbsp": "Sitova välilyönti",
 	"codemirror-keymap-help-title": "Pikanäppäimet",
-	"codemirror-keymap-help-close": "Sulje",
 	"codemirror-keymap-accessibility": "Saavutettavuus",
 	"codemirror-keymap-textstyling": "Tekstin tyyli",
 	"codemirror-keymap-bold": "Lihavointi",

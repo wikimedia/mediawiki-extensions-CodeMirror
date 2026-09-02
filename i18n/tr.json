@@ -32,7 +32,6 @@
 	"codemirror-replace-placeholder": "Değiştir",
 	"codemirror-replace-all": "Hepsini değiştir",
 	"codemirror-done": "Bitti",
-	"codemirror-keymap-help-close": "Kapat",
 	"codemirror-keymap-history": "Geçmiş",
 	"codemirror-keymap-undo": "Geri al",
 	"codemirror-keymap-redo": "Yinele",

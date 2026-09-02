@@ -69,7 +69,6 @@
 	"codemirror-unfold": "utvid",
 	"codemirror-folded-code": "sammenslått kode",
 	"codemirror-keymap-help-title": "Tastatursnarveier",
-	"codemirror-keymap-help-close": "Lukk",
 	"codemirror-keymap-textstyling": "Tekststil",
 	"codemirror-keymap-bold": "Halvfet",
 	"codemirror-keymap-italic": "Kursiv",

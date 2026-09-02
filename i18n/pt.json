@@ -48,7 +48,6 @@
 	"codemirror-special-char-backspace": "Backspace",
 	"codemirror-special-char-newline": "Nova linha",
 	"codemirror-special-char-vertical-tab": "Separador vertical",
-	"codemirror-keymap-help-close": "Fechar",
 	"codemirror-keymap-accessibility": "Acessibilidade",
 	"codemirror-keymap-textstyling": "Estilo de texto",
 	"codemirror-keymap-bold": "Negrito",
