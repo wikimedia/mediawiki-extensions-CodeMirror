@@ -53,6 +53,7 @@
 	"codemirror-keymap-help-close": "Zavřít",
 	"codemirror-keymap-accessibility": "Přístupnost",
 	"prefs-accessibility": "Přístupnost",
+	"prefs-syntax-highlighting": "Zvýrazňování syntaxe",
 	"codemirror-beta-feature-title": "Vylepšené zvýrazňování syntaxe",
 	"codemirror-beta-feature-description": "Získejte předběžný přístup k novému zvýrazňování syntaxe a editačním funkcím jako sbalování a automatické dokončování kódu."
 }

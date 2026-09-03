@@ -127,7 +127,7 @@
 	"codemirror-wikilint-duplicate-image-parameter": "pildiparameeter \"$1\" dubleeritud",
 	"codemirror-wikilint-duplicate-parameter": "malliparameeter dubleeritud",
 	"codemirror-wikilint-escape": "katkesta",
-	"codemirror-wikilint-ext-in-html": "tarkvaralisa silt HTML-sildi atribuudis",
+	"codemirror-wikilint-ext-in-html": "lisasilt HTML-sildi atribuudis",
 	"codemirror-wikilint-frame": "raam",
 	"codemirror-wikilint-header-in-html": "alaosa pealkiri HTML-sildi atribuudis",
 	"codemirror-wikilint-html-in-table": "HTML-silt tabeli atribuudis",
