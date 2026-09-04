@@ -60,5 +60,6 @@
 	"codemirror-keymap-help-title": "Klávesové zkratky",
 	"codemirror-keymap-help-close": "Zavřít",
 	"codemirror-keymap-accessibility": "Přístupnost",
-	"prefs-accessibility": "Přístupnost"
+	"prefs-accessibility": "Přístupnost",
+	"prefs-syntax-highlighting": "Zvýrazňování syntaxe"
 }
