@@ -9,6 +9,8 @@ const highContrastLight = require( './codemirror.theme.high-contrast-light.js' )
 const highContrastDark = require( './codemirror.theme.high-contrast-dark.js' );
 const materialLight = require( './codemirror.theme.material-light.js' );
 const materialDark = require( './codemirror.theme.material-dark.js' );
+const pygmentsLight = require( './codemirror.theme.pygments-light.js' );
+const pygmentsDark = require( './codemirror.theme.pygments-dark.js' );
 const solarizedLight = require( './codemirror.theme.solarized-light.js' );
 const solarizedDark = require( './codemirror.theme.solarized-dark.js' );
 const tokyoNightDay = require( './codemirror.theme.tokyo-night-day.js' );
@@ -142,6 +144,8 @@ class CodeMirrorThemes {
 				[ 'high-contrast-dark', highContrastDark ],
 				[ 'material-light', materialLight ],
 				[ 'material-dark', materialDark ],
+				[ 'pygments-light', pygmentsLight ],
+				[ 'pygments-dark', pygmentsDark ],
 				[ 'solarized-light', solarizedLight ],
 				[ 'solarized-dark', solarizedDark ],
 				[ 'tokyo-night-light', tokyoNightDay ],

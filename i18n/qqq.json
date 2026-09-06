@@ -59,6 +59,7 @@
 	"codemirror-theme-gruvbox": "Label for an option in the 'Editor theme' dropdown of the CodeMirror preferences dialog.",
 	"codemirror-theme-high-contrast": "Label for an option in the 'Editor theme' dropdown of the CodeMirror preferences dialog.",
 	"codemirror-theme-material": "Label for an option in the 'Editor theme' dropdown of the CodeMirror preferences dialog.",
+	"codemirror-theme-pygments": "Label for an option in the 'Editor theme' dropdown of the CodeMirror preferences dialog.",
 	"codemirror-theme-solarized": "Label for an option in the 'Editor theme' dropdown of the CodeMirror preferences dialog.",
 	"codemirror-theme-tokyo-night": "Label for an option in the 'Editor theme' dropdown of the CodeMirror preferences dialog.",
 	"codemirror-theme-vscode": "Label for an option in the 'Editor theme' dropdown of the CodeMirror preferences dialog.",
