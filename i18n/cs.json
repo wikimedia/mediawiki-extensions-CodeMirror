@@ -28,5 +28,6 @@
 	"codemirror-goto-line-go": "Přejít",
 	"codemirror-unfold": "rozbalit",
 	"codemirror-folded-code": "sbalený kód",
-	"prefs-accessibility": "Přístupnost"
+	"prefs-accessibility": "Přístupnost",
+	"prefs-syntax-highlighting": "Zvýrazňování syntaxe"
 }

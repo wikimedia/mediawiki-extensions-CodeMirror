@@ -25,6 +25,7 @@
 	"codemirror-next": "次を検索",
 	"codemirror-previous": "前を検索",
 	"codemirror-all": "すべて",
+	"codemirror-all-tooltip": "すべてのマッチを選択",
 	"codemirror-match-case": "大文字・小文字を区別する",
 	"codemirror-regexp": "正規表現",
 	"codemirror-by-word": "単語",
