@@ -227,7 +227,7 @@ class Hooks implements
 		}
 
 		// Load modules from CodeMirrorPluginModules extension attribute.
-		$pluginModules = ExtensionRegistry::getInstance()->getAttribute( 'CodeMirrorPluginModules' ) ?? [];
+		$pluginModules = ExtensionRegistry::getInstance()->getAttribute( 'CodeMirrorPluginModules' );
 		foreach ( $pluginModules as $module ) {
 			$modules[] = $module;
 		}
