@@ -61,7 +61,6 @@ module.exports = exports = defineComponent( {
 		const textarea = ref( null );
 		let codeMirror = null;
 		let lib = null;
-		let readOnlyCompartment = null;
 		let editableCompartment = null;
 		let placeholderCompartment = null;
 		// Bumped whenever an in-flight load should be abandoned.
@@ -80,17 +79,11 @@ module.exports = exports = defineComponent( {
 		 */
 		/* eslint-enable jsdoc/no-undefined-types */
 		function editorExtensions() {
-			const { Compartment, EditorState, EditorView, Prec, placeholder } = lib;
-			readOnlyCompartment = new Compartment();
+			const { Compartment, EditorView, placeholder } = lib;
 			editableCompartment = new Compartment();
 			placeholderCompartment = new Compartment();
 
 			return [
-				// Must outrank CodeMirror's own read-only state, which it takes from
-				// the textarea and which also blocks the changes we dispatch ourselves.
-				Prec.highest(
-					readOnlyCompartment.of( EditorState.readOnly.of( isReadOnly.value ) )
-				),
 				editableCompartment.of( EditorView.editable.of( !props.disabled ) ),
 				placeholderCompartment.of(
 					props.placeholder ? placeholder( props.placeholder ) : []
@@ -132,11 +125,6 @@ module.exports = exports = defineComponent( {
 			const CodeMirror = require( 'ext.CodeMirror' );
 			lib = require( 'ext.CodeMirror.lib' );
 
-			// TODO: The core class reads read-only once, then blocks all document changes,
-			// including the ones we dispatch for modelValue. editorExtensions() applies it
-			// instead. Make the core state a compartment in a later patch and remove this.
-			textarea.value.readOnly = false;
-
 			codeMirror = new CodeMirror( textarea.value, langSupport );
 			// An embedded editor shouldn't take focus unless it was asked to,
 			// and multiple editors on a page would otherwise compete for it.
@@ -162,9 +150,6 @@ module.exports = exports = defineComponent( {
 			}
 			codeMirror.destroy();
 			codeMirror = null;
-			if ( textarea.value ) {
-				textarea.value.readOnly = isReadOnly.value;
-			}
 		}
 
 		/**
@@ -202,15 +187,12 @@ module.exports = exports = defineComponent( {
 			if ( !codeMirror || !codeMirror.view ) {
 				return;
 			}
-			const { EditorState, EditorView } = lib;
-			codeMirror.view.dispatch( { effects: [
-				readOnlyCompartment.reconfigure(
-					EditorState.readOnly.of( isReadOnly.value )
-				),
-				editableCompartment.reconfigure(
-					EditorView.editable.of( !props.disabled )
+			codeMirror.readOnly = isReadOnly.value;
+			codeMirror.view.dispatch( {
+				effects: editableCompartment.reconfigure(
+					lib.EditorView.editable.of( !props.disabled )
 				)
-			] } );
+			} );
 		} );
 
 		watch( () => props.placeholder, ( newValue ) => {

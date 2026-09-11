@@ -1,7 +1,6 @@
 const {
 	Decoration,
 	Direction,
-	EditorState,
 	EditorView,
 	Extension,
 	LanguageSupport,
@@ -110,7 +109,7 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	/**
 	 * @inheritDoc
 	 */
-	get readOnly() {
+	get initialReadOnly() {
 		return this.surface.getModel().isReadOnly();
 	}
 
@@ -195,7 +194,7 @@ class CodeMirrorVisualEditor extends CodeMirror {
 			this.updateExtension,
 			this.dirExtension,
 			this.preferences.extension,
-			EditorState.readOnly.of( this.readOnly ),
+			this.readOnlyExtension,
 			this.langExtension,
 			EditorView.theme( {
 				'.cm-content': {

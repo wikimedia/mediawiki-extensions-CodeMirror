@@ -85,6 +85,17 @@ describe( 'constructor', () => {
 		expect( cmVe.view.state.readOnly ).toStrictEqual( true );
 	} );
 
+	it( 'should take the read-only state from the editor once initialized', () => {
+		surface = getMockSurface( true );
+		cmVe = new CodeMirrorVisualEditor( surface );
+		cmVe.initialize();
+		cmVe.readOnly = false;
+		expect( cmVe.readOnly ).toStrictEqual( false );
+		expect( cmVe.view.state.readOnly ).toStrictEqual( false );
+		// The VE model is only consulted before there is a view.
+		expect( cmVe.initialReadOnly ).toStrictEqual( true );
+	} );
+
 	it( 'should only seed the registry with VE-supported extensions', () => {
 		expect( Object.keys( cmVe.extensionRegistryDefaults ) ).toStrictEqual( [
 			'activeLine',

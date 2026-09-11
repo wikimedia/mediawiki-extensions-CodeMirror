@@ -268,6 +268,11 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 			mount: () => {
 				this.searchInput.focus();
 				this.searchInput.select();
+			},
+			update: ( update ) => {
+				if ( update.startState.readOnly !== update.state.readOnly ) {
+					this.toggleReplaceControls();
+				}
 			}
 		};
 	}
@@ -402,7 +407,6 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 	 * @private
 	 */
 	appendSecondRow( container ) {
-		const shouldBeDisabled = this.view.state.readOnly;
 		const row = document.createElement( 'div' );
 		row.className = 'cm-mw-panel__row';
 		container.appendChild( row );
@@ -414,12 +418,10 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 			'codemirror-replace-placeholder'
 		);
 		this.replaceInput = replaceInput;
-		this.replaceInput.disabled = shouldBeDisabled;
 		row.appendChild( replaceInputWrapper );
 
 		// "Replace" button.
 		this.replaceButton = this.getButton( 'codemirror-replace' );
-		this.replaceButton.disabled = shouldBeDisabled;
 		row.appendChild( this.replaceButton );
 		this.replaceButton.addEventListener( 'click', ( e ) => {
 			e.preventDefault();
@@ -429,7 +431,6 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 
 		// "Replace all" button.
 		this.replaceAllButton = this.getButton( 'codemirror-replace-all' );
-		this.replaceAllButton.disabled = shouldBeDisabled;
 		row.appendChild( this.replaceAllButton );
 		this.replaceAllButton.addEventListener( 'click', ( e ) => {
 			e.preventDefault();
@@ -445,6 +446,20 @@ class CodeMirrorSearch extends CodeMirrorPanel {
 			this.closePanel( this.view );
 			this.view.focus();
 		} );
+
+		this.toggleReplaceControls();
+	}
+
+	/**
+	 * Enable or disable the replace controls, which only apply to an editable document.
+	 *
+	 * @private
+	 */
+	toggleReplaceControls() {
+		const disabled = this.view.state.readOnly;
+		this.replaceInput.disabled = disabled;
+		this.replaceButton.disabled = disabled;
+		this.replaceAllButton.disabled = disabled;
 	}
 
 	/**

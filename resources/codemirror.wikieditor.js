@@ -65,8 +65,22 @@ class CodeMirrorWikiEditor extends CodeMirror {
 				if ( update.docChanged && typeof this.realtimePreviewHandler === 'function' ) {
 					this.realtimePreviewHandler();
 				}
+				if ( update.startState.readOnly !== update.state.readOnly ) {
+					this.toggleReadOnlyStyling( update.state.readOnly );
+				}
 			} )
 		];
+	}
+
+	/**
+	 * Hide the toolbar buttons that do not apply, until WikiEditor supports a
+	 * read-only mode (T188817).
+	 *
+	 * @param {boolean} readOnly
+	 * @private
+	 */
+	toggleReadOnlyStyling( readOnly ) {
+		this.context.$ui.toggleClass( 'ext-codemirror-readonly', readOnly );
 	}
 
 	/**
@@ -127,10 +141,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 		const codeMirrorButton = toolbar.$toolbar[ 0 ].querySelector( '.tool[rel=CodeMirror]' );
 		codeMirrorButton.id = 'mw-editbutton-codemirror';
 
-		// Hide non-applicable buttons until WikiEditor better supports a read-only mode (T188817).
-		if ( this.readOnly ) {
-			this.context.$ui.addClass( 'ext-codemirror-readonly' );
-		}
+		this.toggleReadOnlyStyling( this.readOnly );
 
 		// Similarly, add a unique CSS for the CodeMirror language mode.
 		// CSS classes used here may include but are not limited to:
@@ -272,9 +283,7 @@ class CodeMirrorWikiEditor extends CodeMirror {
 			group: 'codemirror'
 		} );
 
-		if ( this.readOnly ) {
-			this.context.$ui.removeClass( 'ext-codemirror-readonly' );
-		}
+		this.toggleReadOnlyStyling( false );
 
 		this.switchHook = null;
 	}

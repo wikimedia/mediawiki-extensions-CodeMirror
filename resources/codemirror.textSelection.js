@@ -44,6 +44,9 @@ class CodeMirrorTextSelection {
 	 * @stable to call
 	 */
 	setContents( content ) {
+		if ( this.view.state.readOnly ) {
+			return this.$cmDom;
+		}
 		this.view.dispatch( {
 			changes: {
 				from: 0,
@@ -126,6 +129,9 @@ class CodeMirrorTextSelection {
 	 * @stable to call
 	 */
 	replaceSelection( value ) {
+		if ( this.view.state.readOnly ) {
+			return this.$cmDom;
+		}
 		this.view.dispatch( this.view.state.replaceSelection( value ) );
 		return this.$cmDom;
 	}
@@ -155,8 +161,8 @@ class CodeMirrorTextSelection {
 	 * @stable to call
 	 */
 	encapsulateSelection( options ) {
-		// The transactionFilter in CodeMirror already prevents document changes.
-		// Prevent selection changes that assume document changes that don't happen.
+		// Selection changes are still allowed while read-only, so return early to
+		// prevent ones that assume document changes that don't happen.
 		if ( this.view.state.readOnly ) {
 			return this.$cmDom;
 		}

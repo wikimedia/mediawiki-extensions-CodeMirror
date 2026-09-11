@@ -222,6 +222,13 @@ class CodeMirror {
 		 */
 		this.dirCompartment = new Compartment();
 		/**
+		 * Compartment to control the read-only state of the editor.
+		 *
+		 * @type {Compartment}
+		 * @private
+		 */
+		this.readOnlyCompartment = new Compartment();
+		/**
 		 * The CodeMirror preferences dialog.
 		 *
 		 * @type {CodeMirrorPreferences}
@@ -280,13 +287,58 @@ class CodeMirror {
 	}
 
 	/**
-	 * Whether the textarea is read-only.
+	 * The read-only state to use before there is a {@link CodeMirror#view view}, which is
+	 * what {@link CodeMirror#readOnlyExtension readOnlyExtension} seeds the state with.
+	 * Integrations bound to something other than a textarea should override this.
 	 *
 	 * @type {boolean}
-	 * @stable to call and override
+	 * @protected
+	 * @stable to override
+	 */
+	get initialReadOnly() {
+		return this.textarea.readOnly;
+	}
+
+	/**
+	 * Whether the editor is read-only. Assigning to this reconfigures the editor in place,
+	 * so it can be changed at any time after {@link CodeMirror#initialize initialization}.
+	 * Before then it comes from {@link CodeMirror#initialReadOnly initialReadOnly}.
+	 *
+	 * A read-only editor is still focusable and its contents still selectable. Use
+	 * `EditorView.editable` to make it non-editable.
+	 *
+	 * @type {boolean}
+	 * @stable to call
 	 */
 	get readOnly() {
-		return this.textarea.readOnly;
+		return this.view ? this.view.state.readOnly : this.initialReadOnly;
+	}
+
+	set readOnly( readOnly ) {
+		if ( !this.view ) {
+			mw.log.warn( '[CodeMirror] Cannot set readOnly before initialization.' );
+			return;
+		}
+		if ( this.readOnly === !!readOnly ) {
+			return;
+		}
+		this.dispatch( {
+			effects: this.readOnlyCompartment.reconfigure(
+				EditorState.readOnly.of( !!readOnly )
+			)
+		} );
+	}
+
+	/**
+	 * The read-only state of the editor, in a {@link Compartment} so that
+	 * {@link CodeMirror#readOnly readOnly} can reconfigure it after initialization.
+	 *
+	 * @type {Extension}
+	 * @protected
+	 * @stable to call
+	 */
+	get readOnlyExtension() {
+		return this.readOnlyCompartment.of( EditorState.readOnly.of( this.readOnly ) );
 	}
 
 	/**
@@ -413,32 +465,18 @@ class CodeMirror {
 			this.indentGuidesExtension,
 			this.preferences.extension,
 			this.keymap.extension,
-			EditorState.readOnly.of( this.readOnly ),
+			this.readOnlyExtension,
 			EditorState.allowMultipleSelections.of( true ),
 			drawSelection(),
 			rectangularSelection(),
 			crosshairCursor(),
 			dropCursor(),
-			this.langExtension
+			this.langExtension,
+			// Both do nothing while read-only, but they must always be here so that they
+			// work if the editor is later made editable through CodeMirror#readOnly.
+			history(),
+			this.editRecoveryExtension
 		];
-
-		// Add extensions relevant to editing (not read-only).
-		if ( !this.readOnly ) {
-			extensions.push( EditorView.updateListener.of( ( update ) => {
-				if ( update.docChanged && typeof this.editRecoveryHandler === 'function' ) {
-					this.editRecoveryHandler();
-				}
-			} ) );
-			extensions.push( history() );
-		} else {
-			// Prevent transactions that make changes to the document.
-			extensions.push( EditorState.transactionFilter.of( ( tr ) => {
-				if ( tr.docChanged ) {
-					return [];
-				}
-				return tr;
-			} ) );
-		}
 
 		if ( this.mode === 'mediawiki' ) {
 			extensions.push(
@@ -1114,6 +1152,19 @@ class CodeMirror {
 			this.editRecoveryHandler = data.fieldChangeHandler;
 		};
 		mw.hook( 'editRecovery.loadEnd' ).add( this.editRecoveryLoadEndHandler );
+	}
+
+	/**
+	 * {@link https://www.mediawiki.org/wiki/Manual:Edit_Recovery Edit Recovery} support.
+	 *
+	 * @return {Extension}
+	 */
+	get editRecoveryExtension() {
+		return EditorView.updateListener.of( ( update ) => {
+			if ( update.docChanged && typeof this.editRecoveryHandler === 'function' ) {
+				this.editRecoveryHandler();
+			}
+		} );
 	}
 
 	/**

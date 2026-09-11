@@ -72,6 +72,11 @@ class CodeMirrorLint extends CodeMirrorPanel {
 			showPanel.of( ( view ) => {
 				this.view = view;
 				return this.panel;
+			} ),
+			// Diagnostics withhold their quick fixes while read-only,
+			// so lint again when that changes.
+			linter( null, {
+				needsRefresh: ( update ) => update.startState.readOnly !== update.state.readOnly
 			} )
 		];
 		if ( this.lintSource ) {

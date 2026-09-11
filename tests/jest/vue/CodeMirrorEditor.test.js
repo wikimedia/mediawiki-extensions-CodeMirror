@@ -173,9 +173,20 @@ describe( 'CodeMirrorEditor', () => {
 		} );
 	} );
 
+	describe( 'focus and blur', () => {
+		it( 'relays focus and blur from the textarea', async () => {
+			const wrapper = mountComponent();
+			const textarea = wrapper.get( '[data-testid="codemirror-editor-textarea"]' );
+			await textarea.trigger( 'focus' );
+			await textarea.trigger( 'blur' );
+			expect( wrapper.emitted( 'focus' ) ).toHaveLength( 1 );
+			expect( wrapper.emitted( 'blur' ) ).toHaveLength( 1 );
+		} );
+	} );
+
 	describe( 'readOnly and disabled', () => {
-		// CodeMirror takes read-only from the textarea and then blocks every
-		// document change, including the ones this component dispatches.
+		// The core class takes read-only from the textarea, which this component binds
+		// to the prop, and only refuses changes made through $.textSelection.
 		it( 'still applies external changes when read-only', async () => {
 			const wrapper = await mountEditor( { modelValue: 'one', readOnly: true } );
 			const cm = readyInstance( wrapper );
@@ -191,6 +202,16 @@ describe( 'CodeMirrorEditor', () => {
 			await wrapper.setProps( { readOnly: true } );
 			expect( cm.view.state.readOnly ).toBe( true );
 			expect( wrapper.emitted( 'ready' ) ).toHaveLength( 1 );
+		} );
+
+		it( 'keeps the core read-only state in step with the prop', async () => {
+			const wrapper = await mountEditor();
+			const cm = readyInstance( wrapper );
+			expect( cm.readOnly ).toBe( false );
+			await wrapper.setProps( { readOnly: true } );
+			expect( cm.readOnly ).toBe( true );
+			await wrapper.setProps( { readOnly: false } );
+			expect( cm.readOnly ).toBe( false );
 		} );
 
 		it( 'makes a disabled editor non-editable', async () => {

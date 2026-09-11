@@ -2,6 +2,7 @@ const {
 	EditorState,
 	diagnosticCount,
 	forEachDiagnostic,
+	undo,
 	EditorView,
 	Prec
 } = require( 'ext.CodeMirror.lib' ); // eslint-disable-line n/no-missing-require
@@ -161,6 +162,34 @@ describe( 'applyLinter', () => {
 				}
 			}, 0 );
 		} );
+	} );
+
+	it( 'should withhold quick fixes when the editor becomes read-only', async () => {
+		cm.initialize();
+		cm.applyLinter( () => [ {
+			from: 0,
+			to: 1,
+			severity: 'error',
+			message: 'Test diagnostic',
+			actions: [ { name: 'Fix', apply: () => {} } ]
+		} ], { delay: 0 } );
+		cm.extensionRegistry.toggle( 'lint', cm.view, true );
+		const actionsAfterLint = async () => {
+			await new Promise( ( resolve ) => {
+				setTimeout( resolve, 0 );
+			} );
+			let actions;
+			forEachDiagnostic( cm.view.state, ( diagnostic ) => {
+				actions = diagnostic.actions;
+			} );
+			return actions;
+		};
+
+		expect( await actionsAfterLint() ).toHaveLength( 1 );
+		cm.readOnly = true;
+		expect( await actionsAfterLint() ).toBeUndefined();
+		cm.readOnly = false;
+		expect( await actionsAfterLint() ).toHaveLength( 1 );
 	} );
 
 	it( 'should apply the given linter with an object argument', async () => {
@@ -645,13 +674,75 @@ describe( 'readonly', () => {
 		expect( cm.view.state.readOnly ).toEqual( true );
 	} );
 
-	it( 'should prevent transactions that make document changes from being dispatched', () => {
+	it( 'should let the integration that owns the view change the document', () => {
+		// The library only blocks changes the user makes. Programmatic dispatches are
+		// how an integration loads or syncs contents, so they must still go through.
+		cm.view.dispatch( { changes: { from: 0, to: 0, insert: 'foo' } } );
+		expect( cm.view.state.doc.toString() ).toEqual( 'fooMetallica' );
+	} );
+
+	it( 'should refuse document changes made through textSelection', () => {
+		cm.textSelection.setContents( 'Pantera' );
 		expect( cm.view.state.doc.toString() ).toEqual( 'Metallica' );
-		const transaction = cm.view.state.update( {
-			changes: { from: 0, to: 0, insert: 'foo' }
-		} );
-		cm.view.dispatch( transaction );
+		cm.textSelection.setSelection( { start: 0, end: 9 } );
+		cm.textSelection.replaceSelection( 'Pantera' );
 		expect( cm.view.state.doc.toString() ).toEqual( 'Metallica' );
+		cm.textSelection.encapsulateSelection( { pre: "'''", post: "'''" } );
+		expect( cm.view.state.doc.toString() ).toEqual( 'Metallica' );
+	} );
+
+	it( 'should still allow selection changes', () => {
+		cm.textSelection.setSelection( { start: 0, end: 5 } );
+		expect( cm.textSelection.getSelection() ).toEqual( 'Metal' );
+	} );
+
+	it( 'should follow the state when toggled', () => {
+		cm.readOnly = false;
+		expect( cm.readOnly ).toEqual( false );
+		expect( cm.view.state.readOnly ).toEqual( false );
+		cm.textSelection.setContents( 'Pantera' );
+		expect( cm.view.state.doc.toString() ).toEqual( 'Pantera' );
+
+		cm.readOnly = true;
+		expect( cm.readOnly ).toEqual( true );
+		expect( cm.view.state.readOnly ).toEqual( true );
+		cm.textSelection.setContents( 'Metallica' );
+		expect( cm.view.state.doc.toString() ).toEqual( 'Pantera' );
+
+		// Setting the same value again does nothing.
+		cm.readOnly = true;
+		expect( cm.view.state.readOnly ).toEqual( true );
+	} );
+
+	it( 'should keep the state a boolean', () => {
+		cm.readOnly = 0;
+		expect( cm.readOnly ).toEqual( false );
+		cm.readOnly = 'yes';
+		expect( cm.readOnly ).toEqual( true );
+	} );
+
+	it( 'should keep the undo history across a toggle', () => {
+		cm.readOnly = false;
+		cm.textSelection.setContents( 'Pantera' );
+		cm.readOnly = true;
+		cm.readOnly = false;
+		undo( cm.view );
+		expect( cm.view.state.doc.toString() ).toEqual( 'Metallica' );
+	} );
+
+	it( 'should warn and do nothing when set before initialization', () => {
+		const uninitialized = new CodeMirror( textarea );
+		uninitialized.readOnly = false;
+		expect( mw.log.warn ).toHaveBeenCalledWith(
+			'[CodeMirror] Cannot set readOnly before initialization.'
+		);
+		expect( uninitialized.readOnly ).toEqual( true );
+	} );
+
+	it( 'should fall back to the textarea once destroyed', () => {
+		cm.readOnly = false;
+		cm.destroy();
+		expect( cm.readOnly ).toEqual( true );
 	} );
 } );
 

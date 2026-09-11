@@ -65,6 +65,16 @@ describe( 'initialize', () => {
 		expect( cmWe.context.$ui[ 0 ].classList ).toContain( 'ext-codemirror-readonly' );
 	} );
 
+	it( 'should toggle .ext-codemirror-readonly with the read-only state', () => {
+		const cmWe = getCodeMirrorWikiEditor( true );
+		cmWe.initialize();
+		expect( cmWe.context.$ui[ 0 ].classList ).toContain( 'ext-codemirror-readonly' );
+		cmWe.readOnly = false;
+		expect( cmWe.context.$ui[ 0 ].classList ).not.toContain( 'ext-codemirror-readonly' );
+		cmWe.readOnly = true;
+		expect( cmWe.context.$ui[ 0 ].classList ).toContain( 'ext-codemirror-readonly' );
+	} );
+
 	it( 'should add a CSS class for the CodeMirror mode', () => {
 		const cmWe = getCodeMirrorWikiEditor( false, javascript() );
 		cmWe.initialize();

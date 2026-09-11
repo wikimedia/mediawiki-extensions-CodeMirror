@@ -44,6 +44,22 @@ describe( 'CodeMirrorSearch', () => {
 		expect( cmSearch.replaceInput.disabled ).toBe( true );
 	} );
 
+	it( 'should disable replacement fields when the editor becomes read-only', () => {
+		const cm = getCmWithSearchOpen( 'The Smashing Pumpkins' );
+		const cmSearch = cm.search;
+		expect( cmSearch.replaceInput.disabled ).toBe( false );
+		expect( cmSearch.replaceButton.disabled ).toBe( false );
+		expect( cmSearch.replaceAllButton.disabled ).toBe( false );
+
+		cm.readOnly = true;
+		expect( cmSearch.replaceInput.disabled ).toBe( true );
+		expect( cmSearch.replaceButton.disabled ).toBe( true );
+		expect( cmSearch.replaceAllButton.disabled ).toBe( true );
+
+		cm.readOnly = false;
+		expect( cmSearch.replaceInput.disabled ).toBe( false );
+	} );
+
 	it( 'should open the search panel with Ctrl+F', () => {
 		const cm = getCmWithSearchOpen();
 		expect( cm.view.dom.querySelector( '.cm-mw-panel__search-panel' ) ).toBeTruthy();
