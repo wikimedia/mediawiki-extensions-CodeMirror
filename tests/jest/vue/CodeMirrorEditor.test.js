@@ -71,17 +71,107 @@ describe( 'CodeMirrorEditor', () => {
 	describe( 'before the editor loads', () => {
 		it( 'renders a usable textarea', () => {
 			const wrapper = mountComponent( { modelValue: 'let a = 1;' } );
-			const textarea = wrapper.find( '[data-testid="codemirror-editor-textarea"]' );
+			const textarea = wrapper.find( 'textarea' );
 			expect( textarea.exists() ).toBe( true );
 			expect( textarea.element.value ).toBe( 'let a = 1;' );
 		} );
 
 		it( 'emits input from the plain textarea', async () => {
 			const wrapper = mountComponent();
-			const textarea = wrapper.find( '[data-testid="codemirror-editor-textarea"]' );
+			const textarea = wrapper.find( 'textarea' );
 			textarea.element.value = 'typed';
 			await textarea.trigger( 'input' );
 			expect( wrapper.emitted( 'update:modelValue' )[ 0 ] ).toEqual( [ 'typed' ] );
+		} );
+	} );
+
+	describe( 'attribute fallthrough', () => {
+		const attrs = {
+			class: 'consumer-class',
+			style: 'margin: 1px',
+			'data-testid': 'consumer-testid',
+			id: 'my-id',
+			'aria-label': 'Code'
+		};
+
+		it( 'keeps class, style and data-testid on the root', async () => {
+			const wrapper = await mountEditor( attrs );
+			expect( wrapper.classes() ).toContain( 'consumer-class' );
+			expect( wrapper.classes() ).toContain( 'ext-codemirror-editor' );
+			expect( wrapper.attributes( 'style' ) ).toContain( 'margin' );
+			expect( wrapper.attributes( 'data-testid' ) ).toBe( 'consumer-testid' );
+		} );
+
+		// CodeMirror hides the textarea once it loads, so a class or a test hook
+		// would be useless there.
+		it( 'keeps class, style and data-testid off the textarea', async () => {
+			const wrapper = await mountEditor( attrs );
+			const textarea = wrapper.find( 'textarea' );
+			expect( textarea.classes() ).not.toContain( 'consumer-class' );
+			expect( textarea.attributes( 'style' ) ).toBeUndefined();
+			expect( textarea.attributes( 'data-testid' ) ).toBeUndefined();
+		} );
+
+		it( 'sets no data-testid when the caller passes none', async () => {
+			const wrapper = await mountEditor();
+			expect( wrapper.attributes( 'data-testid' ) ).toBeUndefined();
+		} );
+
+		it( 'passes every other attribute to the textarea', async () => {
+			const wrapper = await mountEditor( attrs );
+			const textarea = wrapper.find( 'textarea' );
+			expect( textarea.attributes( 'id' ) ).toBe( 'my-id' );
+			expect( textarea.attributes( 'aria-label' ) ).toBe( 'Code' );
+			expect( wrapper.attributes( 'id' ) ).toBeUndefined();
+		} );
+
+		it( 'moves the class to the root when the caller changes it', async () => {
+			const parent = mount( {
+				components: { CodeMirrorEditor },
+				data: () => ( { cssClass: 'first' } ),
+				template: '<code-mirror-editor mode="javascript" :class="cssClass" />'
+			}, { attachTo: document.body } );
+			wrappers.push( parent );
+			await flushPromises();
+			const root = parent.find( '.ext-codemirror-editor' );
+			expect( root.classes() ).toContain( 'first' );
+			await parent.setData( { cssClass: 'second' } );
+			expect( root.classes() ).toContain( 'second' );
+			expect( root.classes() ).not.toContain( 'first' );
+		} );
+	} );
+
+	describe( 'height', () => {
+		// CodeMirror reports 14px per line in jsdom.
+		const lineHeight = 14;
+
+		it( 'keeps one height by default', async () => {
+			const wrapper = await mountEditor();
+			expect( wrapper.classes() ).not.toContain( 'ext-codemirror-editor--auto-height' );
+			expect( wrapper.attributes( 'style' ) ).toBeUndefined();
+		} );
+
+		it( 'grows from rows when autoHeight is set', async () => {
+			const wrapper = await mountEditor( { autoHeight: true, rows: 5 } );
+			expect( wrapper.classes() ).toContain( 'ext-codemirror-editor--auto-height' );
+			expect( wrapper.attributes( 'style' ) )
+				.toContain( `--ext-codemirror-editor-min-height: ${ 5 * lineHeight }px` );
+			expect( wrapper.attributes( 'style' ) )
+				.not.toContain( 'max-height' );
+		} );
+
+		it( 'caps the height at maxRows, and grows without autoHeight', async () => {
+			const wrapper = await mountEditor( { maxRows: 20, rows: 5 } );
+			expect( wrapper.classes() ).toContain( 'ext-codemirror-editor--auto-height' );
+			expect( wrapper.attributes( 'style' ) )
+				.toContain( `--ext-codemirror-editor-max-height: ${ 20 * lineHeight }px` );
+		} );
+
+		it( 'follows a change to maxRows', async () => {
+			const wrapper = await mountEditor( { maxRows: 20 } );
+			await wrapper.setProps( { maxRows: 30 } );
+			expect( wrapper.attributes( 'style' ) )
+				.toContain( `--ext-codemirror-editor-max-height: ${ 30 * lineHeight }px` );
 		} );
 	} );
 
@@ -176,7 +266,7 @@ describe( 'CodeMirrorEditor', () => {
 	describe( 'focus and blur', () => {
 		it( 'relays focus and blur from the textarea', async () => {
 			const wrapper = mountComponent();
-			const textarea = wrapper.get( '[data-testid="codemirror-editor-textarea"]' );
+			const textarea = wrapper.get( '.ext-codemirror-editor__textarea' );
 			await textarea.trigger( 'focus' );
 			await textarea.trigger( 'blur' );
 			expect( wrapper.emitted( 'focus' ) ).toHaveLength( 1 );

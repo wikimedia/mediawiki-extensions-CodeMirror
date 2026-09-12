@@ -16,10 +16,17 @@
  * * `readOnly` {boolean} Make the contents read-only, but still selectable.
  * * `disabled` {boolean} Make the contents read-only and not focusable.
  * * `placeholder` {string} Shown while the editor is empty.
- * * `rows` {number} Initial height of the editor, in rows.
+ * * `rows` {number} Height of the editor, in rows. The smallest height when the
+ *   editor grows.
+ * * `autoHeight` {boolean} Grow with the contents instead of keeping one height.
+ * * `maxRows` {number} Largest height in rows before the editor scrolls. Makes
+ *   the editor grow, so `autoHeight` is not needed as well.
  * * `autofocus` {boolean} Focus the editor once it is ready.
  * * `theme` {string} Theme name, overriding the user's preference. Read only when
  *   the editor is created.
+ *
+ * Any other attribute, such as `id` or `aria-label`, goes to the textarea.
+ * `class`, `style` and `data-testid` stay on the root element.
  *
  * **Events:**
  *

@@ -1,15 +1,16 @@
 <template>
 	<div
 		class="ext-codemirror-editor"
-		:class="rootClasses"
+		:class="[ rootClasses, $attrs.class ]"
+		:style="[ $attrs.style, heightStyle ]"
+		:data-testid="$attrs[ 'data-testid' ]"
 	>
 		<!-- CodeMirror moves this textarea into a wrapper of its own, so nothing
 			else may be rendered inside this container. -->
 		<div class="ext-codemirror-editor__container">
 			<textarea
 				ref="textarea"
-				data-testid="codemirror-editor-textarea"
-				v-bind="$attrs"
+				v-bind="textareaAttrs"
 				class="ext-codemirror-editor__textarea"
 				:value="modelValue"
 				:readonly="isReadOnly"
@@ -45,8 +46,12 @@ module.exports = exports = defineComponent( {
 		disabled: { type: Boolean },
 		/** Shown while the editor is empty. */
 		placeholder: { type: String, default: '' },
-		/** Initial height of the editor, in rows. */
+		/** Height of the editor, in rows. The smallest height when it grows. */
 		rows: { type: Number, default: 10 },
+		/** Grow with the contents instead of keeping one height. */
+		autoHeight: { type: Boolean },
+		/** Largest height in rows before the editor scrolls. Makes it grow. */
+		maxRows: { type: Number, default: 0 },
 		/** Focus the editor once it is ready. */
 		autofocus: { type: Boolean },
 		/** Theme name, overriding the user's preference. */
@@ -57,7 +62,7 @@ module.exports = exports = defineComponent( {
 
 	emits: [ 'update:modelValue', 'ready', 'error', 'focus', 'blur' ],
 
-	setup( props, { emit } ) {
+	setup( props, { attrs, emit } ) {
 		const textarea = ref( null );
 		let codeMirror = null;
 		let lib = null;
@@ -66,10 +71,39 @@ module.exports = exports = defineComponent( {
 		// Bumped whenever an in-flight load should be abandoned.
 		let loadId = 0;
 
+		// CodeMirror measures this once the editor exists. Rows mean nothing in CSS,
+		// so we need it to turn the row counts into a height.
+		const lineHeight = ref( 0 );
+
 		const isReadOnly = computed( () => props.readOnly || props.disabled );
+		const growsWithContent = computed( () => props.autoHeight || props.maxRows > 0 );
 		const rootClasses = computed( () => ( {
-			'ext-codemirror-editor--disabled': props.disabled
+			'ext-codemirror-editor--disabled': props.disabled,
+			'ext-codemirror-editor--auto-height': growsWithContent.value
 		} ) );
+		const heightStyle = computed( () => {
+			if ( !growsWithContent.value || !lineHeight.value ) {
+				return null;
+			}
+			const style = {
+				'--ext-codemirror-editor-min-height': `${ props.rows * lineHeight.value }px`
+			};
+			if ( props.maxRows ) {
+				style[ '--ext-codemirror-editor-max-height' ] =
+					`${ props.maxRows * lineHeight.value }px`;
+			}
+			return style;
+		} );
+		// These name the component as a whole, so they stay on the root. CodeMirror
+		// hides the textarea, which would make a class or a test hook useless there.
+		const rootAttrs = [ 'class', 'style', 'data-testid' ];
+		const textareaAttrs = computed( () => {
+			const rest = Object.assign( {}, attrs );
+			for ( const name of rootAttrs ) {
+				delete rest[ name ];
+			}
+			return rest;
+		} );
 
 		/* eslint-disable jsdoc/no-undefined-types */
 		/**
@@ -136,6 +170,7 @@ module.exports = exports = defineComponent( {
 				codeMirror.preferences.lockPreference( 'compactPanels', undefined, true );
 			}
 			codeMirror.initialize( [ codeMirror.defaultExtensions, editorExtensions() ] );
+			lineHeight.value = codeMirror.view.defaultLineHeight;
 
 			emit( 'ready', codeMirror );
 		}
@@ -220,6 +255,8 @@ module.exports = exports = defineComponent( {
 			textarea,
 			isReadOnly,
 			rootClasses,
+			heightStyle,
+			textareaAttrs,
 			onTextareaInput
 		};
 	}
@@ -234,6 +271,20 @@ module.exports = exports = defineComponent( {
 		box-sizing: border-box;
 		width: 100%;
 		font-family: monospace;
+	}
+
+	// The core class gives the editor one fixed height, taken from the textarea.
+	// Two classes outrank the theme that sets it, so the editor can grow instead.
+	&--auto-height {
+		.cm-editor {
+			height: auto;
+			min-height: var( --ext-codemirror-editor-min-height );
+			max-height: var( --ext-codemirror-editor-max-height, none );
+		}
+
+		.cm-scroller {
+			overflow: auto;
+		}
 	}
 
 	// CodeMirror themes paint the editor itself, so the disabled state can't
