@@ -213,6 +213,19 @@ describe( 'CodeMirrorEditor', () => {
 			const wrapper = await mountEditor( { autofocus: true } );
 			expect( readyInstance( wrapper ).preferences.getPreference( 'autofocus' ) ).toBe( true );
 		} );
+
+		it( 'leaves the compact panels preference to the user by default', async () => {
+			const wrapper = await mountEditor();
+			const { preferences } = readyInstance( wrapper );
+			expect( preferences.disabledPreferences.has( 'compactPanels' ) ).toBe( false );
+		} );
+
+		it( 'honours the compact prop', async () => {
+			const wrapper = await mountEditor( { compact: true } );
+			const { preferences } = readyInstance( wrapper );
+			expect( preferences.getPreference( 'compactPanels' ) ).toBe( true );
+			expect( preferences.disabledPreferences.has( 'compactPanels' ) ).toBe( true );
+		} );
 	} );
 
 	describe( 'mode changes', () => {

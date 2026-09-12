@@ -213,6 +213,12 @@
 	margin-top: 0;
 }
 
+// Inline checkboxes carry no top margin, so a select has to space
+// itself from whatever follows it.
+.cm-mw-panel__fieldset .cm-mw-panel__select:not( :last-child ) {
+	margin-bottom: @spacing-75;
+}
+
 // Dialogs
 
 .cm-mw-dialog-backdrop {
@@ -322,6 +328,105 @@
 .cm-mw-icon--close {
 	background-color: @color-base;
 	.cdx-mixin-css-icon( @cdx-icon-close, @color-base, @size-icon-medium, true );
+}
+
+// Compact panels (T436422)
+// Each selector carries one more class than the docked rules above,
+// so it wins regardless of source order.
+.cm-editor.cm-mw-compact-panels .cm-panels {
+	&.cm-panels-top {
+		border: @border-width-base @border-style-base @border-color-subtle;
+		border-radius: @border-radius-base;
+		box-shadow: @box-shadow-drop-medium;
+		font-size: @font-size-small;
+		// CodeMirror sets `top` inline, so inset from the top with a margin.
+		margin-top: @spacing-50;
+		max-width: ~'calc( 100% - @{spacing-200} )';
+		position: absolute;
+		// The search panel is a size container, so this box has no intrinsic
+		// width to shrink to. 28rem fits the English labels on one row each.
+		width: @size-2800;
+		// The base theme pins both edges; release the start one. CSSJanus flips
+		// this pair, so the panel floats at the inline end either way.
+		left: auto;
+		// Keeps the panel clear of the scroller's scrollbar, which CSS cannot measure.
+		right: @spacing-150;
+	}
+
+	.cm-mw-panel {
+		padding: @spacing-25 @spacing-50;
+		// Button labels must never break mid-word; the row wraps instead.
+		white-space: nowrap;
+
+		// The container above draws the outer border.
+		&:last-child {
+			border-bottom: 0;
+		}
+	}
+
+	.cm-mw-panel__row {
+		flex-wrap: wrap;
+		gap: @spacing-25;
+
+		&:not( :last-child ) {
+			margin-bottom: @spacing-25;
+		}
+	}
+
+	// 24px is the smallest target size WCAG 2.2 allows. Do not go below @size-150.
+	.cdx-button,
+	.cdx-toggle-button,
+	.cdx-text-input__input {
+		min-height: @size-150;
+		padding: 0 @spacing-50;
+	}
+
+	.cdx-button--icon-only,
+	.cdx-toggle-button {
+		padding: 0 @spacing-25;
+	}
+
+	.cdx-button-group,
+	.cdx-toggle-button-group {
+		// A group is a block box of inline buttons, which makes it a pixel taller
+		// than the buttons beside it and leaves the whole row on a half pixel.
+		display: flex;
+
+		.cdx-button,
+		.cdx-toggle-button {
+			min-width: @size-150;
+		}
+	}
+
+	// Track the reduced input padding. The width is measured at runtime by
+	// CodeMirrorSearch#updateSearchInputPadding(), so the smaller font is handled.
+	.cm-mw-find-results {
+		right: @spacing-50;
+	}
+
+	.cm-mw-icon--match-case {
+		.cdx-mixin-css-icon( @cdx-icon-search-case-sensitive, @color-base, @size-icon-small, true );
+	}
+
+	.cm-mw-icon--regexp {
+		.cdx-mixin-css-icon( @cdx-icon-search-regular-expression, @color-base, @size-icon-small, true );
+	}
+
+	.cm-mw-icon--quotes {
+		.cdx-mixin-css-icon( @cdx-icon-quotes, @color-base, @size-icon-small, true );
+	}
+
+	.cm-mw-icon--previous {
+		.cdx-mixin-css-icon( @cdx-icon-previous, @color-base, @size-icon-small, true );
+	}
+
+	.cm-mw-icon--next {
+		.cdx-mixin-css-icon( @cdx-icon-next, @color-base, @size-icon-small, true );
+	}
+
+	.cm-mw-icon--close {
+		.cdx-mixin-css-icon( @cdx-icon-close, @color-base, @size-icon-small, true );
+	}
 }
 
 // Status bar

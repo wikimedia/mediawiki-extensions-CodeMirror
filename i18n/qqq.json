@@ -32,6 +32,7 @@
 	"codemirror-prefs-section-references": "Section heading in the CodeMirror preferences dialog for options related to <ref> tags.",
 	"codemirror-prefs-section-other": "Section heading in the CodeMirror preferences dialog for miscellaneous options.",
 	"codemirror-prefs-codefolding": "Label for the option to enable code folding in the CodeMirror preferences dialog.",
+	"codemirror-prefs-compactpanels": "Label for the option to use a compact design for the search and go-to line panels in the CodeMirror preferences dialog. The compact panels float over the editor and have smaller controls, instead of being docked above the contents.",
 	"codemirror-prefs-autocomplete": "Label for the option to enable autocompletion in the CodeMirror preferences dialog.",
 	"codemirror-prefs-openlinks": "Label for the option to open links by modifier + click in the CodeMirror preferences dialog.",
 	"codemirror-prefs-closetags": "Label for the option to auto-close HTML tags in the CodeMirror preferences dialog.",

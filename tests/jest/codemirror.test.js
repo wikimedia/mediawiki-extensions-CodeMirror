@@ -685,6 +685,7 @@ describe( 'extensionRegistryDefaults', () => {
 			'autofocus',
 			'bracketMatching',
 			'closeBrackets',
+			'compactPanels',
 			'lineNumbering',
 			'lineWrapping',
 			'specialChars',
@@ -694,6 +695,17 @@ describe( 'extensionRegistryDefaults', () => {
 		expect( cm.extensionRegistry.names ).toStrictEqual(
 			Object.keys( cm.extensionRegistryDefaults )
 		);
+	} );
+} );
+
+describe( 'compactPanelsExtension', () => {
+	it( 'should add the class alongside the mode class, and toggle with the preference', () => {
+		cm.initialize();
+		expect( cm.view.dom.classList ).toContain( 'cm-mw-mode-mediawiki' );
+		expect( cm.view.dom.classList ).not.toContain( 'cm-mw-compact-panels' );
+		cm.preferences.lockPreference( 'compactPanels', cm.view, true );
+		expect( cm.view.dom.classList ).toContain( 'cm-mw-mode-mediawiki' );
+		expect( cm.view.dom.classList ).toContain( 'cm-mw-compact-panels' );
 	} );
 } );
 

@@ -23,6 +23,7 @@
 	"codemirror-prefs-section-references": "References",
 	"codemirror-prefs-section-other": "Other",
 	"codemirror-prefs-codefolding": "Enable code folding",
+	"codemirror-prefs-compactpanels": "Use compact search panels",
 	"codemirror-prefs-autocomplete": "Enable autocompletion",
 	"codemirror-prefs-openlinks": "Open links with modifier key + click",
 	"codemirror-prefs-closetags": "Enable auto-closing HTML tags",

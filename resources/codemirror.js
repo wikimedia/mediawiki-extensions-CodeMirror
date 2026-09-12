@@ -309,6 +309,7 @@ class CodeMirror {
 			autofocus: [],
 			bracketMatching: this.bracketMatchingExtension,
 			closeBrackets: this.closeBracketsExtension,
+			compactPanels: this.compactPanelsExtension,
 			lineNumbering: this.lineNumberingExtension,
 			lineWrapping: this.lineWrappingExtension,
 			specialChars: this.specialCharsExtension,
@@ -593,6 +594,16 @@ class CodeMirror {
 	 */
 	get closeBracketsExtension() {
 		return closeBrackets();
+	}
+
+	/**
+	 * Extension for the compact panel design. The class it adds makes the search and
+	 * go-to line panels float over the editor instead of pushing the contents down.
+	 *
+	 * @type {Extension}
+	 */
+	get compactPanelsExtension() {
+		return EditorView.editorAttributes.of( { class: 'cm-mw-compact-panels' } );
 	}
 
 	/**

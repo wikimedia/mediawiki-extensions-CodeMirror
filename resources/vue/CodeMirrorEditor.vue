@@ -50,7 +50,9 @@ module.exports = exports = defineComponent( {
 		/** Focus the editor once it is ready. */
 		autofocus: { type: Boolean },
 		/** Theme name, overriding the user's preference. */
-		theme: { type: String, default: null }
+		theme: { type: String, default: null },
+		/** Force the compact panel design, overriding the user's preference. */
+		compact: { type: Boolean }
 	},
 
 	emits: [ 'update:modelValue', 'ready', 'error', 'focus', 'blur' ],
@@ -141,6 +143,9 @@ module.exports = exports = defineComponent( {
 			codeMirror.preferences.lockPreference( 'autofocus', undefined, props.autofocus );
 			if ( props.theme ) {
 				codeMirror.preferences.lockPreference( 'theme', undefined, props.theme );
+			}
+			if ( props.compact ) {
+				codeMirror.preferences.lockPreference( 'compactPanels', undefined, true );
 			}
 			codeMirror.initialize( [ codeMirror.defaultExtensions, editorExtensions() ] );
 

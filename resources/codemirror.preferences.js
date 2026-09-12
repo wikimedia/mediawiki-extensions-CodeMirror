@@ -108,7 +108,8 @@ class CodeMirrorPreferences extends CodeMirrorCodex {
 		 */
 		this.dialogConfig = {
 			appearance: [
-				'theme'
+				'theme',
+				'compactPanels'
 			],
 			lines: [
 				'lineNumbering',
