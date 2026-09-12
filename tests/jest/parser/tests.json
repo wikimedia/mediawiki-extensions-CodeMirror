@@ -423,7 +423,7 @@
 			},
 			{
 				"text": "foo",
-				"name": "mw-em"
+				"name": "mw-em mw-strikethrough"
 			},
 			{
 				"text": "''",
@@ -514,6 +514,10 @@
 				"name": "angleBracket"
 			},
 			{
+				"text": "strike",
+				"name": "mw-strikethrough"
+			},
+			{
 				"text": "</",
 				"name": "angleBracket"
 			},
@@ -536,6 +540,10 @@
 			{
 				"text": ">",
 				"name": "angleBracket"
+			},
+			{
+				"text": "s",
+				"name": "mw-strikethrough"
 			},
 			{
 				"text": "</",
@@ -638,6 +646,10 @@
 			{
 				"text": ">",
 				"name": "angleBracket"
+			},
+			{
+				"text": "text",
+				"name": "mw-strikethrough"
 			},
 			{
 				"text": "</",
@@ -11267,8 +11279,16 @@
 				"name": "angleBracket"
 			},
 			{
+				"text": " a",
+				"name": "mw-strikethrough"
+			},
+			{
 				"text": "#",
 				"name": "list"
+			},
+			{
+				"text": "b ",
+				"name": "mw-strikethrough"
 			},
 			{
 				"text": "</",
@@ -27476,6 +27496,10 @@
 			{
 				"text": ">",
 				"name": "angleBracket"
+			},
+			{
+				"text": "foo",
+				"name": "mw-strikethrough"
 			}
 		]
 	},
@@ -35382,6 +35406,10 @@
 				"name": "angleBracket"
 			},
 			{
+				"text": "x",
+				"name": "mw-strikethrough"
+			},
+			{
 				"text": "</span></s>",
 				"name": "mw-error"
 			}
@@ -41489,6 +41517,10 @@
 				"name": "angleBracket"
 			},
 			{
+				"text": "x",
+				"name": "mw-strikethrough"
+			},
+			{
 				"text": "</",
 				"name": "angleBracket"
 			},
@@ -41515,6 +41547,10 @@
 			{
 				"text": ">",
 				"name": "angleBracket"
+			},
+			{
+				"text": " ",
+				"name": "mw-strikethrough"
 			},
 			{
 				"text": "</",
@@ -123197,6 +123233,10 @@
 				"name": "angleBracket"
 			},
 			{
+				"text": "x",
+				"name": "mw-strikethrough"
+			},
+			{
 				"text": "</",
 				"name": "angleBracket"
 			},
@@ -123283,6 +123323,10 @@
 			{
 				"text": ">",
 				"name": "angleBracket"
+			},
+			{
+				"text": "x",
+				"name": "mw-strikethrough"
 			},
 			{
 				"text": "</",

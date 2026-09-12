@@ -42,6 +42,7 @@ const startState = ( tokenize, tags ) => ( {
 	nExtLink: 0,
 	nExt: 0,
 	nDt: 0,
+	nStrike: 0,
 	bold: false,
 	italic: false,
 	sof: true,
@@ -298,10 +299,15 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 	}
 
 	makeFullStyle( style, state ) {
-		return ( typeof style === 'string' ?
-			style :
-			`${ style[ 0 ] } ${ state.bold || state.nDt > 0 ? mwModeConfig.tags.strong : '' } ${ state.italic ? mwModeConfig.tags.em : '' }`
-		).replace( /\s{2,}/g, ' ' ).trim() || ' ';
+		if ( typeof style === 'string' ) {
+			return style;
+		}
+		const strongStyle = state.bold || state.nDt > 0 ? mwModeConfig.tags.strong : '';
+		const emStyle = state.italic ? mwModeConfig.tags.em : '';
+		const strikeStyle = state.nStrike > 0 ? mwModeConfig.tags.strikethrough : '';
+		return `${ style[ 0 ] } ${ strongStyle } ${ emStyle } ${ strikeStyle }`
+			.replace( /\s{2,}/g, ' ' )
+			.trim() || ' ';
 	}
 
 	makeStyle( style, state, endGround ) {
@@ -767,6 +773,9 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 			if ( stream.eat( '>' ) ) {
 				if ( !( name in mwModeConfig.implicitlyClosedHtmlTags ) ) {
 					state.inHtmlTag.push( name );
+					if ( name === 's' || name === 'strike' ) {
+						state.nStrike++;
+					}
 				}
 				state.tokenize = state.stack.pop();
 				return this.makeLocalStyle( mwModeConfig.tags.htmlTagBracket, state );
@@ -1398,10 +1407,19 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 						}
 						if ( tagname in mwModeConfig.permittedHtmlTags ) {
 							// Html tag
-							if ( isCloseTag === true && tagname !== state.inHtmlTag.pop() ) {
-								// Increment position so that the closing '>' gets highlighted red.
-								stream.pos++;
-								return mwModeConfig.tags.error;
+							if ( isCloseTag === true ) {
+								const poppedTag = state.inHtmlTag.pop();
+								if (
+									poppedTag === 's' ||
+									poppedTag === 'strike'
+								) {
+									state.nStrike = Math.max( 0, state.nStrike - 1 );
+								}
+								if ( tagname !== poppedTag ) {
+									// Increment pos so closing '>' gets highlighted red.
+									stream.pos++;
+									return mwModeConfig.tags.error;
+								}
 							}
 							if (
 								isCloseTag === true &&

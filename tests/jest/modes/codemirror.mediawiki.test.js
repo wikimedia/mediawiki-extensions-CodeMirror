@@ -237,6 +237,11 @@ const testCases = [
 		title: 'Very long line (T366035)',
 		input: '__notoc__<p>'.repeat( 500 ) + '\n<p>',
 		output: '<div class="cm-line">' + '<span class="cm-mw-double-underscore">__notoc__</span><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">p</span><span class="cm-mw-htmltag-bracket">&gt;</span>'.repeat( 500 ) + '</div><div class="cm-line">&lt;p&gt; </div>'
+	},
+	{
+		title: 'HTML underline and strikethrough tags',
+		input: '<u>underline</u> <ins>ins</ins> <s>strike</s> <del>del</del> <strike>strike2</strike> <u><s>both</s></u> <u>\'\'\'bold underline\'\'\'</u>',
+		output: '<div class="cm-line"><span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">u</span><span class="cm-mw-htmltag-bracket">&gt;</span>underline<span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">u</span><span class="cm-mw-htmltag-bracket">&gt;</span> <span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">ins</span><span class="cm-mw-htmltag-bracket">&gt;</span>ins<span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">ins</span><span class="cm-mw-htmltag-bracket">&gt;</span> <span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">s</span><span class="cm-mw-htmltag-bracket">&gt;</span><span class="cm-mw-strikethrough">strike</span><span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">s</span><span class="cm-mw-htmltag-bracket">&gt;</span> <span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">del</span><span class="cm-mw-htmltag-bracket">&gt;</span>del<span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">del</span><span class="cm-mw-htmltag-bracket">&gt;</span> <span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">strike</span><span class="cm-mw-htmltag-bracket">&gt;</span><span class="cm-mw-strikethrough">strike2</span><span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">strike</span><span class="cm-mw-htmltag-bracket">&gt;</span> <span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">u</span><span class="cm-mw-htmltag-bracket">&gt;&lt;</span><span class="cm-mw-htmltag-name">s</span><span class="cm-mw-htmltag-bracket">&gt;</span><span class="cm-mw-strikethrough">both</span><span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">s</span><span class="cm-mw-htmltag-bracket">&gt;&lt;/</span><span class="cm-mw-htmltag-name">u</span><span class="cm-mw-htmltag-bracket">&gt;</span> <span class="cm-mw-htmltag-bracket">&lt;</span><span class="cm-mw-htmltag-name">u</span><span class="cm-mw-htmltag-bracket">&gt;</span><span class="cm-mw-apostrophes">\'\'\'</span><span class="cm-mw-strong">bold underline</span><span class="cm-mw-apostrophes">\'\'\'</span><span class="cm-mw-htmltag-bracket">&lt;/</span><span class="cm-mw-htmltag-name">u</span><span class="cm-mw-htmltag-bracket">&gt;</span> </div>'
 	}
 ];
 
@@ -336,6 +341,7 @@ describe( 'CodeMirrorMediaWiki', () => {
 			'redirect',
 			'section',
 			'skipFormatting',
+			'strikethrough',
 			'strong',
 			'tableCaption',
 			'tableDefinitionValue',
@@ -418,6 +424,7 @@ describe( 'CodeMirrorMediaWiki', () => {
 			'cm-mw-redirect',
 			'cm-mw-section',
 			'cm-mw-skipformatting',
+			'cm-mw-strikethrough',
 			'cm-mw-strong',
 			'cm-mw-table-caption',
 			'cm-mw-table-definition-value',

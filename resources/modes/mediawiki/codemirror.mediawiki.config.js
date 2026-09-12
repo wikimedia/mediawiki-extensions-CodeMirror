@@ -212,6 +212,7 @@ class CodeMirrorMediaWikiConfig {
 			redirect: 'mw-redirect',
 			section: 'mw-section',
 			skipFormatting: 'mw-skipformatting',
+			strikethrough: 'mw-strikethrough',
 			strong: 'mw-strong',
 			tableCaption: 'mw-table-caption',
 			tableDefinitionValue: 'mw-table-definition-value',
@@ -258,6 +259,7 @@ class CodeMirrorMediaWikiConfig {
 			[ this.tags.redirect ]: Tag.define(),
 			[ this.tags.section ]: Tag.define(),
 			[ this.tags.skipFormatting ]: Tag.define(),
+			[ this.tags.strikethrough ]: Tag.define(),
 			[ this.tags.strong ]: Tag.define(),
 			[ this.tags.tableCaption ]: Tag.define(),
 			[ this.tags.tableDefinitionValue ]: Tag.define(),
@@ -545,6 +547,10 @@ class CodeMirrorMediaWikiConfig {
 			{
 				tag: context.tokenTable[ this.tags.skipFormatting ],
 				class: 'cm-mw-skipformatting'
+			},
+			{
+				tag: context.tokenTable[ this.tags.strikethrough ],
+				class: 'cm-mw-strikethrough'
 			},
 			{
 				tag: context.tokenTable[ this.tags.strong ],
