@@ -15,6 +15,9 @@
 ve.ui.CodeMirrorPreferencesTool = function VeUiCodeMirrorPreferencesTool() {
 	// Parent constructor
 	ve.ui.CodeMirrorPreferencesTool.super.apply( this, arguments );
+
+	// Events
+	this.toolbar.connect( this, { surfaceChange: 'onSurfaceChange' } );
 };
 
 /* Inheritance */
@@ -40,7 +43,30 @@ ve.ui.CodeMirrorPreferencesTool.prototype.onUpdateState = function () {
 	// Parent method
 	ve.ui.CodeMirrorPreferencesTool.super.prototype.onUpdateState.apply( this, arguments );
 
-	// The tool is enabled when syntax highlighting is enabled
+	this.updateDisabled();
+};
+
+/**
+ * The toolbar keeps its tools across a mode switch, so visibility has to be updated here rather
+ * than left to which tools were built.
+ *
+ * @param {ve.ui.Surface} oldSurface
+ * @param {ve.ui.Surface} newSurface
+ */
+ve.ui.CodeMirrorPreferencesTool.prototype.onSurfaceChange = function ( oldSurface, newSurface ) {
+	// Hidden outside source mode, where highlighting cannot apply at all. The toggle beside this
+	// stays visible but disabled there, which is enough to advertise the mode switch.
+	this.toggle( !!newSurface && newSurface.getMode() === 'source' );
+	this.updateDisabled();
+};
+
+/**
+ * Disable the tool while there is nothing to configure. Within source mode it stays visible while
+ * disabled, since turning highlighting on is what makes it usable.
+ *
+ * @private
+ */
+ve.ui.CodeMirrorPreferencesTool.prototype.updateDisabled = function () {
 	const surface = this.toolbar.getSurface();
 	this.setDisabled( !surface || !surface.mirror || !surface.mirror.isActive );
 };
@@ -49,9 +75,11 @@ ve.ui.CodeMirrorPreferencesTool.prototype.onUpdateState = function () {
 
 ve.ui.toolFactory.register( ve.ui.CodeMirrorPreferencesTool );
 
-// Registering in wikitextCommandRegistry means that the tool will be
-// automatically hidden in visual mode
-ve.ui.wikitextCommandRegistry.register(
+// Ideally we'd just register this in ve.ui.wikitextCommandRegistry, which
+// would hide this tool entirely in visual mode, but the dependencies mean we
+// can't do that without loading all of the mwwikitext modules. If they're
+// not loaded we break switching from source to VE (T437810).
+ve.ui.commandRegistry.register(
 	new ve.ui.Command(
 		'codeMirrorPreferences', 'window', 'open',
 		{ args: [ 'meta', { page: 'codeMirrorPreferences' } ] }
