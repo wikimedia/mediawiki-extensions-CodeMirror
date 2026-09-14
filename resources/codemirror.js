@@ -157,6 +157,14 @@ class CodeMirror {
 		// eslint-disable-next-line no-underscore-dangle
 		this._bracketMatchingConfig = langSupport.bracketMatchingConfig;
 		/**
+		 * The extension for opening links with Ctrl+Click or Cmd+Click.
+		 *
+		 * @type {Extension|undefined}
+		 * @private
+		 */
+		// eslint-disable-next-line no-underscore-dangle
+		this._openLinksExtension = langSupport.openLinksExtension;
+		/**
 		 * Language support and its extension(s).
 		 *
 		 * @type {LanguageSupport}
@@ -1160,6 +1168,11 @@ class CodeMirror {
 		// Diagnostics are rendered by the EditorView, so skip linting without one.
 		if ( this.view && ( this.lintSource || this.lintApi ) ) {
 			this.preferences.registerExtension( 'lint', this.lintExtension, this );
+		}
+
+		if ( this._openLinksExtension ) { // eslint-disable-line no-underscore-dangle
+			// eslint-disable-next-line no-underscore-dangle
+			this.preferences.registerExtension( 'openLinks', this._openLinksExtension, this );
 		}
 
 		// Enable the preferred theme, giving CodeMirrorThemes a reference to the

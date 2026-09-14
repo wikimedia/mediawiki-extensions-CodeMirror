@@ -244,6 +244,7 @@
 				"codemirror-prefs-linenumbering",
 				"codemirror-prefs-linewrapping",
 				"codemirror-prefs-lint",
+				"codemirror-prefs-openlinks",
 				"codemirror-prefs-reset",
 				"codemirror-prefs-section-appearance",
 				"codemirror-prefs-section-characters",
@@ -335,6 +336,7 @@
 				"modes/mediawiki/codemirror.mediawiki.lint.js",
 				"modes/mediawiki/codemirror.mediawiki.validator.js",
 				"modes/codemirror.mode.js",
+				"codemirror.openLinks.js",
 				"codemirror.validator.js",
 				"workers/codemirror.worker.js"
 			],
@@ -369,7 +371,6 @@
 				"codemirror-keymap-underline",
 				"codemirror-prefs-autocomplete",
 				"codemirror-prefs-bidiisolation",
-				"codemirror-prefs-openlinks",
 				"codemirror-prefs-section-references",
 				"codemirror-theme-colorblind",
 				"parentheses"
@@ -380,6 +381,7 @@
 				"modes/codemirror.mode.exporter.js",
 				"modes/codemirror.mode.js",
 				"modes/codemirror.doctag.js",
+				"modes/codemirror.openLinks.decoration.js",
 				"modes/codemirror.javascript.js",
 				"modes/codemirror.json.js",
 				"modes/codemirror.jsonc.js",
@@ -387,11 +389,13 @@
 				"modes/codemirror.lua.js",
 				"modes/codemirror.vue.js",
 				"modes/codemirror.html.js",
+				"codemirror.openLinks.js",
 				"codemirror.validator.js",
 				"workers/codemirror.worker.js",
 				"lib/codemirror.bundle.modes.js"
 			],
 			"dependencies": [
+				"mediawiki.Title",
 				"ext.CodeMirror.lib"
 			]
 		},

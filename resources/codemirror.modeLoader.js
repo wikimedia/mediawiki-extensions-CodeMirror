@@ -3,6 +3,7 @@
  *
  * Exported by {@link module:ext.CodeMirror ext.CodeMirror} as
  * `CodeMirror.loadLanguageSupport()` and `CodeMirror.modeModules`.
+ *
  * @private
  */
 const extendedModes = [

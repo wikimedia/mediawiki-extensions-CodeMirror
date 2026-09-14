@@ -6,6 +6,7 @@ const {
 	syntaxTree,
 	tags,
 	Decoration,
+	EditorState,
 	HighlightStyle,
 	StreamLanguage
 } = require( 'ext.CodeMirror.lib' );
@@ -14,6 +15,8 @@ const CodeMirrorMode = require( './codemirror.mode.js' );
 const { markDocTagType, getViewPlugin } = require( './codemirror.doctag.js' );
 const CodeMirrorWorker = require( '../workers/codemirror.worker.js' );
 const CodeMirrorValidator = require( '../codemirror.validator.js' );
+const { getOpenLinksExtension } = require( '../codemirror.openLinks.js' );
+const getOpenLinksDecoration = require( './codemirror.openLinks.decoration.js' );
 
 const map = {
 		1: 'constant',
@@ -387,6 +390,50 @@ const markDocTag = ( tree, visibleRanges, state ) => {
 class CodeMirrorLua extends CodeMirrorMode {
 
 	/**
+	 * Resolves the internal link at a given position in the document.
+	 *
+	 * @param {EditorState} state
+	 * @param {number} position
+	 * @return {Object|null}
+	 * @internal
+	 * @ignore
+	 */
+	static resolveLinkAt( state, position ) {
+		const node = syntaxTree( state ).resolveInner( position, 1 );
+		if ( !node || node.name !== 'string' ) {
+			return null;
+		}
+		const { prevSibling } = node;
+		if (
+			!prevSibling ||
+			/[^\s(]/.test( state.sliceDoc( prevSibling.to, node.from ) ) ||
+			prevSibling.name !== 'variableName' && prevSibling.name !== 'variableName.standard'
+		) {
+			return null;
+		}
+		const func = state.sliceDoc( prevSibling.from, prevSibling.to ),
+			isLua = func === 'require' || func === 'mw.loadData',
+			isCSS = func === 'mw.ext.TemplateStyles.link';
+		if ( isLua || isCSS || func === 'mw.loadJsonData' ) {
+			const str = state.sliceDoc( node.from, node.to );
+			const mt = /^(['"]).+\1$|^\[(=*)\[.+\]\2\]$/.exec( str );
+			if ( !mt ) {
+				return null;
+			}
+			const from = mt[ 1 ] ? 1 : mt[ 2 ].length + 2;
+			const to = mt[ 1 ] ? -1 : -mt[ 2 ].length - 2;
+			const page = str.slice( from, to );
+			const ns = isCSS ? mw.config.get( 'extCodeMirrorConfig' ).templateStylesDefaultNamespace : 0;
+			const title = mw.Title.newFromText( page, ns );
+			const nsid = title && title.getNamespaceId();
+			if ( title && ( !isLua || nsid === 828 || func === 'require' && nsid === 850 ) ) {
+				return { url: title.getUrl(), from: node.from + from, to: node.to + to };
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * @param {string} name
 	 * @internal
 	 * @hideconstructor
@@ -568,6 +615,14 @@ class CodeMirrorLua extends CodeMirrorMode {
 				};
 			} );
 		};
+	}
+
+	/** @inheritdoc */
+	get openLinksExtension() {
+		return [
+			getOpenLinksExtension( CodeMirrorLua.resolveLinkAt ),
+			getOpenLinksDecoration( CodeMirrorLua.resolveLinkAt )
+		];
 	}
 
 	/** @inheritDoc */

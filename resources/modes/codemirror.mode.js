@@ -88,6 +88,15 @@ class CodeMirrorMode {
 	}
 
 	/**
+	 * The extension for opening links with CTRL+click or CMD+click.
+	 *
+	 * @type {Extension|undefined}
+	 */
+	get openLinksExtension() {
+		return undefined;
+	}
+
+	/**
 	 * Whether the mode should load a web worker.
 	 *
 	 * @return {boolean}

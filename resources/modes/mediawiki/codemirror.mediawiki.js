@@ -228,6 +228,11 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 		];
 	}
 
+	/** @inheritdoc */
+	get openLinksExtension() {
+		return this._openLinksExtension; // eslint-disable-line no-underscore-dangle
+	}
+
 	/**
 	 * Register the ground tokens. These aren't referenced directly in the StreamParser, nor do
 	 * they have a parent Tag, so we don't need them as constants like we do for other tokens.
@@ -1787,9 +1792,6 @@ const mediawiki = ( config = { bidiIsolation: false } ) => {
 		if ( config.autocomplete !== false ) {
 			cm.preferences.registerExtension( 'autocomplete', autocompleteExtension, cm.view );
 		}
-		if ( config.openLinks !== false ) {
-			cm.preferences.registerExtension( 'openLinks', openLinksExtension, cm.view );
-		}
 		if ( config.closeTags !== false ) {
 			cm.preferences.registerExtension( 'closeTags', closeTagsExtension, cm.view );
 		}
@@ -1801,6 +1803,10 @@ const mediawiki = ( config = { bidiIsolation: false } ) => {
 
 	const langSupport = new CodeMirrorMediaWiki( mwConfig );
 	langSupport.lint = config.lint !== false;
+	if ( config.openLinks !== false ) {
+		// eslint-disable-next-line no-underscore-dangle
+		langSupport._openLinksExtension = openLinksExtension;
+	}
 	return langSupport;
 };
 
