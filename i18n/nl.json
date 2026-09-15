@@ -26,6 +26,7 @@
 	"codemirror-prefs-section-references": "Referenties",
 	"codemirror-prefs-section-other": "Overige",
 	"codemirror-prefs-codefolding": "Code opvouwen inschakelen",
+	"codemirror-prefs-compactpanels": "Compacte zoekpanelen gebruiken",
 	"codemirror-prefs-autocomplete": "Automatisch aanvullen inschakelen",
 	"codemirror-prefs-openlinks": "Koppelingen openen met hulptoets + klikken",
 	"codemirror-prefs-closetags": "Automatisch sluiten van HTML-tags inschakelen",

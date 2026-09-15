@@ -22,6 +22,7 @@
 	"codemirror-prefs-section-references": "Rujukan",
 	"codemirror-prefs-section-other": "Lain-lain",
 	"codemirror-prefs-codefolding": "Dayakan pelipatan kod",
+	"codemirror-prefs-compactpanels": "Gunakan panel carian padat",
 	"codemirror-prefs-autocomplete": "Dayakan autolengkap",
 	"codemirror-prefs-openlinks": "Buka pautan dengan kunci pengubah suai + klik",
 	"codemirror-prefs-closetags": "Dayakan tag HTML tutup automatik",

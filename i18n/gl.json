@@ -23,6 +23,7 @@
 	"codemirror-prefs-section-references": "Referencias",
 	"codemirror-prefs-section-other": "Outras",
 	"codemirror-prefs-codefolding": "Activar o pregamento de código",
+	"codemirror-prefs-compactpanels": "Usar os paneis de procura compactos",
 	"codemirror-prefs-autocomplete": "Activar o autocompletado",
 	"codemirror-prefs-openlinks": "Abrir as ligazóns coa tecla modificadora + clic",
 	"codemirror-prefs-closetags": "Activar as etiquetas HTML automáticas de peche",
