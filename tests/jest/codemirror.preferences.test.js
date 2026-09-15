@@ -21,11 +21,13 @@ describe( 'CodeMirrorPreferences', () => {
 				fooExtension: EditorView.theme(),
 				barExtension: EditorView.theme()
 			},
-			mode = 'mediawiki'
+			mode = 'mediawiki',
+			persistPreferences = true
 		) => new CodeMirrorPreferences(
 			new CodeMirrorExtensionRegistry( extConfig ),
 			mode,
-			new CodeMirrorKeymap()
+			new CodeMirrorKeymap(),
+			persistPreferences
 		);
 
 		mw.user.isNamed = jest.fn().mockReturnValue( true );
@@ -539,5 +541,39 @@ describe( 'CodeMirrorPreferences', () => {
 		expect( preferences.getPreference( 'theme' ) ).toBe( 'colorblind' );
 		expect( mw.user.options.set )
 			.toHaveBeenCalledWith( 'usecodemirror-colorblind', null );
+	} );
+
+	describe( 'persistPreferences', () => {
+		it( 'should save preferences to the user options by default', () => {
+			mockDefaultPreferences();
+			mockUserPreferences();
+			const preferences = getCodeMirrorPreferences();
+			preferences.api.saveOption = jest.fn();
+			preferences.setPreference( 'fooExtension', true );
+			expect( preferences.api.saveOption ).toHaveBeenCalled();
+			expect( preferences.getPreference( 'fooExtension' ) ).toEqual( true );
+		} );
+
+		it( 'should not save preferences when persistPreferences is false', () => {
+			mockDefaultPreferences();
+			mockUserPreferences();
+			const preferences = getCodeMirrorPreferences( undefined, 'mediawiki', false );
+			preferences.api.saveOption = jest.fn();
+			preferences.setPreference( 'fooExtension', true );
+			expect( preferences.api.saveOption ).not.toHaveBeenCalled();
+			expect( mw.user.options.set ).not.toHaveBeenCalled();
+			// The preference still applies for the life of the editor.
+			expect( preferences.getPreference( 'fooExtension' ) ).toEqual( true );
+		} );
+
+		it( 'should not save the usecodemirror option when persistPreferences is false', () => {
+			mockDefaultPreferences();
+			mockUserPreferences();
+			const preferences = getCodeMirrorPreferences( undefined, 'mediawiki', false );
+			preferences.api.saveOption = jest.fn();
+			preferences.saveUserOptionInternal( 'usecodemirror', 1 );
+			expect( preferences.api.saveOption ).not.toHaveBeenCalled();
+			expect( mw.user.options.set ).not.toHaveBeenCalled();
+		} );
 	} );
 } );

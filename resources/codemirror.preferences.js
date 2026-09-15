@@ -24,9 +24,11 @@ class CodeMirrorPreferences extends CodeMirrorCodex {
 	 * @param {CodeMirrorExtensionRegistry} extensionRegistry
 	 * @param {string} mode The CodeMirror mode being used, e.g. 'mediawiki', 'javascript', etc.
 	 * @param {CodeMirrorKeymap} cmKeymap Reference to the keymap instance.
+	 * @param {boolean} [persistPreferences=true] Save changes to the user's options.
+	 *   Pass `false` to keep them for the life of the editor only.
 	 * @fires CodeMirror~'ext.CodeMirror.preferences.ready'
 	 */
-	constructor( extensionRegistry, mode, cmKeymap ) {
+	constructor( extensionRegistry, mode, cmKeymap, persistPreferences = true ) {
 		super();
 
 		/** @type {CodeMirrorExtensionRegistry} */
@@ -40,6 +42,9 @@ class CodeMirrorPreferences extends CodeMirrorCodex {
 
 		/** @type {mw.Api} */
 		this.api = new mw.Api();
+
+		/** @type {boolean} */
+		this.persistPreferences = persistPreferences;
 
 		/** @type {EditorView} */
 		this.view = undefined;
@@ -328,6 +333,9 @@ class CodeMirrorPreferences extends CodeMirrorCodex {
 	 * @private
 	 */
 	setPreferencesInternal( storageObj ) {
+		if ( !this.persistPreferences ) {
+			return;
+		}
 		const stringified = storageObj === null ? null : JSON.stringify( storageObj );
 		if ( mw.user.isNamed() ) {
 			this.saveUserOptionInternal( this.getOptionName(), stringified );
@@ -347,6 +355,9 @@ class CodeMirrorPreferences extends CodeMirrorCodex {
 	 * @internal
 	 */
 	saveUserOptionInternal( optionname, optionvalue ) {
+		if ( !this.persistPreferences ) {
+			return;
+		}
 		this.api.saveOption( optionname, optionvalue, { global: 'update' } );
 		mw.user.options.set( optionname, optionvalue || null );
 	}

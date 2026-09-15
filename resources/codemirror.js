@@ -237,7 +237,8 @@ class CodeMirror {
 		this.preferences = new CodeMirrorPreferences(
 			this.extensionRegistry,
 			this.mode,
-			this.keymap
+			this.keymap,
+			this.persistPreferences
 		);
 		/**
 		 * The CodeMirror search panel.
@@ -386,6 +387,23 @@ class CodeMirror {
 	 */
 	get supportedExtensions() {
 		return null;
+	}
+
+	/**
+	 * Whether to save preference changes to the user's options. Subclasses that are not the
+	 * user's main editor should override this and return `false`, so that the editor does not
+	 * change preferences the user set elsewhere. Preferences are still read, and still apply
+	 * for the life of the editor.
+	 *
+	 * Note this is distinct from {@link CodeMirrorPreferences#lockPreference locked preferences},
+	 * which _force_ a specific {@link PrefValue} for the life of the editor.
+	 *
+	 * @type {boolean}
+	 * @protected
+	 * @stable to override
+	 */
+	get persistPreferences() {
+		return true;
 	}
 
 	/**
