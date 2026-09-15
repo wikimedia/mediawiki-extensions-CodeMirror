@@ -132,6 +132,7 @@
 				"codemirror.matchbrackets.js",
 				"codemirror.indentGuides.js",
 				"codemirror.sortLines.js",
+				"codemirror.modeLoader.js",
 				"themes/codemirror.themes.js",
 				"themes/codemirror.theme.basic-light.js",
 				"themes/codemirror.theme.basic-dark.js",
@@ -418,12 +419,12 @@
 		},
 		"ext.CodeMirror.VueComponent": {
 			"dependencies": [
+				"ext.CodeMirror",
 				"vue"
 			],
 			"packageFiles": [
 				"vue/codemirror.editor.js",
-				"vue/CodeMirrorEditor.vue",
-				"vue/codemirror.modeLoader.js"
+				"vue/CodeMirrorEditor.vue"
 			]
 		},
 		"ext.CodeMirror.WikiEditor": {

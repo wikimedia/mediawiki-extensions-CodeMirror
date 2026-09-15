@@ -1,13 +1,13 @@
-const { modeModules, loadLanguageSupport } = require( '../../../resources/vue/codemirror.modeLoader.js' );
+const { modeModules, loadLanguageSupport } = require( '../../resources/codemirror.modeLoader.js' );
 
 jest.mock(
 	'ext.CodeMirror.modes',
-	() => require( '../../../resources/modes/codemirror.mode.exporter.js' ),
+	() => require( '../../resources/modes/codemirror.mode.exporter.js' ),
 	{ virtual: true }
 );
 jest.mock(
 	'ext.CodeMirror.modes.extended',
-	() => require( '../../../resources/modes/codemirror.mode.extended.exporter.js' ),
+	() => require( '../../resources/modes/codemirror.mode.extended.exporter.js' ),
 	{ virtual: true }
 );
 // The mediawiki and abusefilter modules export a bare factory rather than a map.
@@ -31,16 +31,14 @@ describe( 'codemirror.modeLoader', () => {
 		}
 	} );
 
-	it( 'loads ext.CodeMirror alongside the mode module', async () => {
+	it( 'loads the mode module', async () => {
 		await loadLanguageSupport( 'javascript' );
-		expect( mw.loader.using ).toHaveBeenCalledWith( [ 'ext.CodeMirror', 'ext.CodeMirror.modes' ] );
+		expect( mw.loader.using ).toHaveBeenCalledWith( 'ext.CodeMirror.modes' );
 	} );
 
 	it( 'routes extended modes to the extended module', async () => {
 		await loadLanguageSupport( 'python' );
-		expect( mw.loader.using ).toHaveBeenCalledWith(
-			[ 'ext.CodeMirror', 'ext.CodeMirror.modes.extended' ]
-		);
+		expect( mw.loader.using ).toHaveBeenCalledWith( 'ext.CodeMirror.modes.extended' );
 	} );
 
 	it.each( [ 'javascript', 'css', 'json', 'jsonc', 'lua', 'vue', 'html' ] )(

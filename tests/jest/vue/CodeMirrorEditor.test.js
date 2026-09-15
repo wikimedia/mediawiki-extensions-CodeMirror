@@ -178,9 +178,7 @@ describe( 'CodeMirrorEditor', () => {
 	describe( 'loading', () => {
 		it( 'loads the module for the mode and emits ready', async () => {
 			const wrapper = await mountEditor( { mode: 'python' } );
-			expect( mw.loader.using ).toHaveBeenCalledWith(
-				[ 'ext.CodeMirror', 'ext.CodeMirror.modes.extended' ]
-			);
+			expect( mw.loader.using ).toHaveBeenCalledWith( 'ext.CodeMirror.modes.extended' );
 			expect( readyInstance( wrapper ).mode ).toBe( 'python' );
 		} );
 

@@ -49,6 +49,7 @@ const CodeMirrorThemes = require( './themes/codemirror.themes.js' );
 const CodeMirrorExtensionRegistry = require( './codemirror.extensionRegistry.js' );
 const bracketMatching = require( './codemirror.matchbrackets.js' );
 const indentGuides = require( './codemirror.indentGuides.js' );
+const { loadLanguageSupport, modeModules } = require( './codemirror.modeLoader.js' );
 require( './ext.CodeMirror.data.js' );
 
 /**
@@ -1749,3 +1750,6 @@ module.exports = CodeMirror;
 module.exports.CodeMirrorPreferences = CodeMirrorPreferences;
 module.exports.CodeMirrorExtensionRegistry = CodeMirrorExtensionRegistry;
 module.exports.CodeMirrorThemes = CodeMirrorThemes;
+// Mode loading, for consumers that resolve a mode by name.
+module.exports.loadLanguageSupport = loadLanguageSupport;
+module.exports.modeModules = modeModules;

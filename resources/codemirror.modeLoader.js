@@ -1,15 +1,10 @@
 /**
- * @module ext.CodeMirror.VueComponent.modeLoader
- * @description
  * Maps each mode to the ResourceLoader module that provides it, and loads it.
  *
- * This is an implementation detail of
- * {@link module:ext.CodeMirror.VueComponent ext.CodeMirror.VueComponent}
- * and is not intended for external use.
- * @internal
- * @ignore
+ * Exported by {@link module:ext.CodeMirror ext.CodeMirror} as
+ * `CodeMirror.loadLanguageSupport()` and `CodeMirror.modeModules`.
+ * @private
  */
-
 const extendedModes = [
 	'angular',
 	'cpp',
@@ -37,9 +32,11 @@ const extendedModes = [
 ];
 
 /**
- * The ResourceLoader module that provides each mode.
+ * The ResourceLoader module that provides each mode, keyed by mode name.
  *
  * @type {Object<string,string>}
+ * @memberof CodeMirror
+ * @stable to use
  */
 const modeModules = {
 	abusefilter: 'ext.CodeMirror.abusefilter',
@@ -64,6 +61,8 @@ for ( const mode of extendedModes ) {
  * @param {Object} [config] Passed to the mode. Only the `mediawiki` mode uses this.
  * @return {Promise<LanguageSupport>}
  * @throws {Error} If the mode is unknown, or its module doesn't provide it.
+ * @memberof CodeMirror
+ * @stable to use
  */
 async function loadLanguageSupport( mode, config = {} ) {
 	const moduleName = modeModules[ mode ];
@@ -71,7 +70,7 @@ async function loadLanguageSupport( mode, config = {} ) {
 		throw new Error( `[CodeMirror] Unknown mode "${ mode }"` );
 	}
 
-	await mw.loader.using( [ 'ext.CodeMirror', moduleName ] );
+	await mw.loader.using( moduleName );
 
 	// eslint-disable-next-line security/detect-non-literal-require
 	const modeModule = require( moduleName );

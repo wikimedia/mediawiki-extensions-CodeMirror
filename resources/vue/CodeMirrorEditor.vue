@@ -26,7 +26,7 @@
 
 <script>
 const { computed, defineComponent, onBeforeUnmount, onMounted, ref, watch } = require( 'vue' );
-const { loadLanguageSupport } = require( './codemirror.modeLoader.js' );
+const { loadLanguageSupport } = require( 'ext.CodeMirror' );
 
 module.exports = exports = defineComponent( {
 	name: 'CodeMirrorEditor',
