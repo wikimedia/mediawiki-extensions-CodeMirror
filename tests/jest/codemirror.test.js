@@ -899,4 +899,49 @@ describe( 'dispatch', () => {
 		expect( cm.extensionRegistry.isEnabled( 'fooExtension', cm ) ).toBe( true );
 		expect( cm.state.tabSize ).toBe( 3 );
 	} );
+
+	describe( 'getLineNumberingExtension', () => {
+		/**
+		 * Read the text of the line number gutter.
+		 *
+		 * @return {string[]}
+		 */
+		const gutterNumbers = () => Array.from(
+			cm.view.dom.querySelectorAll( '.cm-lineNumbers .cm-gutterElement' )
+		// The first element is the spacer CodeMirror uses to size the gutter.
+		).slice( 1 ).map( ( el ) => el.textContent );
+
+		it( 'should start at 1 by default', () => {
+			cm.initialize( [ cm.lineNumberingExtension ] );
+			cm.view.dispatch( {
+				changes: { from: 0, to: cm.view.state.doc.length, insert: 'a\nb\nc' }
+			} );
+			expect( gutterNumbers() ).toEqual( [ '1', '2', '3' ] );
+		} );
+
+		it( 'should start at the given line number', () => {
+			cm.initialize( [ cm.getLineNumberingExtension( 10 ) ] );
+			cm.view.dispatch( {
+				changes: { from: 0, to: cm.view.state.doc.length, insert: 'a\nb\nc' }
+			} );
+			expect( gutterNumbers() ).toEqual( [ '10', '11', '12' ] );
+		} );
+
+		it( 'should transform the digits of an offset number', () => {
+			const origTable = mw.language.getDigitTransformTable,
+				origGet = mw.config.get;
+			mw.language.getDigitTransformTable = jest.fn().mockReturnValue( { 1: '١', 2: '٢' } );
+			mw.config.get = jest.fn().mockImplementation( ( key ) => key === 'wgTranslateNumerals' );
+			try {
+				cm.initialize( [ cm.getLineNumberingExtension( 12 ) ] );
+				cm.view.dispatch( {
+					changes: { from: 0, to: cm.view.state.doc.length, insert: 'a' }
+				} );
+				expect( gutterNumbers() ).toEqual( [ '١٢' ] );
+			} finally {
+				mw.language.getDigitTransformTable = origTable;
+				mw.config.get = origGet;
+			}
+		} );
+	} );
 } );

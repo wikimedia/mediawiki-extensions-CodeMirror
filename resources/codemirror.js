@@ -583,10 +583,25 @@ class CodeMirror {
 	 * @type {Extension}
 	 */
 	get lineNumberingExtension() {
+		return this.getLineNumberingExtension();
+	}
+
+	/**
+	 * Line numbering, starting at the given number.
+	 *
+	 * Use this instead of {@link CodeMirror#lineNumberingExtension} when the code in the editor
+	 * is part of a larger file, and the first line is not line 1.
+	 *
+	 * @param {number} [firstLineNumber=1] Number to show for the first line.
+	 * @return {Extension}
+	 * @stable to call
+	 */
+	getLineNumberingExtension( firstLineNumber = 1 ) {
+		const offset = firstLineNumber - 1;
 		return [
 			lineNumbers( {
 				formatNumber: ( num ) => {
-					const numberString = String( num );
+					const numberString = String( num + offset );
 					const transformTable = mw.language.getDigitTransformTable();
 					if ( mw.config.get( 'wgTranslateNumerals' ) && transformTable ) {
 						let convertedNumber = '';
