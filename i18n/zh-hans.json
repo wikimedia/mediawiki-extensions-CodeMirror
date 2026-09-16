@@ -32,6 +32,7 @@
 	"codemirror-prefs-section-references": "参考资料",
 	"codemirror-prefs-section-other": "其他",
 	"codemirror-prefs-codefolding": "启用代码折叠",
+	"codemirror-prefs-compactpanels": "使用紧凑型搜索面板",
 	"codemirror-prefs-autocomplete": "启用自动填充",
 	"codemirror-prefs-openlinks": "使用修饰键 + 单击打开链接",
 	"codemirror-prefs-closetags": "启用自动闭合HTML标签",
