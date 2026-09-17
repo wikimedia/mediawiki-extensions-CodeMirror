@@ -64,7 +64,7 @@ const pygmentsLightTheme = EditorView.theme( {
 	},
 	// Line highlighting
 	'.cm-activeLine': {
-		backgroundColor: '#eeecc4'
+		backgroundColor: '#eeecc440'
 	},
 	// Matching brackets
 	'.cm-matchingBracket, &.cm-focused .cm-matchingBracket': {
