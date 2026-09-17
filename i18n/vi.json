@@ -24,6 +24,7 @@
 	"codemirror-prefs-section-references": "Chú thích",
 	"codemirror-prefs-section-other": "Khác",
 	"codemirror-prefs-codefolding": "Bật thu gọn mã",
+	"codemirror-prefs-compactpanels": "Sử dụng bảng tìm kiếm nhỏ gọn",
 	"codemirror-prefs-autocomplete": "Bật tự động hoàn thành",
 	"codemirror-prefs-openlinks": "Mở liên kết bằng phím sửa đổi + nhấp chuột",
 	"codemirror-prefs-closetags": "Bật tính năng tự động đóng thẻ HTML",
