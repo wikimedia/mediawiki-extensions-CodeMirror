@@ -28,6 +28,7 @@
 	"codemirror-prefs-section-references": "각주",
 	"codemirror-prefs-section-other": "기타",
 	"codemirror-prefs-codefolding": "코드 폴딩 활성화",
+	"codemirror-prefs-compactpanels": "간결한 검색 패널을 사용",
 	"codemirror-prefs-autocomplete": "자동 완성 활성화",
 	"codemirror-prefs-openlinks": "수식 키 + 클릭으로 링크 열기",
 	"codemirror-prefs-closetags": "HTML 태그 자동 닫기 기능 활성화",
