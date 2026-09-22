@@ -21,7 +21,19 @@ const CodeMirrorVisualEditorHighlightLineNumbering = require( './codemirror.visu
 const PARSE_BUDGET = 50;
 
 /**
- * Extra vertical padding (in DM offsets) added above and below the viewport so that
+ * The maximum number of sequential passes that can end with the parse short of the
+ * viewport. Each pass continues from the position where the last pass stopped, thus the
+ * parse always moves forward. The limit applies only if the parse cannot get to the
+ * viewport. The highlighter then leaves the viewport unpainted and does not request
+ * more frames.
+ *
+ * @type {number}
+ * @private
+ */
+const MAX_PARSE_PASSES = 100;
+
+/**
+ * Extra vertical padding (in pixels) added above and below the viewport so that
  * highlighting is ready slightly before content scrolls into view.
  *
  * @type {number}
@@ -304,6 +316,21 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 		 */
 		this.suspendEnabled =
 			new URL( location.href ).searchParams.get( SUSPEND_PARAM ) !== '0';
+
+		/**
+		 * The number of sequential passes that ended with the parse short of the viewport.
+		 * See {@link MAX_PARSE_PASSES}.
+		 *
+		 * @type {number}
+		 */
+		this.parsePasses = 0;
+		/**
+		 * The source offset that the pass count applies to. If the viewport moves to a
+		 * different offset, the count starts again.
+		 *
+		 * @type {number|null}
+		 */
+		this.parsePassTarget = null;
 
 		this.onDocumentPrecommitBound = this.onDocumentPrecommit.bind( this );
 		this.scheduleRefreshBound = this.scheduleRefresh.bind( this );
@@ -891,7 +918,9 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 		// Heading sizes change line heights, which the gutter measures, but a class change emits
 		// no 'position' event to prompt it. Anything left in `previous` stopped being a heading.
 		if ( changed || previous.size ) {
-			this.lineNumberGutter.update();
+			// Use repaint(), not update(). The lines move here, but the band monitors only
+			// the viewport.
+			this.lineNumberGutter.repaint();
 		}
 	}
 
@@ -1335,10 +1364,27 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 		}
 
 		const model = this.surface.getModel();
-		const tree = ensureSyntaxTree( this.tokenizer, srcTo, PARSE_BUDGET ) ||
-			syntaxTree( this.tokenizer );
+		// ensureSyntaxTree() gives a tree only if the parse gets to srcTo before the budget
+		// ends. If it does not, the fallback tree stops before srcTo, and the remainder of
+		// the viewport has no colors. No parse worker runs, because there is no EditorView.
+		// Thus this pass must request the next one.
+		const parsed = ensureSyntaxTree( this.tokenizer, srcTo, PARSE_BUDGET );
+		const tree = parsed || syntaxTree( this.tokenizer );
 		if ( !tree ) {
 			return;
+		}
+		if ( parsed ) {
+			this.parsePasses = 0;
+			this.parsePassTarget = null;
+		} else {
+			if ( this.parsePassTarget !== srcTo ) {
+				this.parsePassTarget = srcTo;
+				this.parsePasses = 0;
+			}
+			if ( this.parsePasses < MAX_PARSE_PASSES ) {
+				this.parsePasses++;
+				this.scheduleRefresh();
+			}
 		}
 
 		const groups = new Map();

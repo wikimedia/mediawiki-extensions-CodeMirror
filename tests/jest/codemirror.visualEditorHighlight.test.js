@@ -1310,6 +1310,34 @@ describe( 'refresh', () => {
 		expect( options.customHighlightRanges.size ).toBeGreaterThan( 0 );
 	} );
 
+	it( 'should not schedule another pass once the parse reached the viewport', () => {
+		const scheduleRefresh = jest.spyOn( controller, 'scheduleRefresh' );
+		controller.refresh();
+		expect( scheduleRefresh ).not.toHaveBeenCalled();
+		scheduleRefresh.mockRestore();
+	} );
+
+	it( 'should come back for the rest when the parse runs out of budget', () => {
+		// This document is too large for the 50 ms budget. Thus ensureSyntaxTree() returns
+		// null, and refresh() uses a tree that stops before the viewport. The controller
+		// must then request the next pass.
+		// The document has few long lines, because getMockSurface makes a DOM node for
+		// each line.
+		const bigSurface = getMockSurface(
+			( '{{template|arg=[[Link]] \'\'text\'\'}} '.repeat( 20 ) + '\n' ).repeat( 2000 )
+		);
+		const bigController = new CodeMirrorVisualEditorHighlight(
+			bigSurface, mediawiki(), matchTag
+		);
+		bigController.initialize();
+		bigController.activate();
+		const scheduleRefresh = jest.spyOn( bigController, 'scheduleRefresh' );
+		bigController.refresh();
+		expect( scheduleRefresh ).toHaveBeenCalled();
+		scheduleRefresh.mockRestore();
+		bigController.destroy();
+	} );
+
 	it( 'should remove groups that are no longer present in the viewport', () => {
 		controller.refresh();
 		controller.drawnGroups.add( 'syntax-cm-mw-gone' );
