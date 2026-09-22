@@ -95,6 +95,12 @@ const getMockSurface = ( doc = '' ) => {
 		getTarget: jest.fn().mockImplementation( () => target ),
 		$scrollContainer: { on: jest.fn(), off: jest.fn() },
 		$scrollListener: { on: jest.fn(), off: jest.fn() },
+		// The bounds use surface coordinates. The line-number gutter compares them to the
+		// band that it drew last. The value does not change, thus each test starts from the
+		// same viewport.
+		getViewportDimensions: jest.fn().mockReturnValue( {
+			top: 0, bottom: 500, left: 0, right: 800, height: 500, width: 800
+		} ),
 		getDialogs: jest.fn().mockReturnValue( dialogs ),
 		// Exposed for assertions
 		dialogs: dialogs,

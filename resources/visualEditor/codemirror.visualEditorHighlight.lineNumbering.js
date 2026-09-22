@@ -1,10 +1,21 @@
 /**
- * Offsets above and below the viewport, so numbers are ready before their lines scroll in.
+ * Pixels above and below the viewport, so numbers are ready before their lines scroll in.
  *
  * @type {number}
  * @private
  */
 const VIEWPORT_PADDING = 100;
+
+/**
+ * Additional pixels above and below the viewport, as a fraction of the viewport height.
+ * A scroll inside this band does not cause a repaint. This is important because
+ * ve.ce.Surface#getViewportRange reads a client rect for each probe of its binary search.
+ * The numbers need little time to draw, thus the band can be large.
+ *
+ * @type {number}
+ * @private
+ */
+const OVERSCAN_RATIO = 1;
 
 /**
  * Line-number gutter for a VisualEditor source-mode surface, drawn beside VisualEditor's own
@@ -56,9 +67,17 @@ class CodeMirrorVisualEditorHighlightLineNumbering {
 		 * @type {number}
 		 */
 		this.digitCount = 0;
+		/**
+		 * The pixel band, in surface coordinates, of the last draw. Null if the gutter must
+		 * draw the numbers again.
+		 *
+		 * @type {Object|null}
+		 */
+		this.paintedViewport = null;
 
 		const teardownCheck = () => !!this.surfaceView && this.enabled;
 		this.updateDebounced = ve.debounceWithTest( teardownCheck, this.update.bind( this ) );
+		this.repaintDebounced = ve.debounceWithTest( teardownCheck, this.repaint.bind( this ) );
 
 		/** @type {jQuery} */
 		this.$element = $( '<div>' )
@@ -77,7 +96,7 @@ class CodeMirrorVisualEditorHighlightLineNumbering {
 			this.surfaceView.getSurface().getMode() === 'source';
 		if ( enabled === this.enabled ) {
 			if ( enabled ) {
-				this.update();
+				this.repaint();
 			}
 			return;
 		}
@@ -90,18 +109,20 @@ class CodeMirrorVisualEditorHighlightLineNumbering {
 			this.side = null;
 			this.applySide();
 			this.$element.insertBefore( this.$documentNode );
-			surfaceView.connect( this, { position: this.updateDebounced } );
+			// A scroll uses the band. All other events draw the numbers again.
+			surfaceView.connect( this, { position: this.repaintDebounced } );
 			surfaceView.getSurface().$scrollListener.on(
 				'scroll.codeMirrorVeGutter', this.updateDebounced
 			);
-			$( window ).on( 'resize.codeMirrorVeGutter', this.updateDebounced );
-			this.update();
+			$( window ).on( 'resize.codeMirrorVeGutter', this.repaintDebounced );
+			this.repaint();
 		} else {
-			surfaceView.disconnect( this, { position: this.updateDebounced } );
+			surfaceView.disconnect( this, { position: this.repaintDebounced } );
 			surfaceView.getSurface().$scrollListener.off(
 				'scroll.codeMirrorVeGutter', this.updateDebounced
 			);
-			$( window ).off( 'resize.codeMirrorVeGutter', this.updateDebounced );
+			$( window ).off( 'resize.codeMirrorVeGutter', this.repaintDebounced );
+			this.invalidate();
 			this.releasePadding();
 			this.$element.detach().empty();
 			this.$documentNode = null;
@@ -136,6 +157,8 @@ class CodeMirrorVisualEditorHighlightLineNumbering {
 			this.releasePadding();
 		}
 		this.side = side;
+		// The numbers move to the other edge, thus the gutter must draw them again.
+		this.invalidate();
 		// Sit within the document node's own padding rather than at the surface edge, so the
 		// gutter stays under the floating toolbar when scrolled instead of poking out beside it.
 		this.contentPadding = parseFloat( window.getComputedStyle(
@@ -147,6 +170,22 @@ class CodeMirrorVisualEditorHighlightLineNumbering {
 	}
 
 	/**
+	 * Make {@link update} draw the numbers again, even if the viewport did not move.
+	 * Use this when the lines move, because the band monitors only the viewport.
+	 */
+	invalidate() {
+		this.paintedViewport = null;
+	}
+
+	/**
+	 * Drop the band and draw the numbers again now.
+	 */
+	repaint() {
+		this.invalidate();
+		this.update();
+	}
+
+	/**
 	 * Repaint the numbers for the visible lines, positioning each at its line's top.
 	 */
 	update() {
@@ -155,7 +194,19 @@ class CodeMirrorVisualEditorHighlightLineNumbering {
 		}
 		this.applySide();
 		const surfaceView = this.surfaceView,
-			viewportRange = surfaceView.getViewportRange( true, VIEWPORT_PADDING );
+			dimensions = surfaceView.getSurface().getViewportDimensions();
+		if ( !dimensions ) {
+			return;
+		}
+		// The bounds use surface coordinates. Thus they move with the scroll, not the text.
+		const painted = this.paintedViewport;
+		if ( painted && painted.height === dimensions.height &&
+			dimensions.top >= painted.top && dimensions.bottom <= painted.bottom
+		) {
+			return;
+		}
+		const padding = VIEWPORT_PADDING + Math.round( dimensions.height * OVERSCAN_RATIO ),
+			viewportRange = surfaceView.getViewportRange( true, padding );
 		if ( !viewportRange ) {
 			return;
 		}
@@ -165,6 +216,12 @@ class CodeMirrorVisualEditorHighlightLineNumbering {
 			this.$element.empty();
 			return;
 		}
+		// getViewportRange applies the padding once above and twice below. Match that.
+		this.paintedViewport = {
+			top: Math.max( 0, dimensions.top - padding ),
+			bottom: dimensions.bottom + ( padding * 2 ),
+			height: dimensions.height
+		};
 
 		let first = lines.indexOf( ceDocument.getBranchNodeFromOffset( viewportRange.start ) ),
 			last = lines.indexOf( ceDocument.getBranchNodeFromOffset( viewportRange.end ) );
