@@ -39,5 +39,14 @@
 	"codemirror-prefs-whitespace": "Fremhæv mellemrum",
 	"codemirror-prefs-trailingwhitespace": "Fremhæv efterfølgende mellemrum",
 	"codemirror-prefs-autofocus": "Sæt fokus på bidragsyder i første omgang",
+	"codemirror-prefs-highlightrefs": "Fremhæv indholdet af <ref> tags",
+	"codemirror-prefs-foldallrefs": "Fold alle <ref> tags som standard",
+	"codemirror-prefs-reset": "Nulstil til standardindstillinger",
+	"codemirror-prefs-theme": "Redigerings tema",
+	"codemirror-theme-default": "Standard",
+	"codemirror-theme-no-highlight": "Ingen fremhævning",
+	"codemirror-theme-colorblind": "Farveblindevenlig",
+	"codemirror-theme-basic": "Grundlæggende",
+	"codemirror-theme-high-contrast": "Høj kontrast",
 	"prefs-syntax-highlighting": "Syntaksfremhævning"
 }
