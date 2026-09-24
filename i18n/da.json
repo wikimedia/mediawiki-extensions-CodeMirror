@@ -2,9 +2,33 @@
 	"@metadata": {
 		"authors": [
 			"Saederup92",
-			"Weblars"
+			"Weblars",
+			"Steenth"
 		]
 	},
 	"codemirror-desc": "Giver syntaksfremhævelse i wikitekst editoren",
-	"codemirror-toggle-label": "Syntaksfremhævelse"
+	"codemirror-toggle-label": "Syntaksfremhævelse",
+	"codemirror-toggle-label-short": "Syntaks",
+	"codemirror-prefs-summary": "Du kan lære mere om denne funktion ved at læse [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror hjælpesiden].",
+	"codemirror-prefs-title": "Indstillinger for syntaksfremhævelse",
+	"codemirror-prefs-section-lines": "Linjer",
+	"codemirror-prefs-section-characters": "Tegn",
+	"codemirror-prefs-section-code-assistance": "Kodehjælp",
+	"codemirror-prefs-section-other": "Andre",
+	"codemirror-prefs-codefolding": "Aktivér kodefoldning",
+	"codemirror-prefs-autocomplete": "Aktivér autofuldføring",
+	"codemirror-prefs-openlinks": "Åbn links med ændringstasten + klik",
+	"codemirror-prefs-bidiisolation": "Isoler tekst med forskellig skriveretning",
+	"codemirror-prefs-bracketmatching": "Aktivér parentesmatchning",
+	"codemirror-prefs-closebrackets": "Aktivér automatisk lukning af parenteser",
+	"codemirror-prefs-linenumbering": "Vis linjenumre",
+	"codemirror-prefs-linewrapping": "Ombryd linjer",
+	"codemirror-prefs-lint": "Lint koden",
+	"codemirror-prefs-activeline": "Fremhæv den aktive linje",
+	"codemirror-prefs-specialchars": "Vis specialtegn",
+	"codemirror-prefs-whitespace": "Fremhæv mellemrum",
+	"codemirror-prefs-autofocus": "Sæt fokus på bidragsyder i første omgang",
+	"codemirror-prefs-highlightrefs": "Fremhæv indholdet af <ref> tags",
+	"codemirror-prefs-reset": "Nulstil til standardindstillinger",
+	"prefs-syntax-highlighting": "Syntaksfremhævning"
 }
