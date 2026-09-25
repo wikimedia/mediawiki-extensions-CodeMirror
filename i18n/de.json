@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Brettchenweber",
+			"IWL04",
 			"Inkowik",
 			"Kghbln",
 			"McDutchie",
@@ -28,6 +29,7 @@
 	"codemirror-prefs-section-references": "Einzelnachweise",
 	"codemirror-prefs-section-other": "Andere",
 	"codemirror-prefs-codefolding": "Code-Faltung aktivieren",
+	"codemirror-prefs-compactpanels": "Kompakte Suchfelder verwenden",
 	"codemirror-prefs-autocomplete": "Autovervollständigung aktivieren",
 	"codemirror-prefs-openlinks": "Öffnen von Links per Hilfstaste + Klick",
 	"codemirror-prefs-closetags": "Automatisches Schließen von HTML-Tags aktivieren",
