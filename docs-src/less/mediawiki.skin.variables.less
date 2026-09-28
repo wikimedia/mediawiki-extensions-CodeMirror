@@ -1,0 +1,15 @@
+// Stands in for the file ResourceLoader supplies to the extension's Less at run time.
+// MediaWiki core resolves that import to the skin's tokens, which are Codex tokens.
+@import '@wikimedia/codex-design-tokens/theme-wikimedia-ui.less';
+
+// MediaWiki's copy also brings in the Codex icon paths and the css-icon mixin. This page shows
+// none of the editor's icons, so these only have to exist for codemirror.less to compile.
+@cdx-icon-close: '';
+@cdx-icon-next: '';
+@cdx-icon-previous: '';
+@cdx-icon-quotes: '';
+@cdx-icon-search-case-sensitive: '';
+@cdx-icon-search-regular-expression: '';
+
+.cdx-mixin-css-icon( @icon; @color: currentColor; @size: 1em; @is-button-icon: false ) {
+}

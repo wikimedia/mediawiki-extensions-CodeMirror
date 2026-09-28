@@ -1,0 +1,9 @@
+// The editor's own style sheets, which paint the DOM, and VisualEditor's, which paint
+// ::highlight() ranges, never load together on a wiki. This page loads both so the two can be
+// compared, so the DOM ones need a switch. Much of codemirror.less is not scoped by a theme
+// class - .cm-matchingBracket's outline among it - so the switch has to sit above all of them.
+body:not( .cm-doc-visualeditor ) {
+	@import '../../resources/codemirror.less';
+	@import '../../resources/modes/mediawiki/codemirror.mediawiki.less';
+	@import '../../resources/modes/mediawiki/codemirror.mediawiki.colorblind.less';
+}

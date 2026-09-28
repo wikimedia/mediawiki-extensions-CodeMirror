@@ -1,0 +1,15 @@
+// Codex supplies light values as `var( --token, fallback )`, so light mode needs no declarations.
+// Dark mode needs the custom properties themselves, under the selectors .darkmode() targets.
+@import '@wikimedia/codex-design-tokens/theme-wikimedia-ui-mixin-dark.less';
+
+@media screen {
+	html.skin-theme-clientpref-night {
+		.cdx-mode-dark();
+	}
+}
+
+@media screen and ( prefers-color-scheme: dark ) {
+	html.skin-theme-clientpref-os {
+		.cdx-mode-dark();
+	}
+}

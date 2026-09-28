@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wikitext highlighting classes – CodeMirror</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+body {
+	margin: 0 auto;
+	padding: 1em;
+	max-width: 60em;
+	font-family: sans-serif;
+	line-height: 1.6;
+	color: var( --color-base, #202122 );
+	background: var( --background-color-base, #fff );
+}
+
+/* The page's own links, not the highlighted ones inside the examples. */
+a {
+	color: var( --color-progressive, #36c );
+}
+
+a:visited {
+	color: var( --color-visited, #6a60b0 );
+}
+
+a:hover {
+	color: var( --color-progressive--hover, #3056a9 );
+}
+
+code {
+	font-family: monospace, monospace;
+	white-space: nowrap;
+}
+
+.cm-doc-toolbar {
+	position: sticky;
+	top: 0;
+	z-index: 1;
+	padding: 0.5em 0;
+	background: inherit;
+	border-bottom: 1px solid var( --border-color-subtle, #c8ccd1 );
+}
+
+.cm-doc-toolbar label {
+	margin-right: 1.5em;
+	white-space: nowrap;
+}
+
+.cm-doc-note {
+	margin: 0.25em 0 0;
+	font-size: 0.85em;
+	color: var( --color-subtle, #54595d );
+}
+
+/*
+ * The examples are static markup, so they do not get CodeMirror's base theme. These are the
+ * parts of it that affect how a token reads: resources/lib/codemirror.bundle.lib.js.
+ */
+.cm-doc-render {
+	font-family: monospace, monospace;
+	font-size: 0.9em;
+	line-height: 1.4;
+}
+
+.cm-doc-render .cm-content {
+	white-space: break-spaces;
+	overflow-wrap: anywhere;
+}
+
+.cm-doc-render .cm-line {
+	display: block;
+	padding: 0 2px 0 6px;
+}
+
+.cm-doc-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 2em;
+}
+
+.cm-doc-table th,
+.cm-doc-table td {
+	padding: 0.5em;
+	text-align: left;
+	vertical-align: top;
+	border-top: 1px solid var( --border-color-subtle, #c8ccd1 );
+}
+
+.cm-doc-classes {
+	width: 20em;
+}
+
+.cm-doc-classes code {
+	display: block;
+}
+
+.cm-doc-grounds {
+	display: grid;
+	grid-template-columns: repeat( auto-fill, minmax( 16em, 1fr ) );
+	gap: 0.5em;
+	margin-bottom: 2em;
+}
+
+.cm-doc-grounds[hidden] {
+	display: none;
+}
+
+.cm-doc-ground > div {
+	height: 1.5em;
+	border: 1px solid var( --border-color-subtle, #c8ccd1 );
+}
+
+.cm-doc-ground code {
+	font-size: 0.8em;
+}
+
+#cm-doc-playground .cm-editor {
+	border: 1px solid var( --border-color-subtle, #c8ccd1 );
+	max-height: 30em;
+}
+
+.cm-doc-footer {
+	margin-top: 2.5em;
+	padding: 1em 0 3em;
+	border-top: 1px solid var( --border-color-subtle, #c8ccd1 );
+	color: var( --color-subtle, #54595d );
+}
+</style>
+</head>
+<body>
+
+<h1>Wikitext highlighting classes</h1>
+
+<p>Every CSS class the CodeMirror wikitext mode applies, with an example of each. Override any of
+them in <a href="https://www.mediawiki.org/wiki/Special:MyPage/common.css">your personal CSS</a>
+to change how the editor looks.</p>
+
+<p>The examples are generated from the mode itself, so the classes are always the ones you will
+see while editing. Some things, such as line height and font size, have no effect in the
+<a href="https://www.mediawiki.org/wiki/2017_wikitext_editor">2017 wikitext editor</a>.</p>
+
+<div class="cm-doc-toolbar">
+	<label><input type="checkbox" id="cm-doc-dark"> Dark mode</label>
+	<label>Theme <select id="cm-doc-theme"><!--THEMES--></select></label>
+	<label><input type="checkbox" id="cm-doc-visualeditor"> VisualEditor source mode</label>
+	<p class="cm-doc-note" id="cm-doc-visualeditor-note" hidden>
+		This browser does not support the CSS Custom Highlight API, which the VisualEditor
+		source mode needs.
+	</p>
+</div>
+
+<h2>Contents</h2>
+<ul id="cm-doc-toc"><!--TOC--></ul>
+
+<!--SECTIONS-->
+
+<h2 id="playground">Playground</h2>
+<p>A real editor, with the same bracket and tag matching as a wiki, so you can type your own
+wikitext and put the caret on a bracket to see it match.</p>
+
+<p class="cm-doc-note">This is the highlighting on its own. The editor on a wiki does more:
+line numbers, the active line, autocomplete, code folding, closing brackets and tags, linting,
+search and replace, and marks for special characters and whitespace. You turn those on and off
+in the editor's own settings, and none of them are here.</p>
+<div id="cm-doc-playground" data-doc="<!--PLAYGROUND-->"></div>
+
+<footer class="cm-doc-footer">
+	<a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror">User documentation</a> &bull;
+	<a href="../js/">JS documentation</a>
+</footer>
+
+<script src="demo.js"></script>
+</body>
+</html>

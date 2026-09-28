@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CodeMirror documentation</title>
+<style>
+:root {
+	color-scheme: light dark;
+	--cm-color-base: #202122;
+	--cm-color-subtle: #54595d;
+	--cm-color-progressive: #36c;
+	--cm-background: #fff;
+	--cm-background-interactive: #f8f9fa;
+	--cm-border: #c8ccd1;
+}
+
+@media screen and ( prefers-color-scheme: dark ) {
+	:root {
+		--cm-color-base: #eaecf0;
+		--cm-color-subtle: #a2a9b1;
+		--cm-color-progressive: #88a3e8;
+		--cm-background: #101418;
+		--cm-background-interactive: #27292d;
+		--cm-border: #54595d;
+	}
+}
+
+body {
+	margin: 0 auto;
+	padding: 1em;
+	max-width: 48em;
+	font-family: sans-serif;
+	line-height: 1.6;
+	color: var( --cm-color-base );
+	background: var( --cm-background );
+}
+
+a {
+	color: var( --cm-color-progressive );
+}
+
+header {
+	margin: 2em 0 2.5em;
+	text-align: center;
+}
+
+header img {
+	width: 160px;
+	height: 160px;
+}
+
+h1 {
+	margin: 0.3em 0 0;
+}
+
+.cm-home-lead {
+	font-size: 1.1em;
+	color: var( --cm-color-subtle );
+}
+
+.cm-home-links {
+	list-style: none;
+	margin: 2.5em 0 0;
+	padding: 0;
+}
+
+.cm-home-links li {
+	margin-bottom: 1em;
+	border: 1px solid var( --cm-border );
+	border-radius: 2px;
+	background: var( --cm-background-interactive );
+}
+
+.cm-home-links a {
+	display: block;
+	padding: 1em;
+	font-size: 1.1em;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.cm-home-links a:hover {
+	text-decoration: underline;
+}
+
+.cm-home-links p {
+	margin: 0.2em 0 0;
+	font-size: 0.9em;
+	font-weight: normal;
+	color: var( --cm-color-subtle );
+}
+
+footer {
+	margin-top: 3em;
+	padding: 1em 0 3em;
+	border-top: 1px solid var( --cm-border );
+	font-size: 0.9em;
+	color: var( --cm-color-subtle );
+}
+</style>
+</head>
+<body>
+
+<header>
+	<img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Baboon.svg" alt="" width="160" height="160">
+	<h1>CodeMirror</h1>
+</header>
+
+<p class="cm-home-lead"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Extension:CodeMirror">Extension:CodeMirror</a>
+provides a standalone editor in MediaWiki with syntax highlighting and other advanced syntactical
+editing features using the <a href="https://codemirror.net/">CodeMirror library</a>. It supports
+a variety of languages, notably MediaWiki wikitext, JavaScript, CSS, JSON, Lua and Vue.</p>
+
+<ul class="cm-home-links">
+	<li><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror">User documentation
+		<p>How to use the editor on a wiki: the settings, the keyboard shortcuts and what each
+		feature does.</p>
+	</a></li>
+	<li><a href="js/">JavaScript documentation
+		<p>The generated reference for the extension's own classes and the hooks an
+		extension or a gadget can use.</p>
+	</a></li>
+	<li><a href="wikitext-styles/">Wikitext highlighting classes
+		<p>Every CSS class the wikitext mode applies, with a live example of each, so you can
+		override them in your personal CSS.</p>
+	</a></li>
+</ul>
+
+<footer>
+	<a href="https://gerrit.wikimedia.org/g/mediawiki/extensions/CodeMirror">Source</a> &bull;
+	<a href="https://commons.wikimedia.org/wiki/File:Baboon.svg">Image attribution</a>
+</footer>
+
+</body>
+</html>

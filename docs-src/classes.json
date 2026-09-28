@@ -1,0 +1,643 @@
+{
+	"themes": [
+		"default",
+		"colorblind",
+		"no-highlight"
+	],
+	"playground": "== Try it ==\nType wikitext here to see how it is highlighted.\n\n'''Bold''' and ''italic'', a [[Help:Link|link]], an https://example.org free link,\na {{template|parameter=value}}, a {{#if:x|yes|no}} parser function and a <ref name=\"source\">{{cite web|url=https://example.org}}</ref>.\n\n{| class=\"wikitable\"\n|+ Caption\n! Header !! Header\n|-\n| Cell || Cell\n|}\n",
+	"sections": [
+		{
+			"title": "Text and formatting",
+			"rows": [
+				{
+					"classes": [
+						"cm-mw-apostrophes"
+					],
+					"description": "The apostrophes that mark bold and italic text.",
+					"wikitext": "'''bold''' and ''italic''"
+				},
+				{
+					"classes": [
+						"cm-mw-strong"
+					],
+					"description": "Text between bold apostrophes.",
+					"wikitext": "'''bold text'''"
+				},
+				{
+					"classes": [
+						"cm-mw-em"
+					],
+					"description": "Text between italic apostrophes.",
+					"wikitext": "''italic text''"
+				},
+				{
+					"classes": [
+						"cm-mw-strikethrough"
+					],
+					"description": "Text inside <s> or <strike>.",
+					"wikitext": "<s>struck text</s>"
+				},
+				{
+					"classes": [
+						"cm-mw-list"
+					],
+					"description": "The asterisk, number sign or semicolon that starts a list item.",
+					"wikitext": "* bullet\n# numbered\n; term : definition"
+				},
+				{
+					"classes": [
+						"cm-mw-indenting"
+					],
+					"description": "The colon after a definition term, and the colons that indent a table.",
+					"wikitext": "; term : definition\n:{| class=\"wikitable\"\n|}"
+				},
+				{
+					"classes": [
+						"cm-mw-skipformatting"
+					],
+					"description": "A leading space, which makes the line pre-formatted.",
+					"wikitext": " leading space"
+				},
+				{
+					"classes": [
+						"cm-mw-hr"
+					],
+					"description": "A horizontal rule.",
+					"wikitext": "----"
+				},
+				{
+					"classes": [
+						"cm-mw-signature"
+					],
+					"description": "A signature.",
+					"wikitext": "~~~~"
+				},
+				{
+					"classes": [
+						"cm-mw-comment"
+					],
+					"description": "An HTML comment.",
+					"wikitext": "<!-- a comment -->"
+				},
+				{
+					"classes": [
+						"cm-mw-html-entity"
+					],
+					"description": "An HTML entity.",
+					"wikitext": "&amp; &nbsp; &#x2014;"
+				},
+				{
+					"classes": [
+						"cm-mw-double-underscore"
+					],
+					"description": "A behaviour switch.",
+					"wikitext": "__TOC__ __NOINDEX__"
+				},
+				{
+					"classes": [
+						"cm-mw-redirect"
+					],
+					"description": "The redirect keyword at the top of a page.",
+					"wikitext": "#REDIRECT [[Target page]]"
+				},
+				{
+					"classes": [
+						"cm-mw-error"
+					],
+					"description": "Markup the parser could not make sense of.",
+					"wikitext": "</div>"
+				}
+			]
+		},
+		{
+			"title": "Headings",
+			"intro": "Levels 1 and 2 are also enlarged. The size is not changed in the 2017 wikitext editor.",
+			"rows": [
+				{
+					"classes": [
+						"cm-mw-section-header"
+					],
+					"description": "The equals signs on either side of a heading.",
+					"wikitext": "== Heading =="
+				},
+				{
+					"classes": [
+						"cm-mw-section"
+					],
+					"description": "The heading text itself.",
+					"defaultStyle": "none",
+					"wikitext": "== Heading =="
+				},
+				{
+					"classes": [
+						"cm-mw-section-1"
+					],
+					"description": "A level 1 heading.",
+					"wikitext": "= Heading ="
+				},
+				{
+					"classes": [
+						"cm-mw-section-2"
+					],
+					"description": "A level 2 heading.",
+					"wikitext": "== Heading =="
+				},
+				{
+					"classes": [
+						"cm-mw-section-3"
+					],
+					"description": "A level 3 heading.",
+					"wikitext": "=== Heading ==="
+				},
+				{
+					"classes": [
+						"cm-mw-section-4"
+					],
+					"description": "A level 4 heading.",
+					"wikitext": "==== Heading ===="
+				},
+				{
+					"classes": [
+						"cm-mw-section-5"
+					],
+					"description": "A level 5 heading.",
+					"wikitext": "===== Heading ====="
+				},
+				{
+					"classes": [
+						"cm-mw-section-6"
+					],
+					"description": "A level 6 heading.",
+					"wikitext": "====== Heading ======"
+				}
+			]
+		},
+		{
+			"title": "Templates",
+			"rows": [
+				{
+					"classes": [
+						"cm-mw-template-bracket"
+					],
+					"description": "The braces around a template call.",
+					"wikitext": "{{cite book|title=A book}}"
+				},
+				{
+					"classes": [
+						"cm-mw-template-name"
+					],
+					"description": "The template name. Also carries cm-mw-pagename.",
+					"wikitext": "{{cite book}}"
+				},
+				{
+					"classes": [
+						"cm-mw-template-argument-name"
+					],
+					"description": "A named parameter, up to and including the equals sign.",
+					"wikitext": "{{cite book|title=A book}}"
+				},
+				{
+					"classes": [
+						"cm-mw-template-delimiter"
+					],
+					"description": "The pipe between template parameters.",
+					"wikitext": "{{cite book|title=A book|year=2026}}"
+				},
+				{
+					"classes": [
+						"cm-mw-template"
+					],
+					"description": "Everything else inside a template call.",
+					"wikitext": "{{cite book|title=A book}}"
+				}
+			]
+		},
+		{
+			"title": "Template parameters",
+			"intro": "Triple-braced parameters, used inside templates.",
+			"rows": [
+				{
+					"classes": [
+						"cm-mw-templatevariable-bracket"
+					],
+					"description": "The triple braces.",
+					"wikitext": "{{{name|default}}}"
+				},
+				{
+					"classes": [
+						"cm-mw-templatevariable-name"
+					],
+					"description": "The parameter name.",
+					"wikitext": "{{{name}}}"
+				},
+				{
+					"classes": [
+						"cm-mw-templatevariable-delimiter"
+					],
+					"description": "The pipe before the default value.",
+					"wikitext": "{{{name|default}}}"
+				},
+				{
+					"classes": [
+						"cm-mw-templatevariable"
+					],
+					"description": "The default value.",
+					"wikitext": "{{{name|default}}}"
+				}
+			]
+		},
+		{
+			"title": "Parser functions",
+			"rows": [
+				{
+					"classes": [
+						"cm-mw-parserfunction-bracket"
+					],
+					"description": "The braces around a parser function.",
+					"wikitext": "{{#if:x|yes|no}}"
+				},
+				{
+					"classes": [
+						"cm-mw-parserfunction-name"
+					],
+					"description": "The function name, including any leading number sign.",
+					"wikitext": "{{#ifeq:a|a|same|different}}\n{{PAGENAME}}"
+				},
+				{
+					"classes": [
+						"cm-mw-parserfunction-delimiter"
+					],
+					"description": "The colon after the name, and the pipes between arguments.",
+					"wikitext": "{{#switch:x|a=1|b=2}}"
+				},
+				{
+					"classes": [
+						"cm-mw-parserfunction"
+					],
+					"description": "The arguments.",
+					"wikitext": "{{#expr:2 + 2}}"
+				}
+			]
+		},
+		{
+			"title": "Extension tags",
+			"intro": "Extensions may apply their own highlighting to the text inside their tag.",
+			"rows": [
+				{
+					"classes": [
+						"cm-mw-exttag-bracket"
+					],
+					"description": "The angle brackets of an extension tag.",
+					"wikitext": "<poem>a line</poem>"
+				},
+				{
+					"classes": [
+						"cm-mw-exttag-name"
+					],
+					"description": "The tag name.",
+					"wikitext": "<poem>a line</poem>"
+				},
+				{
+					"classes": [
+						"cm-mw-exttag-attribute",
+						"cm-mw-exttag-attribute-value"
+					],
+					"description": "An attribute name and its value.",
+					"wikitext": "<poem style=\"padding: 1em;\">a line</poem>"
+				},
+				{
+					"classes": [
+						"cm-mw-exttag"
+					],
+					"description": "The text inside the tag.",
+					"wikitext": "<poem>a line\nanother line</poem>"
+				},
+				{
+					"classes": [
+						"cm-mw-tag-ref"
+					],
+					"description": "The content of a reference. Tinted through a CSS custom property, --background-color-refs, so a theme can restyle it.",
+					"wikitext": "Claim.<ref>{{cite web|url=https://example.org}}</ref>"
+				}
+			]
+		},
+		{
+			"title": "HTML tags",
+			"rows": [
+				{
+					"classes": [
+						"cm-mw-htmltag-bracket"
+					],
+					"description": "The angle brackets of an HTML tag.",
+					"wikitext": "<span>text</span>"
+				},
+				{
+					"classes": [
+						"cm-mw-htmltag-name"
+					],
+					"description": "The tag name.",
+					"wikitext": "foo<sup>bar</sup> foo<sub>bar</sub>"
+				},
+				{
+					"classes": [
+						"cm-mw-htmltag-attribute",
+						"cm-mw-htmltag-attribute-value"
+					],
+					"description": "An attribute name and its value.",
+					"wikitext": "<span style=\"color: red;\" class=\"x\">text</span>"
+				}
+			]
+		},
+		{
+			"title": "Pre-formatted text",
+			"rows": [
+				{
+					"classes": [
+						"cm-mw-tag-pre",
+						"cm-mw-ext-pre"
+					],
+					"description": "Text inside <pre>.",
+					"wikitext": "<pre>unformatted text</pre>"
+				},
+				{
+					"classes": [
+						"cm-mw-tag-nowiki",
+						"cm-mw-ext-nowiki"
+					],
+					"description": "Text inside <nowiki>.",
+					"wikitext": "<nowiki>[[not a link]]</nowiki>"
+				}
+			]
+		},
+		{
+			"title": "Internal links",
+			"rows": [
+				{
+					"classes": [
+						"cm-mw-link-bracket"
+					],
+					"description": "The square brackets around an internal link.",
+					"wikitext": "[[Help:Contents]]"
+				},
+				{
+					"classes": [
+						"cm-mw-link-pagename"
+					],
+					"description": "The link target. Also carries cm-mw-pagename.",
+					"wikitext": "[[Help:Contents]]"
+				},
+				{
+					"classes": [
+						"cm-mw-link"
+					],
+					"description": "The number sign that introduces a section anchor.",
+					"wikitext": "[[Help:Contents#Section]]"
+				},
+				{
+					"classes": [
+						"cm-mw-link-tosection"
+					],
+					"description": "The section anchor after the number sign.",
+					"wikitext": "[[Help:Contents#Section]]"
+				},
+				{
+					"classes": [
+						"cm-mw-link-delimiter"
+					],
+					"description": "The pipe before the link label.",
+					"wikitext": "[[Help:Contents|the label]]"
+				},
+				{
+					"classes": [
+						"cm-mw-link-text"
+					],
+					"description": "The link label.",
+					"defaultStyle": "none",
+					"wikitext": "[[Help:Contents|the label]]"
+				},
+				{
+					"classes": [
+						"cm-mw-pagename"
+					],
+					"description": "Any page name, whether in a link or a template call.",
+					"wikitext": "[[Help:Contents]] {{cite book}}"
+				},
+				{
+					"classes": [
+						"cm-mw-image-parameter"
+					],
+					"description": "A known image parameter in a file link.",
+					"wikitext": "[[File:Example.png|thumb|right|alt=Alt text|A caption]]"
+				},
+				{
+					"classes": [
+						"cm-mw-file-ground"
+					],
+					"description": "Every token in a file link, also links in its caption. It has no style of its own, so a theme can style file links apart from other links.",
+					"wikitext": "[[File:Example.png|thumb|A caption with a [[link]]]]"
+				}
+			]
+		},
+		{
+			"title": "External links",
+			"rows": [
+				{
+					"classes": [
+						"cm-mw-extlink-bracket"
+					],
+					"description": "The square brackets around a bracketed external link.",
+					"wikitext": "[https://example.org label]"
+				},
+				{
+					"classes": [
+						"cm-mw-extlink-protocol",
+						"cm-mw-free-extlink-protocol"
+					],
+					"description": "The protocol, in a bracketed and a bare link.",
+					"wikitext": "[https://example.org label]\nhttps://example.org"
+				},
+				{
+					"classes": [
+						"cm-mw-extlink",
+						"cm-mw-free-extlink"
+					],
+					"description": "The rest of the URL, in a bracketed and a bare link.",
+					"wikitext": "[https://example.org label]\nhttps://example.org"
+				},
+				{
+					"classes": [
+						"cm-mw-extlink-text"
+					],
+					"description": "The link label.",
+					"defaultStyle": "none",
+					"wikitext": "[https://example.org label]"
+				}
+			]
+		},
+		{
+			"title": "Tables",
+			"rows": [
+				{
+					"classes": [
+						"cm-mw-table-bracket"
+					],
+					"description": "The braces that open and close a table.",
+					"wikitext": "{|\n| cell\n|}"
+				},
+				{
+					"classes": [
+						"cm-mw-table-delimiter"
+					],
+					"description": "The row and cell separators.",
+					"wikitext": "{|\n|-\n! Header !! Header\n|-\n| Cell || Cell\n|}"
+				},
+				{
+					"classes": [
+						"cm-mw-table-definition",
+						"cm-mw-table-definition-value"
+					],
+					"description": "An attribute on the table, a row or a cell, and its value.",
+					"wikitext": "{| class=\"wikitable\" style=\"width: 100%;\"\n| cell\n|}"
+				},
+				{
+					"classes": [
+						"cm-mw-table-caption"
+					],
+					"description": "The table caption.",
+					"wikitext": "{|\n|+ The caption\n| cell\n|}"
+				}
+			]
+		},
+		{
+			"title": "Language conversion",
+			"intro": "Only on wikis that have language variants configured.",
+			"rows": [
+				{
+					"classes": [
+						"cm-mw-conversion-bracket"
+					],
+					"description": "The markers around a conversion block.",
+					"wikitext": "-{zh-hans:简体; zh-hant:繁體}-"
+				},
+				{
+					"classes": [
+						"cm-mw-conversion-lang"
+					],
+					"description": "The variant code.",
+					"wikitext": "-{zh-hans:简体; zh-hant:繁體}-"
+				},
+				{
+					"classes": [
+						"cm-mw-conversion-delimiter"
+					],
+					"description": "The colons and semicolons between variants.",
+					"wikitext": "-{zh-hans:简体; zh-hant:繁體}-"
+				},
+				{
+					"classes": [
+						"cm-mw-conversion-flag"
+					],
+					"description": "A conversion flag.",
+					"wikitext": "-{R|https://example.org}-"
+				}
+			]
+		},
+		{
+			"title": "Bracket and tag matching",
+			"intro": "When the caret is on a bracket or a tag name, the editor marks it and its partner. These classes come from the matching extensions rather than from the syntax highlighting, so they sit outside the wikitext theme and are the same in every mode. VisualEditor's source mode cannot draw them, because the Custom Highlight API has no outline. In the examples below the caret is just after the opening bracket or tag name.",
+			"fromExtensions": true,
+			"rows": [
+				{
+					"classes": [
+						"cm-matchingBracket"
+					],
+					"description": "A tag and the closing tag that matches it.",
+					"wikitext": "<ref name=\"a\">A source</ref>",
+					"cursor": "<ref"
+				},
+				{
+					"classes": [
+						"cm-nonmatchingBracket"
+					],
+					"description": "A tag with no closing tag.",
+					"wikitext": "<ref name=\"a\">A source",
+					"cursor": "<ref"
+				},
+				{
+					"classes": [
+						"cm-matchingBracket"
+					],
+					"description": "Template braces. Full-width CJK brackets match too.",
+					"wikitext": "{{cite book|title=A book}}",
+					"cursor": "{{"
+				},
+				{
+					"classes": [
+						"cm-nonmatchingBracket"
+					],
+					"description": "Template braces with nothing to close them.",
+					"wikitext": "{{cite book|title=A book",
+					"cursor": "{{"
+				},
+				{
+					"classes": [
+						"cm-matchingBracket"
+					],
+					"description": "Link brackets.",
+					"wikitext": "[[Help:Contents|the label]]",
+					"cursor": "[["
+				},
+				{
+					"classes": [
+						"cm-matchingBracket"
+					],
+					"description": "A self-closing tag, which matches on its own.",
+					"wikitext": "<templatestyles src=\"Template:X/styles.css\" />",
+					"cursor": "<templatestyles"
+				}
+			]
+		},
+		{
+			"title": "Nesting",
+			"intro": "Every token inside a template, extension tag or link also carries a \"ground\" class recording how deeply it is nested. They tint the background so nested structures stay legible, and they combine: a template inside a template inside a link is cm-mw-template2-link-ground. Nesting is counted up to three levels. cm-mw-template-ground has no tint of its own, so a single unnested template is not shaded.",
+			"grounds": true,
+			"notes": {
+				"visualEditor": "The swatches are drawn with the editor's own style sheets, which this page turns off for VisualEditor source mode. The tints themselves do apply there, on the text: you can see them in the nested examples above.",
+				"noTints": "This theme removes the nesting tints, so every swatch is blank."
+			}
+		},
+		{
+			"title": "Extension and tag names",
+			"intro": "Each parser tag the wiki has installed gets a cm-mw-ext-<name> class on the tag itself. Tags whose content the editor tokenizes, such as nowiki, pre and ref, also put cm-mw-tag-<name> on that content. Which tags exist depends on the extensions installed, so the list below is from a typical Wikimedia wiki rather than yours. Only nowiki, pre and templatestyles are styled by default; the rest are hooks for your own CSS.",
+			"patterns": [
+				"^cm-mw-(ext|tag)-"
+			],
+			"rows": [
+				{
+					"classes": [
+						"cm-mw-ext-ref",
+						"cm-mw-tag-ref"
+					],
+					"description": "The <ref> tag, and its content.",
+					"wikitext": "Claim.<ref name=\"a\">A source</ref>"
+				},
+				{
+					"classes": [
+						"cm-mw-ext-syntaxhighlight"
+					],
+					"description": "The <syntaxhighlight> tag.",
+					"defaultStyle": "none",
+					"wikitext": "<syntaxhighlight lang=\"php\">echo 1;</syntaxhighlight>"
+				},
+				{
+					"classes": [
+						"cm-mw-ext-templatestyles"
+					],
+					"description": "The <templatestyles> tag.",
+					"wikitext": "<templatestyles src=\"Template:X/styles.css\" />"
+				}
+			]
+		}
+	],
+	"undocumented": {}
+}

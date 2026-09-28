@@ -28,7 +28,8 @@ const workers = {
 const rootDirs = {
 	resources: [ 'resources/**' ],
 	workers: Object.keys( workers ).map( ( name ) => `resources/workers/${ name }/**` ),
-	selenium: [ 'tests/selenium/**' ]
+	selenium: [ 'tests/selenium/**' ],
+	docs: [ 'docs-src/**' ]
 };
 
 module.exports = defineConfig( [
@@ -170,6 +171,30 @@ module.exports = defineConfig( [
 		},
 		rules: {
 			'wdio/no-pause': 'warn'
+		}
+	},
+
+	// Build of the wikitext style reference, and the code it runs in the browser
+	{
+		files: rootDirs.docs,
+		extends: [ wikimedia( 'server' ) ],
+		rules: {
+			'n/no-missing-require': [ 'error', { allowModules: [ 'ext.CodeMirror.lib' ] } ]
+		},
+		settings: {
+			jsdoc: {
+				preferredTypes: {
+					CodeMirrorMediaWiki: 'CodeMirrorMediaWiki',
+					Highlight: 'Highlight'
+				}
+			}
+		}
+	},
+	{
+		files: [ 'docs-src/demo.js', 'docs-src/stubs.js' ],
+		extends: [ wikimedia( 'client' ) ],
+		languageOptions: {
+			sourceType: 'module'
 		}
 	}
 ] );
