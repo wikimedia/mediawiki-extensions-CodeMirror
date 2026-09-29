@@ -1523,6 +1523,7 @@ class CodeMirror {
 
 		// Backup scroll position, selections, and focus state before we hide the textarea.
 		const { selectionStart, selectionEnd, scrollTop } = this.preInitSelection || this.textarea;
+		const isInitialActivation = Boolean( this.preInitSelection );
 		// Clear the pre-init selection since it's no longer valid after the first activation.
 		this.preInitSelection = null;
 
@@ -1542,7 +1543,7 @@ class CodeMirror {
 			} );
 		}
 
-		if ( this.view ) {
+		if ( this.view && !isInitialActivation ) {
 			// We're re-enabling, so we want to sync contents from the textarea.
 			this.cmTextSelection.setContents( this.getSourceContents() );
 		}
