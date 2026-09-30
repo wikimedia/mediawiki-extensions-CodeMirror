@@ -127,9 +127,7 @@ describe( 'CodeMirror textSelection for the wikitext 2010 editor', () => {
 			// Use textSelection to scroll back to caret.
 			$cmEditor.textSelection( 'scrollToCaretPosition' );
 		} );
-		expect(
-			await browser.execute( () => $( '.cm-scroller' ).scrollTop() )
-		).toBe( 0 );
+		await expect( $( '.cm-scroller' ) ).toHaveElementProperty( 'scrollTop', 0 );
 	} );
 
 	// Content is now "foobar\n" repeated 50 times.
