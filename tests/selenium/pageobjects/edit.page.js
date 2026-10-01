@@ -40,6 +40,14 @@ class EditPage extends Page {
 		return $( '.ve-ce-attachedRootNode' );
 	}
 
+	activationComplete() {
+		return browser.executeAsync( ( done ) => {
+			mw.hook( 've.activationComplete' ).add( () => {
+				done();
+			} );
+		} );
+	}
+
 	get visualEditorPageMenu() {
 		return $( '.ve-ui-toolbar-group-pageMenu' );
 	}

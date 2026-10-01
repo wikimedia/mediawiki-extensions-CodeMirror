@@ -16,6 +16,7 @@ describe( 'CodeMirror (enabled) - VisualEditor 2017 wikitext editor', () => {
 
 	it( 'opens with the CodeMirror view displayed and focus set on the VE surface', async () => {
 		await EditPage.openForEditing( title );
+		await EditPage.activationComplete();
 		await EditPage.visualEditorContentEditable.waitForDisplayed();
 		await EditPage.codeMirrorContentEditable.waitForDisplayed();
 		await expect( EditPage.codeMirrorContentEditable ).toBeDisplayed();

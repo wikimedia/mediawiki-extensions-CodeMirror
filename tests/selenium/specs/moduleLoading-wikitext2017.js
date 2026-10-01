@@ -16,6 +16,7 @@ describe( 'CodeMirror (disabled) - VisualEditor 2017 wikitext editor', () => {
 
 	it( 'should only load necessary modules when the CodeMirror preference is unset', async () => {
 		await EditPage.openForEditing( title );
+		await EditPage.activationComplete();
 		await EditPage.visualEditorContentEditable.waitForDisplayed();
 		await expect( EditPage.codeMirrorContentEditable ).not.toBeDisplayed();
 		expect(
