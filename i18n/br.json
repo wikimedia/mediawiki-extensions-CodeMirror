@@ -2,11 +2,12 @@
 	"@metadata": {
 		"authors": [
 			"Adriendelucca",
-			"Huñvreüs"
+			"Huñvreüs",
+			"Ar choler"
 		]
 	},
 	"codemirror-desc": "Pourchas a ra livañ ereadurezh en aozer wikitestenn",
-	"codemirror-toggle-label": "Livañ ereadurezh",
+	"codemirror-toggle-label": "Ereadurezh livet",
 	"codemirror-toggle-label-short": "Ereadurezh",
 	"codemirror-prefs-enable": "Gweredekaat livañ ereadurezh",
 	"codemirror-prefs-title": "Dibaboù livañ ereadurezh",
@@ -30,7 +31,7 @@
 	"codemirror-goto-line": "Mont d'al linenn",
 	"codemirror-goto-line-go": "Mont",
 	"prefs-accessibility": "Diraezañ",
-	"prefs-syntax-highlighting": "Livañ ereadurezh",
+	"prefs-syntax-highlighting": "Ereadurezh livet",
 	"codemirror-beta-feature-title": "Livañ ereadurezh gwellaet",
 	"codemirror-beta-feature-description": "Grit abred gant arc’hweladurioù livañ ereadurezh nevez evel plegañ ar c’hod hag klokaat emgefre"
 }
