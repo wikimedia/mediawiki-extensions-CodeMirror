@@ -30,6 +30,7 @@
 	"codemirror-prefs-section-references": "Примечания",
 	"codemirror-prefs-section-other": "Другое",
 	"codemirror-prefs-codefolding": "Включить сворачивание кода",
+	"codemirror-prefs-compactpanels": "Ужать строки поиска",
 	"codemirror-prefs-autocomplete": "Включить автодополнение",
 	"codemirror-prefs-openlinks": "Открывать ссылки по клику с нажатой клавишей-модификатором (Ctrl/Cmd)",
 	"codemirror-prefs-closetags": "Включить автозакрытие тегов HTML",
