@@ -2,11 +2,18 @@
 	"@metadata": {
 		"authors": [
 			"Budhiastawa",
-			"Daud I.F. Argana"
+			"Daud I.F. Argana",
+			"Hidayatsrf"
 		]
 	},
 	"codemirror-desc": "Menyediakan penyorotan sintaksis di penyunting teks wiki",
 	"codemirror-toggle-label": "Penyorotan sintaksis",
+	"codemirror-prefs-summary": "Anda dapat mempelajari lebih lanjut tentang fitur ini dengan membaca halaman bantuan [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror].",
+	"codemirror-prefs-enable": "Aktifkan penyorotan sintaks untuk wikitext",
+	"codemirror-prefs-enable-help": "Diterapkan saat menyunting halaman konten dan templat.",
+	"codemirror-prefs-enable-code": "Aktifkan penyorotan sintaks untuk kode.",
+	"codemirror-prefs-enable-code-help": "Diterapkan saat mengedit kode seperti JavaScript, CSS, atau modul Lua.",
+	"prefs-syntax-highlighting": "Penyorotan sintaksis",
 	"codemirror-ve-limit-exceeded": "Ukuran dokumen terlalu besar untuk penyorotan sintaks dan telah dinonaktifkan.",
 	"codemirror-ve-limit-exceeded-info": "Informasi lebih lanjut"
 }
