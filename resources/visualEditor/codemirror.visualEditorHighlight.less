@@ -95,6 +95,10 @@
 	text-decoration: @text-decoration-underline;
 }
 
+::highlight( visualeditor-syntax-cm-mw-strikethrough ) {
+	text-decoration: @text-decoration-line-through;
+}
+
 /*
  * Background tints. The EditorView integration applies these via the .cm-mw-*-ground classes and
  * the highlightRefs theme, neither of which has an equivalent without a view.
