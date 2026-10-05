@@ -409,6 +409,23 @@ describe( 'destroy', () => {
 		expect( events.submit ).toBeUndefined();
 	} );
 
+	it( 'should remove the hashchange event listener', () => {
+		const events = {};
+		window.addEventListener = jest.fn( ( event, callback ) => {
+			events[ event ] = callback;
+		} );
+		window.removeEventListener = jest.fn( ( event ) => {
+			delete events[ event ];
+		} );
+
+		cm.initialize();
+		expect( typeof cm.hashChangeEventHandler ).toBe( 'function' );
+		expect( events.hashchange ).toBe( cm.hashChangeEventHandler );
+		cm.destroy();
+		expect( cm.hashChangeEventHandler ).toBeNull();
+		expect( events.hashchange ).toBeUndefined();
+	} );
+
 	it( 'should detach the keymap from mw.hook', () => {
 		// Constructed here because the shared instance predates the hook registry reset.
 		const cm2 = new CodeMirror( textarea );

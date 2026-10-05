@@ -1154,6 +1154,7 @@ class CodeMirror {
 		this.addEditRecoveryHandler();
 		this.addTextAreaJQueryHook();
 		this.addFormSubmitHandler();
+		this.addHashChangeHandler();
 
 		if ( this.mode !== 'mediawiki' ) {
 			// Register applicable extensions through CodeMirrorPreferences.
@@ -1336,6 +1337,37 @@ class CodeMirror {
 			}
 		};
 		this.textarea.form.addEventListener( 'submit', this.formSubmitEventHandler );
+	}
+
+	/**
+	 * Scroll the CodeMirror editor on hashchange.
+	 *
+	 * @protected
+	 */
+	addHashChangeHandler() {
+		/**
+		 * The `hashchange` event handler.
+		 *
+		 * @type {Function|null}
+		 * @private
+		 */
+		this.hashChangeEventHandler = () => {
+			if ( !this.isActive ) {
+				return;
+			}
+			const mt = /#mw-cm-l(\d+)/.exec( location.hash );
+			if ( mt ) {
+				const { doc } = this.state,
+					line = parseInt( mt[ 1 ], 10 );
+				if ( line > 0 && line <= doc.lines ) {
+					this.view.dispatch( {
+						effects: EditorView.scrollIntoView( doc.line( line ).from, { y: 'center' } )
+					} );
+				}
+			}
+		};
+		this.hashChangeEventHandler();
+		window.addEventListener( 'hashchange', this.hashChangeEventHandler );
 	}
 
 	/**
@@ -1704,6 +1736,10 @@ class CodeMirror {
 		if ( this.formSubmitEventHandler && this.textarea.form ) {
 			this.textarea.form.removeEventListener( 'submit', this.formSubmitEventHandler );
 			this.formSubmitEventHandler = null;
+		}
+		if ( this.hashChangeEventHandler ) {
+			window.removeEventListener( 'hashchange', this.hashChangeEventHandler );
+			this.hashChangeEventHandler = null;
 		}
 		if ( this.editRecoveryLoadEndHandler ) {
 			mw.hook( 'editRecovery.loadEnd' ).remove( this.editRecoveryLoadEndHandler );

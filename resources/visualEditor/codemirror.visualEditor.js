@@ -287,6 +287,11 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	addFormSubmitHandler() {}
 
 	/**
+	 * @inheritDoc
+	 */
+	addHashChangeHandler() {}
+
+	/**
 	 * Focus is always given to the VE surface, which relays it to CodeMirror.
 	 *
 	 * @inheritDoc
