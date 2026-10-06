@@ -26,6 +26,7 @@
 	"codemirror-prefs-section-references": "منابع",
 	"codemirror-prefs-section-other": "سایر",
 	"codemirror-prefs-codefolding": "فعال‌سازی حالت کد تاشو",
+	"codemirror-prefs-compactpanels": "استفاده از پنل‌های جستجوی فشرده",
 	"codemirror-prefs-autocomplete": "فعال‌سازی تکمیل خودکار",
 	"codemirror-prefs-openlinks": "گشودن پیوندها با فشردن کلید تغییرساز + کلیک",
 	"codemirror-prefs-closetags": "فعال‌سازی بستن خودکار برچسب‌های اچ‌تی‌ام‌ال",
