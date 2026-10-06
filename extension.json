@@ -24,9 +24,15 @@
 	"config": {
 		"CodeMirrorEnabledModes": {
 			"value": {
-				"mediawiki": true
+				"mediawiki": true,
+				"javascript": true,
+				"json": true,
+				"jsonc": true,
+				"css": true,
+				"lua": true,
+				"vue": true
 			},
-			"description": "Temporary feature flag to control the rollout of CodeMirror to new content models."
+			"description": "Temporary feature flag to control conflicts with CodeEditor."
 		},
 		"CodeMirrorVisualEditorCustomHighlight": {
 			"value": false,
