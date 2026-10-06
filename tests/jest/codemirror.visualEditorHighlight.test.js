@@ -735,23 +735,6 @@ describe( 'themes', () => {
 		expect( controller.syntaxHighlightingEnabled ).toBe( false );
 		expect( isColorblind() ).toBe( false );
 	} );
-
-	it( 'should pick up a colorblind setting from the pre-themes user option', () => {
-		// CodeMirrorPreferences migrates usecodemirror-colorblind in its constructor.
-		const origGet = mw.user.options.get;
-		mw.user.options.get = jest.fn().mockImplementation(
-			( key ) => ( key === 'usecodemirror-colorblind' ? 1 : null )
-		);
-		try {
-			const themed = new CodeMirrorVisualEditorHighlight(
-				getMockSurface( 'x' ), langSupport
-			);
-			themed.activate();
-			expect( themed.theme ).toBe( 'colorblind' );
-		} finally {
-			mw.user.options.get = origGet;
-		}
-	} );
 } );
 
 describe( 'headings', () => {

@@ -24,7 +24,6 @@ global.mockUserOptionsGet = ( options = {} ) => {
 		'codemirror-preferences-code': null,
 		usecodemirror: '1',
 		'usecodemirror-code': '1',
-		'usecodemirror-colorblind': '0',
 		editfont: 'monospace'
 	}, options );
 	mw.user.options.get = jest.fn().mockImplementation( ( key ) => mockOptions[ key ] );

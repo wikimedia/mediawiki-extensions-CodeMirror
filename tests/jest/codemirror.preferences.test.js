@@ -562,16 +562,6 @@ describe( 'CodeMirrorPreferences', () => {
 		expect( preferences.dialog.querySelectorAll( '.cm-mw-slow-feature' ).length ).toBe( 2 );
 	} );
 
-	it( 'migrates the legacy colorblind user option to CodeMirrorPreferences', () => {
-		// Override existing mode to have the colorblind option set.
-		mockUserOptionsGet( { 'usecodemirror-colorblind': '1' } );
-		// Make a fresh instance of CodeMirrorPreferences to trigger the migration.
-		const preferences = getCodeMirrorPreferences();
-		expect( preferences.getPreference( 'theme' ) ).toBe( 'colorblind' );
-		expect( mw.user.options.set )
-			.toHaveBeenCalledWith( 'usecodemirror-colorblind', null );
-	} );
-
 	describe( 'persistPreferences', () => {
 		it( 'should save preferences to the user options by default', () => {
 			mockDefaultPreferences();

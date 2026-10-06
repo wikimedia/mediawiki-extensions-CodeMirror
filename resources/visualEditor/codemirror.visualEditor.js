@@ -224,13 +224,7 @@ class CodeMirrorVisualEditor extends CodeMirror {
 	 * @inheritDoc
 	 */
 	get contentAttributesExtension() {
-		// Add colorblind mode if preference is set.
-		// This currently is only to be used for the MediaWiki markup language.
-		const useColorBlind = mw.user.options.get( 'usecodemirror-colorblind' ) &&
-			mw.config.get( 'cmMode' ) === 'mediawiki';
-
 		return EditorView.contentAttributes.of( {
-			class: useColorBlind ? 'cm-mw-colorblind-colors' : '',
 			spellcheck: 'true',
 			// Disable tabbing to content editable (T412827)
 			inert: 'true',

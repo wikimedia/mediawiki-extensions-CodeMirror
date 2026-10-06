@@ -514,9 +514,8 @@
 		"remoteExtPath": "CodeMirror/resources"
 	},
 	"DefaultUserOptions": {
-		"usecodemirror": 0,
+		"usecodemirror": 1,
 		"usecodemirror-code": 1,
-		"usecodemirror-colorblind": 0,
 		"codemirror-preferences": "",
 		"codemirror-preferences-code": ""
 	},
@@ -568,7 +567,6 @@
 			"AutoPrefs": [
 				"usecodemirror",
 				"usecodemirror-code",
-				"usecodemirror-colorblind",
 				"codemirror-preferences",
 				"codemirror-preferences-code"
 			]
