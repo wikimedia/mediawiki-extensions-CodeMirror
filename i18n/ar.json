@@ -13,8 +13,8 @@
 		]
 	},
 	"codemirror-desc": "يوفر إبراز التركيب في محرر نص الويكي",
-	"codemirror-toggle-label": "إبراز التركيب",
-	"codemirror-toggle-label-short": "تركيب",
+	"codemirror-toggle-label": "إبراز الألوان السياقية",
+	"codemirror-toggle-label-short": "تلوين سياقي",
 	"codemirror-prefs-summary": "يمكنك معرفة المزيد عن هذه الميزة عبر قراءة [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror صفحة المساعدة].",
 	"codemirror-prefs-enable": "تمكين إضفاء الضوء على النصوص النصية للويكيتكس",
 	"codemirror-v6-prefs-colorblind": "استخدم مخططًا صديقًا لعمى الألوان",
@@ -60,5 +60,5 @@
 	"codemirror-unfold": "انفتح",
 	"codemirror-folded-code": "الكود المطوي",
 	"prefs-accessibility": "إمكانية الوصول",
-	"prefs-syntax-highlighting": "إبراز التركيب"
+	"prefs-syntax-highlighting": "إبراز الألوان السياقية"
 }

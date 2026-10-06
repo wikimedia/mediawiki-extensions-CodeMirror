@@ -8,7 +8,7 @@
 	},
 	"codemirror-desc": "Menyediakan penyorotan sintaksis di penyunting teks wiki",
 	"codemirror-toggle-label": "Penyorotan sintaksis",
-	"codemirror-prefs-summary": "Anda dapat mempelajari lebih lanjut tentang fitur ini dengan membaca halaman bantuan [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror].",
+	"codemirror-prefs-summary": "Anda dapat mempelajari lebih lanjut tentang fitur ini dengan membaca [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror|halaman bantuan CodeMirror].",
 	"codemirror-prefs-enable": "Aktifkan penyorotan sintaks untuk wikitext",
 	"prefs-syntax-highlighting": "Penyorotan sintaksis"
 }
