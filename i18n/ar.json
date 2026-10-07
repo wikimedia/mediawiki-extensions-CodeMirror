@@ -29,6 +29,7 @@
 	"codemirror-prefs-section-references": "مراجع",
 	"codemirror-prefs-section-other": "أخرى",
 	"codemirror-prefs-codefolding": "فعّل طي الترميز",
+	"codemirror-prefs-compactpanels": "استخدم لوحات بحث مختصرة",
 	"codemirror-prefs-autocomplete": "فعّل الإكمال التلقائي",
 	"codemirror-prefs-openlinks": "افتح الروابط باستخدام مفتاح تغيير الوظيفة + النقر",
 	"codemirror-prefs-closetags": "تفعيل خاصية الإغلاق التلقائي لعلامات HTML",
