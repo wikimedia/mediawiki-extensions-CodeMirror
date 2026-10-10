@@ -460,7 +460,8 @@ describe( 'destroy', () => {
 	it( 'should not restore the selection after being destroyed', () => {
 		let frameCallback;
 		cm.requestAnimationFrame.mockImplementation( ( cb ) => {
-			frameCallback = cb;
+			// The first call to requestAnimationFrame is from restoreSelectionAndScrollPosition.
+			frameCallback = frameCallback || cb;
 		} );
 		textarea.value = 'Metallica';
 		textarea.selectionStart = 4;
@@ -473,7 +474,8 @@ describe( 'destroy', () => {
 	it( 'should clamp a stale selection to the current contents', () => {
 		let frameCallback;
 		cm.requestAnimationFrame.mockImplementation( ( cb ) => {
-			frameCallback = cb;
+			// The first call to requestAnimationFrame is from restoreSelectionAndScrollPosition.
+			frameCallback = frameCallback || cb;
 		} );
 		textarea.value = 'Metallica';
 		textarea.selectionStart = 4;

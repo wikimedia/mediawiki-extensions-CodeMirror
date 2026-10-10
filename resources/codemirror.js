@@ -1366,8 +1366,10 @@ class CodeMirror {
 				}
 			}
 		};
-		this.hashChangeEventHandler();
-		window.addEventListener( 'hashchange', this.hashChangeEventHandler );
+		this.requestAnimationFrame( () => {
+			this.hashChangeEventHandler();
+			window.addEventListener( 'hashchange', this.hashChangeEventHandler );
+		} );
 	}
 
 	/**

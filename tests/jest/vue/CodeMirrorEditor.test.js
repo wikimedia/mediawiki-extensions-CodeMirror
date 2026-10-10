@@ -1,4 +1,5 @@
 const { mount, flushPromises } = require( '@vue/test-utils' );
+const CodeMirror = require( '../../../resources/codemirror.js' );
 const CodeMirrorEditor = require( '../../../resources/vue/CodeMirrorEditor.vue' );
 
 jest.mock(
@@ -11,6 +12,7 @@ jest.mock(
 	() => require( '../../../resources/modes/codemirror.mode.extended.exporter.js' ),
 	{ virtual: true }
 );
+jest.spyOn( CodeMirror.prototype, 'requestAnimationFrame' ).mockImplementation( ( cb ) => cb() );
 
 // Mounted wrappers, unmounted after each test so no editor outlives it.
 const wrappers = [];
