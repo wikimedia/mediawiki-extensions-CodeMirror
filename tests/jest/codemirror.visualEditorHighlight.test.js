@@ -1,8 +1,8 @@
 const CodeMirrorVisualEditorHighlight = require( '../../resources/visualEditor/codemirror.visualEditorHighlight.js' );
 const { mediawiki, matchTag } = require( '../../resources/modes/mediawiki/codemirror.mediawiki.js' );
 const CodeMirrorVisualEditor = require( '../../resources/visualEditor/codemirror.visualEditor.js' );
-/* eslint-disable-next-line n/no-missing-require */
-const { CodeMirrorPreferences, CodeMirrorThemes } = require( 'ext.CodeMirror' );
+const CodeMirrorPreferences = require( '../../resources/codemirror.preferences.js' );
+const CodeMirrorThemes = require( '../../resources/themes/codemirror.themes.js' );
 /* eslint-disable-next-line n/no-missing-require */
 const { EditorState } = require( 'ext.CodeMirror.lib' );
 

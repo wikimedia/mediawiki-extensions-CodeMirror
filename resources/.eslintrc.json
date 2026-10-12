@@ -28,6 +28,7 @@
 				"CodeMirror.extensionRegistry": "CodeMirror.extensionRegistry",
 				"CodeMirror.initialize": "CodeMirror.initialize",
 				"CodeMirror.textarea": "CodeMirror.textarea",
+				"CodeMirror.loadLanguageSupport": "CodeMirror.loadLanguageSupport",
 				"CodeMirror.view": "CodeMirror.view",
 				"CodeMirrorChild": "CodeMirrorChild",
 				"CodeMirrorExtensionRegistry": "CodeMirrorExtensionRegistry",

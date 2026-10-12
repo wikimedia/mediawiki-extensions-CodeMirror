@@ -19,6 +19,14 @@ const vsCodeLight = require( './codemirror.theme.vscode-light.js' );
 const vsCodeDark = require( './codemirror.theme.vscode-dark.js' );
 
 /**
+ * @type {Facet}
+ * @private
+ */
+const themeFacet = Facet.define( {
+	combine: ( values ) => values[ 0 ] || 'default'
+} );
+
+/**
  * This class houses all logic involving
  * {@link https://codemirror.net/examples/styling/#themes themes}.
  * It adds the available themes as a dropdown in the {@link CodeMirrorPreferences preferences}
@@ -226,6 +234,17 @@ class CodeMirrorThemes {
 	}
 
 	/**
+	 * The name of the applied theme, as {@link CodeMirrorThemes#setLightOrDarkMode} adds it to
+	 * the theme's Extension. A theme is otherwise a set of styles, which say nothing to an
+	 * integration that renders no CodeMirror of its own.
+	 *
+	 * @type {Facet}
+	 */
+	get themeFacet() {
+		return themeFacet;
+	}
+
+	/**
 	 * Update the theme's reconfiguration values in the extension registry
 	 * and reconfigure the extension to use the new preferred value.
 	 *
@@ -239,7 +258,7 @@ class CodeMirrorThemes {
 					this.themes.get( `${ name }-${ this.isDark ? 'dark' : 'light' }` ),
 					// So that the state says which theme is applied, for integrations that
 					// have to paint it themselves.
-					CodeMirrorThemes.themeFacet.of( name )
+					themeFacet.of( name )
 				]
 			] )
 		) );
@@ -276,16 +295,5 @@ class CodeMirrorThemes {
 		this.extensionRegistry.registerFromValueMap( 'theme', this.editor, this.preferredTheme );
 	}
 }
-
-/**
- * The name of the applied theme, as {@link CodeMirrorThemes#setLightOrDarkMode} adds it to the
- * theme's Extension. A theme is otherwise a set of styles, which say nothing to an integration
- * that renders no CodeMirror of its own.
- *
- * @type {Facet}
- */
-CodeMirrorThemes.themeFacet = Facet.define( {
-	combine: ( values ) => values[ 0 ] || 'default'
-} );
 
 module.exports = CodeMirrorThemes;

@@ -14,6 +14,9 @@ const bundle = require( '../lib/codemirror.bundle.modes.extended.js' );
  * Lua, Vue and HTML, use {@link module:ext.CodeMirror.modes ext.CodeMirror.modes}.
  * For wikitext, use
  * {@link module:ext.CodeMirror.mode.mediawiki ext.CodeMirror.mode.mediawiki}.
+ * If you need to load a mode dynamically by name, you can use
+ * {@link CodeMirror.loadLanguageSupport loadLanguageSupport()} from the
+ * {@link module:ext.CodeMirror ext.CodeMirror} module.
  *
  * Everything in this module is downloaded together, so prefer
  * {@link module:ext.CodeMirror.modes ext.CodeMirror.modes} where it has the

@@ -6,7 +6,6 @@ const {
 	highlightTree,
 	syntaxTree
 } = require( 'ext.CodeMirror.lib' );
-const { CodeMirrorThemes } = require( 'ext.CodeMirror' );
 const CodeMirrorVisualEditor = require( './codemirror.visualEditor.js' );
 const { findBracketMatch } = require( '../codemirror.matchbrackets.util.js' );
 const CodeMirrorVisualEditorHighlightLineNumbering = require( './codemirror.visualEditorHighlight.lineNumbering.js' );
@@ -486,7 +485,7 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 	 * @type {string}
 	 */
 	get theme() {
-		return this.state ? this.state.facet( CodeMirrorThemes.themeFacet ) : 'default';
+		return this.state ? this.state.facet( this.themes.themeFacet ) : 'default';
 	}
 
 	/**

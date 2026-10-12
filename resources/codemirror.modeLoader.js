@@ -36,8 +36,8 @@ const extendedModes = [
  * The ResourceLoader module that provides each mode, keyed by mode name.
  *
  * @type {Object<string,string>}
- * @memberof CodeMirror
- * @stable to use
+ * @internal
+ * @ignore
  */
 const modeModules = {
 	abusefilter: 'ext.CodeMirror.abusefilter',

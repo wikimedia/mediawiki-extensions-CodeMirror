@@ -10,6 +10,11 @@ module.exports = {};
  *
  * For MediaWiki wikitext syntax highlighting, use
  * {@link module:ext.CodeMirror.mode.mediawiki ext.CodeMirror.mode.mediawiki}.
+ *
+ * If you need to load a mode dynamically by name, you can use
+ * {@link CodeMirror.loadLanguageSupport loadLanguageSupport()} from the
+ * {@link module:ext.CodeMirror ext.CodeMirror} module.
+ *
  * @example
  * const require = await mw.loader.using( [ 'ext.CodeMirror', 'ext.CodeMirror.modes' ] );
  * const CodeMirror = require( 'ext.CodeMirror' );

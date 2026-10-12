@@ -14,6 +14,8 @@ require( './ext.CodeMirror.data.js' );
  * CodeMirrorPreferences is a dialog that allows users to configure CodeMirror preferences.
  * It is opened by pressing `Ctrl`-`Shift`-`,` (or `Command`-`Shift`-`,` on macOS).
  *
+ * The constructor is internal. An instance can be accessed via {@link CodeMirror#preferences}.
+ *
  * Note that this code, like MediaWiki Core, refers to the user's preferences as "options".
  * In this class, "preferences" refer to the user's preferences for CodeMirror, which
  * are stored as a single user 'option' in the database.
@@ -27,6 +29,8 @@ class CodeMirrorPreferences extends CodeMirrorCodex {
 	 * @param {boolean} [persistPreferences=true] Save changes to the user's options.
 	 *   Pass `false` to keep them for the life of the editor only.
 	 * @fires CodeMirror~'ext.CodeMirror.preferences.ready'
+	 * @hideconstructor
+	 * @internal
 	 */
 	constructor( extensionRegistry, mode, cmKeymap, persistPreferences = true ) {
 		super();

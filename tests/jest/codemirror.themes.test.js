@@ -59,7 +59,7 @@ describe( 'CodeMirrorThemes', () => {
 		// The styles, plus the facet naming the applied theme.
 		expect( themes.extensionRegistry.get( 'theme' ).compartment.get( view.state )[ 0 ] )
 			.toStrictEqual( themes.themes.get( 'default-light' ) );
-		expect( view.state.facet( CodeMirrorThemes.themeFacet ) ).toBe( 'default' );
+		expect( view.state.facet( themes.themeFacet ) ).toBe( 'default' );
 		expect( view.editorAttrs.class.includes( 'cm-mw-theme-default' ) ).toBeTruthy();
 		// Change to GitHub theme.
 		preferences.showPreferencesDialog( view );
@@ -69,7 +69,7 @@ describe( 'CodeMirrorThemes', () => {
 		expect( themes.preferredTheme ).toBe( 'github' );
 		expect( themes.extensionRegistry.get( 'theme' ).compartment.get( view.state )[ 0 ] )
 			.toStrictEqual( themes.themes.get( 'github-light' ) );
-		expect( view.state.facet( CodeMirrorThemes.themeFacet ) ).toBe( 'github' );
+		expect( view.state.facet( themes.themeFacet ) ).toBe( 'github' );
 		expect( view.editorAttrs.class.includes( 'cm-mw-theme-default' ) ).toBeFalsy();
 		expect( view.editorAttrs.class.includes( 'cm-mw-theme-github' ) ).toBeTruthy();
 		// Now switch to dark mode.
@@ -78,7 +78,7 @@ describe( 'CodeMirrorThemes', () => {
 		await new Promise( process.nextTick );
 		expect( themes.extensionRegistry.get( 'theme' ).compartment.get( view.state )[ 0 ] )
 			.toStrictEqual( themes.themes.get( 'github-dark' ) );
-		expect( view.state.facet( CodeMirrorThemes.themeFacet ) ).toBe( 'github' );
+		expect( view.state.facet( themes.themeFacet ) ).toBe( 'github' );
 		expect( view.editorAttrs.class.includes( 'cm-mw-theme-github' ) ).toBeTruthy();
 	} );
 } );
