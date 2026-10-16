@@ -101,7 +101,7 @@ function resolveLinkAt( state, position ) {
 		}
 	} else if ( name.includes( mwModeConfig.tags.pageName ) &&
 		names.includes( mwModeConfig.tags.parserFunction ) ) {
-		const ns = Number( /mw-function-(\d+)/.exec( name )[ 1 ] ),
+		const ns = Number( /mw-function-(-?\d+)/.exec( name )[ 1 ] ),
 			title = mw.Title.newFromText( state.sliceDoc( from, to ).trim(), ns );
 		if ( title ) {
 			return { url: title.getUrl(), from, to };
