@@ -560,6 +560,15 @@
 	"attributes": {
 		"CodeMirror": {
 			"ParserFunctionNsIds": {
+				"pageid": 0,
+				"localurl": 0,
+				"localurle": 0,
+				"fullurl": 0,
+				"fullurle": 0,
+				"canonicalurl": 0,
+				"canonicalurle": 0,
+				"special": -1,
+				"speciale": -1,
 				"filepath": 6,
 				"int": 8
 			},
