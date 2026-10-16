@@ -63,6 +63,10 @@ describe( 'resolveLinkAt', () => {
 		mw.Title.newFromText = jest.fn().mockImplementation( ( text, ns = 0 ) => (
 			text ? { getUrl: () => `/wiki/${ ns }:${ text }` } : null
 		) );
+		// Use double colons to distinguish from mw.Title.newFromText()
+		mw.Title.makeTitle = jest.fn().mockImplementation( ( ns, text ) => (
+			text ? { getUrl: () => `/wiki/${ ns }::${ text }` } : null
+		) );
 		langSupport = mediawiki( {
 			bidiIsolation: false,
 			codeFolding: false,
@@ -90,7 +94,7 @@ describe( 'resolveLinkAt', () => {
 	it( 'should resolve a parser function target to its own namespace', () => {
 		// #invoke is configured with namespace 828 (Module) in the shared setup.
 		const link = resolveAt( '{{#invoke:Foo|bar}}', 'Foo' );
-		expect( link.url ).toBe( '/wiki/828:Foo' );
+		expect( link.url ).toBe( '/wiki/828::Foo' );
 	} );
 
 	it( 'should span the protocol and the URL of an external link', () => {
