@@ -244,7 +244,8 @@ describe( 'CodeMirrorCodex', () => {
 	const formSpecifierTestCases = [
 		{
 			title: 'checkbox',
-			spec: { type: 'checkbox', label: 'bar', default: true },
+			spec: { type: 'checkbox', label: 'bar' },
+			value: true,
 			expected: {
 				tagName: 'INPUT',
 				className: 'cdx-checkbox cdx-checkbox--inline cm-mw-panel__checkbox',
@@ -255,7 +256,8 @@ describe( 'CodeMirrorCodex', () => {
 			}
 		}, {
 			title: 'text',
-			spec: { type: 'text', default: 'baz', placeholder: 'placeholder text' },
+			spec: { type: 'text', placeholder: 'placeholder text' },
+			value: 'baz',
 			expected: {
 				tagName: 'INPUT',
 				className: 'cdx-text-input cm-mw-panel__text-input',
@@ -272,9 +274,9 @@ describe( 'CodeMirrorCodex', () => {
 				options: [
 					[ 'Option 1', 'opt1' ],
 					[ 'Option 2', 'opt2' ]
-				],
-				default: 'opt2'
+				]
 			},
+			value: 'opt2',
 			expected: {
 				tagName: 'SELECT',
 				className: 'cdx-field cm-mw-panel__select cm-mw-panel__select--select-test',
@@ -291,8 +293,8 @@ describe( 'CodeMirrorCodex', () => {
 
 	it.each( formSpecifierTestCases )(
 		'FormSpecifier ($title)',
-		( { title, spec, expected } ) => {
-			const [ wrapper, element ] = cmCodex.getFormField( title, spec );
+		( { title, spec, value, expected } ) => {
+			const [ wrapper, element ] = cmCodex.getFormField( title, spec, value );
 			expect( wrapper.className ).toBe( expected.className );
 			expect( wrapper.textContent ).toContain( expected.label );
 			expect( element.checked ).toBe( expected.checked );

@@ -203,30 +203,28 @@ class CodeMirrorCodex {
 	 *   for use by the 'text' type.
 	 * @property {Array} [options] Array of [label, value] pairs, for use by the 'select' type.
 	 *   The label should be a message key.
-	 * @property {Mixed} [default] The initial value of the field.
 	 */
 
 	/**
 	 * Generate a form field from a {@link FormSpecifier}.
 	 *
 	 * @param {string} name
-	 * @param {FormSpecifier} specifier
+	 * @param {FormSpecifier} specifier What kind of field to build.
+	 * @param {PrefValue} [value] What the field holds.
 	 * @return {Array<HTMLElement>} Array of [wrapper, input] elements, where `wrapper` is an HTML
 	 *   element that wraps the input and its label, and `input` is the actual form control element
 	 *   (e.g. `<input>`, `<select>`, etc.) that can be listened to for changes.
 	 * @internal
 	 */
-	getFormField( name, specifier ) {
+	getFormField( name, specifier, value ) {
 		specifier = Object.assign( { type: 'checkbox' }, specifier );
 		switch ( specifier.type ) {
 			case 'checkbox':
-				return this.getCheckbox( name, specifier.label, Boolean( specifier.default ) );
+				return this.getCheckbox( name, specifier.label, Boolean( value ) );
 			case 'text':
-				return this.getTextInput( name, specifier.default, specifier.placeholder );
+				return this.getTextInput( name, value, specifier.placeholder );
 			case 'select':
-				return this.getSelect(
-					name, specifier.label, specifier.options, specifier.default
-				);
+				return this.getSelect( name, specifier.label, specifier.options, value );
 			default:
 				throw new Error( `[CodeMirror] Unsupported form field type: ${ specifier.type }` );
 		}

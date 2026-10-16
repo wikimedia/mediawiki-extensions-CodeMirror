@@ -189,8 +189,7 @@ class CodeMirrorThemes {
 		this.preferences.formSpecification.set( 'theme', {
 			type: 'select',
 			label: 'codemirror-prefs-theme',
-			options: new Map( this.getOptions() ),
-			default: this.preferredTheme
+			options: new Map( this.getOptions() )
 		} );
 	}
 

@@ -371,6 +371,41 @@ describe( 'CodeMirrorPreferences', () => {
 		expect( checkbox.checked ).toBe( true );
 	} );
 
+	describe( 'form specifiers', () => {
+		it( 'should render a form field from the stored value', () => {
+			mockDefaultPreferences( { theme: 'default' } );
+			mockUserPreferences( { theme: 'pygments' } );
+			const preferences = getCodeMirrorPreferences( { theme: EditorView.theme() } );
+			preferences.formSpecification.set( 'theme', {
+				type: 'select',
+				label: 'codemirror-prefs-theme',
+				options: new Map( [
+					[ 'codemirror-theme-default', 'default' ],
+					[ 'codemirror-theme-pygments', 'pygments' ]
+				] )
+			} );
+			preferences.showPreferencesDialog( new EditorView() );
+			expect( preferences.dialog.querySelector( 'select[name="theme"]' ).value )
+				.toBe( 'pygments' );
+		} );
+
+		it( 'should disable every control of a locked preference', () => {
+			mockDefaultPreferences( { theme: 'default' } );
+			mockUserPreferences( {} );
+			const preferences = getCodeMirrorPreferences( { theme: EditorView.theme() } );
+			preferences.formSpecification.set( 'theme', {
+				type: 'select',
+				label: 'codemirror-prefs-theme',
+				options: new Map( [ [ 'codemirror-theme-default', 'default' ] ] )
+			} );
+			// Lock without an editor, which has nothing registered to reconfigure.
+			preferences.lockPreference( 'theme' );
+			preferences.showPreferencesDialog( new EditorView() );
+			expect( preferences.dialog.querySelector( 'select[name="theme"]' ).disabled )
+				.toBe( true );
+		} );
+	} );
+
 	describe( 'default preferences', () => {
 		const defPrefsTestCases = [
 			{

@@ -581,19 +581,23 @@ class CodeMirrorPreferences extends CodeMirrorCodex {
 		);
 		const wrappers = [];
 		for ( const prefName of prefNames ) {
-			let wrapper, input;
+			let wrapper;
 			const formSpecifier = this.formSpecification.get( prefName );
 			if ( formSpecifier ) {
-				[ wrapper, input ] = this.getFormField( prefName, formSpecifier );
+				[ wrapper ] = this.getFormField(
+					prefName, formSpecifier, this.getPreference( prefName )
+				);
 			} else {
-				[ wrapper, input ] = this.getCheckbox(
+				[ wrapper ] = this.getCheckbox(
 					prefName,
 					`codemirror-prefs-${ prefName.toLowerCase() }`,
 					this.getPreference( prefName )
 				);
 			}
 			if ( this.disabledPreferences.has( prefName ) ) {
-				input.disabled = true;
+				for ( const control of wrapper.querySelectorAll( 'input, select' ) ) {
+					control.disabled = true;
+				}
 			}
 			if ( this.slowPreferences.has( prefName ) ) {
 				const slowSpan = document.createElement( 'span' );
