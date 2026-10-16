@@ -502,6 +502,18 @@ describe( 'mediawiki() lint config', () => {
 		expect( langSupport.lintApi ).toBeUndefined();
 	} );
 
+	it( 'should name both linters by default', () => {
+		const langSupport = mediawiki();
+		expect( langSupport.lintSourceLabel ).toBe( 'codemirror-prefs-lint-wikilint' );
+		expect( langSupport.lintApiLabel ).toBe( 'codemirror-prefs-lint-parsoid' );
+	} );
+
+	it( 'should withhold the linter names when disabled', () => {
+		const langSupport = mediawiki( { lint: false } );
+		expect( langSupport.lintSourceLabel ).toBeUndefined();
+		expect( langSupport.lintApiLabel ).toBeUndefined();
+	} );
+
 	it( 'should not register the lint preference when disabled', () => {
 		const withLint = new CodeMirror( document.createElement( 'textarea' ), mediawiki() );
 		withLint.initialize();

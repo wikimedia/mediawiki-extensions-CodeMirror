@@ -250,12 +250,16 @@
 				"codemirror-prefs-linenumbering",
 				"codemirror-prefs-linewrapping",
 				"codemirror-prefs-lint",
+				"codemirror-prefs-lint-all",
+				"codemirror-prefs-lint-api",
+				"codemirror-prefs-lint-browser",
 				"codemirror-prefs-openlinks",
 				"codemirror-prefs-reset",
 				"codemirror-prefs-section-appearance",
 				"codemirror-prefs-section-characters",
 				"codemirror-prefs-section-code-assistance",
 				"codemirror-prefs-section-lines",
+				"codemirror-prefs-section-linting",
 				"codemirror-prefs-section-other",
 				"codemirror-prefs-specialchars",
 				"codemirror-prefs-theme",
@@ -377,6 +381,8 @@
 				"codemirror-keymap-underline",
 				"codemirror-prefs-autocomplete",
 				"codemirror-prefs-bidiisolation",
+				"codemirror-prefs-lint-parsoid",
+				"codemirror-prefs-lint-wikilint",
 				"codemirror-prefs-section-references",
 				"codemirror-theme-colorblind",
 				"parentheses"
@@ -403,6 +409,14 @@
 			"dependencies": [
 				"mediawiki.Title",
 				"ext.CodeMirror.lib"
+			],
+			"messages": [
+				"codemirror-prefs-lint-eslint",
+				"codemirror-prefs-lint-luacheck",
+				"codemirror-prefs-lint-peast",
+				"codemirror-prefs-lint-scribunto",
+				"codemirror-prefs-lint-stylelint",
+				"codemirror-prefs-lint-templatestyles"
 			]
 		},
 		"ext.CodeMirror.modes.extended": {

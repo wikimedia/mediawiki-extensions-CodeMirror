@@ -213,6 +213,15 @@
 	margin-top: 0;
 }
 
+// Space the select from the checkbox that it belongs to.
+.cm-mw-panel__fieldset .cm-mw-panel__field-group .cm-mw-panel__select {
+	margin-top: @spacing-25;
+
+	&.cm-mw-panel__select--hidden {
+		display: none;
+	}
+}
+
 // Inline checkboxes carry no top margin, so a select has to space
 // itself from whatever follows it.
 .cm-mw-panel__fieldset .cm-mw-panel__select:not( :last-child ) {

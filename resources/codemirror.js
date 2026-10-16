@@ -149,6 +149,18 @@ class CodeMirror {
 		 */
 		this.lintApi = langSupport.lintApi;
 		/**
+		 * Key for an i18n message naming the `lintSource` linter.
+		 *
+		 * @type {string|undefined}
+		 */
+		this.lintSourceLabel = langSupport.lintSourceLabel;
+		/**
+		 * Key for an i18n message naming the `lintApi` linter.
+		 *
+		 * @type {string|undefined}
+		 */
+		this.lintApiLabel = langSupport.lintApiLabel;
+		/**
 		 * The extended configuration for bracket matching.
 		 *
 		 * @type {Config|undefined}
@@ -931,6 +943,45 @@ class CodeMirror {
 	}
 
 	/**
+	 * Let the user choose a single linter when the mode offers more than one.
+	 * The `lint` preference then holds 'browser' or 'api' in place of `true`.
+	 *
+	 * @private
+	 */
+	registerLintChoices() {
+		if ( !this.lintSource || !this.lintApi ||
+			!this.lintSourceLabel || !this.lintApiLabel
+		) {
+			return;
+		}
+
+		this.extensionRegistry.reconfigValueMap.set( 'lint', new Map( [
+			[ 'browser', [
+				new CodeMirrorLint(
+					this.lintSource, this.keymap, undefined, this.gotoLine
+				).extension,
+				this.customLinters
+			] ],
+			[ 'api', [
+				new CodeMirrorLint(
+					undefined, this.keymap, this.lintApi, this.gotoLine
+				).extension,
+				this.customLinters
+			] ]
+		] ) );
+
+		this.preferences.formSpecification.set( 'lint', {
+			type: 'checkbox-select',
+			label: 'codemirror-prefs-lint',
+			options: new Map( [
+				[ 'codemirror-prefs-lint-all', 'all' ],
+				[ [ 'codemirror-prefs-lint-browser', mw.msg( this.lintSourceLabel ) ], 'browser' ],
+				[ [ 'codemirror-prefs-lint-api', mw.msg( this.lintApiLabel ) ], 'api' ]
+			] )
+		} );
+	}
+
+	/**
 	 * This extension adds a vertical column guide to the editor at column 80.
 	 *
 	 * @type {Extension}
@@ -1169,6 +1220,12 @@ class CodeMirror {
 		// Diagnostics are rendered by the EditorView, so skip linting without one.
 		if ( this.view && ( this.lintSource || this.lintApi ) ) {
 			this.preferences.registerExtension( 'lint', this.lintExtension, this );
+			this.registerLintChoices();
+			// registerExtension() enables every linter for any truthy value.
+			const lintPref = this.preferences.getPreference( 'lint' );
+			if ( typeof lintPref === 'string' ) {
+				this.extensionRegistry.toggle( 'lint', this, lintPref );
+			}
 		}
 
 		if ( this._openLinksExtension ) { // eslint-disable-line no-underscore-dangle
@@ -1471,8 +1528,12 @@ class CodeMirror {
 		} else {
 			this.preferences.registerExtension( 'lint', this.lintExtension, this.view );
 		}
+		this.registerLintChoices();
 		if ( this.extensionRegistry.isEnabled( 'lint', this.view ) ) {
-			this.extensionRegistry.toggle( 'lint', this.view, true );
+			// Pass the preference so that a chosen linter is not replaced by all of them.
+			this.extensionRegistry.toggle(
+				'lint', this.view, this.preferences.getPreference( 'lint' )
+			);
 		}
 	}
 

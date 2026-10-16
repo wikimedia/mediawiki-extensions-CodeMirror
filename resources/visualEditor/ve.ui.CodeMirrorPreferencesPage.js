@@ -161,7 +161,9 @@ ve.ui.CodeMirrorPreferencesPage.prototype.getField = function ( name ) {
 		case 'select':
 			widget = new OO.ui.DropdownInputWidget( {
 				options: Array.from( spec.options ).map(
-					( [ message, data ] ) => ( { data, label: ve.msg( message ) } )
+					( [ message, data ] ) => (
+						{ data, label: ve.msg( ...[].concat( message ) ) }
+					)
 				),
 				value
 			} );

@@ -7,7 +7,7 @@ const {
 	Prec
 } = require( 'ext.CodeMirror.lib' ); // eslint-disable-line n/no-missing-require
 const CodeMirror = require( '../../resources/codemirror.js' );
-const { javascript } = require( '../../resources/modes/codemirror.mode.exporter.js' );
+const { css, javascript, json } = require( '../../resources/modes/codemirror.mode.exporter.js' );
 
 let textarea, cm, form;
 
@@ -121,6 +121,66 @@ describe( 'applyExtension', () => {
 			spellcheck: 'false'
 		} ) ) );
 		expect( cm.view.contentDOM.getAttribute( 'spellcheck' ) ).toStrictEqual( 'false' );
+	} );
+} );
+
+describe( 'registerLintChoices', () => {
+	it( 'should offer a choice when the mode has two linters', () => {
+		const cm2 = new CodeMirror( textarea, javascript() );
+		cm2.initialize();
+		expect( [ ...cm2.extensionRegistry.reconfigValueMap.get( 'lint' ).keys() ] )
+			.toStrictEqual( [ 'browser', 'api' ] );
+		const specifier = cm2.preferences.formSpecification.get( 'lint' );
+		expect( specifier.type ).toBe( 'checkbox-select' );
+		expect( [ ...specifier.options ] ).toStrictEqual( [
+			[ 'codemirror-prefs-lint-all', 'all' ],
+			[ [ 'codemirror-prefs-lint-browser', 'codemirror-prefs-lint-eslint' ], 'browser' ],
+			[ [ 'codemirror-prefs-lint-api', 'codemirror-prefs-lint-peast' ], 'api' ]
+		] );
+	} );
+
+	it( 'should offer no choice when the mode has only one linter', () => {
+		// Plain CSS has no API-powered linter; only sanitized-css does.
+		const cm2 = new CodeMirror( textarea, css() );
+		cm2.initialize();
+		expect( cm2.lintApi ).toBeUndefined();
+		expect( cm2.extensionRegistry.reconfigValueMap.has( 'lint' ) ).toBe( false );
+		expect( cm2.preferences.formSpecification.has( 'lint' ) ).toBe( false );
+	} );
+
+	it( 'should apply a stored choice on initialization', () => {
+		mockUserOptionsGet( {
+			'codemirror-preferences-code': JSON.stringify( { lint: 'api' } )
+		} );
+		const cm2 = new CodeMirror( textarea, javascript() );
+		cm2.initialize();
+		expect( cm2.extensionRegistry.isEnabled( 'lint', cm2.view ) ).toBe( true );
+		expect( cm2.extensionRegistry.getCompartment( 'lint' ).get( cm2.view.state ) )
+			.toBe( cm2.extensionRegistry.reconfigValueMap.get( 'lint' ).get( 'api' ) );
+	} );
+
+	it( 'should lint with what it has when the choice came from another mode', () => {
+		// All non-wikitext modes share one stored preference, so a choice made for
+		// JavaScript reaches JSON, which has no API-powered linter.
+		mockUserOptionsGet( {
+			'codemirror-preferences-code': JSON.stringify( { lint: 'api' } )
+		} );
+		const cm2 = new CodeMirror( textarea, json() );
+		cm2.initialize();
+		expect( cm2.extensionRegistry.isEnabled( 'lint', cm2.view ) ).toBe( true );
+		expect( cm2.extensionRegistry.getCompartment( 'lint' ).get( cm2.view.state ) )
+			.toBe( cm2.extensionRegistry.extensions.lint );
+	} );
+
+	it( 'should keep the chosen linter when a custom linter is applied', () => {
+		mockUserOptionsGet( {
+			'codemirror-preferences-code': JSON.stringify( { lint: 'api' } )
+		} );
+		const cm2 = new CodeMirror( textarea, javascript() );
+		cm2.initialize();
+		cm2.applyLinter( () => [], { delay: 0 } );
+		expect( cm2.extensionRegistry.getCompartment( 'lint' ).get( cm2.view.state ) )
+			.toBe( cm2.extensionRegistry.reconfigValueMap.get( 'lint' ).get( 'api' ) );
 	} );
 } );
 

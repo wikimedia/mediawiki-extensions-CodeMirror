@@ -191,3 +191,23 @@ describe( 'CodeMirrorLint: Stylelint', () => {
 		).toBeTruthy();
 	} );
 } );
+
+describe( 'CodeMirrorCss linter labels', () => {
+	afterEach( () => {
+		// Restore the default config, since css() reads the content model on construction.
+		mockMwConfigGet();
+	} );
+
+	it( 'names only the client-side linter for plain CSS', () => {
+		const mode = css();
+		expect( mode.lintSourceLabel ).toBe( 'codemirror-prefs-lint-stylelint' );
+		expect( mode.lintApiLabel ).toBeUndefined();
+	} );
+
+	it( 'names both linters for sanitized-css', () => {
+		mockMwConfigGet( { wgPageContentModel: 'sanitized-css' } );
+		const mode = css();
+		expect( mode.lintSourceLabel ).toBe( 'codemirror-prefs-lint-stylelint' );
+		expect( mode.lintApiLabel ).toBe( 'codemirror-prefs-lint-templatestyles' );
+	} );
+} );

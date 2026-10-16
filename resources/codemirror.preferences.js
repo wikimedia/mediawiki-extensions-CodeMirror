@@ -11,6 +11,14 @@ require( './ext.CodeMirror.data.js' );
  */
 
 /**
+ * In a 'checkbox-select' field, the option that stands for the boolean value `true`.
+ *
+ * @type {string}
+ * @private
+ */
+const SELECT_ALL = 'all';
+
+/**
  * CodeMirrorPreferences is a dialog that allows users to configure CodeMirror preferences.
  * It is opened by pressing `Ctrl`-`Shift`-`,` (or `Command`-`Shift`-`,` on macOS).
  *
@@ -135,7 +143,9 @@ class CodeMirrorPreferences extends CodeMirrorCodex {
 				'codeFolding',
 				'bracketMatching',
 				'closeBrackets',
-				'closeTags',
+				'closeTags'
+			],
+			linting: [
 				'lint'
 			]
 		};
@@ -639,6 +649,7 @@ class CodeMirrorPreferences extends CodeMirrorCodex {
 				// * codemirror-prefs-section-lines
 				// * codemirror-prefs-section-characters
 				// * codemirror-prefs-section-code-assistance
+				// * codemirror-prefs-section-linting
 				// * codemirror-prefs-section-other
 				mw.msg( `codemirror-prefs-section-${ section }` )
 			);
@@ -733,6 +744,54 @@ class CodeMirrorPreferences extends CodeMirrorCodex {
 			}
 		} );
 		return [ wrapper, select ];
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	getCheckboxSelect( name, specifier, value ) {
+		// Build the controls with the superclass, since the overrides above bind each one
+		// directly to a preference, and here the two share one.
+		const [ wrapper, checkbox, select ] = this.getFieldGroup(
+			super.getCheckbox( name, specifier.label, Boolean( value ) ),
+			super.getSelect(
+				name,
+				undefined,
+				specifier.options,
+				value === true ? SELECT_ALL : value
+			)
+		);
+		select.setAttribute( 'aria-label', mw.msg( specifier.label ) );
+		const selectWrapper = select.closest( '.cm-mw-panel__select' );
+
+		const sync = ( prefValue ) => {
+			checkbox.checked = !!prefValue;
+			if ( prefValue ) {
+				select.value = prefValue === true ? SELECT_ALL : prefValue;
+			}
+			selectWrapper.classList.toggle( 'cm-mw-panel__select--hidden', !prefValue );
+		};
+		sync( value );
+
+		const write = ( selected ) => this.setPreference(
+			name,
+			selected === SELECT_ALL ? true : selected,
+			this.view
+		);
+		checkbox.addEventListener( 'change', () => {
+			write( checkbox.checked && select.value );
+		} );
+		select.addEventListener( 'change', () => {
+			write( select.value );
+		} );
+		// Update both controls when the preference is changed.
+		mw.hook( 'ext.CodeMirror.preferences.apply' ).add( ( pref, prefValue ) => {
+			if ( pref === name ) {
+				sync( prefValue );
+			}
+		} );
+
+		return [ wrapper, checkbox, select ];
 	}
 }
 

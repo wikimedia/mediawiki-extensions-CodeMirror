@@ -617,6 +617,16 @@ class CodeMirrorLua extends CodeMirrorMode {
 		};
 	}
 
+	/** @inheritDoc */
+	get lintSourceLabel() {
+		return 'codemirror-prefs-lint-luacheck';
+	}
+
+	/** @inheritDoc */
+	get lintApiLabel() {
+		return 'codemirror-prefs-lint-scribunto';
+	}
+
 	/** @inheritdoc */
 	get openLinksExtension() {
 		return [

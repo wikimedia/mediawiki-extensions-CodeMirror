@@ -88,6 +88,24 @@ class CodeMirrorMode {
 	}
 
 	/**
+	 * Key for an i18n message naming the linter used by {@link CodeMirrorMode#lintSource}.
+	 *
+	 * @type {string|undefined}
+	 */
+	get lintSourceLabel() {
+		return undefined;
+	}
+
+	/**
+	 * Key for an i18n message naming the linter used by {@link CodeMirrorMode#lintApi}.
+	 *
+	 * @type {string|undefined}
+	 */
+	get lintApiLabel() {
+		return undefined;
+	}
+
+	/**
 	 * The extension for opening links with CTRL+click or CMD+click.
 	 *
 	 * @type {Extension|undefined}

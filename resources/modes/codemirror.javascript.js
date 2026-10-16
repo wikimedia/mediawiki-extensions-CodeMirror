@@ -229,6 +229,16 @@ class CodeMirrorJavaScript extends CodeMirrorMode {
 	}
 
 	/** @inheritDoc */
+	get lintSourceLabel() {
+		return 'codemirror-prefs-lint-eslint';
+	}
+
+	/** @inheritDoc */
+	get lintApiLabel() {
+		return 'codemirror-prefs-lint-peast';
+	}
+
+	/** @inheritDoc */
 	get bracketMatchingConfig() {
 		return {
 			exclude( state, pos ) {

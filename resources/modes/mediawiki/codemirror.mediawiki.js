@@ -155,6 +155,16 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 	}
 
 	/** @inheritDoc */
+	get lintSourceLabel() {
+		return this.lint === false ? undefined : 'codemirror-prefs-lint-wikilint';
+	}
+
+	/** @inheritDoc */
+	get lintApiLabel() {
+		return this.lint === false ? undefined : 'codemirror-prefs-lint-parsoid';
+	}
+
+	/** @inheritDoc */
 	get bracketMatchingConfig() {
 		return {
 			// Also match CJK full-width brackets (T362992)

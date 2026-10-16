@@ -147,8 +147,10 @@ class CodeMirrorCodex {
 	 * Get a CSS-only Codex Select. This only supports a flat list of options, not optgroups.
 	 *
 	 * @param {string} name
-	 * @param {string} label
-	 * @param {Array} options Array of [label, value] pairs.
+	 * @param {string} [label] Omit to leave the select unlabelled, in which case the caller
+	 *   is responsible for giving it an accessible name.
+	 * @param {Array} options Array of [label, value] pairs. A label is a message key, or an
+	 *   array of a message key and its parameters.
 	 * @param {string} [selected]
 	 * @return {Array<HTMLElement>} [HTMLDivElement, HTMLSelectElement]
 	 */
@@ -156,18 +158,19 @@ class CodeMirrorCodex {
 		const id = `cm-mw__${ this.getRandomId() }`;
 		const wrapper = document.createElement( 'div' );
 		wrapper.className = `cdx-field cm-mw-panel__select cm-mw-panel__select--${ name }`;
-		const labelWrapper = document.createElement( 'div' );
-		labelWrapper.className = 'cdx-label';
-		const labelElement = document.createElement( 'label' );
-		labelElement.className = 'cdx-label__label';
-		labelElement.htmlFor = id;
-		const innerSpan = document.createElement( 'span' );
-		innerSpan.className = 'cdx-label__label__text';
-
-		innerSpan.textContent = mw.msg( label );
-		labelElement.appendChild( innerSpan );
-		labelWrapper.appendChild( labelElement );
-		wrapper.appendChild( labelWrapper );
+		if ( label ) {
+			const labelWrapper = document.createElement( 'div' );
+			labelWrapper.className = 'cdx-label';
+			const labelElement = document.createElement( 'label' );
+			labelElement.className = 'cdx-label__label';
+			labelElement.htmlFor = id;
+			const innerSpan = document.createElement( 'span' );
+			innerSpan.className = 'cdx-label__label__text';
+			innerSpan.textContent = mw.msg( label );
+			labelElement.appendChild( innerSpan );
+			labelWrapper.appendChild( labelElement );
+			wrapper.appendChild( labelWrapper );
+		}
 		const fieldControl = document.createElement( 'div' );
 		fieldControl.className = 'cdx-field__control';
 		wrapper.appendChild( fieldControl );
@@ -179,7 +182,7 @@ class CodeMirrorCodex {
 			const option = document.createElement( 'option' );
 			option.value = value;
 
-			option.textContent = mw.msg( optionLabel );
+			option.textContent = mw.msg( ...[].concat( optionLabel ) );
 			if ( value === selected ) {
 				option.selected = true;
 			}
@@ -190,6 +193,39 @@ class CodeMirrorCodex {
 	}
 
 	/**
+	 * Group a checkbox with the field that it switches on and off.
+	 *
+	 * @param {Array<HTMLElement>} checkboxField [wrapper, input] pair for the checkbox.
+	 * @param {Array<HTMLElement>} subField [wrapper, control] pair for the dependent field.
+	 * @return {Array<HTMLElement>} [HTMLDivElement, HTMLInputElement, HTMLElement]
+	 */
+	getFieldGroup( checkboxField, subField ) {
+		const wrapper = document.createElement( 'div' );
+		wrapper.className = 'cm-mw-panel__field-group';
+		wrapper.append( checkboxField[ 0 ], subField[ 0 ] );
+		return [ wrapper, checkboxField[ 1 ], subField[ 1 ] ];
+	}
+
+	/**
+	 * Get a checkbox with a Codex Select beneath it, for a feature that is switched on and
+	 * off and, when on, offers a choice.
+	 *
+	 * @param {string} name
+	 * @param {FormSpecifier} specifier What kind of field to build.
+	 * @param {PrefValue} [value] What the field holds.
+	 * @return {Array<HTMLElement>} [HTMLDivElement, HTMLInputElement, HTMLSelectElement]
+	 */
+	getCheckboxSelect( name, specifier, value ) {
+		const field = this.getFieldGroup(
+			this.getCheckbox( name, specifier.label, Boolean( value ) ),
+			this.getSelect( name, undefined, specifier.options, value )
+		);
+		// The checkbox labels the pair, so the select shows no label of its own.
+		field[ 2 ].setAttribute( 'aria-label', mw.msg( specifier.label ) );
+		return field;
+	}
+
+	/**
 	 * @typedef {Object} CodeMirrorCodex~FormSpecifier
 	 * @description Specifier for form elements, in particular for {@link CodeMirrorPreferences},
 	 *   when the feature calls for a form element other than a simple checkbox.
@@ -197,12 +233,15 @@ class CodeMirrorCodex {
 	 * - 'checkbox' (default)
 	 * - 'text'
 	 * - 'select'
+	 * - 'checkbox-select'
 	 * @property {string} [label] Key for an i18n message that labels the form element.
-	 *   Required for the 'checkbox' and 'select' types, ignored for 'text' type.
+	 *   Required for the 'checkbox', 'select' and 'checkbox-select' types,
+	 *   ignored for 'text' type.
 	 * @property {string} [placeholder] Key for an i18n message that serves as the placeholder text,
 	 *   for use by the 'text' type.
-	 * @property {Array} [options] Array of [label, value] pairs, for use by the 'select' type.
-	 *   The label should be a message key.
+	 * @property {Array} [options] Array of [label, value] pairs, for use by the 'select' and
+	 *   'checkbox-select' types. A label is a message key, or an array of a message key
+	 *   and its parameters.
 	 */
 
 	/**
@@ -225,6 +264,8 @@ class CodeMirrorCodex {
 				return this.getTextInput( name, value, specifier.placeholder );
 			case 'select':
 				return this.getSelect( name, specifier.label, specifier.options, value );
+			case 'checkbox-select':
+				return this.getCheckboxSelect( name, specifier, value );
 			default:
 				throw new Error( `[CodeMirror] Unsupported form field type: ${ specifier.type }` );
 		}

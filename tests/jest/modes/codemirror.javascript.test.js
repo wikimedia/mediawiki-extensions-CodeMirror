@@ -368,3 +368,11 @@ describe( 'CodeMirrorLint: ESLint', () => {
 		).toBeTruthy();
 	} );
 } );
+
+describe( 'CodeMirrorJavaScript linter labels', () => {
+	it( 'names both linters', () => {
+		const mode = javascript();
+		expect( mode.lintSourceLabel ).toBe( 'codemirror-prefs-lint-eslint' );
+		expect( mode.lintApiLabel ).toBe( 'codemirror-prefs-lint-peast' );
+	} );
+} );

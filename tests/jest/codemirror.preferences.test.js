@@ -406,6 +406,115 @@ describe( 'CodeMirrorPreferences', () => {
 		} );
 	} );
 
+	describe( 'checkbox-select field', () => {
+		const lintSpecifier = {
+			type: 'checkbox-select',
+			label: 'codemirror-prefs-lint',
+			options: new Map( [
+				[ 'codemirror-prefs-lint-all', 'all' ],
+				[ [ 'codemirror-prefs-lint-browser', 'WikiLint' ], 'browser' ],
+				[ [ 'codemirror-prefs-lint-api', 'Parsoid' ], 'api' ]
+			] )
+		};
+		const getLintPreferences = ( stored ) => {
+			mockDefaultPreferences( { lint: true } );
+			mockUserPreferences( stored );
+			const preferences = getCodeMirrorPreferences( { lint: EditorView.theme() } );
+			preferences.formSpecification.set( 'lint', lintSpecifier );
+			const view = new EditorView();
+			// Register as CodeMirror does, so that changes have something to reconfigure.
+			preferences.extensionRegistry.reconfigValueMap.set( 'lint', new Map( [
+				[ 'browser', EditorView.theme() ],
+				[ 'api', EditorView.theme() ]
+			] ) );
+			preferences.registerExtension( 'lint', EditorView.theme(), view );
+			preferences.showPreferencesDialog( view );
+			return preferences;
+		};
+
+		it( 'should disable both controls of a locked preference', () => {
+			const preferences = getCodeMirrorPreferences( { lint: EditorView.theme() } );
+			preferences.formSpecification.set( 'lint', lintSpecifier );
+			mockDefaultPreferences( { lint: true } );
+			mockUserPreferences( {} );
+			preferences.lockPreference( 'lint' );
+			preferences.showPreferencesDialog( new EditorView() );
+			expect( preferences.dialog.querySelector( 'input[name="lint"]' ).disabled )
+				.toBe( true );
+			expect( preferences.dialog.querySelector( 'select[name="lint"]' ).disabled )
+				.toBe( true );
+		} );
+
+		it( 'should label the select with the checkbox label, but not visibly', () => {
+			const preferences = getLintPreferences( {} );
+			const select = preferences.dialog.querySelector( 'select[name="lint"]' );
+			expect( select.closest( '.cm-mw-panel__select' ).querySelector( 'label' ) )
+				.toBeNull();
+			expect( select.getAttribute( 'aria-label' ) ).toBe( 'codemirror-prefs-lint' );
+		} );
+
+		it( 'should pass message parameters given with an option label', () => {
+			const preferences = getLintPreferences( {} );
+			const options = preferences.dialog.querySelectorAll( 'select[name="lint"] option' );
+			// The mw.msg() mock returns the key, so the parameters are not interpolated.
+			expect( [ ...options ].map( ( option ) => option.textContent ) ).toStrictEqual( [
+				'codemirror-prefs-lint-all',
+				'codemirror-prefs-lint-browser',
+				'codemirror-prefs-lint-api'
+			] );
+		} );
+
+		it( 'should show the select only while the checkbox is checked', () => {
+			const preferences = getLintPreferences( {} );
+			const select = preferences.dialog.querySelector( 'select[name="lint"]' );
+			const checkbox = preferences.dialog.querySelector( 'input[name="lint"]' );
+			const selectWrapper = select.closest( '.cm-mw-panel__select' );
+			expect( checkbox.checked ).toBe( true );
+			expect( selectWrapper.classList.contains( 'cm-mw-panel__select--hidden' ) )
+				.toBe( false );
+			preferences.setPreference( 'lint', false );
+			expect( checkbox.checked ).toBe( false );
+			expect( selectWrapper.classList.contains( 'cm-mw-panel__select--hidden' ) )
+				.toBe( true );
+		} );
+
+		it( 'should show boolean true as the "all" option', () => {
+			const preferences = getLintPreferences( {} );
+			expect( preferences.dialog.querySelector( 'select[name="lint"]' ).value )
+				.toBe( 'all' );
+		} );
+
+		it( 'should show a stored choice as the selected option', () => {
+			const preferences = getLintPreferences( { lint: 'api' } );
+			expect( preferences.dialog.querySelector( 'select[name="lint"]' ).value )
+				.toBe( 'api' );
+			expect( preferences.dialog.querySelector( 'input[name="lint"]' ).checked )
+				.toBe( true );
+		} );
+
+		it( 'should store the select value, using true for "all"', () => {
+			const preferences = getLintPreferences( {} );
+			const select = preferences.dialog.querySelector( 'select[name="lint"]' );
+			select.value = 'browser';
+			select.dispatchEvent( new Event( 'change' ) );
+			expect( preferences.getPreference( 'lint' ) ).toBe( 'browser' );
+			select.value = 'all';
+			select.dispatchEvent( new Event( 'change' ) );
+			expect( preferences.getPreference( 'lint' ) ).toBe( true );
+		} );
+
+		it( 'should keep the chosen linter when the checkbox is toggled', () => {
+			const preferences = getLintPreferences( { lint: 'api' } );
+			const checkbox = preferences.dialog.querySelector( 'input[name="lint"]' );
+			checkbox.checked = false;
+			checkbox.dispatchEvent( new Event( 'change' ) );
+			expect( preferences.getPreference( 'lint' ) ).toBe( false );
+			checkbox.checked = true;
+			checkbox.dispatchEvent( new Event( 'change' ) );
+			expect( preferences.getPreference( 'lint' ) ).toBe( 'api' );
+		} );
+	} );
+
 	describe( 'default preferences', () => {
 		const defPrefsTestCases = [
 			{

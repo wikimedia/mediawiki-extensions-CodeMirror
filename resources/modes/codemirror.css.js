@@ -134,6 +134,19 @@ class CodeMirrorCss extends CodeMirrorMode {
 	}
 
 	/** @inheritDoc */
+	get lintSourceLabel() {
+		return 'codemirror-prefs-lint-stylelint';
+	}
+
+	/** @inheritDoc */
+	get lintApiLabel() {
+		if ( this.dialect !== 'sanitized-css' ) {
+			return undefined;
+		}
+		return 'codemirror-prefs-lint-templatestyles';
+	}
+
+	/** @inheritDoc */
 	get support() {
 		return [
 			cssLanguage.data.of( {
