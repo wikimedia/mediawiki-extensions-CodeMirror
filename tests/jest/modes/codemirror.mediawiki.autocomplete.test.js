@@ -187,3 +187,72 @@ describe( 'MediaWiki autocomplete', () => {
 		} );
 	} );
 } );
+
+describe( 'MediaWiki autocomplete: page title search', () => {
+	let request;
+
+	beforeEach( () => {
+		request = Promise.resolve( [ '', [ 'Foo', 'Foobar' ] ] );
+		request.abort = jest.fn();
+		mw.Api.prototype.get = jest.fn().mockReturnValue( request );
+		mw.Api.prototype.abort.mockClear();
+		cm.view.dispatch( {
+			changes: { from: 0, to: cm.view.state.doc.length, insert: '[[Foo' },
+			selection: { anchor: 5, head: 5 }
+		} );
+	} );
+
+	afterEach( () => {
+		mw.Api.prototype.get = jest.fn().mockReturnValue( Promise.resolve( {} ) );
+	} );
+
+	it( 'should request only 10 results', async () => {
+		const { options } = await source( createCompletionContext() );
+		expect( mw.Api.prototype.get ).toHaveBeenCalledWith( {
+			action: 'opensearch',
+			search: 'Foo',
+			namespace: 0,
+			limit: 10
+		} );
+		expect( options.map( ( { label } ) => label ) ).toEqual( [ 'Foo', 'Foobar' ] );
+	} );
+
+	it( 'should leave filtering and ranking to the search engine', async () => {
+		const result = await source( createCompletionContext() );
+		expect( result.filter ).toBe( false );
+		// The parser function branch merges in a static list, so it must filter.
+		cm.view.dispatch( {
+			changes: { from: 0, to: cm.view.state.doc.length, insert: '{{ #' },
+			selection: { anchor: 4, head: 4 }
+		} );
+		expect( await source( createCompletionContext() ) ).not.toHaveProperty( 'filter' );
+	} );
+
+	it( 'should abort in-flight requests before issuing a new one', async () => {
+		await Promise.all( [
+			source( createCompletionContext() ),
+			source( createCompletionContext() )
+		] );
+		const { invocationCallOrder: aborts } = mw.Api.prototype.abort.mock,
+			{ invocationCallOrder: gets } = mw.Api.prototype.get.mock;
+		expect( aborts ).toHaveLength( 2 );
+		expect( gets ).toHaveLength( 2 );
+		expect( aborts[ 0 ] ).toBeLessThan( gets[ 0 ] );
+		expect( aborts[ 1 ] ).toBeLessThan( gets[ 1 ] );
+	} );
+
+	it( 'should abort the request when the query is superseded', async () => {
+		const context = createCompletionContext(),
+			addEventListener = jest.spyOn( context, 'addEventListener' );
+		await source( context );
+		expect( addEventListener ).toHaveBeenCalledWith(
+			'abort',
+			expect.any( Function ),
+			{ onDocChange: true }
+		);
+		// The plugin reads this flag to abort the query on any document change.
+		expect( context.abortOnDocChange ).toBe( true );
+		addEventListener.mock.calls[ 0 ][ 1 ]();
+		expect( request.abort ).toHaveBeenCalledTimes( 1 );
+	} );
+} );
