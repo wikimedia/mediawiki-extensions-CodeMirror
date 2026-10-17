@@ -1,4 +1,5 @@
 const {
+	CompletionContext,
 	CompletionSource,
 	EditorSelection,
 	Extension,
@@ -34,64 +35,49 @@ const hasTag = ( types, names ) => ( Array.isArray( names ) ? names : [ names ] 
 
 const api = new mw.Api( { parameters: { formatversion: 2 } } ),
 	title = mw.config.get( 'wgPageName' );
-let promise,
-	last;
 
 /**
  * Get suggestions for wiki links.
  *
+ * @param {CompletionContext} context
  * @param {string} search
  * @param {number} namespace
  * @param {boolean} subpage
  * @return {Promise<string[]>}
  * @private
  */
-const linkSuggestFactory = async ( search, namespace = 0, subpage = false ) => {
-	if ( promise ) {
-		last = [ search, namespace, subpage ];
-	} else {
-		if ( subpage ) {
-			search = title + search;
-		}
-		api.abort();
-		promise = api.get( { action: 'opensearch', search, namespace, limit: 'max' } )
-			.then( ( [ , pages ] ) => {
-				if ( subpage ) {
-					const { length } = title;
-					return pages.map( ( page ) => page.slice( length ) );
-				}
-				return namespace === 0 ?
-					pages.map( ( page ) => page ) :
-					pages.map( ( page ) => new mw.Title( page ).getMainText() );
-			} )
-			.catch( () => [] )
-			.then( ( result ) => {
-				setTimeout( () => {
-					promise = null;
-				}, 120 );
-				return result;
-			} );
+const linkSuggestFactory = ( context, search, namespace = 0, subpage = false ) => {
+	if ( subpage ) {
+		search = title + search;
 	}
-	const ret = await promise;
-	if ( last ) {
-		const args = last;
-		last = null;
-		promise = null;
-		return linkSuggestFactory( ...args );
-	}
-	return ret;
+	api.abort();
+	const request = api.get( { action: 'opensearch', search, namespace, limit: 10 } );
+	// A slow request holds up the next one, so stop it as soon as the user types again.
+	context.addEventListener( 'abort', () => request.abort(), { onDocChange: true } );
+	return request
+		.then( ( [ , pages ] ) => {
+			if ( subpage ) {
+				const { length } = title;
+				return pages.map( ( page ) => page.slice( length ) );
+			}
+			return namespace === 0 ?
+				pages.map( ( page ) => page ) :
+				pages.map( ( page ) => new mw.Title( page ).getMainText() );
+		} )
+		.catch( () => [] );
 };
 
 /**
  * Autocompletion for page names.
  *
  * @param {CodeMirrorMediaWiki} mode
+ * @param {CompletionContext} context
  * @param {string} str
  * @param {number} ns
  * @return {Promise}
  * @private
  */
-const linkSuggest = ( mode, str, ns = 0 ) => {
+const linkSuggest = ( mode, context, str, ns = 0 ) => {
 	const { nsRegex } = mode;
 	if ( /[|{}<>[\]#]/.test( str ) ) {
 		return Promise.resolve( undefined );
@@ -125,7 +111,7 @@ const linkSuggest = ( mode, str, ns = 0 ) => {
 		}
 	}
 	const underscore = str.slice( offset ).includes( '_' );
-	return linkSuggestFactory( search, ns, subpage ).then( ( pages ) => ( {
+	return linkSuggestFactory( context, search, ns, subpage ).then( ( pages ) => ( {
 		offset,
 		options: pages.map( ( label ) => ( {
 			type: 'text',
@@ -192,7 +178,7 @@ const completionSource = ( mode ) => ( context ) => {
 	if ( isParserFunction || hasTag( types, 'templateName' ) ) {
 		const options = search.includes( ':' ) ? [] : [ ...mode.functionSynonyms ],
 			apply = applyTemplateCompletion( /^\s*[|}]/.test( state.sliceDoc( pos ) ) );
-		return linkSuggest( mode, search, 10 )
+		return linkSuggest( mode, context, search, 10 )
 			.then( ( suggestions = { offset: 0, options: [] } ) => {
 				options.push( ...suggestions.options
 					.map( ( option ) => Object.assign( option, { apply } ) ) );
@@ -204,11 +190,14 @@ const completionSource = ( mode ) => ( context ) => {
 	if ( hasTag( types, 'linkPageName' ) ) {
 		const isGallery = types.has( 'mw-tag-gallery' ) && !node.name.includes( 'link-ground' ),
 			apply = applyLinkCompletion( isGallery || /^\s*[|\]]/.test( state.sliceDoc( pos ) ) );
-		return linkSuggest( mode, search, isGallery ? 6 : 0 )
+		return linkSuggest( mode, context, search, isGallery ? 6 : 0 )
 			.then( ( suggestions ) => suggestions ? {
 				from: from + suggestions.offset,
 				options: suggestions.options
-					.map( ( option ) => Object.assign( option, { apply } ) )
+					.map( ( option ) => ( { ...option, apply } ) ),
+				// The search engine corrects spelling and ranks the results, but
+				// local filtering hides a corrected title and changes the order.
+				filter: false
 			} : null );
 	}
 	if ( !hasTag( types, [
