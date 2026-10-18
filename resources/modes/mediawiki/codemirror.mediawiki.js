@@ -528,12 +528,16 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 
 	eatTemplateArgument( expectArgName ) {
 		return ( stream, state ) => {
-			if ( expectArgName && stream.match( /^(?:[^=|}{[<&~_-]|-(?!\{)|_(?!_))+/ ) ) {
-				if ( stream.eat( '=' ) ) {
-					state.tokenize = this.eatTemplateArgument( false );
-					return this.makeLocalStyle( mwModeConfig.tags.templateArgumentName, state );
+			if ( stream.sol() && stream.peek() === '=' ) {
+				const style = this.eatWikiText( mwModeConfig.tags.template )( stream, state );
+				if ( typeof style === 'string' && style.includes( mwModeConfig.tags.sectionHeader ) ) {
+					return style;
 				}
-				return this.makeLocalStyle( mwModeConfig.tags.template, state );
+				stream.pos = 0;
+			}
+			if ( expectArgName && stream.match( /^(?:[^=|}{[<-]|\}(?!\})|\{(?!\{)|\[(?!\[)|-(?!\{))*=/ ) ) {
+				state.tokenize = this.eatTemplateArgument( false );
+				return this.makeLocalStyle( mwModeConfig.tags.templateArgumentName, state );
 			} else if ( stream.eatWhile( /[^|}{[<&~_-]/ ) ) {
 				return this.makeLocalStyle( mwModeConfig.tags.template, state );
 			} else if ( stream.eat( '|' ) ) {

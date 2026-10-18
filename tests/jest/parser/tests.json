@@ -4409,7 +4409,11 @@
 				"name": "mw-template-ground comment"
 			},
 			{
-				"text": "=foo",
+				"text": "=",
+				"name": "mw-template-ground definitionKeyword"
+			},
+			{
+				"text": "foo",
 				"name": "mw-template-ground attributeValue"
 			},
 			{
@@ -4465,7 +4469,11 @@
 				"name": "mw-template-ground comment"
 			},
 			{
-				"text": "=foo",
+				"text": "=",
+				"name": "mw-template-ground definitionKeyword"
+			},
+			{
+				"text": "foo",
 				"name": "mw-template-ground attributeValue"
 			},
 			{
@@ -5047,7 +5055,11 @@
 				"name": "mw-template-ground separator"
 			},
 			{
-				"text": "=foo",
+				"text": "=",
+				"name": "mw-template-ground definitionKeyword"
+			},
+			{
+				"text": "foo",
 				"name": "mw-template-ground attributeValue"
 			},
 			{
@@ -5081,7 +5093,11 @@
 				"name": "mw-template-ground separator"
 			},
 			{
-				"text": "=foo",
+				"text": "=",
+				"name": "mw-template-ground definitionKeyword"
+			},
+			{
+				"text": "foo",
 				"name": "mw-template-ground attributeValue"
 			},
 			{
@@ -12144,7 +12160,7 @@
 			},
 			{
 				"text": "=",
-				"name": "mw-template-ground attributeValue"
+				"name": "mw-template-ground definitionKeyword"
 			},
 			{
 				"text": "{{",
@@ -12258,7 +12274,7 @@
 			},
 			{
 				"text": "=",
-				"name": "mw-template-ground attributeValue"
+				"name": "mw-template-ground definitionKeyword"
 			},
 			{
 				"text": "{{",
@@ -87367,8 +87383,16 @@
 				"name": "mw-template-ground definitionKeyword"
 			},
 			{
-				"text": "==b==",
-				"name": "mw-template-ground attributeValue"
+				"text": "==",
+				"name": "heading heading2"
+			},
+			{
+				"text": "b",
+				"name": "mw-section"
+			},
+			{
+				"text": "==",
+				"name": "mw-template-ground heading"
 			},
 			{
 				"text": "}}",
@@ -87451,8 +87475,16 @@
 				"name": "mw-template-ground definitionKeyword"
 			},
 			{
-				"text": "==foo==",
-				"name": "mw-template-ground attributeValue"
+				"text": "==",
+				"name": "heading heading2"
+			},
+			{
+				"text": "foo",
+				"name": "mw-section"
+			},
+			{
+				"text": "==",
+				"name": "mw-template-ground heading"
 			},
 			{
 				"text": "</",
@@ -91077,8 +91109,16 @@
 				"name": "mw-template-ground separator"
 			},
 			{
-				"text": "=heading=",
-				"name": "mw-template-ground attributeValue"
+				"text": "=",
+				"name": "heading heading1"
+			},
+			{
+				"text": "heading",
+				"name": "mw-section"
+			},
+			{
+				"text": "=",
+				"name": "mw-template-ground heading"
 			}
 		]
 	},
@@ -91099,8 +91139,16 @@
 				"name": "mw-template-ground separator"
 			},
 			{
-				"text": "==heading==",
-				"name": "mw-template-ground attributeValue"
+				"text": "==",
+				"name": "heading heading2"
+			},
+			{
+				"text": "heading",
+				"name": "mw-section"
+			},
+			{
+				"text": "==",
+				"name": "mw-template-ground heading"
 			}
 		]
 	},
@@ -126664,8 +126712,16 @@
 				"name": "mw-template-ground attributeValue"
 			},
 			{
-				"text": "=== test ===",
-				"name": "mw-template-ground attributeValue"
+				"text": "===",
+				"name": "heading heading3"
+			},
+			{
+				"text": " test ",
+				"name": "mw-section"
+			},
+			{
+				"text": "===",
+				"name": "mw-template-ground heading"
 			},
 			{
 				"text": "line",
