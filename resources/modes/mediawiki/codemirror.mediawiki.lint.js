@@ -164,43 +164,45 @@ const lintSource = ( view ) => worker.lint( view ).then( ( data ) => data
 
 const getMsgKey = ( type ) => `linter-category-${ type }`;
 
-const api = new mw.Api(),
-	hasExtLinter = mw.loader.getState( 'ext.linter.edit' ) !== null;
-
-const validator = new CodeMirrorMediaWikiValidator();
-
 const isEqualError = ( a, b ) => a.type === b.type &&
 	a.dsr[ 0 ] === b.dsr[ 0 ] &&
 	a.dsr[ 1 ] === b.dsr[ 1 ];
 
-const lintApi = async ( { state: { doc } } ) => {
-	const errors = await validator.execute( doc.toString() );
-	if ( hasExtLinter && errors.length ) {
-		await api.loadMessagesIfMissing( errors.map( ( { type } ) => getMsgKey( type ) ) );
-	}
-	return errors
-		.filter( ( { dsr: [ from, to ] } ) => from <= to )
-		.reduce( ( acc, cur ) => {
-			if ( !acc.some( ( err ) => isEqualError( err, cur ) ) ) {
-				acc.push( cur );
-			}
-			return acc;
-		}, [] )
-		.map( ( { type, dsr: [ from, to ] } ) => {
-			const msgKey = getMsgKey( type );
-			return {
-				severity: 'info',
-				source: 'Parsoid',
+const api = new mw.Api(),
+	hasExtLinter = mw.loader.getState( 'ext.linter.edit' ) !== null;
 
-				message: mw.messages.exists( msgKey ) ? mw.msg( msgKey ) : type,
-				from,
-				to
-			};
-		} );
+const getLintApi = () => {
+	const validator = new CodeMirrorMediaWikiValidator();
+
+	return async ( { state: { doc } } ) => {
+		const errors = await validator.execute( doc.toString() );
+		if ( hasExtLinter && errors.length ) {
+			await api.loadMessagesIfMissing( errors.map( ( { type } ) => getMsgKey( type ) ) );
+		}
+		return errors
+			.filter( ( { dsr: [ from, to ] } ) => from <= to )
+			.reduce( ( acc, cur ) => {
+				if ( !acc.some( ( err ) => isEqualError( err, cur ) ) ) {
+					acc.push( cur );
+				}
+				return acc;
+			}, [] )
+			.map( ( { type, dsr: [ from, to ] } ) => {
+				const msgKey = getMsgKey( type );
+				return {
+					severity: 'info',
+					source: 'Parsoid',
+
+					message: mw.messages.exists( msgKey ) ? mw.msg( msgKey ) : type,
+					from,
+					to
+				};
+			} );
+	};
 };
 
 module.exports = {
 	lintSource,
-	lintApi,
+	getLintApi,
 	worker
 };
