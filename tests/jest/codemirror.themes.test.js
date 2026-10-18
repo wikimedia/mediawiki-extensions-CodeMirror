@@ -24,11 +24,34 @@ describe( 'CodeMirrorThemes', () => {
 			'skin-theme-clientpref-day', 'skin-theme-clientpref-night', 'skin-theme-clientpref-os'
 		);
 		jest.restoreAllMocks();
+		// Restore the default config, which a test may have replaced outright.
+		mockMwConfigGet();
 	} );
 
 	it( 'addFormSpec', () => {
 		expect( preferences.formSpecification.get( 'theme' ).options )
 			.toStrictEqual( new Map( themes.getOptions() ) );
+	} );
+
+	it( 'falls back to the default theme when the mode has no such theme', () => {
+		// A wiki can set any theme as the default, but wikitext offers only a few.
+		mockMwConfigGet( {
+			extCodeMirrorConfig: { defaultPreferences: { theme: 'github' } }
+		} );
+		const mwPreferences = new CodeMirrorPreferences(
+			new CodeMirrorExtensionRegistry( {} ),
+			'mediawiki',
+			new CodeMirrorKeymap()
+		);
+		const mwThemes = new CodeMirrorThemes( mwPreferences );
+		expect( mwPreferences.getPreference( 'theme' ) ).toBe( 'github' );
+		expect( mwThemes.themes.has( 'github-light' ) ).toBe( false );
+		expect( mwThemes.getThemeName() ).toBe( 'default' );
+		document.documentElement.classList.add( 'skin-theme-clientpref-day' );
+		mwThemes.registerFromValueMap( view );
+		expect( mwThemes.extensionRegistry.get( 'theme' ).compartment.get( view.state )[ 0 ] )
+			.toStrictEqual( mwThemes.themes.get( 'default-light' ) );
+		expect( view.state.facet( mwThemes.themeFacet ) ).toBe( 'default' );
 	} );
 
 	it( 'addDarkModeMutationObserver', async () => {
@@ -54,7 +77,6 @@ describe( 'CodeMirrorThemes', () => {
 		// Should be default-light to start with.
 		document.documentElement.classList.add( 'skin-theme-clientpref-day' );
 		themes.registerFromValueMap( view );
-		expect( themes.preferredTheme ).toBe( 'default' );
 		expect( themes.preferences.getPreference( 'theme' ) ).toBe( 'default' );
 		// The styles, plus the facet naming the applied theme.
 		expect( themes.extensionRegistry.get( 'theme' ).compartment.get( view.state )[ 0 ] )
@@ -66,7 +88,7 @@ describe( 'CodeMirrorThemes', () => {
 		const select = document.querySelector( '.cm-mw-panel__select--theme select' );
 		select.value = 'github';
 		select.dispatchEvent( new Event( 'change' ) );
-		expect( themes.preferredTheme ).toBe( 'github' );
+		expect( themes.preferences.getPreference( 'theme' ) ).toBe( 'github' );
 		expect( themes.extensionRegistry.get( 'theme' ).compartment.get( view.state )[ 0 ] )
 			.toStrictEqual( themes.themes.get( 'github-light' ) );
 		expect( view.state.facet( themes.themeFacet ) ).toBe( 'github' );

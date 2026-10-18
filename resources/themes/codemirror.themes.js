@@ -103,12 +103,16 @@ class CodeMirrorThemes {
 	}
 
 	/**
-	 * The user's preferred theme, as stored in the preferences.
+	 * The theme to apply. This is the preference, unless it names a theme that the
+	 * current mode does not offer, in which case it is the default theme. A wiki can
+	 * set any theme as the default for wikitext, where only a few are available.
 	 *
-	 * @type {PrefValue}
+	 * @return {string}
+	 * @private
 	 */
-	get preferredTheme() {
-		return this.preferences.getPreference( 'theme' );
+	getThemeName() {
+		const theme = this.preferences.getPreference( 'theme' );
+		return this.themes.has( `${ theme }-light` ) ? theme : 'default';
 	}
 
 	/**
@@ -264,7 +268,7 @@ class CodeMirrorThemes {
 		if ( this.editor ) {
 			// Reconfigure the currently enabled theme with the new theme.
 			this.extensionRegistry.reconfigureFromValueMap(
-				'theme', this.editor, this.preferredTheme
+				'theme', this.editor, this.getThemeName()
 			);
 		}
 	}
@@ -291,7 +295,7 @@ class CodeMirrorThemes {
 	 */
 	registerFromValueMap( editor ) {
 		this.editor = editor;
-		this.extensionRegistry.registerFromValueMap( 'theme', this.editor, this.preferredTheme );
+		this.extensionRegistry.registerFromValueMap( 'theme', this.editor, this.getThemeName() );
 	}
 }
 

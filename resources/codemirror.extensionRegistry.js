@@ -185,7 +185,30 @@ class CodeMirrorExtensionRegistry {
 	 * @internal
 	 */
 	registerFromValueMap( name, editor, reconfigValue ) {
-		this.register( name, this.reconfigValueMap.get( name ).get( reconfigValue ), editor, true );
+		this.register( name, this.getFromValueMap( name, reconfigValue ), editor, true );
+	}
+
+	/**
+	 * Get the {@link Extension} for a reconfiguration value, or the registered default when
+	 * the value map holds none. A stored preference can name a value that this editor has no
+	 * Extension for, such as a theme that only the code modes offer, and an unresolved value
+	 * breaks the whole editor configuration.
+	 *
+	 * @param {string} name
+	 * @param {string} reconfigValue
+	 * @return {Extension}
+	 * @private
+	 */
+	getFromValueMap( name, reconfigValue ) {
+		const valueMap = this.reconfigValueMap.get( name );
+		const extension = valueMap && valueMap.get( reconfigValue );
+		if ( extension === undefined ) {
+			mw.log.warn(
+				`[CodeMirror] Extension "${ name }" has no value "${ reconfigValue }".`
+			);
+			return this.extensions[ name ] || [];
+		}
+		return extension;
 	}
 
 	/**
@@ -222,7 +245,7 @@ class CodeMirrorExtensionRegistry {
 	 * @internal
 	 */
 	reconfigureFromValueMap( name, editor, reconfigValue ) {
-		this.reconfigure( name, editor, this.reconfigValueMap.get( name ).get( reconfigValue ) );
+		this.reconfigure( name, editor, this.getFromValueMap( name, reconfigValue ) );
 	}
 
 	/**

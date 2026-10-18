@@ -167,11 +167,39 @@ describe( 'CodeMirrorExtensionRegistry', () => {
 		expect( registry.getCompartment( 'tabSize' ).get( view.state ).value ).toBe( 5 );
 		registry.reconfigureFromValueMap( 'tabSize', view, 'small' );
 		expect( registry.getCompartment( 'tabSize' ).get( view.state ).value ).toBe( 5 );
-		registry.reconfigureFromValueMap( 'tabSize', view, 'unknown' );
-		expect( registry.getCompartment( 'tabSize' ).get( view.state ).value ).toBe( 5 );
 		registry.reconfigureFromValueMap( 'tabSize', view, 'large' );
 		expect( registry.getCompartment( 'tabSize' ).get( view.state ).value ).toBe( 10 );
 		expect( console.warn ).not.toHaveBeenCalled();
+	} );
+
+	it( 'reconfigValueMap with a value it does not hold', () => {
+		const registry = getRegistry( { tabSize: EditorState.tabSize.of( 5 ) } );
+		registry.reconfigValueMap.set( 'tabSize', new Map( [
+			[ 'large', EditorState.tabSize.of( 10 ) ]
+		] ) );
+		const view = new EditorView();
+		registry.register( 'tabSize', EditorState.tabSize.of( 5 ), view, true );
+		registry.reconfigureFromValueMap( 'tabSize', view, 'large' );
+		expect( registry.getCompartment( 'tabSize' ).get( view.state ).value ).toBe( 10 );
+		// Fall back to the registered default rather than leave the value unresolved.
+		registry.reconfigureFromValueMap( 'tabSize', view, 'unknown' );
+		expect( registry.getCompartment( 'tabSize' ).get( view.state ).value ).toBe( 5 );
+		expect( console.warn ).toHaveBeenCalledWith(
+			'[CodeMirror] Extension "tabSize" has no value "unknown".'
+		);
+	} );
+
+	it( 'registerFromValueMap with a value it does not hold', () => {
+		const registry = getRegistry( {} );
+		registry.reconfigValueMap.set( 'tabSize', new Map( [
+			[ 'large', EditorState.tabSize.of( 10 ) ]
+		] ) );
+		const view = new EditorView();
+		// Nothing is registered yet, so there is no default to fall back to. The editor
+		// configuration must still hold a valid Extension.
+		expect( () => registry.registerFromValueMap( 'tabSize', view, 'unknown' ) )
+			.not.toThrow();
+		expect( registry.getCompartment( 'tabSize' ).get( view.state ) ).toStrictEqual( [] );
 	} );
 } );
 
