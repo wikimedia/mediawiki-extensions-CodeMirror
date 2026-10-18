@@ -485,6 +485,12 @@ describe( 'mediawiki() lint config', () => {
 		expect( langSupport.lintApi ).toBeInstanceOf( Function );
 	} );
 
+	it( 'should have differnt lintApi functions for different instances', () => {
+		const langSupport1 = mediawiki();
+		const langSupport2 = mediawiki();
+		expect( langSupport1.lintApi ).not.toBe( langSupport2.lintApi );
+	} );
+
 	it( 'should withhold the linters when disabled', () => {
 		const langSupport = mediawiki( { lint: false } );
 		expect( langSupport.lintSource ).toBeUndefined();

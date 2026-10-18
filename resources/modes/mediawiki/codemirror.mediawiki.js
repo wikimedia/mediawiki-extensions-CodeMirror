@@ -23,7 +23,7 @@ const {
 const closeTagsExtension = require( './codemirror.mediawiki.closeTags.js' );
 const { tagMatching, matchTag } = require( './codemirror.mediawiki.matchTag.js' );
 const mwKeymap = require( './codemirror.mediawiki.keymap.js' );
-const { lintSource, lintApi } = require( './codemirror.mediawiki.lint.js' );
+const { lintSource, getLintApi } = require( './codemirror.mediawiki.lint.js' );
 
 const nsIds = mw.config.get( 'wgNamespaceIds' ),
 	fileNsRegex = new RegExp( `^(?:${
@@ -151,7 +151,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 
 	/** @inheritDoc */
 	get lintApi() {
-		return this.lint === false ? undefined : lintApi;
+		return this.lint === false ? undefined : getLintApi();
 	}
 
 	/** @inheritDoc */
