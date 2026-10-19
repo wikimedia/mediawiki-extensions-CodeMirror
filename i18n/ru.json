@@ -215,6 +215,7 @@
 	"codemirror-wikilint-unclosed-comment": "незакрытый HTML-комментарий",
 	"codemirror-wikilint-unclosed-quotes": "незакрытые кавычки",
 	"codemirror-wikilint-unclosed-table": "незакрытая таблица",
+	"codemirror-wikilint-unnecessary-encoding": "ненужное процентное кодирование во внутренней ссылке",
 	"codemirror-wikilint-uppercase": "перевести в верхний регистр",
 	"codemirror-wikilint-useless-attribute": "бесполезный атрибут",
 	"codemirror-wikilint-useless-link-text": "бесполезный текст ссылки",

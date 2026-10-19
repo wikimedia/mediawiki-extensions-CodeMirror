@@ -1,0 +1,17 @@
+{
+	"@metadata": {
+		"authors": [
+			"ऐक्टिवेटेड्"
+		]
+	},
+	"codemirror-toggle-label": "सिनटैक्स उभारथिन",
+	"codemirror-toggle-label-short": "सिनटैक्स",
+	"codemirror-prefs-help": "सहयोग",
+	"codemirror-prefs-section-appearance": "स्वरूप",
+	"codemirror-prefs-section-lines": "पङ्क्ति",
+	"codemirror-prefs-section-characters": "वर्ण",
+	"codemirror-prefs-section-code-assistance": "कोड सहयोग",
+	"codemirror-prefs-section-references": "सन्दर्भ",
+	"codemirror-prefs-section-other": "अन्य",
+	"codemirror-prefs-codefolding": "कोड तह कैल सक्षम करथिन"
+}
