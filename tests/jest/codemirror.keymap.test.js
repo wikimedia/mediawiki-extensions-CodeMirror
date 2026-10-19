@@ -110,7 +110,7 @@ describe( 'CodeMirrorKeymap (integration)', () => {
 		const cmKeymap = new CodeMirrorKeymap();
 		const run = jest.fn();
 		cmKeymap.registerKeyBinding( {
-			key: 'Ctrl-Shift-H',
+			key: 'Ctrl-H',
 			run
 		}, cm.view );
 		// Simulate the keydown event
