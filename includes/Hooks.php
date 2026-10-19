@@ -35,7 +35,6 @@ class Hooks implements
 
 	private readonly HookRunner $hookRunner;
 	private readonly array $conflictingGadgets;
-	private readonly string $extensionAssetsPath;
 	private readonly bool $debugMode;
 	private readonly array $enabledModes;
 	private bool $readOnly = false;
@@ -75,7 +74,6 @@ class Hooks implements
 	) {
 		$this->hookRunner = new HookRunner( $hookContainer );
 		$this->conflictingGadgets = $config->get( 'CodeMirrorConflictingGadgets' );
-		$this->extensionAssetsPath = $config->get( MainConfigNames::ExtensionAssetsPath );
 		$this->debugMode = $config->get( MainConfigNames::ShowExceptionDetails );
 		$this->enabledModes = array_keys( array_filter( $config->get( 'CodeMirrorEnabledModes' ) ) );
 	}
