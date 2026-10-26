@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Red Winged Duck",
-			"Renessaince"
+			"Renessaince",
+			"Ucukor"
 		]
 	},
 	"codemirror-desc": "Забясьпечвае вылучэньне сынтаксысу ў рэдактары вікітэксту",
@@ -32,5 +33,6 @@
 	"codemirror-keymap-other": "Іншае",
 	"codemirror-keymap-preferences": "Налады падсьветкі сынтаксу",
 	"prefs-accessibility": "Даступнасьць",
+	"codemirror-wikilint-remove": "прыбраць",
 	"codemirror-wikilint-whitespace": "уставіць пропуст"
 }
