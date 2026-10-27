@@ -29,6 +29,7 @@
 	"codemirror-special-char-newline": "Nei Zeil",
 	"codemirror-special-char-vertical-tab": "Vertikalen Tab",
 	"codemirror-special-char-escape": "Escape-Zeechen",
+	"codemirror-special-char-nbsp": "Espace ouni Zeilenëmbroch",
 	"codemirror-special-char-line-separator": "Zeilen-Trennzeechen",
 	"prefs-accessibility": "Accessibilitéit",
 	"prefs-syntax-highlighting": "Ervirhiewe vun der Syntax"
