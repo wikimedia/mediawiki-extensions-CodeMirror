@@ -3,7 +3,8 @@
 		"authors": [
 			"Meliganai",
 			"Mormegil",
-			"Henryk Siuda"
+			"Henryk Siuda",
+			"Draceane"
 		]
 	},
 	"codemirror-desc": "Poskytuje zvýrazňování syntaxe v editoru wikitextu",
@@ -17,7 +18,7 @@
 	"codemirror-prefs-section-characters": "Znaky",
 	"codemirror-prefs-section-code-assistance": "Pomoc ohledně kódu",
 	"codemirror-prefs-section-other": "Jiné",
-	"codemirror-prefs-codefolding": "Povolit skládání kódu",
+	"codemirror-prefs-codefolding": "Povolit sbalování kódu",
 	"codemirror-prefs-autocomplete": "Povolit automatické doplňování",
 	"codemirror-prefs-bidiisolation": "Izolovat obousměrný text",
 	"codemirror-prefs-closebrackets": "Povolit automatické uzavírání závorek",

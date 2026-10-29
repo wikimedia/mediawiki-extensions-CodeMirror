@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Red Winged Duck",
-			"Renessaince"
+			"Renessaince",
+			"Ucukor"
 		]
 	},
 	"codemirror-desc": "Забясьпечвае вылучэньне сынтаксысу ў рэдактары вікітэксту",
@@ -35,6 +36,7 @@
 	"codemirror-keymap-other": "Іншае",
 	"codemirror-keymap-preferences": "Налады падсьветкі сынтаксу",
 	"prefs-accessibility": "Даступнасьць",
+	"codemirror-wikilint-remove": "прыбраць",
 	"codemirror-wikilint-whitespace": "уставіць пропуст",
 	"codemirror-beta-feature-title": "Палепшаная падсьветка сынтаксісу",
 	"codemirror-beta-feature-description": "Атрымаць раньні доступ да новай падсьветкі сынтаксісу і такіх функцый рэдагаваньня, як згортваньне і аўтадапаўненьне коду."
