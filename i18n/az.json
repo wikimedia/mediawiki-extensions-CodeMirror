@@ -41,7 +41,7 @@
 	"codemirror-prefs-trailingwhitespace": "Sətir sonundakı boşluğu vurğula",
 	"codemirror-prefs-autofocus": "İlkin fokusu redaktora ver",
 	"codemirror-prefs-highlightrefs": "<ref> teqlərinin məzmununu vurğula",
-	"codemirror-prefs-foldallrefs": "Defolt kimi bütün <ref> etiketlərini qatla",
+	"codemirror-prefs-foldallrefs": "Defolt olaraq bütün <ref> etiketlərini qatla",
 	"codemirror-prefs-reset": "Defolta sıfırla",
 	"codemirror-prefs-theme": "Redaktor mövzusu",
 	"codemirror-theme-default": "Defolt",
