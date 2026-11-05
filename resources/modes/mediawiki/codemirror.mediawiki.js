@@ -39,6 +39,8 @@ const startState = ( tokenize, tags ) => ( {
 	extState: false,
 	nTemplate: 0,
 	nLink: 0,
+	// The link depth of the enclosing [[File:…]], or 0 when not in one.
+	fileLinkDepth: 0,
 	nExtLink: 0,
 	nExt: 0,
 	nDt: 0,
@@ -259,6 +261,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 			'mw-ext2-link-ground',
 			'mw-ext3-ground',
 			'mw-ext3-link-ground',
+			'mw-file-ground',
 			'mw-link-ground',
 			'mw-template-ext-ground',
 			'mw-template-ext-link-ground',
@@ -358,10 +361,26 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 		if ( ground !== '' ) {
 			style = `mw${ ground }-ground ${ style }`;
 		}
+		if ( state.fileLinkDepth > 0 ) {
+			style = `mw-file-ground ${ style }`;
+		}
 		if ( endGround ) {
 			state[ endGround ]--;
+			this.endFileGround( state );
 		}
 		return style.trim();
+	}
+
+	/**
+	 * Clear the file ground when the file link closes.
+	 *
+	 * @param {Object} state
+	 * @private
+	 */
+	endFileGround( state ) {
+		if ( state.fileLinkDepth > state.nLink ) {
+			state.fileLinkDepth = 0;
+		}
 	}
 
 	eatBlock( style, terminator, consumeLast ) {
@@ -644,6 +663,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 		return ( stream, state ) => {
 			if ( stream.sol() ) {
 				state.nLink--;
+				this.endFileGround( state );
 				// @todo error message
 				state.tokenize = state.stack.pop();
 				return '';
@@ -679,6 +699,7 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 		if ( stream.sol() ) {
 			// @todo error message
 			state.nLink--;
+			this.endFileGround( state );
 			state.tokenize = state.stack.pop();
 			return '';
 		}
@@ -1308,9 +1329,13 @@ class CodeMirrorMediaWiki extends CodeMirrorMode {
 					if ( stream.eat( '[' ) ) { // Link Example: [[ Foo | Bar ]]
 						stream.eatSpace();
 						if ( /[^\]|[]/.test( stream.peek() ) ) {
+							const isFile = !!stream.match( fileNsRegex, false );
 							state.nLink++;
+							if ( isFile && !state.fileLinkDepth ) {
+								state.fileLinkDepth = state.nLink;
+							}
 							state.stack.push( state.tokenize );
-							state.tokenize = this.inLink( stream.match( fileNsRegex, false ) );
+							state.tokenize = this.inLink( isFile );
 							return this.makeLocalStyle( mwModeConfig.tags.linkBracket, state );
 						}
 					} else {
