@@ -40,7 +40,7 @@
 	"codemirror-prefs-trailingwhitespace": "Sətir sonundakı boşluğu vurğula",
 	"codemirror-prefs-autofocus": "İlkin fokusu redaktora ver",
 	"codemirror-prefs-highlightrefs": "<ref> teqlərinin məzmununu vurğula",
-	"codemirror-prefs-foldallrefs": "Defolt kimi bütün <ref> etiketlərini qatla",
+	"codemirror-prefs-foldallrefs": "Defolt olaraq bütün <ref> etiketlərini qatla",
 	"codemirror-prefs-reset": "Defolta sıfırla",
 	"codemirror-prefs-colorblind": "Vikimətn redaktə edərkən rəng korluğuna uyğun sintaksis sxemini aktivləşdir",
 	"codemirror-prefs-colorblind-help": "Sintaksis üçün hansısa qadcetdən istifadə etsəniz, bu seçim işləməyəcək.",
