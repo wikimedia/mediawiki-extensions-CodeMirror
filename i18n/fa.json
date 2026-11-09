@@ -6,6 +6,7 @@
 			"Darafsh",
 			"Iriman",
 			"Jeeputer",
+			"LProfo",
 			"Ladsgroup"
 		]
 	},
@@ -64,7 +65,7 @@
 	"codemirror-match-case": "تطبیق بزرگی و کوچکی حروف",
 	"codemirror-regexp": "عبارت باقاعده",
 	"codemirror-regexp-invalid": "عبارت باقاعدهٔ نامعتبر",
-	"codemirror-by-word": "کل کلمه",
+	"codemirror-by-word": "کل واژه",
 	"codemirror-replace": "جایگزینی",
 	"codemirror-replace-placeholder": "جایگزینی",
 	"codemirror-replace-all": "جایگزینی همه",
