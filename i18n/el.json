@@ -2,9 +2,18 @@
 	"@metadata": {
 		"authors": [
 			"Geraki",
-			"Αντιγόνη"
+			"Αντιγόνη",
+			"Warudo"
 		]
 	},
 	"codemirror-desc": "Παρέχει επισήμανση σύνταξης στον επεξεργαστή κώδικα wiki",
-	"codemirror-toggle-label": "Επισήμανση σύνταξης"
+	"codemirror-toggle-label": "Επισήμανση σύνταξης",
+	"codemirror-toggle-label-short": "Σύνταξη",
+	"codemirror-prefs-summary": "Μπορείτε να μάθετε περισσότερα σχετικά με αυτό το χαρακτηριστικό διαβάζοντας τη [https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror σελίδα βοήθειας].",
+	"codemirror-prefs-enable": "Ενεργοποίηση επισήμανσης σύνταξης για τον κώδικα wiki",
+	"codemirror-find": "Εύρεση",
+	"codemirror-next": "Εύρεση επομένου",
+	"codemirror-previous": "Εύρεση προηγουμένου",
+	"codemirror-all": "Όλα",
+	"codemirror-match-case": "Ταίριασμα πεζών-κεφαλαίων"
 }
