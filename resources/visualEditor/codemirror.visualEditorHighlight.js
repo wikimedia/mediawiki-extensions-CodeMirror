@@ -572,13 +572,13 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 		this.surface.getModel().getDocument().on( 'precommit', this.onDocumentPrecommitBound );
 		// Only the modal manager is watched. Toolbar and sidebar dialogs leave the surface
 		// in use, where the loss of color would show.
-		this.surface.getDialogs().connect( this, {
+		this.surface.getModalDialogs().connect( this, {
 			opening: 'onWindowOpening',
 			closing: 'onWindowClosing'
 		} );
 		// Highlighting can be switched on from inside a window: the preferences page is one of
 		// the meta dialog's own. Its 'opening' is long past, so check for it here.
-		if ( this.surface.getDialogs().getCurrentWindow() ) {
+		if ( this.surface.getModalDialogs().getCurrentWindow() ) {
 			this.openWindows = 1;
 			// Before the viewport pass below, so it draws nothing until the window closes.
 			this.suspendHighlights();
@@ -604,7 +604,7 @@ class CodeMirrorVisualEditorHighlight extends CodeMirrorVisualEditor {
 	 */
 	unbindSurface() {
 		this.surface.getModel().getDocument().off( 'precommit', this.onDocumentPrecommitBound );
-		this.surface.getDialogs().disconnect( this );
+		this.surface.getModalDialogs().disconnect( this );
 		this.openWindows = 0;
 		this.suspended = false;
 		this.unbindSyntaxListeners();

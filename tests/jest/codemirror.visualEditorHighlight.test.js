@@ -101,9 +101,9 @@ const getMockSurface = ( doc = '' ) => {
 		getViewportDimensions: jest.fn().mockReturnValue( {
 			top: 0, bottom: 500, left: 0, right: 800, height: 500, width: 800
 		} ),
-		getDialogs: jest.fn().mockReturnValue( dialogs ),
+		getModalDialogs: jest.fn().mockReturnValue( dialogs ),
 		// Exposed for assertions
-		dialogs: dialogs,
+		modalDialogs: dialogs,
 		model: model,
 		documentModel: documentModel,
 		view: surfaceView,
@@ -1471,12 +1471,12 @@ describe( 'suspending while a window is open', () => {
 
 	it( 'should watch the modal window manager while active', () => {
 		controller.activate();
-		expect( surface.dialogs.connect ).toHaveBeenCalledWith( controller, {
+		expect( surface.modalDialogs.connect ).toHaveBeenCalledWith( controller, {
 			opening: 'onWindowOpening',
 			closing: 'onWindowClosing'
 		} );
 		controller.deactivate();
-		expect( surface.dialogs.disconnect ).toHaveBeenCalledWith( controller );
+		expect( surface.modalDialogs.disconnect ).toHaveBeenCalledWith( controller );
 	} );
 
 	it( 'should clear the range-drawing groups when a window opens', () => {
@@ -1521,7 +1521,7 @@ describe( 'suspending while a window is open', () => {
 	} );
 
 	it( 'should suspend when activated underneath an open window', () => {
-		surface.dialogs.getCurrentWindow.mockReturnValue( {} );
+		surface.modalDialogs.getCurrentWindow.mockReturnValue( {} );
 		controller.activate();
 		expect( controller.suspended ).toBe( true );
 	} );
