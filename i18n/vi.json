@@ -151,7 +151,7 @@
 	"codemirror-keymap-multicursor": "Giữ $1 và nhấp để tạo nhiều con trỏ.",
 	"codemirror-keymap-crosshair": "Giữ $1, nhấp và kéo để chọn vùng hình chữ nhật.",
 	"codemirror-keymap-openlinks": "Giữ $1 và nhấp vào tiêu đề trang và URL để mở chúng trong một tab mới.",
-	"codemirror-keymap-lint": "Kiểm tra lỗi",
+	"codemirror-keymap-lint": "Linter",
 	"codemirror-keymap-next-diagnostic": "Chọn chẩn đoán tiếp theo",
 	"prefs-accessibility": "Tăng cường khả năng tiếp cận",
 	"prefs-syntax-highlighting": "Nổi bật cú pháp",
