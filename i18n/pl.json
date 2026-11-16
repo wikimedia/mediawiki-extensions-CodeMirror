@@ -197,6 +197,8 @@
 	"codemirror-wikilint-unclosed-comment": "niezamknięty komentarz HTML",
 	"codemirror-wikilint-unclosed-quotes": "niezamknięte cudzysłowy",
 	"codemirror-wikilint-unclosed-table": "niezamknięta tabela",
+	"codemirror-wikilint-unclosed-tag": "niezamknięty znacznik",
+	"codemirror-wikilint-unmatched-closing": "brakujący znacznik zamykający",
 	"codemirror-wikilint-unnecessary-encoding": "zbędne kodowanie znakami procenta w linku wewnętrznym",
 	"codemirror-wikilint-uppercase": "przekształć na duże litery",
 	"codemirror-wikilint-useless-attribute": "bezużyteczny atrybut",
