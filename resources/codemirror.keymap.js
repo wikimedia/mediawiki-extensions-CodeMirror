@@ -7,9 +7,11 @@ const {
 	startCompletion,
 	undo,
 	undoSelection,
+	// eslint-disable-next-line no-unused-vars -- Used in JSDoc
 	Command,
 	EditorView,
 	Extension,
+	// eslint-disable-next-line no-unused-vars -- Used in JSDoc
 	KeyBinding,
 	Prec,
 	StateEffect
