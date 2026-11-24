@@ -1,10 +1,13 @@
 {
 	"@metadata": {
 		"authors": [
+			"PanWor",
 			"Woytecr"
 		]
 	},
+	"apihelp-codemirror-validate-summary": "Sprawdź podaną zawartość pod kątem błędów walidacji",
+	"apihelp-codemirror-validate-param-content": "Zawartość tekstowa do walidacji",
 	"apihelp-codemirror-validate-param-contentmodel": "Model zawartości",
-	"apihelp-codemirror-validate-param-title": "Tytuł strony, do której należy treść.",
+	"apihelp-codemirror-validate-param-title": "Tytuł strony, do której należy zawartość.",
 	"apihelp-codemirror-validate-example": "Sprawdź, czy kod <code>h2 {color: red}</code> jest prawidłowy dla modelu sanitized-css"
 }
