@@ -3,12 +3,15 @@
 		"authors": [
 			"Luky001",
 			"TomášPolonec",
-			"Teslaton"
+			"Teslaton",
+			"KormiSK"
 		]
 	},
 	"codemirror-desc": "Poskytuje zvýraznenie syntaxe v textovom editore",
 	"codemirror-toggle-label": "Zvýraznenie syntaxe",
 	"codemirror-toggle-label-short": "Syntax",
+	"codemirror-prefs-enable": "Zapnúť zvýrazňovanie syntaxe vo wikitexte",
 	"codemirror-prefs-colorblind": "Povoliť schému pre farboslepých na zvýraznenie syntaxe pri úprave wikitextu",
-	"prefs-accessibility": "Dostupnosť"
+	"prefs-accessibility": "Dostupnosť",
+	"prefs-syntax-highlighting": "Zvýrazňovanie syntaxe"
 }
