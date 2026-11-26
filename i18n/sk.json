@@ -3,7 +3,8 @@
 		"authors": [
 			"Luky001",
 			"TomášPolonec",
-			"Teslaton"
+			"Teslaton",
+			"KormiSK"
 		]
 	},
 	"codemirror-desc": "Poskytuje zvýraznenie syntaxe v textovom editore",
@@ -11,6 +12,7 @@
 	"codemirror-toggle-label-short": "Syntax",
 	"codemirror-prefs-colorblind": "Povoliť schému pre farboslepých na zvýraznenie syntaxe pri úprave wikitextu",
 	"prefs-accessibility": "Dostupnosť",
+	"prefs-syntax-highlighting": "Zvýrazňovanie syntaxe",
 	"codemirror-beta-feature-title": "Vylepšené zvýrazňovanie syntaxe",
 	"codemirror-beta-feature-description": "Získajte predbežný prístup k novým funkciám zvýrazňovania syntaxe a úprav. Medzi nimi je napríklad tzv. code folding alebo automatické dopĺňanie."
 }
