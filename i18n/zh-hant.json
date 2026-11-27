@@ -13,7 +13,8 @@
 			"Waihorace",
 			"Winston Sung",
 			"Xiplus",
-			"沈澄心"
+			"沈澄心",
+			"臺灣象象"
 		]
 	},
 	"codemirror-desc": "提供 wikitext 編輯器語法醒目標示",
@@ -21,6 +22,9 @@
 	"codemirror-toggle-label-short": "語法",
 	"codemirror-prefs-summary": "您可以透過閱讀[https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Extension:CodeMirror 幫助頁面]來了解此功能的更多資訊。",
 	"codemirror-prefs-enable": "啟用wikitext語法醒目標示",
+	"codemirror-prefs-enable-help": "適用於編輯內容頁面與模板時",
+	"codemirror-prefs-enable-code": "啟用程式碼語法醒目標示",
+	"codemirror-prefs-enable-code-help": "適用於編輯JavaScript、CSS或Lua模組時",
 	"codemirror-prefs-title": "語法醒目偏好設定",
 	"codemirror-prefs-help": "說明",
 	"codemirror-prefs-section-lines": "行",
