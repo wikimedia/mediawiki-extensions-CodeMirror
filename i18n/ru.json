@@ -151,7 +151,7 @@
 	"codemirror-keymap-lint": "Анализатор",
 	"codemirror-keymap-next-diagnostic": "Выбор следующей проверки",
 	"prefs-accessibility": "Доступность",
-	"prefs-syntax-highlighting": "Подсвечивать синтаксис",
+	"prefs-syntax-highlighting": "Подсветка синтаксиса",
 	"codemirror-wikilint-attributes-of-closing-tag": "атрибуты закрывающего тега",
 	"codemirror-wikilint-bold-apostrophes": "полужирные апострофы",
 	"codemirror-wikilint-bold-in-header": "полужирный текст в заголовке раздела",

@@ -3,12 +3,18 @@
 		"authors": [
 			"Luky001",
 			"TomášPolonec",
-			"Teslaton"
+			"Teslaton",
+			"KormiSK"
 		]
 	},
 	"codemirror-desc": "Poskytuje zvýraznenie syntaxe v textovom editore",
 	"codemirror-toggle-label": "Zvýraznenie syntaxe",
 	"codemirror-toggle-label-short": "Syntax",
+	"codemirror-prefs-enable": "Zapnúť zvýrazňovanie syntaxe vo wikitexte",
+	"codemirror-prefs-enable-help": "Používa sa pri úprave stránok s obsahom a šablón.",
+	"codemirror-prefs-enable-code": "Zapnúť zvýrazňovanie syntaxe pre kód",
+	"codemirror-prefs-enable-code-help": "Používa sa pri úpravách kódu ako napríklad JavaScriptu, CSS alebo modulov v Lua.",
 	"codemirror-prefs-colorblind": "Povoliť schému pre farboslepých na zvýraznenie syntaxe pri úprave wikitextu",
-	"prefs-accessibility": "Dostupnosť"
+	"prefs-accessibility": "Dostupnosť",
+	"prefs-syntax-highlighting": "Zvýrazňovanie syntaxe"
 }
